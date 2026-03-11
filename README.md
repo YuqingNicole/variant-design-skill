@@ -1,0 +1,82 @@
+# variant-design
+
+> Solve the blank canvas problem. Prompt → 3 fully-formed distinct designs → vary → export.
+
+A Claude Code skill inspired by the [Variant](https://variant.com) design community. Give it a prompt, get three divergent design directions — each from a different studio's aesthetic — then iterate with one-word actions.
+
+---
+
+## What it does
+
+1. **Detects your scenario** — dashboard, SaaS landing page, editorial, e-commerce, mobile app, creative tool, education
+2. **Generates 3 distinct variations** — each pulls from a different aesthetic direction (Minimal/Editorial, Bold/Expressive, Dark/Premium, Warm/Human, Neo-brutalist, Luxury/Silence…)
+3. **Ships working code** — HTML single-file by default, or React. Real content, no lorem ipsum
+4. **Offers variation actions** — push further, polish, swap styles, remix colors, shuffle layouts, see other views
+
+---
+
+## Usage
+
+Install via [Claude Code](https://claude.ai/code) skill registry, then trigger with any design prompt:
+
+```
+design a dashboard for a crypto trading terminal
+show me 3 directions for a SaaS landing page
+give me UI options for a wellness app
+vary strong  /  remix colors  /  shuffle layout
+```
+
+### Variation actions
+
+| Action | What happens |
+|---|---|
+| **Vary strong** | Push current direction to its extreme |
+| **Vary subtle** | Polish and refine, same aesthetic |
+| **Change style** | Keep layout, swap entire visual language |
+| **Remix colors** | 3 alternative palettes: analogous / complementary / unexpected |
+| **Shuffle layout** | Same content + style, different composition |
+| **See other views** | Mobile / dark mode / empty state / hover states |
+
+---
+
+## Reference library
+
+Domain-specific materials (starter prompts, palettes, typography, layouts, real community examples):
+
+| File | Domain |
+|---|---|
+| `references/dashboard.md` | Data dashboards, analytics, monitoring, trading terminals |
+| `references/editorial.md` | Magazines, journalism, long-form, news |
+| `references/saas.md` | SaaS landing pages, B2B, developer tools |
+| `references/ecommerce.md` | E-commerce, consumer apps, fintech cards |
+| `references/education.md` | Learning apps, quizzes, language tools |
+| `references/creative.md` | Generative art, music tools, creative software |
+| `references/mobile.md` | iOS/Android apps, onboarding, home screens |
+| `references/palettes.md` | Universal palette library — 27 palettes × 7 aesthetic directions |
+
+---
+
+## Design principles
+
+- **Real content wins.** Plausible headlines, real data, actual copy. Makes designs feel alive.
+- **Commit fully.** Half-executed aesthetics look worse than simple ones.
+- **Never converge.** If A is dark, B cannot also be dark. Each must feel like a different studio.
+- **Typography first.** Distinctive display font + reliable body. Never Inter, Roboto, Arial, system-ui.
+- **Color = one bold choice.** One dominant color used with conviction beats five timid colors.
+
+---
+
+## Contributing
+
+PRs welcome. Each reference file follows a consistent 6-section schema:
+
+1. Starter Prompts (domain-grouped)
+2. Color Palettes (CSS custom properties)
+3. Typography Pairings
+4. Layout Patterns
+5. Signature Details
+6. Real Community Examples
+
+---
+
+Built with [Claude Code Skills](https://claude.ai/code).

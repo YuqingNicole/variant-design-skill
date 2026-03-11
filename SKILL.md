@@ -7,6 +7,12 @@ description: AI-driven visual/UI design generation inspired by Variant (variant.
 
 Solve the blank canvas problem. Prompt → 3 fully-formed distinct designs → vary → export.
 
+## About
+
+Inspired by the [Variant](https://variant.com) design community — a space where designers share divergent takes on the same brief. This skill brings that practice into Claude Code: every prompt yields three designs that feel like they came from different studios, then lets you iterate with one-word actions.
+
+**Supports:** HTML (default) · React · 7 domain reference libraries · 27 palettes · variation actions
+
 ## Scenario Detection → Load Reference
 
 Identify the scenario and load the corresponding reference file before designing:
