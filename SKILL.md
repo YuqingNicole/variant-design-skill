@@ -17,21 +17,21 @@ Inspired by the [Variant](https://variant.com) design community — a space wher
 
 Identify the scenario and load the corresponding reference file before designing:
 
-| User asks about... | Load |
-|---|---|
-| Dashboard, analytics, metrics, monitoring, data viz | `references/dashboard.md` |
-| Editorial, magazine, journalism, news, article | `references/editorial.md` |
-| Landing page, SaaS, product page, startup, B2B | `references/saas.md` |
-| E-commerce, shopping, product, fintech card, consumer | `references/ecommerce.md` |
-| Education, learning app, quiz, language, science | `references/education.md` |
-| Generative art, music tool, 3D, creative tool, synthesizer | `references/creative.md` |
-| Mobile app, iOS, Android, onboarding, home screen | `references/mobile.md` |
-| Unsure / general | Use aesthetic directions table below + `references/palettes.md` |
+| User asks about... | Also matches | Load |
+|---|---|---|
+| Dashboard, analytics, metrics, monitoring, data viz | 后台, admin panel, management system, backoffice, CRM, internal tool | `references/dashboard.md` |
+| Editorial, magazine, journalism, news, article | blog post, report, white paper, newsletter | `references/editorial.md` |
+| Landing page, SaaS, product page, startup, B2B | website, 官网, corporate site, personal site, portfolio, agency | `references/saas.md` |
+| E-commerce, shopping, product, fintech card, consumer | store, shop, marketplace, cart, checkout | `references/ecommerce.md` |
+| Education, learning app, quiz, language, science | lesson, flashcard, tutorial, training, course | `references/education.md` |
+| Generative art, music tool, 3D, creative tool, synthesizer | tool, studio, editor, canvas, sequencer, DAW | `references/creative.md` |
+| Mobile app, iOS, Android, onboarding, home screen | app, 应用, 界面, UI screen | `references/mobile.md` |
+| Unsure / general | | Use aesthetic directions table below + `references/palettes.md` |
 
 ## Core Workflow
 
 ### 1. Parse → Detect → Load
-Identify scenario, load reference file, pick 3 starter prompts and palettes from it.
+Identify scenario, load reference file, pick 3 starter prompts and palettes from it. Study the Real Community Examples for composition patterns and what makes each design work — extract the principle, not the surface style.
 
 ### 2. Generate 3 Distinct Variations
 
@@ -92,13 +92,22 @@ After presenting, always offer:
 
 ---
 
+## Variation Loop
+
+After any variation action, always:
+1. Present the updated design (labelled with the action taken, e.g. "Variation A — Vary Strong")
+2. Offer the full action menu again — the loop never ends until the user moves on
+3. If the user has iterated 3+ times on the same direction, proactively suggest: "Want to branch? I can apply this to one of the other variations."
+
+---
+
 ## Design Principles
 
 - **Real content wins.** Plausible headlines, real data values, actual copy. Makes designs feel alive.
 - **Commit fully.** Half-executed aesthetics look worse than simple ones.
 - **Never converge.** If A is dark, B cannot also be dark. Each must feel like a different studio.
 - **Match type to domain.** Don't default to generic app UI — load the right reference.
-- **Typography first.** Distinctive display + reliable body. Use Google Fonts `@import`.
+- **Typography first.** Distinctive display + reliable body. Use Google Fonts `@import`. Scale: display 48–96px, section header 24–32px, body 15–17px, caption 12–13px. Line-height: 1.2 for headlines, 1.6–1.8 for body. Never mix more than 2 typefaces.
 - **Color = one bold choice.** One dominant color used with conviction beats five timid colors.
 
 ---
@@ -107,3 +116,11 @@ After presenting, always offer:
 
 - **HTML**: Single-file, embedded CSS, optional vanilla JS. **Default.**
 - **React**: Functional components, Tailwind or CSS modules — state assumptions upfront.
+
+### HTML Output Spec
+- CSS custom properties (`--bg`, `--accent`, etc.) for all colors — never hardcode hex in rules
+- Google Fonts via `@import` in `<style>` — always specify weights used
+- Responsive: mobile-first, breakpoints at `640px` and `1024px`
+- No frameworks by default — vanilla CSS + HTML. CDN Tailwind only if user asks
+- Hover states required on all interactive elements
+- Minimum visual completeness: populated data, real copy, working nav state

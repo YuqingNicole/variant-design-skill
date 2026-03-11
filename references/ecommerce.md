@@ -160,6 +160,29 @@ Product pages, shopping apps, wellness/lifestyle, fintech cards, premium consume
 └──────────────────────────────────────────┘
 ```
 
+### Cart & Checkout
+
+A multi-step checkout flow with a persistent order summary panel. The progress indicator keeps users oriented, while the side-by-side layout lets them review their order without leaving the form.
+
+```
+┌─────────────────────────────────────────────┐
+│  ← Back    Checkout (2/3)    [====--] 66%   │
+├───────────────────┬─────────────────────────┤
+│                   │  Order Summary          │
+│  Shipping Info    │  ─────────────────────  │
+│  ─────────────    │  Product A    $120.00   │
+│  Name             │  Product B     $48.00   │
+│  [____________]   │  ─────────────────────  │
+│                   │  Subtotal     $168.00   │
+│  Address          │  Shipping       $0.00   │
+│  [____________]   │  Tax           $13.44   │
+│                   │  ─────────────────────  │
+│  City / ZIP       │  Total        $181.44   │
+│  [______][_____]  │                         │
+│                   │  [  Place Order  →  ]   │
+└───────────────────┴─────────────────────────┘
+```
+
 ---
 
 ## 5. Signature Details
