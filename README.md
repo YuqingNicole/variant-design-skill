@@ -15,9 +15,27 @@ A Claude Code skill inspired by the [Variant](https://variant.com) design commun
 
 ---
 
+## Installation
+
+### Claude Code (recommended)
+
+```bash
+claude skill install https://github.com/YuqingNicole/variant-design-skill
+```
+
+Or add manually to your project's `SKILL.md` — copy the contents of [`SKILL.md`](./SKILL.md) into your existing skill file.
+
+### Other Claude interfaces
+
+**Claude.ai (web/desktop):** Paste the contents of `SKILL.md` into a Project's custom instructions, or drop it at the top of a conversation as a system prompt.
+
+**API / custom integrations:** Include `SKILL.md` as a system message before your user turn.
+
+---
+
 ## Usage
 
-Install via [Claude Code](https://claude.ai/code) skill registry, then trigger with any design prompt:
+Once installed, trigger with any design prompt:
 
 ```
 design a dashboard for a crypto trading terminal
