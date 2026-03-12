@@ -404,6 +404,6 @@ Maximum negative space, one hero image, sparse text. High-end real estate, watch
 | Dashboard / analytics | Data Light, Terminal Green, Deep Ocean |
 | Mobile app | Night Sky, Wellness Soft |
 | Creative / music tool | Dark Lab, Synth Neon |
-| Education | Study Light, French Green (see education.md) |
+| Education | Study Light, French Green, Duolingo Green (see education.md) |
 | Portfolio / personal | Brutalist Mono, Brutalist Dark |
 | Luxury / fashion | Ivory Silence, French Gray, Minimal Luxury |

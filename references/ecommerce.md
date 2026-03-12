@@ -2,6 +2,16 @@
 
 Product pages, shopping apps, wellness/lifestyle, fintech cards, premium consumer experiences.
 
+## Table of Contents
+1. Starter Prompts
+2. Color Palettes
+3. Typography Pairings
+4. Layout Patterns
+5. Signature Details
+6. Real Community Examples
+
+---
+
 ## 1. Starter Prompts
 
 **Premium / Fintech**
@@ -200,19 +210,24 @@ A multi-step checkout flow with a persistent order summary panel. The progress i
 
 ## 6. Real Variant Community Examples
 
-**Chinese Crystal App**:
-- Warm cream background `#FBF7F0`
-- Pearl bracelet product photography
-- "AI能量推荐" badge, seasonal node indicator
-- Energy configuration: 适合清肝·镇静·防水逆·提升气场
-- Element tabs: 全部 / 金属性 / 木属性 / 水属性 / 火属性 / 土属性
-- Crystal grid: 白水晶 / 薰衣草 / 青金石 / 紫水晶
-- ¥802.00 price, dual CTA buttons
+### Chinese Wellness Crystal App
 
-**Black VISA Credit Card**:
-- Pure black background
-- Card centered with subtle perspective tilt
-- Embossed card number: 4921 8834 9012 6558
-- Cardholder: ALEXANDER PIERCE
-- Expiry: 09/28, VISA logo
-- Zero decoration — card as the only design element
+**Prompt:** "A Chinese wellness e-commerce app product page: warm cream background #FBF7F0. Hero: pearl bracelet photography centered. 'AI能量推荐' badge and current solar term indicator at top. Energy configuration section: 适合清肝 · 镇静 · 防水逆 · 提升气场. Element filter tabs: 全部 / 金属性 / 木属性 / 水属性 / 火属性 / 土属性 — each tab uses its element color. Product grid: 白水晶 / 薰衣草 / 青金石 / 紫水晶. Price ¥802.00 in large type. Dual CTA: 加入购物车 (outline) and 立即购买 (filled accent)."
+
+**What makes it work:**
+- The "AI能量推荐" badge at the top does double work: it legitimizes the product recommendation with a technology signal while speaking directly to the cultural belief system (energy/qi alignment) that drives the purchase decision — a product-market fit expressed in a single UI label.
+- Color-coding the element tabs (metal grey / wood green / water blue / fire red / earth gold) turns a filter row into a visual vocabulary that matches how practitioners actually think about the five elements. Users don't need to read the labels — the color communicates the category.
+- The dual CTA button pattern (outline "Add to Cart" + filled "Buy Now") is a standard conversion mechanic, but placing it below the product grid rather than the hero image delays the purchase pressure — appropriate for a high-consideration, spiritually-motivated purchase.
+- Warm cream (#FBF7F0) as the background color bridges traditional Chinese aesthetic (paper/silk tones) and modern lifestyle app expectations — neither clinical white nor overtly red/gold, it positions the brand as contemporary wellness rather than traditional medicine.
+
+---
+
+### Premium Black Credit Card Showcase
+
+**Prompt:** "A luxury credit card product showcase: pure #000000 background. A single physical card centered with a subtle 5° perspective tilt, no other elements competing. Card shows: embossed number 4921 8834 9012 6558 in monospace, cardholder name ALEXANDER PIERCE, expiry 09/28, VISA logo bottom-right. Below the card: three minimal benefit labels in muted text. Zero decorative elements — the card is the entire design."
+
+**What makes it work:**
+- The decision to make the card the only object on screen is a luxury positioning move: scarcity of visual information signals scarcity of the product. A card surrounded by feature grids and testimonials reads as mass-market; a card floating in darkness reads as exclusive.
+- The 5° perspective tilt introduces just enough physicality to remind the viewer this is a material object — it has thickness, weight, a surface. A flat straight-on view would reduce the card to a rectangle; the tilt makes it feel holdable.
+- Using monospace for the card number mirrors the actual embossed typography on physical cards — the design references the real artifact, which strengthens the premium association even in a flat digital render.
+- Three benefit labels below the card in muted small text respect the silence of the hero composition — they provide necessary information without competing with the card's visual authority.

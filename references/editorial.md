@@ -202,21 +202,34 @@ Science magazines, news cards, luxury editorial, cultural journalism, long-form 
 
 ## 6. Real Variant Community Examples
 
-**Mars Database (Featured)**:
-- Red/orange `#C0392B` background
-- "M > 04 (MARS)" title with "Featured" badge
-- Two-column element table: Overview / Aphelion / Closest Distance / Mass / Perihelion / Nitrogen / Gravity / Orbital Period / Argon
-- Right panel: "Focus. The Red Planet" article with rover timeline (Perseverance, Ingenuity, Curiosity, Viking 1 & 2, Pathfinder)
-- Clean serif body text on cream/white card
+### Mars Subject Database — (Featured)
 
-**Luxury Interior ("silence is a luxury")**:
-- Near-black background
-- Full-bleed interior photography
-- Minimal type overlay, single statement headline
-- Maximum negative space
+**Prompt:** "A science editorial database card for Mars: red/orange #C0392B dominant background, 'M > 04 (MARS)' header with 'Featured' pill badge. Left: two-column element table (Overview / Aphelion / Closest Distance / Mass / Perihelion / Nitrogen / Gravity / Orbital Period / Argon) with alternating row tints. Right panel: 'Focus. The Red Planet' article section with a rover timeline (Perseverance / Ingenuity / Curiosity / Viking 1 & 2 / Pathfinder). Clean serif body text on a cream/white card inset."
 
-**Computational Linguistics (bilingual)**:
-- Dark purple background
-- Japanese text large: "計算システムと人間言語学の交差点。"
-- English translation below in lighter weight
-- Academic/cultural tension between East and West typography
+**What makes it work:**
+- The deep red/orange background communicates "Mars" before a single word is read — it's a color that carries planetary identity. This is the editorial principle of letting the palette do conceptual work, not just aesthetic work.
+- Placing the data table (left) beside the narrative text (right) mirrors how a print magazine spread works: the structured data earns trust, the prose creates meaning. Neither panel alone would hold attention as long as the two in combination.
+- The cream/white card inset for the article text creates a reading zone that floats visually above the colored background — a classic magazine technique for controlling contrast without flattening the layout to pure white.
+- The rover timeline (rather than a chart) humanizes the data — missions have names and years, making the science feel like a story with characters.
+
+---
+
+### Luxury Interior Editorial — "Silence is a luxury"
+
+**Prompt:** "A luxury interior design editorial spread: near-black #0A0A0A background, full-bleed interior photography at 60% viewport height, single statement headline 'SILENCE IS A LUXURY' in large sparse serif centered at bottom of image, no subheadline, maximum negative space below. One accent: warm gold text on dark surface. Zero decorative elements."
+
+**What makes it work:**
+- Using a full headline as the only text element forces the copy to earn its place — "Silence is a luxury" works because it is both literally true (the room is quiet) and philosophically loaded (luxury = having enough space to hear nothing). Weak copy would collapse this format.
+- Maximum negative space is the design itself, not the absence of design. The dark space around the image is what makes the image feel expensive — the same photo on a tight grid reads as a catalog; on this layout it reads as art.
+- Restricting to one accent color (warm gold) and using it sparingly — only on the critical text — means the eye has exactly one place to go after taking in the photograph.
+
+---
+
+### Computational Linguistics — Bilingual Feature
+
+**Prompt:** "A tech-culture editorial card on computational linguistics: dark purple #1A0A2E background. Japanese text dominant at 64px: '計算システムと人間言語学の交差点。' English translation below in 18px lighter weight: 'The intersection of computational systems and human language.' Academic and modern — serif Japanese, geometric Latin. Section label 'LANGUAGE × MACHINE' in small muted caps top-left."
+
+**What makes it work:**
+- Leading with the Japanese text at 3.5× the size of the English translation is a commitment to the bilingual conceit — a half-hearted equal-size treatment would read as indecision. The size hierarchy makes a statement: this publication treats both languages as primary.
+- The tonal contrast between the dense kanji forms and the sparse Latin letterforms creates visual tension that mirrors the editorial subject: the friction between computational systems and human language. The design argues the point rather than illustrating it.
+- Dark purple as background splits the difference between academic (dark, serious) and tech (purple, digital) — it refuses to be either a science journal or a startup landing page, which is exactly right for a culture-technology crossover piece.

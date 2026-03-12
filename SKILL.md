@@ -124,3 +124,51 @@ After any variation action, always:
 - No frameworks by default — vanilla CSS + HTML. CDN Tailwind only if user asks
 - Hover states required on all interactive elements
 - Minimum visual completeness: populated data, real copy, working nav state
+
+### React Output Spec
+- Functional components only — no class components
+- Declare all color tokens as a `const theme = { bg: '...', accent: '...' }` object at the top of the file, reference via `style={{ background: theme.bg }}`
+- Google Fonts: add a `<link>` in the returned JSX or instruct user to add to `index.html`
+- Prefer inline styles for one-off values; extract repeated patterns to a `styles` object
+- State assumptions upfront in a comment block: which components are stateful, what props to pass
+- If Tailwind: use `@apply` for repeated patterns; if CSS modules: one `.module.css` per component
+- No `useEffect` for layout — CSS-only animations and transitions preferred
+- Prop defaults must be realistic content (no `undefined`, no "Lorem ipsum")
+
+### Multi-Screen / Flow Support
+
+When a user asks for a flow (onboarding, checkout, wizard, multi-step form):
+1. Render all screens side-by-side horizontally, each in a `390px` frame with label above
+2. Use a shared `currentStep` state variable to show/hide screens if making it interactive
+3. Annotate transitions: "→ swipe left to advance" or "→ tab triggers step 2"
+4. Each screen must be visually complete — never leave a screen empty as placeholder
+
+---
+
+## Anti-Patterns
+
+Avoid these in every output:
+
+| Anti-pattern | Instead |
+|---|---|
+| Two variations in the same aesthetic direction | Ensure A/B/C feel like different studios — re-check the direction table |
+| `Inter`, `Roboto`, `Arial`, `system-ui` as display fonts | Pick a distinctive display font from the reference pairing list |
+| Hardcoded hex values in CSS rules (e.g., `color: #0F172A`) | Use CSS custom properties: `color: var(--text)` |
+| Lorem ipsum or placeholder text | Write real, domain-plausible content |
+| Generic "Feature 1 / Feature 2 / Feature 3" copy | Specific feature names that match the domain |
+| Five or more colors used at similar weight | One dominant color used with conviction |
+| Cards with identical sizes and equal visual weight | Vary card sizes to create rhythm and hierarchy |
+| Hover states missing on interactive elements | Every button, link, and card needs a visible hover |
+| Mobile layouts that are just desktop shrunk down | Rethink for thumb zones, touch targets, and vertical flow |
+| Gradient abuse (5+ color gradient backgrounds) | One solid color or a two-stop gradient maximum |
+
+---
+
+## Accessibility Baseline
+
+Apply to every output — non-negotiable:
+- Text contrast minimum: **4.5:1** for body, **3:1** for large text (≥24px bold or ≥18.5px normal)
+- All interactive elements: minimum **44×44px** touch/click target
+- Focus rings: never `outline: none` without a custom visible replacement
+- Don't convey meaning by color alone — pair with icon, label, or pattern
+- Avoid pure white on pure black for long-form text — slightly off-white/off-black (`#F0EDE8` on `#111`) reduces eye strain
