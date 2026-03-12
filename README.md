@@ -35,16 +35,50 @@ Or add manually to your project's `SKILL.md` — copy the contents of [`SKILL.md
 
 ## Usage
 
-Once installed, trigger with any design prompt:
+### Basic triggers
+
+The simplest way — just describe what you want:
 
 ```
 design a dashboard for a crypto trading terminal
 show me 3 directions for a SaaS landing page
 give me UI options for a wellness app
-vary strong  /  remix colors  /  shuffle layout
 ```
 
+### Directed triggers — lock in a style or reference a site
+
+You can be more specific by naming an aesthetic direction, a palette, or even an existing site you want to match:
+
+```
+developer tools homepage, code-first hero with CLI snippet, dark Data/Technical direction
+
+landing page for an AI agent tool — Dark Indigo palette, Geist font, Code-First layout from saas.md
+
+3 variations for a food delivery app — one Warm/Human, one Bold/Expressive, one Neo-brutalist
+
+reproduce the visual style of [site you described] — dark navy, monospace, swim lane diagrams
+```
+
+**Tip:** the more constraints you name (direction + palette + layout pattern), the more targeted the output. The more open the prompt, the more divergent the three variations will be.
+
+### Anatomy of a directed prompt
+
+```
+[what it is] + [domain] + [aesthetic direction or palette] + [layout hint] + [any signature detail]
+```
+
+Examples:
+
+| Goal | Prompt |
+|---|---|
+| Match a specific site's vibe | `"developer tool landing page — dark Data/Technical, CLI code hero, Dark Indigo palette"` |
+| Explore freely | `"landing page for a mindfulness app"` |
+| One fixed + two free | `"3 directions for a finance dashboard — one must be Amber Finance dark terminal"` |
+| Multi-screen flow | `"3-screen onboarding flow for a meditation app, Wellness Soft palette"` |
+
 ### Variation actions
+
+After seeing the initial 3 variations, iterate with:
 
 | Action | What happens |
 |---|---|
