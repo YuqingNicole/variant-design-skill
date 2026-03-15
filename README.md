@@ -2,16 +2,18 @@
 
 > Solve the blank canvas problem. Prompt → 3 fully-formed distinct designs → vary → export.
 
-A Claude Code skill inspired by the [Variant](https://variant.com) design community. Give it a prompt, get three divergent design directions — each from a different studio's aesthetic — then iterate with one-word actions.
+A Claude Code skill inspired by the [Variant](https://variant.com) design community, powered by the **Impeccable design system**. Give it a prompt, get three divergent design directions — each from a different studio's aesthetic — then iterate with one-word actions.
 
 ---
 
 ## What it does
 
 1. **Detects your scenario** — dashboard, SaaS landing page, editorial, e-commerce, mobile app, creative tool, education
-2. **Generates 3 distinct variations** — each pulls from a different aesthetic direction (Minimal/Editorial, Bold/Expressive, Dark/Premium, Warm/Human, Neo-brutalist, Luxury/Silence…)
-3. **Ships working code** — HTML single-file by default, or React. Real content, no lorem ipsum
-4. **Offers variation actions** — push further, polish, swap styles, remix colors, shuffle layouts, see other views
+2. **Loads design system references** — typography, color theory (OKLCH), spatial design, motion, interaction, responsive, UX writing
+3. **Generates 3 distinct variations** — each pulls from a different aesthetic direction (Minimal/Editorial, Bold/Expressive, Dark/Premium, Warm/Human, Neo-brutalist, Luxury/Silence…)
+4. **Runs an AI Slop Test** — quality gate that catches generic AI aesthetic fingerprints before presenting
+5. **Ships working code** — HTML single-file by default, or React. Real content, no lorem ipsum
+6. **Offers variation actions** — push further, polish, critique, swap styles, remix colors, shuffle layouts, see other views
 
 ---
 
@@ -85,15 +87,18 @@ After seeing the initial 3 variations, iterate with:
 | **Vary strong** | Push current direction to its extreme |
 | **Vary subtle** | Polish and refine, same aesthetic |
 | **Change style** | Keep layout, swap entire visual language |
-| **Remix colors** | 3 alternative palettes: analogous / complementary / unexpected |
+| **Remix colors** | 3 alternative palettes using OKLCH: analogous / complementary / unexpected |
 | **Shuffle layout** | Same content + style, different composition |
+| **Polish** | Refine against design system: typography, spacing, interactions, motion |
+| **Critique** | Systematic audit against all 7 design system dimensions |
 | **See other views** | Mobile / dark mode / empty state / hover states |
 
 ---
 
 ## Reference library
 
-Domain-specific materials (starter prompts, palettes, typography, layouts, real community examples):
+### Domain references
+Scenario-specific materials (starter prompts, palettes, typography, layouts, real community examples):
 
 | File | Domain |
 |---|---|
@@ -106,6 +111,19 @@ Domain-specific materials (starter prompts, palettes, typography, layouts, real 
 | `references/mobile.md` | iOS/Android apps, onboarding, home screens |
 | `references/palettes.md` | Universal palette library — 27 palettes × 7 aesthetic directions |
 
+### Design system references (Impeccable)
+Foundational design principles loaded for every generation:
+
+| File | Covers |
+|---|---|
+| `references/design-system/typography.md` | Modular scale, fluid type, font pairing, OpenType features, vertical rhythm |
+| `references/design-system/color-and-contrast.md` | OKLCH color space, tinted neutrals, 60-30-10 rule, dark mode, WCAG contrast |
+| `references/design-system/spatial-design.md` | 4pt grid, container queries, squint test, hierarchy through multiple dimensions |
+| `references/design-system/motion-design.md` | 100/300/500 rule, ease-out-expo, stagger, reduced motion, perceived performance |
+| `references/design-system/interaction-design.md` | 8 interactive states, focus-visible, forms, modals, keyboard navigation |
+| `references/design-system/responsive-design.md` | Mobile-first, content-driven breakpoints, input detection, safe areas |
+| `references/design-system/ux-writing.md` | Button labels, error formulas, empty states, voice vs tone, accessibility |
+
 ---
 
 ## Design principles
@@ -114,13 +132,14 @@ Domain-specific materials (starter prompts, palettes, typography, layouts, real 
 - **Commit fully.** Half-executed aesthetics look worse than simple ones.
 - **Never converge.** If A is dark, B cannot also be dark. Each must feel like a different studio.
 - **Typography first.** Distinctive display font + reliable body. Never Inter, Roboto, Arial, system-ui.
-- **Color = one bold choice.** One dominant color used with conviction beats five timid colors.
+- **Color = one bold OKLCH choice.** One dominant color used with conviction beats five timid colors. Always tint neutrals.
+- **No AI slop.** No purple gradients, no glassmorphism, no bounce easing, no centered-everything layouts.
 
 ---
 
 ## Contributing
 
-PRs welcome. Each reference file follows a consistent 6-section schema:
+PRs welcome. Each domain reference file follows a consistent 6-section schema:
 
 1. Starter Prompts (domain-grouped)
 2. Color Palettes (CSS custom properties)
@@ -129,6 +148,8 @@ PRs welcome. Each reference file follows a consistent 6-section schema:
 5. Signature Details
 6. Real Community Examples
 
+Design system references follow the Impeccable style structure with principles, code examples, and anti-patterns.
+
 ---
 
-Built with [Claude Code Skills](https://claude.ai/code).
+Built with [Claude Code Skills](https://claude.ai/code). Design system powered by [Impeccable](https://github.com/tychografie/impeccable).
