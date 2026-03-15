@@ -32,6 +32,16 @@ Persist context as a comment block at the top of generated files or in the conve
 
 ---
 
+## Smart Prompt Handling
+
+Before generating, apply these three rules in order:
+
+1. **Confirm scenario detection.** State the detected scenario and aesthetic direction. Ask the user to confirm before proceeding: *"I'm reading this as a [scenario] with [direction] vibes — correct?"*
+2. **Resolve vague prompts — max 2 questions.** If the prompt lacks enough signal to differentiate 3 variations (e.g. "design something cool"), ask at most 2 clarifying questions. Focus on: (a) what it's for / who uses it, (b) any aesthetic leaning. If the user says "surprise me," pick 3 maximally divergent directions and proceed.
+3. **Never generate blind.** Do not produce code until you have either (a) user confirmation of the scenario, or (b) answers to your clarifying questions, or (c) an explicit "surprise me."
+
+---
+
 ## Scenario Detection → Load Reference
 
 Identify the scenario and load the corresponding reference file before designing:
@@ -90,11 +100,17 @@ Each variation = a different studio's interpretation. Never two in the same dire
 - Motion strategy — consult `motion-design.md` for timing and easing
 - One signature detail that makes this variation unforgettable
 
-### 3. Implement
+### 3. Implement & Present
 
 Working code — HTML (default) or React. Real content, no lorem ipsum. Visually complete.
 
-Label: **Variation A — [Name]** / **B — [Name]** / **C — [Name]**
+Before each code block, present a **Summary Card** so users can compare without reading code:
+
+> **Variation A — [Name]**
+> Direction: [e.g. Minimal / Editorial] · Palette: [name or dominant colors] · Fonts: [display + body]
+> Layout: [pattern, e.g. asymmetric 2-col] · Signature: [one unforgettable detail]
+
+Label code blocks: **Variation A — [Name]** / **B — [Name]** / **C — [Name]**
 
 ### 4. AI Slop Test (Quality Gate)
 
@@ -104,21 +120,20 @@ Before presenting, run this check on each variation:
 
 A distinctive interface should make someone ask "how was this made?" not "which AI made this?" Review the Anti-Patterns table below — they are the fingerprints of AI-generated work.
 
+After passing, show a one-line confidence signal: e.g. *"Passed: distinctive fonts, OKLCH palette, tinted neutrals, WCAG AA, no AI slop patterns detected."*
+
 ### 5. Offer Variation Actions
 
-After presenting, always offer:
+After presenting, always offer grouped by intent:
 
-> Which direction resonates? Options:
-> - **Vary strong** — push aesthetic to its extreme
-> - **Vary subtle** — polish, same direction
-> - **Distill** — strip to essence, remove everything non-essential
-> - **Change style** — keep layout, swap visual language
-> - **Remix colors** — 3 alternative palettes using OKLCH
-> - **Shuffle layout** — same content/style, different composition
-> - **Polish** — refine spacing, typography, and micro-details
-> - **Critique** — audit against design system principles
-> - **Extract tokens** — export design tokens as CSS/JSON/Tailwind config
-> - **See other views** — mobile / dark mode / empty state / onboarding / hover states
+> Which direction resonates? Pick an action:
+>
+> **Reshape** — Vary strong · Distill · Shuffle layout · Change style
+> **Tune** — Vary subtle · Remix colors · Mix (e.g. "Mix A + B")
+> **Refine** — Polish · Critique · See other views
+> **Export** — Extract tokens
+>
+> Can't decide? Say **"Mix A + B"** or **"A's layout + C's colors"**.
 
 ---
 
@@ -268,14 +283,26 @@ Render additional views with full design system compliance:
 
 - **Hover / active / focus states** — all interactive elements with visible state changes
 
+### Mix
+Combine two variations into one. Accepts forms like "Mix A + B" or "A's layout + C's colors."
+
+**Process:**
+1. Use the first-named variation as the **structural base** (layout, hierarchy, component structure)
+2. Layer the second variation's **visual language** (palette, typography, motion, signature details)
+3. When elements conflict (e.g. both have a distinctive nav pattern), explicitly state the trade-off and pick the one that better serves the content
+4. Label result as "Mix [A+B]" and present with a Summary Card showing which parts came from where
+
 ---
 
 ## Variation Loop
 
-After any variation action, always:
-1. Present the updated design (labelled with the action taken, e.g. "Variation A — Distill")
-2. Offer the full action menu again — the loop never ends until the user moves on
+Track iteration count internally (reset per variation). After any variation action:
+1. Present the updated design (labelled with the action taken, e.g. "Variation A — Distill · iteration 3")
+2. Offer the grouped action menu again — the loop never ends until the user moves on
 3. If the user has iterated 3+ times on the same direction, proactively suggest: "Want to branch? I can apply this to one of the other variations."
+4. **At iteration 2:** Ask a direction-check — *"Still feeling this direction, or want to pivot?"*
+5. **At iteration 4:** Show a change summary — *"Over 4 rounds: [list key changes]. Want to keep refining or export?"*
+6. **At iteration 5+:** Suggest convergence — *"You've refined this 5 times — it's looking solid. Ready to export, or one more pass?"*
 
 ---
 
@@ -408,6 +435,18 @@ Apply when the design will be used in real products:
 - Debounce search/filter inputs (300ms)
 - Prevent double-submit on forms (disable button after first click, re-enable on error)
 - Paste handling: strip formatting on paste into plain-text inputs
+
+### Integration Quick-Start
+
+After exporting, append a brief guide so users know how to own the code:
+
+> **Making it yours:**
+> - **Colors:** Edit the `--color-*` CSS custom properties in `:root` — all colors flow from these tokens
+> - **Fonts:** Swap the Google Fonts `@import` URL and update `--font-display` / `--font-body`
+> - **Spacing:** Adjust `--space-*` tokens to scale the entire layout proportionally
+> - **New pages:** Copy the HTML structure, keep the same `<style>` block — the token system ensures visual consistency
+> - **Dark mode:** Redefine `--color-*` semantic tokens inside `@media (prefers-color-scheme: dark)` — primitives stay unchanged
+> - **Framework migration:** The CSS custom properties work in any framework. For React/Vue, map tokens to your theme object
 
 ---
 
