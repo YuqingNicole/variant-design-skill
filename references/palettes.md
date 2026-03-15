@@ -11,17 +11,19 @@ Deep backgrounds, atmospheric depth, subtle glows. Default for trading terminals
 
 ### Dark Pro *(Dashboard → financial/infrastructure)*
 ```
---bg:        #0A0E1A
---surface:   #131929
---card:      #1A2235
---border:    #2A3550
---text:      #E8EDF5
---muted:     #6B7A9A
---accent:    #00D4AA   /* teal */
---danger:    #FF4757
---warning:   #FFB900
---positive:  #00C896
+--bg:        #0A0E1A   /* oklch(8% 0.03 260) */
+--surface:   #131929   /* oklch(13% 0.03 260) */
+--card:      #1A2235   /* oklch(17% 0.03 255) */
+--border:    #2A3550   /* oklch(26% 0.04 250) */
+--text:      #E8EDF5   /* oklch(94% 0.01 260) */
+--muted:     #6B7A9A   /* oklch(55% 0.05 255) */
+--accent:    #00D4AA   /* oklch(76% 0.15 170) */
+--danger:    #FF4757   /* oklch(62% 0.22 20) */
+--warning:   #FFB900   /* oklch(82% 0.17 85) */
+--positive:  #00C896   /* oklch(73% 0.14 168) */
 ```
+
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Terminal Green *(DevOps / monitoring)*
 ```
@@ -94,15 +96,17 @@ White and near-white backgrounds, structured hierarchy. Enterprise software, pro
 
 ### Minimal White *(SaaS / enterprise)*
 ```
---bg:        #FFFFFF
---surface:   #F8FAFC
---card:      #FFFFFF
---border:    #E2E8F0
---text:      #0F172A
---muted:     #64748B
---accent:    #0EA5E9   /* sky blue */
---cta:       #0F172A
+--bg:        #FFFFFF   /* oklch(100% 0 0) */
+--surface:   #F8FAFC   /* oklch(98% 0.005 250) */
+--card:      #FFFFFF   /* oklch(100% 0 0) */
+--border:    #E2E8F0   /* oklch(92% 0.01 250) */
+--text:      #0F172A   /* oklch(15% 0.03 260) */
+--muted:     #64748B   /* oklch(52% 0.03 250) */
+--accent:    #0EA5E9   /* oklch(68% 0.16 230) */
+--cta:       #0F172A   /* oklch(15% 0.03 260) */
 ```
+
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Data Light *(analytics / business)*
 ```
@@ -149,15 +153,17 @@ Earthy tones, organic warmth. Consumer apps, food, wellness, East Asian markets.
 
 ### Warm Startup *(consumer SaaS / productivity)*
 ```
---bg:        #FAFAF9
---surface:   #F5F5F4
---card:      #FFFFFF
---border:    #E7E5E4
---text:      #1C1917
---muted:     #78716C
---accent:    #EA580C   /* orange */
---cta:       #EA580C
+--bg:        #FAFAF9   /* oklch(98% 0.003 80) */
+--surface:   #F5F5F4   /* oklch(97% 0.003 80) */
+--card:      #FFFFFF   /* oklch(100% 0 0) */
+--border:    #E7E5E4   /* oklch(92% 0.005 60) */
+--text:      #1C1917   /* oklch(15% 0.01 60) */
+--muted:     #78716C   /* oklch(52% 0.01 60) */
+--accent:    #EA580C   /* oklch(60% 0.2 40) */
+--cta:       #EA580C   /* oklch(60% 0.2 40) */
 ```
+
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Academic Cream *(long-form / culture)*
 ```
@@ -215,15 +221,17 @@ High contrast, vivid accents, dominant color blocks. Consumer products, youth br
 
 ### Structural Black *(engineering / infra)*
 ```
---bg:        #111111
---surface:   #1A1A1A
---card:      #222222
---border:    #333333
---text:      #FFFFFF
---muted:     #888888
---accent:    #FF6B35   /* orange */
---accent-2:  #FFFFFF
+--bg:        #111111   /* oklch(12% 0 0) */
+--surface:   #1A1A1A   /* oklch(15% 0 0) */
+--card:      #222222   /* oklch(19% 0 0) */
+--border:    #333333   /* oklch(27% 0 0) */
+--text:      #FFFFFF   /* oklch(100% 0 0) */
+--muted:     #888888   /* oklch(62% 0 0) */
+--accent:    #FF6B35   /* oklch(66% 0.2 35) */
+--accent-2:  #FFFFFF   /* oklch(100% 0 0) */
 ```
+
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Streetwear Bold *(fashion / youth)*
 ```
@@ -269,16 +277,18 @@ Raw, unconventional, broken grid. Portfolios, startups that want to stand out.
 
 ### Brutalist Mono
 ```
---bg:        #F5F5F0
---surface:   #FFFFFF
---card:      #FFFFFF
---border:    #000000   /* thick black borders */
---text:      #000000
---muted:     #555555
---accent:    #FFD700   /* yellow */
---accent-2:  #FF0050   /* red */
+--bg:        #F5F5F0   /* oklch(97% 0.005 95) */
+--surface:   #FFFFFF   /* oklch(100% 0 0) */
+--card:      #FFFFFF   /* oklch(100% 0 0) */
+--border:    #000000   /* oklch(0% 0 0) */
+--text:      #000000   /* oklch(0% 0 0) */
+--muted:     #555555   /* oklch(42% 0 0) */
+--accent:    #FFD700   /* oklch(87% 0.17 95) */
+--accent-2:  #FF0050   /* oklch(58% 0.26 15) */
 --shadow:    4px 4px 0px #000000
 ```
+
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Brutalist Dark
 ```
@@ -314,16 +324,18 @@ Dense, systematic. Monospace fonts, tight grids, information-first.
 
 ### Dark Indigo *(modern SaaS / data products)*
 ```
---bg:        #0F172A
---surface:   #1E293B
---card:      #1E293B
---border:    #334155
---text:      #F1F5F9
---muted:     #94A3B8
---accent:    #6366F1   /* indigo */
---accent-2:  #38BDF8   /* sky */
---cta:       #6366F1
+--bg:        #0F172A   /* oklch(15% 0.04 260) */
+--surface:   #1E293B   /* oklch(22% 0.04 255) */
+--card:      #1E293B   /* oklch(22% 0.04 255) */
+--border:    #334155   /* oklch(32% 0.04 250) */
+--text:      #F1F5F9   /* oklch(97% 0.005 250) */
+--muted:     #94A3B8   /* oklch(70% 0.025 250) */
+--accent:    #6366F1   /* oklch(55% 0.22 275) */
+--accent-2:  #38BDF8   /* oklch(76% 0.13 230) */
+--cta:       #6366F1   /* oklch(55% 0.22 275) */
 ```
+
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Deep Ocean *(science / research)*
 ```
@@ -356,14 +368,16 @@ Maximum negative space, one hero image, sparse text. High-end real estate, watch
 
 ### Premium Black *(luxury / fintech)*
 ```
---bg:        #000000
---surface:   #0A0A0A
---card:      #141414
---border:    #2A2A2A
---text:      #FFFFFF
---muted:     #888888
---accent:    #C9A96E   /* gold */
+--bg:        #000000   /* oklch(0% 0 0) */
+--surface:   #0A0A0A   /* oklch(6% 0 0) */
+--card:      #141414   /* oklch(12% 0 0) */
+--border:    #2A2A2A   /* oklch(22% 0 0) */
+--text:      #FFFFFF   /* oklch(100% 0 0) */
+--muted:     #888888   /* oklch(62% 0 0) */
+--accent:    #C9A96E   /* oklch(74% 0.1 80) */
 ```
+
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Ivory Silence *(luxury goods / cosmetics)*
 ```

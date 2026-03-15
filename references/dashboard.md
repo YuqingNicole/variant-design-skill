@@ -2,6 +2,13 @@
 
 Data dashboards, monitoring panels, analytics views, KPI trackers, financial terminals.
 
+> **Design system references for this domain:**
+> - `design-system/typography.md` — tabular-nums for data alignment, modular scale for metric hierarchy
+> - `design-system/color-and-contrast.md` — semantic color (success/danger/warning), WCAG on dark backgrounds
+> - `design-system/spatial-design.md` — dense grid layouts, data-first visual hierarchy
+> - `design-system/motion-design.md` — real-time update animations, chart transitions
+> - `design-system/interaction-design.md` — 8 states for interactive filters, form controls, tooltips
+
 ## Table of Contents
 1. Starter Prompts
 2. Color Palettes

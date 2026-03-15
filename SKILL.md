@@ -1,6 +1,6 @@
 ---
 name: variant-design
-description: AI-driven visual/UI design generation with Impeccable design system. Generates 3 distinct design variations from a prompt with built-in scenario materials, design system references (typography, color, spatial, motion, interaction, responsive, UX writing), and anti-AI-slop quality gates. Supports variation actions: Vary strong/subtle, Change style, Remix colors, Shuffle layout, Polish, Critique, See other views. Exports to HTML or React. Triggers on: "design options for X", "show me variations", "give me UI directions", "vary this design", "change the style", "remix colors", "shuffle layout", "polish this", "critique this", "design a dashboard/landing page/app/editorial".
+description: AI-driven visual/UI design generation with Impeccable design system. Generates 3 distinct design variations from a prompt with built-in scenario materials, design system references (typography, color, spatial, motion, interaction, responsive, UX writing), and anti-AI-slop quality gates. Supports variation actions: Vary strong/subtle, Distill, Change style, Remix colors, Shuffle layout, Polish, Critique, Extract tokens, See other views. Exports to HTML or React. Triggers on: "design options for X", "show me variations", "give me UI directions", "vary this design", "distill this", "change the style", "remix colors", "shuffle layout", "polish this", "critique this", "extract tokens", "design a dashboard/landing page/app/editorial".
 ---
 
 # Variant Design
@@ -14,6 +14,23 @@ Inspired by the [Variant](https://variant.com) design community — a space wher
 Built on the **Impeccable design system** — a comprehensive set of design references covering typography, color theory, spatial design, motion, interaction patterns, responsive design, and UX writing. Every design decision is grounded in these principles.
 
 **Supports:** HTML (default) · React · 7 domain reference libraries · 27 palettes · design system references · variation actions
+
+---
+
+## Project Context Initialization
+
+On first use in a project, gather design context to ground all future generations. Ask the user:
+
+1. **Users & Purpose** — Who uses this? What problem does it solve? What's the core task?
+2. **Brand & Personality** — Existing brand colors? Tone (playful / serious / technical / warm)? Any sites you admire?
+3. **Aesthetic Preferences** — Light or dark? Minimal or dense? Any direction from the aesthetic table you're drawn to?
+4. **Constraints** — Framework requirements? Accessibility standards beyond baseline? Target devices?
+
+If the user can't answer, infer from their codebase: scan for existing color variables, font imports, component patterns, and README/brand docs. Confirm inferences before proceeding.
+
+Persist context as a comment block at the top of generated files or in the conversation — reference it in every subsequent generation to ensure consistency across variations.
+
+---
 
 ## Scenario Detection → Load Reference
 
@@ -94,56 +111,169 @@ After presenting, always offer:
 > Which direction resonates? Options:
 > - **Vary strong** — push aesthetic to its extreme
 > - **Vary subtle** — polish, same direction
+> - **Distill** — strip to essence, remove everything non-essential
 > - **Change style** — keep layout, swap visual language
 > - **Remix colors** — 3 alternative palettes using OKLCH
 > - **Shuffle layout** — same content/style, different composition
 > - **Polish** — refine spacing, typography, and micro-details
-> - **Critique** — audit against design system principles and identify improvements
-> - **See other views** — mobile / dark mode / empty state / hover states
+> - **Critique** — audit against design system principles
+> - **Extract tokens** — export design tokens as CSS/JSON/Tailwind config
+> - **See other views** — mobile / dark mode / empty state / onboarding / hover states
 
 ---
 
 ## Variation Action Definitions
 
-**Vary strong** — amplify current direction to maximum. More contrast, stronger type, bolder color, more dramatic composition. Consult `references/design-system/typography.md` for scale ratios and `references/design-system/color-and-contrast.md` for high-contrast palette construction.
+### Vary strong
+Amplify current direction to maximum. More contrast, stronger type, bolder color, more dramatic composition. Consult `references/design-system/typography.md` for scale ratios and `references/design-system/color-and-contrast.md` for high-contrast palette construction.
 
-**Vary subtle** — tighten spacing, refine hierarchy, soften where needed. Same direction, higher craft. Focus on vertical rhythm, optical alignment, and micro-interactions per `references/design-system/spatial-design.md` and `references/design-system/motion-design.md`.
+*Before → After example:*
+- Body text 16px, heading 32px → Body 15px, heading 72px (ratio 1.25 → 1.5+)
+- Accent used on buttons only → Accent dominates hero section, bleeds into nav
+- Subtle 200ms fade-in → Dramatic 600ms staggered reveal with scale transform
 
-**Change style** — extract structure/layout DNA, replace entire visual language with a different direction from the table above.
+### Vary subtle
+Tighten spacing, refine hierarchy, soften where needed. Same direction, higher craft. Focus on vertical rhythm, optical alignment, and micro-interactions per `references/design-system/spatial-design.md` and `references/design-system/motion-design.md`.
 
-**Remix colors** — keep all shapes, type, layout. Generate 3 palettes using OKLCH color space (per `references/design-system/color-and-contrast.md`):
+*Before → After example:*
+- Inconsistent padding (16/20/24px) → Locked to 4pt grid (16/24/32px)
+- Generic hover (opacity change) → Contextual hover (card lifts 2px, button darkens accent)
+- Missing OpenType → `tabular-nums` on data, `font-kerning: normal` on headlines
+
+### Distill
+Strip the design to its absolute essence. Inspired by the Impeccable *distill* philosophy — ruthless simplification reveals what truly matters.
+
+**Process:**
+1. Identify the single core purpose of the interface
+2. For each element, ask: "Does removing this break the core purpose?" If no, remove it.
+3. Simplify across all dimensions:
+   - **Information:** Reduce visible options, use progressive disclosure (`<details>`, hover reveals)
+   - **Visual:** Fewer colors (aim for 2–3 total), fewer type sizes, remove decorative elements
+   - **Layout:** Collapse sections, merge related content, eliminate redundant containers
+   - **Interaction:** Fewer clicks to complete the primary task, remove confirmation steps where undo works
+   - **Content:** Shorter headlines, tighter copy, remove introductory paragraphs that restate the heading
+4. Verify: Can a new user complete the core task faster? If not, you removed the wrong things.
+
+*Before → After example:*
+- 5-section landing page → 2 sections: hero with value prop + single CTA
+- Dashboard with 12 metric cards → 3 key metrics large + "Show all" expandable
+- Nav with 8 items → 4 primary + overflow menu
+
+### Change style
+Extract structure/layout DNA, replace entire visual language with a different direction from the table above.
+
+### Remix colors
+Keep all shapes, type, layout. Generate 3 palettes using OKLCH color space (per `references/design-system/color-and-contrast.md`):
 1. Analogous to current — shift hue ±30°, adjust chroma
 2. Complementary contrast — opposite hue, rebalanced lightness
 3. Unexpected/left-field — completely different mood
 
 Always tint neutrals toward the brand hue. Never use pure gray, pure black (#000), or pure white (#fff).
 
-**Shuffle layout** — same content + style. Rearrange structure: try full-bleed → asymmetric grid → editorial columns → card masonry. Consult `references/design-system/spatial-design.md` for grid systems and visual hierarchy principles.
+*Before → After example (palette 3, unexpected):*
+- Dark indigo tech dashboard → Warm cream editorial palette with rust accent
+- All neutrals shift from cool blue-gray → warm stone-tinted
 
-**Polish** — apply Impeccable design system refinements:
-- Audit typography against `references/design-system/typography.md`: vertical rhythm, modular scale, OpenType features (tabular-nums for data, proper fractions)
-- Check spatial relationships per `references/design-system/spatial-design.md`: squint test, hierarchy through multiple dimensions
-- Refine interactions per `references/design-system/interaction-design.md`: all 8 interactive states, focus-visible, proper form design
-- Verify motion per `references/design-system/motion-design.md`: 100/300/500 rule, ease-out-expo for enters, staggered animations
-- Validate UX writing per `references/design-system/ux-writing.md`: specific button labels, error formulas, empty states as opportunities
+### Shuffle layout
+Same content + style. Rearrange structure: try full-bleed → asymmetric grid → editorial columns → card masonry. Consult `references/design-system/spatial-design.md` for grid systems and visual hierarchy principles.
 
-**Critique** — systematic audit against design system principles:
-1. Typography: Is hierarchy clear? Scale ratio consistent? Fonts distinctive?
-2. Color: WCAG contrast passing? Neutrals tinted? 60-30-10 balance?
-3. Layout: Passes squint test? Varied spacing creates rhythm? Cards justified?
-4. Motion: Durations appropriate? Ease-out for enters? Reduced motion respected?
-5. Interaction: All 8 states designed? Focus rings present? Touch targets ≥44px?
-6. Responsive: Mobile-first? Content-driven breakpoints? Input method detected?
-7. Writing: Specific button labels? Helpful errors? Empty states that teach?
+*Before → After example:*
+- Centered hero + 3-column grid → Full-bleed left-aligned hero + asymmetric 2-column with oversized feature
 
-**See other views** — render: empty state / data-filled state / mobile viewport / dark↔light toggle / active/hover states. Follow `references/design-system/responsive-design.md` for mobile adaptations and `references/design-system/color-and-contrast.md` for dark mode (dark mode ≠ inverted light mode).
+### Polish
+Apply Impeccable design system refinements systematically:
+- **Typography** (`references/design-system/typography.md`): vertical rhythm, modular scale, OpenType features (tabular-nums for data, proper fractions), font-display: swap, size-adjust fallback metrics
+- **Spatial** (`references/design-system/spatial-design.md`): squint test, hierarchy through multiple dimensions, optical alignment (text negative margin -0.05em, icon center offsets)
+- **Interaction** (`references/design-system/interaction-design.md`): all 8 interactive states (default/hover/focus/active/disabled/loading/error/success), focus-visible rings, proper form design (visible labels, blur validation, `aria-describedby` errors)
+- **Motion** (`references/design-system/motion-design.md`): 100/300/500 rule, ease-out-expo for enters, exit at 75% of enter duration, staggered animations with CSS custom properties
+- **UX Writing** (`references/design-system/ux-writing.md`): specific button labels (verb + object), error formula (what → why → fix), empty states that teach the interface, link text with standalone meaning
+- **Clarify copy**: Scan all visible text — replace vague labels with specific ones, remove redundant intros, ensure every word earns its place. "Submit" → "Create account". "Error" → "Email needs to be in name@example.com format."
+
+### Critique
+Systematic audit against design system principles. Score each dimension and provide specific fixes:
+
+1. **Typography:** Is hierarchy clear? Scale ratio consistent? Fonts distinctive? Vertical rhythm locked?
+2. **Color:** WCAG contrast passing? Neutrals tinted? 60-30-10 balance? No pure black/white?
+3. **Layout:** Passes squint test? Varied spacing creates rhythm? Cards justified? No nested cards?
+4. **Motion:** Durations appropriate (100/300/500)? Ease-out for enters? Reduced motion respected? Only transform+opacity animated?
+5. **Interaction:** All 8 states designed? Focus rings present? Touch targets ≥44px? Skeleton > spinner?
+6. **Responsive:** Mobile-first? Content-driven breakpoints? Input method detected (`pointer`/`hover`)? Safe areas?
+7. **Writing:** Specific button labels? Helpful errors (what/why/fix)? Empty states that teach? No redundant copy?
+8. **Resilience:** Text truncation handled? Long content graceful? Loading/error states present? i18n-ready spacing?
+
+### Extract tokens
+Export the design's token system in the requested format:
+
+**CSS Custom Properties (default):**
+```css
+:root {
+  /* Primitives */
+  --blue-500: oklch(55% 0.2 260);
+  --stone-100: oklch(95% 0.01 60);
+  /* Semantic */
+  --color-primary: var(--blue-500);
+  --color-surface: var(--stone-100);
+  /* Typography */
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Instrument Sans', sans-serif;
+  --text-xs: clamp(0.7rem, 0.65rem + 0.25vw, 0.75rem);
+  --text-base: clamp(0.95rem, 0.9rem + 0.25vw, 1.0625rem);
+  --text-xl: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+  /* Spacing */
+  --space-xs: 4px; --space-sm: 8px; --space-md: 16px;
+  --space-lg: 24px; --space-xl: 48px; --space-2xl: 96px;
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-normal: 350ms;
+}
+```
+
+**JSON (for design tools / Figma):** Same structure as flat key-value JSON.
+
+**Tailwind config:** Extend `theme` with `colors`, `fontFamily`, `spacing`, `transitionTimingFunction`.
+
+### See other views
+Render additional views with full design system compliance:
+
+- **Empty state** — not just "No items." Design as an onboarding moment:
+  1. Acknowledge briefly ("No projects yet")
+  2. Explain the value of filling it ("Create your first project to start tracking progress")
+  3. Provide a clear primary action (prominent CTA button)
+  4. Add visual interest (illustration, icon, or subtle pattern — never a sad face)
+  5. If applicable, show a preview of what it will look like when populated
+
+- **Data-filled state** — realistic volume: 3–7 items for lists, 6–12 months of data for charts, edge cases included (one very long name, one empty optional field)
+
+- **Mobile viewport** — not a shrunk desktop. Per `references/design-system/responsive-design.md`:
+  - Rethink for thumb zones (primary actions bottom-right for right-handed)
+  - Touch targets ≥44px with padding
+  - Navigation collapses to hamburger + drawer or bottom tab bar
+  - Tables transform to cards with `data-label` attributes
+  - Use `@media (pointer: coarse)` for larger tap areas
+
+- **Dark ↔ Light toggle** — per `references/design-system/color-and-contrast.md`:
+  - Dark mode uses lighter surfaces for depth (no shadows)
+  - Desaturate accent colors slightly for dark backgrounds
+  - Reduce font weight (light text on dark appears heavier)
+  - Never pure black (#000) background — use oklch(12-18% ...) tinted
+
+- **Onboarding flow** — per Impeccable *onboard* principles:
+  - Show Don't Tell: inline demos > text instructions
+  - Make It Optional: skip button always visible, no forced tours
+  - Time to Value: reach the "aha moment" in ≤3 steps
+  - Context Over Ceremony: teach at the moment of need, not upfront
+  - Respect User Intelligence: no condescending language, allow power-user shortcuts
+
+- **Hover / active / focus states** — all interactive elements with visible state changes
 
 ---
 
 ## Variation Loop
 
 After any variation action, always:
-1. Present the updated design (labelled with the action taken, e.g. "Variation A — Vary Strong")
+1. Present the updated design (labelled with the action taken, e.g. "Variation A — Distill")
 2. Offer the full action menu again — the loop never ends until the user moves on
 3. If the user has iterated 3+ times on the same direction, proactively suggest: "Want to branch? I can apply this to one of the other variations."
 
@@ -241,6 +371,43 @@ When a user asks for a flow (onboarding, checkout, wizard, multi-step form):
 2. Use a shared `currentStep` state variable to show/hide screens if making it interactive
 3. Annotate transitions: "→ swipe left to advance" or "→ tab triggers step 2"
 4. Each screen must be visually complete — never leave a screen empty as placeholder
+5. Apply onboarding principles: show don't tell, make skip visible, reach "aha" in ≤3 steps
+
+### Performance Baseline
+
+Every output must meet these minimums:
+
+- **Images:** `loading="lazy"` on below-fold images, `width`/`height` attributes to prevent CLS, `srcset` for responsive images, WebP/AVIF format preference
+- **Fonts:** `font-display: swap`, subset to used character ranges when possible, preconnect to Google Fonts origin: `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>`
+- **CSS:** No `@import` for CSS files (blocks render) — only for Google Fonts in `<style>`. Use `content-visibility: auto` for off-screen sections
+- **Animation:** Only `transform` and `opacity` (GPU-composited). No `will-change` unless animation is imminent. Use `Intersection Observer` for scroll-triggered animations — never scroll event listeners
+- **Layout:** No layout thrashing (read then write, never interleave). Avoid forced synchronous reflows
+
+### Production Hardening Checklist
+
+Apply when the design will be used in real products:
+
+**Text resilience:**
+- All text containers handle overflow: `overflow: hidden; text-overflow: ellipsis` for single-line, `-webkit-line-clamp` for multi-line
+- Test with 2× expected content length — does the layout survive?
+- Test with 0 content — does the empty state make sense?
+- Headings: `overflow-wrap: break-word` to prevent horizontal scroll on mobile
+
+**i18n readiness:**
+- No fixed-width containers for text — allow 30% expansion for German/French
+- Use logical properties: `margin-inline-start` not `margin-left` (RTL support)
+- Numbers: use `Intl.NumberFormat` for locale-aware formatting
+- Dates: use `Intl.DateTimeFormat` — never hardcode date formats
+
+**Error & edge states:**
+- Network failure: show last-known data with "Unable to update" banner, not a blank screen
+- Slow connection: skeleton screens appear within 200ms if data isn't ready
+- Invalid data: graceful degradation (show "--" for missing numbers, not NaN/undefined)
+
+**Input robustness:**
+- Debounce search/filter inputs (300ms)
+- Prevent double-submit on forms (disable button after first click, re-enable on error)
+- Paste handling: strip formatting on paste into plain-text inputs
 
 ---
 
@@ -273,6 +440,8 @@ Avoid these in every output — they are the telltale signs of AI-generated desi
 | Modals for everything | Consider alternatives: inline expansion, drawers, popovers |
 | Pure black (#000) or pure white (#fff) | Always tint — pure extremes don't exist in nature |
 | Gray text on colored backgrounds | Use darker shade of the background color |
+| Empty state = "No data" text only | Design as onboarding moment: acknowledge, explain value, CTA |
+| Text that overflows its container | `overflow-wrap: break-word`, `text-overflow: ellipsis`, line-clamp |
 
 ---
 
@@ -287,3 +456,5 @@ Apply to every output — non-negotiable:
 - `@media (prefers-reduced-motion: reduce)` — preserve functional animations (progress, loading), remove spatial movement
 - Use `rem`/`em` for font sizes, never `px` for body text — respect browser settings
 - Minimum 16px body text on all viewports
+- Keyboard navigation: logical tab order, skip links for nav-heavy pages, roving tabindex for component groups
+- ARIA: landmarks (`main`, `nav`, `aside`), live regions for dynamic content, `aria-describedby` for form errors

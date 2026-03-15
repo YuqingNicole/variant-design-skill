@@ -2,6 +2,13 @@
 
 Product pages, shopping apps, wellness/lifestyle, fintech cards, premium consumer experiences.
 
+> **Design system references for this domain:**
+> - `design-system/typography.md` — price typography, promotional type hierarchy
+> - `design-system/color-and-contrast.md` — trust signals, urgency colors, brand consistency
+> - `design-system/interaction-design.md` — cart flows, form validation, payment states
+> - `design-system/responsive-design.md` — product grid adaptation, mobile checkout optimization
+> - `design-system/ux-writing.md` — product descriptions, error messages, empty cart states
+
 ## Table of Contents
 1. Starter Prompts
 2. Color Palettes

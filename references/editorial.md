@@ -2,6 +2,12 @@
 
 Science magazines, news cards, luxury editorial, cultural journalism, long-form articles.
 
+> **Design system references for this domain:**
+> - `design-system/typography.md` — editorial type scales, serif/sans pairing, vertical rhythm for long-form
+> - `design-system/color-and-contrast.md` — restrained palettes, reading-optimized contrast
+> - `design-system/spatial-design.md` — column grids, measure (ch units), generous whitespace
+> - `design-system/responsive-design.md` — art direction with `<picture>`, fluid type for headlines
+
 ## Table of Contents
 1. Starter Prompts
 2. Color Palettes

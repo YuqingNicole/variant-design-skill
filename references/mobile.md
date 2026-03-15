@@ -2,6 +2,13 @@
 
 iOS/Android app screens, onboarding flows, home screens, feed apps, detail views, and utility apps.
 
+> **Design system references for this domain:**
+> - `design-system/typography.md` — mobile type scales, thumb-friendly sizing
+> - `design-system/spatial-design.md` — thumb zone layouts, bottom-sheet patterns
+> - `design-system/interaction-design.md` — gesture hints, swipe actions, haptic feedback patterns
+> - `design-system/responsive-design.md` — safe areas, input detection, orientation handling
+> - `design-system/motion-design.md` — page transitions, pull-to-refresh, sheet animations
+
 ## Table of Contents
 1. Starter Prompts
 2. Color Palettes

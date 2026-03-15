@@ -2,6 +2,13 @@
 
 B2B product pages, startup homepages, developer tools, pricing pages, feature showcases.
 
+> **Design system references for this domain:**
+> - `design-system/typography.md` — hero type scales, code font pairing for developer tools
+> - `design-system/color-and-contrast.md` — brand palette construction, dark/light mode theming
+> - `design-system/spatial-design.md` — landing page rhythm, feature grid patterns
+> - `design-system/motion-design.md` — scroll-triggered reveals, hero animations
+> - `design-system/ux-writing.md` — CTA copy, value proposition clarity
+
 ## Table of Contents
 1. Starter Prompts
 2. Color Palettes
