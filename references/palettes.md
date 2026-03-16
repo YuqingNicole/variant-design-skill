@@ -405,6 +405,167 @@ Maximum negative space, one hero image, sparse text. High-end real estate, watch
 
 ---
 
+## Pinterest-Popular / Trending
+
+Aesthetic palettes frequently seen on Pinterest mood boards, design inspiration pins, and trending visual styles.
+
+### Scandinavian Hygge *(Nordic / minimalist home)*
+```
+--bg:        #F7F4EF
+--surface:   #FEFCF8
+--card:      #FFFFFF
+--border:    #E5DFD5
+--text:      #2C2822
+--muted:     #9A9488
+--accent:    #8A7A60   /* warm wood */
+--accent-2:  #3A3630   /* charcoal */
+--warm:      #E8DCC8   /* linen */
+```
+
+### Wabi-Sabi *(Japanese / imperfection aesthetic)*
+```
+--bg:        #EDE8E0
+--surface:   #F5F0E8
+--card:      #FAF6F0
+--border:    #D8D0C4
+--text:      #2E2A24
+--muted:     #8A8478
+--accent:    #7A6A52   /* clay */
+--accent-2:  #B8A890   /* stone */
+--ink:       #3A3430   /* sumi ink */
+```
+
+### Cottagecore *(pastoral / botanical)*
+```
+--bg:        #FAF8F2
+--surface:   #FFFFFF
+--card:      #FFFFFF
+--border:    #E0DCC8
+--text:      #2A3020
+--muted:     #7A8068
+--accent:    #5A7A48   /* meadow green */
+--accent-2:  #C87A5A   /* terracotta pot */
+--bloom:     #D4848A   /* dried rose */
+```
+
+### Y2K Nostalgia *(retro-futurism / early 2000s)*
+```
+--bg:        #F0ECFA
+--surface:   #FAFAFF
+--card:      #FFFFFF
+--border:    #DDD5F0
+--text:      #1A1030
+--muted:     #8878A8
+--accent:    #C050C0   /* hot pink-purple */
+--accent-2:  #50B0FF   /* baby blue */
+--chrome:    #D0D0E0   /* silver */
+```
+
+### Coastal Mediterranean *(seaside / resort)*
+```
+--bg:        #F5F9FC
+--surface:   #FFFFFF
+--card:      #FFFFFF
+--border:    #C8DDE8
+--text:      #1A2E3A
+--muted:     #5A7A8A
+--accent:    #1E6CA0   /* deep sea */
+--accent-2:  #E8A855   /* sun gold */
+--sand:      #F0E0C8
+```
+
+### Kinfolk Neutral *(editorial / lifestyle)*
+```
+--bg:        #F0ECE4
+--surface:   #F8F4EE
+--card:      #FEFCF8
+--border:    #DDD6CA
+--text:      #262220
+--muted:     #8A847A
+--accent:    #3A3632   /* near-black */
+--accent-2:  #A09484   /* taupe */
+```
+
+### Art Deco Revival *(1920s / gatsby / luxury)*
+```
+--bg:        #0E0E14
+--surface:   #16161E
+--card:      #1E1E28
+--border:    #2E2E3A
+--text:      #F0EDDE
+--muted:     #6A687A
+--accent:    #C9A44A   /* gold */
+--accent-2:  #1A5A5A   /* emerald teal */
+--line:      #C9A44A   /* geometric line details */
+```
+
+### Earthy Ceramic *(pottery / craft / handmade)*
+```
+--bg:        #F5EEE6
+--surface:   #FAF6F0
+--card:      #FFFFFF
+--border:    #E0D4C4
+--text:      #2E241C
+--muted:     #8A7A68
+--accent:    #B85C38   /* terracotta */
+--accent-2:  #6A8A5A   /* glaze green */
+--clay:      #D4B8A0
+```
+
+### Moody Botanical *(dark floral / plant aesthetic)*
+```
+--bg:        #0C1410
+--surface:   #141E18
+--card:      #1A2820
+--border:    #283830
+--text:      #E4EDE6
+--muted:     #5A7A60
+--accent:    #8AB880   /* sage */
+--accent-2:  #D4848A   /* dusty pink */
+--gold:      #C4A86A
+```
+
+### Soft Gradient *(glassmorphism-adjacent / aurora)*
+```
+--bg:        #F0F0FA
+--surface:   #FFFFFF
+--card:      rgba(255,255,255,0.7)
+--border:    rgba(200,200,230,0.3)
+--text:      #1A1A30
+--muted:     #7A7A98
+--accent:    #7C5CFC   /* purple */
+--accent-2:  #F472B6   /* pink */
+--accent-3:  #38BDF8   /* sky */
+```
+
+### Japandi *(Japanese + Scandinavian fusion)*
+```
+--bg:        #F2EDE5
+--surface:   #F8F4EE
+--card:      #FEFCF8
+--border:    #DDD4C6
+--text:      #2A2620
+--muted:     #8A847A
+--accent:    #4A5A40   /* moss */
+--accent-2:  #1A1815   /* ink */
+--paper:     #F0E8DA   /* washi */
+```
+
+### Lavender Dream *(gentle / feminine / wellness)*
+```
+--bg:        #F5F0FA
+--surface:   #FEFCFF
+--card:      #FFFFFF
+--border:    #E0D8F0
+--text:      #2A1E40
+--muted:     #8A7EA8
+--accent:    #8B6CC4   /* lavender */
+--accent-2:  #E8B0C0   /* blush */
+--soft:      #C8B8E0
+```
+
+---
+
 ## Picking a Palette
 
 | Scenario | Recommended |
@@ -419,5 +580,10 @@ Maximum negative space, one hero image, sparse text. High-end real estate, watch
 | Mobile app | Night Sky, Wellness Soft |
 | Creative / music tool | Dark Lab, Synth Neon |
 | Education | Study Light, French Green, Duolingo Green (see education.md) |
-| Portfolio / personal | Brutalist Mono, Brutalist Dark |
-| Luxury / fashion | Ivory Silence, French Gray, Minimal Luxury |
+| Portfolio / personal | Brutalist Mono, Brutalist Dark, Portfolio Ink (see portfolio.md) |
+| Luxury / fashion | Ivory Silence, French Gray, Minimal Luxury, Atelier Ivory, Noir Editorial (see fashion.md) |
+| Food / restaurant | Terroir Warm, Espresso Dark, Patisserie Rose, Bar Noir (see food-beverage.md) |
+| Streetwear / contemporary | Streetwear Bold, Streetwear Concrete (see fashion.md), Y2K Revival |
+| Beauty / cosmetics | Blush Beauty, Lavender Dream (see fashion.md) |
+| Interior / home | Scandinavian Hygge, Japandi, French Gray, Scandinavian Home (see fashion.md) |
+| Pinterest aesthetic | Wabi-Sabi, Cottagecore, Kinfolk Neutral, Moody Botanical, Coastal Mediterranean |

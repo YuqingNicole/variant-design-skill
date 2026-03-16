@@ -1,6 +1,6 @@
 ---
 name: variant-design
-description: AI-driven visual/UI design generation with Impeccable design system. Generates 3 distinct design variations from a prompt with built-in scenario materials, design system references (typography, color, spatial, motion, interaction, responsive, UX writing), and anti-AI-slop quality gates. Supports variation actions: Vary strong/subtle, Distill, Change style, Remix colors, Shuffle layout, Polish, Critique, Extract tokens, See other views. Exports to HTML or React. Triggers on: "design options for X", "show me variations", "give me UI directions", "vary this design", "distill this", "change the style", "remix colors", "shuffle layout", "polish this", "critique this", "extract tokens", "design a dashboard/landing page/app/editorial".
+description: AI-driven interactive design generation with Impeccable design system. Generates 3 distinct, fully-animated design variations from a prompt — every output is alive with scroll reveals, micro-interactions, animated charts, and functional JS patterns. Built-in scenario materials (10 domains), design system references (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing), interactive pattern library (filtering, drag-and-drop, lightbox, charts, forms), and anti-AI-slop quality gates. Supports variation actions: Vary strong/subtle, Distill, Change style, Remix colors, Shuffle layout, Add motion, Dramatize, Make interactive, Polish, Critique, Extract tokens, See other views. Exports to Interactive HTML or React. Triggers on: "design options for X", "show me variations", "give me UI directions", "vary this design", "distill this", "change the style", "remix colors", "shuffle layout", "add motion", "dramatize", "make interactive", "animate this", "make it move", "polish this", "critique this", "extract tokens", "design a dashboard/landing page/app/editorial".
 ---
 
 # Variant Design
@@ -13,7 +13,7 @@ Inspired by the [Variant](https://variant.com) design community — a space wher
 
 Built on the **Impeccable design system** — a comprehensive set of design references covering typography, color theory, spatial design, motion, interaction patterns, responsive design, and UX writing. Every design decision is grounded in these principles.
 
-**Supports:** HTML (default) · React · 7 domain reference libraries · 27 palettes · design system references · variation actions
+**Supports:** Interactive HTML (default) · React + Framer Motion · 10 domain reference libraries · 39 palettes · design system references · micro-interaction library · interactive pattern library · variation actions
 
 ---
 
@@ -55,6 +55,9 @@ Identify the scenario and load the corresponding reference file before designing
 | Education, learning app, quiz, language, science | lesson, flashcard, tutorial, training, course | `references/education.md` |
 | Generative art, music tool, 3D, creative tool, synthesizer | tool, studio, editor, canvas, sequencer, DAW | `references/creative.md` |
 | Mobile app, iOS, Android, onboarding, home screen | app, 应用, 界面, UI screen | `references/mobile.md` |
+| Portfolio, personal site, showcase, case study | designer portfolio, developer site, freelancer, agency, 作品集 | `references/portfolio.md` |
+| Restaurant, recipe, food, coffee, bakery, menu | café, bar, cocktail, wine, tea, meal planning, 餐厅, 菜单 | `references/food-beverage.md` |
+| Fashion, clothing, beauty, lookbook, interior design | streetwear, luxury brand, skincare, cosmetics, furniture, 时尚, 服装 | `references/fashion.md` |
 | Unsure / general | | Use aesthetic directions table below + `references/palettes.md` |
 
 **Always also load the relevant design system references** from `references/design-system/` based on what matters most for the design:
@@ -65,11 +68,13 @@ Identify the scenario and load the corresponding reference file before designing
 | Color palette, dark mode, contrast | `references/design-system/color-and-contrast.md` |
 | Layout, spacing, grids, visual hierarchy | `references/design-system/spatial-design.md` |
 | Animations, transitions, loading states | `references/design-system/motion-design.md` |
+| Micro-interactions, scroll reveals, hover effects | `references/design-system/micro-interactions.md` |
+| Functional interactions (filter, drag, charts, forms) | `references/interactive-patterns.md` |
 | Forms, states, focus, keyboard nav | `references/design-system/interaction-design.md` |
 | Mobile-first, breakpoints, fluid design | `references/design-system/responsive-design.md` |
 | Labels, errors, empty states, microcopy | `references/design-system/ux-writing.md` |
 
-For initial generation, load at minimum: **typography**, **color-and-contrast**, and **spatial-design**. Load others as the design demands.
+For initial generation, load at minimum: **typography**, **color-and-contrast**, **spatial-design**, and **micro-interactions**. Load **interactive-patterns** when the design involves filtering, forms, charts, galleries, or drag-and-drop. Load others as the design demands.
 
 ## Core Workflow
 
@@ -98,6 +103,7 @@ Each variation = a different studio's interpretation. Never two in the same dire
 - Typography: display font + body font (see banned fonts list below)
 - Layout pattern (from reference) — consult `spatial-design.md` for grid and hierarchy principles
 - Motion strategy — consult `motion-design.md` for timing and easing
+- **Interaction plan** — which micro-interactions and interactive patterns from `micro-interactions.md` and `interactive-patterns.md` to include (minimum 3 micro-interactions + domain-specific patterns)
 - One signature detail that makes this variation unforgettable
 
 ### 3. Implement & Present
@@ -109,6 +115,7 @@ Before each code block, present a **Summary Card** so users can compare without 
 > **Variation A — [Name]**
 > Direction: [e.g. Minimal / Editorial] · Palette: [name or dominant colors] · Fonts: [display + body]
 > Layout: [pattern, e.g. asymmetric 2-col] · Signature: [one unforgettable detail]
+> Interactions: [e.g. scroll reveal + counter animation + card lift + lightbox gallery]
 
 Label code blocks: **Variation A — [Name]** / **B — [Name]** / **C — [Name]**
 
@@ -120,7 +127,9 @@ Before presenting, run this check on each variation:
 
 A distinctive interface should make someone ask "how was this made?" not "which AI made this?" Review the Anti-Patterns table below — they are the fingerprints of AI-generated work.
 
-After passing, show a one-line confidence signal: e.g. *"Passed: distinctive fonts, OKLCH palette, tinted neutrals, WCAG AA, no AI slop patterns detected."*
+**Interactivity gate**: Before presenting, also verify: Does this page move? Scroll down — do elements animate in? Hover a card — does it respond? Click a button — does it give feedback? If anything is dead on interaction, fix it before presenting.
+
+After passing, show a one-line confidence signal: e.g. *"Passed: distinctive fonts, OKLCH palette, tinted neutrals, WCAG AA, scroll reveals, counter animation, card hover lift, no AI slop patterns detected."*
 
 ### 5. Offer Variation Actions
 
@@ -130,6 +139,7 @@ After presenting, always offer grouped by intent:
 >
 > **Reshape** — Vary strong · Distill · Shuffle layout · Change style
 > **Tune** — Vary subtle · Remix colors · Mix (e.g. "Mix A + B")
+> **Animate** — Add motion · Dramatize · Make interactive
 > **Refine** — Polish · Critique · See other views
 > **Export** — Extract tokens
 >
@@ -188,6 +198,53 @@ Always tint neutrals toward the brand hue. Never use pure gray, pure black (#000
 *Before → After example (palette 3, unexpected):*
 - Dark indigo tech dashboard → Warm cream editorial palette with rust accent
 - All neutrals shift from cool blue-gray → warm stone-tinted
+
+### Add motion
+Layer additional micro-interactions and animations onto the current design. Consult `references/design-system/micro-interactions.md` for the full pattern library.
+
+**Process:**
+1. Audit current interactions — list what already moves and what's dead
+2. Add missing baseline: scroll reveals on all sections, card hover lifts, button press feedback
+3. Add 2-3 domain-appropriate enhancements from the "Picking Micro-Interactions by Domain" table
+4. Wire up any static data displays: counter animations for numbers, bar/donut animations for charts
+5. Verify reduced motion fallbacks exist for every new animation
+
+*Before → After example:*
+- Static hero → Staggered entrance (title 100ms → subtitle 250ms → CTA 400ms → image 300ms)
+- Cards appear instantly → Scroll-triggered fade-up with 80ms stagger
+- Numbers display as-is → Count up from 0 with easeOutExpo on scroll into view
+- Image gallery static → Lightbox on click with keyboard navigation
+
+### Dramatize
+Push existing interactions to their cinematic maximum. Not just "add hover" — make the page feel like a directed experience.
+
+**Process:**
+1. Replace subtle scroll reveals with more expressive entrances (word-by-word text reveal, curtain reveal, scale-from-zero)
+2. Add parallax layers to hero sections (foreground moves faster than background)
+3. Upgrade hover effects: card lift → tilt-3D, link underline → magnetic cursor pull
+4. Add page-level choreography: scroll progress bar, sticky header morph, section transitions
+5. Include a "hero moment" — one interaction that makes the user pause (e.g., counter hitting a big number, image comparison slider, infinite marquee of client logos)
+
+*Before → After example:*
+- Simple fade-in on scroll → Staggered word reveal + parallax background + scroll progress bar
+- Card hover lifts 4px → Card tilts toward cursor in 3D perspective with glow
+- Static hero → Curtain reveal on page load + magnetic CTA button + background parallax
+
+### Make interactive
+Add functional interaction patterns that turn the design from a visual into a working prototype. Consult `references/interactive-patterns.md` for full implementations.
+
+**Process:**
+1. Identify what should be functional: Is there a form? Add validation + multi-step. Gallery? Add lightbox. Products? Add filtering. Data? Add live charts.
+2. Add the most impactful interaction from `interactive-patterns.md` for this domain (see "Picking Patterns by Domain" table)
+3. Wire up navigation: tabs work, accordions expand, drawers slide, modals open with proper focus trap
+4. Add data interactions: sorting, filtering, search — with animated transitions between states
+5. Add feedback loops: toast on action, copy-to-clipboard confirmation, form submission success state
+
+*Before → After example:*
+- Static product grid → Filter by category with animated show/hide + sort by price with FLIP animation
+- Image gallery → Lightbox with keyboard nav (←→ Esc) + zoom on hover + dot indicators
+- Contact form → Multi-step with progress bar, floating labels, real-time validation, submit→loading→success
+- Dashboard metrics → Animated bar chart on scroll, donut chart that draws in, sparklines that trace, flash-on-update for live data
 
 ### Shuffle layout
 Same content + style. Rearrange structure: try full-bleed → asymmetric grid → editorial columns → card masonry. Consult `references/design-system/spatial-design.md` for grid systems and visual hierarchy principles.
@@ -368,18 +425,56 @@ Grounded in the Impeccable design system. Consult individual references for deep
 
 ## Code Export
 
-- **HTML**: Single-file, embedded CSS, optional vanilla JS. **Default.**
+- **Interactive HTML**: Single-file, embedded CSS + JavaScript. Alive by default. **Default.**
 - **React**: Functional components, Tailwind or CSS modules — state assumptions upfront.
 
-### HTML Output Spec
+### Interactive HTML Output Spec (Default)
+
+Every HTML output must feel alive — static mockups are not acceptable. Follow this checklist:
+
+**Baseline (every output):**
 - CSS custom properties for all colors — use OKLCH where supported with hex fallback: `--accent: oklch(65% 0.2 250); /* fallback: #6366F1 */`
 - Semantic token layer: `--color-primary`, `--color-surface`, `--color-text` mapping to primitives
 - Google Fonts via `@import` in `<style>` — always specify weights used, include `font-display: swap`
 - Responsive: mobile-first, breakpoints at `640px` and `1024px`. Use `clamp()` for fluid values
-- No frameworks by default — vanilla CSS + HTML. CDN Tailwind only if user asks
-- Hover states + focus-visible rings on all interactive elements
+- No frameworks by default — vanilla CSS + HTML + JS. CDN Tailwind only if user asks
 - `@media (prefers-reduced-motion: reduce)` block for all animations
 - Minimum visual completeness: populated data, real copy, working nav state
+
+**Interactivity baseline (every output — non-negotiable):**
+- **Page load animation**: Staggered entrance for hero elements (title → subtitle → CTA → image) using `animation-delay`. See `design-system/micro-interactions.md` → Page Load.
+- **Scroll reveal**: All below-fold sections use `IntersectionObserver` to fade/slide in on scroll. Apply `data-reveal` to sections, `data-reveal-stagger` to card grids.
+- **Hover states**: Every button, card, link, and image has visible hover feedback — card lift, image zoom, link underline animation, button press scale. Not just `opacity` changes.
+- **Focus rings**: `:focus-visible` on all interactive elements with 2-3px offset ring.
+- **Smooth scroll**: `html { scroll-behavior: smooth; }` for anchor links.
+- **At least 3 micro-interactions** from `design-system/micro-interactions.md` appropriate to the domain (see the "Picking Micro-Interactions by Domain" table).
+
+**Enhanced interactivity (add when relevant to the design):**
+- **Sticky header** that shrinks/blurs on scroll — for any page with navigation
+- **Dark mode toggle** with animated icon transition — for any page with `[data-theme]` tokens
+- **Counter animation** — for any stat/metric displays (KPIs, hero numbers, pricing)
+- **Scroll progress bar** — for long-form editorial, case studies, documentation
+- **Infinite marquee** — for client logos, skills, testimonials
+- **Image zoom on hover** — for any image gallery, product grid, portfolio
+- **Accordion with animated height** — for FAQ, menu sections, sidebar filters
+- **Tab switching with indicator slide** — for any tabbed interface
+- **Toast notifications** — for any form submission, copy action, save confirmation
+- **Floating labels** — for any form with text inputs
+
+**Domain-specific interactivity (consult `references/interactive-patterns.md`):**
+- **Dashboard**: Live clock, animated charts (bar/donut/sparkline), flash-on-update metrics, sortable tables
+- **SaaS Landing**: Scroll-driven parallax hero, animated counters in social proof, comparison slider for pricing
+- **E-commerce**: Filter chips with animated show/hide, image carousel with scroll-snap, product image lightbox
+- **Portfolio**: Masonry grid with animated layout, lightbox gallery, tilt-on-hover cards, cursor effects
+- **Food & Beverage**: Image lightbox for dishes, accordion menus, step-by-step recipe checkboxes
+- **Fashion**: Full-screen image carousel, countdown timer (for drops), before/after comparison slider
+- **Editorial**: Word-by-word text reveal, scroll progress bar, parallax images, reading time estimate
+- **Education**: Multi-step form with progress, drag-to-sort for quizzes, animated progress bars
+- **Mobile**: Slide drawer navigation, snap-scroll carousel, pull-to-refresh hint, swipeable cards
+
+**Always load these references before coding:**
+- `references/design-system/micro-interactions.md` — animation patterns and JS snippets
+- `references/interactive-patterns.md` — functional interaction patterns (filter, drag, charts, forms)
 
 ### React Output Spec
 - Functional components only — no class components
@@ -388,8 +483,10 @@ Grounded in the Impeccable design system. Consult individual references for deep
 - Prefer inline styles for one-off values; extract repeated patterns to a `styles` object
 - State assumptions upfront in a comment block: which components are stateful, what props to pass
 - If Tailwind: use `@apply` for repeated patterns; if CSS modules: one `.module.css` per component
-- No `useEffect` for layout — CSS-only animations and transitions preferred
+- Use `useEffect` sparingly — CSS animations and transitions preferred for entrances and states; JS for scroll observers and data-driven interactions
 - Prop defaults must be realistic content (no `undefined`, no "Lorem ipsum")
+- **Include interaction hooks**: `useScrollReveal`, `useCounter`, `useThemeToggle` as custom hooks where reusable
+- **Framer Motion**: Allowed and encouraged for React outputs. Use `motion.div`, `AnimatePresence`, `useInView` for scroll reveals, `layout` prop for animated filtering/sorting
 
 ### Multi-Screen / Flow Support
 
@@ -481,6 +578,11 @@ Avoid these in every output — they are the telltale signs of AI-generated desi
 | Gray text on colored backgrounds | Use darker shade of the background color |
 | Empty state = "No data" text only | Design as onboarding moment: acknowledge, explain value, CTA |
 | Text that overflows its container | `overflow-wrap: break-word`, `text-overflow: ellipsis`, line-clamp |
+| Static page with no animations or interactions | Every page needs: entrance animation, scroll reveals, hover states, ≥3 micro-interactions |
+| Scroll reveal on ALL elements simultaneously | Stagger children with 60-80ms delay; animate sections independently |
+| JavaScript in `<script>` but nothing actually moves | Wire up scroll observer, counters, lightbox — code must produce visible motion |
+| Hover effects limited to `opacity: 0.8` | Use card lift, image zoom, underline slide, color shift — see `micro-interactions.md` |
+| Charts/numbers that appear fully rendered | Animate bar growth, counter count-up, donut draw on scroll into view |
 
 ---
 
