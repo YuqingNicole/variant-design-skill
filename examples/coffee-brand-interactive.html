@@ -100,6 +100,39 @@
     outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 2px;
   }
 
+  /* Mobile hamburger */
+  .menu-toggle {
+    display: none; background: none; border: none; color: var(--text);
+    width: 44px; height: 44px; position: relative;
+    flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+  }
+  .menu-toggle span {
+    display: block; width: 22px; height: 2px; background: var(--text);
+    transition: transform 300ms var(--ease-out-expo), opacity 200ms ease;
+  }
+  .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-toggle.open span:nth-child(2) { opacity: 0; }
+  .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--bg); z-index: 99;
+    flex-direction: column; justify-content: center; align-items: center; gap: 32px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 300ms ease;
+  }
+  .mobile-menu.open { opacity: 1; pointer-events: auto; }
+  .mobile-menu a {
+    font-family: var(--font-display); font-size: 2rem; font-weight: 600;
+    color: var(--text); transition: color 200ms ease;
+  }
+  .mobile-menu a:hover { color: var(--accent); }
+
+  @media (max-width: 768px) {
+    .menu-toggle { display: flex; }
+    .mobile-menu { display: flex; }
+  }
+
   /* ========== HERO ========== */
   .hero {
     min-height: 100vh; display: flex; flex-direction: column;
@@ -328,7 +361,6 @@
   .donut-fill {
     fill: none; stroke-width: 16; stroke-linecap: round;
     transform: rotate(-90deg); transform-origin: center;
-    stroke-dasharray: 691; stroke-dashoffset: 691;
     transition: stroke-dashoffset 1.2s var(--ease-out-expo);
   }
   .donut-fill.animated { stroke-dashoffset: var(--target); }
@@ -340,6 +372,12 @@
     color: var(--accent-2);
   }
   .donut-center-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .donut-legend {
+    position: absolute; bottom: -48px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 20px; white-space: nowrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--muted); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
   /* ========== PROCESS / TIMELINE ========== */
   .process-section {
@@ -400,14 +438,31 @@
   .newsletter-btn:active { transform: scale(0.97); }
   .newsletter-btn:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 4px; }
   .newsletter-btn.loading {
-    color: transparent; pointer-events: none;
-    background-image: conic-gradient(var(--bg) 90deg, transparent 0);
-    background-size: 20px 20px; background-repeat: no-repeat;
-    background-position: center;
-    animation: spin 800ms linear infinite;
+    color: transparent; pointer-events: none; position: relative;
+  }
+  .newsletter-btn.loading::after {
+    content: ''; position: absolute; inset: 0; margin: auto;
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: var(--bg); border-right-color: var(--bg);
+    animation: spin 700ms linear infinite;
   }
   .newsletter-btn.success { background: var(--positive); color: var(--text); }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Back to top */
+  .back-to-top {
+    position: fixed; bottom: 24px; left: 24px; z-index: 90;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--text); font-size: 1.2rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 300ms ease, transform 200ms var(--ease-out-quart);
+  }
+  .back-to-top.visible { opacity: 1; pointer-events: auto; }
+  .back-to-top:hover { transform: translateY(-2px); background: var(--surface); }
+  .back-to-top:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   /* ========== FOOTER ========== */
   .footer {
@@ -502,7 +557,21 @@
       <li><a href="#subscribe">Subscribe</a></li>
     </ul>
   </nav>
+  <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <a href="#products" class="mobile-menu-link">Beans</a>
+  <a href="#flavor" class="mobile-menu-link">Flavor</a>
+  <a href="#process" class="mobile-menu-link">Process</a>
+  <a href="#subscribe" class="mobile-menu-link">Subscribe</a>
+</div>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
 
 <!-- Hero -->
 <section class="hero">
@@ -510,7 +579,7 @@
   <p class="hero-overline">Single-Origin · Ethically Sourced · Small Batch</p>
   <h1 class="hero-title">Every cup tells an <em>origin</em> story</h1>
   <p class="hero-subtitle">We travel to the farms, learn the soil, taste the altitude. Then we roast each lot to reveal exactly what that place tastes like.</p>
-  <button class="hero-cta" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+  <button class="hero-cta" id="hero-cta">
     Explore Our Beans <span class="arrow">→</span>
   </button>
 </section>
@@ -541,19 +610,19 @@
 <!-- Stats -->
 <section class="stats-section" data-reveal-stagger>
   <div class="stat-card">
-    <div class="stat-value" data-counter data-target="12" data-suffix="+">0</div>
+    <div class="stat-value" data-counter data-target="12" data-suffix="+">12+</div>
     <div class="stat-label">Origin Countries</div>
   </div>
   <div class="stat-card">
-    <div class="stat-value" data-counter data-target="1850" data-prefix="" data-suffix="m">0</div>
+    <div class="stat-value" data-counter data-target="1850" data-suffix="m">1,850m</div>
     <div class="stat-label">Avg Altitude</div>
   </div>
   <div class="stat-card">
-    <div class="stat-value" data-counter data-target="48" data-suffix="hrs">0</div>
+    <div class="stat-value" data-counter data-target="48" data-suffix="hrs">48hrs</div>
     <div class="stat-label">Roast to Ship</div>
   </div>
   <div class="stat-card">
-    <div class="stat-value" data-counter data-target="94" data-suffix="/100">0</div>
+    <div class="stat-value" data-counter data-target="94" data-suffix="/100">94/100</div>
     <div class="stat-label">Avg Cup Score</div>
   </div>
 </section>
@@ -725,14 +794,25 @@
 
   <div class="donut-container" data-reveal>
     <svg class="donut-chart" viewBox="0 0 240 240">
+      <!-- r=110: C=691, r=90: C=565, r=70: C=440 -->
       <circle class="donut-ring" cx="120" cy="120" r="110"/>
-      <circle class="donut-fill" cx="120" cy="120" r="110" stroke="var(--accent)" style="--target: 120"/>
-      <circle class="donut-fill" cx="120" cy="120" r="90" stroke="var(--accent-2)" style="--target: 200"/>
-      <circle class="donut-fill" cx="120" cy="120" r="70" stroke="var(--positive)" style="--target: 280"/>
+      <circle class="donut-ring" cx="120" cy="120" r="90"/>
+      <circle class="donut-ring" cx="120" cy="120" r="70"/>
+      <circle class="donut-fill" cx="120" cy="120" r="110" stroke="var(--accent)"
+        stroke-dasharray="691" stroke-dashoffset="691" style="--target: 138"/>
+      <circle class="donut-fill" cx="120" cy="120" r="90" stroke="var(--accent-2)"
+        stroke-dasharray="565" stroke-dashoffset="565" style="--target: 141"/>
+      <circle class="donut-fill" cx="120" cy="120" r="70" stroke="var(--positive)"
+        stroke-dasharray="440" stroke-dashoffset="440" style="--target: 132"/>
     </svg>
     <div class="donut-center">
-      <div class="donut-center-value" data-counter data-target="94">0</div>
+      <div class="donut-center-value" data-counter data-target="94">94</div>
       <div class="donut-center-label">Cup Score</div>
+    </div>
+    <div class="donut-legend">
+      <div class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span>Acidity 80%</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--accent-2)"></span>Sweetness 75%</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--positive)"></span>Body 70%</div>
     </div>
   </div>
 </section>
@@ -803,10 +883,46 @@ window.addEventListener('load', () => {
   document.body.classList.add('loaded');
 });
 
-// ========== STICKY HEADER ==========
+// ========== HERO CTA ==========
+document.getElementById('hero-cta').addEventListener('click', () => {
+  document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+});
+
+// ========== STICKY HEADER + BACK TO TOP ==========
+const header = document.getElementById('header');
+const backToTop = document.getElementById('back-to-top');
 window.addEventListener('scroll', () => {
-  document.getElementById('header').classList.toggle('scrolled', window.scrollY > 60);
+  const y = window.scrollY;
+  header.classList.toggle('scrolled', y > 60);
+  backToTop.classList.toggle('visible', y > 600);
 }, { passive: true });
+
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ========== MOBILE MENU ==========
+const menuToggle = document.getElementById('menu-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+
+menuToggle.addEventListener('click', () => {
+  const isOpen = menuToggle.classList.toggle('open');
+  mobileMenu.classList.toggle('open', isOpen);
+  mobileMenu.setAttribute('aria-hidden', !isOpen);
+  menuToggle.setAttribute('aria-expanded', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+});
+
+// Close mobile menu on link click
+mobileMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    menuToggle.classList.remove('open');
+    mobileMenu.classList.remove('open');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  });
+});
 
 // ========== SCROLL REVEAL ==========
 const revealObserver = new IntersectionObserver((entries) => {
@@ -831,6 +947,9 @@ function animateCounter(el) {
   const suffix = el.dataset.suffix || '';
   const duration = 1600;
   const start = performance.now();
+
+  // Reset to 0 before animating
+  el.textContent = prefix + '0' + suffix;
 
   function tick(now) {
     const elapsed = Math.min((now - start) / duration, 1);
@@ -895,35 +1014,51 @@ filterChips.forEach(chip => {
 
     const category = chip.dataset.filter;
 
+    // First hide non-matching, then show matching (avoids flash)
     productCards.forEach(card => {
       const show = category === 'all' || card.dataset.category === category;
-      if (show) {
-        card.style.display = '';
-        requestAnimationFrame(() => {
-          card.style.opacity = '1';
-          card.style.transform = '';
-        });
-      } else {
+      if (!show) {
         card.style.opacity = '0';
         card.style.transform = 'scale(0.95)';
         setTimeout(() => { card.style.display = 'none'; }, 260);
       }
     });
+
+    setTimeout(() => {
+      productCards.forEach(card => {
+        const show = category === 'all' || card.dataset.category === category;
+        if (show) {
+          card.style.display = '';
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.95)';
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              card.style.opacity = '1';
+              card.style.transform = '';
+            });
+          });
+        }
+      });
+    }, 280);
   });
 });
 
-// ========== ADD TO BAG (TOAST) ==========
+// ========== ADD TO BAG (TOAST) — with debounce ==========
 const toast = document.getElementById('toast');
 const toastMsg = document.getElementById('toast-msg');
 let toastTimer;
 
 document.querySelectorAll('.product-btn').forEach(btn => {
   btn.addEventListener('click', () => {
+    // Prevent double-click
+    if (btn.dataset.busy) return;
+    btn.dataset.busy = 'true';
+
     const name = btn.closest('.product-card').querySelector('.product-name').textContent;
 
     // Button feedback
     const original = btn.textContent;
-    btn.textContent = '✓ Added';
+    btn.textContent = '\u2713 Added';
     btn.style.background = 'var(--positive)';
     btn.style.color = 'var(--text)';
     btn.style.borderColor = 'var(--positive)';
@@ -932,6 +1067,7 @@ document.querySelectorAll('.product-btn').forEach(btn => {
       btn.style.background = '';
       btn.style.color = '';
       btn.style.borderColor = '';
+      delete btn.dataset.busy;
     }, 1500);
 
     // Toast
@@ -955,13 +1091,15 @@ document.getElementById('newsletter-form').addEventListener('submit', (e) => {
   const btn = e.target.querySelector('.newsletter-btn');
   const input = e.target.querySelector('.newsletter-input');
 
+  if (btn.dataset.busy) return;
+  btn.dataset.busy = 'true';
   btn.classList.add('loading');
   btn.textContent = '';
 
   setTimeout(() => {
     btn.classList.remove('loading');
     btn.classList.add('success');
-    btn.textContent = '✓ Subscribed';
+    btn.textContent = '\u2713 Subscribed';
     input.value = '';
     input.disabled = true;
 
@@ -969,12 +1107,13 @@ document.getElementById('newsletter-form').addEventListener('submit', (e) => {
       btn.classList.remove('success');
       btn.textContent = 'Subscribe';
       input.disabled = false;
+      delete btn.dataset.busy;
     }, 3000);
   }, 1200);
 });
 
 // ========== RIPPLE EFFECT ON CTA ==========
-document.querySelector('.hero-cta').addEventListener('click', function(e) {
+document.getElementById('hero-cta').addEventListener('click', function(e) {
   const circle = document.createElement('span');
   const rect = this.getBoundingClientRect();
   const size = Math.max(rect.width, rect.height);
@@ -991,7 +1130,7 @@ document.querySelector('.hero-cta').addEventListener('click', function(e) {
   circle.addEventListener('animationend', () => circle.remove());
 });
 
-// Ripple keyframes (injected once)
+// Ripple keyframes
 const rippleStyle = document.createElement('style');
 rippleStyle.textContent = '@keyframes ripple { to { transform: scale(2.5); opacity: 0; } }';
 document.head.appendChild(rippleStyle);

@@ -17,6 +17,188 @@ Built on the **Impeccable design system** — a comprehensive set of design refe
 
 ---
 
+## CLI Workflow (Claude Code)
+
+This skill runs inside Claude Code — a terminal. Design decisions must account for the fact that the user **cannot see the output** without opening a browser. Every step of the workflow should minimize friction between "idea" and "eyes on pixels."
+
+### Output Convention
+
+**File naming:** `variant-[scenario]-[variation].html` (e.g., `variant-dashboard-A.html`)
+
+**Output directory:** Write to `./variant-output/` in the current working directory. Create the directory if it doesn't exist. This keeps design files separate from project source code.
+
+```
+variant-output/
+├── variant-dashboard-A.html
+├── variant-dashboard-B.html
+├── variant-dashboard-C.html
+└── tokens/
+    └── dashboard-A-tokens.css    (when user extracts tokens)
+```
+
+**Iteration files:** On variation actions, overwrite the same file (e.g., `variant-dashboard-A.html`) rather than creating `variant-dashboard-A-v2.html`. The user is iterating on one design, not collecting versions. Git handles history.
+
+### Auto-Preview
+
+**After every file write, immediately open it in the user's default browser:**
+
+```bash
+# macOS
+open variant-output/variant-dashboard-A.html
+
+# Linux
+xdg-open variant-output/variant-dashboard-A.html
+```
+
+This is non-negotiable. The user should never have to manually find and open the file. When iterating (Vary subtle, Remix colors, etc.), the browser tab auto-refreshes because the file is overwritten — just re-run `open` to bring it to focus.
+
+### Live Preview Server (Optional)
+
+If the user asks for live preview or says "watch mode", start a lightweight file server with auto-reload:
+
+```bash
+# Using Python (available on most systems)
+cd variant-output && python3 -c "
+import http.server, socketserver, os, time, threading
+
+class ReloadHandler(http.server.SimpleHTTPRequestHandler):
+    def end_headers(self):
+        self.send_header('Cache-Control', 'no-store')
+        super().end_headers()
+
+    def do_GET(self):
+        if self.path == '/_poll':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            self.wfile.write(str(os.path.getmtime('.')).encode())
+            return
+        super().do_GET()
+
+with socketserver.TCPServer(('', 3333), ReloadHandler) as httpd:
+    print('Preview: http://localhost:3333')
+    httpd.serve_forever()
+" &
+```
+
+Then inject a tiny auto-reload script at the bottom of every generated HTML:
+```html
+<script>
+// Auto-reload in dev (remove for production)
+(async function poll() {
+  try {
+    const r = await fetch('/_poll');
+    const t = await r.text();
+    if (window._lastMod && t !== window._lastMod) location.reload();
+    window._lastMod = t;
+  } catch(e) {}
+  setTimeout(poll, 800);
+})();
+</script>
+```
+
+Only include this script when the preview server is running. Remove it on export.
+
+### Compact CLI Output
+
+Terminal space is precious. Keep text responses short and structured:
+
+**On initial generation (3 variations):**
+```
+✦ Detected: coffee brand landing page → loading food-beverage.md + micro-interactions.md
+
+  A — Terroir Warm       Fraunces + Instrument Sans    Minimal/Editorial
+  B — Espresso Dark      DM Serif Display + DM Sans    Dark/Premium
+  C — Fresh Market       Crimson Pro + Plus Jakarta     Warm/Human
+
+  Interactions: scroll reveal, counter animation, card lift, filter chips, lightbox
+
+  Files written:
+    variant-output/variant-coffee-A.html  ← opened in browser
+    variant-output/variant-coffee-B.html
+    variant-output/variant-coffee-C.html
+
+  Pick a variation to iterate, or an action:
+  Reshape — Vary strong · Distill · Shuffle layout · Change style
+  Tune    — Vary subtle · Remix colors · Mix (A+B)
+  Animate — Add motion · Dramatize · Make interactive
+  Refine  — Polish · Critique · See other views
+  Export  — Extract tokens
+```
+
+**On iteration:**
+```
+✦ Variation A — Vary subtle · iteration 2
+
+  Changed: tightened spacing to 4pt grid, added tabular-nums on stats,
+  hover now lifts 4px→6px with shadow, scroll stagger 60ms→80ms
+
+  variant-output/variant-coffee-A.html  ← updated & opened
+
+  Next action?
+```
+
+**Never dump the full HTML in the chat.** Write to file, open in browser, show a 2-3 line summary of what changed. The user reads code in their editor, not in the terminal.
+
+### Quick Triggers
+
+Support shorthand prompts for fast iteration in the terminal:
+
+| User types | Expands to |
+|---|---|
+| `A vary strong` | Apply "Vary strong" to Variation A |
+| `B remix colors` | Apply "Remix colors" to Variation B |
+| `C → mobile` | Show Variation C as mobile viewport |
+| `pick A` | Select Variation A as the winner, archive B and C |
+| `A + B colors` | Mix: A's layout with B's color palette |
+| `tokens A` | Extract design tokens from Variation A to CSS file |
+| `open B` | Re-open Variation B in browser |
+| `dark mode A` | Generate dark ↔ light toggle variant of A |
+| `compare` | Open all 3 variations side-by-side (writes a comparison HTML) |
+
+### Comparison View
+
+When the user says "compare" or wants to see all variations together, generate a single `variant-output/_compare.html` that displays all 3 side-by-side in iframes:
+
+```html
+<style>
+  body { margin:0; display:grid; grid-template-columns:1fr 1fr 1fr; height:100vh; gap:2px; background:#111; }
+  iframe { width:100%; height:100%; border:none; }
+  .label { position:absolute; top:8px; left:12px; background:#111; color:#fff; padding:4px 12px;
+    font:12px/1 monospace; border-radius:4px; z-index:10; }
+  .frame { position:relative; }
+</style>
+<div class="frame"><span class="label">A</span><iframe src="variant-coffee-A.html"></iframe></div>
+<div class="frame"><span class="label">B</span><iframe src="variant-coffee-B.html"></iframe></div>
+<div class="frame"><span class="label">C</span><iframe src="variant-coffee-C.html"></iframe></div>
+```
+
+### Framework Export
+
+When the user says "export to [framework]", transform the winning variation into the target structure:
+
+| Target | Action |
+|---|---|
+| `export to next` | Create `app/page.tsx` + `app/globals.css` with tokens + `public/` for images |
+| `export to vite` | Create `src/App.jsx` + `src/index.css` + `index.html` |
+| `export to astro` | Create `src/pages/index.astro` + `src/styles/tokens.css` |
+| `export to static` | Clean HTML (remove dev scripts), optimize images, inline critical CSS |
+
+Always ask which variation to export if the user hasn't picked one yet.
+
+### Clipboard Mode
+
+If the user says "copy" or "clipboard", copy the HTML to system clipboard instead of (or in addition to) writing the file:
+
+```bash
+# macOS
+cat variant-output/variant-coffee-A.html | pbcopy
+```
+
+Useful for pasting into CodePen, Claude.ai artifacts, or other tools.
+
+---
+
 ## Project Context Initialization
 
 On first use in a project, gather design context to ground all future generations. Ask the user:
@@ -110,14 +292,14 @@ Each variation = a different studio's interpretation. Never two in the same dire
 
 Working code — HTML (default) or React. Real content, no lorem ipsum. Visually complete.
 
-Before each code block, present a **Summary Card** so users can compare without reading code:
+**Write each variation to a separate file** following the CLI Output Convention (see "CLI Workflow" section). Never dump full HTML into the chat — write to `variant-output/` and open in browser.
 
-> **Variation A — [Name]**
-> Direction: [e.g. Minimal / Editorial] · Palette: [name or dominant colors] · Fonts: [display + body]
-> Layout: [pattern, e.g. asymmetric 2-col] · Signature: [one unforgettable detail]
-> Interactions: [e.g. scroll reveal + counter animation + card lift + lightbox gallery]
+Present a **compact Summary Card** in the terminal for each variation:
 
-Label code blocks: **Variation A — [Name]** / **B — [Name]** / **C — [Name]**
+> **A — [Name]** · [Direction] · [Palette] · [Fonts]
+> Layout: [pattern] · Signature: [detail] · Interactions: [list]
+
+Then show the file paths and open the first variation in the browser. The user reads the design in the browser, not in the terminal.
 
 ### 4. AI Slop Test (Quality Gate)
 
@@ -354,12 +536,14 @@ Combine two variations into one. Accepts forms like "Mix A + B" or "A's layout +
 ## Variation Loop
 
 Track iteration count internally (reset per variation). After any variation action:
-1. Present the updated design (labelled with the action taken, e.g. "Variation A — Distill · iteration 3")
-2. Offer the grouped action menu again — the loop never ends until the user moves on
-3. If the user has iterated 3+ times on the same direction, proactively suggest: "Want to branch? I can apply this to one of the other variations."
-4. **At iteration 2:** Ask a direction-check — *"Still feeling this direction, or want to pivot?"*
-5. **At iteration 4:** Show a change summary — *"Over 4 rounds: [list key changes]. Want to keep refining or export?"*
-6. **At iteration 5+:** Suggest convergence — *"You've refined this 5 times — it's looking solid. Ready to export, or one more pass?"*
+1. **Overwrite the same file** (e.g. `variant-output/variant-coffee-A.html`) — don't create new files for iterations
+2. **Re-open in browser** — run `open` / `xdg-open` so the user sees the update immediately
+3. **Show a 2-3 line diff summary** in the terminal — what changed, not the full code
+4. Offer the grouped action menu again — the loop never ends until the user moves on
+5. If the user has iterated 3+ times on the same direction, proactively suggest: "Want to branch? I can apply this to one of the other variations."
+6. **At iteration 2:** Ask a direction-check — *"Still feeling this direction, or want to pivot?"*
+7. **At iteration 4:** Show a change summary — *"Over 4 rounds: [list key changes]. Want to keep refining or export?"*
+8. **At iteration 5+:** Suggest convergence — *"You've refined this 5 times — it's looking solid. Ready to export, or one more pass?"*
 
 ---
 
