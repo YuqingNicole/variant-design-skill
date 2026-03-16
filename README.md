@@ -24,12 +24,33 @@ Three variations from a single prompt — each feels like a different studio:
 
 ## What it does
 
+### Generate Mode (default)
+
 1. **Detects your scenario** — dashboard, SaaS landing page, editorial, e-commerce, mobile app, creative tool, education, portfolio, food & beverage, fashion & lifestyle
-2. **Loads design system references** — typography, color theory (OKLCH), spatial design, motion, interaction, responsive, UX writing
-3. **Generates 3 distinct variations** — each pulls from a different aesthetic direction (Minimal/Editorial, Bold/Expressive, Dark/Premium, Warm/Human, Neo-brutalist, Luxury/Silence…)
+2. **Loads design system references** — typography, color theory (OKLCH), spatial design, motion, micro-interactions, interaction, responsive, UX writing
+3. **Generates 3 distinct variations** — each pulls from a different aesthetic direction with full interactivity (scroll reveals, animated charts, hover effects, functional JS)
 4. **Runs an AI Slop Test** — quality gate that catches generic AI aesthetic fingerprints before presenting
-5. **Ships working code** — HTML single-file by default, or React. Real content, no lorem ipsum
-6. **Offers variation actions** — push further, polish, critique, swap styles, remix colors, shuffle layouts, see other views
+5. **Ships working code** — Interactive HTML by default, or React + Framer Motion. Real content, no lorem ipsum
+6. **Offers variation actions** — push further, polish, critique, swap styles, remix colors, shuffle layouts, add motion, dramatize, make interactive
+
+### Analyze Mode (existing sites)
+
+1. **Scans your existing code** — reads HTML, CSS, JSX, Vue, Svelte files for design tokens
+2. **Extracts design primitives** — colors, fonts, spacing, components, transitions, breakpoints
+3. **Detects inconsistencies** — near-duplicate colors, off-grid spacing, missing hover states, contrast failures, font scale issues
+4. **Generates a style report** — scored audit with severity levels and priority fix list
+5. **Produces tokens** — consolidated CSS custom properties file from scattered hardcoded values
+6. **Generates style-matched pages** — new pages that follow your existing design system exactly
+7. **Creates migration plans** — phased checklist for consolidating an inconsistent codebase
+
+```
+audit                    → Full style consistency report
+tokens                   → Extract tokens from existing CSS
+match                    → Generate new pages matching your existing style
+new page pricing         → Add /pricing page following your current design
+migrate                  → Phased plan to consolidate design tokens
+compare old new          → Side-by-side existing vs. redesigned
+```
 
 ---
 
@@ -163,6 +184,8 @@ Foundational design principles loaded for every generation:
 | `references/design-system/interaction-design.md` | 8 interactive states, focus-visible, forms, modals, keyboard navigation |
 | `references/design-system/responsive-design.md` | Mobile-first, content-driven breakpoints, input detection, safe areas |
 | `references/design-system/ux-writing.md` | Button labels, error formulas, empty states, voice vs tone, accessibility |
+| `references/design-system/micro-interactions.md` | Scroll reveals, hover effects, counters, parallax, page transitions, toasts |
+| `references/design-system/style-audit.md` | Token extraction, consistency detection, audit reports, migration plans |
 
 ---
 
@@ -218,12 +241,33 @@ Built with [Claude Code Skills](https://claude.ai/code). Design system powered b
 
 ## 功能概览
 
+### 生成模式（默认）
+
 1. **场景检测** — 仪表盘、SaaS 落地页、编辑/杂志、电商、移动应用、创意工具、教育、作品集、餐饮美食、时尚生活
-2. **加载设计系统参考** — 排版、色彩理论（OKLCH）、空间设计、动效、交互、响应式、UX 文案
-3. **生成 3 个差异化变体** — 每个采用不同的审美方向（极简/编辑、大胆/表现、暗色/高端、温暖/人文、新粗野主义、奢华/留白……）
+2. **加载设计系统参考** — 排版、色彩理论（OKLCH）、空间设计、动效、微交互、交互、响应式、UX 文案
+3. **生成 3 个差异化变体** — 每个采用不同的审美方向，包含完整交互（滚动揭示、动态图表、悬浮效果、功能性 JS）
 4. **AI 审美质量门** — 自动检测并过滤常见的 AI 生成审美特征
-5. **输出可用代码** — 默认 HTML 单文件，或 React。真实内容，没有占位文本
-6. **提供迭代操作** — 推到极致、精修、批评、换风格、重混色彩、重排布局、查看其他视图
+5. **输出可交互代码** — 默认交互式 HTML，或 React + Framer Motion。真实内容，没有占位文本
+6. **提供迭代操作** — 推到极致、精修、批评、换风格、重混色彩、重排布局、添加动效、戏剧化、使其可交互
+
+### 分析模式（已有网站）
+
+1. **扫描现有代码** — 读取 HTML、CSS、JSX、Vue、Svelte 文件中的设计 token
+2. **提取设计原语** — 颜色、字体、间距、组件、过渡、断点
+3. **检测不一致性** — 近似重复颜色、偏离网格间距、缺失悬浮状态、对比度不足、字体比例问题
+4. **生成风格报告** — 带评分的审计报告，含严重程度和优先修复清单
+5. **生成 token 文件** — 将散落的硬编码值整合为 CSS 自定义属性
+6. **生成风格匹配页面** — 新页面精确遵循你现有的设计系统
+7. **生成迁移计划** — 分阶段整合不一致代码库的清单
+
+```
+audit                    → 完整风格一致性报告
+tokens                   → 从现有 CSS 提取 token
+match                    → 生成匹配现有风格的新页面
+new page pricing         → 添加遵循当前设计的 /pricing 页面
+migrate                  → 分阶段 token 整合计划
+compare old new          → 现有页面 vs 重新设计的并排对比
+```
 
 ---
 
@@ -360,6 +404,8 @@ open B                 → 重新在浏览器打开 B
 | `references/design-system/interaction-design.md` | 8 种交互状态、focus-visible、表单、模态框、键盘导航 |
 | `references/design-system/responsive-design.md` | 移动优先、内容驱动断点、输入方式检测、安全区域 |
 | `references/design-system/ux-writing.md` | 按钮标签、错误消息公式、空状态、语气与语调、无障碍 |
+| `references/design-system/micro-interactions.md` | 滚动揭示、悬浮效果、计数器、视差、页面过渡、Toast 通知 |
+| `references/design-system/style-audit.md` | Token 提取、一致性检测、审计报告、迁移计划 |
 
 ---
 

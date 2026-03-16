@@ -1,6 +1,6 @@
 ---
 name: variant-design
-description: AI-driven interactive design generation with Impeccable design system. Generates 3 distinct, fully-animated design variations from a prompt — every output is alive with scroll reveals, micro-interactions, animated charts, and functional JS patterns. Built-in scenario materials (10 domains), design system references (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing), interactive pattern library (filtering, drag-and-drop, lightbox, charts, forms), and anti-AI-slop quality gates. Supports variation actions: Vary strong/subtle, Distill, Change style, Remix colors, Shuffle layout, Add motion, Dramatize, Make interactive, Polish, Critique, Extract tokens, See other views. Exports to Interactive HTML or React. Triggers on: "design options for X", "show me variations", "give me UI directions", "vary this design", "distill this", "change the style", "remix colors", "shuffle layout", "add motion", "dramatize", "make interactive", "animate this", "make it move", "polish this", "critique this", "extract tokens", "design a dashboard/landing page/app/editorial".
+description: AI-driven interactive design generation and style analysis with Impeccable design system. Two modes — (1) Generate: 3 distinct, fully-animated design variations from a prompt with scroll reveals, micro-interactions, animated charts, and functional JS patterns; (2) Analyze: audit existing sites for style consistency, extract design tokens, generate style-matched new pages, and produce migration plans. Built-in scenario materials (10 domains), design system references (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing, style audit), interactive pattern library, and anti-AI-slop quality gates. Triggers on: "design options for X", "show me variations", "vary this design", "audit", "analyze my site", "check consistency", "match this style", "extract tokens", "new page matching my site", "migrate", "add motion", "dramatize", "make interactive".
 ---
 
 # Variant Design
@@ -13,7 +13,7 @@ Inspired by the [Variant](https://variant.com) design community — a space wher
 
 Built on the **Impeccable design system** — a comprehensive set of design references covering typography, color theory, spatial design, motion, interaction patterns, responsive design, and UX writing. Every design decision is grounded in these principles.
 
-**Supports:** Interactive HTML (default) · React + Framer Motion · 10 domain reference libraries · 39 palettes · design system references · micro-interaction library · interactive pattern library · variation actions
+**Supports:** Interactive HTML (default) · React + Framer Motion · 10 domain reference libraries · 39 palettes · design system references · micro-interaction library · interactive pattern library · style audit & token extraction · variation actions
 
 ---
 
@@ -214,6 +214,87 @@ Persist context as a comment block at the top of generated files or in the conve
 
 ---
 
+## Site Analysis Mode
+
+When the user points to existing code (file paths, a directory, or says "analyze/audit/check my site"), switch from generation mode to analysis mode. Load `references/design-system/style-audit.md` for the full methodology.
+
+### Triggers
+
+| User says | Action |
+|---|---|
+| "analyze my site" / "audit this" / "check consistency" | Full style audit → report |
+| "match this style" / "follow existing design" / "extend my site" | Extract tokens → generate matching pages |
+| "extract tokens" (on existing files, not a generated variation) | Token extraction → CSS custom properties file |
+| "what's wrong with this design" / "review my CSS" | Style consistency check → findings list |
+| "migrate" / "consolidate" / "clean up" | Audit → token generation → migration plan |
+| "add a [page] to my site" / "new page matching my existing design" | Extract → match → generate |
+
+### Analysis Workflow
+
+**Step 1: Scan** — Read the files the user points to. If no specific files given, scan for:
+```bash
+# Auto-detect entry points
+find . -name "*.html" -o -name "*.css" -o -name "*.tsx" -o -name "*.jsx" \
+  -o -name "*.vue" -o -name "*.svelte" | head -20
+# Also check for:
+# - tailwind.config.* (Tailwind projects)
+# - globals.css / index.css / app.css (common entry CSS)
+# - tokens.css / variables.css / theme.* (existing token files)
+```
+
+**Step 2: Extract** — Pull all design primitives following the Token Extraction schema in `style-audit.md`: colors, typography, spacing, components, transitions. Group by semantic role.
+
+**Step 3: Detect** — Run all consistency checks from `style-audit.md` Section 2. For each finding, record severity (error/warning/info), the specific values, file locations, and a concrete fix.
+
+**Step 4: Report** — Present findings using the compact terminal format from `style-audit.md` Section 3. Score out of 100. List priority fixes.
+
+**Step 5: Act** — Based on what the user wants:
+- **Audit only**: Stop after the report. Offer to generate a token file or migration plan.
+- **Extract tokens**: Generate a `tokens.css` file consolidating all values (see `style-audit.md` Section 4).
+- **Generate matching page**: Lock extracted tokens as constraints, generate new pages that match (see below).
+- **Migration plan**: Generate phased checklist for consolidating the codebase (see `style-audit.md` Section 6).
+
+### Style-Matched Generation
+
+When generating new pages for an existing project, the workflow changes:
+
+1. **Extract first** — Always analyze existing code before generating. Never guess the style.
+2. **Lock tokens** — All generated code must use `var(--*)` referencing the existing token system. If no token system exists, generate one first and get user approval.
+3. **Match patterns** — Study existing component shapes (card radius, shadow, padding), interaction patterns (transition durations, hover effects), layout patterns (container width, grid), and naming conventions (BEM, Tailwind, CSS modules).
+4. **Show diff from existing** — In the Summary Card, note which tokens/patterns are being reused vs. which are new additions.
+5. **Flag deviations** — If the design system principles (from Impeccable) conflict with the existing style, flag it: *"Your existing buttons have no hover state — I've added one following your color palette. OK?"*
+
+**Summary Card for style-matched generation:**
+```
+✦ New page: /pricing — matching existing site style
+
+  Reusing: --bg, --surface, --card, --border, --text, --muted, --accent
+  Reusing: Plus Jakarta Sans 400/600, 4 font sizes, 8px grid
+  Reusing: .card (24px padding, 8px radius, 1px border)
+  Reusing: .btn (100px radius, 200ms transition)
+
+  New additions:
+  + Pricing toggle (monthly/annual) — uses existing .btn style
+  + FAQ accordion — uses existing .card + new grid height animation
+  + Comparison table — new component, follows existing spacing/color
+
+  File: variant-output/pricing-matched.html ← opened in browser
+```
+
+### Quick Triggers for Analysis
+
+| User types | Action |
+|---|---|
+| `audit` | Full style audit on current project |
+| `audit src/styles/` | Audit specific directory |
+| `tokens` | Extract tokens from existing code → CSS file |
+| `match` | Enter style-matched generation mode |
+| `new page pricing` | Generate /pricing page matching existing style |
+| `migrate` | Generate migration plan for token consolidation |
+| `compare old new` | Side-by-side: existing page vs. redesigned version |
+
+---
+
 ## Smart Prompt Handling
 
 Before generating, apply these three rules in order:
@@ -253,6 +334,7 @@ Identify the scenario and load the corresponding reference file before designing
 | Micro-interactions, scroll reveals, hover effects | `references/design-system/micro-interactions.md` |
 | Functional interactions (filter, drag, charts, forms) | `references/interactive-patterns.md` |
 | Forms, states, focus, keyboard nav | `references/design-system/interaction-design.md` |
+| Style audit, token extraction, consistency checks | `references/design-system/style-audit.md` |
 | Mobile-first, breakpoints, fluid design | `references/design-system/responsive-design.md` |
 | Labels, errors, empty states, microcopy | `references/design-system/ux-writing.md` |
 
