@@ -1,6 +1,6 @@
 ---
 name: variant-design
-description: AI-driven interactive design generation and style analysis with Impeccable design system. Two modes — (1) Generate: 3 distinct, fully-animated design variations from a prompt with scroll reveals, micro-interactions, animated charts, and functional JS patterns; (2) Analyze: audit existing sites for style consistency, extract design tokens, generate style-matched new pages, and produce migration plans. Built-in scenario materials (10 domains), design system references (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing, style audit), interactive pattern library, and anti-AI-slop quality gates. Triggers on: "design options for X", "show me variations", "vary this design", "audit", "analyze my site", "check consistency", "match this style", "extract tokens", "new page matching my site", "migrate", "add motion", "dramatize", "make interactive".
+description: AI-driven interactive design generation and style analysis with Impeccable design system. Four modes — (1) Generate: 3 distinct, fully-animated design variations from a prompt; (2) Analyze: audit existing sites, extract design tokens, generate style-matched pages; (3) Content formats: HTML pitch decks (dark flip / light scroll-snap), WeChat article layout with inline styles + API upload flow; (4) Writing: anti-AI-taste Chinese copywriting with banned word list and before/after rewrites. Built-in Wu Xing (五行) color system with 40-tone palette, 26 combos, and cultural brand mapping. 14 domain references (including presentation, wechat, wuxing-colors, voice), full design system (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing, style audit), interactive pattern library, and anti-AI-slop quality gates. Triggers on: "design options for X", "show me variations", "vary this design", "audit", "analyze my site", "match this style", "extract tokens", "migrate", "add motion", "dramatize", "make interactive", "pitch deck", "slides", "幻灯片", "PPT", "公众号", "wechat article", "微信文章", "五行配色", "wu xing", "brand color", "moodboard", "去AI味", "写文案", "copywriting".
 ---
 
 # Variant Design
@@ -321,6 +321,10 @@ Identify the scenario and load the corresponding reference file before designing
 | Portfolio, personal site, showcase, case study | designer portfolio, developer site, freelancer, agency, 作品集 | `references/portfolio.md` |
 | Restaurant, recipe, food, coffee, bakery, menu | café, bar, cocktail, wine, tea, meal planning, 餐厅, 菜单 | `references/food-beverage.md` |
 | Fashion, clothing, beauty, lookbook, interior design | streetwear, luxury brand, skincare, cosmetics, furniture, 时尚, 服装 | `references/fashion.md` |
+| Pitch deck, slides, presentation, keynote, investor deck | 幻灯片, PPT, 演讲稿, deck | `references/presentation.md` |
+| WeChat article, 公众号, wechat post, 微信文章 | 公号排版, 推文, 内容排版 | `references/wechat.md` |
+| Brand color, moodboard, 五行, wu xing, chinese color, 品牌配色 | 东方美学, 传统配色, 文化品牌 | `references/wuxing-colors.md` |
+| Writing, 文案, copywriting, 去AI味, anti-AI writing | 公众号文章写作, 内容语气, voice | `references/voice.md` |
 | Unsure / general | | Use aesthetic directions table below + `references/palettes.md` |
 
 **Always also load the relevant design system references** from `references/design-system/` based on what matters most for the design:
@@ -849,6 +853,16 @@ Avoid these in every output — they are the telltale signs of AI-generated desi
 | JavaScript in `<script>` but nothing actually moves | Wire up scroll observer, counters, lightbox — code must produce visible motion |
 | Hover effects limited to `opacity: 0.8` | Use card lift, image zoom, underline slide, color shift — see `micro-interactions.md` |
 | Charts/numbers that appear fully rendered | Animate bar growth, counter count-up, donut draw on scroll into view |
+| **Slides & WeChat (extra rules)** | |
+| Emoji in slides or WeChat articles | Never — `references/presentation.md` + `references/wechat.md` |
+| CSS variables `var(--xxx)` in WeChat HTML | All styles must be inline; WeChat strips class/var | 
+| External font `@import` in WeChat | WeChat blocks Google Fonts — system fonts only |
+| `position: fixed/absolute` in WeChat | Not supported in WeChat article renderer |
+| JS-driven `scrollTo()` in scroll-deck (Mode 2) | CSS `scroll-snap` only — JS may only passively listen |
+| **Writing (中文内容)** | |
+| AI taste opening: "在当今时代…" / "不可否认…" | Scene opening: time + place + one concrete detail |
+| Stacked modifiers: 深刻/全面/系统性/赋能 | One verb, one noun — see `references/voice.md` |
+| Summary + call to share at article end | End with余韵 — open question or resonant detail |
 
 ---
 
