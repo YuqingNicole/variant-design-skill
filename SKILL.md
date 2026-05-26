@@ -1,6 +1,6 @@
 ---
 name: variant-design
-description: AI-driven interactive design generation, style analysis, and UX evaluation with Impeccable design system. Context-aware output — auto-detects React projects (package.json with react dependency) and generates .tsx components; otherwise generates zero-dependency interactive HTML. Five modes — (1) Generate: 3 distinct, fully-animated design variations from a prompt; (2) Analyze: audit existing sites, extract design tokens, generate style-matched pages; (3) UX Review: heuristic evaluation (Nielsen's 10), cognitive load analysis, mental model diagnosis, affordance audit, dark pattern detection — grounded in NNG research; (4) Content formats: HTML pitch decks (dark flip / light scroll-snap), WeChat article layout with inline styles + API upload flow; (5) Writing: anti-AI-taste Chinese copywriting with banned word list and before/after rewrites. Built-in Wu Xing (五行) color system with 40-tone palette, 26 combos, and cultural brand mapping. 16 domain references (including ux-heuristics, ux-psychology, presentation, wechat, wuxing-colors, voice), full design system (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing, style audit), interactive pattern library, and anti-AI-slop quality gates. Triggers on: "design options for X", "show me variations", "vary this design", "audit", "analyze my site", "match this style", "extract tokens", "migrate", "add motion", "dramatize", "make interactive", "ux review", "heuristic evaluation", "usability audit", "cognitive load", "mental models", "affordances", "dark patterns", "review this design", "pitch deck", "slides", "幻灯片", "PPT", "公众号", "wechat article", "微信文章", "五行配色", "wu xing", "brand color", "moodboard", "去AI味", "写文案", "copywriting".
+description: AI-driven interactive design generation, style analysis, and UX evaluation with Impeccable design system. Context-aware output — auto-detects React projects (package.json with react dependency) and generates .tsx components; otherwise generates zero-dependency interactive HTML. Six modes — (1) Generate: 3 distinct, fully-animated design variations from a prompt, with zone-level iteration (vary/remix/shuffle a specific section); (2) Component: isolated UI components with all 8 states and variants — button systems, forms, cards, modals, nav; (3) Analyze: audit existing sites, extract design tokens, generate style-matched pages; (4) UX Review: heuristic evaluation (Nielsen's 10), cognitive load analysis, mental model diagnosis, affordance audit, dark pattern detection — grounded in NNG research; (5) Content formats: HTML pitch decks, WeChat article layout with 4 color schemes + 3 structural templates + inline styles + API upload flow; (6) Writing: anti-AI-taste Chinese copywriting across 4 text types (opinion/story/tutorial/product copy) and 3 platforms (公众号/小红书/产品内文案), with banned word list and before/after rewrites. Built-in Wu Xing (五行) color system with 40-tone palette, 26 combos, and cultural brand mapping. 16 domain references (including ux-heuristics, ux-psychology, presentation, wechat, wuxing-colors, voice), full design system (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing, style audit), interactive pattern library, and anti-AI-slop quality gates. Triggers on: "design options for X", "show me variations", "vary this design", "audit", "analyze my site", "match this style", "extract tokens", "migrate", "add motion", "dramatize", "make interactive", "ux review", "heuristic evaluation", "usability audit", "cognitive load", "mental models", "affordances", "dark patterns", "review this design", "pitch deck", "slides", "幻灯片", "PPT", "公众号", "wechat article", "微信文章", "五行配色", "wu xing", "brand color", "moodboard", "去AI味", "写文案", "copywriting".
 ---
 
 # Variant Design
@@ -216,6 +216,12 @@ Support shorthand prompts for fast iteration in the terminal:
 | `react C` | Export Variation C as React .tsx component |
 | `reset context` | Delete `.variant-context.json` and start fresh — next generation ignores all persisted preferences |
 | `show context` | Print the current `.variant-context.json` contents in the terminal |
+| `A vary strong — hero` | Zone-level: vary strong on hero section only, rest unchanged |
+| `B remix colors — card` | Zone-level: remix colors on card zone only |
+| `zones A` | List all `data-zone` sections found in Variation A |
+| `component button` | Component mode: button system with all variants and states |
+| `component form` | Component mode: form components |
+| `component card` | Component mode: card variants |
 
 ### Context Commands
 
@@ -648,7 +654,7 @@ Identify the scenario and load the corresponding reference file before designing
 | Pitch deck, slides, presentation, keynote, investor deck | 幻灯片, PPT, 演讲稿, deck | `references/presentation.md` |
 | WeChat article, 公众号, wechat post, 微信文章 | 公号排版, 推文, 内容排版 | `references/wechat.md` |
 | Brand color, moodboard, 五行, wu xing, chinese color, 品牌配色 | 东方美学, 传统配色, 文化品牌 | `references/wuxing-colors.md` |
-| Writing, 文案, copywriting, 去AI味, anti-AI writing | 公众号文章写作, 内容语气, voice | `references/voice.md` |
+| Writing, 文案, copywriting, 去AI味, anti-AI writing | 公众号, 小红书, 产品文案, 观点文, 故事文, 教程文, voice | `references/voice.md` |
 | UX review, heuristic evaluation, usability audit, cognitive load, mental models | "is this good UX", affordances, dark patterns | `references/ux-heuristics.md` + `references/ux-psychology.md` |
 | Unsure / general | | Use aesthetic directions table below + `references/palettes.md` |
 
@@ -741,6 +747,94 @@ After presenting, always offer grouped by intent:
 > **Export** — Extract tokens
 >
 > Can't decide? Say **"Mix A + B"** or **"A's layout + C's colors"**.
+
+---
+
+## Zone-Level Variation
+
+By default, variation actions replace the entire design. **Zone syntax** lets you target a specific section — everything outside the zone stays untouched.
+
+### Zone Syntax
+
+```
+[variation] [action] — [zone]
+
+Examples:
+  A vary strong — hero
+  B remix colors — card
+  C shuffle layout — sidebar
+  A vary subtle — nav
+  B distill — footer
+```
+
+Zones are **semantic** — they refer to the role of the section, not a CSS class name. Recognized zone names:
+
+| Zone | Matches |
+|------|---------|
+| `hero` | Top section, headline, CTA, background |
+| `nav` / `header` | Navigation bar, logo, links |
+| `card` | Any card component or card grid |
+| `sidebar` | Side panel, filters, secondary nav |
+| `footer` | Bottom section |
+| `form` | Any form or input group |
+| `chart` / `data` | Data visualization, metrics, stats |
+| `cta` | Call-to-action button or section |
+| `modal` | Overlay, dialog, drawer |
+| `[custom]` | User can name any section: "pricing table", "testimonials", "team grid" |
+
+### How to Apply Zone Variations
+
+**Step 1: Identify the zone in the file**
+
+Before making changes, read the current file and locate the zone by its semantic role — look for the `data-zone` attribute (if present), or identify it from the HTML structure.
+
+**Step 2: Mark zones on first generation**
+
+When generating initial HTML/TSX, annotate major sections with `data-zone`:
+
+```html
+<section data-zone="hero"> ... </section>
+<nav data-zone="nav"> ... </nav>
+<section data-zone="cards"> ... </section>
+<aside data-zone="sidebar"> ... </aside>
+<section data-zone="cta"> ... </section>
+<footer data-zone="footer"> ... </footer>
+```
+
+For TSX, use a `data-zone` prop on the top-level element of each section component.
+
+**Step 3: Isolate and rewrite the zone**
+
+Read the current file. Extract only the content inside the target `data-zone`. Apply the action (vary strong, remix colors, etc.) to that section alone. Rewrite only that section in the file — preserve everything else character-for-character.
+
+**Step 4: Report**
+
+```
+✦ Variation A — Remix colors · hero zone only · iteration 3
+
+  Changed: hero background oklch(15% 0.02 240) → oklch(20% 0.15 45) (warm amber)
+  hero headline color, gradient, and CTA button updated to match
+  Cards, nav, footer unchanged
+
+  variant-output/variant-coffee-A.html ← updated & opened
+```
+
+### Zone Variation Rules
+
+- **Preserve outside zones exactly.** Do not reflow, re-indent, or reformat code outside the target zone — even if it looks messy.
+- **Tokens cascade.** If the zone uses CSS custom properties (`--color-accent`, `--bg`), update the token values in `:root` only if the zone exclusively uses them. If tokens are shared across zones, override inline within the zone instead.
+- **Motion is zone-scoped.** Only change animation/transition properties within the target zone. Don't touch `@keyframes` or animation values used by other zones.
+- **If zone not found:** Tell the user which zones are present (`data-zone` attributes found), and ask which one to target. Do not guess.
+
+### Zone Quick Triggers
+
+| User types | Action |
+|---|---|
+| `A vary strong — hero` | Vary strong applied to hero zone only |
+| `B remix colors — card` | Remix colors applied to card zone only |
+| `C shuffle layout — sidebar` | Shuffle layout applied to sidebar only |
+| `A vary subtle — nav` | Refine nav zone only |
+| `zones A` | List all `data-zone` sections found in Variation A |
 
 ---
 
@@ -1019,6 +1113,102 @@ Grounded in the Impeccable design system. Consult individual references for deep
 - **Error formula:** What happened → Why → How to fix. Never blame the user.
 - **Empty states are opportunities:** Acknowledge, explain value, provide clear action.
 - **Link text must standalone:** "View pricing plans" not "Click here".
+
+---
+
+## Component Mode
+
+When the user asks for a **component** rather than a full page, switch to Component Mode. Generates isolated, self-contained UI pieces — not full layouts.
+
+### Triggers
+
+| User says | Action |
+|---|---|
+| "design a button system" / "button variants" | Button component set: all sizes, all states |
+| "design a form" / "input components" | Form component set: inputs, selects, errors, validation |
+| "card component" / "design a card" | Card variants: default, hover, selected, loading, empty |
+| "modal" / "dialog component" | Modal with header, body, footer, dismiss, focus trap |
+| "design a [X] component" | Single component, all 8 interactive states |
+| "component library" / "design system components" | Set of 5–8 related components as a unified system |
+| "nav component" / "sidebar component" | Navigation piece with all states and responsive behavior |
+
+### Component Mode Workflow
+
+**Step 1: Clarify scope** — single component or a system of related components?
+
+**Step 2: Define states** — for every component, design all 8 states before coding:
+`default → hover → focus → active → disabled → loading → error → success`
+
+**Step 3: Define variants** — size scales, visual emphasis, semantic variants:
+
+| Component | Common variants |
+|-----------|----------------|
+| Button | sizes (sm/md/lg) × types (primary/secondary/ghost/destructive) |
+| Input | sizes × states × types (text/password/search/textarea) |
+| Card | default / interactive (hover) / selected / loading (skeleton) / empty |
+| Badge / Tag | semantic colors (info/success/warning/error) × sizes |
+| Avatar | sizes × states (online/offline/loading) × fallback (initials/icon) |
+| Modal | sizes (sm/md/lg/fullscreen) × dismissible/non-dismissible |
+
+**Step 4: Generate** — produce a single HTML file (or TSX) showing all variants side by side on a neutral background, with clear labels. Component files go to `variant-output/component-[name].html`.
+
+**Step 5: State showcase** — always include an interactive state showcase section: hover the component, click it, tab to it — all states visible and working.
+
+### Component Output Format
+
+```html
+<!-- Component showcase layout -->
+<section data-zone="showcase" style="background:#f5f5f5; padding:48px; font-family:...">
+  <h2>Button System</h2>
+
+  <!-- Row per variant group -->
+  <div data-zone="primary-buttons">
+    <!-- sm, md, lg sizes, all states inline -->
+  </div>
+
+  <div data-zone="secondary-buttons"> ... </div>
+  <div data-zone="destructive-buttons"> ... </div>
+
+  <!-- State showcase — interactive -->
+  <div data-zone="states">
+    <p>Hover, click, or tab through to see all states</p>
+    <!-- live interactive demo -->
+  </div>
+</section>
+```
+
+Terminal output:
+
+```
+✦ Component: Button System
+  Variants: primary · secondary · ghost · destructive
+  Sizes: sm · md · lg
+  States: default · hover · focus · active · disabled · loading
+
+  variant-output/component-buttons.html ← opened in browser
+
+  Next: vary strong · remix colors — [variant] · export tokens · react component
+```
+
+### Component + Zone Bridge
+
+Components can be injected into full-page variations using zone syntax:
+
+```
+A use new button component    → replace all buttons in Variation A with the new component system
+B update card — card zone     → apply new card component to the card zone in Variation B
+```
+
+### Quick Triggers for Component Mode
+
+| User types | Action |
+|---|---|
+| `component button` | Button system: all variants + all states |
+| `component form` | Form components: inputs, labels, errors, submit |
+| `component card` | Card variants: default/hover/selected/loading/empty |
+| `component nav` | Navigation component with responsive behavior |
+| `states [component]` | Show all 8 interactive states for a specific component |
+| `dark component` | Re-generate component set in dark mode |
 
 ---
 
