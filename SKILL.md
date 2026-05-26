@@ -1,6 +1,6 @@
 ---
 name: variant-design
-description: AI-driven interactive design generation, style analysis, and UX evaluation with Impeccable design system. Context-aware output — auto-detects React projects (package.json with react dependency) and generates .tsx components; otherwise generates zero-dependency interactive HTML. Six modes — (1) Generate: 3 distinct, fully-animated design variations from a prompt, with zone-level iteration (vary/remix/shuffle a specific section); (2) Component: isolated UI components with all 8 states and variants — button systems, forms, cards, modals, nav; (3) Analyze: audit existing sites, extract design tokens, generate style-matched pages; (4) UX Review: heuristic evaluation (Nielsen's 10), cognitive load analysis, mental model diagnosis, affordance audit, dark pattern detection — grounded in NNG research; (5) Content formats: HTML pitch decks, WeChat article layout with 4 color schemes + 3 structural templates + inline styles + API upload flow; (6) Writing: anti-AI-taste Chinese copywriting across 4 text types (opinion/story/tutorial/product copy) and 3 platforms (公众号/小红书/产品内文案), with banned word list and before/after rewrites. Built-in Wu Xing (五行) color system with 40-tone palette, 26 combos, and cultural brand mapping. 16 domain references (including ux-heuristics, ux-psychology, presentation, wechat, wuxing-colors, voice), full design system (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing, style audit), interactive pattern library, and anti-AI-slop quality gates. Triggers on: "design options for X", "show me variations", "vary this design", "audit", "analyze my site", "match this style", "extract tokens", "migrate", "add motion", "dramatize", "make interactive", "ux review", "heuristic evaluation", "usability audit", "cognitive load", "mental models", "affordances", "dark patterns", "review this design", "pitch deck", "slides", "幻灯片", "PPT", "公众号", "wechat article", "微信文章", "五行配色", "wu xing", "brand color", "moodboard", "去AI味", "写文案", "copywriting".
+description: AI-driven interactive design generation, style analysis, and UX evaluation with Impeccable design system. Context-aware output — auto-detects React projects (package.json with react dependency) and generates .tsx components; otherwise generates zero-dependency interactive HTML. Six modes — (1) Generate: 3 distinct, fully-animated design variations from a prompt, with zone-level iteration (vary/remix/shuffle a specific section); (2) Component: isolated UI components with all 8 states and variants — button systems, forms, cards, modals, nav; (3) Analyze: audit existing sites, extract design tokens, generate style-matched pages; (4) UX Review: heuristic evaluation (Nielsen's 10), cognitive load analysis, mental model diagnosis, affordance audit, dark pattern detection — grounded in NNG research; (5) Content formats: HTML pitch decks, WeChat article layout with 4 color schemes + 3 structural templates + inline styles + API upload flow; (6) Writing: anti-AI-taste Chinese copywriting across 4 text types (opinion/story/tutorial/product copy) and 3 platforms (公众号/小红书/产品内文案), with banned word list and before/after rewrites. Built-in Wu Xing (五行) color system with 40-tone palette, 26 combos, and cultural brand mapping. 16 domain references (including ux-heuristics, ux-psychology, presentation, wechat, wuxing-colors, voice), full design system (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing, style audit), interactive pattern library, and anti-AI-slop quality gates. Triggers on: "design options for X", "show me variations", "vary this design", "audit", "analyze my site", "match this style", "extract tokens", "migrate", "add motion", "dramatize", "make interactive", "component button/form/card", "ux review", "heuristic evaluation", "usability audit", "cognitive load", "mental models", "affordances", "dark patterns", "review this design", "export to vue/astro/svelte", "pitch deck", "slides", "幻灯片", "PPT", "公众号", "wechat article", "微信文章", "五行配色", "wu xing", "brand color", "moodboard", "去AI味", "写文案", "copywriting".
 ---
 
 # Variant Design
@@ -25,53 +25,244 @@ This skill runs inside Claude Code — a terminal. Design decisions must account
 
 Before generating any design, detect the output format. Run this detection once per session and cache the result.
 
-**Step 1: Check for React project**
+**Step 1: Read package.json**
 
 ```bash
-# Read package.json if it exists in cwd
 cat package.json 2>/dev/null
 ```
 
-Parse the JSON output. Check if the key `"react"` exists as an **exact key** in any of: `dependencies`, `devDependencies`, `peerDependencies`, or `optionalDependencies`. Do not substring-match — `react-scripts`, `@vitejs/plugin-react`, or README text mentioning "react" do not count.
+If absent or unreadable → **HTML output** (fail-safe), print warning if unreadable. Do not traverse parent directories — check cwd only.
 
-**Step 2: Detect framework**
+**Step 2: Walk the decision tree**
 
-If React is detected, also check for:
-- Key `"next"` in any dependencies → **Next.js project** (App Router: add `"use client"` to components using hooks/animations/browser APIs)
-- Key `"vite"` or `"@vitejs/plugin-react"` → **Vite project**
-- Neither → **generic React project**
-
-**Step 3: Check for animation library**
-
-If React is detected, check for key `"framer-motion"` or `"motion"` in dependencies. If not found, **do not import Framer Motion** — use CSS animations instead (same visual result, no missing package error).
-
-**Step 4: Apply override**
-
-Explicit user format always wins over detection:
-- User says `--react` or `react [A/B/C]` → force React output
-- User says `--html` → force HTML output
-- `export to react/next/vite` → force that framework's output
-- Detection result is the default when no override is given
-
-**Step 5: Announce the format choice**
-
-After detection, print one line before generating:
+Parse dependencies / devDependencies / peerDependencies / optionalDependencies. Check for **exact keys only** — never substring-match (`react-scripts` ≠ `react`, `@vitejs/plugin-react` ≠ `vite`).
 
 ```
-✦ Output format: [React .tsx — detected react in package.json (Next.js)] 
-  or
-✦ Output format: [Interactive HTML — no React project detected in cwd]
-  or
-✦ Output format: [React .tsx — user requested --react]
+package.json exists?
+│
+├─ no  →  HTML (zero-dep default)
+│
+└─ yes → check keys:
+    │
+    ├─ "react" present?
+    │   ├─ yes → React branch:
+    │   │         ├─ "next" present?          → Next.js App Router .tsx
+    │   │         │                              add "use client" on components
+    │   │         │                              using hooks/animations/browser APIs
+    │   │         ├─ "vite" or               → Vite .tsx
+    │   │         │  "@vitejs/plugin-react"     preview: read scripts.dev → npm run dev
+    │   │         └─ neither                 → Generic React .tsx
+    │   │
+    │   └─ no → non-React branch:
+    │           ├─ "vue" present?             → Vue 3 .vue SFC
+    │           │                               <script setup> + <template> + <style scoped>
+    │           │                               preview: npm run dev (Vite assumed)
+    │           ├─ "astro" present?           → Astro .astro component
+    │           │                               frontmatter + HTML template
+    │           │                               no client-side JS unless :is="client:load"
+    │           ├─ "svelte" or               → Svelte .svelte component
+    │           │  "@sveltejs/kit" present?     <script> + markup + <style>
+    │           │                               SvelteKit if @sveltejs/kit detected
+    │           └─ none of the above         → HTML (zero-dep default)
 ```
 
-This line makes the detection transparent. If the format is wrong, the user knows to pass `--html` or `--react`.
+**Step 3: Check for animation library (React branch only)**
+
+- `"framer-motion"` or `"motion"` in deps → use Framer Motion (`motion.div`, `AnimatePresence`, `useInView`)
+- Not found → CSS animations only — do **not** import Framer Motion (missing package = runtime error)
+
+**Step 4: Apply user override**
+
+Explicit user instruction always wins over detection:
+
+| User says | Output |
+|---|---|
+| `--react` or `react [A/B/C]` | Force React (auto-detect Next/Vite sub-type) |
+| `--html` | Force zero-dep HTML |
+| `--vue` | Force Vue 3 SFC |
+| `--astro` | Force Astro component |
+| `--svelte` | Force Svelte component |
+| `export to next/vite/astro/svelte` | Force that framework |
+
+**Step 5: Announce the format**
+
+Print one line before generating:
+
+```
+✦ Output format: Next.js .tsx — detected next in package.json
+✦ Output format: Vue 3 SFC .vue — detected vue in package.json
+✦ Output format: Astro .astro — detected astro in package.json
+✦ Output format: Svelte .svelte — detected @sveltejs/kit in package.json
+✦ Output format: Interactive HTML — no framework detected in cwd
+✦ Output format: React .tsx — user requested --react
+```
 
 **Edge cases:**
-- No `package.json` in cwd → HTML output
-- Malformed/unreadable `package.json` → HTML output (fail safe), print warning
-- `.tsx` files exist but no `react` in `package.json` (Preact/Solid/stale files) → HTML output; do NOT treat `.tsx` existence alone as a React signal
-- Monorepo: check cwd only, do not traverse parent directories
+- `.tsx` files exist but no `react` key → HTML output (Preact/Solid/stale files don't count)
+- Both `vue` and `nuxt` detected → treat as Nuxt 3 (same SFC format, note `useNuxtApp` available)
+- Monorepo: check cwd only, never traverse to parent `package.json`
+- Multiple frameworks in same `package.json` (unusual) → print ambiguity warning, ask user to pass `--[framework]`
+
+---
+
+### Framework Output Templates
+
+Each framework has its own file template, preview command, and import note.
+
+#### Next.js App Router
+
+```tsx
+// variant-output/VariantA.tsx
+// Generated by variant-design — move to app/components/ or src/components/
+// Preview: npm run dev (then import this component in your page)
+"use client"; // include when component uses hooks, animations, or browser APIs
+
+import { useState, useEffect, useRef } from "react";
+// import { motion } from "framer-motion"; // only if framer-motion detected
+
+export default function VariantA() {
+  // ...
+}
+```
+
+Preview instruction after writing file:
+```
+✦ Written: variant-output/VariantA.tsx
+  Move to app/components/VariantA.tsx, then import in your page:
+  import VariantA from "@/components/VariantA"
+  Preview: npm run dev
+```
+
+#### Vite React
+
+```tsx
+// variant-output/VariantA.tsx
+// Generated by variant-design — move to src/components/
+// Preview: npm run dev (Vite), then import this component
+
+import { useState, useEffect, useRef } from "react";
+
+export default function VariantA() {
+  // ...
+}
+```
+
+Preview: read `package.json scripts` → use `npm run dev` / `pnpm dev` / `yarn dev` based on detected package manager. Fallback: `npx vite`.
+
+#### Generic React
+
+Same as Vite template without Vite-specific notes. Preview: `npx vite` as fallback.
+
+#### Vue 3 SFC
+
+```vue
+<!-- variant-output/VariantA.vue -->
+<!-- Generated by variant-design — move to src/components/ -->
+<!-- Preview: npm run dev -->
+
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+// animations: use CSS transitions/animations (no framer-motion in Vue)
+// for complex motion: @vueuse/motion or vanilla CSS
+</script>
+
+<template>
+  <div class="variant-a">
+    <!-- ... -->
+  </div>
+</template>
+
+<style scoped>
+/* OKLCH colors as CSS custom properties */
+.variant-a {
+  --color-primary: oklch(65% 0.2 250);
+  /* ... */
+}
+</style>
+```
+
+**Vue rules:**
+- `<script setup>` always — no Options API
+- `lang="ts"` unless project has no TypeScript
+- Animations via CSS transitions + `v-enter-active` / `v-leave-active` transition classes
+- No Framer Motion — Vue has its own `<Transition>` and `<TransitionGroup>`
+- Reactivity: `ref()` for primitives, `reactive()` for objects, `computed()` for derived state
+
+#### Astro Component
+
+```astro
+---
+// variant-output/VariantA.astro
+// Generated by variant-design — move to src/components/ or src/pages/
+// Preview: npm run dev
+
+// Astro components have no client-side reactivity by default
+// Use client:load / client:visible for interactive islands
+interface Props {
+  title?: string;
+}
+const { title = "Default Title" } = Astro.props;
+---
+
+<section class="variant-a">
+  <!-- ... -->
+</section>
+
+<style>
+  /* Scoped by default in Astro */
+  .variant-a {
+    --color-primary: oklch(65% 0.2 250);
+  }
+</style>
+
+<!-- Add client:load only for interactive sections -->
+<!-- <InteractiveIsland client:load /> -->
+```
+
+**Astro rules:**
+- Frontmatter (`---`) for server-side logic only — no `useState`, no `useEffect`
+- Styles scoped by default — no need for CSS modules
+- Interactive sections: extract to a separate `.tsx` / `.vue` / `.svelte` island, import with `client:load` or `client:visible`
+- No JavaScript in `<script>` unless truly necessary — Astro ships zero JS by default
+
+#### Svelte / SvelteKit
+
+```svelte
+<!-- variant-output/VariantA.svelte -->
+<!-- Generated by variant-design — move to src/lib/components/ -->
+<!-- Preview: npm run dev -->
+
+<script lang="ts">
+  import { onMount } from "svelte";
+  // animations: svelte/transition and svelte/animate built-in
+  import { fade, fly, slide } from "svelte/transition";
+  import { tweened } from "svelte/motion";
+
+  let visible = false;
+  onMount(() => { visible = true; });
+</script>
+
+<div class="variant-a">
+  {#if visible}
+    <section transition:fly={{ y: 20, duration: 400 }}>
+      <!-- ... -->
+    </section>
+  {/if}
+</div>
+
+<style>
+  .variant-a {
+    --color-primary: oklch(65% 0.2 250);
+  }
+</style>
+```
+
+**Svelte rules:**
+- Use built-in `svelte/transition` and `svelte/animate` — no Framer Motion
+- `tweened()` and `spring()` from `svelte/motion` for number animations (counters, progress bars)
+- `{#if}` / `{#each}` / `{#await}` blocks — no JSX
+- Reactivity is assignment-based: `count += 1` triggers re-render automatically
+- SvelteKit: routes in `src/routes/`, components in `src/lib/components/`
 
 ### Output Convention
 
@@ -269,11 +460,16 @@ When the user says "export to [framework]" or `react [A/B/C]`, transform the win
 
 | Target | Action |
 |---|---|
-| `export to next` | Create `app/page.tsx` + `app/globals.css` with tokens + `public/` for images. Add `"use client"` directive if the component uses hooks, animations, or browser APIs. |
-| `export to vite` | Create `src/App.jsx` + `src/index.css` + `index.html` |
-| `export to astro` | Create `src/pages/index.astro` + `src/styles/tokens.css` |
-| `export to static` | Clean HTML (remove dev scripts), optimize images, inline critical CSS |
-| `react [A/B/C]` | Shorthand for `export to react` on the specified variation. Auto-detects Next vs Vite vs generic React from cwd. |
+| `export to next` | Next.js App Router .tsx — `"use client"` where needed, tokens in CSS file |
+| `export to vite` | Vite React .tsx — `src/App.tsx` structure, preview via `npm run dev` |
+| `export to vue` | Vue 3 SFC .vue — `<script setup lang="ts">` + scoped styles + `svelte/transition` equivalents via CSS |
+| `export to astro` | Astro .astro — frontmatter + template + scoped styles, interactive parts as `client:load` islands |
+| `export to svelte` | Svelte .svelte — `svelte/transition` animations, `tweened()` for counters, no Framer Motion |
+| `export to static` | Clean HTML — remove dev scripts, inline critical CSS |
+| `react [A/B/C]` | Shorthand for `export to react` — auto-detects Next vs Vite vs generic from cwd |
+| `vue [A/B/C]` | Shorthand for `export to vue` on the specified variation |
+| `astro [A/B/C]` | Shorthand for `export to astro` on the specified variation |
+| `svelte [A/B/C]` | Shorthand for `export to svelte` on the specified variation |
 
 Always ask which variation to export if the user hasn't picked one yet.
 
