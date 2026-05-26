@@ -178,9 +178,11 @@ Terminal space is precious. Keep text responses short and structured:
   Export  — Extract tokens · react A · react B · react C
 ```
 
+After initial generation, write context with detected scenario, the chosen palettes, and fonts for all 3 variations. Do not write `picked` yet — user hasn't chosen.
+
 **On iteration:**
 ```
-✦ Variation A — Vary subtle · iteration 2
+✦ Variation A — Vary subtle · iteration 2  [Terroir Warm · Editorial]
 
   Changed: tightened spacing to 4pt grid, added tabular-nums on stats,
   hover now lifts 4px→6px with shadow, scroll stagger 60ms→80ms
@@ -189,6 +191,8 @@ Terminal space is precious. Keep text responses short and structured:
 
   Next action? (react A to export as React component)
 ```
+
+After each iteration, update context: increment `iterations`, update `picked` if the user is iterating on a specific variation (implies selection).
 
 **Never dump the full HTML in the chat.** Write to file, open in browser, show a 2-3 line summary of what changed. The user reads code in their editor, not in the terminal.
 
@@ -210,6 +214,31 @@ Support shorthand prompts for fast iteration in the terminal:
 | `react A` | Export Variation A as React .tsx component (alias for `export to react`, Variation A) |
 | `react B` | Export Variation B as React .tsx component |
 | `react C` | Export Variation C as React .tsx component |
+| `reset context` | Delete `.variant-context.json` and start fresh — next generation ignores all persisted preferences |
+| `show context` | Print the current `.variant-context.json` contents in the terminal |
+
+### Context Commands
+
+**`show context`** — Print the current context:
+
+```bash
+cat ./variant-output/.variant-context.json 2>/dev/null || echo "(no context saved yet)"
+```
+
+Display as a formatted single-line summary, e.g.:
+```
+✦ Context: Amber Warm · Editorial · Instrument Serif + Instrument Sans · picked B · 4 iterations
+  Framework: next · Scenario: landing-page
+  Notes: user prefers high contrast, no dark mode
+```
+
+**`reset context`** — Delete the context file and confirm:
+
+```bash
+rm -f ./variant-output/.variant-context.json
+```
+
+Print: `✦ Context cleared — next generation starts fresh.`
 
 ### Comparison View
 
@@ -269,6 +298,27 @@ Useful for pasting into CodePen, Claude.ai artifacts, or other tools.
 
 ## Project Context Initialization
 
+### Session Start: Read Persisted Context
+
+**Before doing anything else**, check for a context file in the output directory:
+
+```bash
+cat ./variant-output/.variant-context.json 2>/dev/null
+```
+
+If the file exists and is valid JSON, load it silently and print one line:
+
+```
+✦ Resuming context: [palette] · [direction] · picked [variation] · iteration [n]
+  (reset context to start fresh)
+```
+
+Use all fields as constraints for the current session — the user should not need to re-specify preferences they've already confirmed.
+
+If the file does not exist, proceed to the first-use questions below.
+
+### First Use: Gather Context
+
 On first use in a project, gather design context to ground all future generations. Ask the user:
 
 1. **Users & Purpose** — Who uses this? What problem does it solve? What's the core task?
@@ -278,7 +328,36 @@ On first use in a project, gather design context to ground all future generation
 
 If the user can't answer, infer from their codebase: scan for existing color variables, font imports, component patterns, and README/brand docs. Confirm inferences before proceeding.
 
-Persist context as a comment block at the top of generated files or in the conversation — reference it in every subsequent generation to ensure consistency across variations.
+### Persist Context After Each Decision
+
+Write `./variant-output/.variant-context.json` whenever the user makes a meaningful choice. Create `variant-output/` first if it doesn't exist.
+
+**Schema:**
+
+```json
+{
+  "palette": "Amber Warm",
+  "fonts": ["Instrument Serif", "Instrument Sans"],
+  "direction": "Editorial",
+  "scenario": "landing-page",
+  "picked": "B",
+  "iterations": 3,
+  "framework": "next",
+  "notes": "user prefers high contrast, no dark mode"
+}
+```
+
+**When to update:**
+- After user picks a palette or confirms a direction → update `palette`, `direction`, `fonts`
+- After user says `pick A/B/C` → update `picked`
+- After each variation action (vary, remix, shuffle) → increment `iterations`
+- After scenario is detected and confirmed → update `scenario`
+- After framework is detected → update `framework`
+- After user gives a preference constraint → append to `notes`
+
+**Fields are optional** — write only what's known. Do not guess or fill in defaults.
+
+Write the file silently (no terminal output). If write fails (e.g. no write permission), continue silently — context persistence is best-effort, never blocking.
 
 ---
 
@@ -413,6 +492,10 @@ Identify the scenario and load the corresponding reference file before designing
 For initial generation, load at minimum: **typography**, **color-and-contrast**, **spatial-design**, and **micro-interactions**. Load **interactive-patterns** when the design involves filtering, forms, charts, galleries, or drag-and-drop. Load others as the design demands.
 
 ## Core Workflow
+
+### 0. Load Persisted Context (Every Session)
+
+Before parsing the prompt, run the context check from "Project Context Initialization → Session Start". If a `.variant-context.json` exists, apply its values as soft constraints on all generation steps: palette selection, font choices, direction, and framework output format. The user can override any field by stating a preference explicitly.
 
 ### 1. Parse → Detect → Load
 Identify scenario, load domain reference file + relevant design system references, pick 3 starter prompts and palettes. Study the Real Community Examples for composition patterns and what makes each design work — extract the principle, not the surface style.
