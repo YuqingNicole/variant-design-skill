@@ -147,6 +147,8 @@ compare                → 三个变体并排对比
 open B                 → 重新在浏览器打开 B
 react A                → 将变体 A 导出为 React .tsx 组件
 react B                → 将变体 B 导出为 React .tsx 组件
+show context           → 打印当前持久化的色板/字体/方向
+reset context          → 清除 context，下次从头开始
 ```
 
 ### 你会看到什么
@@ -154,6 +156,15 @@ react B                → 将变体 B 导出为 React .tsx 组件
 文件会写入 `variant-output/` 目录并**自动在浏览器中打开** — 你永远不需要手动寻找或打开文件。终端中会显示紧凑的**摘要卡片**（方向、色板、字体、交互）。操作按 **Reshape / Tune / Animate / Refine / Export** 五组分类。
 
 迭代时，同一文件会被覆盖并重新打开 — 浏览器标签页自动刷新。终端只显示 2-3 行变更摘要，不会输出完整代码。
+
+**偏好跨 session 持久化。** 重新进入项目目录时，技能会自动读取 `variant-output/.variant-context.json`，恢复上次的色板、字体、方向和迭代次数：
+
+```
+✦ Resuming context: Amber Warm · Editorial · Instrument Serif + Instrument Sans · picked B · 4 iterations
+  (reset context to start fresh)
+```
+
+无需重新说明你已确认的偏好。用 `show context` 查看当前 context，用 `reset context` 从头开始。
 
 **输出格式**是上下文感知的：如果当前目录含有 React 项目（`package.json` 含 `react` 依赖），自动输出 `.tsx` 组件；否则输出零依赖 HTML。
 

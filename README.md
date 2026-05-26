@@ -147,6 +147,8 @@ compare                → Side-by-side view of all 3
 open B                 → Re-open B in browser
 react A                → Export Variation A as React .tsx component
 react B                → Export Variation B as React .tsx component
+show context           → Print current persisted palette/fonts/direction
+reset context          → Clear context, start fresh next session
 ```
 
 ### What you'll see
@@ -154,6 +156,15 @@ react B                → Export Variation B as React .tsx component
 Files are written to `variant-output/` and **auto-opened in your browser** — you never need to manually find or open files. Each variation comes with a compact **Summary Card** in the terminal (direction, palette, fonts, interactions). Actions are grouped into **Reshape / Tune / Animate / Refine / Export** categories.
 
 On iteration, the same file is overwritten and re-opened — your browser tab refreshes automatically. The terminal shows a 2-3 line summary of what changed, not the full code.
+
+**Context persists across sessions.** When you re-enter a project directory, the skill reads `variant-output/.variant-context.json` and resumes your last palette, fonts, direction, and iteration count automatically:
+
+```
+✦ Resuming context: Amber Warm · Editorial · Instrument Serif + Instrument Sans · picked B · 4 iterations
+  (reset context to start fresh)
+```
+
+No need to re-specify preferences you've already confirmed. Use `show context` to inspect the current context, or `reset context` to start fresh.
 
 **Output format** is context-aware: if your current directory contains a React project (`package.json` with `react` dependency), output is `.tsx` components. Otherwise, zero-dependency HTML is the default. Override with `--react` or `--html`. See below for more.
 
