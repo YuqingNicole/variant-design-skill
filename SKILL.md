@@ -460,57 +460,152 @@ When the user wants to evaluate usability rather than generate visuals, switch t
 
 ### UX Review Workflow
 
-**Step 1: Define scope** — What task(s) is the user trying to complete? What screens/flows are in scope?
+Two paths depending on what's available:
+- **Code in cwd** → run Code Scan (Steps 1a–1b) first, then layer conceptual analysis
+- **No code / screenshots / description only** → skip to Step 2
 
-**Step 2: Walk the flow** — Step through each screen as a first-time user would. For each screen, check:
+**Step 1a: Auto-detect project files**
+
+```bash
+# Find component files in cwd (skip node_modules, .git, dist)
+find . \( -name "*.tsx" -o -name "*.jsx" -o -name "*.vue" -o -name "*.svelte" -o -name "*.html" \) \
+  -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/dist/*" | head -30
+```
+
+If files found, proceed to Step 1b. Otherwise skip to Step 2.
+
+**Step 1b: Code-level heuristic scan**
+
+Run these greps against the found files. Each maps to a specific heuristic:
+
+```bash
+# H9 — Generic error messages (critical pattern)
+grep -rn "error occurred\|something went wrong\|invalid input\|please try again\|An error\|Unknown error" \
+  --include="*.tsx" --include="*.jsx" --include="*.vue" --include="*.html" \
+  --exclude-dir=node_modules --exclude-dir=dist . 2>/dev/null
+
+# H1 — Missing loading states: async handlers without loading flag
+grep -rn "onClick\|onSubmit\|handleSubmit" \
+  --include="*.tsx" --include="*.jsx" --exclude-dir=node_modules . 2>/dev/null | head -20
+# (then read those files to check if loading/disabled state is managed)
+
+# H3 — Destructive actions: delete/remove calls without confirmation guard
+grep -rn "delete\|remove\|destroy\|clearAll\|reset" \
+  --include="*.tsx" --include="*.jsx" -i --exclude-dir=node_modules . 2>/dev/null | \
+  grep -iv "confirm\|modal\|dialog\|undo\|trash\|soft" | head -20
+
+# H4 — Terminology inconsistency: mixed action words for same concept
+grep -rn '"Delete"\|"Remove"\|"Erase"\|"Discard"\|"Clear"' \
+  --include="*.tsx" --include="*.jsx" --exclude-dir=node_modules . 2>/dev/null
+# Flag if multiple terms coexist in same codebase
+
+# H6 — Icon-only buttons missing accessible label
+grep -rn "<button\|<Button\|<IconButton" \
+  --include="*.tsx" --include="*.jsx" --exclude-dir=node_modules . 2>/dev/null | \
+  grep -v "aria-label\|title=\|children\|tooltip" | head -20
+
+# H5 — Forms missing inline validation
+grep -rn "<form\|<Form\|onSubmit" \
+  --include="*.tsx" --include="*.jsx" --exclude-dir=node_modules . 2>/dev/null | head -10
+# (then read those files to check for inline validation vs. submit-only)
+
+# H10 — Empty states: no empty state handling
+grep -rn "\.length === 0\|\.length == 0\|items\.length\|data\.length" \
+  --include="*.tsx" --include="*.jsx" --exclude-dir=node_modules . 2>/dev/null | \
+  grep -v "EmptyState\|empty\|nothing\|no items\|no results" | head -15
+
+# Accessibility baseline
+grep -rn "<img " \
+  --include="*.tsx" --include="*.jsx" --include="*.html" \
+  --exclude-dir=node_modules . 2>/dev/null | grep -v "alt=" | head -10
+```
+
+For each grep that returns results: read the flagged files at the relevant lines to confirm whether it's a real violation or a false positive. Report only confirmed violations.
+
+**Step 2: Define scope** — What task(s) is the user trying to complete? What screens/flows are in scope?
+
+**Step 3: Walk the flow** — Step through each screen as a first-time user would. For each screen, check:
 - What is the user trying to do here? (H1: visibility of goal)
 - Can they figure out how to do it? (affordances, signifiers)
 - Will they know when it worked? (feedback, system status)
 - What could go wrong? (error prevention)
 - Is anything adding unnecessary mental work? (cognitive load)
 
-**Step 3: Log violations** — For each violation found:
+**Step 4: Log violations** — For each violation found (from code scan or conceptual walk):
 ```
-Screen: [name/URL]
-Heuristic: [H1–H10 from ux-heuristics.md, or cognitive load / mental model / affordance]
-Violation: [specific description of what's wrong]
+File: [path:line] or Screen: [name]
+Heuristic: [H1–H10, or cognitive load / mental model / affordance]
+Violation: [specific description — quote actual code or UI text where possible]
 Severity: [1=cosmetic / 2=minor / 3=major / 4=critical]
-Fix: [concrete recommendation]
+Fix: [concrete recommendation with code example if applicable]
 ```
 
-**Step 4: Report** — Present as a prioritized list, critical issues first. Group by heuristic to surface systemic problems.
+**Step 5: Report** — Present as a prioritized list, critical issues first. Group by heuristic to surface systemic problems.
 
-**Step 5: Offer next step** — After the report, offer:
-- Generate redesigned version of worst-offending screen
-- Generate comparison (current vs. fixed)
-- Generate a checklist for the dev team to implement fixes
+**Step 6: Offer next step** — After the report, offer:
+- `fix [H9]` → Generate corrected error messages as a code snippet or new component
+- `generate fix` → Generate redesigned version of worst-offending screen as HTML/TSX
+- `compare` → Side-by-side: current vs. fixed version opened in browser
+- `checklist` → Generate a dev-ready fix checklist (markdown, copy-pasteable to GitHub Issues)
 
 ### UX Review Output Format
 
 ```
 ✦ UX Review: [screen/flow name]
+  Scanned: 23 components · 4 violations found
 
   Critical (fix before launch)
   ────────────────────────────
-  [H9] Error messages — "Invalid input" tells user nothing
-       Fix: Add what failed + why + how to fix ("Email must include @")
+  [H9] src/components/LoginForm.tsx:47
+       catch(e) { setError("An error occurred") }
+       Fix: setError(`Login failed: ${e.message}. Check your email and password.`)
 
-  [H1] System status — Upload button shows no loading state
-       Fix: Disable button + show spinner during upload
+  [H1] src/components/UploadButton.tsx:23
+       onClick={handleUpload} — no loading/disabled state managed
+       Fix: setLoading(true) on click; disabled={loading}; show <Spinner /> inside button
 
   Major (high priority)
   ─────────────────────
-  [H3] No undo for destructive action — "Delete project" is immediate
-       Fix: Move to trash with 30-day recovery window
+  [H3] src/pages/ProjectList.tsx:89
+       onClick={() => deleteProject(id)} — no confirmation, immediate delete
+       Fix: Move to trash: softDelete(id) + undo toast for 5s, or confirm dialog
 
   Minor (low priority)
   ────────────────────
-  [H4] Inconsistency — "Remove" and "Delete" used for same action
-       Fix: Standardize to "Delete" everywhere
+  [H4] "Remove" (src/components/MemberList.tsx:34) vs "Delete" (src/pages/Settings.tsx:102)
+       Same destructive action, two different words
+       Fix: Standardize to "Remove" for members, "Delete" for owned resources
 
   Summary: 2 critical · 1 major · 1 minor
-  Next: Generate redesigned error state? (react ux-fix)
+  Next: fix H9 · fix H1 · generate fix · checklist
 ```
+
+### Quick Triggers for UX Review
+
+| User types | Action |
+|---|---|
+| `ux scan` | Code scan only — run all heuristic greps, report file:line violations, no conceptual walk |
+| `ux review` | Full review — code scan + conceptual walk + report |
+| `ux review src/components/` | Scope scan to specific directory |
+| `fix H9` | Generate corrected error message patterns as a code snippet |
+| `fix H1` | Generate loading state pattern for flagged component |
+| `fix H3` | Generate soft-delete / confirmation dialog pattern |
+| `generate fix` | Generate redesigned screen that resolves all critical violations |
+| `checklist` | Output dev-ready markdown checklist of all violations (copy to GitHub Issues) |
+| `compare ux` | Side-by-side: current vs. UX-fixed version in browser |
+
+### Cross-Mode Bridges
+
+**From Site Analysis → UX Review:**
+After `audit` extracts tokens and consistency issues, you can continue with `ux scan` — the two modes complement each other. Style audit catches visual/token issues; UX scan catches behavioral/interaction issues.
+
+**From UX Review → Generate:**
+After flagging violations, offer to generate a fixed version:
+- `generate fix` → generate corrected screen as HTML/TSX, written to `variant-output/ux-fix-[screen].html`, opened in browser
+- `compare ux` → write both current (screenshot or recreation) and fixed version, open side-by-side in `variant-output/_ux-compare.html`
+
+**From Generate → UX Review:**
+Every generated design silently runs the heuristic checklist before being presented (part of the AI Slop Test gate). If any H1–H10 critical violations are found in the generated code, fix before writing the file — don't present broken UX as a variation.
 
 ### When to Load Which Reference
 
@@ -520,7 +615,7 @@ Fix: [concrete recommendation]
 | Mental models, cognitive load, Gestalt | `references/ux-psychology.md` |
 | Both | Load both — they complement each other |
 
-**For generation tasks:** Load these references as quality constraints, not just for evaluation. Every generated design should silently pass the heuristic checklist before being presented.
+**For generation tasks:** Load these references as silent quality constraints. Every generated design should pass the heuristic checklist before being presented — this is part of the quality gate, same as the AI Slop Test.
 
 ---
 
