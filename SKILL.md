@@ -1,6 +1,6 @@
 ---
 name: variant-design
-description: AI-driven interactive design generation and style analysis with Impeccable design system. Four modes — (1) Generate: 3 distinct, fully-animated design variations from a prompt; (2) Analyze: audit existing sites, extract design tokens, generate style-matched pages; (3) Content formats: HTML pitch decks (dark flip / light scroll-snap), WeChat article layout with inline styles + API upload flow; (4) Writing: anti-AI-taste Chinese copywriting with banned word list and before/after rewrites. Built-in Wu Xing (五行) color system with 40-tone palette, 26 combos, and cultural brand mapping. 14 domain references (including presentation, wechat, wuxing-colors, voice), full design system (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing, style audit), interactive pattern library, and anti-AI-slop quality gates. Triggers on: "design options for X", "show me variations", "vary this design", "audit", "analyze my site", "match this style", "extract tokens", "migrate", "add motion", "dramatize", "make interactive", "pitch deck", "slides", "幻灯片", "PPT", "公众号", "wechat article", "微信文章", "五行配色", "wu xing", "brand color", "moodboard", "去AI味", "写文案", "copywriting".
+description: AI-driven interactive design generation and style analysis with Impeccable design system. Context-aware output — auto-detects React projects (package.json with react dependency) and generates .tsx components; otherwise generates zero-dependency interactive HTML. Four modes — (1) Generate: 3 distinct, fully-animated design variations from a prompt; (2) Analyze: audit existing sites, extract design tokens, generate style-matched pages; (3) Content formats: HTML pitch decks (dark flip / light scroll-snap), WeChat article layout with inline styles + API upload flow; (4) Writing: anti-AI-taste Chinese copywriting with banned word list and before/after rewrites. Built-in Wu Xing (五行) color system with 40-tone palette, 26 combos, and cultural brand mapping. 14 domain references (including presentation, wechat, wuxing-colors, voice), full design system (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing, style audit), interactive pattern library, and anti-AI-slop quality gates. Triggers on: "design options for X", "show me variations", "vary this design", "audit", "analyze my site", "match this style", "extract tokens", "migrate", "add motion", "dramatize", "make interactive", "pitch deck", "slides", "幻灯片", "PPT", "公众号", "wechat article", "微信文章", "五行配色", "wu xing", "brand color", "moodboard", "去AI味", "写文案", "copywriting".
 ---
 
 # Variant Design
@@ -13,13 +13,65 @@ Inspired by the [Variant](https://variant.com) design community — a space wher
 
 Built on the **Impeccable design system** — a comprehensive set of design references covering typography, color theory, spatial design, motion, interaction patterns, responsive design, and UX writing. Every design decision is grounded in these principles.
 
-**Supports:** Interactive HTML (default) · React + Framer Motion · 10 domain reference libraries · 39 palettes · design system references · micro-interaction library · interactive pattern library · style audit & token extraction · variation actions
+**Supports:** Context-aware output (HTML default · React .tsx when React project detected) · Framer Motion (when installed) · 10 domain reference libraries · 39 palettes · design system references · micro-interaction library · interactive pattern library · style audit & token extraction · variation actions
 
 ---
 
 ## CLI Workflow (Claude Code)
 
 This skill runs inside Claude Code — a terminal. Design decisions must account for the fact that the user **cannot see the output** without opening a browser. Every step of the workflow should minimize friction between "idea" and "eyes on pixels."
+
+### Output Format Detection
+
+Before generating any design, detect the output format. Run this detection once per session and cache the result.
+
+**Step 1: Check for React project**
+
+```bash
+# Read package.json if it exists in cwd
+cat package.json 2>/dev/null
+```
+
+Parse the JSON output. Check if the key `"react"` exists as an **exact key** in any of: `dependencies`, `devDependencies`, `peerDependencies`, or `optionalDependencies`. Do not substring-match — `react-scripts`, `@vitejs/plugin-react`, or README text mentioning "react" do not count.
+
+**Step 2: Detect framework**
+
+If React is detected, also check for:
+- Key `"next"` in any dependencies → **Next.js project** (App Router: add `"use client"` to components using hooks/animations/browser APIs)
+- Key `"vite"` or `"@vitejs/plugin-react"` → **Vite project**
+- Neither → **generic React project**
+
+**Step 3: Check for animation library**
+
+If React is detected, check for key `"framer-motion"` or `"motion"` in dependencies. If not found, **do not import Framer Motion** — use CSS animations instead (same visual result, no missing package error).
+
+**Step 4: Apply override**
+
+Explicit user format always wins over detection:
+- User says `--react` or `react [A/B/C]` → force React output
+- User says `--html` → force HTML output
+- `export to react/next/vite` → force that framework's output
+- Detection result is the default when no override is given
+
+**Step 5: Announce the format choice**
+
+After detection, print one line before generating:
+
+```
+✦ Output format: [React .tsx — detected react in package.json (Next.js)] 
+  or
+✦ Output format: [Interactive HTML — no React project detected in cwd]
+  or
+✦ Output format: [React .tsx — user requested --react]
+```
+
+This line makes the detection transparent. If the format is wrong, the user knows to pass `--html` or `--react`.
+
+**Edge cases:**
+- No `package.json` in cwd → HTML output
+- Malformed/unreadable `package.json` → HTML output (fail safe), print warning
+- `.tsx` files exist but no `react` in `package.json` (Preact/Solid/stale files) → HTML output; do NOT treat `.tsx` existence alone as a React signal
+- Monorepo: check cwd only, do not traverse parent directories
 
 ### Output Convention
 
@@ -123,7 +175,7 @@ Terminal space is precious. Keep text responses short and structured:
   Tune    — Vary subtle · Remix colors · Mix (A+B)
   Animate — Add motion · Dramatize · Make interactive
   Refine  — Polish · Critique · See other views
-  Export  — Extract tokens
+  Export  — Extract tokens · react A · react B · react C
 ```
 
 **On iteration:**
@@ -135,7 +187,7 @@ Terminal space is precious. Keep text responses short and structured:
 
   variant-output/variant-coffee-A.html  ← updated & opened
 
-  Next action?
+  Next action? (react A to export as React component)
 ```
 
 **Never dump the full HTML in the chat.** Write to file, open in browser, show a 2-3 line summary of what changed. The user reads code in their editor, not in the terminal.
@@ -155,6 +207,9 @@ Support shorthand prompts for fast iteration in the terminal:
 | `open B` | Re-open Variation B in browser |
 | `dark mode A` | Generate dark ↔ light toggle variant of A |
 | `compare` | Open all 3 variations side-by-side (writes a comparison HTML) |
+| `react A` | Export Variation A as React .tsx component (alias for `export to react`, Variation A) |
+| `react B` | Export Variation B as React .tsx component |
+| `react C` | Export Variation C as React .tsx component |
 
 ### Comparison View
 
@@ -175,16 +230,29 @@ When the user says "compare" or wants to see all variations together, generate a
 
 ### Framework Export
 
-When the user says "export to [framework]", transform the winning variation into the target structure:
+When the user says "export to [framework]" or `react [A/B/C]`, transform the winning variation into the target structure:
 
 | Target | Action |
 |---|---|
-| `export to next` | Create `app/page.tsx` + `app/globals.css` with tokens + `public/` for images |
+| `export to next` | Create `app/page.tsx` + `app/globals.css` with tokens + `public/` for images. Add `"use client"` directive if the component uses hooks, animations, or browser APIs. |
 | `export to vite` | Create `src/App.jsx` + `src/index.css` + `index.html` |
 | `export to astro` | Create `src/pages/index.astro` + `src/styles/tokens.css` |
 | `export to static` | Clean HTML (remove dev scripts), optimize images, inline critical CSS |
+| `react [A/B/C]` | Shorthand for `export to react` on the specified variation. Auto-detects Next vs Vite vs generic React from cwd. |
 
 Always ask which variation to export if the user hasn't picked one yet.
+
+**Preview after React export:** Do not run `vite --open` directly — it may bypass project config. Instead, read `package.json.scripts` and print the correct dev command:
+- If scripts contains `"dev"` → print `npm run dev` (or `pnpm dev` / `yarn dev` / `bun dev` based on detected package manager)
+- If scripts contains `"start"` → print `npm start`
+- If no scripts found → print `npx vite` as fallback, with a note
+
+Example output after React export:
+```
+✦ Exported: variant-output/VariantA.tsx
+  Move to src/components/ to include in your project's build.
+  Preview: npm run dev  (then open the page that imports this component)
+```
 
 ### Clipboard Mode
 
@@ -695,8 +763,8 @@ Grounded in the Impeccable design system. Consult individual references for deep
 
 ## Code Export
 
-- **Interactive HTML**: Single-file, embedded CSS + JavaScript. Alive by default. **Default.**
-- **React**: Functional components, Tailwind or CSS modules — state assumptions upfront.
+- **Interactive HTML**: Single-file, embedded CSS + JavaScript. Alive by default. **Default when no React project detected.**
+- **React .tsx**: Functional components — auto-selected when React project detected in cwd, or via `react [A/B/C]` / `--react` / `export to react`.
 
 ### Interactive HTML Output Spec (Default)
 
@@ -747,16 +815,38 @@ Every HTML output must feel alive — static mockups are not acceptable. Follow 
 - `references/interactive-patterns.md` — functional interaction patterns (filter, drag, charts, forms)
 
 ### React Output Spec
+
+**When to use:** Auto-triggered when React project is detected (see Output Format Detection), or explicitly requested via `react [A/B/C]` / `--react` / `export to react`.
+
+**File output:**
+- Write to `variant-output/VariantA.tsx` (preserves same directory convention as HTML)
+- Add this comment at the top of every generated `.tsx` file:
+  ```tsx
+  // Generated by variant-design — move to src/components/ to include in your project's build.
+  // Preview: run your project's dev server (npm run dev / pnpm dev) then import this component.
+  ```
+
+**Component structure:**
 - Functional components only — no class components
+- Single default export: `export default function VariantA() { ... }`
 - Declare color tokens as `const theme = { ... }` with OKLCH values and hex fallbacks
 - Google Fonts: add a `<link>` in the returned JSX or instruct user to add to `index.html`
 - Prefer inline styles for one-off values; extract repeated patterns to a `styles` object
 - State assumptions upfront in a comment block: which components are stateful, what props to pass
-- If Tailwind: use `@apply` for repeated patterns; if CSS modules: one `.module.css` per component
+- If Tailwind detected in project: use Tailwind classes; if CSS modules: one `.module.css` per component; otherwise inline styles
 - Use `useEffect` sparingly — CSS animations and transitions preferred for entrances and states; JS for scroll observers and data-driven interactions
 - Prop defaults must be realistic content (no `undefined`, no "Lorem ipsum")
 - **Include interaction hooks**: `useScrollReveal`, `useCounter`, `useThemeToggle` as custom hooks where reusable
-- **Framer Motion**: Allowed and encouraged for React outputs. Use `motion.div`, `AnimatePresence`, `useInView` for scroll reveals, `layout` prop for animated filtering/sorting
+
+**Animation:**
+- Check whether `framer-motion` or `motion` is in `package.json` dependencies before importing
+- **If Framer Motion detected:** use `motion.div`, `AnimatePresence`, `useInView` for scroll reveals, `layout` prop for animated filtering/sorting
+- **If Framer Motion NOT detected:** implement animations with CSS transitions + `IntersectionObserver` in `useEffect` — same visual result, zero extra dependencies. Do NOT add `framer-motion` import.
+
+**Framework-specific rules:**
+- **Next.js (key `"next"` detected):** Add `"use client"` directive at the top of any component that uses hooks (`useState`, `useEffect`, `useRef`), browser APIs, event handlers, or animation libraries. Server components are the default in App Router — `"use client"` is required.
+- **Vite:** Standard React component, no special directives needed.
+- **Generic React:** Standard functional component.
 
 ### Multi-Screen / Flow Support
 

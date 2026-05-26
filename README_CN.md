@@ -26,7 +26,7 @@
 2. **加载设计系统参考** — 排版、色彩理论（OKLCH）、空间设计、动效、微交互、交互、响应式、UX 文案
 3. **生成 3 个差异化变体** — 每个采用不同的审美方向，包含完整交互（滚动揭示、动态图表、悬浮效果、功能性 JS）
 4. **AI 审美质量门** — 自动检测并过滤常见的 AI 生成审美特征
-5. **输出可交互代码** — 默认交互式 HTML，或 React + Framer Motion。真实内容，没有占位文本
+5. **输出可交互代码** — 上下文感知输出：检测到 React 项目（package.json 含 react 依赖）时自动生成 `.tsx` 组件；否则生成零依赖交互式 HTML。真实内容，没有占位文本
 6. **提供迭代操作** — 推到极致、精修、批评、换风格、重混色彩、重排布局、添加动效、戏剧化、使其可交互
 
 ### 分析模式（已有网站）
@@ -145,6 +145,8 @@ A + B colors           → A 的布局 + B 的色板
 tokens A               → 提取 A 的 CSS 设计令牌
 compare                → 三个变体并排对比
 open B                 → 重新在浏览器打开 B
+react A                → 将变体 A 导出为 React .tsx 组件
+react B                → 将变体 B 导出为 React .tsx 组件
 ```
 
 ### 你会看到什么
@@ -152,6 +154,32 @@ open B                 → 重新在浏览器打开 B
 文件会写入 `variant-output/` 目录并**自动在浏览器中打开** — 你永远不需要手动寻找或打开文件。终端中会显示紧凑的**摘要卡片**（方向、色板、字体、交互）。操作按 **Reshape / Tune / Animate / Refine / Export** 五组分类。
 
 迭代时，同一文件会被覆盖并重新打开 — 浏览器标签页自动刷新。终端只显示 2-3 行变更摘要，不会输出完整代码。
+
+**输出格式**是上下文感知的：如果当前目录含有 React 项目（`package.json` 含 `react` 依赖），自动输出 `.tsx` 组件；否则输出零依赖 HTML。
+
+### React 输出（上下文感知）
+
+在 React 项目目录中，技能会自动切换为 `.tsx` 输出：
+
+```
+# 在 React/Next/Vite 项目目录中：
+设计一个仪表盘  →  生成 variant-output/VariantA.tsx, VariantB.tsx, VariantC.tsx
+                    检测到 Next.js → 自动添加 "use client"
+                    检测到 framer-motion → 使用 Framer Motion；否则用 CSS 动画
+
+# 在其他目录中：
+设计一个仪表盘  →  生成 variant-output/variant-dashboard-A.html（不变）
+
+# 任意地方强制指定：
+设计一个仪表盘 --react   →  始终输出 .tsx
+设计一个仪表盘 --html    →  始终输出 HTML
+
+# 导出特定变体：
+react A              →  将变体 A 导出为 .tsx
+export to next       →  将选定变体导出为 Next.js App Router 组件
+```
+
+生成的 `.tsx` 文件写入 `variant-output/`，移到 `src/components/` 即可纳入项目构建。预览命令从 `package.json scripts` 自动推断（`npm run dev`、`pnpm dev` 等）。
 
 ---
 

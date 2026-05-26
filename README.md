@@ -26,7 +26,7 @@ Three variations from a single prompt — each feels like a different studio:
 2. **Loads design system references** — typography, color theory (OKLCH), spatial design, motion, micro-interactions, interaction, responsive, UX writing
 3. **Generates 3 distinct variations** — each pulls from a different aesthetic direction with full interactivity (scroll reveals, animated charts, hover effects, functional JS)
 4. **Runs an AI Slop Test** — quality gate that catches generic AI aesthetic fingerprints before presenting
-5. **Ships working code** — Interactive HTML by default, or React + Framer Motion. Real content, no lorem ipsum
+5. **Ships working code** — Context-aware output: auto-detects React projects and generates `.tsx` components; generates zero-dependency interactive HTML otherwise. Real content, no lorem ipsum
 6. **Offers variation actions** — push further, polish, critique, swap styles, remix colors, shuffle layouts, add motion, dramatize, make interactive
 
 ### Analyze Mode (existing sites)
@@ -145,6 +145,8 @@ A + B colors           → Mix A layout with B palette
 tokens A               → Extract CSS tokens from A
 compare                → Side-by-side view of all 3
 open B                 → Re-open B in browser
+react A                → Export Variation A as React .tsx component
+react B                → Export Variation B as React .tsx component
 ```
 
 ### What you'll see
@@ -152,6 +154,32 @@ open B                 → Re-open B in browser
 Files are written to `variant-output/` and **auto-opened in your browser** — you never need to manually find or open files. Each variation comes with a compact **Summary Card** in the terminal (direction, palette, fonts, interactions). Actions are grouped into **Reshape / Tune / Animate / Refine / Export** categories.
 
 On iteration, the same file is overwritten and re-opened — your browser tab refreshes automatically. The terminal shows a 2-3 line summary of what changed, not the full code.
+
+**Output format** is context-aware: if your current directory contains a React project (`package.json` with `react` dependency), output is `.tsx` components. Otherwise, zero-dependency HTML is the default. Override with `--react` or `--html`. See below for more.
+
+### React output (context-aware)
+
+In a React project, the skill automatically switches to `.tsx` output:
+
+```
+# In a React/Next/Vite project directory:
+design a dashboard  →  generates variant-output/VariantA.tsx, VariantB.tsx, VariantC.tsx
+                        Detects Next.js → adds "use client" where needed
+                        Detects framer-motion → uses it; otherwise CSS animations
+
+# In any other directory:
+design a dashboard  →  generates variant-output/variant-dashboard-A.html (unchanged)
+
+# Explicit override anywhere:
+design a dashboard --react   →  always .tsx
+design a dashboard --html    →  always HTML
+
+# Export a specific variation:
+react A              →  export Variation A as .tsx
+export to next       →  export winning variation as Next.js App Router component
+```
+
+Generated `.tsx` files go to `variant-output/` — move them to `src/components/` to include in your project's build. The preview command is inferred from your `package.json` scripts (`npm run dev`, `pnpm dev`, etc.).
 
 ---
 
