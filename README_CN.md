@@ -29,6 +29,26 @@
 5. **输出可交互代码** — 上下文感知输出：检测到 React 项目（package.json 含 react 依赖）时自动生成 `.tsx` 组件；否则生成零依赖交互式 HTML。真实内容，没有占位文本
 6. **提供迭代操作** — 推到极致、精修、批评、换风格、重混色彩、重排布局、添加动效、戏剧化、使其可交互
 
+### UX Review 模式
+
+基于 Nielsen Norman Group 研究的可用性评估。
+
+1. **启发式评估** — 对照 Nielsen 10 条启发式原则走查流程，每条违规按严重程度评级（1=表面问题 到 4=发布阻断）
+2. **认知负荷分析** — 定位多余复杂度的来源，给出精简建议
+3. **心智模型诊断** — 找出用户预期与系统实际行为的不匹配点
+4. **可供性审查** — 标记看起来可交互但实际不能点的元素（反之亦然）
+5. **格式塔检查** — 验证邻近性、相似性等视觉分组信号是否与设计意图一致
+6. **暗黑模式扫描** — 识别操控性交互模式（羞辱确认、套牢模式、隐藏费用）
+
+```
+ux review              → 当前设计的完整启发式评估
+review this design     → 走查流程，按严重程度标记违规点
+cognitive load         → 分析是什么让这个界面感觉复杂
+mental models          → 诊断用户为什么在这里感到困惑
+affordances            → 这看起来可点击 / 可拖拽 / 可交互吗？
+dark patterns          → 交互模式的伦理审查
+```
+
 ### 分析模式（已有网站）
 
 1. **扫描现有代码** — 读取 HTML、CSS、JSX、Vue、Svelte 文件中的设计 token
@@ -212,6 +232,8 @@ export to next       →  将选定变体导出为 Next.js App Router 组件
 | `references/food-beverage.md` | 餐厅、食谱、咖啡品牌、烘焙、鸡尾酒吧 |
 | `references/fashion.md` | 时尚品牌、潮牌、美妆、室内设计、生活方式 |
 | `references/palettes.md` | 通用色板库 — 39 个色板 × 7+ 审美方向（含 Pinterest 流行色板） |
+| `references/ux-heuristics.md` | Nielsen 10 启发式原则 · Fitts 定律 · Hick 定律 · Jakob 定律 · 严重程度评级 · 评估流程 |
+| `references/ux-psychology.md` | 心智模型 · 认知负荷 · 格式塔原则 · 阅读模式 · 可供性 · 注意力 · 记忆 · 信任 |
 
 ### 设计系统参考（Impeccable）
 每次生成都会加载的基础设计原则：

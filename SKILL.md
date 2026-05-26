@@ -1,6 +1,6 @@
 ---
 name: variant-design
-description: AI-driven interactive design generation and style analysis with Impeccable design system. Context-aware output — auto-detects React projects (package.json with react dependency) and generates .tsx components; otherwise generates zero-dependency interactive HTML. Four modes — (1) Generate: 3 distinct, fully-animated design variations from a prompt; (2) Analyze: audit existing sites, extract design tokens, generate style-matched pages; (3) Content formats: HTML pitch decks (dark flip / light scroll-snap), WeChat article layout with inline styles + API upload flow; (4) Writing: anti-AI-taste Chinese copywriting with banned word list and before/after rewrites. Built-in Wu Xing (五行) color system with 40-tone palette, 26 combos, and cultural brand mapping. 14 domain references (including presentation, wechat, wuxing-colors, voice), full design system (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing, style audit), interactive pattern library, and anti-AI-slop quality gates. Triggers on: "design options for X", "show me variations", "vary this design", "audit", "analyze my site", "match this style", "extract tokens", "migrate", "add motion", "dramatize", "make interactive", "pitch deck", "slides", "幻灯片", "PPT", "公众号", "wechat article", "微信文章", "五行配色", "wu xing", "brand color", "moodboard", "去AI味", "写文案", "copywriting".
+description: AI-driven interactive design generation, style analysis, and UX evaluation with Impeccable design system. Context-aware output — auto-detects React projects (package.json with react dependency) and generates .tsx components; otherwise generates zero-dependency interactive HTML. Five modes — (1) Generate: 3 distinct, fully-animated design variations from a prompt; (2) Analyze: audit existing sites, extract design tokens, generate style-matched pages; (3) UX Review: heuristic evaluation (Nielsen's 10), cognitive load analysis, mental model diagnosis, affordance audit, dark pattern detection — grounded in NNG research; (4) Content formats: HTML pitch decks (dark flip / light scroll-snap), WeChat article layout with inline styles + API upload flow; (5) Writing: anti-AI-taste Chinese copywriting with banned word list and before/after rewrites. Built-in Wu Xing (五行) color system with 40-tone palette, 26 combos, and cultural brand mapping. 16 domain references (including ux-heuristics, ux-psychology, presentation, wechat, wuxing-colors, voice), full design system (typography, color, spatial, motion, micro-interactions, interaction, responsive, UX writing, style audit), interactive pattern library, and anti-AI-slop quality gates. Triggers on: "design options for X", "show me variations", "vary this design", "audit", "analyze my site", "match this style", "extract tokens", "migrate", "add motion", "dramatize", "make interactive", "ux review", "heuristic evaluation", "usability audit", "cognitive load", "mental models", "affordances", "dark patterns", "review this design", "pitch deck", "slides", "幻灯片", "PPT", "公众号", "wechat article", "微信文章", "五行配色", "wu xing", "brand color", "moodboard", "去AI味", "写文案", "copywriting".
 ---
 
 # Variant Design
@@ -442,6 +442,88 @@ When generating new pages for an existing project, the workflow changes:
 
 ---
 
+## UX Review Mode
+
+When the user wants to evaluate usability rather than generate visuals, switch to UX Review mode. Load `references/ux-heuristics.md` and `references/ux-psychology.md`.
+
+### Triggers
+
+| User says | Action |
+|---|---|
+| "ux review" / "heuristic review" / "usability audit" | Full heuristic evaluation against Nielsen's 10 |
+| "review this design" / "what's wrong with this UI" | Heuristic scan → findings list with severity |
+| "check usability" / "is this good UX" | Walk through flow, flag violations |
+| "cognitive load" / "too complex?" | Cognitive load analysis → reduction suggestions |
+| "why do users get confused here" | Mental model analysis → mismatch diagnosis |
+| "affordances" / "does this look clickable" | Affordance/signifier audit |
+| "dark patterns" / "is this ethical" | Dark pattern scan |
+
+### UX Review Workflow
+
+**Step 1: Define scope** — What task(s) is the user trying to complete? What screens/flows are in scope?
+
+**Step 2: Walk the flow** — Step through each screen as a first-time user would. For each screen, check:
+- What is the user trying to do here? (H1: visibility of goal)
+- Can they figure out how to do it? (affordances, signifiers)
+- Will they know when it worked? (feedback, system status)
+- What could go wrong? (error prevention)
+- Is anything adding unnecessary mental work? (cognitive load)
+
+**Step 3: Log violations** — For each violation found:
+```
+Screen: [name/URL]
+Heuristic: [H1–H10 from ux-heuristics.md, or cognitive load / mental model / affordance]
+Violation: [specific description of what's wrong]
+Severity: [1=cosmetic / 2=minor / 3=major / 4=critical]
+Fix: [concrete recommendation]
+```
+
+**Step 4: Report** — Present as a prioritized list, critical issues first. Group by heuristic to surface systemic problems.
+
+**Step 5: Offer next step** — After the report, offer:
+- Generate redesigned version of worst-offending screen
+- Generate comparison (current vs. fixed)
+- Generate a checklist for the dev team to implement fixes
+
+### UX Review Output Format
+
+```
+✦ UX Review: [screen/flow name]
+
+  Critical (fix before launch)
+  ────────────────────────────
+  [H9] Error messages — "Invalid input" tells user nothing
+       Fix: Add what failed + why + how to fix ("Email must include @")
+
+  [H1] System status — Upload button shows no loading state
+       Fix: Disable button + show spinner during upload
+
+  Major (high priority)
+  ─────────────────────
+  [H3] No undo for destructive action — "Delete project" is immediate
+       Fix: Move to trash with 30-day recovery window
+
+  Minor (low priority)
+  ────────────────────
+  [H4] Inconsistency — "Remove" and "Delete" used for same action
+       Fix: Standardize to "Delete" everywhere
+
+  Summary: 2 critical · 1 major · 1 minor
+  Next: Generate redesigned error state? (react ux-fix)
+```
+
+### When to Load Which Reference
+
+| Question | Load |
+|---|---|
+| Nielsen heuristics evaluation | `references/ux-heuristics.md` |
+| Mental models, cognitive load, Gestalt | `references/ux-psychology.md` |
+| Both | Load both — they complement each other |
+
+**For generation tasks:** Load these references as quality constraints, not just for evaluation. Every generated design should silently pass the heuristic checklist before being presented.
+
+---
+
 ## Smart Prompt Handling
 
 Before generating, apply these three rules in order:
@@ -472,6 +554,7 @@ Identify the scenario and load the corresponding reference file before designing
 | WeChat article, 公众号, wechat post, 微信文章 | 公号排版, 推文, 内容排版 | `references/wechat.md` |
 | Brand color, moodboard, 五行, wu xing, chinese color, 品牌配色 | 东方美学, 传统配色, 文化品牌 | `references/wuxing-colors.md` |
 | Writing, 文案, copywriting, 去AI味, anti-AI writing | 公众号文章写作, 内容语气, voice | `references/voice.md` |
+| UX review, heuristic evaluation, usability audit, cognitive load, mental models | "is this good UX", affordances, dark patterns | `references/ux-heuristics.md` + `references/ux-psychology.md` |
 | Unsure / general | | Use aesthetic directions table below + `references/palettes.md` |
 
 **Always also load the relevant design system references** from `references/design-system/` based on what matters most for the design:

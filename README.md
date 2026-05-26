@@ -29,6 +29,26 @@ Three variations from a single prompt — each feels like a different studio:
 5. **Ships working code** — Context-aware output: auto-detects React projects and generates `.tsx` components; generates zero-dependency interactive HTML otherwise. Real content, no lorem ipsum
 6. **Offers variation actions** — push further, polish, critique, swap styles, remix colors, shuffle layouts, add motion, dramatize, make interactive
 
+### UX Review Mode
+
+Evaluate usability against established principles — grounded in Nielsen Norman Group research.
+
+1. **Heuristic evaluation** — Walk flows against Nielsen's 10 usability heuristics; each violation rated by severity (1=cosmetic to 4=critical)
+2. **Cognitive load analysis** — Identify sources of extraneous complexity; suggest reduction strategies
+3. **Mental model diagnosis** — Find mismatches between what users expect and what the system does
+4. **Affordance audit** — Flag elements that look interactive but aren't (or vice versa)
+5. **Gestalt check** — Verify proximity, similarity, and grouping signals match intended relationships
+6. **Dark pattern scan** — Identify manipulative patterns (confirmshaming, roach motel, hidden costs)
+
+```
+ux review              → Full heuristic evaluation of current design
+review this design     → Walk flows, flag violations with severity ratings
+cognitive load         → Identify what's making this feel complex
+mental models          → Diagnose why users get confused here
+affordances            → Does this look clickable / draggable / interactive?
+dark patterns          → Ethical audit of interaction patterns
+```
+
 ### Analyze Mode (existing sites)
 
 1. **Scans your existing code** — reads HTML, CSS, JSX, Vue, Svelte files for design tokens
@@ -213,6 +233,8 @@ Scenario-specific materials (starter prompts, palettes, typography, layouts, rea
 | `references/fashion.md` | Fashion brands, streetwear, beauty, interior design, lifestyle |
 | `references/palettes.md` | Universal palette library — 39 palettes × 7+ aesthetic directions (incl. Pinterest trends) |
 | `references/interactive-patterns.md` | Filtering, drag-and-drop, charts, lightbox, carousels, multi-step forms |
+| `references/ux-heuristics.md` | Nielsen's 10 heuristics · Fitts's Law · Hick's Law · Jakob's Law · severity ratings · evaluation protocol |
+| `references/ux-psychology.md` | Mental models · cognitive load · Gestalt principles · reading patterns · affordances · attention · memory · trust |
 
 ### Design system references (Impeccable)
 Foundational design principles loaded for every generation:
