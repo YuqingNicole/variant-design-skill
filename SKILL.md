@@ -675,6 +675,11 @@ When the user wants to evaluate usability rather than generate visuals, switch t
 | "component spec" / "button states" / "modal behavior" / "ARIA" | Component spec review | `ux-component-specs.md` |
 | "design critique" / "feedback on design" / "design review meeting" | Critique framework guidance | `ux-design-critique.md` |
 | "conversion" / "landing page" / "trust signals" / "CTA copy" / "pricing page" | Conversion UX audit | `ux-conversion-patterns.md` |
+| "error message" / "error state" / "form error" / "validation" / "recovery path" / "prevent errors" | Error design audit — classification, messaging, prevention | `ux-error-design.md` |
+| "empty state" / "no data" / "blank state" / "nothing here" / "zero state" | Empty state design — all 4 types | `ux-empty-states.md` |
+| "notification" / "toast" / "banner" / "badge" / "push notification" / "alert priority" | Notification system design and priority rules | `ux-notifications.md` |
+| "table" / "data table" / "sorting" / "filtering" / "pagination" / "bulk select" / "row actions" | Table and list interaction design | `ux-tables-lists.md` |
+| "search" / "autocomplete" / "search results" / "search bar" / "faceted search" / "command palette" | Search pattern design — input, suggestions, results | `ux-search-patterns.md` |
 
 ### UX Review Workflow
 
@@ -864,6 +869,11 @@ Every generated design silently runs the heuristic checklist before being presen
 | Component specs, button/form/modal states, ARIA patterns | `references/ux-component-specs.md` |
 | Design critique, feedback frameworks, design review | `references/ux-design-critique.md` |
 | Conversion, landing pages, trust signals, pricing UX, CTAs | `references/ux-conversion-patterns.md` |
+| Error messages, validation, recovery paths, prevention layers | `references/ux-error-design.md` |
+| Empty states (first use / cleared / no results / error) | `references/ux-empty-states.md` |
+| Notifications — Toast, Banner, Badge, Push, priority management | `references/ux-notifications.md` |
+| Tables, lists, sorting, filtering, pagination, bulk selection | `references/ux-tables-lists.md` |
+| Search patterns — autocomplete, facets, results page, command palette | `references/ux-search-patterns.md` |
 | Full UX review | Load all relevant references above |
 
 **For generation tasks:** Load `ux-heuristics.md` and `ux-psychology.md` as silent quality constraints. Every generated design should pass the heuristic checklist before being presented — this is part of the quality gate, same as the AI Slop Test.
