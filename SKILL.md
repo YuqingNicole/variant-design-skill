@@ -666,6 +666,7 @@ When the user wants to evaluate usability rather than generate visuals, switch t
 | "user testing" / "how to test this" / "usability test" | Research method recommendation + test plan | `ux-research-methods.md` |
 | "what do users think" / "how do I get feedback" | Research method selection | `ux-research-methods.md` |
 | "NPS" / "SUS" / "survey" / "interview users" | Measurement framework or interview guidance | `ux-research-methods.md` |
+| "transition feels wrong" / "animation timing" / "state choreography" / "loading feels laggy" | Component transition audit | `ux-interaction-transitions.md` |
 | "touch target" / "thumb zone" / "mobile gesture" / "iOS vs Android" | Mobile interaction audit | `ux-mobile-patterns.md` |
 | "onboarding" / "empty state" / "first use" / "aha moment" / "activation" | Onboarding flow review | `ux-onboarding.md` |
 | "chart" / "dashboard" / "data viz" / "KPI card" / "which chart" | Data visualization audit or recommendation | `ux-data-visualization.md` |
@@ -854,6 +855,7 @@ Every generated design silently runs the heuristic checklist before being presen
 | Navigation, findability, IA structure, labeling, search | `references/ux-information-architecture.md` |
 | Accessibility, WCAG, keyboard nav, screen readers, a11y | `references/ux-accessibility.md` |
 | User research methods, usability testing, interviews, surveys | `references/ux-research-methods.md` |
+| Component state transitions, timing, easing, choreography | `references/ux-interaction-transitions.md` |
 | Mobile gestures, thumb zones, iOS/Android conventions, touch targets | `references/ux-mobile-patterns.md` |
 | Onboarding, empty states, Aha moment, first-use experience | `references/ux-onboarding.md` |
 | Charts, dashboards, data visualization, chart selection | `references/ux-data-visualization.md` |
@@ -902,6 +904,7 @@ Identify the scenario and load the corresponding reference file before designing
 | Information architecture, navigation, findability, site structure | "can't find", IA audit, card sort, tree test, nav labels, search design | `references/ux-information-architecture.md` |
 | Accessibility, a11y, WCAG, screen reader, keyboard navigation | alt text, focus indicator, ARIA, color contrast, inclusive design | `references/ux-accessibility.md` |
 | User research, usability testing, user interviews, surveys, A/B test | "how do I test this", NPS, SUS, research methods, "what do users think" | `references/ux-research-methods.md` |
+| Component transitions, animation timing, state choreography, easing | "feels laggy", "transition wrong", button loading, modal enter/exit, skeleton | `references/ux-interaction-transitions.md` |
 | Mobile interactions, touch targets, gestures, thumb zone, iOS vs Android | swipe, bottom sheet, tap, safe area, mobile form | `references/ux-mobile-patterns.md` |
 | Onboarding, first-use, empty states, Aha moment, sign-up flow | new user experience, activation, "blank slate", progressive disclosure | `references/ux-onboarding.md` |
 | Charts, data viz, dashboard design, KPIs, data tables | bar chart, line chart, color encoding, tooltip, filter | `references/ux-data-visualization.md` |
