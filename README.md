@@ -31,14 +31,21 @@ Three variations from a single prompt — each feels like a different studio:
 
 ### UX Review Mode
 
-Evaluate usability against established principles — grounded in Nielsen Norman Group research.
+Comprehensive usability evaluation grounded in Nielsen Norman Group research — 13 specialized reference libraries covering everything from heuristics to conversion design.
 
-1. **Heuristic evaluation** — Walk flows against Nielsen's 10 usability heuristics; each violation rated by severity (1=cosmetic to 4=critical)
+1. **Heuristic evaluation** — Walk flows against Nielsen's 10 heuristics; each violation rated by severity (1=cosmetic to 4=critical)
 2. **Cognitive load analysis** — Identify sources of extraneous complexity; suggest reduction strategies
 3. **Mental model diagnosis** — Find mismatches between what users expect and what the system does
 4. **Affordance audit** — Flag elements that look interactive but aren't (or vice versa)
 5. **Gestalt check** — Verify proximity, similarity, and grouping signals match intended relationships
 6. **Dark pattern scan** — Identify manipulative patterns (confirmshaming, roach motel, hidden costs)
+7. **Information architecture** — Navigation labels, hierarchy depth, search design, card sort validation
+8. **Accessibility audit** — WCAG 2.1 AA, keyboard navigation, ARIA patterns, color contrast
+9. **Mobile interaction** — Touch targets, thumb zones, gesture conflicts, iOS vs Android conventions
+10. **Onboarding review** — First-use experience, Aha moment path, empty states, activation funnel
+11. **Data visualization** — Chart type selection, color encoding, dashboard information density
+12. **Design token review** — Token tier architecture, naming conventions, theming and dark mode
+13. **Conversion design** — Trust signals, CTA copy, pricing page structure, form friction points
 
 ```
 ux review              → Full heuristic evaluation of current design
@@ -47,6 +54,15 @@ cognitive load         → Identify what's making this feel complex
 mental models          → Diagnose why users get confused here
 affordances            → Does this look clickable / draggable / interactive?
 dark patterns          → Ethical audit of interaction patterns
+navigation             → Information architecture and navigation usability
+accessibility / a11y   → WCAG compliance and inclusive design audit
+mobile gestures        → Mobile interaction conventions audit
+onboarding             → First-use experience and activation flow review
+chart / data viz       → Data visualization selection and design audit
+design tokens          → Token architecture and theming review
+conversion / CTA       → Conversion design and trust signal audit
+design critique        → How to give and receive effective design feedback
+user research          → How to plan usability tests and research methods
 ```
 
 ### Analyze Mode (existing sites)
@@ -79,6 +95,78 @@ claude skill install https://github.com/YuqingNicole/variant-design-skill
 ```
 
 Or add manually to your project's `SKILL.md` — copy the contents of [`SKILL.md`](./SKILL.md) into your existing skill file.
+
+### Hermes Agent (Nous Research)
+
+[Hermes Agent](https://github.com/nousresearch/hermes-agent) is a self-improving AI agent framework that supports 200+ models and persists skills across sessions.
+
+**Install Hermes:**
+```bash
+# Linux / macOS / WSL2
+curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+
+# Windows (PowerShell)
+iex (irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.ps1)
+```
+
+**Load this skill into Hermes:**
+```bash
+# 1. Start Hermes
+hermes
+
+# 2. Point it at this skill file — paste SKILL.md contents into your workspace's AGENTS.md
+#    (~/.hermes/workspace/AGENTS.md  or the project-level equivalent)
+cat SKILL.md >> ~/.hermes/workspace/AGENTS.md
+
+# 3. Select your model
+hermes model   # choose any provider (Anthropic, OpenAI, OpenRouter, etc.)
+
+# 4. Start designing
+hermes
+> design a SaaS landing page with 3 variations
+```
+
+Hermes persists skills in its skill registry — once loaded, variant-design is available in every subsequent session without re-loading.
+
+### OpenClaw
+
+[OpenClaw](https://github.com/openclaw/openclaw) is a local-first AI assistant gateway that connects 40+ messaging platforms (WhatsApp, Telegram, Slack, Discord, iMessage, etc.) to AI agents.
+
+**Install OpenClaw:**
+```bash
+npm install -g openclaw@latest
+openclaw onboard --install-daemon
+```
+
+**Load this skill into OpenClaw:**
+```bash
+# 1. Copy SKILL.md contents into your OpenClaw workspace AGENTS.md
+cat SKILL.md >> ~/.openclaw/workspace/AGENTS.md
+
+# 2. Set your model in ~/.openclaw/openclaw.json
+{
+  "agent": {
+    "model": "anthropic/claude-sonnet-4-6"
+  }
+}
+
+# 3. Start the gateway
+openclaw onboard --install-daemon
+
+# 4. Use via any connected channel (Telegram, Slack, iMessage, etc.)
+> design a dashboard with 3 variations
+> ux review
+> vary strong A
+```
+
+**In-session commands (any channel):**
+```
+/new             → start a new design session
+/think high      → enable extended thinking for complex design decisions
+/reset           → clear context and start fresh
+```
+
+OpenClaw routes your design requests through the connected channel directly to the agent — you can trigger `vary strong A`, `remix colors`, or `ux review` from Telegram or iMessage the same way you would in a terminal.
 
 ### Other Claude interfaces
 
@@ -235,6 +323,17 @@ Scenario-specific materials (starter prompts, palettes, typography, layouts, rea
 | `references/interactive-patterns.md` | Filtering, drag-and-drop, charts, lightbox, carousels, multi-step forms |
 | `references/ux-heuristics.md` | Nielsen's 10 heuristics · Fitts's Law · Hick's Law · Jakob's Law · severity ratings · evaluation protocol |
 | `references/ux-psychology.md` | Mental models · cognitive load · Gestalt principles · reading patterns · affordances · attention · memory · trust |
+| `references/ux-information-architecture.md` | Navigation patterns · information scent · card sorting · tree testing · labeling rules · search design · IA anti-patterns |
+| `references/ux-accessibility.md` | WCAG 2.1 AA · keyboard navigation · semantic HTML · ARIA usage · color contrast · accessible forms · a11y code scans |
+| `references/ux-research-methods.md` | Usability testing · user interviews · SUS/NPS · A/B testing · analytics · research method selection matrix |
+| `references/ux-mobile-patterns.md` | Touch targets · thumb zones · gesture conventions · iOS vs Android · bottom gesture conflicts · mobile forms |
+| `references/ux-onboarding.md` | Aha moment · empty states · progressive disclosure · signup flow · activation funnel · onboarding anti-patterns |
+| `references/ux-data-visualization.md` | Chart selection · visual encoding hierarchy · dashboard density · color encoding · interactive patterns · data anti-patterns |
+| `references/ux-content-strategy.md` | Content models · taxonomy · multilingual UX · RTL layouts · content lifecycle · multi-surface design |
+| `references/ux-design-tokens.md` | Three-tier token architecture · naming conventions · semantic tokens · multi-brand theming · dark mode · Style Dictionary |
+| `references/ux-component-specs.md` | Button/input/modal/toggle full state machines · spacing specs · ARIA patterns · keyboard interaction |
+| `references/ux-design-critique.md` | Feedback frameworks · taste trap · HiPPO problem · async review · critique vs review · self-critique checklist |
+| `references/ux-conversion-patterns.md` | Trust signals · landing page anatomy · CTA copy · pricing page patterns · form conversion · dark pattern identification |
 
 ### Design system references (Impeccable)
 Foundational design principles loaded for every generation:

@@ -31,7 +31,7 @@
 
 ### UX Review 模式
 
-基于 Nielsen Norman Group 研究的可用性评估。
+基于 Nielsen Norman Group 研究的全面可用性评估——13 个专项参考库，覆盖从启发式原则到转化率设计。
 
 1. **启发式评估** — 对照 Nielsen 10 条启发式原则走查流程，每条违规按严重程度评级（1=表面问题 到 4=发布阻断）
 2. **认知负荷分析** — 定位多余复杂度的来源，给出精简建议
@@ -39,6 +39,13 @@
 4. **可供性审查** — 标记看起来可交互但实际不能点的元素（反之亦然）
 5. **格式塔检查** — 验证邻近性、相似性等视觉分组信号是否与设计意图一致
 6. **暗黑模式扫描** — 识别操控性交互模式（羞辱确认、套牢模式、隐藏费用）
+7. **信息架构审查** — 导航标签、层级深度、搜索设计、卡片分类验证
+8. **无障碍审查** — WCAG 2.1 AA 合规性、键盘导航、ARIA 模式、色彩对比度
+9. **移动端交互审查** — 触摸目标尺寸、拇指区域、手势冲突、iOS/Android 规范差异
+10. **引导流程审查** — 首次使用体验、Aha moment 路径、空状态设计、激活漏斗
+11. **数据可视化审查** — 图表类型选择、色彩编码、Dashboard 信息密度
+12. **设计令牌审查** — Token 分层架构、命名规范、主题与暗色模式实现
+13. **转化设计审查** — 信任信号、CTA 文案、定价页面结构、表单摩擦点
 
 ```
 ux review              → 当前设计的完整启发式评估
@@ -47,6 +54,15 @@ cognitive load         → 分析是什么让这个界面感觉复杂
 mental models          → 诊断用户为什么在这里感到困惑
 affordances            → 这看起来可点击 / 可拖拽 / 可交互吗？
 dark patterns          → 交互模式的伦理审查
+navigation             → 信息架构与导航可用性审查
+accessibility / a11y   → WCAG 合规性与无障碍设计审查
+mobile gestures        → 移动端交互规范审查
+onboarding             → 首次使用体验与激活流程审查
+chart / data viz       → 数据可视化选型与设计审查
+design tokens          → Token 架构与主题设计审查
+conversion / CTA       → 转化设计与信任信号审查
+design critique        → 如何给设计提有效反馈
+user research          → 如何规划用户测试和研究方法
 ```
 
 ### 分析模式（已有网站）
@@ -79,6 +95,74 @@ claude skill install https://github.com/YuqingNicole/variant-design-skill
 ```
 
 或手动添加到项目的 `SKILL.md` 中——复制 [`SKILL.md`](./SKILL.md) 的内容。
+
+### Hermes Agent（Nous Research）
+
+[Hermes Agent](https://github.com/nousresearch/hermes-agent) 是一个自我改进型 AI agent 框架，支持 200+ 模型，技能跨 session 持久化。
+
+**安装 Hermes：**
+```bash
+# Linux / macOS / WSL2
+curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+
+# Windows（PowerShell）
+iex (irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.ps1)
+```
+
+**将本 skill 加载到 Hermes：**
+```bash
+# 1. 将 SKILL.md 内容追加到 Hermes 工作区的 AGENTS.md
+cat SKILL.md >> ~/.hermes/workspace/AGENTS.md
+
+# 2. 选择模型
+hermes model   # 选择任意提供商（Anthropic、OpenAI、OpenRouter 等）
+
+# 3. 启动并开始设计
+hermes
+> 给我一个 SaaS 落地页的 3 个方向
+```
+
+Hermes 会将 skill 注册到技能库，后续每次会话无需重新加载即可直接使用。
+
+### OpenClaw
+
+[OpenClaw](https://github.com/openclaw/openclaw) 是本地优先的 AI 助手网关，可将 40+ 消息平台（WhatsApp、Telegram、Slack、Discord、iMessage 等）连接到 AI agent。
+
+**安装 OpenClaw：**
+```bash
+npm install -g openclaw@latest
+openclaw onboard --install-daemon
+```
+
+**将本 skill 加载到 OpenClaw：**
+```bash
+# 1. 将 SKILL.md 内容追加到 OpenClaw 工作区
+cat SKILL.md >> ~/.openclaw/workspace/AGENTS.md
+
+# 2. 在 ~/.openclaw/openclaw.json 中配置模型
+{
+  "agent": {
+    "model": "anthropic/claude-sonnet-4-6"
+  }
+}
+
+# 3. 启动网关守护进程
+openclaw onboard --install-daemon
+
+# 4. 在任意连接的渠道中使用（Telegram、Slack、iMessage 等）
+> 设计一个仪表盘的 3 个方向
+> ux review
+> vary strong A
+```
+
+**会话内命令（任意渠道均可）：**
+```
+/new             → 开始新的设计会话
+/think high      → 开启深度思考（适合复杂设计决策）
+/reset           → 清除 context，重新开始
+```
+
+OpenClaw 将设计请求通过连接的渠道路由到 agent——你可以在 Telegram 或 iMessage 里直接发 `vary strong A`、`remix colors` 或 `ux review`，效果和在终端里完全一致。
 
 ### 其他 Claude 界面
 
@@ -234,6 +318,17 @@ export to next       →  将选定变体导出为 Next.js App Router 组件
 | `references/palettes.md` | 通用色板库 — 39 个色板 × 7+ 审美方向（含 Pinterest 流行色板） |
 | `references/ux-heuristics.md` | Nielsen 10 启发式原则 · Fitts 定律 · Hick 定律 · Jakob 定律 · 严重程度评级 · 评估流程 |
 | `references/ux-psychology.md` | 心智模型 · 认知负荷 · 格式塔原则 · 阅读模式 · 可供性 · 注意力 · 记忆 · 信任 |
+| `references/ux-information-architecture.md` | 导航模式 · 信息气味 · 卡片分类 · 树测试 · 标签规则 · 搜索设计 · IA 反模式 |
+| `references/ux-accessibility.md` | WCAG 2.1 AA · 键盘导航 · 语义 HTML · ARIA 用法 · 色彩对比 · 无障碍表单 · a11y 代码扫描 |
+| `references/ux-research-methods.md` | 可用性测试 · 用户访谈 · SUS/NPS · A/B 测试 · 分析工具 · 研究方法选择矩阵 |
+| `references/ux-mobile-patterns.md` | 触摸目标 · 拇指区域 · 手势规范 · iOS/Android 差异 · 底部手势冲突 · 移动端表单 |
+| `references/ux-onboarding.md` | Aha moment · 空状态 · 渐进式披露 · 注册流程优化 · 激活漏斗 · 引导反模式 |
+| `references/ux-data-visualization.md` | 图表选型框架 · 视觉编码层级 · Dashboard 密度 · 色彩编码 · 交互模式 · 数据反模式 |
+| `references/ux-content-strategy.md` | 内容模型 · 分类体系 · 多语言 UX · RTL 布局 · 内容生命周期 · 多端适配 |
+| `references/ux-design-tokens.md` | 三层 Token 架构 · 命名规范 · 语义 Token · 多品牌主题 · 暗色模式 · Style Dictionary |
+| `references/ux-component-specs.md` | 按钮/输入框/Modal/Toggle 完整状态机 · 间距规范 · ARIA 模式 · 键盘交互 |
+| `references/ux-design-critique.md` | 反馈框架 · 品味陷阱 · HiPPO 问题 · 异步评审 · 批评 vs 评审 · 自我批评清单 |
+| `references/ux-conversion-patterns.md` | 信任信号 · 落地页解剖 · CTA 文案 · 定价页模式 · 表单转化 · 暗黑模式辨别 |
 
 ### 设计系统参考（Impeccable）
 每次生成都会加载的基础设计原则：

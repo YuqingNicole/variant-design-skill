@@ -646,19 +646,34 @@ When generating new pages for an existing project, the workflow changes:
 
 ## UX Review Mode
 
-When the user wants to evaluate usability rather than generate visuals, switch to UX Review mode. Load `references/ux-heuristics.md` and `references/ux-psychology.md`.
+When the user wants to evaluate usability rather than generate visuals, switch to UX Review mode. Load `references/ux-heuristics.md` and `references/ux-psychology.md`. Load additional references as the review scope demands (see "When to Load Which Reference" below).
 
 ### Triggers
 
-| User says | Action |
-|---|---|
-| "ux review" / "heuristic review" / "usability audit" | Full heuristic evaluation against Nielsen's 10 |
-| "review this design" / "what's wrong with this UI" | Heuristic scan → findings list with severity |
-| "check usability" / "is this good UX" | Walk through flow, flag violations |
-| "cognitive load" / "too complex?" | Cognitive load analysis → reduction suggestions |
-| "why do users get confused here" | Mental model analysis → mismatch diagnosis |
-| "affordances" / "does this look clickable" | Affordance/signifier audit |
-| "dark patterns" / "is this ethical" | Dark pattern scan |
+| User says | Action | Load |
+|---|---|---|
+| "ux review" / "heuristic review" / "usability audit" | Full heuristic evaluation against Nielsen's 10 | `ux-heuristics.md` + `ux-psychology.md` |
+| "review this design" / "what's wrong with this UI" | Heuristic scan → findings list with severity | `ux-heuristics.md` |
+| "check usability" / "is this good UX" | Walk through flow, flag violations | `ux-heuristics.md` + `ux-psychology.md` |
+| "cognitive load" / "too complex?" | Cognitive load analysis → reduction suggestions | `ux-psychology.md` |
+| "why do users get confused here" | Mental model analysis → mismatch diagnosis | `ux-psychology.md` |
+| "affordances" / "does this look clickable" | Affordance/signifier audit | `ux-psychology.md` |
+| "dark patterns" / "is this ethical" | Dark pattern scan | `ux-psychology.md` |
+| "navigation" / "can't find" / "information architecture" / "IA" | IA audit — labels, hierarchy, findability | `ux-information-architecture.md` |
+| "site structure" / "how to organize" / "card sort" / "tree test" | IA design or validation | `ux-information-architecture.md` |
+| "accessibility" / "a11y" / "screen reader" / "keyboard navigation" | Accessibility audit against WCAG 2.1 AA | `ux-accessibility.md` |
+| "WCAG" / "alt text" / "aria" / "focus" | Specific accessibility check | `ux-accessibility.md` |
+| "user testing" / "how to test this" / "usability test" | Research method recommendation + test plan | `ux-research-methods.md` |
+| "what do users think" / "how do I get feedback" | Research method selection | `ux-research-methods.md` |
+| "NPS" / "SUS" / "survey" / "interview users" | Measurement framework or interview guidance | `ux-research-methods.md` |
+| "touch target" / "thumb zone" / "mobile gesture" / "iOS vs Android" | Mobile interaction audit | `ux-mobile-patterns.md` |
+| "onboarding" / "empty state" / "first use" / "aha moment" / "activation" | Onboarding flow review | `ux-onboarding.md` |
+| "chart" / "dashboard" / "data viz" / "KPI card" / "which chart" | Data visualization audit or recommendation | `ux-data-visualization.md` |
+| "content model" / "taxonomy" / "multilingual" / "RTL" / "localization" | Content structure review | `ux-content-strategy.md` |
+| "design tokens" / "token naming" / "theming" / "dark mode architecture" | Token architecture review | `ux-design-tokens.md` |
+| "component spec" / "button states" / "modal behavior" / "ARIA" | Component spec review | `ux-component-specs.md` |
+| "design critique" / "feedback on design" / "design review meeting" | Critique framework guidance | `ux-design-critique.md` |
+| "conversion" / "landing page" / "trust signals" / "CTA copy" / "pricing page" | Conversion UX audit | `ux-conversion-patterns.md` |
 
 ### UX Review Workflow
 
@@ -716,10 +731,31 @@ grep -rn "\.length === 0\|\.length == 0\|items\.length\|data\.length" \
   --include="*.tsx" --include="*.jsx" --exclude-dir=node_modules . 2>/dev/null | \
   grep -v "EmptyState\|empty\|nothing\|no items\|no results" | head -15
 
-# Accessibility baseline
+# A11y — Images missing alt text
 grep -rn "<img " \
   --include="*.tsx" --include="*.jsx" --include="*.html" \
   --exclude-dir=node_modules . 2>/dev/null | grep -v "alt=" | head -10
+
+# A11y — Buttons missing accessible name (icon-only)
+grep -rn "<button\|<Button\|<IconButton" \
+  --include="*.tsx" --include="*.jsx" --exclude-dir=node_modules . 2>/dev/null | \
+  grep -v "aria-label\|aria-labelledby\|title=" | head -15
+
+# A11y — onClick on non-interactive elements (no keyboard access)
+grep -rn "onClick" \
+  --include="*.tsx" --include="*.jsx" --exclude-dir=node_modules . 2>/dev/null | \
+  grep -E "<div|<span|<p" | head -15
+
+# A11y — outline:none removing focus indicators
+grep -rn "outline:\s*none\|outline:\s*0" \
+  --include="*.css" --include="*.scss" --include="*.tsx" --include="*.jsx" \
+  --exclude-dir=node_modules . 2>/dev/null | head -10
+
+# A11y — Inputs missing associated label
+grep -rn "<input" \
+  --include="*.tsx" --include="*.jsx" --include="*.html" \
+  --exclude-dir=node_modules . 2>/dev/null | \
+  grep -v "type=\"hidden\"\|aria-label\|aria-labelledby\|id=" | head -10
 ```
 
 For each grep that returns results: read the flagged files at the relevant lines to confirm whether it's a real violation or a false positive. Report only confirmed violations.
@@ -814,10 +850,21 @@ Every generated design silently runs the heuristic checklist before being presen
 | Question | Load |
 |---|---|
 | Nielsen heuristics evaluation | `references/ux-heuristics.md` |
-| Mental models, cognitive load, Gestalt | `references/ux-psychology.md` |
-| Both | Load both — they complement each other |
+| Mental models, cognitive load, Gestalt, affordances | `references/ux-psychology.md` |
+| Navigation, findability, IA structure, labeling, search | `references/ux-information-architecture.md` |
+| Accessibility, WCAG, keyboard nav, screen readers, a11y | `references/ux-accessibility.md` |
+| User research methods, usability testing, interviews, surveys | `references/ux-research-methods.md` |
+| Mobile gestures, thumb zones, iOS/Android conventions, touch targets | `references/ux-mobile-patterns.md` |
+| Onboarding, empty states, Aha moment, first-use experience | `references/ux-onboarding.md` |
+| Charts, dashboards, data visualization, chart selection | `references/ux-data-visualization.md` |
+| Content models, taxonomy, multilingual UX, content lifecycle | `references/ux-content-strategy.md` |
+| Design tokens, token architecture, theming, dark mode | `references/ux-design-tokens.md` |
+| Component specs, button/form/modal states, ARIA patterns | `references/ux-component-specs.md` |
+| Design critique, feedback frameworks, design review | `references/ux-design-critique.md` |
+| Conversion, landing pages, trust signals, pricing UX, CTAs | `references/ux-conversion-patterns.md` |
+| Full UX review | Load all relevant references above |
 
-**For generation tasks:** Load these references as silent quality constraints. Every generated design should pass the heuristic checklist before being presented — this is part of the quality gate, same as the AI Slop Test.
+**For generation tasks:** Load `ux-heuristics.md` and `ux-psychology.md` as silent quality constraints. Every generated design should pass the heuristic checklist before being presented — this is part of the quality gate, same as the AI Slop Test.
 
 ---
 
@@ -852,6 +899,17 @@ Identify the scenario and load the corresponding reference file before designing
 | Brand color, moodboard, 五行, wu xing, chinese color, 品牌配色 | 东方美学, 传统配色, 文化品牌 | `references/wuxing-colors.md` |
 | Writing, 文案, copywriting, 去AI味, anti-AI writing | 公众号, 小红书, 产品文案, 观点文, 故事文, 教程文, voice | `references/voice.md` |
 | UX review, heuristic evaluation, usability audit, cognitive load, mental models | "is this good UX", affordances, dark patterns | `references/ux-heuristics.md` + `references/ux-psychology.md` |
+| Information architecture, navigation, findability, site structure | "can't find", IA audit, card sort, tree test, nav labels, search design | `references/ux-information-architecture.md` |
+| Accessibility, a11y, WCAG, screen reader, keyboard navigation | alt text, focus indicator, ARIA, color contrast, inclusive design | `references/ux-accessibility.md` |
+| User research, usability testing, user interviews, surveys, A/B test | "how do I test this", NPS, SUS, research methods, "what do users think" | `references/ux-research-methods.md` |
+| Mobile interactions, touch targets, gestures, thumb zone, iOS vs Android | swipe, bottom sheet, tap, safe area, mobile form | `references/ux-mobile-patterns.md` |
+| Onboarding, first-use, empty states, Aha moment, sign-up flow | new user experience, activation, "blank slate", progressive disclosure | `references/ux-onboarding.md` |
+| Charts, data viz, dashboard design, KPIs, data tables | bar chart, line chart, color encoding, tooltip, filter | `references/ux-data-visualization.md` |
+| Content model, taxonomy, multilingual, RTL, content lifecycle | structured content, metadata, localization, i18n, translation | `references/ux-content-strategy.md` |
+| Design tokens, token naming, theming, dark mode architecture | CSS variables, semantic tokens, primitive tokens, brand theming | `references/ux-design-tokens.md` |
+| Component specs, button states, modal behavior, form input | component library, ARIA, state machine, variant, anatomy | `references/ux-component-specs.md` |
+| Design critique, design review, feedback frameworks | "how to give feedback", "review this design", design review meeting | `references/ux-design-critique.md` |
+| Conversion, landing pages, pricing design, trust signals, CTA | "increase conversions", "improve signup rate", checkout UX, CRO | `references/ux-conversion-patterns.md` |
 | Unsure / general | | Use aesthetic directions table below + `references/palettes.md` |
 
 **Always also load the relevant design system references** from `references/design-system/` based on what matters most for the design:
