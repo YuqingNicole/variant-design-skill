@@ -619,6 +619,64 @@ find . -name "*.html" -o -name "*.css" -o -name "*.tsx" -o -name "*.jsx" \
 
 **Step 3: Detect** — Run all consistency checks from `style-audit.md` Section 2. For each finding, record severity (error/warning/info), the specific values, file locations, and a concrete fix.
 
+**Step 3.5: Visual Quality Audit** — In addition to consistency checks from `style-audit.md`, run this anti-slop checklist. Flag any item that fails with severity **warning** or **error**:
+
+**Typography**
+- [ ] Display font is NOT Inter/Roboto/Arial/Open Sans — use something with character
+- [ ] Headlines have presence: tight tracking, compressed line-height, strong weight contrast
+- [ ] Body text max-width ~65ch; line-height ≥ 1.5
+- [ ] Weight range uses at least 3 stops (e.g. 400 / 500 / 700) — not just Regular + Bold
+- [ ] Numbers in data contexts use `font-variant-numeric: tabular-nums` or monospace
+- [ ] No orphaned single words on last line — use `text-wrap: balance` / `text-wrap: pretty`
+- [ ] Headers use sentence case — not Title Case On Every Word
+
+**Color & Surfaces**
+- [ ] No pure `#000000` background — use off-black / dark charcoal / tinted dark
+- [ ] Accent saturation below 80% — no neon or screaming accents
+- [ ] Only one accent color — remove all others
+- [ ] Grays are from one family — no mixing warm and cool grays
+- [ ] No purple-to-blue "AI gradient" aesthetic
+- [ ] Shadows are tinted to match background hue — not pure black at low opacity
+- [ ] No random isolated dark section in a light-mode page (or vice versa)
+
+**Layout**
+- [ ] Not everything centered and symmetrical — break with offset, left-align, or asymmetry
+- [ ] No 3 equal-column feature card row — use zig-zag, asymmetric grid, or horizontal scroll
+- [ ] Uses `min-height: 100dvh` not `height: 100vh` (iOS Safari viewport jump)
+- [ ] Has `max-width` container constraint — content doesn't stretch edge-to-edge
+- [ ] Cards vary in size or weight — not uniformly identical
+- [ ] Card group CTAs pin to bottom so buttons align across variable-length cards
+
+**Interactivity & States**
+- [ ] All buttons/links/cards have hover state (not just `opacity: 0.8`)
+- [ ] Active/pressed feedback: `scale(0.98)` or `translateY(1px)`
+- [ ] Transitions have non-zero duration (200-300ms)
+- [ ] Visible `:focus-visible` ring — never `outline: none` alone
+- [ ] Loading state exists — skeleton loaders, not generic spinners
+- [ ] Empty state has content: acknowledge → explain value → CTA
+- [ ] Error state has inline message — no `window.alert()`
+
+**Content**
+- [ ] No generic names: John Doe, Acme Corp, Nexus, SmartFlow
+- [ ] No fake round numbers: `99.99%`, `$100.00`, `50,000 users`
+- [ ] No AI clichés: Elevate, Seamless, Unleash, Next-Gen, Game-changer, Delve
+- [ ] No Lorem Ipsum
+- [ ] No exclamation marks in success/confirmation messages
+- [ ] No passive voice in errors
+
+**Iconography**
+- [ ] Not using only Lucide/Feather icons — consider Phosphor or Radix UI Icons
+- [ ] Consistent stroke width across all icons
+- [ ] Favicon exists
+
+**Code Quality**
+- [ ] Semantic HTML: `<nav>`, `<main>`, `<article>`, `<section>` — not div soup
+- [ ] No arbitrary z-index values (`9999`)
+- [ ] All `<img>` have meaningful `alt` text
+- [ ] Animations use only `transform` and `opacity` — no `top`/`left`/`width`/`height`
+
+Score: subtract 2 points per failed item from 100. Present as `Quality Score: XX/100`.
+
 **Step 4: Report** — Present findings using the compact terminal format from `style-audit.md` Section 3. Score out of 100. List priority fixes.
 
 **Step 5: Act** — Based on what the user wants:
@@ -908,7 +966,24 @@ Every generated design silently runs the heuristic checklist before being presen
 
 Before generating, apply these three rules in order:
 
-1. **Confirm scenario detection.** State the detected scenario and aesthetic direction. Ask the user to confirm before proceeding: *"I'm reading this as a [scenario] with [direction] vibes — correct?"*
+1. **Confirm scenario detection.** Before generating, output a one-line Design Read summary, then ask the user to confirm:
+
+   Format:
+   ```
+   Design Read: [page kind] for [audience] — [vibe keywords] · [constraints if any]
+   ```
+   Example:
+   ```
+   Design Read: SaaS landing page for dev-tools B2B — minimal, Linear-style · dark mode preferred
+   ```
+   Then ask: *"Correct? Or redirect me before I generate."*
+
+   Read these signals to build the Design Read:
+   - **Page kind**: landing / portfolio / dashboard / editorial / app screen / redesign
+   - **Vibe words**: adjectives the user used or implied ("clean", "brutalist", "premium", "editorial", "agency-y")
+   - **Audience**: B2B procurement vs design-conscious consumer vs recruiter vs general public
+   - **Reference signals**: URLs, product names, competitor brands mentioned
+   - **Quiet constraints**: accessibility-first, regulated industry, kids' product, trust-first commerce — these OVERRIDE aesthetic preference
 2. **Resolve vague prompts — max 2 questions.** If the prompt lacks enough signal to differentiate 3 variations (e.g. "design something cool"), ask at most 2 clarifying questions. Focus on: (a) what it's for / who uses it, (b) any aesthetic leaning. If the user says "surprise me," pick 3 maximally divergent directions and proceed.
 3. **Never generate blind.** Do not produce code until you have either (a) user confirmation of the scenario, or (b) answers to your clarifying questions, or (c) an explicit "surprise me."
 
@@ -1904,6 +1979,25 @@ B update card — card zone     → apply new card component to the card zone in
 - **Interactive HTML**: Single-file, embedded CSS + JavaScript. Alive by default. **Default when no React project detected.**
 - **React .tsx**: Functional components — auto-selected when React project detected in cwd, or via `react [A/B/C]` / `--react` / `export to react`.
 
+### Output Completeness
+
+Generated code is production input — partial output is broken output.
+
+**Banned output patterns — never produce:**
+- `// ...` / `/* ... */` standing in for omitted code
+- `// rest of code` / `// rest of component` / `// implement here`
+- `// similar to above` / `// continue pattern` / `// add more as needed`
+- `// TODO` in delivered output
+- Describing what code should do instead of writing it
+
+**Handling long outputs:** Write at full quality up to a clean breakpoint (end of function / end of file). Then output:
+```
+[PAUSED — X of Y complete. Send "continue" to resume from: <next section name>]
+```
+On "continue": pick up exactly where stopped. No recap, no repetition.
+
+**Cross-check before responding:** Every code block must contain runnable code. Every component the user requested must be present and complete.
+
 ### Interactive HTML Output Spec (Default)
 
 Every HTML output must feel alive — static mockups are not acceptable. Follow this checklist:
@@ -2081,6 +2175,11 @@ Avoid these in every output — they are the telltale signs of AI-generated desi
 | JavaScript in `<script>` but nothing actually moves | Wire up scroll observer, counters, lightbox — code must produce visible motion |
 | Hover effects limited to `opacity: 0.8` | Use card lift, image zoom, underline slide, color shift — see `micro-interactions.md` |
 | Charts/numbers that appear fully rendered | Animate bar growth, counter count-up, donut draw on scroll into view |
+| Fake round numbers: `99.99%`, `$100.00`, `10,000 users` | Organic messy data: `47.2%`, `$99.00`, `8,400 users` |
+| AI copywriting clichés: Elevate, Seamless, Unleash, Next-Gen, Game-changer, Delve, Tapestry | Plain specific language: say exactly what it does |
+| Title Case On Every Single Header | Sentence case — capitalize proper nouns only |
+| Exclamation marks in success messages: "Saved!" "Done!" | Confident without loud: "Saved." "Done." |
+| Passive voice in error messages: "Mistakes were made" | Active voice: "We couldn't save your changes. Try again." |
 | **Slides & WeChat (extra rules)** | |
 | Emoji in slides or WeChat articles | Never — `references/presentation.md` + `references/wechat.md` |
 | CSS variables `var(--xxx)` in WeChat HTML | All styles must be inline; WeChat strips class/var | 
