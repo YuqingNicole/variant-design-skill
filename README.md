@@ -1,3 +1,5 @@
+
+
 # variant-design
 
 English | **[中文](./README_CN.md)**
@@ -276,29 +278,33 @@ No need to re-specify preferences you've already confirmed. Use `show context` t
 
 **Output format** is context-aware: if your current directory contains a React project (`package.json` with `react` dependency), output is `.tsx` components. Otherwise, zero-dependency HTML is the default. Override with `--react` or `--html`. See below for more.
 
-### React output (context-aware)
+### Framework output (context-aware)
 
-In a React project, the skill automatically switches to `.tsx` output:
+The skill detects your frontend framework from `package.json` and generates the matching component format:
 
 ```
-# In a React/Next/Vite project directory:
-design a dashboard  →  generates variant-output/VariantA.tsx, VariantB.tsx, VariantC.tsx
-                        Detects Next.js → adds "use client" where needed
-                        Detects framer-motion → uses it; otherwise CSS animations
+# React / Next.js / Vite:
+design a dashboard  →  variant-output/VariantA.tsx, VariantB.tsx, VariantC.tsx
+                        Next.js → adds "use client" when using hooks/browser APIs
+                        Detects framer-motion → uses it; otherwise falls back to CSS
 
-# In any other directory:
-design a dashboard  →  generates variant-output/variant-dashboard-A.html (unchanged)
+# Vue 3:
+design a dashboard  →  variant-output/VariantA.vue
+                        <script setup lang="ts"> + scoped styles
 
-# Explicit override anywhere:
-design a dashboard --react   →  always .tsx
-design a dashboard --html    →  always HTML
+# Astro:
+design a dashboard  →  variant-output/VariantA.astro
+                        Frontmatter + template + scoped styles
 
-# Export a specific variation:
-react A              →  export Variation A as .tsx
-export to next       →  export winning variation as Next.js App Router component
+# Svelte:
+design a dashboard  →  variant-output/VariantA.svelte
+                        Built-in svelte/transition animations
+
+# Fallback (any other directory):
+design a dashboard  →  variant-output/variant-dashboard-A.html
 ```
 
-Generated `.tsx` files go to `variant-output/` — move them to `src/components/` to include in your project's build. The preview command is inferred from your `package.json` scripts (`npm run dev`, `pnpm dev`, etc.).
+Component files are written to `variant-output/` — move them to your project's component directory (`src/components/` or `src/lib/components/`). The preview command is inferred from your `package.json` scripts (`npm run dev`, `pnpm dev`, etc.). Override detection with `--react`, `--vue`, `--astro`, `--svelte`, or `--html`.
 
 ---
 
