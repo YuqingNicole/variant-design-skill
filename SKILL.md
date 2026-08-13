@@ -13,7 +13,7 @@ Inspired by the [Variant](https://variant.com) design community — a space wher
 
 Built on the **Impeccable design system** — a comprehensive set of design references covering typography, color theory, spatial design, motion, interaction patterns, responsive design, and UX writing. Every design decision is grounded in these principles.
 
-**Supports:** Context-aware output (HTML default · React .tsx when React project detected) · Framer Motion (when installed) · 10 domain reference libraries · 39 palettes · design system references · micro-interaction library · interactive pattern library · style audit & token extraction · variation actions
+**Supports:** Context-aware output (HTML default · React .tsx when React project detected) · Framer Motion (when installed) · 10 domain reference libraries · 39 palettes · design system references · micro-interaction library · interactive pattern library · style audit & token extraction · variation actions · **Design Declaration → Product Integrity Contract** for product-critical UI
 
 ---
 
@@ -505,6 +505,42 @@ Useful for pasting into CodePen, Claude.ai artifacts, or other tools.
 
 ---
 
+## Mode 0 — Design Declaration (product-critical UI)
+
+Use this layer **before** visual generation for a new product, a workflow redesign, or any page involving user trust, money, privacy, irreversible actions, or AI-generated conclusions. It is not a PRD and does not replace the existing Design Read: Design Read confirms the prompt; this declaration locks the human product judgments that the skill must not invent.
+
+**Skip only** for an explicitly exploratory visual exercise (`surprise me`, poster, moodboard, or brand exploration). Label that output: `exploratory — no product decision locked`.
+
+### Minimal declaration
+
+Ask at most two questions total; first infer from the README, product copy, flows, and existing UI. Mark unconfirmed fields as `assumption`, never as research fact.
+
+```yaml
+design_declaration:
+  user_context: [who, in what moment]
+  primary_job: [the one task this page/flow must complete]
+  success_moment: [when the user has clearly received value]
+  trust_boundary: [uncertain data, payment, deletion, privacy, financial/medical risk]
+  hierarchy: [one must-see item, then at most three secondary items]
+  chosen_tension: [e.g. evidence > delight; speed > exploration]
+  non_negotiables: [maximum three]
+  evidence_status: [real | mock-clearly-labeled | unknown]
+```
+
+Read `references/design-declaration.md` whenever this mode applies.
+
+### Product Integrity Contract
+
+When a design system is confirmed, compile the declaration into `variant-output/design-contract.md`; read it before every Generate, Component, Compose, Analyze, or UX Review action. The contract has priority over aesthetic defaults.
+
+**Must:** make the primary job and one primary CTA legible in the first view; make trust boundaries explicit through source/state/confirmation/undo/limits; include loading, empty, error, and success behavior; use confirmed tokens.
+
+**Must not:** mix real, mock, and AI-inferred data without labels; conceal price, risk, source, recovery, or irreversible consequences; create competing primary CTAs; add decoration that contradicts hierarchy.
+
+After `ds confirm`, the declaration is frozen alongside the system. Variations may change layout and information organization, but must not silently change `primary_job`, `trust_boundary`, or `non_negotiables`.
+
+---
+
 ## Project Context Initialization
 
 ### Session Start: Read Persisted Context
@@ -553,6 +589,17 @@ Write `./variant-output/.variant-context.json` whenever the user makes a meaning
   "iterations": 3,
   "framework": "next",
   "notes": "user prefers high contrast, no dark mode",
+  "designDeclaration": {
+    "user_context": "...",
+    "primary_job": "...",
+    "success_moment": "...",
+    "trust_boundary": "...",
+    "hierarchy": ["..."],
+    "chosen_tension": "evidence > delight",
+    "non_negotiables": ["..."],
+    "evidence_status": "mock-clearly-labeled",
+    "frozenAt": "2026-08-13T10:00:00Z"
+  },
   "designSystem": {
     "confirmed": true,
     "file": "variant-output/design-system.css",
@@ -577,6 +624,7 @@ Write `./variant-output/.variant-context.json` whenever the user makes a meaning
 - After scenario is detected and confirmed → update `scenario`
 - After framework is detected → update `framework`
 - After user gives a preference constraint → append to `notes`
+- After Design Declaration is confirmed → write `designDeclaration`; after `ds confirm`, add `frozenAt` and generate `variant-output/design-contract.md`
 - After `ds confirm` → write `designSystem` object with `confirmed: true`, `file`, `palette`, `fonts`, `confirmedAt`
 - After each `component [name]` build → add entry to `components` map
 - After `ds reset` → set `designSystem.confirmed: false`, clear `components`
@@ -986,6 +1034,7 @@ Before generating, apply these three rules in order:
    - **Quiet constraints**: accessibility-first, regulated industry, kids' product, trust-first commerce — these OVERRIDE aesthetic preference
 2. **Resolve vague prompts — max 2 questions.** If the prompt lacks enough signal to differentiate 3 variations (e.g. "design something cool"), ask at most 2 clarifying questions. Focus on: (a) what it's for / who uses it, (b) any aesthetic leaning. If the user says "surprise me," pick 3 maximally divergent directions and proceed.
 3. **Never generate blind.** Do not produce code until you have either (a) user confirmation of the scenario, or (b) answers to your clarifying questions, or (c) an explicit "surprise me."
+4. **Lock product judgment when it matters.** For product-critical UI, complete Mode 0 after Design Read and before generation. For exploratory work, state that no product decision is locked.
 
 ---
 
@@ -1056,7 +1105,7 @@ Token foundation   Atomic pieces     Assembled layouts
 | User says | Action |
 |---|---|
 | `ds` / "create a design system" / "define tokens" / "set up tokens" | Generate design system → preview → confirm |
-| `ds confirm` | Lock current design system as constraint for all future outputs |
+| `ds confirm` | Lock current design system **and Design Declaration** as constraints; generate `design-contract.md` |
 | `ds edit [section]` | Edit one section of the design system (palette / type / spacing / motion) without regenerating all |
 | `ds show` | Print current design system token summary in terminal |
 | `component [name]` (after DS confirmed) | Generate component using locked DS tokens, all 8 states |
@@ -1485,6 +1534,22 @@ Present a **compact Summary Card** in the terminal for each variation:
 Then show the file paths and open the first variation in the browser. The user reads the design in the browser, not in the terminal.
 
 ### 4. AI Slop Test (Quality Gate)
+
+### 4.5 Product Integrity Gate (product-critical UI)
+
+Read `references/product-integrity-gate.md` after the visual gate. Report it separately — never average product integrity into a style score:
+
+```text
+Visual System: 88/100
+Product Integrity: pass (0 P0 · 1 P1 · 2 P2)
+```
+
+- **P0 / block:** primary job or success moment undefined (unless exploratory); real/mock/AI-inferred data mixed; high-stakes or irreversible action has no consequence, confirmation, or recovery path.
+- **P1 / fix before write:** primary CTA or hierarchy unclear; loading/empty/error absent; page-level styles bypass confirmed tokens.
+- **P2 / refine:** motion, gradient, glass, shadow, or decorative element has no information or feedback role.
+
+If Product Integrity is `block`, do not present the generated design as complete; fix the contract violation first.
+
 
 Before presenting, run this check on each variation:
 
