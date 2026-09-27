@@ -1,21 +1,23 @@
 :root {
-  color: #0b0b0d;
-  background: #f4f1e9;
-  font-family: var(--font-sans);
+  color: #f2f0eb;
+  background: #0a0b0c;
+  font-family: var(--font-serif);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 
-  /* Color roles: one job per color. */
-  --color-ink: #0b0b0d;
-  --color-paper: #f4f1e9;
-  --color-surface: #ffffff;
-  --color-brand: #2347ff;
-  --color-action: #dfff52;
-  --color-annotation: #ff492d;
-  --color-muted: #66645f;
-  --color-line: rgba(11, 11, 13, .24);
+  /* Monochrome product system: color belongs to the work, not the interface. */
+  --color-ink: #f2f0eb;
+  --color-paper: #0a0b0c;
+  --color-surface: #111315;
+  --color-surface-raised: #16191c;
+  --color-brand: #f2f0eb;
+  --color-action: #f2f0eb;
+  --color-annotation: #8b8f94;
+  --color-muted: #92979d;
+  --color-line: rgba(255, 255, 255, .11);
+  --color-line-strong: rgba(255, 255, 255, .18);
 
-  /* 8px spacing system. */
   --space-1: .5rem;
   --space-2: 1rem;
   --space-3: 1.5rem;
@@ -25,34 +27,49 @@
   --space-7: 6rem;
   --space-8: 8rem;
 
-  /* Two-role type system: one sans family for voice, mono only for data. */
-  --font-sans: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, sans-serif;
-  --font-display: var(--font-sans);
+  --font-serif: "Iowan Old Style", Baskerville, "Songti SC", STSong, "Noto Serif CJK SC", "Source Han Serif SC", SimSun, Georgia, serif;
+  --font-display: var(--font-serif);
   --font-mono: "SFMono-Regular", "Roboto Mono", Menlo, Consolas, ui-monospace, monospace;
   --weight-body: 400;
-  --weight-heading: 850;
-  --weight-display: 900;
-  --tracking-display: -.065em;
-  --tracking-label: .08em;
-  --text-meta: .75rem;
+  --weight-heading: 400;
+  --weight-display: 400;
+  --tracking-display: -.055em;
+  --tracking-label: .09em;
+  --text-meta: .6875rem;
   --text-small: .875rem;
   --text-body: 1rem;
   --text-lede: 1.125rem;
   --text-h3: 1.25rem;
-  --text-h2: clamp(3.25rem, 6vw, 6.5rem);
-  --text-h1: clamp(4.8rem, 8.4vw, 8.5rem);
+  --text-h2: clamp(3rem, 6vw, 6rem);
+  --text-h1: clamp(4.25rem, 9vw, 8rem);
 
-  /* Four content rhythms. Preview art may define its own internal typesetting. */
-  --leading-display: .88;
+  --leading-display: .92;
   --leading-heading: 1.2;
-  --leading-body: 1.6;
-  --leading-meta: 1.3;
+  --leading-body: 1.65;
+  --leading-meta: 1.35;
 
-  /* Shared geometry. Direction previews may vary inside these shells. */
-  --content-width: 77.5rem;
-  --border: 1px solid var(--color-ink);
-  --border-strong: 2px solid var(--color-ink);
-  --radius: 0;
-  --shadow: .5rem .5rem 0 var(--color-ink);
-  --section-pad: clamp(5rem, 10vw, 8rem);
+  --content-width: 72rem;
+  --border: 1px solid var(--color-line);
+  --border-strong: 1px solid var(--color-line-strong);
+  --radius-sm: .625rem;
+  --radius: 1rem;
+  --radius-lg: 1.5rem;
+  --shadow: 0 1.5rem 5rem rgba(0, 0, 0, .24);
+  --section-pad: clamp(6rem, 10vw, 9rem);
+}
+
+* { box-sizing: border-box; }
+html { color-scheme: dark; scroll-behavior: smooth; background: var(--color-paper); }
+body { margin: 0; min-width: 320px; overflow-x: hidden; color: var(--color-ink); background: var(--color-paper); font-family: var(--font-serif); font-weight: var(--weight-body); line-height: var(--leading-body); }
+button, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+a { color: inherit; }
+h1, h2, h3, p { margin-top: 0; }
+h1, h2, h3 { font-weight: var(--weight-heading); }
+::selection { color: #0a0b0c; background: var(--color-action); }
+:focus-visible { outline: 2px solid var(--color-action); outline-offset: 3px; }
+.shell { width: min(var(--content-width), calc(100% - 3.5rem)); margin-inline: auto; }
+
+@media (max-width: 640px) {
+  .shell { width: min(100% - 1.5rem, var(--content-width)); }
 }
