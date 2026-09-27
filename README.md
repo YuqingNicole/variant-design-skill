@@ -8,6 +8,26 @@ A Claude Code skill inspired by the [Variant](https://variant.com) design commun
 
 ---
 
+## Interactive website
+
+**[Live website →](https://variant-design-studio.nicole-chen144768.chatgpt.site/)** · [Website source](./website) · [Install the skill](#installation)
+
+Use the bilingual prompt playground to:
+
+1. Describe the product, audience, tone, and constraints.
+2. Compare three prompt-aware positions: **Narrative**, **System**, and **Contrast**.
+3. Take the strongest direction into the full skill for iteration and code export.
+
+Run the [React](https://react.dev/) + [Vite](https://vite.dev/) website locally:
+
+```bash
+git clone https://github.com/YuqingNicole/variant-design-skill.git
+cd variant-design-skill/website
+npm ci && npm run dev
+```
+
+---
+
 ## Sample output
 
 Three variations from a single prompt — each feels like a different studio:
