@@ -9,6 +9,16 @@ Turn one brief into deliberate design options, compare them on shared criteria, 
 
 In commands below, `<skill-root>` means the directory containing this `SKILL.md`. Resolve it before running bundled scripts; do not assume the user's project contains this skill's `scripts/` directory.
 
+## Update awareness
+
+On the first Variant Design request in a session, run this once before long-running work:
+
+```bash
+node <skill-root>/scripts/check-update.mjs --quiet
+```
+
+The check is non-blocking, caches results for 24 hours, and stays silent when current or offline. If it reports a newer release, tell the user once and continue their task. Never update automatically or execute the suggested update command without the user's request.
+
 ## Route first
 
 Choose one primary route. Read that file completely, then load only the references it requires. Do not load every sub-skill or reference by default.

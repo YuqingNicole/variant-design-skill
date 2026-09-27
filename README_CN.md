@@ -114,6 +114,8 @@ compare old new          → 现有页面 vs 重新设计的并排对比
 claude skill install https://github.com/YuqingNicole/variant-design-skill
 ```
 
+Skill 最多每 24 小时检查一次 [GitHub Releases](https://github.com/YuqingNicole/variant-design-skill/releases)。发现新版本时只显示版本链接和更新命令，不会自动执行更新。
+
 或手动添加到项目的 `SKILL.md` 中——复制 [`SKILL.md`](./SKILL.md) 的内容。
 
 ### Hermes Agent（Nous Research）

@@ -114,6 +114,8 @@ compare old new          → Side-by-side existing vs. redesigned
 claude skill install https://github.com/YuqingNicole/variant-design-skill
 ```
 
+The skill checks [GitHub Releases](https://github.com/YuqingNicole/variant-design-skill/releases) at most once every 24 hours. When a newer version is available, it prints the release link and update command but never updates automatically.
+
 Or add manually to your project's `SKILL.md` — copy the contents of [`SKILL.md`](./SKILL.md) into your existing skill file.
 
 ### Hermes Agent (Nous Research)
