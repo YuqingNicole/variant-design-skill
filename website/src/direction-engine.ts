@@ -15,6 +15,13 @@ export type DesignDirection = {
   colors: [string, string, string, string];
   sampleTitle: string;
   sampleMeta: string;
+  contract?: {
+    artDirection: string;
+    signatureMove: string;
+    contentPlan: string[];
+    avoid: string[];
+  };
+  html?: string;
 };
 
 type Domain = "finance" | "developer" | "wellness" | "luxury" | "education" | "climate" | "community" | "general";
