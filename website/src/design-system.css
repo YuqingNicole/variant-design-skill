@@ -1,7 +1,7 @@
 :root {
   color: #0b0b0d;
   background: #f4f1e9;
-  font-family: Arial, Helvetica, ui-sans-serif, sans-serif;
+  font-family: var(--font-sans);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 
@@ -25,10 +25,15 @@
   --space-7: 6rem;
   --space-8: 8rem;
 
-  /* One display family, one serif accent, mono only for metadata. */
-  --font-sans: Arial, Helvetica, ui-sans-serif, sans-serif;
-  --font-serif: Georgia, "Times New Roman", serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Two-role type system: one sans family for voice, mono only for data. */
+  --font-sans: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: "SFMono-Regular", "Roboto Mono", Menlo, Consolas, ui-monospace, monospace;
+  --weight-body: 400;
+  --weight-heading: 850;
+  --weight-display: 900;
+  --tracking-display: -.065em;
+  --tracking-label: .08em;
   --text-meta: .75rem;
   --text-small: .875rem;
   --text-body: 1rem;

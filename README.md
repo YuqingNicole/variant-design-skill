@@ -341,7 +341,7 @@ Scenario-specific materials (starter prompts, palettes, typography, layouts, rea
 | `references/portfolio.md` | Designer portfolios, developer showcases, freelancer sites |
 | `references/food-beverage.md` | Restaurants, recipes, coffee brands, bakeries, cocktail bars |
 | `references/fashion.md` | Fashion brands, streetwear, beauty, interior design, lifestyle |
-| `references/palettes.md` | Universal palette library — 39 palettes × 7+ aesthetic directions (incl. Pinterest trends) |
+| `references/palettes.md` | Universal palette library — 40+ palettes across 7+ aesthetic directions, plus 7 attributed community palettes |
 | `references/interactive-patterns.md` | Filtering, drag-and-drop, charts, lightbox, carousels, multi-step forms |
 | `references/ux-heuristics.md` | Nielsen's 10 heuristics · Fitts's Law · Hick's Law · Jakob's Law · severity ratings · evaluation protocol |
 | `references/ux-psychology.md` | Mental models · cognitive load · Gestalt principles · reading patterns · affordances · attention · memory · trust |

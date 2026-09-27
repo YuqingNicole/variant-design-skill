@@ -3,17 +3,26 @@ import { createRoot } from "react-dom/client";
 import "./design-system.css";
 import "./styles.css";
 import { createDirections, type DesignDirection, type Language } from "./direction-engine";
+import { communityPalettes, paletteSourceUrl, type PaletteId } from "./community-palettes";
 
 const repositoryUrl = "https://github.com/YuqingNicole/variant-design-skill";
 const installCommand = "claude skill install https://github.com/YuqingNicole/variant-design-skill";
 
+function swatchForeground(hex: string) {
+  const value = hex.replace("#", "");
+  const [red, green, blue] = [0, 2, 4].map((offset) => Number.parseInt(value.slice(offset, offset + 2), 16));
+  const luminance = (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
+  return luminance > 0.58 ? "#0A0A0A" : "#FFFFFF";
+}
+
 const copy = {
   zh: {
     pageTitle: "Variant Design — 第一稿不是答案。", pageDescription: "一个提示词，生成三种有明确立场的视觉方向。比较、批判、变化，再交付真正值得保留的方案。",
-    navLabel: "主导航", homeLabel: "Variant Design 首页", issue: "第 01 期 / 2026", navWork: "作品", navMethod: "方法", switchLabel: "切换到英文", switchText: "EN",
+    navLabel: "主导航", homeLabel: "Variant Design 首页", issue: "第 01 期 / 2026", navPalettes: "色板", navWork: "作品", navMethod: "方法", switchLabel: "切换到英文", switchText: "EN",
     kickerA: "一份命题", kickerB: "三种立场", heroLines: ["别把", "第一稿", "当答案。"], heroLede: "把一份设计命题变成三个有明确取舍的方向。比较它们，批判它们，再推进真正值得交付的那一个。",
     installSkill: "安装技能", commandCopied: "命令已复制", fieldNotes: "阅读设计笔记 ↗", principlesLabel: "项目原则", principles: ["解决空白画布。", "一份命题，三个工作室。", "审美始终参与判断。"],
     workbenchLabel: "交互式提示词演示", liveProof: "现场验证", run: "方向引擎 / 001", ready: "就绪", diverging: "分析中", promptLabel: "描述产品、用户和你不想要的感觉。", defaultPrompt: "为一款面向独立开发者的 AI 财务工具设计首页，专业但不要像传统银行", directionsCode: "3 个定制方向", working: "分析中…", diverge: "生成三个方向", regenerate: "重新生成", statusReady: "等待你的设计命题", statusBuilding: "正在拆解产品、受众与视觉张力…", statusDone: "三个定制方向已就绪", emptyPrompt: "请先输入一个具体的设计命题。", longPrompt: "命题请控制在 600 个字符以内。", failedPrompt: "方向生成失败，请修改命题后重试。",
+    paletteEyebrow: "01 / 内置色板", paletteTitle: ["先选择一种", "色彩立场。"], paletteBody: "七套三色色板来自设计师 346eur 的公开分享。选择一套，它会成为三个生成方向共同遵守的颜色约束。", paletteGroupLabel: "选择生成方向使用的色板", paletteAuto: "智能匹配", paletteAutoMood: "根据提示词自动选择", paletteSelected: "当前选择", paletteUse: "使用此色板", paletteSource: "查看灵感来源 ↗",
     marquee: ["理解", "发散", "比较", "推进"], directionEyebrow: "02 / 有纪律的发散", directionTitle: ["一份命题。", "三套系统。"], directionNote: "同一份命题，三种主张", directionBody: "每个方向改变视觉立场，但使用相同的评估维度，因此差异清晰、结果可比较。",
     generatedFor: "本轮命题", thesisLabel: "设计主张", typeLabel: "字体", densityLabel: "密度", layoutLabel: "布局", motionLabel: "动效", reasonLabel: "为什么适合",
     directions: [
@@ -33,10 +42,11 @@ const copy = {
   },
   en: {
     pageTitle: "Variant Design — The first answer is too easy.", pageDescription: "One prompt becomes three visual arguments. Critique, vary, and ship the direction with a point of view.",
-    navLabel: "Primary navigation", homeLabel: "Variant Design home", issue: "ISSUE 01 / 2026", navWork: "Work", navMethod: "Method", switchLabel: "Switch to Chinese", switchText: "中文",
+    navLabel: "Primary navigation", homeLabel: "Variant Design home", issue: "ISSUE 01 / 2026", navPalettes: "Palettes", navWork: "Work", navMethod: "Method", switchLabel: "Switch to Chinese", switchText: "中文",
     kickerA: "One brief", kickerB: "three positions", heroLines: ["DON'T SHIP", "THE FIRST", "IDEA."], heroLede: "Turn one brief into three directions with explicit trade-offs. Compare them, critique them, then push the one worth shipping.",
     installSkill: "INSTALL THE SKILL", commandCopied: "COMMAND COPIED", fieldNotes: "Read the field notes ↗", principlesLabel: "Project principles", principles: ["Blank canvas, solved.", "Three studios, one brief.", "Taste stays in the loop."],
     workbenchLabel: "Interactive prompt demonstration", liveProof: "LIVE PROOF", run: "DIRECTION ENGINE / 001", ready: "READY", diverging: "ANALYSING", promptLabel: "Describe the product, its users, and what it should not feel like.", defaultPrompt: "Design a homepage for an AI finance tool for indie developers—professional, but nothing like a traditional bank", directionsCode: "3 tailored directions", working: "Analysing…", diverge: "Generate three directions", regenerate: "Regenerate", statusReady: "Ready for a design brief", statusBuilding: "Reading the product, audience, and visual tension…", statusDone: "Three tailored directions are ready", emptyPrompt: "Start with a specific design brief.", longPrompt: "Keep the brief under 600 characters.", failedPrompt: "Direction generation failed. Revise the brief and try again.",
+    paletteEyebrow: "01 / Built-in palettes", paletteTitle: ["Choose a", "color position."], paletteBody: "Seven three-color palettes transcribed from designer 346eur’s public post. Pick one and all three generated directions will use it as a shared color constraint.", paletteGroupLabel: "Choose a palette for generated directions", paletteAuto: "Smart match", paletteAutoMood: "Choose from the prompt", paletteSelected: "Selected", paletteUse: "Use this palette", paletteSource: "View inspiration source ↗",
     marquee: ["READ", "DIVERGE", "COMPARE", "PUSH"], directionEyebrow: "02 / Disciplined divergence", directionTitle: ["ONE BRIEF.", "THREE SYSTEMS."], directionNote: "One brief, three positions", directionBody: "Each direction changes its visual position but uses the same evaluation dimensions, making differences clear and results comparable.",
     generatedFor: "CURRENT BRIEF", thesisLabel: "Thesis", typeLabel: "Typography", densityLabel: "Density", layoutLabel: "Layout", motionLabel: "Motion", reasonLabel: "Why it fits",
     directions: [
@@ -71,8 +81,13 @@ function usePrefersReducedMotion() {
 function App() {
   const [language, setLanguage] = useState<Language>(() => window.localStorage.getItem("variant-language") === "en" ? "en" : "zh");
   const t = copy[language];
+  const [selectedPaletteId, setSelectedPaletteId] = useState<PaletteId | undefined>(() => {
+    const stored = window.localStorage.getItem("variant-palette");
+    if (stored === "auto") return undefined;
+    return communityPalettes.some((palette) => palette.id === stored) ? stored as PaletteId : communityPalettes[0].id;
+  });
   const [prompt, setPrompt] = useState<string>(t.defaultPrompt);
-  const [directions, setDirections] = useState<DesignDirection[]>(() => createDirections(t.defaultPrompt, language));
+  const [directions, setDirections] = useState<DesignDirection[]>(() => createDirections(t.defaultPrompt, language, selectedPaletteId));
   const [generatedBrief, setGeneratedBrief] = useState<string>(t.defaultPrompt);
   const [isGenerating, setIsGenerating] = useState(false);
   const [statusKey, setStatusKey] = useState<"ready" | "building" | "done">("ready");
@@ -81,6 +96,7 @@ function App() {
   const timerRef = useRef<number | null>(null);
   const reducedMotion = usePrefersReducedMotion();
   const status = statusKey === "ready" ? t.statusReady : statusKey === "building" ? t.statusBuilding : t.statusDone;
+  const activePalette = communityPalettes.find((palette) => palette.id === selectedPaletteId);
 
   useEffect(() => () => { if (timerRef.current) window.clearTimeout(timerRef.current); }, []);
   useEffect(() => {
@@ -93,7 +109,7 @@ function App() {
   function switchLanguage() {
     const next = language === "zh" ? "en" : "zh";
     const nextPrompt = copy[next].defaultPrompt;
-    setLanguage(next); setPrompt(nextPrompt); setDirections(createDirections(nextPrompt, next)); setGeneratedBrief(nextPrompt); setStatusKey("ready"); setError(null); setCopied(false); setIsGenerating(false);
+    setLanguage(next); setPrompt(nextPrompt); setDirections(createDirections(nextPrompt, next, selectedPaletteId)); setGeneratedBrief(nextPrompt); setStatusKey("ready"); setError(null); setCopied(false); setIsGenerating(false);
     if (timerRef.current) window.clearTimeout(timerRef.current);
   }
 
@@ -105,7 +121,7 @@ function App() {
     setIsGenerating(true); setError(null); setStatusKey("building");
     timerRef.current = window.setTimeout(() => {
       try {
-        setDirections(createDirections(prompt, language)); setGeneratedBrief(prompt.trim()); setStatusKey("done");
+        setDirections(createDirections(prompt, language, selectedPaletteId)); setGeneratedBrief(prompt.trim()); setStatusKey("done");
         document.querySelector("#directions")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
       } catch { setError(t.failedPrompt); setStatusKey("ready"); }
       finally { setIsGenerating(false); }
@@ -117,6 +133,15 @@ function App() {
     window.setTimeout(() => setCopied(false), 1800);
   }
 
+  function selectPalette(paletteId?: PaletteId) {
+    setSelectedPaletteId(paletteId);
+    if (paletteId) window.localStorage.setItem("variant-palette", paletteId);
+    else window.localStorage.setItem("variant-palette", "auto");
+    const brief = prompt.trim() || t.defaultPrompt;
+    setDirections(createDirections(brief, language, paletteId));
+    setError(null);
+  }
+
   return (
     <main data-language={language}>
       <section className="hero" id="top">
@@ -124,7 +149,7 @@ function App() {
           <a className="signature" href="#top" aria-label={t.homeLabel}><b>YN</b><span>Yuqing Nicole<br />variant.design</span></a>
           <div className="nav-index" aria-hidden="true">{t.issue}</div>
           <div className="nav-links">
-            <a href="#directions">{t.navWork}</a><a href="#method">{t.navMethod}</a><a href={repositoryUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
+            <a href="#palettes">{t.navPalettes}</a><a href="#directions">{t.navWork}</a><a href="#method">{t.navMethod}</a><a href={repositoryUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
             <button className="language-switch" type="button" onClick={switchLanguage} aria-label={t.switchLabel}>{t.switchText}</button>
           </div>
         </nav>
@@ -155,6 +180,39 @@ function App() {
         <div className="hero-marquee" aria-hidden="true">{t.marquee.map((item, index) => <span className="marquee-item" key={item}>{item}{index < t.marquee.length - 1 && <i>→</i>}</span>)}</div>
       </section>
 
+      <section className="palette-library" id="palettes">
+        <div className="shell">
+          <header className="palette-heading">
+            <div><p className="eyebrow">{t.paletteEyebrow}</p><h2>{t.paletteTitle[0]}<br /><em>{t.paletteTitle[1]}</em></h2></div>
+            <div className="palette-intro"><p>{t.paletteBody}</p><a href={paletteSourceUrl} target="_blank" rel="noreferrer">{t.paletteSource}</a></div>
+          </header>
+          <div className="palette-archive">
+            <div className={`palette-stage ${activePalette ? "" : "is-auto"}`} aria-live="polite">
+              {activePalette ? <>
+                <div className="palette-stage-image"><img src={activePalette.image} alt="" /><span>{String(communityPalettes.findIndex((palette) => palette.id === activePalette.id) + 1).padStart(2, "0")} / {String(communityPalettes.length).padStart(2, "0")}</span></div>
+                <div className="palette-stage-meta">
+                  <div><small>{t.paletteSelected}</small><h3>{activePalette.name[language]}</h3><p>{activePalette.mood[language]}</p></div>
+                  <div className="palette-stage-swatches">{activePalette.colors.map((color) => <div key={color.hex} style={{ background: color.hex, color: swatchForeground(color.hex) }}><span>{color.name[language]}</span><code>{color.hex}</code></div>)}</div>
+                </div>
+              </> : <div className="palette-auto-stage"><small>{t.paletteSelected}</small><h3>{t.paletteAuto}</h3><p>{t.paletteAutoMood}</p></div>}
+            </div>
+            <div className="palette-index" role="group" aria-label={t.paletteGroupLabel}>
+              <button className={`palette-index-row palette-index-auto ${selectedPaletteId ? "" : "is-selected"}`} type="button" onClick={() => selectPalette()} aria-pressed={!selectedPaletteId}>
+                <span>00</span><span><strong>{t.paletteAuto}</strong><small>{t.paletteAutoMood}</small></span>
+              </button>
+              {communityPalettes.map((palette, index) => {
+                const selected = selectedPaletteId === palette.id;
+                return <button className={`palette-index-row ${selected ? "is-selected" : ""}`} type="button" key={palette.id} onClick={() => selectPalette(palette.id)} aria-pressed={selected}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <span><strong>{palette.name[language]}</strong><small>{palette.mood[language]}</small></span>
+                  <span className="palette-index-swatches" aria-hidden="true">{palette.colors.map((color) => <i key={color.hex} style={{ background: color.hex }} />)}</span>
+                </button>;
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="directions-section" id="directions">
         <div className="section-number" aria-hidden="true">02</div>
         <div className="shell">
@@ -170,7 +228,7 @@ function App() {
               </div>
               <p className="direction-thesis"><b>{t.thesisLabel}</b>{direction.thesis}</p>
               <dl className="direction-specs"><div><dt>{t.typeLabel}</dt><dd>{direction.typography}</dd></div><div><dt>{t.densityLabel}</dt><dd>{direction.density}</dd></div><div><dt>{t.layoutLabel}</dt><dd>{direction.layoutLabel}</dd></div><div><dt>{t.motionLabel}</dt><dd>{direction.motion}</dd></div></dl>
-              <div className="palette" aria-label="Color palette">{direction.colors.map((color) => <span key={color} style={{ background: color }} title={color} />)}</div>
+              <div className="palette" aria-label="Color palette">{direction.colors.map((color, colorIndex) => <span key={`${color}-${colorIndex}`} style={{ background: color }} title={color} />)}</div>
               <div className="direction-reason"><b>{t.reasonLabel}</b><p>{direction.reason}</p></div><div className="card-caption"><span>{direction.name}</span><b>0{index + 1}</b></div>
             </article>)}
           </div>
