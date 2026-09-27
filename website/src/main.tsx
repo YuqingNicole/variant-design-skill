@@ -1,5 +1,6 @@
 import { StrictMode, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
+import "./design-system.css";
 import "./styles.css";
 import { createDirections, type DesignDirection, type Language } from "./direction-engine";
 
@@ -10,47 +11,47 @@ const copy = {
   zh: {
     pageTitle: "Variant Design — 第一稿不是答案。", pageDescription: "一个提示词，生成三种有明确立场的视觉方向。比较、批判、变化，再交付真正值得保留的方案。",
     navLabel: "主导航", homeLabel: "Variant Design 首页", issue: "第 01 期 / 2026", navWork: "作品", navMethod: "方法", switchLabel: "切换到英文", switchText: "EN",
-    kickerA: "做方向", kickerB: "不做默认", heroLines: ["别把", "第一稿", "当答案。"], heroLede: "一个提示词，变成三种有明确立场的视觉方案。保留张力，质疑显而易见的选择，最后交付真正有观点的方向。",
+    kickerA: "一份命题", kickerB: "三种立场", heroLines: ["别把", "第一稿", "当答案。"], heroLede: "把一份设计命题变成三个有明确取舍的方向。比较它们，批判它们，再推进真正值得交付的那一个。",
     installSkill: "安装技能", commandCopied: "命令已复制", fieldNotes: "阅读设计笔记 ↗", principlesLabel: "项目原则", principles: ["解决空白画布。", "一份命题，三个工作室。", "审美始终参与判断。"],
     workbenchLabel: "交互式提示词演示", liveProof: "现场验证", run: "方向引擎 / 001", ready: "就绪", diverging: "分析中", promptLabel: "描述产品、用户和你不想要的感觉。", defaultPrompt: "为一款面向独立开发者的 AI 财务工具设计首页，专业但不要像传统银行", directionsCode: "3 个定制方向", working: "分析中…", diverge: "生成三个方向", regenerate: "重新生成", statusReady: "等待你的设计命题", statusBuilding: "正在拆解产品、受众与视觉张力…", statusDone: "三个定制方向已就绪", emptyPrompt: "请先输入一个具体的设计命题。", longPrompt: "命题请控制在 600 个字符以内。", failedPrompt: "方向生成失败，请修改命题后重试。",
-    marquee: ["理解", "发散", "比较", "推进"], directionEyebrow: "根据你的命题生成", directionTitle: ["三种立场。", "实时定制。"], directionNote: "同一份命题，三种主张", directionBody: "方向名称、设计理由、配色、字体、密度、布局和动效都会随输入改变。",
+    marquee: ["理解", "发散", "比较", "推进"], directionEyebrow: "02 / 有纪律的发散", directionTitle: ["一份命题。", "三套系统。"], directionNote: "同一份命题，三种主张", directionBody: "每个方向改变视觉立场，但使用相同的评估维度，因此差异清晰、结果可比较。",
     generatedFor: "本轮命题", thesisLabel: "设计主张", typeLabel: "字体", densityLabel: "密度", layoutLabel: "布局", motionLabel: "动效", reasonLabel: "为什么适合",
     directions: [
       { id: "A", label: "编辑式克制", sub: "留白与叙事", image: "/sample-A-editorial.png", alt: "使用表达性衬线字体和大量留白的编辑式网站方案", tone: "衬线 / 安静 / 叙事" },
       { id: "B", label: "运营式清晰", sub: "密度与秩序", image: "/sample-B-dashboard.png", alt: "呈现密集运营数据的深色基础设施仪表盘方案", tone: "高密 / 技术 / 果断" },
       { id: "C", label: "面向转化的温度", sub: "人性与行动", image: "/sample-C-saas.png", alt: "使用绿色强调色和亲和字体的温暖软件产品发布页方案", tone: "人性 / 平静 / 转化" },
     ],
-    manifestoA: "AI 可以生成选项。", manifestoB: "审美决定什么值得留下。", methodEyebrow: "工作方法", methodTitle: ["这项技能，", "有一根编辑主线。"], methodBody: "Variant Design 不是情绪板机器。每一次运行都带着设计系统、反套路标准和批判循环。",
+    manifestoA: "没有规则的变化只是噪音。", manifestoB: "系统让选择变得清晰。", methodEyebrow: "03 / 约束系统", methodTitle: ["发散需要", "共同的规则。"], methodBody: "所有方向共享同一组评估维度：层级、字体、密度、布局、动效和理由。这样审美判断才有可比较的基础。",
     methods: [
       { title: "界定问题", body: "在接触视觉表面之前，先识别产品类型、技术框架、受众和限制。", tag: "定位" },
       { title: "强制发散", body: "三个方向必须坚持不同的设计主张，而不是提供表面上的变化。", tag: "发散" },
       { title: "审问作品", body: "检查启发式原则、无障碍、认知负荷、设计令牌，以及 AI 审美留下的惯性痕迹。", tag: "判断" },
       { title: "交付立场", body: "变化、混合、打磨，再把胜出的方向导出为符合项目技术栈的可运行代码。", tag: "落地" },
     ],
-    commandEyebrow: "一句话改变方向", commandTitle: ["像创意总监一样", "说话。"], commandBody: "没有面板，没有层层嵌套的控件。用短而明确的指令，让设计对话继续向前。", commandLabel: "现场笔记 / 快速动作", commandsLabel: "示例指令", commands: ["A 再大胆一点", "B 重混配色", "C → 移动端", "混合 A + B", "批判", "提取 A 的令牌"], boardNote: "推到它开始承担风险为止",
+    commandEyebrow: "04 / 继续推进", commandTitle: ["改变方向，", "不是操作界面。"], commandBody: "用简短、明确的语言继续设计对话。系统负责维护规范，你只需要表达判断。", commandLabel: "快速动作", commandsLabel: "示例指令", commands: ["A 再大胆一点", "B 重混配色", "C → 移动端", "混合 A + B", "批判", "提取 A 的令牌"], boardNote: "每一次变化，都保留可追溯的设计理由",
     startHere: "04 / 从这里开始", installTitle: ["第一稿", "来得", "太容易。"], installBody: "安装这项技能，带来一份命题，然后拒绝第一个看起来还不错的答案。", copy: "复制 ↗", copied: "已复制 ✓", documentation: "使用文档 ↗", chineseReadme: "中文说明 ↗", license: "MIT / 开源", footerMotto: "创造选项。保留审美。",
   },
   en: {
     pageTitle: "Variant Design — The first answer is too easy.", pageDescription: "One prompt becomes three visual arguments. Critique, vary, and ship the direction with a point of view.",
     navLabel: "Primary navigation", homeLabel: "Variant Design home", issue: "ISSUE 01 / 2026", navWork: "Work", navMethod: "Method", switchLabel: "Switch to Chinese", switchText: "中文",
-    kickerA: "Design in directions", kickerB: "not defaults", heroLines: ["DON'T SHIP", "THE FIRST", "IDEA."], heroLede: "One prompt becomes three visual arguments. Keep the tension, question the obvious, and export the direction that actually has a point of view.",
+    kickerA: "One brief", kickerB: "three positions", heroLines: ["DON'T SHIP", "THE FIRST", "IDEA."], heroLede: "Turn one brief into three directions with explicit trade-offs. Compare them, critique them, then push the one worth shipping.",
     installSkill: "INSTALL THE SKILL", commandCopied: "COMMAND COPIED", fieldNotes: "Read the field notes ↗", principlesLabel: "Project principles", principles: ["Blank canvas, solved.", "Three studios, one brief.", "Taste stays in the loop."],
     workbenchLabel: "Interactive prompt demonstration", liveProof: "LIVE PROOF", run: "DIRECTION ENGINE / 001", ready: "READY", diverging: "ANALYSING", promptLabel: "Describe the product, its users, and what it should not feel like.", defaultPrompt: "Design a homepage for an AI finance tool for indie developers—professional, but nothing like a traditional bank", directionsCode: "3 tailored directions", working: "Analysing…", diverge: "Generate three directions", regenerate: "Regenerate", statusReady: "Ready for a design brief", statusBuilding: "Reading the product, audience, and visual tension…", statusDone: "Three tailored directions are ready", emptyPrompt: "Start with a specific design brief.", longPrompt: "Keep the brief under 600 characters.", failedPrompt: "Direction generation failed. Revise the brief and try again.",
-    marquee: ["READ", "DIVERGE", "COMPARE", "PUSH"], directionEyebrow: "Generated from your brief", directionTitle: ["THREE POSITIONS.", "TAILORED LIVE."], directionNote: "One brief, three positions", directionBody: "Names, rationale, palette, typography, density, layout, and motion all change with the prompt.",
+    marquee: ["READ", "DIVERGE", "COMPARE", "PUSH"], directionEyebrow: "02 / Disciplined divergence", directionTitle: ["ONE BRIEF.", "THREE SYSTEMS."], directionNote: "One brief, three positions", directionBody: "Each direction changes its visual position but uses the same evaluation dimensions, making differences clear and results comparable.",
     generatedFor: "CURRENT BRIEF", thesisLabel: "Thesis", typeLabel: "Typography", densityLabel: "Density", layoutLabel: "Layout", motionLabel: "Motion", reasonLabel: "Why it fits",
     directions: [
       { id: "A", label: "Editorial restraint", sub: "Space and narrative", image: "/sample-A-editorial.png", alt: "Editorial website variation with expressive serif typography and generous whitespace", tone: "Serif-led / quiet / narrative" },
       { id: "B", label: "Operational clarity", sub: "Density and order", image: "/sample-B-dashboard.png", alt: "Dark infrastructure dashboard variation with dense operational data", tone: "Dense / technical / decisive" },
       { id: "C", label: "SaaS warmth", sub: "Human and actionable", image: "/sample-C-saas.png", alt: "Warm SaaS landing page variation with green accents and friendly typography", tone: "Human / calm / conversion-led" },
     ],
-    manifestoA: "AI can generate options.", manifestoB: "Taste decides what survives.", methodEyebrow: "The working method", methodTitle: ["A skill with", "an editorial spine."], methodBody: "Variant Design is not a moodboard machine. It carries a design system, an anti-slop gate, and a critique loop into every run.",
+    manifestoA: "Variation without rules is noise.", manifestoB: "A system makes choices clear.", methodEyebrow: "03 / Constraint system", methodTitle: ["Divergence needs", "shared rules."], methodBody: "Every direction uses the same evaluation dimensions: hierarchy, typography, density, layout, motion, and rationale. That gives taste a comparable foundation.",
     methods: [
       { title: "Frame the problem", body: "Detect the product type, framework, audience, and constraints before touching the surface.", tag: "FRAME" },
       { title: "Force divergence", body: "Three directions commit to different design arguments—not cosmetic alternatives.", tag: "DIVERGE" },
       { title: "Interrogate the work", body: "Critique heuristics, accessibility, cognitive load, tokens, and the tell-tale fingerprints of AI taste.", tag: "JUDGE" },
       { title: "Ship the conviction", body: "Vary, mix, polish, and export the winner as working code in the project’s own stack.", tag: "SHIP" },
     ],
-    commandEyebrow: "One-line direction changes", commandTitle: ["Talk like a", "creative director."], commandBody: "No panels. No nested controls. Keep the design conversation moving with short, opinionated commands.", commandLabel: "FIELD NOTES / QUICK MOVES", commandsLabel: "Example commands", commands: ["A vary strong", "B remix colors", "C → mobile", "mix A + B", "critique", "tokens A"], boardNote: "push it until it has something to lose",
+    commandEyebrow: "04 / Push the work", commandTitle: ["Change the direction,", "not the interface."], commandBody: "Continue the design conversation in short, decisive language. The system protects the rules; you provide the judgment.", commandLabel: "QUICK MOVES", commandsLabel: "Example commands", commands: ["A vary strong", "B remix colors", "C → mobile", "mix A + B", "critique", "tokens A"], boardNote: "every change keeps a traceable design reason",
     startHere: "04 / START HERE", installTitle: ["THE FIRST", "ANSWER IS", "TOO EASY."], installBody: "Install the skill. Bring a brief. Refuse the first competent answer.", copy: "COPY ↗", copied: "COPIED ✓", documentation: "Documentation ↗", chineseReadme: "Chinese guide ↗", license: "MIT / OPEN SOURCE", footerMotto: "MAKE OPTIONS. KEEP TASTE.",
   },
 } as const;
@@ -138,7 +139,6 @@ function App() {
               <a className="text-link" href={repositoryUrl} target="_blank" rel="noreferrer">{t.fieldNotes}</a>
             </div>
           </div>
-          <div className="hero-notes" aria-label={t.principlesLabel}>{t.principles.map((principle, index) => <p key={principle}><span>0{index + 1}</span>{principle}</p>)}</div>
           <div className="workbench" aria-label={t.workbenchLabel}>
             <div className="workbench-tape">{t.liveProof}</div>
             <div className="workbench-head"><span>{t.run}</span><span className="run-state"><i className={isGenerating ? "is-live" : ""} /> {isGenerating ? t.diverging : t.ready}</span></div>
@@ -164,7 +164,7 @@ function App() {
           </header>
           <div className="contact-sheet">
             {directions.map((direction, index) => <article className={`direction-card card-${index + 1}`} key={`${direction.id}-${direction.name}`}>
-              <div className="card-pin" aria-hidden="true" /><div className="direction-meta"><span className="direction-id">{direction.id}</span><div><h3>{direction.name}</h3><p>{direction.layoutLabel}</p></div></div>
+              <div className="direction-meta"><span className="direction-id">{direction.id}</span><div><h3>{direction.name}</h3><p>{direction.layoutLabel}</p></div></div>
               <div className={`direction-preview preview-${direction.layout}`} style={{ "--preview-ink": direction.colors[0], "--preview-paper": direction.colors[1], "--preview-accent": direction.colors[2], "--preview-pop": direction.colors[3] } as React.CSSProperties}>
                 <div className="preview-top"><span>0{index + 1}</span><i /></div><strong>{direction.sampleTitle}</strong><div className="preview-lines"><i /><i /><i /></div><small>{direction.sampleMeta}</small>
               </div>

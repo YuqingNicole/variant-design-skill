@@ -1,0 +1,47 @@
+:root {
+  color: #0b0b0d;
+  background: #f4f1e9;
+  font-family: Arial, Helvetica, ui-sans-serif, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+
+  /* Color roles: one job per color. */
+  --color-ink: #0b0b0d;
+  --color-paper: #f4f1e9;
+  --color-surface: #ffffff;
+  --color-brand: #2347ff;
+  --color-action: #dfff52;
+  --color-annotation: #ff492d;
+  --color-muted: #66645f;
+  --color-line: rgba(11, 11, 13, .24);
+
+  /* 8px spacing system. */
+  --space-1: .5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4rem;
+  --space-7: 6rem;
+  --space-8: 8rem;
+
+  /* One display family, one serif accent, mono only for metadata. */
+  --font-sans: Arial, Helvetica, ui-sans-serif, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --text-meta: .75rem;
+  --text-small: .875rem;
+  --text-body: 1rem;
+  --text-lede: 1.125rem;
+  --text-h3: 1.25rem;
+  --text-h2: clamp(3.25rem, 6vw, 6.5rem);
+  --text-h1: clamp(4.8rem, 8.4vw, 8.5rem);
+
+  /* Shared geometry. Direction previews may vary inside these shells. */
+  --content-width: 77.5rem;
+  --border: 1px solid var(--color-ink);
+  --border-strong: 2px solid var(--color-ink);
+  --radius: 0;
+  --shadow: .5rem .5rem 0 var(--color-ink);
+  --section-pad: clamp(5rem, 10vw, 8rem);
+}
