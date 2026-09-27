@@ -1,3 +1,5 @@
+import { getCommunityPalette, type PaletteId } from "./community-palettes";
+
 export type Language = "zh" | "en";
 
 export type DesignDirection = {
@@ -70,14 +72,24 @@ function hashPrompt(prompt: string) {
   return [...prompt].reduce((total, character) => (total * 31 + character.charCodeAt(0)) >>> 0, 7);
 }
 
-export function createDirections(prompt: string, language: Language): DesignDirection[] {
+export function createDirections(prompt: string, language: Language, paletteId?: PaletteId): DesignDirection[] {
   const clean = prompt.trim();
   if (!clean) throw new Error("empty_prompt");
   if (clean.length > 600) throw new Error("prompt_too_long");
 
   const domain = detect<Domain>(clean, domainSignals, "general");
   const tone = detect<Tone>(clean, toneSignals, domain === "developer" ? "technical" : "trust");
-  const selectedPalettes = rotate(palettes[domain], hashPrompt(clean));
+  const communityPalette = getCommunityPalette(paletteId);
+  const selectedPalettes: Array<[string, string, string, string]> = communityPalette
+    ? (() => {
+        const [ink, accent, paper] = communityPalette.colors.map((color) => color.hex);
+        return [
+          [ink, paper, accent, paper],
+          [ink, accent, paper, accent],
+          [ink, paper, accent, ink],
+        ];
+      })()
+    : rotate(palettes[domain], hashPrompt(clean));
   const shortBrief = clean.length > 44 ? `${clean.slice(0, 42)}…` : clean;
 
   const zhDomain: Record<Domain, string> = { finance: "金融产品", developer: "数字工具", wellness: "健康体验", luxury: "高端品牌", education: "学习产品", climate: "可持续项目", community: "社群平台", general: "这个产品" };

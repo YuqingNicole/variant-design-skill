@@ -566,6 +566,24 @@ Aesthetic palettes frequently seen on Pinterest mood boards, design inspiration 
 
 ---
 
+## Community Palette Set — 346eur
+
+Seven compact three-color palettes transcribed from [346eur's public Threads post](https://www.threads.com/share/_4EmJsY_E/). Use these when a direction needs a strong atmospheric anchor rather than a full semantic UI scale. Assign the darkest color to ink or background, the middle color to accent, and the lightest color to paper or text; derive accessible interaction states during implementation.
+
+| Palette | Color 1 | Color 2 | Color 3 |
+|---|---|---|---|
+| Ancient Gild · Slate | Onyx `#0A0A0A` | Blue Slate `#536878` | Alabaster Grey `#E5E4E2` |
+| Colonial Cobalt | Midnight Violet `#240A24` | Blue Violet `#9932CC` | Lavender `#E6E6FA` |
+| Vintage Hearth · Ash | Dark Wine `#6F1D1B` | Ash Grey `#ADBDA8` | Linen `#F0E6DE` |
+| Ancient Gild · Old Gold | Black Cherry `#550003` | Old Gold `#B8AB38` | Vanilla Custard `#E0D794` |
+| Toxic Nightfall | Espresso `#4E2C23` | Burnt Peach `#E27258` | Soft Apricot `#FFDAB9` |
+| Vintage Hearth · Snow | Inferno `#AA0003` | Periwinkle `#BFB4DC` | Bright Snow `#FAFBFD` |
+| Electric Tundra | Prussian Blue `#050A30` | Blue `#0000FF` | Cyan `#00FFFF` |
+
+> The source post uses Ancient Gild and Vintage Hearth twice for different color combinations. The suffixes above keep both source palettes addressable without changing their original family names.
+
+---
+
 ## Picking a Palette
 
 | Scenario | Recommended |
