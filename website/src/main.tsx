@@ -1,11 +1,10 @@
 import { StrictMode, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { BorderBeam } from "border-beam";
 import "./styles.css";
+import { createDirections, type DesignDirection, type Language } from "./direction-engine";
 
 const repositoryUrl = "https://github.com/YuqingNicole/variant-design-skill";
 const installCommand = "claude skill install https://github.com/YuqingNicole/variant-design-skill";
-type Language = "zh" | "en";
 
 const copy = {
   zh: {
@@ -13,8 +12,9 @@ const copy = {
     navLabel: "主导航", homeLabel: "Variant Design 首页", issue: "第 01 期 / 2026", navWork: "作品", navMethod: "方法", switchLabel: "切换到英文", switchText: "EN",
     kickerA: "做方向", kickerB: "不做默认", heroLines: ["别把", "第一稿", "当答案。"], heroLede: "一个提示词，变成三种有明确立场的视觉方案。保留张力，质疑显而易见的选择，最后交付真正有观点的方向。",
     installSkill: "安装技能", commandCopied: "命令已复制", fieldNotes: "阅读设计笔记 ↗", principlesLabel: "项目原则", principles: ["解决空白画布。", "一份命题，三个工作室。", "审美始终参与判断。"],
-    workbenchLabel: "交互式提示词演示", liveProof: "现场验证", run: "方案生成 / 001", ready: "就绪", diverging: "发散中", promptLabel: "给空白画布一个问题。", defaultPrompt: "为一款创意编程工具设计发布页", directionsCode: "3 个方向 / 可运行代码", working: "生成中…", diverge: "开始发散", statusReady: "等待你的命题", statusBuilding: "正在构建三种视觉主张…", statusDone: "三个方向已就绪——选择一个继续推进",
-    marquee: ["生成", "批判", "变化", "交付"], directionEyebrow: "同一命题 / 不同立场", directionTitle: ["三种方案。", "不做填充。"], directionNote: "同一份命题，三种主张", directionBody: "不是把同一套模板换三种颜色。每个方向都会改变层级、字体、密度、节奏和交互。",
+    workbenchLabel: "交互式提示词演示", liveProof: "现场验证", run: "方向引擎 / 001", ready: "就绪", diverging: "分析中", promptLabel: "描述产品、用户和你不想要的感觉。", defaultPrompt: "为一款面向独立开发者的 AI 财务工具设计首页，专业但不要像传统银行", directionsCode: "3 个定制方向", working: "分析中…", diverge: "生成三个方向", regenerate: "重新生成", statusReady: "等待你的设计命题", statusBuilding: "正在拆解产品、受众与视觉张力…", statusDone: "三个定制方向已就绪", emptyPrompt: "请先输入一个具体的设计命题。", longPrompt: "命题请控制在 600 个字符以内。", failedPrompt: "方向生成失败，请修改命题后重试。",
+    marquee: ["理解", "发散", "比较", "推进"], directionEyebrow: "根据你的命题生成", directionTitle: ["三种立场。", "实时定制。"], directionNote: "同一份命题，三种主张", directionBody: "方向名称、设计理由、配色、字体、密度、布局和动效都会随输入改变。",
+    generatedFor: "本轮命题", thesisLabel: "设计主张", typeLabel: "字体", densityLabel: "密度", layoutLabel: "布局", motionLabel: "动效", reasonLabel: "为什么适合",
     directions: [
       { id: "A", label: "编辑式克制", sub: "留白与叙事", image: "/sample-A-editorial.png", alt: "使用表达性衬线字体和大量留白的编辑式网站方案", tone: "衬线 / 安静 / 叙事" },
       { id: "B", label: "运营式清晰", sub: "密度与秩序", image: "/sample-B-dashboard.png", alt: "呈现密集运营数据的深色基础设施仪表盘方案", tone: "高密 / 技术 / 果断" },
@@ -35,8 +35,9 @@ const copy = {
     navLabel: "Primary navigation", homeLabel: "Variant Design home", issue: "ISSUE 01 / 2026", navWork: "Work", navMethod: "Method", switchLabel: "Switch to Chinese", switchText: "中文",
     kickerA: "Design in directions", kickerB: "not defaults", heroLines: ["DON'T SHIP", "THE FIRST", "IDEA."], heroLede: "One prompt becomes three visual arguments. Keep the tension, question the obvious, and export the direction that actually has a point of view.",
     installSkill: "INSTALL THE SKILL", commandCopied: "COMMAND COPIED", fieldNotes: "Read the field notes ↗", principlesLabel: "Project principles", principles: ["Blank canvas, solved.", "Three studios, one brief.", "Taste stays in the loop."],
-    workbenchLabel: "Interactive prompt demonstration", liveProof: "LIVE PROOF", run: "VARIANT RUN / 001", ready: "READY", diverging: "DIVERGING", promptLabel: "Give the blank canvas a problem.", defaultPrompt: "A launch page for a creative coding tool", directionsCode: "3 directions / real code", working: "Working…", diverge: "Make it diverge", statusReady: "Ready for a brief", statusBuilding: "Building three visual arguments…", statusDone: "Three directions ready — choose what to push",
-    marquee: ["GENERATE", "CRITIQUE", "VARY", "SHIP"], directionEyebrow: "Same brief / different convictions", directionTitle: ["THREE TAKES.", "NO FILLER."], directionNote: "One brief, three positions", directionBody: "Not three palettes pasted onto one template. Each direction changes hierarchy, typography, density, rhythm, and interaction.",
+    workbenchLabel: "Interactive prompt demonstration", liveProof: "LIVE PROOF", run: "DIRECTION ENGINE / 001", ready: "READY", diverging: "ANALYSING", promptLabel: "Describe the product, its users, and what it should not feel like.", defaultPrompt: "Design a homepage for an AI finance tool for indie developers—professional, but nothing like a traditional bank", directionsCode: "3 tailored directions", working: "Analysing…", diverge: "Generate three directions", regenerate: "Regenerate", statusReady: "Ready for a design brief", statusBuilding: "Reading the product, audience, and visual tension…", statusDone: "Three tailored directions are ready", emptyPrompt: "Start with a specific design brief.", longPrompt: "Keep the brief under 600 characters.", failedPrompt: "Direction generation failed. Revise the brief and try again.",
+    marquee: ["READ", "DIVERGE", "COMPARE", "PUSH"], directionEyebrow: "Generated from your brief", directionTitle: ["THREE POSITIONS.", "TAILORED LIVE."], directionNote: "One brief, three positions", directionBody: "Names, rationale, palette, typography, density, layout, and motion all change with the prompt.",
+    generatedFor: "CURRENT BRIEF", thesisLabel: "Thesis", typeLabel: "Typography", densityLabel: "Density", layoutLabel: "Layout", motionLabel: "Motion", reasonLabel: "Why it fits",
     directions: [
       { id: "A", label: "Editorial restraint", sub: "Space and narrative", image: "/sample-A-editorial.png", alt: "Editorial website variation with expressive serif typography and generous whitespace", tone: "Serif-led / quiet / narrative" },
       { id: "B", label: "Operational clarity", sub: "Density and order", image: "/sample-B-dashboard.png", alt: "Dark infrastructure dashboard variation with dense operational data", tone: "Dense / technical / decisive" },
@@ -70,8 +71,11 @@ function App() {
   const [language, setLanguage] = useState<Language>(() => window.localStorage.getItem("variant-language") === "en" ? "en" : "zh");
   const t = copy[language];
   const [prompt, setPrompt] = useState<string>(t.defaultPrompt);
+  const [directions, setDirections] = useState<DesignDirection[]>(() => createDirections(t.defaultPrompt, language));
+  const [generatedBrief, setGeneratedBrief] = useState<string>(t.defaultPrompt);
   const [isGenerating, setIsGenerating] = useState(false);
   const [statusKey, setStatusKey] = useState<"ready" | "building" | "done">("ready");
+  const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const timerRef = useRef<number | null>(null);
   const reducedMotion = usePrefersReducedMotion();
@@ -87,18 +91,24 @@ function App() {
 
   function switchLanguage() {
     const next = language === "zh" ? "en" : "zh";
-    setLanguage(next); setPrompt(copy[next].defaultPrompt); setStatusKey("ready"); setCopied(false); setIsGenerating(false);
+    const nextPrompt = copy[next].defaultPrompt;
+    setLanguage(next); setPrompt(nextPrompt); setDirections(createDirections(nextPrompt, next)); setGeneratedBrief(nextPrompt); setStatusKey("ready"); setError(null); setCopied(false); setIsGenerating(false);
     if (timerRef.current) window.clearTimeout(timerRef.current);
   }
 
   function generate(event: React.FormEvent) {
     event.preventDefault();
-    if (!prompt.trim() || isGenerating) return;
-    setIsGenerating(true); setStatusKey("building");
+    if (isGenerating) return;
+    if (!prompt.trim()) { setError(t.emptyPrompt); setStatusKey("ready"); return; }
+    if (prompt.trim().length > 600) { setError(t.longPrompt); setStatusKey("ready"); return; }
+    setIsGenerating(true); setError(null); setStatusKey("building");
     timerRef.current = window.setTimeout(() => {
-      setIsGenerating(false); setStatusKey("done");
-      document.querySelector("#directions")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
-    }, 3400);
+      try {
+        setDirections(createDirections(prompt, language)); setGeneratedBrief(prompt.trim()); setStatusKey("done");
+        document.querySelector("#directions")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+      } catch { setError(t.failedPrompt); setStatusKey("ready"); }
+      finally { setIsGenerating(false); }
+    }, 700);
   }
 
   async function copyInstall() {
@@ -134,14 +144,12 @@ function App() {
             <div className="workbench-head"><span>{t.run}</span><span className="run-state"><i className={isGenerating ? "is-live" : ""} /> {isGenerating ? t.diverging : t.ready}</span></div>
             <form onSubmit={generate}>
               <label htmlFor="design-prompt">{t.promptLabel}</label>
-              <BorderBeam size="line" colorVariant="sunset" active={isGenerating && !reducedMotion} strength={0.9} theme="dark" className="prompt-beam">
-                <div className="prompt-surface">
-                  <textarea id="design-prompt" value={prompt} onChange={(event) => setPrompt(event.target.value)} aria-busy={isGenerating} rows={4} />
-                  <div className="prompt-footer"><span>{t.directionsCode}</span><button type="submit" disabled={isGenerating || !prompt.trim()}>{isGenerating ? t.working : t.diverge}<span aria-hidden="true">→</span></button></div>
-                </div>
-              </BorderBeam>
+              <div className={`prompt-surface ${error ? "has-error" : ""}`}>
+                <textarea id="design-prompt" value={prompt} onChange={(event) => { setPrompt(event.target.value); if (error) setError(null); }} aria-busy={isGenerating} aria-invalid={Boolean(error)} aria-describedby={error ? "prompt-error" : undefined} rows={4} />
+                <div className="prompt-footer"><span>{t.directionsCode}</span><button type="submit" disabled={isGenerating}>{isGenerating ? t.working : statusKey === "done" ? t.regenerate : t.diverge}<span aria-hidden="true">→</span></button></div>
+              </div>
             </form>
-            <div className="workbench-status"><p role="status" aria-live="polite">{status}</p><span>HTML / REACT / VUE / ASTRO / SVELTE</span></div>
+            <div className="workbench-status"><p id={error ? "prompt-error" : undefined} role="status" aria-live="polite" className={error ? "status-error" : ""}>{error ?? status}</p><span>HTML / REACT / VUE / ASTRO / SVELTE</span></div>
           </div>
         </div>
         <div className="hero-marquee" aria-hidden="true">{t.marquee.map((item, index) => <span className="marquee-item" key={item}>{item}{index < t.marquee.length - 1 && <i>→</i>}</span>)}</div>
@@ -152,12 +160,18 @@ function App() {
         <div className="shell">
           <header className="section-heading">
             <div><p className="eyebrow">{t.directionEyebrow}</p><h2>{t.directionTitle[0]}<br /><em>{t.directionTitle[1]}</em></h2></div>
-            <div className="heading-note"><span>{t.directionNote}</span><p>{t.directionBody}</p></div>
+            <div className="heading-note"><span>{statusKey === "done" ? t.generatedFor : t.directionNote}</span><p>{statusKey === "done" ? generatedBrief : t.directionBody}</p></div>
           </header>
           <div className="contact-sheet">
-            {t.directions.map((direction, index) => <article className={`direction-card card-${index + 1}`} key={direction.id}>
-              <div className="card-pin" aria-hidden="true" /><div className="direction-meta"><span className="direction-id">{direction.id}</span><div><h3>{direction.label}</h3><p>{direction.sub}</p></div></div>
-              <img src={direction.image} alt={direction.alt} loading="lazy" width="1280" height="800" /><div className="card-caption"><span>{direction.tone}</span><b>0{index + 1}</b></div>
+            {directions.map((direction, index) => <article className={`direction-card card-${index + 1}`} key={`${direction.id}-${direction.name}`}>
+              <div className="card-pin" aria-hidden="true" /><div className="direction-meta"><span className="direction-id">{direction.id}</span><div><h3>{direction.name}</h3><p>{direction.layoutLabel}</p></div></div>
+              <div className={`direction-preview preview-${direction.layout}`} style={{ "--preview-ink": direction.colors[0], "--preview-paper": direction.colors[1], "--preview-accent": direction.colors[2], "--preview-pop": direction.colors[3] } as React.CSSProperties}>
+                <div className="preview-top"><span>0{index + 1}</span><i /></div><strong>{direction.sampleTitle}</strong><div className="preview-lines"><i /><i /><i /></div><small>{direction.sampleMeta}</small>
+              </div>
+              <p className="direction-thesis"><b>{t.thesisLabel}</b>{direction.thesis}</p>
+              <dl className="direction-specs"><div><dt>{t.typeLabel}</dt><dd>{direction.typography}</dd></div><div><dt>{t.densityLabel}</dt><dd>{direction.density}</dd></div><div><dt>{t.layoutLabel}</dt><dd>{direction.layoutLabel}</dd></div><div><dt>{t.motionLabel}</dt><dd>{direction.motion}</dd></div></dl>
+              <div className="palette" aria-label="Color palette">{direction.colors.map((color) => <span key={color} style={{ background: color }} title={color} />)}</div>
+              <div className="direction-reason"><b>{t.reasonLabel}</b><p>{direction.reason}</p></div><div className="card-caption"><span>{direction.name}</span><b>0{index + 1}</b></div>
             </article>)}
           </div>
         </div>
@@ -192,4 +206,3 @@ function App() {
 }
 
 createRoot(document.getElementById("root")!).render(<StrictMode><App /></StrictMode>);
-
