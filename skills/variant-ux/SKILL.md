@@ -58,11 +58,17 @@ If files found, proceed to Step 1b. Otherwise skip to Step 2.
 
 **Step 1b: Code-level heuristic scan**
 
-Run these greps against the found files. Each maps to a specific heuristic:
+First run the shared deterministic scanner, then use the targeted greps below for heuristics that require human confirmation:
+
+```bash
+node <skill-root>/scripts/quality-gate.mjs <file-or-directory> --json
+```
+
+The scanner covers English and Chinese generic errors, missing image alt attributes, removed focus indicators, missing reduced-motion handling, placeholder content, and common resilience issues. Run these additional greps against the found files:
 
 ```bash
 # H9 — Generic error messages (critical pattern)
-grep -rn "error occurred\|something went wrong\|invalid input\|please try again\|An error\|Unknown error" \
+grep -rn "error occurred\|something went wrong\|invalid input\|please try again\|An error\|Unknown error\|出错了\|发生错误\|未知错误\|输入有误\|请重试\|操作失败" \
   --include="*.tsx" --include="*.jsx" --include="*.vue" --include="*.html" \
   --exclude-dir=node_modules --exclude-dir=dist . 2>/dev/null
 
@@ -123,7 +129,7 @@ grep -rn "<input" \
   grep -v "type=\"hidden\"\|aria-label\|aria-labelledby\|id=" | head -10
 ```
 
-For each grep that returns results: read the flagged files at the relevant lines to confirm whether it's a real violation or a false positive. Report only confirmed violations.
+For each scanner or grep result: read the flagged files at the relevant lines to confirm whether it is a real violation or a false positive. Report only confirmed violations.
 
 **Step 2: Define scope** — What task(s) is the user trying to complete? What screens/flows are in scope?
 
@@ -208,7 +214,7 @@ After flagging violations, offer to generate a fixed version:
 - `compare ux` → write both current (screenshot or recreation) and fixed version, open side-by-side in `variant-output/_ux-compare.html`
 
 **From Generate → UX Review:**
-Every generated design silently runs the heuristic checklist before being presented (part of the AI Slop Test gate). If any H1–H10 critical violations are found in the generated code, fix before writing the file — don't present broken UX as a variation.
+Every generated design runs `<skill-root>/scripts/quality-gate.mjs` plus the relevant heuristic checks before presentation. Fix confirmed critical violations before presenting the variation.
 
 ### When to Load Which Reference
 
@@ -235,4 +241,4 @@ Every generated design silently runs the heuristic checklist before being presen
 | Search patterns — autocomplete, facets, results page, command palette | `references/ux-search-patterns.md` |
 | Full UX review | Load all relevant references above |
 
-**For generation tasks:** Load `ux-heuristics.md` and `ux-psychology.md` as silent quality constraints. Every generated design should pass the heuristic checklist before being presented — this is part of the quality gate, same as the AI Slop Test.
+**For generation tasks:** Load `ux-heuristics.md` and `ux-psychology.md` as silent quality constraints. Every generated design should pass the relevant mechanical and heuristic checks before being presented.

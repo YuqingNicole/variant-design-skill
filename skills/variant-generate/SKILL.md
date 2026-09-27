@@ -3,13 +3,15 @@ name: variant-generate
 description: Generate 3 distinct design variations from a prompt. Each variation feels like a different studio — layout, palette, typography, and motion diverge. Supports variation actions: Vary strong/subtle, Distill, Shuffle layout, Change style, Remix colors, Mix, Dramatize, Add motion, Make interactive, Polish, Critique, See other views, Extract tokens. Load skills/shared/code-output.md for framework detection and output conventions. Triggers on: design options for X, show me variations, give me UI directions, vary this design, change the style, remix colors, shuffle layout, design a dashboard/landing page/app/editorial
 ---
 
-> Before generating code, load `skills/shared/code-output.md` for framework detection and output conventions.
+> Before generating code, load `skills/shared/code-output.md`. Also read `references/project-context.md` and `references/quality-baseline.md`.
 
 ## Core Workflow
 
 ### 0. Load Persisted Context (Every Session)
 
-Before parsing the prompt, run the context check from "Project Context Initialization → Session Start". If a `.variant-context.json` exists, apply its values as soft constraints on all generation steps: palette selection, font choices, direction, and framework output format. The user can override any field by stating a preference explicitly.
+Read `variant-output/.variant-context.json` when it exists and apply its known values as soft constraints. Follow `references/project-context.md`; the current request always overrides persisted preferences.
+
+Use the fast path when the brief or repository already reveals the product, audience, tone, and constraints: state consequential assumptions in one line and generate. Ask at most two questions only when the answers would materially change the result. Do not require a separate confirmation turn after an explicit request to build or generate.
 
 ### 1. Parse → Detect → Load
 
@@ -49,7 +51,7 @@ Check `designSystem.confirmed` in context first:
 **For each variation, define before coding:**
 - Starter prompt (from reference or custom)
 - Color palette (from reference or `palettes.md`) — use OKLCH for perceptually uniform colors where possible
-- Typography: display font + body font (see banned fonts list below)
+- Typography: display font + body font; use the guidance and banned defaults in `references/quality-baseline.md`
 - Layout pattern (from reference) — consult `spatial-design.md` for grid and hierarchy principles
 - Motion strategy — consult `motion-design.md` for timing and easing
 - **Interaction plan** — which micro-interactions and interactive patterns from `micro-interactions.md` and `interactive-patterns.md` to include (minimum 3 micro-interactions + domain-specific patterns)
@@ -68,17 +70,19 @@ Present a **compact Summary Card** in the terminal for each variation:
 
 Then show the file paths and open the first variation in the browser. The user reads the design in the browser, not in the terminal.
 
-### 4. AI Slop Test (Quality Gate)
+### 4. Quality Gate
 
-Before presenting, run this check on each variation:
+Run the mechanical scanner on every generated variation before presenting it:
 
-> If you showed this interface to someone and said "AI made this," would they believe you immediately? If yes, redesign.
+```bash
+node <skill-root>/scripts/quality-gate.mjs variant-output/variant-[scenario]-A.html --strict
+```
 
-A distinctive interface should make someone ask "how was this made?" not "which AI made this?" Review the Anti-Patterns table in the main SKILL.md — they are the fingerprints of AI-generated work.
+Repeat for B and C, or scan their containing directory when it contains only the current deliverables. Inspect findings in context and fix confirmed issues. Then review the rendered pages for hierarchy, distinctness, responsive behavior, and working interactions using `references/quality-baseline.md`.
 
-**Interactivity gate**: Before presenting, also verify: Does this page move? Scroll down — do elements animate in? Hover a card — does it respond? Click a button — does it give feedback? If anything is dead on interaction, fix it before presenting.
+For product-critical UI, also read `references/design-declaration.md` and run `references/product-integrity-gate.md`. Report product integrity separately from visual quality and do not present a P0 result as complete.
 
-After passing, show a one-line confidence signal: e.g. *"Passed: distinctive fonts, OKLCH palette, tinted neutrals, WCAG AA, scroll reveals, counter animation, card hover lift, no AI slop patterns detected."*
+Only report checks actually performed. Do not claim WCAG compliance, browser coverage, or “no AI slop” from self-assessment alone.
 
 ### 5. Offer Variation Actions
 
@@ -392,7 +396,7 @@ Combine two variations into one. Accepts forms like "Mix A + B" or "A's layout +
 
 Track iteration count internally (reset per variation). After any variation action:
 1. **Overwrite the same file** (e.g. `variant-output/variant-coffee-A.html`) — don't create new files for iterations
-2. **Re-open in browser** — run `open` / `xdg-open` so the user sees the update immediately
+2. **Re-open in browser** — use the preview workflow in `skills/shared/code-output.md`
 3. **Show a 2-3 line diff summary** in the terminal — what changed, not the full code
 4. Offer the grouped action menu again — the loop never ends until the user moves on
 5. If the user has iterated 3+ times on the same direction, proactively suggest: "Want to branch? I can apply this to one of the other variations."
