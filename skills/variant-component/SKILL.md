@@ -3,7 +3,7 @@ name: variant-component
 description: Generate isolated UI components with all 8 states and variants — button systems, forms, cards, modals, nav. Design System-aware when a token set is confirmed. Load skills/shared/code-output.md for framework detection and output conventions. Triggers on: component, button system, form component, card component, modal, navigation component, design a button, input components, component library
 ---
 
-> Before generating code, load `skills/shared/code-output.md` for framework detection and output conventions.
+> Before generating code, load `skills/shared/code-output.md` for framework detection and `references/quality-baseline.md` for verification.
 
 ## Component Mode
 
@@ -42,6 +42,8 @@ When the user asks for a **component** rather than a full page, switch to Compon
 **Step 4: Generate** — produce a single HTML file (or TSX) showing all variants side by side on a neutral background, with clear labels. Component files go to `variant-output/component-[name].html`.
 
 **Step 5: State showcase** — always include an interactive state showcase section: hover the component, click it, tab to it — all states visible and working.
+
+**Step 6: Verify** — run `node <skill-root>/scripts/quality-gate.mjs <component-file> --strict`, inspect the result in the browser, and fix confirmed findings before presenting it.
 
 ### Component Output Format
 

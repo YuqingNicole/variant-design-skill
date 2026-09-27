@@ -3,7 +3,9 @@ name: variant-design-system
 description: Design System mode — tokens → components → pages three-layer workflow. Generate a complete token set (palette/type/spacing/motion/elevation/radius), confirm it, then all downstream outputs are visually consistent. Triggers on: ds, design system, tokens, create token set, define palette, define tokens, set up tokens, ds confirm, compose
 ---
 
-> Before generating code, load `skills/shared/code-output.md` for framework detection and output conventions.
+> Before generating code, load `skills/shared/code-output.md`, `references/project-context.md`, and `references/quality-baseline.md`.
+
+For product-critical work, also read `references/design-declaration.md` and `references/product-integrity-gate.md`. A confirmed design system locks the declaration's product constraints as well as visual tokens.
 
 ## Design System Mode
 
@@ -20,7 +22,7 @@ Token foundation   Atomic pieces     Assembled layouts
 | User says | Action |
 |---|---|
 | `ds` / "create a design system" / "define tokens" / "set up tokens" | Generate design system → preview → confirm |
-| `ds confirm` | Lock current design system as constraint for all future outputs |
+| `ds confirm` | Lock the current design system and any product-critical Design Declaration for future outputs |
 | `ds edit [section]` | Edit one section of the design system (palette / type / spacing / motion) without regenerating all |
 | `ds show` | Print current design system token summary in terminal |
 | `component [name]` (after DS confirmed) | Generate component using locked DS tokens, all 8 states |
@@ -273,6 +275,8 @@ When the user approves (says `ds confirm`, "looks good", "confirm this", "ship i
 ```
 
 3. From this point forward, **all Generate, Component, and Compose outputs** must `<link rel="stylesheet" href="design-system.css">` (or inline the tokens) — no aesthetic invention allowed outside the locked token system.
+
+4. For product-critical work, compile the confirmed declaration into `variant-output/design-contract.md` and run the Product Integrity Gate separately from the visual quality gate.
 
 ### Step 3 — Build Components (`component [name]`)
 

@@ -45,7 +45,7 @@ Three variations from a single prompt — each feels like a different studio:
 1. **Detects your scenario** — dashboard, SaaS landing page, editorial, e-commerce, mobile app, creative tool, education, portfolio, food & beverage, fashion & lifestyle
 2. **Loads design system references** — typography, color theory (OKLCH), spatial design, motion, micro-interactions, interaction, responsive, UX writing
 3. **Generates 3 distinct variations** — each pulls from a different aesthetic direction with full interactivity (scroll reveals, animated charts, hover effects, functional JS)
-4. **Runs an AI Slop Test** — quality gate that catches generic AI aesthetic fingerprints before presenting
+4. **Runs mechanical and visual quality gates** — scans generated code, then checks the rendered result for generic AI aesthetic fingerprints
 5. **Ships working code** — Context-aware output: auto-detects React projects and generates `.tsx` components; generates zero-dependency interactive HTML otherwise. Real content, no lorem ipsum
 6. **Offers variation actions** — push further, polish, critique, swap styles, remix colors, shuffle layouts, add motion, dramatize, make interactive
 

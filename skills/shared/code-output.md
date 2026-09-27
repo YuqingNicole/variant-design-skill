@@ -269,64 +269,23 @@ variant-output/
 
 ### Auto-Preview
 
-**After every file write, immediately open it in the user's default browser:**
+After writing a previewable artifact, show it with the environment's browser/UI tooling when available. Otherwise use the cross-platform helper from the skill root:
 
 ```bash
-# macOS
-open variant-output/variant-dashboard-A.html
-
-# Linux
-xdg-open variant-output/variant-dashboard-A.html
+node <skill-root>/scripts/open-preview.mjs variant-output/variant-dashboard-A.html
 ```
 
-This is non-negotiable. The user should never have to manually find and open the file. When iterating (Vary subtle, Remix colors, etc.), the browser tab auto-refreshes because the file is overwritten — just re-run `open` to bring it to focus.
+If the runtime cannot open a browser, provide the exact file path or preview URL instead of failing the task. Re-open or refresh after iterations so the user never has to locate the artifact manually.
 
 ### Live Preview Server (Optional)
 
-If the user asks for live preview or says "watch mode", start a lightweight file server with auto-reload:
+If the user asks for live preview or says "watch mode", start the bundled static server:
 
 ```bash
-# Using Python (available on most systems)
-cd variant-output && python3 -c "
-import http.server, socketserver, os, time, threading
-
-class ReloadHandler(http.server.SimpleHTTPRequestHandler):
-    def end_headers(self):
-        self.send_header('Cache-Control', 'no-store')
-        super().end_headers()
-
-    def do_GET(self):
-        if self.path == '/_poll':
-            self.send_response(200)
-            self.send_header('Content-type', 'text/plain')
-            self.end_headers()
-            self.wfile.write(str(os.path.getmtime('.')).encode())
-            return
-        super().do_GET()
-
-with socketserver.TCPServer(('', 3333), ReloadHandler) as httpd:
-    print('Preview: http://localhost:3333')
-    httpd.serve_forever()
-" &
+node <skill-root>/scripts/preview-server.mjs variant-output
 ```
 
-Then inject a tiny auto-reload script at the bottom of every generated HTML:
-```html
-<script>
-// Auto-reload in dev (remove for production)
-(async function poll() {
-  try {
-    const r = await fetch('/_poll');
-    const t = await r.text();
-    if (window._lastMod && t !== window._lastMod) location.reload();
-    window._lastMod = t;
-  } catch(e) {}
-  setTimeout(poll, 800);
-})();
-</script>
-```
-
-Only include this script when the preview server is running. Remove it on export.
+It starts at port 3333 and automatically tries the next available port when occupied. Use the printed URL; never assume a fixed port. Do not inject development polling code into exported files.
 
 ### Compact CLI Output
 
@@ -478,7 +437,16 @@ If the user says "copy" or "clipboard", copy the HTML to system clipboard instea
 ```bash
 # macOS
 cat variant-output/variant-coffee-A.html | pbcopy
+
+# Windows PowerShell
+Get-Content -Raw variant-output/variant-coffee-A.html | clip.exe
+
+# Linux (choose what is installed)
+wl-copy < variant-output/variant-coffee-A.html
+xclip -selection clipboard < variant-output/variant-coffee-A.html
 ```
+
+If no clipboard utility is available, return the exact file path instead of treating clipboard support as required.
 
 ---
 
