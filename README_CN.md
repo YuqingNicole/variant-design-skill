@@ -8,6 +8,26 @@
 
 ---
 
+## 交互式网站
+
+**[在线体验 →](https://variant-design-studio.nicole-chen144768.chatgpt.site/)** · [网站源码](./website) · [安装 Skill](#安装)
+
+使用双语提示词体验站：
+
+1. 描述产品、用户、语气与约束。
+2. 比较三个定制方向：**叙事型**、**系统型**与**反差型**。
+3. 把胜出的方向交给完整 Skill，继续迭代并导出代码。
+
+在本地运行 [React](https://react.dev/) + [Vite](https://vite.dev/) 网站：
+
+```bash
+git clone https://github.com/YuqingNicole/variant-design-skill.git
+cd variant-design-skill/website
+npm ci && npm run dev
+```
+
+---
+
 ## 示例输出
 
 同一个提示词生成三个变体——每个都像来自不同工作室：
