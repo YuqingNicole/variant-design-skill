@@ -19,7 +19,7 @@ h1, h2, h3 { font-weight: var(--weight-heading); }
 .nav-links a { text-decoration: none; }
 .nav-links a:hover { color: var(--color-action); }
 .language-switch { min-width: 2.75rem; padding: .25rem .5rem; border: 1px solid rgba(255,255,255,.75); border-radius: var(--radius); color: #fff; background: transparent; font-size: var(--text-meta); font-weight: 600; cursor: pointer; }
-.language-switch:hover, .language-switch:focus-visible { color: var(--color-brand); background: var(--color-action); border-color: var(--color-action); outline: none; }
+.language-switch:hover, .language-switch:focus-visible { color: var(--color-brand); background: var(--color-action); border-color: var(--color-action); }
 
 .hero-grid { position: relative; z-index: 1; min-height: 47rem; padding-block: var(--space-7); display: grid; grid-template-columns: 7fr 5fr; gap: var(--space-6); align-items: center; }
 .hero-copy { min-width: 0; }

@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 2,
+  "language": "zh",
+  "scenario": "variant-design-landing",
+  "framework": "vite-react",
+  "activeVariant": "B",
+  "selectedVariant": null,
+  "taskContract": {
+    "primaryJob": "理解 Variant Design，比较本站三版，安装并用于真实项目",
+    "data": "共同使用 website/src/App.tsx 的内容、色板、交互和链接",
+    "requiredFunctions": [
+      "中英文切换",
+      "安装命令",
+      "三版比较",
+      "色板选择",
+      "在线生成服务状态",
+      "定价和文档入口"
+    ]
+  },
+  "recommendation": {
+    "variant": "B",
+    "reason": "当前任务是让人真实体验比较与迭代。B 首屏展示本站三种取舍，并把比较作为主要操作；这是产品判断，尚无转化数据。"
+  },
+  "designSystem": {
+    "confirmed": true,
+    "file": "src/design-system.css",
+    "fonts": [
+      "Iowan Old Style",
+      "Baskerville",
+      "Songti SC",
+      "SFMono-Regular"
+    ]
+  },
+  "variants": {
+    "A": {
+      "entry": "VariantA.tsx",
+      "files": [
+        "VariantA.tsx"
+      ],
+      "tokens": {
+        "file": "../src/design-system.css",
+        "fonts": [
+          "Iowan Old Style",
+          "Baskerville",
+          "Songti SC",
+          "SFMono-Regular"
+        ],
+        "surface": "#0a0b0c",
+        "text": "#f2f0eb"
+      },
+      "comparison": {
+        "optimizes": "先理解产品方法，再进入操作",
+        "tradeoff": "到达比较页面前需要多读一点说明",
+        "bestFor": "第一次接触多方案设计的人"
+      },
+      "version": 1,
+      "history": [],
+      "undo": []
+    },
+    "B": {
+      "entry": "VariantB.tsx",
+      "files": [
+        "VariantB.tsx"
+      ],
+      "tokens": {
+        "file": "../src/design-system.css",
+        "fonts": [
+          "Iowan Old Style",
+          "Baskerville",
+          "Songti SC",
+          "SFMono-Regular"
+        ],
+        "surface": "#0a0b0c",
+        "text": "#f2f0eb"
+      },
+      "comparison": {
+        "optimizes": "直接检查真实产物，缩短到比较的路径",
+        "tradeoff": "首屏的品牌叙事更简短",
+        "bestFor": "希望先试用，再判断是否安装的人"
+      },
+      "version": 4,
+      "history": [
+        {
+          "action": "apply",
+          "version": 2,
+          "snapshot": ".history/B/36e90492-5988-4495-b594-0ff0b4e863cc.json",
+          "summary": "Clarify that previews work without model setup and edits continue in agent chat",
+          "zone": "hero",
+          "at": "2026-10-05T14:46:44.936Z"
+        },
+        {
+          "action": "undo",
+          "version": 3,
+          "snapshot": ".history/B/bc6adfa8-e57c-4b5a-adf7-e46295827a35.json",
+          "restored": ".history/B/36e90492-5988-4495-b594-0ff0b4e863cc.json",
+          "at": "2026-10-05T14:47:52.240Z"
+        },
+        {
+          "action": "apply",
+          "version": 4,
+          "snapshot": ".history/B/1394e3e3-8e7b-4b9a-b1ba-4cec6497726e.json",
+          "summary": "Clarify that previews work without model setup and edits continue in agent chat",
+          "zone": "hero",
+          "at": "2026-10-05T14:49:48.581Z"
+        }
+      ],
+      "undo": [
+        ".history/B/1394e3e3-8e7b-4b9a-b1ba-4cec6497726e.json"
+      ]
+    },
+    "C": {
+      "entry": "VariantC.tsx",
+      "files": [
+        "VariantC.tsx"
+      ],
+      "tokens": {
+        "file": "../src/design-system.css",
+        "fonts": [
+          "Iowan Old Style",
+          "Baskerville",
+          "Songti SC",
+          "SFMono-Regular"
+        ],
+        "surface": "#0a0b0c",
+        "text": "#f2f0eb"
+      },
+      "comparison": {
+        "optimizes": "快速安装并进入自己的项目",
+        "tradeoff": "对尚未理解技能的人解释较少",
+        "bestFor": "已熟悉工作方式的开发者"
+      },
+      "version": 1,
+      "history": [],
+      "undo": []
+    }
+  },
+  "preview": {
+    "colorScheme": "dark"
+  }
+}

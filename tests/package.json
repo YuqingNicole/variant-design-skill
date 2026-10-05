@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "test": "playwright test",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test:landing": "playwright test --config=landing.config.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.56.1",

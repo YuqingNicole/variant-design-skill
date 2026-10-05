@@ -18,7 +18,7 @@ Use the fast path when the brief or repository already reveals the product, audi
 Check `designSystem.confirmed` in context first:
 
 **If `designSystem.confirmed: true`:**
-- Read `variant-output/design-system.css` — load all token values
+- Read `designSystem.file` relative to the target project root and load its tokens. Use `variant-output/design-system.css` only when no file is registered; existing projects may keep their confirmed system in `src/design-system.css`.
 - Print: `✦ DS locked: [palette] · [fonts] · variations differ in layout only`
 - Skip palette/font selection — tokens are fixed
 - Load scenario reference for layout and interaction patterns only

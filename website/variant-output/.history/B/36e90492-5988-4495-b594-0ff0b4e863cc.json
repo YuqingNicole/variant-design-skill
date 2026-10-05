@@ -1,0 +1,30 @@
+{
+  "variant": {
+    "entry": "VariantB.tsx",
+    "files": [
+      "VariantB.tsx"
+    ],
+    "tokens": {
+      "file": "../src/design-system.css",
+      "fonts": [
+        "Iowan Old Style",
+        "Baskerville",
+        "Songti SC",
+        "SFMono-Regular"
+      ],
+      "surface": "#0a0b0c",
+      "text": "#f2f0eb"
+    },
+    "comparison": {
+      "optimizes": "直接检查真实产物，缩短到比较的路径",
+      "tradeoff": "首屏的品牌叙事更简短",
+      "bestFor": "希望先试用，再判断是否安装的人"
+    },
+    "version": 1,
+    "history": [],
+    "undo": []
+  },
+  "files": {
+    "VariantB.tsx": "aW1wb3J0IEFwcCBmcm9tICIuLi9zcmMvQXBwIjsKaW1wb3J0IHR5cGUgeyBMYW5kaW5nSGVyb0NvbmZpZyB9IGZyb20gIi4uL3NyYy9MYW5kaW5nSW50cm9kdWN0aW9uIjsKCi8qIHpvbmU6aGVybzpzdGFydCAqLwpleHBvcnQgY29uc3QgaGVybzogTGFuZGluZ0hlcm9Db25maWcgPSB7CiAgImlkIjogIkIiLAogICJsYXlvdXQiOiAicHJvb2YiLAogICJ0aXRsZSI6IHsKICAgICJ6aCI6IFsKICAgICAgIuS4ieS4quaWueahiO+8jCIsCiAgICAgICLpgInlvpfmmI7nmb3jgIIiCiAgICBdLAogICAgImVuIjogWwogICAgICAiVGhyZWUgZGlyZWN0aW9ucy4iLAogICAgICAiQSBjbGVhcmVyIGNob2ljZS4iCiAgICBdCiAgfSwKICAiZGVzY3JpcHRpb24iOiB7CiAgICAiemgiOiAi5bCx55So5L2g5q2j5Zyo55yL55qE6L+Z5Liq572R56uZ77ya5q+U6L6D5LiJ54mI44CB6K+V5pS55LiA5aSE44CB5pKk5Zue5L+u5pS577yM5YaN5oqK5a6M5pW06aG16Z2i5bim6L+b6aG555uu44CCIiwKICAgICJlbiI6ICJTdGFydCB3aXRoIHRoaXMgdmVyeSB3ZWJzaXRlOiBjb21wYXJlIHRocmVlIHZlcnNpb25zLCByZWZpbmUgYSBzZWN0aW9uLCB1bmRvIGEgY2hhbmdlLCBhbmQgYnJpbmcgdGhlIGNvbXBsZXRlIHBhZ2UgaW50byB5b3VyIHByb2plY3QuIgogIH0sCiAgInByaW1hcnkiOiAiY29tcGFyZSIsCiAgImxhYmVsIjogewogICAgInpoIjogIuaJk+W8gOS4ieeJiOavlOi+gyIsCiAgICAiZW4iOiAiQ29tcGFyZSB0aGUgdGhyZWUgdmVyc2lvbnMiCiAgfSwKICAibm90ZSI6IHsKICAgICJ6aCI6ICLlkIzkuIDlk4HniYwgwrcg5ZCM5LiA5Yqf6IO9IMK3IOS4ieenjeWPluiIjSIsCiAgICAiZW4iOiAiT25lIGJyYW5kIMK3IFNhbWUgZmVhdHVyZXMgwrcgVGhyZWUgdHJhZGUtb2ZmcyIKICB9Cn07Ci8qIHpvbmU6aGVybzplbmQgKi8KCmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIFZhcmlhbnRCKCkgeyByZXR1cm4gPEFwcCBoZXJvPXtoZXJvfSAvPjsgfQo="
+  }
+}

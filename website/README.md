@@ -1,15 +1,26 @@
 # Variant Design website
 
-The website contains a real server-side generation loop. It does not expose model credentials to the browser and does not fall back to simulated results.
+The website includes three complete versions of its own landing page plus an optional server-side model generation workflow. Built-in site variants need no model credentials and are clearly separate from example design contracts or live model output.
 
 ## Run locally
 
 ```bash
-cp .env.example .env
-# Add ANTHROPIC_API_KEY or OPENAI_API_KEY to .env
-npm install
+npm ci
 npm run dev
+# Optional live generation: copy .env.example to .env and configure one provider.
 ```
+
+The homepage uses B as an agent-recommended working baseline; it does not mark a user-selected winner. Open `/variant-output/_compare.html` to compare A/B/C at matching desktop or mobile widths, or `/variant-output/_preview/B.html` to use a full version.
+
+```bash
+# Export a named configuration to the real site; backs up the previous integration.
+npm run export:landing -- B
+npm test
+npm run build
+npm start
+```
+
+`build` checks `src` and all preview TSX, then includes the comparison and three HTML entries in the production output. See [iteration-log.md](iteration-log.md) for the actual edit/undo/export run and remaining boundaries.
 
 The development server exposes:
 

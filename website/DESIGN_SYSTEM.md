@@ -1,17 +1,13 @@
-# Variant Design — Landing System
+# Variant Design — Landing system
 
-The landing page uses one visual grammar: a disciplined editorial grid. Variation belongs inside generated direction previews, never in the surrounding product shell.
+The implementation in `src/design-system.css` is the token source of truth. The current product shell is monochrome with a bilingual editorial serif stack; the older blue/acid palette and square-corner description no longer describe the site.
 
-## Non-negotiable rules
+- Keep Iowan Old Style/Baskerville and Songti/Source Han Serif fallbacks for display and body; monospace is reserved for metadata and commands.
+- Reuse the ink, paper, surface, muted, border, radius, and spacing tokens. Color belongs to the palette examples and generated work.
+- A/B/C retain the same site functions, content below the hero, font stack, and palette. Their hero priority and arrangement may differ.
+- A explains the product first; B makes the actual comparison the main action; C prioritizes installing the complete skill.
+- Keep useful controls in the first viewport. Preserve navigation on mobile through the native details menu.
+- Clearly distinguish the built-in site variants, rule-based example contracts, and live model output. Missing model configuration is an unavailable state, not a successful generation.
+- Motion communicates state and respects reduced motion. Keyboard focus remains visible.
 
-1. Use the 8px spacing scale from `src/design-system.css`. No one-off spacing values for layout.
-2. Use blue only for brand fields, acid yellow only for actions, red only for annotations, and black/white/paper for structure.
-3. All product surfaces use square corners, a 1–2px black border, and at most one shared offset shadow.
-4. Never rotate, pin, tape, or skew product components. Expressive treatments are allowed only inside `.direction-preview`.
-5. Use the bilingual editorial serif stack for interface and display type—prioritizing Iowan Old Style/Baskerville for Latin and Songti/Source Han Serif for Chinese—and monospace only for metadata.
-6. Content uses only four line-height tokens: display, heading, body, and metadata. Literal values are allowed only for decorative glyphs and typography inside `.direction-preview`.
-7. Every section follows the same sequence: numbered eyebrow, claim, supporting evidence, action or outcome.
-8. Generated direction cards must expose the same fields in the same order so users can compare them.
-9. Motion must explain state. Decorative animation is not allowed; reduced-motion preferences are respected.
-10. Body text is at least 16px and recurring labels are at least 14px.
-11. Desktop uses a 12-column mental model within a 1240px shell; mobile collapses to one column without horizontal scrolling.
+`variant-output/VariantA.tsx`, B, and C own their hero configurations. Shared `App.tsx` and `LandingIntroduction.tsx` provide the same working site. Local hero edits use the history helper; `npm run export:landing -- B` copies the current B configuration into `src/landing-config.ts` with a backup.

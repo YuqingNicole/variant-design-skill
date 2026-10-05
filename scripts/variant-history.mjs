@@ -47,6 +47,7 @@ function outsideZone(source, zone) {
   const pairs = [
     [`<!-- zone:${zone}:start -->`, `<!-- zone:${zone}:end -->`],
     [`{/* zone:${zone}:start */}`, `{/* zone:${zone}:end */}`],
+    [`/* zone:${zone}:start */`, `/* zone:${zone}:end */`],
   ];
   for (const [start, end] of pairs) {
     if (!source.includes(start)) continue;

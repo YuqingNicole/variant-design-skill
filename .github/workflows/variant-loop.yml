@@ -23,3 +23,25 @@ jobs:
         working-directory: tests
       - run: npm run typecheck
         working-directory: tests
+
+  landing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+        working-directory: website
+      - run: npm test
+        working-directory: website
+      - run: npm run build
+        working-directory: website
+      - run: npm ci
+        working-directory: tests
+      - run: npx playwright install --with-deps chromium
+        working-directory: tests
+      - run: npm run test:landing
+        working-directory: tests
