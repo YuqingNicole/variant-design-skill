@@ -1,62 +1,51 @@
 # Project context
 
-Persist confirmed choices in `variant-output/.variant-context.json` so later turns do not ask the user to repeat them.
+Read `variant-output/.variant-context.json` before work. Current user instructions override saved choices. Missing fields are unknown; do not invent them. The whole request has a maximum of two material clarification questions.
 
-## Start of a task
+## Schema version 2
 
-1. Read the file when it exists and is valid JSON.
-2. Apply known values as constraints.
-3. Let the current request override any persisted value.
-4. Do not ask first-use questions when the request or repository already supplies enough context.
-
-Use missing fields as unknowns, not an invitation to guess. Ask at most two questions when the answers would materially alter the output.
-
-## Schema
+Paths in `variants.*.files` and `entry` are relative to `variant-output/`. List every file owned by that variant, including local CSS and assets. Shared assets and the locked DS are read-only during variant edits. Each variant has independent files, tokens, comparison, monotonically increasing version, audit history, and undo stack.
 
 ```json
 {
-  "scenario": "landing-page",
+  "schemaVersion": 2,
+  "scenario": "dashboard",
   "framework": "vite-react",
-  "palette": "Amber Warm",
-  "fonts": ["Newsreader", "DM Sans"],
-  "direction": "Editorial",
-  "picked": "B",
-  "iterations": 3,
-  "notes": ["high contrast", "no default dark mode"],
-  "designDeclaration": {
-    "user_context": "...",
-    "primary_job": "...",
-    "success_moment": "...",
-    "trust_boundary": "...",
-    "hierarchy": ["..."],
-    "chosen_tension": "evidence > delight",
-    "non_negotiables": ["..."],
-    "evidence_status": "mock-clearly-labeled"
+  "activeVariant": "B",
+  "selectedVariant": null,
+  "taskContract": {
+    "primaryJob": "Find and investigate failed jobs",
+    "data": "shared jobs fixture",
+    "requiredFunctions": ["filter", "compare", "inspect evidence"]
   },
-  "designSystem": {
-    "confirmed": true,
-    "file": "variant-output/design-system.css",
-    "palette": "Amber Warm",
-    "fonts": ["Newsreader", "DM Sans"],
-    "confirmedAt": "ISO-8601 timestamp"
+  "recommendation": {"variant": "A", "reason": "Alert triage is the stated priority; speed remains a hypothesis until tested."},
+  "variants": {
+    "A": {
+      "entry": "VariantA.tsx",
+      "files": ["VariantA.tsx", "VariantA.css"],
+      "tokens": {"palette": "Amber Warm", "fonts": ["Newsreader", "DM Sans"]},
+      "comparison": {"optimizes": "Anomaly detection", "tradeoff": "Less simultaneous detail", "bestFor": "On-call triage"},
+      "version": 1,
+      "history": [],
+      "undo": []
+    }
   },
-  "components": {
-    "button": "variant-output/component-button.html"
-  }
+  "notes": ["high contrast"],
+  "designSystem": {"confirmed": true, "file": "variant-output/design-system.css", "fonts": ["Newsreader", "DM Sans"], "confirmedAt": "ISO-8601 timestamp"},
+  "components": {"button": "variant-output/component-button.html"}
 }
 ```
 
-All fields are optional. Do not write invented defaults.
+The abbreviated example shows A only; register B and C with the same structure before building comparison. Tokens should contain actual values or exact token-file references as well as palette/font names. Preserve `designDeclaration`, `designSystem`, `components`, and unrelated context fields when updating.
 
-## Update rules
+## Selection, editing, and migration
 
-- Scenario or framework detected → update `scenario` or `framework`.
-- User confirms a palette, type pair, or direction → update those fields.
-- User selects A/B/C or iterates on one direction → update `picked` and `iterations`.
-- User adds a durable constraint → append it to `notes` without duplicating it.
-- Design Declaration confirmed → update `designDeclaration`.
-- `ds confirm` → set `designSystem.confirmed: true`, record its file and timestamp, and write `variant-output/design-contract.md` for product-critical work.
-- Component built → register its exact output path.
-- `ds reset` → set `designSystem.confirmed: false`; do not delete unrelated user files.
+- Initial generation: register all three directions, version 1, empty history/undo. No winner yet.
+- Editing B: update only B, set `activeVariant: "B"`, leave `selectedVariant` unchanged.
+- Explicit `pick B`: set `selectedVariant: "B"`; retain A/C and histories.
+- Export: use the named variant or selected winner. Do not turn export into selection.
+- Recommendation is advice, not a selection.
+- Legacy context: back up the original JSON first. Move ambiguous `picked` into `activeVariant`; populate `selectedVariant` only with evidence of explicit selection. Read each artifact to recover per-variant tokens and paths; do not copy the old global palette/fonts to all three. Retain old iteration count under `legacy`, start version 1 at the current recovered state, and do not fabricate missing history.
+- `ds confirm` / `ds reset`, declaration and component registry updates retain their existing semantics. Explicit DS edits are a separate operation, not a variation action.
 
-Write atomically when practical. Persistence is best-effort and must not block delivery.
+Preference persistence is best-effort. Overwriting an artifact requires a successful snapshot; otherwise keep the original and deliver a separate candidate. See [preview-and-history.md](preview-and-history.md) for apply/undo commands. Run one writer at a time per output directory. Multi-file replacement rolls back ordinary failures; after a process crash recover files from the last snapshot before continuing.

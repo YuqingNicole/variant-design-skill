@@ -49,7 +49,7 @@
 
   /* ========== SCROLL PROGRESS ========== */
   .scroll-progress {
-    position: fixed; top: 0; left: 0; height: 3px; z-index: 9999;
+    position: fixed; top: 0; left: 0; height: 3px; z-index: 110;
     background: var(--accent);
     transform-origin: left; transform: scaleX(0);
     animation: scroll-progress linear both;
@@ -59,7 +59,7 @@
 
   /* ========== CURTAIN REVEAL ========== */
   .curtain {
-    position: fixed; inset: 0; z-index: 10000;
+    position: fixed; inset: 0; z-index: 120;
     background: var(--accent);
     transform-origin: top;
     animation: curtain-exit 900ms var(--ease-out-expo) 200ms forwards;
@@ -135,7 +135,7 @@
 
   /* ========== HERO ========== */
   .hero {
-    min-height: 100vh; display: flex; flex-direction: column;
+    min-height: 100svh; min-height: 100dvh; display: flex; flex-direction: column;
     justify-content: center; align-items: center; text-align: center;
     padding: 120px 24px 80px; position: relative; overflow: hidden;
   }
@@ -423,7 +423,7 @@
     transition: border-color 200ms ease, box-shadow 200ms ease;
   }
   .newsletter-input:focus {
-    outline: none; border-color: var(--accent);
+    outline: 2px solid var(--accent-2); outline-offset: 3px; border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(196,116,42,0.15);
   }
   .newsletter-input::placeholder { color: var(--muted); }
@@ -495,7 +495,7 @@
 
   /* ========== TOAST ========== */
   .toast {
-    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    position: fixed; bottom: 24px; right: 24px; z-index: 110;
     background: var(--card); color: var(--text);
     padding: 16px 24px; border-radius: var(--radius);
     border: 1px solid var(--border);
@@ -595,7 +595,7 @@
     <span>Costa Rica Tarrazú</span><span class="marquee-dot"></span>
     <span>Rwanda Nyamasheke</span><span class="marquee-dot"></span>
     <span>Panama Geisha</span><span class="marquee-dot"></span>
-    <!-- Duplicate for seamless loop -->
+    <!-- Duplicate for continuous loop -->
     <span>Ethiopia Yirgacheffe</span><span class="marquee-dot"></span>
     <span>Colombia Huila</span><span class="marquee-dot"></span>
     <span>Guatemala Antigua</span><span class="marquee-dot"></span>
@@ -878,6 +878,26 @@
 </div>
 
 <script>
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const counterFrames = new Map();
+function finishCounter(el) {
+  el.textContent = (el.dataset.prefix || '') + new Intl.NumberFormat().format(Number(el.dataset.target)) + (el.dataset.suffix || '');
+}
+function settleMotion() {
+  if (!reducedMotion.matches) return;
+  counterFrames.forEach(frame => cancelAnimationFrame(frame));
+  counterFrames.clear();
+  document.querySelectorAll('[data-counter]').forEach(finishCounter);
+  document.querySelectorAll('[data-reveal], [data-reveal-stagger]').forEach(el => el.classList.add('visible'));
+  document.querySelectorAll('.flavor-bar-fill').forEach(el => {
+    el.style.transform = `scaleX(${parseInt(el.style.getPropertyValue('--bar-width')) / 100})`;
+    el.classList.add('animated');
+  });
+  document.querySelectorAll('.donut-fill').forEach(el => el.classList.add('animated'));
+}
+reducedMotion.addEventListener('change', settleMotion);
+settleMotion();
+
 // ========== PAGE LOAD ==========
 window.addEventListener('load', () => {
   document.body.classList.add('loaded');
@@ -885,7 +905,7 @@ window.addEventListener('load', () => {
 
 // ========== HERO CTA ==========
 document.getElementById('hero-cta').addEventListener('click', () => {
-  document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('products').scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth' });
 });
 
 // ========== STICKY HEADER + BACK TO TOP ==========
@@ -898,7 +918,7 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 backToTop.addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
 });
 
 // ========== MOBILE MENU ==========
@@ -942,6 +962,7 @@ document.querySelectorAll('[data-reveal], [data-reveal-stagger]').forEach(el => 
 const easeOutExpo = t => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
 
 function animateCounter(el) {
+  if (reducedMotion.matches) { finishCounter(el); return; }
   const target = parseInt(el.dataset.target);
   const prefix = el.dataset.prefix || '';
   const suffix = el.dataset.suffix || '';
@@ -952,12 +973,14 @@ function animateCounter(el) {
   el.textContent = prefix + '0' + suffix;
 
   function tick(now) {
+    if (reducedMotion.matches) { finishCounter(el); counterFrames.delete(el); return; }
     const elapsed = Math.min((now - start) / duration, 1);
     const value = Math.round(easeOutExpo(elapsed) * target);
     el.textContent = prefix + new Intl.NumberFormat().format(value) + suffix;
-    if (elapsed < 1) requestAnimationFrame(tick);
+    if (elapsed < 1) counterFrames.set(el, requestAnimationFrame(tick));
+    else counterFrames.delete(el);
   }
-  requestAnimationFrame(tick);
+  counterFrames.set(el, requestAnimationFrame(tick));
 }
 
 const counterObserver = new IntersectionObserver((entries) => {
@@ -980,7 +1003,7 @@ const barObserver = new IntersectionObserver((entries) => {
         setTimeout(() => {
           fill.style.transform = `scaleX(${parseInt(fill.style.getPropertyValue('--bar-width')) / 100})`;
           fill.classList.add('animated');
-        }, i * 120);
+        }, reducedMotion.matches ? 0 : i * 120);
       });
       barObserver.unobserve(entry.target);
     }
@@ -994,7 +1017,7 @@ const donutObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.querySelectorAll('.donut-fill').forEach((ring, i) => {
-        setTimeout(() => ring.classList.add('animated'), i * 200);
+        setTimeout(() => ring.classList.add('animated'), reducedMotion.matches ? 0 : i * 200);
       });
       donutObserver.unobserve(entry.target);
     }
@@ -1013,6 +1036,14 @@ filterChips.forEach(chip => {
     chip.classList.add('active');
 
     const category = chip.dataset.filter;
+    if (reducedMotion.matches) {
+      productCards.forEach(card => {
+        card.style.display = category === 'all' || card.dataset.category === category ? '' : 'none';
+        card.style.opacity = '1';
+        card.style.transform = '';
+      });
+      return;
+    }
 
     // First hide non-matching, then show matching (avoids flash)
     productCards.forEach(card => {

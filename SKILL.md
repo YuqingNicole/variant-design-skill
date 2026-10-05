@@ -37,6 +37,14 @@ Choose one primary route. Read that file completely, then load only the referenc
 
 If a request spans routes, select the route that produces the requested deliverable and load a second route only when its workflow is actually needed. For example, an accessibility review of a generated page uses UX Review first; generating the fixed page then adds Generate.
 
+## Rule precedence
+
+Across every route and reference: **user constraints → product task and existing/confirmed design system → accessibility → style suggestions**. This order resolves design choices; do not silently hide accessibility problems when a higher constraint prevents a fix—report the conflict and an accessible alternative. Font bans, motion examples, and visual novelty are suggestions subordinate to the existing brand.
+
+Use two acceptance modes: **exploration** compares task strategies plus fitting visual directions; **brand-locked** preserves fonts, colors, component language, and token scales while varying hierarchy, layout, density, and permitted interactions. Both preserve the same core task, data, and necessary functions. A static interface is valid when animation adds no information.
+
+The two-question budget applies to the whole request, including sub-skills. Infer known answers; do not restart intake after routing.
+
 ## Fast path
 
 Do not force a confirmation round when the brief or existing project already answers the important questions.
@@ -60,7 +68,7 @@ Before design work, read `variant-output/.variant-context.json` when it exists. 
 
 - User instructions override persisted preferences.
 - A confirmed design system locks visual tokens, not content hierarchy or product judgment.
-- Keep context writes best-effort; failure to persist must not block the task.
+- Preference writes are best-effort. Before replacing existing output, a successful durable snapshot is required; on failure keep the original and deliver a separate candidate.
 - `reset context` may remove only `variant-output/.variant-context.json` after resolving that exact path.
 
 ## Product-critical work

@@ -1,6 +1,6 @@
 # Micro-Interactions
 
-Small, focused moments that make interfaces feel alive. Every output should include at least 3 micro-interactions from this library.
+Small, focused moments that make interfaces feel alive. Use only interactions that support the task. There is no minimum count; entry animations and scroll reveals are optional. Existing brand, accessibility, and reduced-motion constraints take precedence over every example below.
 
 ## Philosophy
 

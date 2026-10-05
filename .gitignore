@@ -1,3 +1,9 @@
 .gstack/
 .DS_Store
 website/.env
+
+node_modules/
+tests/.generated/
+tests/.candidate/
+tests/test-results/
+tests/playwright-report/

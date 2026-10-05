@@ -44,7 +44,7 @@ Three variations from a single prompt — each feels like a different studio:
 
 1. **Detects your scenario** — dashboard, SaaS landing page, editorial, e-commerce, mobile app, creative tool, education, portfolio, food & beverage, fashion & lifestyle
 2. **Loads design system references** — typography, color theory (OKLCH), spatial design, motion, micro-interactions, interaction, responsive, UX writing
-3. **Generates 3 distinct variations** — each pulls from a different aesthetic direction with full interactivity (scroll reveals, animated charts, hover effects, functional JS)
+3. **Generates 3 distinct variations** — each expresses a distinct product trade-off with working task controls; visual tokens stay fixed under a brand lock
 4. **Runs mechanical and visual quality gates** — scans generated code, then checks the rendered result for generic AI aesthetic fingerprints
 5. **Ships working code** — Context-aware output: auto-detects React projects and generates `.tsx` components; generates zero-dependency interactive HTML otherwise. Real content, no lorem ipsum
 6. **Offers variation actions** — push further, polish, critique, swap styles, remix colors, shuffle layouts, add motion, dramatize, make interactive
@@ -108,93 +108,29 @@ compare old new          → Side-by-side existing vs. redesigned
 
 ## Installation
 
-### Claude Code (recommended)
+Install the **complete repository**, preserving `SKILL.md`, `skills/`, `references/`, `scripts/`, `assets/`, and `VERSION` together. Copying only `SKILL.md` is insufficient: it routes to sub-skills and executable helpers.
+
+For Codex, clone into its skills directory (use your configured skills root if different):
 
 ```bash
-claude skill install https://github.com/YuqingNicole/variant-design-skill
+git clone https://github.com/YuqingNicole/variant-design-skill.git ~/.codex/skills/variant-design
 ```
 
-The skill checks [GitHub Releases](https://github.com/YuqingNicole/variant-design-skill/releases) at most once every 24 hours. When a newer version is available, it prints the release link and update command but never updates automatically.
+For Claude Code or another local agent, install the same complete folder in that agent's skills location, or clone it into your workspace and point the agent to the absolute `SKILL.md` path. For Hermes/OpenClaw `AGENTS.md`, add a pointer to this installed entrypoint rather than pasting its text. The agent needs file access and Node.js for the bundled helpers.
 
-Or add manually to your project's `SKILL.md` — copy the contents of [`SKILL.md`](./SKILL.md) into your existing skill file.
+For web projects or API integrations, make the referenced directories available through the environment's file retrieval/execution tools as well as the entrypoint. Prompt text alone cannot provide preview servers or snapshot commands.
 
-### Hermes Agent (Nous Research)
+The optional release check runs at most once per 24 hours, reports an available release, and never updates automatically.
 
-[Hermes Agent](https://github.com/nousresearch/hermes-agent) is a self-improving AI agent framework that supports 200+ models and persists skills across sessions.
+## Generate → compare → choose → refine → export
 
-**Install Hermes:**
-```bash
-# Linux / macOS / WSL2
-curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+- Three directions retain the same core task, data, and required functions. Each explains **what it optimizes, what it sacrifices, and when to use it**, followed by a reasoned recommendation.
+- The comparison page opens by default. React output gets three isolated mounts and direct preview URLs; project type checks must include the generated files. Native adapters handle framework-specific dependencies.
+- `B vary subtle — hero` edits B without selecting it. `pick B` explicitly chooses B. `undo B` restores B's last files and tokens while preserving A/C and the selected winner.
+- Schema v2 stores each direction's files, tokens, version, comparison, and history separately. A durable snapshot precedes every replacement; Git alone is not a snapshot.
+- Precedence: user constraints → product task and existing design system → accessibility → style advice. Report unresolved accessibility conflicts. Brand-locked output retains fonts/tokens; free exploration may vary them. There is no animation quota.
 
-# Windows (PowerShell)
-iex (irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.ps1)
-```
-
-**Load this skill into Hermes:**
-```bash
-# 1. Start Hermes
-hermes
-
-# 2. Point it at this skill file — paste SKILL.md contents into your workspace's AGENTS.md
-#    (~/.hermes/workspace/AGENTS.md  or the project-level equivalent)
-cat SKILL.md >> ~/.hermes/workspace/AGENTS.md
-
-# 3. Select your model
-hermes model   # choose any provider (Anthropic, OpenAI, OpenRouter, etc.)
-
-# 4. Start designing
-hermes
-> design a SaaS landing page with 3 variations
-```
-
-Hermes persists skills in its skill registry — once loaded, variant-design is available in every subsequent session without re-loading.
-
-### OpenClaw
-
-[OpenClaw](https://github.com/openclaw/openclaw) is a local-first AI assistant gateway that connects 40+ messaging platforms (WhatsApp, Telegram, Slack, Discord, iMessage, etc.) to AI agents.
-
-**Install OpenClaw:**
-```bash
-npm install -g openclaw@latest
-openclaw onboard --install-daemon
-```
-
-**Load this skill into OpenClaw:**
-```bash
-# 1. Copy SKILL.md contents into your OpenClaw workspace AGENTS.md
-cat SKILL.md >> ~/.openclaw/workspace/AGENTS.md
-
-# 2. Set your model in ~/.openclaw/openclaw.json
-{
-  "agent": {
-    "model": "anthropic/claude-sonnet-4-6"
-  }
-}
-
-# 3. Start the gateway
-openclaw onboard --install-daemon
-
-# 4. Use via any connected channel (Telegram, Slack, iMessage, etc.)
-> design a dashboard with 3 variations
-> ux review
-> vary strong A
-```
-
-**In-session commands (any channel):**
-```
-/new             → start a new design session
-/think high      → enable extended thinking for complex design decisions
-/reset           → clear context and start fresh
-```
-
-OpenClaw routes your design requests through the connected channel directly to the agent — you can trigger `vary strong A`, `remix colors`, or `ux review` from Telegram or iMessage the same way you would in a terminal.
-
-### Other Claude interfaces
-
-**Claude.ai (web/desktop):** Paste the contents of `SKILL.md` into a Project's custom instructions, or drop it at the top of a conversation as a system prompt.
-
-**API / custom integrations:** Include `SKILL.md` as a system message before your user turn.
+Implementation and verification: [preview and history](references/preview-and-history.md), [context schema](references/project-context.md), [regression tests](tests/README.md). Existing route-first routing, local zones, and Product Integrity Gate remain in place.
 
 ---
 
@@ -283,14 +219,14 @@ reset context          → Clear context, start fresh next session
 
 ### What you'll see
 
-Files are written to `variant-output/` and **auto-opened in your browser** — you never need to manually find or open files. Each variation comes with a compact **Summary Card** in the terminal (direction, palette, fonts, interactions). Actions are grouped into **Reshape / Tune / Animate / Refine / Export** categories.
+Files are written to `variant-output/` and **auto-opened in your browser** — when browser tools are available; otherwise the exact URL/path is returned. Each variation comes with a compact **Summary Card** in the terminal (optimization, trade-off, best-fit scenario, palette, fonts, interactions). Actions are grouped into **Reshape / Tune / Animate / Refine / Export** categories.
 
 On iteration, the same file is overwritten and re-opened — your browser tab refreshes automatically. The terminal shows a 2-3 line summary of what changed, not the full code.
 
 **Context persists across sessions.** When you re-enter a project directory, the skill reads `variant-output/.variant-context.json` and resumes your last palette, fonts, direction, and iteration count automatically:
 
 ```
-✦ Resuming context: Amber Warm · Editorial · Instrument Serif + Instrument Sans · picked B · 4 iterations
+✦ Resuming context: Amber Warm · Editorial · Instrument Serif + Instrument Sans · editing B · selected none · B revision 4
   (reset context to start fresh)
 ```
 
@@ -379,7 +315,7 @@ Foundational design principles loaded for every generation:
 - **Real content wins.** Plausible headlines, real data, actual copy. Makes designs feel alive.
 - **Commit fully.** Half-executed aesthetics look worse than simple ones.
 - **Never converge.** If A is dark, B cannot also be dark. Each must feel like a different studio.
-- **Typography first.** Distinctive display font + reliable body. Never Inter, Roboto, Arial, system-ui.
+- **Typography first.** Distinctive display font + reliable body. Preserve existing brand fonts; free exploration should choose type deliberately.
 - **Color = one bold OKLCH choice.** One dominant color used with conviction beats five timid colors. Always tint neutrals.
 - **No AI slop.** No purple gradients, no glassmorphism, no bounce easing, no centered-everything layouts.
 

@@ -1,6 +1,6 @@
 ---
 name: variant-ux
-description: UX Review mode — heuristic evaluation (Nielsen's 10), cognitive load analysis, mental model diagnosis, affordance audit, dark pattern detection — grounded in NNG research. Load references/ux-heuristics.md and references/ux-psychology.md. Triggers on: ux review, heuristic evaluation, usability audit, cognitive load, mental models, affordances, dark patterns, review this design, check usability, is this good UX
+description: "UX Review mode — heuristic evaluation (Nielsen's 10), cognitive load analysis, mental model diagnosis, affordance audit, dark pattern detection — grounded in NNG research. Load references/ux-heuristics.md and references/ux-psychology.md. Triggers on: ux review, heuristic evaluation, usability audit, cognitive load, mental models, affordances, dark patterns, review this design, check usability, is this good UX"
 ---
 
 ## UX Review Mode
