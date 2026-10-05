@@ -23,7 +23,7 @@
   },
   "designSystem": {
     "confirmed": true,
-    "file": "website/src/design-system.css",
+    "file": "src/design-system.css",
     "fonts": [
       "Iowan Old Style",
       "Baskerville",
