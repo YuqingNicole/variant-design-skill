@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const extensions = new Set([".html", ".css", ".scss", ".js", ".jsx", ".ts", ".tsx", ".vue", ".svelte", ".astro"]);
-const ignoredDirectories = new Set([".git", "node_modules", "dist", "build", ".next", ".cache"]);
+const ignoredDirectories = new Set([".git", "node_modules", "dist", "build", ".next", ".cache", ".history", "_harness"]);
 
 function locationFor(source, index) {
   return source.slice(0, index).split("\n").length;
@@ -84,18 +84,22 @@ function scanSource(source, file = "<memory>") {
 
   for (const rule of rules) addMatches(findings, source, file, rule);
 
-  const removesOutline = /outline\s*:\s*(?:none|0)\b/i.test(source);
-  const hasFocusReplacement = /:focus-visible|\bfocus-visible\b/i.test(source);
-  if (removesOutline && !hasFocusReplacement) {
-    const index = source.search(/outline\s*:\s*(?:none|0)\b/i);
-    findings.push({
-      severity: "error",
-      rule: "focus-outline-removed",
-      file,
-      line: locationFor(source, index),
-      message: "Focus outline is removed without a visible focus-visible replacement.",
-      excerpt: source.match(/outline\s*:\s*(?:none|0)\b/i)?.[0] ?? "outline removed",
-    });
+  // A selector's presence says nothing about its computed indicator or coverage.
+  // Keep all outline removals reviewable, even with an unrelated focus rule.
+  for (const match of source.matchAll(/outline\s*:\s*(?:none|0)\b/gi)) {
+    findings.push({ severity: "warning", rule: "focus-outline-removed", file,
+      line: locationFor(source, match.index),
+      message: "Outline removed: keyboard-test this control's computed focus indicator; a focus-visible keyword is not proof.",
+      excerpt: match[0] });
+  }
+  for (const match of source.matchAll(/[^{}]*:focus-visible[^{}]*\{[^{}]*outline\s*:\s*(?:none|0)\b[^{}]*\}/gi)) {
+    findings.push({ severity: "warning", rule: "focus-visible-suppressed", file,
+      line: locationFor(source, match.index),
+      message: "Focus-visible rule suppresses the outline; verify a visible replacement on this element.", excerpt: match[0].trim().slice(0, 140) });
+  }
+  if (/requestAnimationFrame|\.animate\s*\(/.test(source) && !/matchMedia\s*\([\s\S]{0,100}prefers-reduced-motion/.test(source)) {
+    findings.push({ severity: "warning", rule: "js-motion-review", file, line: 1,
+      message: "JavaScript animation needs a runtime reduced-motion guard; CSS alone cannot cancel its loop.", excerpt: "JavaScript motion" });
   }
 
   const usesMotion = /(?:animation(?:-name)?|transition)\s*:/i.test(source);

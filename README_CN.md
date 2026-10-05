@@ -44,7 +44,7 @@ npm ci && npm run dev
 
 1. **场景检测** — 仪表盘、SaaS 落地页、编辑/杂志、电商、移动应用、创意工具、教育、作品集、餐饮美食、时尚生活
 2. **加载设计系统参考** — 排版、色彩理论（OKLCH）、空间设计、动效、微交互、交互、响应式、UX 文案
-3. **生成 3 个差异化变体** — 每个采用不同的审美方向，包含完整交互（滚动揭示、动态图表、悬浮效果、功能性 JS）
+3. **生成 3 个差异化变体** — 每个体现不同产品取舍并包含可用的任务控件；品牌锁定时保留视觉 tokens
 4. **机械 + 视觉质量门** — 扫描生成代码，再检查渲染结果中的常见 AI 审美特征
 5. **输出可交互代码** — 上下文感知输出：检测到 React 项目（package.json 含 react 依赖）时自动生成 `.tsx` 组件；否则生成零依赖交互式 HTML。真实内容，没有占位文本
 6. **提供迭代操作** — 推到极致、精修、批评、换风格、重混色彩、重排布局、添加动效、戏剧化、使其可交互
@@ -108,89 +108,29 @@ compare old new          → 现有页面 vs 重新设计的并排对比
 
 ## 安装
 
-### Claude Code（推荐）
+必须安装**完整仓库**，将 `SKILL.md`、`skills/`、`references/`、`scripts/`、`assets/` 和 `VERSION` 保持在同一目录。只复制 `SKILL.md` 不足以运行：入口还依赖子技能和脚本。
+
+Codex 可克隆到技能目录（如果配置了其他技能根目录，使用实际路径）：
 
 ```bash
-claude skill install https://github.com/YuqingNicole/variant-design-skill
+git clone https://github.com/YuqingNicole/variant-design-skill.git ~/.codex/skills/variant-design
 ```
 
-Skill 最多每 24 小时检查一次 [GitHub Releases](https://github.com/YuqingNicole/variant-design-skill/releases)。发现新版本时只显示版本链接和更新命令，不会自动执行更新。
+Claude Code 或其他本地 agent 同样需要完整目录；可以安装到对应技能位置，也可以克隆到工作区后让 agent 读取入口的绝对路径。Hermes/OpenClaw 的 `AGENTS.md` 应指向已安装的入口，而非粘贴入口文本。脚本需要文件访问权限和 Node.js。
 
-或手动添加到项目的 `SKILL.md` 中——复制 [`SKILL.md`](./SKILL.md) 的内容。
+网页 Project 或 API 集成需要通过环境的文件检索和执行能力提供引用目录，仅粘贴提示词不能提供预览服务器和快照功能。
 
-### Hermes Agent（Nous Research）
+可选更新检查最多每 24 小时运行一次，只提示可用发布，不自动更新。
 
-[Hermes Agent](https://github.com/nousresearch/hermes-agent) 是一个自我改进型 AI agent 框架，支持 200+ 模型，技能跨 session 持久化。
+## 生成 → 比较 → 选择 → 局部迭代 → 导出
 
-**安装 Hermes：**
-```bash
-# Linux / macOS / WSL2
-curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+- 三版保留相同核心任务、数据和必要功能。每版说明**优化什么、牺牲什么、适合什么场景**，并给出有理由的推荐。
+- 默认打开比较页。React 输出自动挂载三版，提供独立预览地址；项目类型检查必须覆盖生成文件。框架特有依赖使用原生隔离预览入口。
+- `B vary subtle — hero` 只修改 B，不自动选定；`pick B` 才选为胜者；`undo B` 恢复 B 上次的文件和 tokens，保留 A/C 与最终选择。
+- v2 上下文分别存储各版文件、tokens、版本、比较信息和历史。覆盖前必须保存持久快照，Git 本身不会保存中间修改。
+- 优先级：用户约束 → 产品任务和已有设计系统 → 可访问性 → 风格建议。无法解决的可访问性冲突要明确报告。品牌锁定保留字体和 tokens，自由探索允许变化；取消动效数量配额。
 
-# Windows（PowerShell）
-iex (irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.ps1)
-```
-
-**将本 skill 加载到 Hermes：**
-```bash
-# 1. 将 SKILL.md 内容追加到 Hermes 工作区的 AGENTS.md
-cat SKILL.md >> ~/.hermes/workspace/AGENTS.md
-
-# 2. 选择模型
-hermes model   # 选择任意提供商（Anthropic、OpenAI、OpenRouter 等）
-
-# 3. 启动并开始设计
-hermes
-> 给我一个 SaaS 落地页的 3 个方向
-```
-
-Hermes 会将 skill 注册到技能库，后续每次会话无需重新加载即可直接使用。
-
-### OpenClaw
-
-[OpenClaw](https://github.com/openclaw/openclaw) 是本地优先的 AI 助手网关，可将 40+ 消息平台（WhatsApp、Telegram、Slack、Discord、iMessage 等）连接到 AI agent。
-
-**安装 OpenClaw：**
-```bash
-npm install -g openclaw@latest
-openclaw onboard --install-daemon
-```
-
-**将本 skill 加载到 OpenClaw：**
-```bash
-# 1. 将 SKILL.md 内容追加到 OpenClaw 工作区
-cat SKILL.md >> ~/.openclaw/workspace/AGENTS.md
-
-# 2. 在 ~/.openclaw/openclaw.json 中配置模型
-{
-  "agent": {
-    "model": "anthropic/claude-sonnet-4-6"
-  }
-}
-
-# 3. 启动网关守护进程
-openclaw onboard --install-daemon
-
-# 4. 在任意连接的渠道中使用（Telegram、Slack、iMessage 等）
-> 设计一个仪表盘的 3 个方向
-> ux review
-> vary strong A
-```
-
-**会话内命令（任意渠道均可）：**
-```
-/new             → 开始新的设计会话
-/think high      → 开启深度思考（适合复杂设计决策）
-/reset           → 清除 context，重新开始
-```
-
-OpenClaw 将设计请求通过连接的渠道路由到 agent——你可以在 Telegram 或 iMessage 里直接发 `vary strong A`、`remix colors` 或 `ux review`，效果和在终端里完全一致。
-
-### 其他 Claude 界面
-
-**Claude.ai（网页/桌面）：** 将 `SKILL.md` 内容粘贴到 Project 的自定义指令中，或在对话开头作为系统提示词。
-
-**API / 自定义集成：** 将 `SKILL.md` 作为系统消息放在用户消息之前。
+实现与验证：[预览和历史](references/preview-and-history.md)、[上下文结构](references/project-context.md)、[回归测试](tests/README.md)。保留 route-first 路由、局部变体和 Product Integrity Gate。
 
 ---
 
@@ -279,14 +219,14 @@ reset context          → 清除 context，下次从头开始
 
 ### 你会看到什么
 
-文件会写入 `variant-output/` 目录并**自动在浏览器中打开** — 你永远不需要手动寻找或打开文件。终端中会显示紧凑的**摘要卡片**（方向、色板、字体、交互）。操作按 **Reshape / Tune / Animate / Refine / Export** 五组分类。
+文件会写入 `variant-output/` 目录并**自动在浏览器中打开** — 浏览器工具可用时自动打开，否则返回准确地址。终端中会显示紧凑的**摘要卡片**（优化目标、代价、适用场景、色板、字体、交互）。操作按 **Reshape / Tune / Animate / Refine / Export** 五组分类。
 
 迭代时，同一文件会被覆盖并重新打开 — 浏览器标签页自动刷新。终端只显示 2-3 行变更摘要，不会输出完整代码。
 
 **偏好跨 session 持久化。** 重新进入项目目录时，技能会自动读取 `variant-output/.variant-context.json`，恢复上次的色板、字体、方向和迭代次数：
 
 ```
-✦ Resuming context: Amber Warm · Editorial · Instrument Serif + Instrument Sans · picked B · 4 iterations
+✦ Resuming context: Amber Warm · Editorial · Instrument Serif + Instrument Sans · editing B · selected none · B revision 4
   (reset context to start fresh)
 ```
 
@@ -374,7 +314,7 @@ export to next       →  将选定变体导出为 Next.js App Router 组件
 - **真实内容为王。** 可信的标题、真实的数据、实际的文案。让设计有生命力。
 - **全力以赴。** 半吊子的审美比简单的更糟糕。
 - **永不趋同。** 如果 A 是暗色，B 就不能也是暗色。每个变体必须像来自不同工作室。
-- **排版优先。** 独特的展示字体 + 可靠的正文字体。禁用 Inter、Roboto、Arial、system-ui。
+- **排版优先。** 独特的展示字体 + 可靠的正文字体。已有品牌字体优先，自由探索时有意识地选择字体。
 - **色彩 = 一个大胆的 OKLCH 选择。** 一个果断使用的主色胜过五个犹豫不决的颜色。始终给中性灰染色。
 - **拒绝 AI 审美。** 不要紫色渐变、不要毛玻璃效果、不要弹跳缓动、不要居中一切的布局。
 

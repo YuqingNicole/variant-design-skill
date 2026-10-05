@@ -1,6 +1,6 @@
 ---
 name: variant-analyze
-description: Audit existing sites, extract design tokens, generate style-matched pages. Runs consistency checks and Visual Quality Audit (40-item anti-slop checklist, Quality Score XX/100). Triggers on: analyze my site, audit this, match this style, extract tokens, what's wrong with this design, migrate, add a page to my site, compare old new
+description: "Audit existing sites, extract design tokens, generate style-matched pages. Runs consistency checks and Visual Quality Audit (40-item anti-slop checklist, Quality Score XX/100). Triggers on: analyze my site, audit this, match this style, extract tokens, what's wrong with this design, migrate, add a page to my site, compare old new"
 ---
 
 ## Site Analysis Mode

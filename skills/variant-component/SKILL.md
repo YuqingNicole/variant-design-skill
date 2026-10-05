@@ -1,6 +1,6 @@
 ---
 name: variant-component
-description: Generate isolated UI components with all 8 states and variants — button systems, forms, cards, modals, nav. Design System-aware when a token set is confirmed. Load skills/shared/code-output.md for framework detection and output conventions. Triggers on: component, button system, form component, card component, modal, navigation component, design a button, input components, component library
+description: "Generate isolated UI components with all 8 states and variants — button systems, forms, cards, modals, nav. Design System-aware when a token set is confirmed. Load skills/shared/code-output.md for framework detection and output conventions. Triggers on: component, button system, form component, card component, modal, navigation component, design a button, input components, component library"
 ---
 
 > Before generating code, load `skills/shared/code-output.md` for framework detection and `references/quality-baseline.md` for verification.

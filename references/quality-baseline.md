@@ -19,7 +19,7 @@ Strict mode fails on warnings as well as errors. Use `--json` for machine-readab
 Check the rendered result, not just source code:
 
 - hierarchy is obvious at a squint;
-- A/B/C differ in position, layout, type, and interaction strategy—not only color;
+- Exploration: A/B/C express distinct task trade-offs through layout and interaction; type and palette may differ when appropriate. Brand-locked: fonts, colors, components, and token scales remain identical; compare hierarchy, density, and structure;
 - text rhythm, spacing, and alignment come from a small token set;
 - mobile is recomposed rather than merely shrunk;
 - actions provide hover, focus, active, loading, error, and success feedback when relevant;
@@ -29,7 +29,7 @@ Check the rendered result, not just source code:
 ## Typography
 
 - Use a distinctive display face only when it fits the product; body type must remain readable.
-- Avoid defaulting display text to Inter, Roboto, Arial, Open Sans, Lato, Montserrat, `system-ui`, or an unspecified system font.
+- Preserve existing or confirmed brand fonts, including any families listed below. In free exploration, avoid defaulting display text to Inter, Roboto, Arial, Open Sans, Lato, Montserrat, `system-ui`, or an unspecified system font.
 - Suitable alternatives include Instrument Sans, Plus Jakarta Sans, Outfit, Onest, Figtree, Urbanist, Fraunces, Newsreader, and Lora.
 - Use no more than two families, a deliberate type scale, balanced headings, and body line-height around 1.5–1.7.
 - Use tabular numerals for comparable data.
@@ -58,6 +58,12 @@ Check the rendered result, not just source code:
 - Never remove focus outlines without a visible `:focus-visible` replacement.
 - Pair color with text, shape, icon, or pattern when it conveys meaning.
 - Add `prefers-reduced-motion` handling whenever animation or transition is used.
+
+## Behavioral evidence
+
+Scanner success is only a static preflight. Keyboard-tab through actual controls and inspect the computed focus indicator; an unrelated `:focus-visible` selector proves nothing. Test the same output under `prefers-reduced-motion: reduce`: counters must show final values immediately, reveals must leave content visible, and JavaScript loops, timers, and smooth scrolling must honor the preference (including a change while running).
+
+For the five regression scenarios and executable checks, read `references/preview-and-history.md`. Record the artifact, viewport, action, expected result, actual result, and any untested behavior. Do not describe fixture coverage as validation of every future generated page.
 
 ## Product integrity
 

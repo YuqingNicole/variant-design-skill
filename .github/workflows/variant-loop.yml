@@ -1,0 +1,25 @@
+name: Variant loop regressions
+on:
+  push:
+  pull_request:
+jobs:
+  loop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
+      - run: node --test scripts/variant-loop.test.mjs
+      - run: node scripts/quality-gate.mjs --self-test
+      - run: node scripts/quality-gate.mjs examples/coffee-brand-interactive.html --strict
+      - run: npm ci
+        working-directory: tests
+      - run: npx playwright install --with-deps chromium
+        working-directory: tests
+      - run: npm test
+        working-directory: tests
+      - run: npm run typecheck
+        working-directory: tests

@@ -1,6 +1,6 @@
 ---
 name: variant-design-system
-description: Design System mode — tokens → components → pages three-layer workflow. Generate a complete token set (palette/type/spacing/motion/elevation/radius), confirm it, then all downstream outputs are visually consistent. Triggers on: ds, design system, tokens, create token set, define palette, define tokens, set up tokens, ds confirm, compose
+description: "Design System mode — tokens → components → pages three-layer workflow. Generate a complete token set (palette/type/spacing/motion/elevation/radius), confirm it, then all downstream outputs are visually consistent. Triggers on: ds, design system, tokens, create token set, define palette, define tokens, set up tokens, ds confirm, compose"
 ---
 
 > Before generating code, load `skills/shared/code-output.md`, `references/project-context.md`, and `references/quality-baseline.md`.
@@ -31,7 +31,7 @@ Token foundation   Atomic pieces     Assembled layouts
 
 ### Step 1 — Generate Design System (`ds`)
 
-**Before generating**, ask 3 focused questions (can be answered in one message):
+**Before generating**, infer these dimensions from the brief and repository. Ask at most two material unanswered questions across the entire request; no mandatory intake:
 
 1. **Brand personality** — 2–3 adjectives that describe the feel (e.g. "precise, warm, understated")
 2. **Color direction** — existing brand color, or a reference (hex / site URL / mood word)

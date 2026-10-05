@@ -1,6 +1,6 @@
 ---
 name: variant-generate
-description: Generate 3 distinct design variations from a prompt. Each variation feels like a different studio — layout, palette, typography, and motion diverge. Supports variation actions: Vary strong/subtle, Distill, Shuffle layout, Change style, Remix colors, Mix, Dramatize, Add motion, Make interactive, Polish, Critique, See other views, Extract tokens. Load skills/shared/code-output.md for framework detection and output conventions. Triggers on: design options for X, show me variations, give me UI directions, vary this design, change the style, remix colors, shuffle layout, design a dashboard/landing page/app/editorial
+description: "Generate 3 distinct design variations from a prompt. Each variation expresses a distinct product trade-off; locked brand tokens stay identical. Supports variation actions: Vary strong/subtle, Distill, Shuffle layout, Change style, Remix colors, Mix, Dramatize, Add motion, Make interactive, Polish, Critique, See other views, Extract tokens. Load skills/shared/code-output.md for framework detection and output conventions. Triggers on: design options for X, show me variations, give me UI directions, vary this design, change the style, remix colors, shuffle layout, design a dashboard/landing page/app/editorial"
 ---
 
 > Before generating code, load `skills/shared/code-output.md`. Also read `references/project-context.md` and `references/quality-baseline.md`.
@@ -28,6 +28,8 @@ Check `designSystem.confirmed` in context first:
 
 ### 2. Generate 3 Distinct Variations
 
+First define a shared task contract: primary job, identical input data, necessary functions, and success criteria. Give each direction a distinct optimization, explicit cost, and suitable scenario. For a dashboard: A prioritizes anomaly detection, B comparison across objects, C evidence tracing. All three still support the same core task and required functions. Differences must be visible in layout and interaction, not merely described in the card.
+
 **If DS confirmed:** Each variation = a different structural arrangement. Visual language (colors, fonts, components) does not change between A, B, C. Variations differ in:
 - Grid and layout pattern
 - Information hierarchy (what leads, what's secondary)
@@ -54,7 +56,7 @@ Check `designSystem.confirmed` in context first:
 - Typography: display font + body font; use the guidance and banned defaults in `references/quality-baseline.md`
 - Layout pattern (from reference) — consult `spatial-design.md` for grid and hierarchy principles
 - Motion strategy — consult `motion-design.md` for timing and easing
-- **Interaction plan** — which micro-interactions and interactive patterns from `micro-interactions.md` and `interactive-patterns.md` to include (minimum 3 micro-interactions + domain-specific patterns)
+- **Interaction plan** — which micro-interactions and interactive patterns from `micro-interactions.md` and `interactive-patterns.md` to include (only feedback and patterns that serve the task; no motion quota)
 - One signature detail that makes this variation unforgettable
 
 ### 3. Implement & Present
@@ -67,8 +69,13 @@ Present a **compact Summary Card** in the terminal for each variation:
 
 > **A — [Name]** · [Direction] · [Palette] · [Fonts]
 > Layout: [pattern] · Signature: [detail] · Interactions: [list]
+> Optimizes: [task advantage].
+> Trade-off: [specific cost].
+> Best for: [scenario].
 
-Then show the file paths and open the first variation in the browser. The user reads the design in the browser, not in the terminal.
+Persist these three sentences under each variant's `comparison` field. Add `recommendation: {variant, reason}` based on the user's priorities and observed behavior, clearly distinguishing hypotheses from tested evidence. A recommendation does not select a winner.
+
+Build and open the comparison page by default, with A/B/C direct links and the recommendation. Follow `references/preview-and-history.md` for React mounting, snapshots, undo, and checks. Show the actual URL.
 
 ### 4. Quality Gate
 
@@ -152,6 +159,8 @@ When generating initial HTML/TSX, annotate major sections with `data-zone`:
 ```
 
 For TSX, use a `data-zone` prop on the top-level element of each section component.
+
+For reliable local diffs, also bracket each editable zone with unique `<!-- zone:hero:start -->` / `<!-- zone:hero:end -->` markers (TSX: `{/* zone:hero:start */}` / `{/* zone:hero:end */}`). Keep its CSS overrides inside those boundaries. If an existing artifact lacks markers, snapshot before adding them in a separate preparation step and verify that rendering is unchanged.
 
 **Step 3: Isolate and rewrite the zone**
 
@@ -245,8 +254,8 @@ Layer additional micro-interactions and animations onto the current design. Cons
 
 **Process:**
 1. Audit current interactions — list what already moves and what's dead
-2. Add missing baseline: scroll reveals on all sections, card hover lifts, button press feedback
-3. Add 2-3 domain-appropriate enhancements from the "Picking Micro-Interactions by Domain" table
+2. Add only motion that clarifies state, hierarchy, or the requested expressive direction; scroll reveals and card lifts are optional. Honor reduced motion in CSS and JavaScript.
+3. Choose relevant enhancements from the "Picking Micro-Interactions by Domain" table; no quota
 4. Wire up any static data displays: counter animations for numbers, bar/donut animations for charts
 5. Verify reduced motion fallbacks exist for every new animation
 
@@ -395,7 +404,7 @@ Combine two variations into one. Accepts forms like "Mix A + B" or "A's layout +
 ## Variation Loop
 
 Track iteration count internally (reset per variation). After any variation action:
-1. **Overwrite the same file** (e.g. `variant-output/variant-coffee-A.html`) — don't create new files for iterations
+1. Stage the candidate separately, then use the transactional apply workflow in `references/preview-and-history.md`. It saves a snapshot before replacing files at stable paths. An edit sets `activeVariant`, never `selectedVariant`. Support `undo B` without touching A/C or the selected winner.
 2. **Re-open in browser** — use the preview workflow in `skills/shared/code-output.md`
 3. **Show a 2-3 line diff summary** in the terminal — what changed, not the full code
 4. Offer the grouped action menu again — the loop never ends until the user moves on
