@@ -7,3 +7,8 @@ tests/.generated/
 tests/.candidate/
 tests/test-results/
 tests/playwright-report/
+
+website/dist/
+website/variant-output/_compare.html
+website/variant-output/_preview/
+website/variant-output/.exports/

@@ -1,0 +1,41 @@
+{
+  "variant": {
+    "entry": "VariantB.tsx",
+    "files": [
+      "VariantB.tsx"
+    ],
+    "tokens": {
+      "file": "../src/design-system.css",
+      "fonts": [
+        "Iowan Old Style",
+        "Baskerville",
+        "Songti SC",
+        "SFMono-Regular"
+      ],
+      "surface": "#0a0b0c",
+      "text": "#f2f0eb"
+    },
+    "comparison": {
+      "optimizes": "直接检查真实产物，缩短到比较的路径",
+      "tradeoff": "首屏的品牌叙事更简短",
+      "bestFor": "希望先试用，再判断是否安装的人"
+    },
+    "version": 2,
+    "history": [
+      {
+        "action": "apply",
+        "version": 2,
+        "snapshot": ".history/B/36e90492-5988-4495-b594-0ff0b4e863cc.json",
+        "summary": "Clarify that previews work without model setup and edits continue in agent chat",
+        "zone": "hero",
+        "at": "2026-10-05T14:46:44.936Z"
+      }
+    ],
+    "undo": [
+      ".history/B/36e90492-5988-4495-b594-0ff0b4e863cc.json"
+    ]
+  },
+  "files": {
+    "VariantB.tsx": "aW1wb3J0IEFwcCBmcm9tICIuLi9zcmMvQXBwIjsKaW1wb3J0IHR5cGUgeyBMYW5kaW5nSGVyb0NvbmZpZyB9IGZyb20gIi4uL3NyYy9MYW5kaW5nSW50cm9kdWN0aW9uIjsKCi8qIHpvbmU6aGVybzpzdGFydCAqLwpleHBvcnQgY29uc3QgaGVybzogTGFuZGluZ0hlcm9Db25maWcgPSB7CiAgImlkIjogIkIiLAogICJsYXlvdXQiOiAicHJvb2YiLAogICJ0aXRsZSI6IHsKICAgICJ6aCI6IFsKICAgICAgIuS4ieS4quaWueahiO+8jCIsCiAgICAgICLpgInlvpfmmI7nmb3jgIIiCiAgICBdLAogICAgImVuIjogWwogICAgICAiVGhyZWUgZGlyZWN0aW9ucy4iLAogICAgICAiQSBjbGVhcmVyIGNob2ljZS4iCiAgICBdCiAgfSwKICAiZGVzY3JpcHRpb24iOiB7CiAgICAiemgiOiAi5bCx55So5L2g5q2j5Zyo55yL55qE6L+Z5Liq572R56uZ77ya5q+U6L6D5LiJ5Liq5a6M5pW06aG16Z2i77yM5YaN5Zue5YiwIGFnZW50IOWvueivneWxgOmDqOS/ruaUueOAgeaSpOWbnu+8jOacgOWQjuaOpeWFpemhueebruOAgiIsCiAgICAiZW4iOiAiU3RhcnQgd2l0aCB0aGlzIHZlcnkgd2Vic2l0ZTogY29tcGFyZSB0aHJlZSBjb21wbGV0ZSBwYWdlcywgdGhlbiByZWZpbmUgYW5kIHVuZG8gaW4geW91ciBhZ2VudCBjaGF0IGJlZm9yZSBpbnRlZ3JhdGluZyB0aGUgcmVzdWx0LiIKICB9LAogICJwcmltYXJ5IjogImNvbXBhcmUiLAogICJsYWJlbCI6IHsKICAgICJ6aCI6ICLmiZPlvIDkuInniYjmr5TovoMiLAogICAgImVuIjogIkNvbXBhcmUgdGhlIHRocmVlIHZlcnNpb25zIgogIH0sCiAgIm5vdGUiOiB7CiAgICAiemgiOiAi5peg6ZyA6YWN572u5qih5Z6LIMK3IOWFiOavlOi+g+WujOaVtOmhtemdoiIsCiAgICAiZW4iOiAiTm8gbW9kZWwgc2V0dXAgwrcgQ29tcGFyZSBjb21wbGV0ZSBwYWdlcyBmaXJzdCIKICB9Cn07Ci8qIHpvbmU6aGVybzplbmQgKi8KCmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIFZhcmlhbnRCKCkgeyByZXR1cm4gPEFwcCBoZXJvPXtoZXJvfSAvPjsgfQo="
+  }
+}

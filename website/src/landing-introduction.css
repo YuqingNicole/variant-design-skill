@@ -1,0 +1,51 @@
+/* The landing variants share the existing type and color tokens. */
+.hero-grid[class*="hero-layout-"] { max-width: var(--content-width); width: min(var(--content-width), calc(100% - 3.5rem)); padding-block: var(--space-7) var(--space-5); gap: var(--space-5); }
+.hero-grid .hero-copy { min-width: 0; }
+.hero-grid h1 { font-size: clamp(3rem, 5.5vw, 5.5rem); line-height: 1.12; }
+.hero-grid h1 span, .hero-grid h1 em { display: block; }
+.hero-grid .hero-kicker { margin-bottom: var(--space-3); font-size: .75rem; }
+.hero-grid .hero-lede { color: var(--color-muted); font-size: var(--text-lede); }
+.hero-grid .hero-actions .button { min-height: 3rem; font: 400 var(--text-small)/var(--leading-body) var(--font-serif); text-decoration: none; padding-inline: var(--space-3); }
+.hero-grid .text-link { font-size: var(--text-small); }
+.hero-context { margin: var(--space-3) 0 0; color: var(--color-muted); font-size: var(--text-small); }
+.hero-layout-proof, .hero-layout-install { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; text-align: left; }
+.hero-layout-proof .hero-actions, .hero-layout-install .hero-actions, .hero-layout-proof .hero-kicker, .hero-layout-install .hero-kicker { justify-content: flex-start; }
+.hero-layout-proof .hero-lede, .hero-layout-install .hero-lede { margin-inline: 0; }
+.hero-layout-story { display: grid; grid-template-columns: 1fr; text-align: center; }
+.hero-layout-story .landing-evidence { width: 100%; }
+.hero-layout-story .landing-options { display: grid; grid-template-columns: repeat(3, 1fr); }
+.hero-layout-story .landing-option { grid-template-columns: auto 1fr; align-items: start; }
+.hero-layout-story .landing-option > span:last-child { display: none; }
+.landing-evidence { padding: var(--space-3); color: var(--color-ink); background: var(--color-surface); border: var(--border-strong); border-radius: var(--radius); text-align: left; }
+.evidence-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-1); font: .75rem/var(--leading-meta) var(--font-mono); color: var(--color-muted); padding-bottom: var(--space-3); }
+.landing-option { display: grid; grid-template-columns: 2rem 1fr auto; gap: var(--space-2); align-items: center; border-top: var(--border); text-decoration: none; padding: var(--space-3) 0; }
+.landing-option > b { color: var(--color-muted); font: 400 1rem/var(--leading-body) var(--font-mono); }
+.landing-option strong { display: block; font-size: var(--text-lede); font-weight: 400; }
+.landing-option small { display: block; color: var(--color-muted); font-size: var(--text-small); margin-top: var(--space-1); }
+.landing-option:hover strong { text-decoration: underline; text-underline-offset: .25em; }
+.evidence-footnote { border-top: var(--border); padding-top: var(--space-2); margin-bottom: 0; color: var(--color-muted); font-size: var(--text-small); }
+.hero-install { margin-bottom: var(--space-3); }
+.hero-install code { display: block; overflow-wrap: anywhere; color: var(--color-ink); font: .875rem/1.7 var(--font-mono); }
+.hero-install button { padding: var(--space-1) var(--space-2); margin: var(--space-2) var(--space-2) 0 0; border: var(--border-strong); background: var(--color-action); color: var(--color-paper); border-radius: var(--radius-sm); cursor: pointer; }
+.hero-install a { display: inline-block; font-size: var(--text-small); }
+.hero-grid .workbench { grid-column: 1 / -1; justify-self: center; margin-top: var(--space-2); }
+.sample-disclosure { color: var(--color-muted); font-size: var(--text-small); border-left: var(--border-strong); padding-left: var(--space-2); }
+@media (max-width: 800px) {
+  .hero-grid[class*="hero-layout-"] { grid-template-columns: 1fr; width: calc(100% - 1.5rem); padding-top: var(--space-5); gap: var(--space-4); }
+  .hero-grid h1 { font-size: clamp(2.75rem, 10vw, 4rem); }
+  .hero-layout-story .landing-options { grid-template-columns: 1fr; }
+  .hero-grid .hero-actions { align-items: flex-start; flex-wrap: wrap; }
+  .landing-evidence { padding: var(--space-2); }
+  .hero-grid .hero-kicker { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.mobile-navigation { display: none; }
+@media (max-width: 640px) {
+  .nav { grid-template-columns: auto 1fr auto; gap: var(--space-2); }
+  .mobile-navigation { display: block; justify-self: end; color: var(--color-ink); }
+  .mobile-navigation summary { cursor: pointer; padding: var(--space-1); font-size: var(--text-small); min-height: 44px; }
+  .mobile-navigation > div { position: absolute; top: 100%; left: 0; right: 0; padding: var(--space-2); background: var(--color-surface); border: var(--border-strong); box-shadow: var(--shadow); }
+  .mobile-navigation a { display: block; padding: var(--space-1) var(--space-2); min-height: 44px; text-decoration: none; }
+  .mobile-navigation a:focus-visible, .mobile-navigation a:hover { background: var(--color-surface-raised); }
+}

@@ -137,7 +137,7 @@
 .pricing-card li { color: #aeb2b7; border-color: var(--color-line); }
 .pricing-card li span, .pricing-card.is-accent li span, .pricing-card.is-dark li span { color: #75806f; }
 .pricing-button, .pricing-card.is-accent .pricing-button, .pricing-card.is-dark .pricing-button { min-height: 3.25rem; color: #0a0b0c; background: #dfe1e3; border: 0; border-radius: .65rem; font-size: .8125rem; }
-.pricing-button:hover, .pricing-button:focus-visible { color: #0a0b0c; background: var(--color-action); outline: none; }
+.pricing-button:hover, .pricing-button:focus-visible { color: #0a0b0c; background: var(--color-action); }
 
 .pricing-principles { color: var(--color-ink); background: #0d0f11; border-block: var(--border); }
 .pricing-principles h2 { color: #e7e6e2; font-weight: 400; }

@@ -8,7 +8,7 @@ Use schema v2 in [project-context.md](project-context.md). Register A/B/C with t
 node <skill-root>/scripts/build-preview.mjs variant-output
 ```
 
-This writes `_compare.html`. HTML entries load directly; React entries get separate `_preview/A.html`, B.html, C.html documents and React mounts, isolating global styles between variants. The comparison page is read-only; selection, iteration, undo, and export commands run in the agent chat. Refresh the builder after edits/undo/selection so cards and revision numbers stay current.
+This writes `_compare.html`. HTML entries load directly; React entries get separate `_preview/A.html`, B.html, C.html documents and React mounts, isolating global styles between variants. The comparison page is read-only; selection, iteration, undo, and export commands run in the agent chat. Refresh the builder after edits/undo/selection so cards and revision numbers stay current. Set `language: "zh"` for Chinese comparison labels and `preview: {colorScheme: "dark"}` for a dark comparison shell. Desktop/mobile controls render each iframe at the same 1200px/390px viewport, scaled to fit, so three narrow columns do not accidentally compare only mobile layouts.
 
 ## React preview
 
@@ -44,6 +44,8 @@ node <skill-root>/scripts/variant-history.mjs select variant-output B
 
 Apply validates unique ownership, snapshots all B files and B metadata, verifies snapshot persistence, then replaces the files and updates context. It rejects changes outside exact zone markers for scoped actions. CSS overrides must stay in the marked zone; a local edit cannot alter shared root tokens. Keep the owned file set stable during one apply. To introduce a new owned file, explicitly register it with its initial content before the next transaction.
 
+For configuration-driven React pages, `/* zone:hero:start */` / `/* zone:hero:end */` also delimit a standard JS/TS configuration block. Keep shared components read-only during that local edit and compare the rendered non-target sections; preserving wrapper bytes alone cannot prove rendered scope.
+
 The helper checks token metadata under a DS lock; it cannot prove that arbitrary CSS/JS obeys those tokens. Also compare the rendered fonts and token usage against `design-system.css`. Undo restores files, tokens, and comparison together; version numbers advance to record the undo event. It does not change A/C or the selected winner. Saved snapshots are retained even after undo. Do not claim history exists until it has been written.
 
 ## Verification and export
@@ -59,3 +61,9 @@ Run `node --test scripts/variant-loop.test.mjs` for file/metadata and static sca
 Fixture tests verify the mechanics, not the quality of future generated designs. Run the same task-specific browser checks on the actual delivered output. If browser tooling is unavailable, list those checks as unverified.
 
 Export the explicitly named variant or selected winner from its current revision and tokens. Preserve source files/history. Include framework integration files, dependencies, and a short record of checks performed. Re-run the appropriate typecheck and open the exported artifact before reporting completion.
+
+## Integration checkpoint learned from the landing page
+
+Run the target project's production build after integrating the named export. With Vite multiple HTML entries, register the comparison and A/B/C entries in `build.rollupOptions.input`; a working dev URL does not mean the preview survives a production build. Open the built application and every preview route and verify real controls, not just HTTP 200 (an SPA fallback can return the wrong page with 200).
+
+The repository's `website/` is a runnable dogfood project. `npm run export:landing -- B` exports the named hero configuration into its real React entrypoint, backs up the previous integration, and leaves the user's winner selection untouched. The three wrappers keep the complete site functional while sharing the locked brand system. See `website/iteration-log.md` for observed evidence and limitations.

@@ -6,9 +6,12 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit -p tsconfig.app.json && vite build",
-    "test": "node --test server/*.test.mjs",
+    "test": "node --test server/*.test.mjs scripts/*.test.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "start": "node server.mjs"
+    "start": "node server.mjs",
+    "predev": "node ../scripts/build-preview.mjs variant-output",
+    "prebuild": "node ../scripts/build-preview.mjs variant-output",
+    "export:landing": "node scripts/export-landing.mjs"
   },
   "dependencies": {
     "border-beam": "^1.4.1",
