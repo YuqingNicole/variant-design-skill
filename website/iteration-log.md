@@ -48,3 +48,11 @@ No provider credentials were configured in this run. The built-in variants were 
 The built-in site variants use the same required features and content below the hero. Their generation is a real repository artifact, not evidence that every future prompt will produce a good result. The unrelated online workspace's richer per-direction persistence still needs a dedicated product pass before claiming a fully self-service browser loop.
 
 Next: run one provider-backed brief when the service is configured, inspect actual generated behavior, and address independent online-workspace histories and durable recovery using that evidence. Keep the existing A/B/C case as a regression project.
+
+## 2026-10-06 — Guided real-project demo
+
+The homepage now puts the built-in real case before the optional model-backed generator. Three live, scaled previews share one brief; each explains its optimization, tradeoff and audience. Viewing A/B/C updates scoped agent prompts without selecting a winner. The four handoff steps cover full-directory installation/generation, hero-only edits with snapshots, undo, and backed-up integration. Read-only textareas remain usable if clipboard access fails. The completed PR #10 is linked as historical evidence, not a live execution status.
+
+Preview wrappers omit the guided section to prevent recursive frames. An explicit preview language follows the parent without overwriting the homepage's saved language. Existing fonts and color tokens remain unchanged.
+
+Validation: TypeScript/Vite build, four Node website tests, and four production Playwright tests passed (local Chrome channel; the default cached Playwright binary was absent). Ego-browser inspection confirmed real 1200px preview frames, no nested demo sections, and no overflow at 390px; desktop/mobile screenshots reviewed. No live model call or installation was performed by the demo buttons.
