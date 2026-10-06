@@ -14,8 +14,8 @@ const compareUrl = "/variant-output/_compare.html";
 const installCommand = "git clone https://github.com/YuqingNicole/variant-design-skill.git ~/.codex/skills/variant-design";
 export { installCommand };
 
-export function LandingIntroduction({ config, language, onInstall, copied }: {
-  config: LandingHeroConfig; language: Language; onInstall: () => void; copied: boolean;
+export function LandingIntroduction({ config, language, onInstall, copied, guided = false }: {
+  config: LandingHeroConfig; language: Language; onInstall: () => void; copied: boolean; guided?: boolean;
 }) {
   const zh = language === "zh";
   const options = zh
@@ -29,7 +29,7 @@ export function LandingIntroduction({ config, language, onInstall, copied }: {
       <div className="hero-actions">
         {config.primary === "install"
           ? <button className="button button-primary" onClick={onInstall}>{copied ? (zh ? "安装命令已复制" : "Install command copied") : config.label[language]}<span aria-hidden="true">↗</span></button>
-          : <a className="button button-primary" href={compareUrl}>{config.label[language]}<span aria-hidden="true">→</span></a>}
+          : <a className="button button-primary" href={guided ? "#guided-demo" : compareUrl}>{guided ? (zh ? "看三版，跟着试一次" : "Explore the three directions") : config.label[language]}<span aria-hidden="true">→</span></a>}
         <a className="text-link" href={config.primary === "install" ? compareUrl : "#install"}>{zh ? (config.primary === "install" ? "先看看三版" : "安装到我的项目") : (config.primary === "install" ? "See the three versions" : "Install in my project")}</a>
       </div>
       <p className="hero-context">{config.note[language]}</p>

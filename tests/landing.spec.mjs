@@ -48,3 +48,36 @@ test('integrated B keeps a mobile action, navigation, brief on language change, 
   await expect(page.getByRole('button', { name: 'Switch to Chinese' })).toBeFocused();
   await expect(page.getByRole('button', { name: 'Switch to Chinese' })).toHaveCSS('outline-style', 'solid');
 });
+
+test('guided case previews real variants and hands off scoped, reversible prompts without selecting a winner', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/');
+  await page.locator('.hero-actions a').first().click();
+  await expect(page).toHaveURL(/#guided-demo$/);
+  await expect(page.locator('.demo-card')).toHaveCount(3);
+  for (const id of ['A', 'B', 'C']) {
+    const frame = page.frameLocator(`.demo-preview iframe[title^="${id} "]`);
+    await expect(frame.locator('main')).toHaveAttribute('data-landing-direction', id);
+    await expect(frame.locator('#guided-demo')).toHaveCount(0);
+  }
+  await page.getByRole('button', { name: '用 C 继续演示' }).click();
+  await expect(page.getByRole('button', { name: '正在查看 C' })).toHaveAttribute('aria-pressed', 'true');
+  await page.locator('.demo-steps details').nth(1).locator('summary').click();
+  const edit = page.locator('.demo-steps details').nth(1);
+  await expect(edit.locator('textarea')).toHaveValue(/正在试改 C，不是最终选定/);
+  await edit.getByRole('button', { name: '复制指令' }).click();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('只修改 C 的 hero');
+  await expect(page.locator('.demo-notice')).toContainText('粘贴到项目');
+  await page.getByRole('button', { name: '切换到英文' }).click();
+  await expect(page.locator('.demo-steps details').nth(1).locator('textarea')).toHaveValue(/Try a local edit of C/);
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test('guided prompts remain available when clipboard access fails', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.reject(new Error('denied')) } }));
+  await page.goto('/#guided-demo');
+  await page.locator('.demo-steps details').first().getByRole('button', { name: '复制指令' }).click();
+  await expect(page.locator('.demo-notice')).toContainText('文本框');
+  await expect(page.getByRole('textbox', { name: '第 1 步指令' })).toBeVisible();
+});

@@ -7,6 +7,7 @@ import { communityPalettes, paletteSourceUrl, type PaletteId } from "./community
 import { buildRealDirection, generateRealDirections, iterateRealDirection } from "./ai-client";
 import { actionLabel, createWorkspaceVersion, exportDirectionHtml, type WorkspaceAction, type WorkspaceVersion } from "./workspace-engine";
 import { LandingIntroduction, installCommand, type LandingHeroConfig } from "./LandingIntroduction";
+import { GuidedDemo } from "./GuidedDemo";
 import { landingHero } from "./landing-config";
 
 const repositoryUrl = "https://github.com/YuqingNicole/variant-design-skill";
@@ -94,8 +95,10 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
-export default function App({ hero = landingHero }: { hero?: LandingHeroConfig }) {
-  const [language, setLanguage] = useState<Language>(() => window.localStorage.getItem("variant-language") === "en" ? "en" : "zh");
+export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }) {
+  const hero = suppliedHero ?? landingHero;
+  const isVariantPreview = Boolean(suppliedHero);
+  const [language, setLanguage] = useState<Language>(() => (new URLSearchParams(window.location.search).get("language") ?? window.localStorage.getItem("variant-language")) === "en" ? "en" : "zh");
   const t = copy[language];
   const [selectedPaletteId, setSelectedPaletteId] = useState<PaletteId | undefined>(() => {
     const stored = window.localStorage.getItem("variant-palette");
@@ -124,8 +127,8 @@ export default function App({ hero = landingHero }: { hero?: LandingHeroConfig }
     document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
     document.title = t.pageTitle;
     document.querySelector('meta[name="description"]')?.setAttribute("content", t.pageDescription);
-    window.localStorage.setItem("variant-language", language);
-  }, [language, t.pageDescription, t.pageTitle]);
+    if (!isVariantPreview) window.localStorage.setItem("variant-language", language);
+  }, [language, t.pageDescription, t.pageTitle, isVariantPreview]);
   useEffect(() => {
     window.localStorage.setItem(workspaceStorageKey, JSON.stringify(workspaceHistory.slice(0, 12)));
   }, [workspaceHistory]);
@@ -253,7 +256,10 @@ export default function App({ hero = landingHero }: { hero?: LandingHeroConfig }
         </nav>
 
         <div className={`hero-grid shell hero-layout-${hero.layout}`} data-zone="hero">
-          <LandingIntroduction config={hero} language={language} onInstall={copyInstall} copied={copied} />
+          <LandingIntroduction config={hero} language={language} onInstall={copyInstall} copied={copied} guided={!isVariantPreview} />
+        </div>
+        {!isVariantPreview && <GuidedDemo language={language} />}
+        <div className="shell">
           <div className="workbench" id="generator" aria-label={t.workbenchLabel}>
             <div className="workbench-tape">{t.liveProof}</div>
             <div className="workbench-head"><span>{t.run}</span><span className="run-state"><i className={isGenerating ? "is-live" : ""} /> {isGenerating ? t.diverging : t.ready}</span></div>

@@ -55,3 +55,7 @@ For latency-sensitive Claude gateways, a practical starting point is Haiku for s
 Anthropic-compatible gateways can be connected by setting `ANTHROPIC_BASE_URL`; the server appends `/v1/messages`. For gateways with a non-standard route, `ANTHROPIC_API_URL` can instead specify the complete Messages endpoint. The official Anthropic base URL remains the default.
 
 Upstream requests time out after 120 seconds by default and retry once for transient network, rate-limit, or 5xx failures. Override the timeout with `MODEL_TIMEOUT_MS`.
+
+### Guided homepage case
+
+Open `/#guided-demo` to inspect the three real site directions, compare tradeoffs, and copy prompts for installation/generation, scoped editing, undo, and integration into your project. The selected viewing card only changes the prompts; it does not select a final winner or execute file operations. Follow these prompts in an agent chat with your project open. The optional online generator remains separate and requires a configured model provider.
