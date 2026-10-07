@@ -141,3 +141,23 @@ test('canvas homepage opens real directions and preserves the guided handoff acr
  await expect(page.locator('.cap-edit-region h4')).toHaveText(original);
  await expect(page.locator('.canvas-sidebar button').nth(2)).toHaveAttribute('aria-pressed','true');
  });
+
+test('expressive homepage gallery opens distinct complete directions with working calls to action', async ({page}) => {
+ await page.goto('/');
+ for(const id of ['A','B','C']) {
+  const frame=page.frameLocator(`.demo-preview iframe[title^="${id} "]`);
+  await expect(frame.locator('main')).toHaveAttribute('data-expressive-direction',id);
+  const link=page.locator('.demo-preview-link').nth(['A','B','C'].indexOf(id));
+  await expect(link).toHaveAttribute('href',`/directions?direction=${id}&language=zh`);
+ }
+ for(const id of ['A','B','C']) {
+  await page.goto(`/directions?direction=${id}&language=en`);
+  await expect(page.locator('h1')).toBeVisible();
+  for(const width of [390,577,1200]) {
+   await page.setViewportSize({width,height:853});
+   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  }
+  await page.locator('.ex-cta').click();
+  await expect(page).toHaveURL(/#guided-demo$/);
+ }
+});

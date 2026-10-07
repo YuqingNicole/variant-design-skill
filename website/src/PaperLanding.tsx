@@ -49,7 +49,7 @@ export function PaperLanding() {
       <header className="section-heading"><p className="paper-kicker">FROM OPTIONS TO YOUR PROJECT</p><h2>{zh ? <>让每一次选择，<br/><span>都有继续生长的空间。</span></> : <>Room to explore.<br/><span>A path to ship.</span></>}</h2><p>{zh ? '设计不止是第一张好看的图。保留选择的理由，也保留重新选择的余地。' : 'Keep the reasoning behind a design—and the room to change your mind.'}</p></header>
       <CapabilityStudies language={language}/>
     </section>
-    <GuidedDemo language={language}/>
+    <GuidedDemo language={language} expressive/>
     <section className="paper-closing paper-shell"><p className="paper-kicker">YOUR NEXT GOOD IDEA</p><h2>{zh ? '让第一稿，成为起点。' : 'Make the first draft a beginning.'}</h2><a className="paper-button" href="#guided-demo">{zh ? '开始我的三版设计' : 'Explore my three directions'} ↗</a><p>{zh ? '开源技能 · 在你的代码项目里运行' : 'Open-source skill · Runs in your code project'}</p></section>
     <footer className="paper-footer paper-shell"><span>variant design / Yuqing Nicole</span><div><a href={repo} target="_blank" rel="noreferrer">GitHub ↗</a><a href="/workbench">{zh ? '在线实验室' : 'Online lab'}</a><a href="/pricing">{zh ? '价格' : 'Pricing'}</a></div></footer>
   </main>;

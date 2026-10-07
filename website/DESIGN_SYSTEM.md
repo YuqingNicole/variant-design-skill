@@ -32,3 +32,9 @@ The `/` route uses `PaperLanding` and scoped `paper-landing.css`. The structure 
 The primary canvas now renders an original Forma growth dashboard study at `/showcase?direction=A&language=zh`. A prioritizes anomalies, B compares channels, and C allows inspecting individual channel records. Shared sample metrics and tokens make the layout tradeoffs visible. The study is explicitly labeled as sample data, separate from the historical project evidence in GuidedDemo.
 
 Workflow artwork uses rendered dashboard compositions and an interactive headline edit/undo example. Its state is local to the illustration; it does not claim to execute project snapshots or select a final variant. Preserve the original headline and metric region on undo. All artwork is local HTML/CSS/SVG with no external image dependencies.
+
+### Expressive conversion gallery
+
+Homepage GuidedDemo uses three original OFFSCRIPT studio studies at `/directions?direction=A|B|C&language=zh|en`. This is explicitly free visual exploration: A uses cream editorial typography and orange sculptural material; B uses acid yellow, cobalt and oversized poster typography; C uses a dark violet digital composition with a metallic orbital form. Each preserves portfolio content and working project/pricing links. The workbench continues to show the historical brand-locked case.
+
+Thumbnails render the actual pages. Concepts are not presented as client work. The handoff prompt uses the viewed direction as inspiration, checks existing brand constraints, and generates project variants before editing or undoing them. The old verified integration case is clearly described as a separate project.
