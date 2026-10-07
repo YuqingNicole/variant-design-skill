@@ -40,6 +40,10 @@ class PackageTests(unittest.TestCase):
             (output/'.variant-context.json').write_text(json.dumps(state))
             subprocess.run(['node', str(skill/'scripts/build-preview.mjs'), str(output)], cwd=root, check=True, capture_output=True)
             self.assertTrue((output/'_compare.html').exists())
+            evidence = subprocess.run(['node',str(skill/'scripts/artifact-verification.mjs'),'run',str(output),'B'],cwd=root,capture_output=True,text=True)
+            self.assertEqual(evidence.returncode, 2)
+            self.assertEqual(json.loads(evidence.stdout)['status'], 'unverified')
+
             candidate = root/'candidate'
             subprocess.run(['node',str(skill/'scripts/variant-history.mjs'),'prepare',str(output),'B',str(candidate)],cwd=root,check=True,capture_output=True)
             (candidate/'variant-B.html').write_text((output/'variant-B.html').read_text().replace('<h1>B</h1>', '<h1>Better B</h1>'))

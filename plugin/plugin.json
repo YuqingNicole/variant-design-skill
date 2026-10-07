@@ -1,6 +1,6 @@
 {
   "name": "variant-design",
-  "version": "1.1.0-rc.2",
+  "version": "1.1.0-rc.3",
   "description": "Explore three deliberate interface directions in your code project, compare tradeoffs, refine a scoped region with snapshots, and integrate the chosen output. Uses your existing Codex tools and project stack.",
   "author": {"name": "Yuqing Nicole", "url": "https://github.com/YuqingNicole"},
   "homepage": "https://github.com/YuqingNicole/variant-design-skill",

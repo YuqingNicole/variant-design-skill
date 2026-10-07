@@ -88,3 +88,9 @@ test("a failed page receives one focused repair pass", async (t) => {
   assert.equal(repairedA, true);
   assert.equal(auditGeneratedHtml(result.direction.html, "en").passed, true);
 });
+
+test('shared focus diagnostics reject suppressed focus and report runtime as unverified',()=>{
+ const bad=validHtml('A').replace('outline:3px solid currentColor','outline:none');
+ const audit=auditGeneratedHtml(bad);assert.equal(audit.passed,false);assert.ok(audit.findings.some(f=>f.rule==='focus-visible-suppressed'));
+ assert.equal(audit.scope,'static-only');assert.equal(audit.runtime.status,'unverified');assert.equal('score' in audit,false);
+});

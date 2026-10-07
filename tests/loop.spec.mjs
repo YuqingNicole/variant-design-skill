@@ -43,3 +43,27 @@ test('actual coffee example settles counters immediately and stops frames on pre
   expect(await page.evaluate(()=>window.frameCalls)).toBeGreaterThan(0);
   await page.emulateMedia({reducedMotion:'reduce'});await page.waitForTimeout(50);const calls=await page.evaluate(()=>window.frameCalls);await page.waitForTimeout(150);expect(await page.evaluate(()=>window.frameCalls)).toBe(calls);expect(await finalValues()).toBe(true);
 });
+
+test('artifact evidence records computed font and focus, then detects implementation drift',async({page,browser})=>{
+ const {verifyArtifact,inspectVerification}=await import('../scripts/artifact-verification.mjs');
+ const file=path.join(root,'VariantB.tsx'),original=fs.readFileSync(file,'utf8');
+ let expectedFixtureFont='Georgia';
+ const observe=async()=>{
+  await page.goto(`${base}/_preview/B.html`);
+  // Wait for the dev server to serve the changed fixture, not its prior transform.
+  await expect(page.locator('main')).toHaveCSS('font-family',expectedFixtureFont);
+  const font=await page.locator('main').evaluate(el=>getComputedStyle(el).fontFamily);
+  await page.keyboard.press('Tab');
+  const outline=await page.getByRole('button').evaluate(el=>{const css=getComputedStyle(el);return {style:css.outlineStyle,width:parseFloat(css.outlineWidth)};});
+  const tool={name:'Chromium via Playwright',version:browser.version()},environment={url:`${base}/_preview/B.html`,viewport:page.viewportSize()};
+  return [{id:'brand',status:font==='Georgia'?'passed':'failed',reason:'Compare main computed font with locked Georgia',tool,environment,evidence:[font]},
+   {id:'keyboard-focus',status:outline.style!=='none'&&outline.width>0?'passed':'failed',reason:'Tab to the fixture button and measure its outline; this fixture has no alternative indicator',tool,environment,evidence:[JSON.stringify(outline)]}];
+ };
+ try{
+  const good=await verifyArtifact(root,'B',{},observe);expect(good.report.checks.find(c=>c.id==='brand').status).toBe('passed');expect(good.status).toBe('unverified');
+  fs.writeFileSync(file,original.replace("fontFamily:'Georgia'","fontFamily:'Arial'").replace('<button onClick',"<button style={{outline:'none'}} onClick"));
+  expect(inspectVerification(root,good.file).status).toBe('stale');
+  expectedFixtureFont='Arial';
+  const bad=await verifyArtifact(root,'B',{},observe);expect(bad.status).toBe('failed');expect(bad.report.checks.filter(c=>c.status==='failed').map(c=>c.id)).toEqual(['brand','keyboard-focus']);
+ }finally{fs.writeFileSync(file,original);}
+});

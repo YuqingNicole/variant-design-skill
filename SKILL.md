@@ -145,3 +145,7 @@ Then load only the design-system references needed for the task:
 - Generated UI includes meaningful content and relevant loading, empty, error, and success behavior.
 - Accessibility, reduced motion, keyboard use, and visible focus are baseline requirements.
 - Report what was verified and what remains an assumption.
+
+## Version-bound verification
+
+For checks on generated artifacts, follow `references/artifact-verification.md`. Record evidence against the actual revision and recheck it before delivery; changes invalidate prior results. Static-only checks do not establish runtime correctness.

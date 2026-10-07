@@ -14,3 +14,6 @@ website/variant-output/_preview/
 website/variant-output/.exports/
 
 __pycache__/
+
+# Local verification reports may contain project diagnostics
+**/.verification/
