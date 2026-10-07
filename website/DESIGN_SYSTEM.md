@@ -44,3 +44,7 @@ Thumbnails render the actual pages. Concepts are not presented as client work. T
 `SiteChrome.tsx` and `site-system.css` define the shared wordmark, navigation, footer and light product tokens for `/`, `/pricing` and `/workbench`. Pricing uses a single stylesheet rather than layered legacy themes: paper backgrounds, sans-serif headings, sage plan emphasis, 4–6px radii, thin borders and dark primary buttons. Language persists between routes. Free-plan CTAs lead to the guided installation section.
 
 Workbench theme changes are scoped to `.site-workbench`; historical variant previews and expressive concept pages retain their intentionally distinct visual systems. Future product routes should use the shared shell instead of copying navigation markup.
+
+### Brand mark
+
+The shared product logo uses three fanned artboards: pale sage, mid sage and dark forest green. The rightmost board has a small paper-colored detail. `public/variant-mark.svg` is the navigation/footer source, with the same geometry in `public/favicon.svg`. Keep the 48×48 viewBox, empty alt text inside the named home link, and at least 32px display size in the mobile header. Concept-study brands remain independent.
