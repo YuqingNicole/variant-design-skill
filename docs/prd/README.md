@@ -1,14 +1,41 @@
-# 产品内核打磨 · PRD 与跟进清单
+# 产品交付与内核打磨 · PRD 跟进清单
 
 更新日期：2026-10-07。审查基线：master `08d8623`。
 
-本轮完成需求定义和跟踪建档，四项功能均未实现。GitHub Issue 是执行状态与验收证据的记录入口；本目录保存需求基线。范围变动需同时更新 PRD 和对应 Issue，并说明原因。
+已记录购买后旅程及四项内核需求，功能均待实现；需求建档不等于能力已上线。GitHub Issue 是执行状态与验收证据的记录入口；本目录保存需求基线。范围变动需同时更新 PRD 和对应 Issue，并说明原因。
 
-## 执行顺序
+## 购买后旅程与发布门槛
+
+| 次序 | PRD | 跟踪 | 依赖/作用 | 状态 |
+|---|---|---|---|---|
+| 1 | [付费产品定义与完整旅程](000-paid-product-journey.md) | [#22](https://github.com/YuqingNicole/variant-design-skill/issues/22) | 定义交付物、付费增量与商业门槛 | 待实现 |
+| 2 | [购买、权益确认与领取](005-purchase-entitlement.md) | [#23](https://github.com/YuqingNicole/variant-design-skill/issues/23) | 基于 000；未定商业字段阻断真实收费 | 待实现 |
+| 3 | [发行包分发与安装验证](006-distribution-installation.md) | [#24](https://github.com/YuqingNicole/variant-design-skill/issues/24) | 基于 000；测试权益可先验证，正式分发接 005 | 待实现 |
+| 4 | [首次项目交付引导](007-first-project-delivery.md) | [#25](https://github.com/YuqingNicole/variant-design-skill/issues/25) | 基于 006、001、002、003 | 待实现 |
+| 5 | [更新、回退与支持](008-updates-support.md) | [#26](https://github.com/YuqingNicole/variant-design-skill/issues/26) | 基于 005、006；正式销售前完成 | 待实现 |
+
+### 推进阶段
+
+1. **定交付**：以 PRD-000 建立商品与公开版差异清单；为每项 Pro 承诺准备实际资产和演示。
+2. **证明安装与内核**：先验证 PRD-006 的真实安装可行性，并按 001 → 002 → 003 修正真实项目流程。支付测试路径可并行准备，禁止先收费后验证分发。
+3. **串联测试购买**：用 005 的测试订单连接 006 安装、007 首次交付和 008 更新支持。
+4. **封闭验收**：未参与开发的试用者完成 HTML/Vite 两条旅程，修复求助点。
+5. **开放销售门槛**：付费增量、商业条款、安装渠道、升级/支持和交付验收全部有证据，再单独执行真实开售。004 在线工作台可后置，不作为购买后的必经入口。
+
+### 开售前待定决策
+
+- [ ] Pro 相对公开版的资产/适配/更新支持增量已存在且可展示。
+- [ ] 价格、币种、更新期限长度与支持范围已决定。
+- [ ] 收款主体、支付与身份供应商、退款/争议及旧版本保留政策已决定。
+- [ ] 实际平台安装与商业分发路径已验证；未假设平台支持付费目录或激活码。
+- [ ] 不包含模型调用额度等前提已在付款前展示。
+- [ ] 上述五项 PRD 的发布必需验收完成；未通过时保持测试/封闭试用状态。
+
+## 内核执行顺序
 
 | 顺序 | 优先级 | PRD | 跟踪 | 状态 | 前置依赖 |
 |---|---|---|---|---|---|
-| 1 | P0 | [PRD-001 · 候选稿基准与修改冲突保护](001-revision-conflicts.md) | [#17](https://github.com/YuqingNicole/variant-design-skill/issues/17) | 待实现 | 无；首先实施 |
+| 1 | P0 | [PRD-001 · 候选稿基准与修改冲突保护](001-revision-conflicts.md) | [#17](https://github.com/YuqingNicole/variant-design-skill/issues/17) | 待实现 | 无；首个内核实现项 |
 | 2 | P1 | [PRD-002 · 与产物版本绑定的验证证据](002-artifact-verification.md) | [#18](https://github.com/YuqingNicole/variant-design-skill/issues/18) | 待实现 | PRD-001 |
 | 3 | P1 | [PRD-003 · 可追踪的项目预览、接入与回滚](003-project-integration.md) | [#19](https://github.com/YuqingNicole/variant-design-skill/issues/19) | 待实现 | PRD-001、PRD-002 |
 | 4 | P2 | [PRD-004 · 工作台异步状态与持久化一致性](004-workbench-lifecycle.md) | [#20](https://github.com/YuqingNicole/variant-design-skill/issues/20) | 待实现 | 按产品优先级后置；实现可独立 |
@@ -22,7 +49,7 @@
 5. PRD-002 与 PRD-003 的前置工作未完成时，可准备测试与项目样本，但不能声称依赖已经满足。
 6. 不绑定虚构工期。按依赖与实际验证结果推进；遇到范围变化，保留决策记录。
 
-## 首个执行入口
+## 内核执行入口
 
 先处理 PRD-001：旧候选稿覆盖同一区域新编辑的负向用例 → 基准记录与提交前冲突检查 → 正常 apply/undo 回归 → 安装包内运行验证。
 
@@ -46,4 +73,4 @@
 
 ## 范围控制
 
-本批不包含微服务拆分、数据库、自动部署、官网视觉改版、插件公开发布或所有框架支持。下一次实现从第一项开始，无需重新做一轮总体架构审查。
+本轮仅补需求与跟踪，不实施真实收费、提交市场审核或公开发布。内核工作不包含微服务拆分、自动部署、官网视觉改版或所有框架支持；购买权益的最小持久化需求由 PRD-005 单独评估。
