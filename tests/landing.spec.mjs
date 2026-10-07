@@ -81,3 +81,23 @@ test('guided prompts remain available when clipboard access fails', async ({ pag
   await expect(page.locator('.demo-notice')).toContainText('文本框');
   await expect(page.getByRole('textbox', { name: '第 1 步指令' })).toBeVisible();
 });
+
+test('direction artwork switches accessibly and reduced motion cancels active entrances', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.direction-stage')).toBeVisible();
+  await page.locator('.stage-controls button').first().click();
+  await expect(page.locator('.stage-controls button').first()).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.sheet-A')).toHaveClass(/sheet-active/);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => page.evaluate(() => document.getAnimations().filter(a => a.playState === 'running').length)).toBe(0);
+  await expect(page.locator('.sheet-A')).toHaveCSS('transition-duration', '0s');
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  for (const width of [320, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    const bounds = await page.locator('.direction-sheet').evaluateAll(items => items.map(el => { const r=el.getBoundingClientRect(); return {left:r.left,right:r.right}; }));
+    expect(bounds.every(r => r.left >= 0 && r.right <= width)).toBe(true);
+  }
+  await page.locator('.sheet-A').click();
+  await expect(page.locator('main')).toHaveAttribute('data-landing-direction', 'A');
+});

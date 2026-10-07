@@ -49,3 +49,14 @@
   .mobile-navigation a { display: block; padding: var(--space-1) var(--space-2); min-height: 44px; text-decoration: none; }
   .mobile-navigation a:focus-visible, .mobile-navigation a:hover { background: var(--color-surface-raised); }
 }
+/* A quiet studio surface: color lives in the direction studies. */
+.hero-grid:has(.direction-stage) { padding-block: 4.5rem 4rem; gap: 4rem; }
+.hero-grid:has(.direction-stage) .hero-kicker { letter-spacing: .14em; }
+.hero-grid:has(.direction-stage) h1 em { color: #c3ccb9; }
+.hero-grid:has(.direction-stage) .hero-context::before { content: ""; display: inline-block; width: 5px; height: 5px; margin-right: .6rem; border-radius: 50%; background: #c3ccb9; vertical-align: middle; }
+.hero-actions .button span { display: inline-block; transition: transform 180ms ease; }
+.hero-actions .button:hover span { transform: translateX(4px); }
+.demo-card { transition: border-color 220ms, box-shadow 220ms; }
+.demo-card:hover { border-color: #ffffff66; box-shadow: 0 12px 30px #0003; }
+@media(max-width:800px) { .hero-grid:has(.direction-stage) { padding-block: 2.5rem 3rem; gap: 3rem; }.direction-stage { max-width: 490px; margin-inline: auto; } }
+@media(prefers-reduced-motion:reduce) { .hero-actions .button span,.demo-card { transition: none; } }

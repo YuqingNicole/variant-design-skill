@@ -11,3 +11,7 @@ The implementation in `src/design-system.css` is the token source of truth. The 
 - Motion communicates state and respects reduced motion. Keyboard focus remains visible.
 
 `variant-output/VariantA.tsx`, B, and C own their hero configurations. Shared `App.tsx` and `LandingIntroduction.tsx` provide the same working site. Local hero edits use the history helper; `npm run export:landing -- B` copies the current B configuration into `src/landing-config.ts` with a backup.
+
+### Homepage direction studies
+
+The guided homepage uses paper, sage and terracotta as illustration colors for three interactive direction studies, with a sage headline accent. Core UI tokens and the historical A/B/C previews remain unchanged. Cards link to the actual previews and are labelled as illustrations. Motion is limited to user-triggered card rearrangement, action feedback and one-shot section entrances. Reduced-motion disables card transitions and cancels active Web Animations; no continuous animation loop is used.

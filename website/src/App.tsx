@@ -8,6 +8,7 @@ import { buildRealDirection, generateRealDirections, iterateRealDirection } from
 import { actionLabel, createWorkspaceVersion, exportDirectionHtml, type WorkspaceAction, type WorkspaceVersion } from "./workspace-engine";
 import { LandingIntroduction, installCommand, type LandingHeroConfig } from "./LandingIntroduction";
 import { GuidedDemo } from "./GuidedDemo";
+import { useLandingMotion } from "./useLandingMotion";
 import { landingHero } from "./landing-config";
 
 const repositoryUrl = "https://github.com/YuqingNicole/variant-design-skill";
@@ -98,6 +99,7 @@ function usePrefersReducedMotion() {
 export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }) {
   const hero = suppliedHero ?? landingHero;
   const isVariantPreview = Boolean(suppliedHero);
+  useLandingMotion(!isVariantPreview);
   const [language, setLanguage] = useState<Language>(() => (new URLSearchParams(window.location.search).get("language") ?? window.localStorage.getItem("variant-language")) === "en" ? "en" : "zh");
   const t = copy[language];
   const [selectedPaletteId, setSelectedPaletteId] = useState<PaletteId | undefined>(() => {
