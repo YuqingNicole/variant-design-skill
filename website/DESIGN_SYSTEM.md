@@ -26,3 +26,9 @@ The `/` route uses `PaperLanding` and scoped `paper-landing.css`. The structure 
 - Product proof: live A/B/C iframe previews at 1200px internal width, scaled to their container; direction viewing remains distinct from final selection. All simulated workflow diagrams are decorative, not execution status.
 - Responsive: direction rail becomes a horizontal selector; feature columns stack; complete previews remain available through links.
 - Existing online generation and exploratory dark design are accessible at `/workbench`. Historical A/B/C output retains its original brand and rendering.
+
+### Capability illustrations
+
+The primary canvas now renders an original Forma growth dashboard study at `/showcase?direction=A&language=zh`. A prioritizes anomalies, B compares channels, and C allows inspecting individual channel records. Shared sample metrics and tokens make the layout tradeoffs visible. The study is explicitly labeled as sample data, separate from the historical project evidence in GuidedDemo.
+
+Workflow artwork uses rendered dashboard compositions and an interactive headline edit/undo example. Its state is local to the illustration; it does not claim to execute project snapshots or select a final variant. Preserve the original headline and metric region on undo. All artwork is local HTML/CSS/SVG with no external image dependencies.

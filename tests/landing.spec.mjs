@@ -107,7 +107,7 @@ test('canvas homepage opens real directions and preserves the guided handoff acr
   await page.goto('/');
   await expect(page.locator('h1')).toContainText('从看见可能开始');
   await page.locator('.canvas-sidebar button').first().click();
-  await expect(page.frameLocator('.paper-preview iframe').locator('main')).toHaveAttribute('data-landing-direction','A');
+  await expect(page.frameLocator('.paper-preview iframe').locator('[data-showcase-direction]')).toHaveAttribute('data-showcase-direction','A');
   await page.getByRole('button',{name:'切换到英文'}).click();
   await expect(page.locator('h1')).toContainText('More possibilities.');
   await expect(page.frameLocator('.paper-preview iframe').locator('html')).toHaveAttribute('lang','en');
@@ -121,3 +121,23 @@ test('canvas homepage opens real directions and preserves the guided handoff acr
   await page.locator('.paper-footer a[href="/workbench"]').click();
   await expect(page.locator('#generator')).toBeVisible();
 });
+
+ test('capability studies preserve data across directions and undo only the example title', async ({page}) => {
+ await page.goto('/');
+ const frame=page.frameLocator('.paper-preview iframe');
+ for(const [i,id] of ['A','B','C'].entries()){
+ await page.locator('.canvas-sidebar button').nth(i).click();
+ await expect(frame.locator('[data-showcase-direction]')).toHaveAttribute('data-showcase-direction',id);
+ await expect(frame.locator('.cap-stats')).toContainText('$42,340');
+ }
+ await frame.getByRole('button',{name:/Organic search/}).click();
+ await expect(frame.locator('.cap-inspector h3')).toHaveText('Organic search');
+ const original=await page.locator('.cap-edit-region h4').textContent();
+ const metrics=await page.locator('.cap-edit-kpis').textContent();
+ await page.getByRole('button',{name:'试改这个标题 ↗'}).click();
+ await expect(page.locator('.cap-edit-region')).toHaveAttribute('data-refined','true');
+ await expect(page.locator('.cap-edit-kpis')).toHaveText(metrics);
+ await page.getByRole('button',{name:'↶ 撤回示例修改'}).click();
+ await expect(page.locator('.cap-edit-region h4')).toHaveText(original);
+ await expect(page.locator('.canvas-sidebar button').nth(2)).toHaveAttribute('aria-pressed','true');
+ });
