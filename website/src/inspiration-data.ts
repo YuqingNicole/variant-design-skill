@@ -16,7 +16,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "notion",
@@ -35,7 +37,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "raycast",
@@ -54,7 +58,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "official-cover",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "cursor",
@@ -73,7 +79,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "v0",
@@ -92,7 +100,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "lovable",
@@ -111,7 +121,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "aesop",
@@ -130,7 +142,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "unavailable",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "teenage",
@@ -149,7 +163,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "nothing",
@@ -168,7 +184,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "unavailable",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "instrument",
@@ -187,7 +205,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "official-cover",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "pentagram",
@@ -206,7 +226,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "official-cover",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "basic",
@@ -225,7 +247,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "official-cover",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "figma",
@@ -244,7 +268,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "official-cover",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "framer",
@@ -263,7 +289,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "wiki",
@@ -282,7 +310,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "obsidian",
@@ -301,7 +331,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "linear-features",
@@ -320,7 +352,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "official-cover",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "asana",
@@ -339,7 +373,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "posthog",
@@ -358,7 +394,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "plausible",
@@ -377,7 +415,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "first-page",
@@ -396,7 +436,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "new-project",
@@ -415,7 +457,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "history",
@@ -434,7 +478,9 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   },
   {
     "id": "export",
@@ -453,6 +499,8 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established"
+    "reuse": "reference-only; no redistribution permission established",
+    "previewKind": "screenshot",
+    "previewDate": "2026-10-07"
   }
 ];

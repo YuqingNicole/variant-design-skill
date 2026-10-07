@@ -244,3 +244,23 @@ test('inspiration references filter, create an original brief and recover from c
  await page.reload();
  await expect(page.locator('html')).toHaveAttribute('lang','en');
 });
+
+test('inspiration previews load locally, link to sources and degrade without broken images', async ({page})=>{
+ await page.goto('/inspiration');
+ await expect(page.locator('.inspiration-moodboard img')).toHaveCount(3);
+ const previews=page.locator('.inspiration-grid .inspiration-preview');
+ await expect(previews).toHaveCount(24);
+ await page.locator('.inspiration-grid img').evaluateAll(images=>images.forEach(img=>img.loading='eager'));
+ await expect.poll(()=>page.locator('.inspiration-grid img').evaluateAll(images=>images.length===22&&images.every(img=>img.complete&&img.naturalWidth>0))).toBe(true);
+ await expect(page.locator('.inspiration-grid .inspiration-image-fallback').first()).toContainText('暂无法取得预览');
+ for(const width of [320,390,1440]){
+  await page.setViewportSize({width,height:900});
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ }
+ await page.emulateMedia({reducedMotion:'reduce'});
+ expect(await page.locator('.inspiration-moodboard a').first().evaluate(el=>parseFloat(getComputedStyle(el).transitionDuration))).toBeLessThan(0.001);
+ await page.route('**/inspiration/linear.webp',route=>route.abort());
+ await page.reload();
+ await expect(page.locator('.inspiration-grid article').first().locator('.inspiration-image-fallback')).toBeVisible();
+ await expect(previews.first()).toHaveAttribute('href','https://linear.app/');
+});
