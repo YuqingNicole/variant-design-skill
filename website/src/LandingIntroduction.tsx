@@ -1,3 +1,4 @@
+import { DirectionStage } from "./DirectionStage";
 import type { Language } from "./direction-engine";
 import "./landing-introduction.css";
 
@@ -34,11 +35,11 @@ export function LandingIntroduction({ config, language, onInstall, copied, guide
       </div>
       <p className="hero-context">{config.note[language]}</p>
     </div>
-    <aside className="landing-evidence" aria-label={zh ? "本站三版" : "Three versions of this site"}>
+    {guided ? <DirectionStage language={language} /> : <aside className="landing-evidence" aria-label={zh ? "本站三版" : "Three versions of this site"}>
       <div className="evidence-heading"><span>{zh ? "真实案例 / 就是这个网站" : "REAL CASE / THIS VERY WEBSITE"}</span><span>01—03</span></div>
       {config.layout === "install" && <div className="hero-install"><p>{zh ? "完整目录安装 · Codex" : "Complete folder install · Codex"}</p><code>{installCommand}</code><button onClick={onInstall}>{copied ? (zh ? "已复制" : "Copied") : (zh ? "复制命令" : "Copy command")}</button><a href="https://github.com/YuqingNicole/variant-design-skill#installation">{zh ? "其他 agent 的安装方式 ↗" : "Install for another agent ↗"}</a></div>}
       <div className="landing-options">{options.map(([id, title, detail]) => <a key={id} href={`/variant-output/_preview/${id}.html`} className={`landing-option ${config.id === id ? "is-current" : ""}`}><b>{id}</b><span><strong>{title}</strong><small>{detail}</small></span><span aria-hidden="true">↗</span></a>)}</div>
       <p className="evidence-footnote">{zh ? "三个完整页面，共用现有品牌和功能。选择是在明确取舍，不是只换颜色。" : "Three complete pages share the existing brand and features. Compare what each direction prioritizes."}</p>
-    </aside>
+    </aside>}
   </>;
 }

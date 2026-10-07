@@ -27,23 +27,22 @@ test('production comparison opens three complete pages with matching brand and t
 test('integrated B keeps a mobile action, navigation, brief on language change, and reduced motion', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/');
+  await page.goto('/workbench');
   await expect(page.locator('main')).toHaveAttribute('data-landing-direction', 'B');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect(await page.locator('.hero-actions a').first().evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThan(844);
   await expect(page.locator('#generator button[type="submit"]')).toBeDisabled();
-  await page.locator('.mobile-navigation summary').click();
-  await page.locator('.mobile-navigation a[href="/pricing"]').click();
+
+  await page.locator('.site-nav a[href="/pricing"]').click();
   await expect(page).toHaveURL(/\/pricing$/);
-  await page.goto('/');
+  await page.goto('/workbench');
   await page.locator('#design-prompt').fill('A landing page for the real Variant Design project');
   await page.getByRole('button', { name: '切换到英文' }).click();
   await expect(page.locator('#design-prompt')).toHaveValue('A landing page for the real Variant Design project');
   await expect(page.locator('h1')).toContainText('Three directions.');
   await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
-  await page.goto('/');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
+  await page.goto('/workbench');
+  await page.locator('.site-nav-links a').last().focus();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Switch to Chinese' })).toBeFocused();
   await expect(page.getByRole('button', { name: 'Switch to Chinese' })).toHaveCSS('outline-style', 'solid');
@@ -51,7 +50,7 @@ test('integrated B keeps a mobile action, navigation, brief on language change, 
 
 test('guided case previews real variants and hands off scoped, reversible prompts without selecting a winner', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-  await page.goto('/');
+  await page.goto('/workbench');
   await page.locator('.hero-actions a').first().click();
   await expect(page).toHaveURL(/#guided-demo$/);
   await expect(page.locator('.demo-card')).toHaveCount(3);
@@ -76,8 +75,110 @@ test('guided case previews real variants and hands off scoped, reversible prompt
 
 test('guided prompts remain available when clipboard access fails', async ({ page }) => {
   await page.addInitScript(() => Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.reject(new Error('denied')) } }));
-  await page.goto('/#guided-demo');
+  await page.goto('/workbench#guided-demo');
   await page.locator('.demo-steps details').first().getByRole('button', { name: '复制指令' }).click();
   await expect(page.locator('.demo-notice')).toContainText('文本框');
   await expect(page.getByRole('textbox', { name: '第 1 步指令' })).toBeVisible();
 });
+
+test('direction artwork switches accessibly and reduced motion cancels active entrances', async ({ page }) => {
+  await page.goto('/workbench');
+  await expect(page.locator('.direction-stage')).toBeVisible();
+  await page.locator('.stage-controls button').first().click();
+  await expect(page.locator('.stage-controls button').first()).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.sheet-A')).toHaveClass(/sheet-active/);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => page.evaluate(() => document.getAnimations().filter(a => a.playState === 'running').length)).toBe(0);
+  await expect(page.locator('.sheet-A')).toHaveCSS('transition-duration', '0s');
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  for (const width of [320, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    const bounds = await page.locator('.direction-sheet').evaluateAll(items => items.map(el => { const r=el.getBoundingClientRect(); return {left:r.left,right:r.right}; }));
+    expect(bounds.every(r => r.left >= 0 && r.right <= width)).toBe(true);
+  }
+  await page.locator('.sheet-A').click();
+  await expect(page.locator('main')).toHaveAttribute('data-landing-direction', 'A');
+});
+
+test('canvas homepage opens real directions and preserves the guided handoff across language and viewport changes', async ({page}) => {
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.goto('/');
+  await expect(page.locator('h1')).toContainText('从看见可能开始');
+  await page.locator('.canvas-sidebar button').first().click();
+  await expect(page.frameLocator('.paper-preview iframe').locator('[data-showcase-direction]')).toHaveAttribute('data-showcase-direction','A');
+  await page.getByRole('button',{name:'切换到英文'}).click();
+  await expect(page.locator('h1')).toContainText('More possibilities.');
+  await expect(page.frameLocator('.paper-preview iframe').locator('html')).toHaveAttribute('lang','en');
+  await page.locator('.paper-actions a').first().click();
+  await expect(page).toHaveURL(/#guided-demo$/);
+  await expect(page.locator('.demo-steps textarea').first()).toContainText('complete Variant Design skill');
+  for(const width of [320,390,1440]){
+    await page.setViewportSize({width,height:900});
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  }
+  await page.locator('.site-footer a[href="/workbench"]').click();
+  await expect(page.locator('#generator')).toBeVisible();
+});
+
+ test('capability studies preserve data across directions and undo only the example title', async ({page}) => {
+ await page.goto('/');
+ const frame=page.frameLocator('.paper-preview iframe');
+ for(const [i,id] of ['A','B','C'].entries()){
+ await page.locator('.canvas-sidebar button').nth(i).click();
+ await expect(frame.locator('[data-showcase-direction]')).toHaveAttribute('data-showcase-direction',id);
+ await expect(frame.locator('.cap-stats')).toContainText('$42,340');
+ }
+ await frame.getByRole('button',{name:/Organic search/}).click();
+ await expect(frame.locator('.cap-inspector h3')).toHaveText('Organic search');
+ const original=await page.locator('.cap-edit-region h4').textContent();
+ const metrics=await page.locator('.cap-edit-kpis').textContent();
+ await page.getByRole('button',{name:'试改这个标题 ↗'}).click();
+ await expect(page.locator('.cap-edit-region')).toHaveAttribute('data-refined','true');
+ await expect(page.locator('.cap-edit-kpis')).toHaveText(metrics);
+ await page.getByRole('button',{name:'↶ 撤回示例修改'}).click();
+ await expect(page.locator('.cap-edit-region h4')).toHaveText(original);
+ await expect(page.locator('.canvas-sidebar button').nth(2)).toHaveAttribute('aria-pressed','true');
+ });
+
+test('expressive homepage gallery opens distinct complete directions with working calls to action', async ({page}) => {
+ await page.goto('/');
+ for(const id of ['A','B','C']) {
+  const frame=page.frameLocator(`.demo-preview iframe[title^="${id} "]`);
+  await expect(frame.locator('main')).toHaveAttribute('data-expressive-direction',id);
+  const link=page.locator('.demo-preview-link').nth(['A','B','C'].indexOf(id));
+  await expect(link).toHaveAttribute('href',`/directions?direction=${id}&language=zh`);
+ }
+ for(const id of ['A','B','C']) {
+  await page.goto(`/directions?direction=${id}&language=en`);
+  await expect(page.locator('h1')).toBeVisible();
+  for(const width of [390,577,1200]) {
+   await page.setViewportSize({width,height:853});
+   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  }
+  await page.locator('.ex-cta').click();
+  await expect(page).toHaveURL(/#guided-demo$/);
+ }
+});
+
+ test('product pages share their visual system and pricing controls preserve language and values', async ({page})=>{
+ await page.goto('/');
+ const homeFont=await page.locator('h1').evaluate(el=>getComputedStyle(el).fontFamily);
+ await page.locator('.site-nav a[href="/pricing"]').click();
+ await expect(page.locator('h1')).toHaveCSS('font-family',homeFont);
+ await expect(page.locator('.pricing-page')).toHaveCSS('background-color','rgb(247, 247, 242)');
+ await expect(page.locator('.price strong')).toHaveText(['$0','$20','$41']);
+ await page.getByRole('button',{name:'月付',exact:true}).click();
+ await expect(page.locator('.price strong')).toHaveText(['$0','$24','$49']);
+ await page.locator('.pricing-faq summary').first().click();
+ await expect(page.locator('.pricing-faq details').first()).toHaveAttribute('open','');
+ await page.getByRole('button',{name:'切换到英文'}).click();
+ await expect(page.locator('h1')).toContainText('Taste is free.');
+ for(const width of [320,390,577,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
+ await page.locator('.pricing-card').first().getByRole('link').click();
+ await expect(page).toHaveURL(/#guided-demo$/);
+ await expect(page.locator('html')).toHaveAttribute('lang','en');
+ await page.locator('.site-footer a[href="/workbench"]').click();
+ await expect(page.locator('.site-workbench')).toHaveCSS('background-color','rgb(247, 247, 242)');
+ await expect(page.locator('.site-nav')).toBeVisible();
+ });
