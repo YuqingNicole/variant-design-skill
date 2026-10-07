@@ -111,11 +111,11 @@ test('canvas homepage opens real directions and preserves the guided handoff acr
   await expect(page.locator('h1')).toContainText('More possibilities.');
   await expect(page.frameLocator('.paper-preview iframe').locator('html')).toHaveAttribute('lang','en');
   await page.locator('.paper-actions a').first().click();
-  await expect(page).toHaveURL(/#guided-demo$/);
-  await expect(page.locator('.demo-steps textarea').first()).toContainText('complete Variant Design skill');
+  await expect(page).toHaveURL(/\/docs$/);
+  await expect(page.getByRole('textbox',{name:'First project prompt'})).toContainText('complete Variant Design skill');
   for(const width of [320,390,1440]){
     await page.setViewportSize({width,height:900});
-    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   }
   await page.locator('.site-footer a[href="/workbench"]').click();
   await expect(page.locator('#generator')).toBeVisible();
@@ -176,9 +176,37 @@ test('expressive homepage gallery opens distinct complete directions with workin
  await expect(page.locator('h1')).toContainText('Taste is free.');
  for(const width of [320,390,577,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
  await page.locator('.pricing-card').first().getByRole('link').click();
- await expect(page).toHaveURL(/#guided-demo$/);
+ await expect(page).toHaveURL(/\/docs$/);
  await expect(page.locator('html')).toHaveAttribute('lang','en');
  await page.locator('.site-footer a[href="/workbench"]').click();
  await expect(page.locator('.site-workbench')).toHaveCSS('background-color','rgb(247, 247, 242)');
  await expect(page.locator('.site-nav')).toBeVisible();
  });
+
+test('case library links to working details and docs recover from clipboard denial', async ({page})=>{
+ await page.goto('/showcase');
+ await expect(page.locator('.content-case-grid article')).toHaveCount(3);
+ await page.getByRole('button',{name:'已验证项目',exact:true}).click();
+ await expect(page.locator('.content-case-grid article')).toHaveCount(1);
+ await page.locator('.content-case-grid article>a').click();
+ await expect(page).toHaveURL(/\/showcase\/variant-site$/);
+ await page.locator('.content-directions button').first().click();
+ await expect(page.frameLocator('.content-detail-preview iframe').locator('main')).toHaveAttribute('data-landing-direction','A');
+ await expect(page.locator('.content-reading a')).toHaveAttribute('href',/\/pull\/10$/);
+ for(const id of ['offscript','forma']){
+ await page.goto(`/showcase/${id}`);
+ await page.locator('.content-directions button').last().click();
+ await expect(page.locator('.content-detail-preview')).toHaveAttribute('href',/direction=C/);
+ }
+ await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:()=>Promise.reject(new Error('denied'))}}));
+ await page.goto('/docs');
+ await page.getByRole('button',{name:'复制安装命令'}).click();
+ await expect(page.getByRole('status')).toContainText('手动复制');
+ await expect(page.getByRole('textbox',{name:'安装命令'})).toHaveValue(/git clone.*variant-design/);
+ for(const url of ['/docs','/showcase','/showcase/offscript']){
+ await page.goto(url);
+ for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
+ }
+ await page.getByRole('button',{name:'切换到英文'}).click();
+ await expect(page.locator('h1')).toHaveText('One brand. Three personalities.');
+});

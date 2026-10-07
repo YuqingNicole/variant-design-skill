@@ -30,7 +30,7 @@ export function PaperLanding() {
       <p className="paper-kicker">DESIGN WITH POSSIBILITIES</p>
       <h1>{zh ? '好设计，' : 'Good design.'}<br/><span>{zh ? '从看见可能开始。' : 'More possibilities.'}</span></h1>
       <p className="paper-lede">{zh ? '把一个想法，展开成三个值得比较的方向。和你的 Agent 一起选择、打磨，让设计走进真实项目。' : 'Explore three considered directions from one idea. Compare and refine with your agent, then bring the design into your real project.'}</p>
-      <div className="paper-actions"><a className="paper-button" href="#guided-demo">{zh ? '在我的项目中开始' : 'Start in my project'} <span>↗</span></a><a href="#canvas">{zh ? '先看看真实方案' : 'Explore the real directions'} <span>↓</span></a></div>
+      <div className="paper-actions"><a className="paper-button" href="/docs">{zh ? '在我的项目中开始' : 'Start in my project'} <span>↗</span></a><a href="#canvas">{zh ? '先看看真实方案' : 'Explore the real directions'} <span>↓</span></a></div>
       <div className="paper-margin-note" aria-hidden="true"><span>ONE BRIEF</span><i/><span>THREE DIRECTIONS</span></div>
     </header>
     <section className="paper-shell paper-product" id="canvas" aria-label={zh ? '真实设计画布' : 'Live design canvas'}>
