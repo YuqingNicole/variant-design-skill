@@ -210,3 +210,37 @@ test('case library links to working details and docs recover from clipboard deni
  await page.getByRole('button',{name:'切换到英文'}).click();
  await expect(page.locator('h1')).toHaveText('One brand. Three personalities.');
 });
+
+test('inspiration references filter, create an original brief and recover from copy denial', async ({page})=>{
+ await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:()=>Promise.reject(new Error('denied'))}}));
+ await page.goto('/showcase');
+ await page.locator('.content-library a[href="/inspiration"]').click();
+ const cards=page.locator('.inspiration-grid article');
+ await expect(cards).toHaveCount(24);
+ for(const [name,count] of [['Landing',12],['产品界面',8],['关键流程',4]]){
+  await page.getByRole('button',{name,exact:true}).click();
+  await expect(cards).toHaveCount(count);
+ }
+ await page.getByRole('button',{name:'产品界面',exact:true}).click();
+ await page.getByRole('searchbox').fill('Figma');
+ await expect(cards).toHaveCount(1);
+ await cards.getByRole('button',{name:'生成参考指令'}).click();
+ await expect(page.locator('.inspiration-brief')).toBeFocused();
+ await expect(page.getByRole('textbox',{name:'参考设计指令'})).toHaveValue(/https:\/\/www.figma.com\/design\//);
+ await expect(page.getByRole('textbox',{name:'参考设计指令'})).toHaveValue(/不复制其文案、商标与素材/);
+ await page.getByRole('button',{name:'复制指令',exact:true}).click();
+ await expect(page.locator('.inspiration-brief [role="status"]')).toContainText('手动复制');
+ await page.getByRole('button',{name:'收起',exact:true}).click();
+ await page.getByRole('searchbox').fill('nonexistent-reference');
+ await expect(cards).toHaveCount(0);
+ await expect(page.locator('.inspiration-empty')).toBeVisible();
+ await page.getByRole('searchbox').fill('');
+ await page.getByRole('button',{name:'切换到英文'}).click();
+ await expect(page.locator('h1')).toHaveText('Turn inspiration into a brief.');
+ for(const width of [320,390,1440]){
+  await page.setViewportSize({width,height:900});
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ }
+ await page.reload();
+ await expect(page.locator('html')).toHaveAttribute('lang','en');
+});
