@@ -1,0 +1,23 @@
+{
+  "name": "variant-design",
+  "version": "1.1.0-rc.1",
+  "description": "Explore three deliberate interface directions in your code project, compare tradeoffs, refine a scoped region with snapshots, and integrate the chosen output. Uses your existing Codex tools and project stack.",
+  "author": {"name": "Yuqing Nicole", "url": "https://github.com/YuqingNicole"},
+  "homepage": "https://github.com/YuqingNicole/variant-design-skill",
+  "repository": "https://github.com/YuqingNicole/variant-design-skill",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Variant Design",
+    "shortDescription": "Compare, refine, ship UI",
+    "longDescription": "Turn a product brief into three runnable interface directions with explicit benefits and tradeoffs. Preserve an existing design system, compare previews, edit one region, undo recorded changes and integrate a named direction into your project. Requires a local code workspace and Node.js 22 or later for bundled helpers. Preview and verification use the project's tooling; browser checks require available browser tools.",
+    "developerName": "Yuqing Nicole",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/YuqingNicole/variant-design-skill",
+    "supportURL": "https://github.com/YuqingNicole/variant-design-skill/issues",
+    "defaultPrompt": ["Create three design directions for this project while preserving its brand.", "Compare A, B and C and explain which fits my product task.", "Change only B's hero, save a snapshot and show the result."],
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

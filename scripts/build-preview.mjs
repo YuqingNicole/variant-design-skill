@@ -72,7 +72,7 @@ resizePreviews();
   fs.writeFileSync(localFile(root, '_compare.html'), html);
   return { react, urls, comparison: '_compare.html' };
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href) {
   try { console.log(JSON.stringify(buildPreview(path.resolve(process.argv[2] ?? 'variant-output')), null, 2)); }
   catch(error) { console.error(error.message); process.exitCode = 1; }
 }

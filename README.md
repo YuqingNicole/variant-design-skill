@@ -349,3 +349,7 @@ Open any example directly in your browser to see the interactions in action.
 ---
 
 Built with [Claude Code Skills](https://claude.ai/code). Design system powered by [Impeccable](https://github.com/tychografie/impeccable).
+
+## Codex plugin release candidate
+
+A self-contained Codex plugin package and fresh-directory smoke test are available. See [build instructions](plugin/README.md) and [release gates](plugin/release-readiness.md). This candidate is not yet published in the plugin directory.
