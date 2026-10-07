@@ -56,3 +56,11 @@ The shared product logo uses three fanned artboards: pale sage, mid sage and dar
 `/docs` provides full-directory installation, a first-project prompt, scoped edit/undo guidance and troubleshooting. Copy failures preserve selectable text. Shared navigation and primary start actions lead to the library/docs; language persists between routes. Use the shared paper/sage shell, with original project styles confined to scaled preview artboards.
 
 The official site identity is the three-artboard mark. The page favicon references the same `/variant-mark.svg` asset as the header/footer, with a versioned URL to refresh previously cached icons. Historical site previews also use this mark instead of the YN placeholder; concept brands (Forma/OFFSCRIPT) remain case-specific.
+
+### Inspiration reference library
+
+`/inspiration` uses the shared paper/sage shell and links from the case library and footer. It contains external reference links, distinct from original showcase studies. Filter by landing, product or flow; search across bilingual notes; generate a project brief from a selected reference. Briefs require original work and preserve the same task across three directions. The generated brief receives focus; clipboard failures retain selectable text.
+
+`src/inspiration-data.ts` records each source, study suggestion, application, review date, verification scope, mobile status and reuse status. Public-page checks do not establish authenticated behavior, responsive quality, conversion results or redistribution rights. The initial shortlist and six proposed original briefs are in `../references/design-inspiration.md`.
+
+Reference cards now lead with local WebP previews. The hero uses three linked reference boards; cards label page captures versus official covers. `public/inspiration/SOURCES.md` records provenance. Two unavailable captures retain explicit source-link fallbacks; failed image loads use the same pattern. Images are lazy-loaded below the hero with reserved dimensions, and motion respects reduced-motion preferences. The 22 preview assets total approximately 640 KB.
