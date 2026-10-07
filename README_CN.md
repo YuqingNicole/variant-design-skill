@@ -348,3 +348,7 @@ export to next       →  将选定变体导出为 Next.js App Router 组件
 ---
 
 基于 [Claude Code Skills](https://claude.ai/code) 构建。设计系统由 [Impeccable](https://github.com/tychografie/impeccable) 驱动。
+
+## Codex 插件候选版
+
+已提供完整插件打包与独立目录安装包验证，见[构建说明](plugin/README.md)和[发布验收](plugin/release-readiness.md)。候选版尚未上架插件目录；不要只复制 SKILL.md。

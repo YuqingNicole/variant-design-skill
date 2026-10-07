@@ -12,6 +12,7 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: tests/package-lock.json
+      - run: python3 scripts/plugin-package.test.py
       - run: node --test scripts/variant-loop.test.mjs
       - run: node scripts/quality-gate.mjs --self-test
       - run: node scripts/quality-gate.mjs examples/coffee-brand-interactive.html --strict

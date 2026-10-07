@@ -46,7 +46,7 @@ Apply validates unique ownership, snapshots all B files and B metadata, verifies
 
 For configuration-driven React pages, `/* zone:hero:start */` / `/* zone:hero:end */` also delimit a standard JS/TS configuration block. Keep shared components read-only during that local edit and compare the rendered non-target sections; preserving wrapper bytes alone cannot prove rendered scope.
 
-The helper checks token metadata under a DS lock; it cannot prove that arbitrary CSS/JS obeys those tokens. Also compare the rendered fonts and token usage against `design-system.css`. Undo restores files, tokens, and comparison together; version numbers advance to record the undo event. It does not change A/C or the selected winner. Saved snapshots are retained even after undo. Do not claim history exists until it has been written.
+The helper checks token metadata under a DS lock; it cannot prove that arbitrary CSS/JS obeys those tokens. Also compare the rendered fonts and token usage against `design-system.css`. Undo first checks that files and variant metadata still match the recorded post-edit state. If the user has edited them since, it refuses without changing live files. Undo restores files, tokens, and comparison together; version numbers advance to record the undo event. It does not change A/C or the selected winner. Saved snapshots are retained even after undo. Do not claim history exists until it has been written.
 
 ## Verification and export
 
@@ -67,3 +67,16 @@ Export the explicitly named variant or selected winner from its current revision
 Run the target project's production build after integrating the named export. With Vite multiple HTML entries, register the comparison and A/B/C entries in `build.rollupOptions.input`; a working dev URL does not mean the preview survives a production build. Open the built application and every preview route and verify real controls, not just HTTP 200 (an SPA fallback can return the wrong page with 200).
 
 The repository's `website/` is a runnable dogfood project. `npm run export:landing -- B` exports the named hero configuration into its real React entrypoint, backs up the previous integration, and leaves the user's winner selection untouched. The three wrappers keep the complete site functional while sharing the locked brand system. See `website/iteration-log.md` for observed evidence and limitations.
+
+
+## Conflicts, legacy history, and recovery
+
+History mutations use an exclusive `.variant-lock` directory. If another operation is active, wait for that operation to finish. After a crash, inspect the live files, context and snapshots before removing a stale lock; do not automatically steal locks.
+
+Snapshots from before 1.1 do not record the post-edit baseline, so automatic undo refuses them rather than guessing whether later user edits are safe to discard. Recover either legacy or conflicting history into a new, separate directory:
+
+```bash
+node <skill-root>/scripts/variant-history.mjs recover variant-output B work/recovered-B
+```
+
+The parent directory must exist and the destination must not exist. This extracts the last undo snapshot's files and metadata, leaving live files and history unchanged. Compare the recovered candidate with current files; reconcile user edits into a new candidate before using `apply`. Snapshots support crash recovery; multiple file replacements are not a filesystem-wide atomic commit. The operation lock coordinates these helpers, not external editors.

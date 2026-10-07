@@ -9,15 +9,13 @@ Turn one brief into deliberate design options, compare them on shared criteria, 
 
 In commands below, `<skill-root>` means the directory containing this `SKILL.md`. Resolve it before running bundled scripts; do not assume the user's project contains this skill's `scripts/` directory.
 
-## Update awareness
+## Runtime and first use
 
-On the first Variant Design request in a session, run this once before long-running work:
+Use the current code workspace as the target project, not the installed plugin directory. Keep generated output, history, and preview adapters in the target project. The installed skill is read-only during product work.
 
-```bash
-node <skill-root>/scripts/check-update.mjs --quiet
-```
+Bundled scripts require Node.js 22 or later. Before executing them, check the available runtime and the project's package manager. If unavailable, explain the missing runtime and preserve any generated candidate; do not claim that snapshots or preview verification ran. Use the existing framework and dependencies; do not replace the project's stack to fit a helper.
 
-The check is non-blocking, caches results for 24 hours, and stays silent when current or offline. If it reports a newer release, tell the user once and continue their task. Never update automatically or execute the suggested update command without the user's request.
+When the user asks about updates, run `node <skill-root>/scripts/check-update.mjs --quiet`. This optional check contacts GitHub for release metadata; ordinary design work does not require it. Plugin updates should use the plugin manager rather than editing its cached files.
 
 ## Route first
 

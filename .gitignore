@@ -12,3 +12,5 @@ website/dist/
 website/variant-output/_compare.html
 website/variant-output/_preview/
 website/variant-output/.exports/
+
+__pycache__/
