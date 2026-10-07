@@ -13,7 +13,7 @@ const pricingCopy = {
     eyebrow: "价格 / 一个清晰的交换", title: ["审美免费。", "连续性值得付费。"], lede: "开源 Skill 和设计方法不会被锁起来。付费层只解决昂贵的部分：托管模型、保存项目、团队决策和可靠交付。",
     billingLabel: "计费周期", plansLabel: "价格方案", monthly: "月付", annual: "年付", annualNote: "省两个月", perMonth: "/ 月", perSeat: "/ 席位 / 月", billedAnnual: "按年结算", freeForever: "永久免费", earlyAccess: "早期访问 · 暂不扣款", recommended: "建议个人使用",
     plans: [
-      { name: "本地版", thesis: "自己掌控工具和密钥。", priceMonthly: 0, priceAnnual: 0, suffix: "", cta: "免费开始", href: "/#guided-demo", tone: "plain", features: ["完整开源 Skill", "自带 Anthropic 或 OpenAI 密钥", "三个可运行设计方向", "本地版本记录", "HTML 导出", "社区色板与更新"] },
+      { name: "本地版", thesis: "自己掌控工具和密钥。", priceMonthly: 0, priceAnnual: 0, suffix: "", cta: "免费开始", href: "/docs", tone: "plain", features: ["完整开源 Skill", "自带 Anthropic 或 OpenAI 密钥", "三个可运行设计方向", "本地版本记录", "HTML 导出", "社区色板与更新"] },
       { name: "专业版", thesis: "不用维护基础设施，持续推进真实项目。", priceMonthly: 24, priceAnnual: 20, suffix: "", cta: "申请早期访问", href: "issues", tone: "accent", features: ["包含本地版全部功能", "托管生成额度", "私有项目与云端版本", "代码库上下文导入", "可分享预览链接", "GitHub PR 导出"] },
       { name: "团队版", thesis: "让设计选择成为团队资产。", priceMonthly: 49, priceAnnual: 41, suffix: "seat", cta: "讨论团队方案", href: "issues", tone: "dark", features: ["包含专业版全部功能", "共享项目空间", "评论与方向决策记录", "角色与用量控制", "团队设计系统约束", "优先支持"] },
     ],
@@ -37,7 +37,7 @@ const pricingCopy = {
     eyebrow: "Pricing / a clear exchange", title: ["Taste is free.", "Continuity is worth paying for."], lede: "The open-source skill and design method stay open. Paid plans cover the expensive parts: hosted models, persistent projects, team decisions, and reliable delivery.",
     billingLabel: "Billing period", plansLabel: "Pricing plans", monthly: "Monthly", annual: "Annual", annualNote: "Two months free", perMonth: "/ month", perSeat: "/ seat / month", billedAnnual: "billed annually", freeForever: "Free forever", earlyAccess: "Early access · no charge yet", recommended: "Recommended for individuals",
     plans: [
-      { name: "Local", thesis: "Own the tool and the model key.", priceMonthly: 0, priceAnnual: 0, suffix: "", cta: "Start free", href: "/#guided-demo", tone: "plain", features: ["Full open-source skill", "Bring your Anthropic or OpenAI key", "Three working design directions", "Local version history", "HTML export", "Community palettes and updates"] },
+      { name: "Local", thesis: "Own the tool and the model key.", priceMonthly: 0, priceAnnual: 0, suffix: "", cta: "Start free", href: "/docs", tone: "plain", features: ["Full open-source skill", "Bring your Anthropic or OpenAI key", "Three working design directions", "Local version history", "HTML export", "Community palettes and updates"] },
       { name: "Pro", thesis: "Keep real projects moving without running infrastructure.", priceMonthly: 24, priceAnnual: 20, suffix: "", cta: "Request early access", href: "issues", tone: "accent", features: ["Everything in Local", "Hosted generation allowance", "Private projects and cloud versions", "Repository context import", "Shareable preview links", "GitHub PR export"] },
       { name: "Team", thesis: "Turn design decisions into team memory.", priceMonthly: 49, priceAnnual: 41, suffix: "seat", cta: "Discuss a team plan", href: "issues", tone: "dark", features: ["Everything in Pro", "Shared project workspace", "Comments and decision history", "Roles and usage controls", "Team design-system constraints", "Priority support"] },
     ],
@@ -100,7 +100,7 @@ export function PricingPage({ repositoryUrl }: PricingPageProps) {
 
     <section className="pricing-faq shell"><h2>{t.faqTitle}</h2><div>{t.faqs.map((faq, index) => <details key={faq.q}><summary><span>0{index + 1}</span>{faq.q}<b>+</b></summary><p>{faq.a}</p></details>)}</div></section>
 
-    <section className="pricing-final"><div className="shell"><h2>{t.finalTitle}</h2><p>{t.finalBody}</p><div><a className="pricing-button" href="/#guided-demo">{t.finalPrimary}<span>→</span></a><a href={repositoryUrl} target="_blank" rel="noreferrer">{t.finalSecondary}</a></div></div></section>
+    <section className="pricing-final"><div className="shell"><h2>{t.finalTitle}</h2><p>{t.finalBody}</p><div><a className="pricing-button" href="/docs">{t.finalPrimary}<span>→</span></a><a href={repositoryUrl} target="_blank" rel="noreferrer">{t.finalSecondary}</a></div></div></section>
     <SiteFooter language={language}/>
   </main>;
 }

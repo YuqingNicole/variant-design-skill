@@ -48,3 +48,9 @@ Workbench theme changes are scoped to `.site-workbench`; historical variant prev
 ### Brand mark
 
 The shared product logo uses three fanned artboards: pale sage, mid sage and dark forest green. The rightmost board has a small paper-colored detail. `public/variant-mark.svg` is the navigation/footer source, with the same geometry in `public/favicon.svg`. Keep the 48×48 viewBox, empty alt text inside the named home link, and at least 32px display size in the mobile header. Concept-study brands remain independent.
+
+### Content routes
+
+`/showcase` is the filterable case library; `/showcase/offscript`, `/showcase/forma`, and `/showcase/variant-site` explain briefs, constraints, A/B/C choices and delivery boundaries. Concept studies are explicitly distinguished from the historical PR #10 workflow evidence. The existing `/showcase?direction=A|B|C` dashboard embed remains compatible.
+
+`/docs` provides full-directory installation, a first-project prompt, scoped edit/undo guidance and troubleshooting. Copy failures preserve selectable text. Shared navigation and primary start actions lead to the library/docs; language persists between routes. Use the shared paper/sage shell, with original project styles confined to scaled preview artboards.
