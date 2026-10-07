@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { CapabilityStudies, type ShowcaseDirection } from "./CapabilityShowcase";
+import { SiteHeader, SiteFooter } from "./SiteChrome";
 import { GuidedDemo } from "./GuidedDemo";
 import type { Language } from "./direction-engine";
 import { useLandingMotion } from "./useLandingMotion";
 import "./paper-landing.css";
 
-const repo = "https://github.com/YuqingNicole/variant-design-skill";
 export function PaperLanding() {
   const [language, setLanguage] = useState<Language>(() => localStorage.getItem('variant-language') === 'en' ? 'en' : 'zh');
   const [direction, setDirection] = useState<ShowcaseDirection>('A');
@@ -25,11 +25,7 @@ export function PaperLanding() {
     return () => observer.disconnect();
   }, []);
   return <main className="paper-home">
-    <nav className="paper-nav paper-shell" aria-label={zh ? '主导航' : 'Main navigation'}>
-      <a className="paper-wordmark" href="#"><span aria-hidden="true">▧</span> variant<span className="wordmark-light">design</span></a>
-      <div className="paper-nav-links"><a href="#canvas">{zh ? '看方案' : 'Explore'}</a><a href="#workflow">{zh ? '如何工作' : 'Workflow'}</a><a href="#guided-demo">{zh ? '开始使用' : 'Get started'}</a></div>
-      <button className="paper-language" aria-label={zh ? '切换到英文' : 'Switch to Chinese'} onClick={() => setLanguage(zh ? 'en' : 'zh')}>{zh ? 'EN' : '中文'}</button>
-    </nav>
+    <SiteHeader language={language} onLanguage={()=>setLanguage(zh ? "en" : "zh")}/>
     <header className="paper-hero paper-shell hero-copy">
       <p className="paper-kicker">DESIGN WITH POSSIBILITIES</p>
       <h1>{zh ? '好设计，' : 'Good design.'}<br/><span>{zh ? '从看见可能开始。' : 'More possibilities.'}</span></h1>
@@ -51,6 +47,6 @@ export function PaperLanding() {
     </section>
     <GuidedDemo language={language} expressive/>
     <section className="paper-closing paper-shell"><p className="paper-kicker">YOUR NEXT GOOD IDEA</p><h2>{zh ? '让第一稿，成为起点。' : 'Make the first draft a beginning.'}</h2><a className="paper-button" href="#guided-demo">{zh ? '开始我的三版设计' : 'Explore my three directions'} ↗</a><p>{zh ? '开源技能 · 在你的代码项目里运行' : 'Open-source skill · Runs in your code project'}</p></section>
-    <footer className="paper-footer paper-shell"><span>variant design / Yuqing Nicole</span><div><a href={repo} target="_blank" rel="noreferrer">GitHub ↗</a><a href="/workbench">{zh ? '在线实验室' : 'Online lab'}</a><a href="/pricing">{zh ? '价格' : 'Pricing'}</a></div></footer>
+    <SiteFooter language={language}/>
   </main>;
 }

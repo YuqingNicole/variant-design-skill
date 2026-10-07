@@ -38,3 +38,9 @@ Workflow artwork uses rendered dashboard compositions and an interactive headlin
 Homepage GuidedDemo uses three original OFFSCRIPT studio studies at `/directions?direction=A|B|C&language=zh|en`. This is explicitly free visual exploration: A uses cream editorial typography and orange sculptural material; B uses acid yellow, cobalt and oversized poster typography; C uses a dark violet digital composition with a metallic orbital form. Each preserves portfolio content and working project/pricing links. The workbench continues to show the historical brand-locked case.
 
 Thumbnails render the actual pages. Concepts are not presented as client work. The handoff prompt uses the viewed direction as inspiration, checks existing brand constraints, and generates project variants before editing or undoing them. The old verified integration case is clearly described as a separate project.
+
+### Shared product shell
+
+`SiteChrome.tsx` and `site-system.css` define the shared wordmark, navigation, footer and light product tokens for `/`, `/pricing` and `/workbench`. Pricing uses a single stylesheet rather than layered legacy themes: paper backgrounds, sans-serif headings, sage plan emphasis, 4–6px radii, thin borders and dark primary buttons. Language persists between routes. Free-plan CTAs lead to the guided installation section.
+
+Workbench theme changes are scoped to `.site-workbench`; historical variant previews and expressive concept pages retain their intentionally distinct visual systems. Future product routes should use the shared shell instead of copying navigation markup.

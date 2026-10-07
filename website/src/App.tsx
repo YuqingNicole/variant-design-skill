@@ -9,6 +9,8 @@ import { actionLabel, createWorkspaceVersion, exportDirectionHtml, type Workspac
 import { LandingIntroduction, installCommand, type LandingHeroConfig } from "./LandingIntroduction";
 import { GuidedDemo } from "./GuidedDemo";
 import { useLandingMotion } from "./useLandingMotion";
+import { SiteHeader, SiteFooter } from "./SiteChrome";
+import "./workbench-theme.css";
 import { landingHero } from "./landing-config";
 
 const repositoryUrl = "https://github.com/YuqingNicole/variant-design-skill";
@@ -245,9 +247,9 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
   }
 
   return (
-    <main data-language={language} data-landing-direction={hero.id}>
+    <main className={isVariantPreview ? undefined : "site-workbench"} data-language={language} data-landing-direction={hero.id}>
       <section className="hero" id="top">
-        <nav className="nav shell" aria-label={t.navLabel}>
+        {!isVariantPreview ? <SiteHeader language={language} onLanguage={()=>{if(!isGenerating) switchLanguage()}}/> : <nav className="nav shell" aria-label={t.navLabel}>
           <a className="signature" href="#top" aria-label={t.homeLabel}><b>YN</b><span>Yuqing Nicole<br />variant.design</span></a>
           <div className="nav-index" aria-hidden="true">{t.issue}</div>
           <details className="mobile-navigation"><summary>{language === "zh" ? "菜单" : "Menu"}</summary><div><a href="/variant-output/_compare.html">{language === "zh" ? "本站三版" : "Compare this site"}</a><a href="#palettes">{t.navPalettes}</a><a href="#directions">{t.navWork}</a><a href="#method">{t.navMethod}</a><a href="/pricing">{t.navPricing}</a><a href="#install">{t.installSkill}</a></div></details>
@@ -255,7 +257,7 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
             <a href="#palettes">{t.navPalettes}</a><a href="#directions">{t.navWork}</a><a href="#method">{t.navMethod}</a><a href="/pricing">{t.navPricing}</a><a href={repositoryUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
             <button className="language-switch" type="button" onClick={switchLanguage} disabled={isGenerating} aria-label={t.switchLabel}>{t.switchText}</button>
           </div>
-        </nav>
+        </nav>}
 
         <div className={`hero-grid shell hero-layout-${hero.layout}`} data-zone="hero">
           <LandingIntroduction config={hero} language={language} onInstall={copyInstall} copied={copied} guided={!isVariantPreview} />
@@ -386,7 +388,7 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
         <div className="install-panel"><p>{t.installBody}</p><div className="install-command"><code>{installCommand}</code><button onClick={copyInstall}>{copied ? t.copied : t.copy}</button></div><div className="install-links"><a href={repositoryUrl} target="_blank" rel="noreferrer">{t.documentation}</a><a href={`${repositoryUrl}/blob/master/README_CN.md`} target="_blank" rel="noreferrer">{t.chineseReadme}</a><span>{t.license}</span></div></div>
       </div></section>
 
-      <footer className="footer shell"><span>YUQING NICOLE / VARIANT DESIGN</span><span>{t.footerMotto}</span><a href={repositoryUrl} target="_blank" rel="noreferrer">GITHUB ↗</a></footer>
+      {!isVariantPreview ? <SiteFooter language={language}/> : <footer className="footer shell"><span>YUQING NICOLE / VARIANT DESIGN</span><span>{t.footerMotto}</span><a href={repositoryUrl} target="_blank" rel="noreferrer">GITHUB ↗</a></footer>}
     </main>
   );
 }

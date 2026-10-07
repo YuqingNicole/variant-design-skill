@@ -32,8 +32,8 @@ test('integrated B keeps a mobile action, navigation, brief on language change, 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect(await page.locator('.hero-actions a').first().evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThan(844);
   await expect(page.locator('#generator button[type="submit"]')).toBeDisabled();
-  await page.locator('.mobile-navigation summary').click();
-  await page.locator('.mobile-navigation a[href="/pricing"]').click();
+
+  await page.locator('.site-nav a[href="/pricing"]').click();
   await expect(page).toHaveURL(/\/pricing$/);
   await page.goto('/workbench');
   await page.locator('#design-prompt').fill('A landing page for the real Variant Design project');
@@ -42,8 +42,7 @@ test('integrated B keeps a mobile action, navigation, brief on language change, 
   await expect(page.locator('h1')).toContainText('Three directions.');
   await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
   await page.goto('/workbench');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
+  await page.locator('.site-nav-links a').last().focus();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Switch to Chinese' })).toBeFocused();
   await expect(page.getByRole('button', { name: 'Switch to Chinese' })).toHaveCSS('outline-style', 'solid');
@@ -118,7 +117,7 @@ test('canvas homepage opens real directions and preserves the guided handoff acr
     await page.setViewportSize({width,height:900});
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   }
-  await page.locator('.paper-footer a[href="/workbench"]').click();
+  await page.locator('.site-footer a[href="/workbench"]').click();
   await expect(page.locator('#generator')).toBeVisible();
 });
 
@@ -161,3 +160,25 @@ test('expressive homepage gallery opens distinct complete directions with workin
   await expect(page).toHaveURL(/#guided-demo$/);
  }
 });
+
+ test('product pages share their visual system and pricing controls preserve language and values', async ({page})=>{
+ await page.goto('/');
+ const homeFont=await page.locator('h1').evaluate(el=>getComputedStyle(el).fontFamily);
+ await page.locator('.site-nav a[href="/pricing"]').click();
+ await expect(page.locator('h1')).toHaveCSS('font-family',homeFont);
+ await expect(page.locator('.pricing-page')).toHaveCSS('background-color','rgb(247, 247, 242)');
+ await expect(page.locator('.price strong')).toHaveText(['$0','$20','$41']);
+ await page.getByRole('button',{name:'月付',exact:true}).click();
+ await expect(page.locator('.price strong')).toHaveText(['$0','$24','$49']);
+ await page.locator('.pricing-faq summary').first().click();
+ await expect(page.locator('.pricing-faq details').first()).toHaveAttribute('open','');
+ await page.getByRole('button',{name:'切换到英文'}).click();
+ await expect(page.locator('h1')).toContainText('Taste is free.');
+ for(const width of [320,390,577,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
+ await page.locator('.pricing-card').first().getByRole('link').click();
+ await expect(page).toHaveURL(/#guided-demo$/);
+ await expect(page.locator('html')).toHaveAttribute('lang','en');
+ await page.locator('.site-footer a[href="/workbench"]').click();
+ await expect(page.locator('.site-workbench')).toHaveCSS('background-color','rgb(247, 247, 242)');
+ await expect(page.locator('.site-nav')).toBeVisible();
+ });
