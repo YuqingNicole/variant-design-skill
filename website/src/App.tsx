@@ -250,7 +250,7 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
     <main className={isVariantPreview ? undefined : "site-workbench"} data-language={language} data-landing-direction={hero.id}>
       <section className="hero" id="top">
         {!isVariantPreview ? <SiteHeader language={language} onLanguage={()=>{if(!isGenerating) switchLanguage()}}/> : <nav className="nav shell" aria-label={t.navLabel}>
-          <a className="signature" href="#top" aria-label={t.homeLabel}><b>YN</b><span>Yuqing Nicole<br />variant.design</span></a>
+          <a className="signature" href="#top" aria-label={t.homeLabel}><img src="/variant-mark.svg" width="32" height="32" alt=""/><span>Variant<br />Design</span></a>
           <div className="nav-index" aria-hidden="true">{t.issue}</div>
           <details className="mobile-navigation"><summary>{language === "zh" ? "菜单" : "Menu"}</summary><div><a href="/variant-output/_compare.html">{language === "zh" ? "本站三版" : "Compare this site"}</a><a href="#palettes">{t.navPalettes}</a><a href="#directions">{t.navWork}</a><a href="#method">{t.navMethod}</a><a href="/pricing">{t.navPricing}</a><a href="#install">{t.installSkill}</a></div></details>
           <div className="nav-links">
