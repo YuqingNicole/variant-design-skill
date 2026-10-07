@@ -27,7 +27,7 @@ test('production comparison opens three complete pages with matching brand and t
 test('integrated B keeps a mobile action, navigation, brief on language change, and reduced motion', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/');
+  await page.goto('/workbench');
   await expect(page.locator('main')).toHaveAttribute('data-landing-direction', 'B');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect(await page.locator('.hero-actions a').first().evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThan(844);
@@ -35,13 +35,13 @@ test('integrated B keeps a mobile action, navigation, brief on language change, 
   await page.locator('.mobile-navigation summary').click();
   await page.locator('.mobile-navigation a[href="/pricing"]').click();
   await expect(page).toHaveURL(/\/pricing$/);
-  await page.goto('/');
+  await page.goto('/workbench');
   await page.locator('#design-prompt').fill('A landing page for the real Variant Design project');
   await page.getByRole('button', { name: '切换到英文' }).click();
   await expect(page.locator('#design-prompt')).toHaveValue('A landing page for the real Variant Design project');
   await expect(page.locator('h1')).toContainText('Three directions.');
   await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
-  await page.goto('/');
+  await page.goto('/workbench');
   await page.keyboard.press('Tab');
   await page.keyboard.press('Tab');
   await page.keyboard.press('Tab');
@@ -51,7 +51,7 @@ test('integrated B keeps a mobile action, navigation, brief on language change, 
 
 test('guided case previews real variants and hands off scoped, reversible prompts without selecting a winner', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-  await page.goto('/');
+  await page.goto('/workbench');
   await page.locator('.hero-actions a').first().click();
   await expect(page).toHaveURL(/#guided-demo$/);
   await expect(page.locator('.demo-card')).toHaveCount(3);
@@ -76,14 +76,14 @@ test('guided case previews real variants and hands off scoped, reversible prompt
 
 test('guided prompts remain available when clipboard access fails', async ({ page }) => {
   await page.addInitScript(() => Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.reject(new Error('denied')) } }));
-  await page.goto('/#guided-demo');
+  await page.goto('/workbench#guided-demo');
   await page.locator('.demo-steps details').first().getByRole('button', { name: '复制指令' }).click();
   await expect(page.locator('.demo-notice')).toContainText('文本框');
   await expect(page.getByRole('textbox', { name: '第 1 步指令' })).toBeVisible();
 });
 
 test('direction artwork switches accessibly and reduced motion cancels active entrances', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/workbench');
   await expect(page.locator('.direction-stage')).toBeVisible();
   await page.locator('.stage-controls button').first().click();
   await expect(page.locator('.stage-controls button').first()).toHaveAttribute('aria-pressed', 'true');
@@ -100,4 +100,24 @@ test('direction artwork switches accessibly and reduced motion cancels active en
   }
   await page.locator('.sheet-A').click();
   await expect(page.locator('main')).toHaveAttribute('data-landing-direction', 'A');
+});
+
+test('canvas homepage opens real directions and preserves the guided handoff across language and viewport changes', async ({page}) => {
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.goto('/');
+  await expect(page.locator('h1')).toContainText('从看见可能开始');
+  await page.locator('.canvas-sidebar button').first().click();
+  await expect(page.frameLocator('.paper-preview iframe').locator('main')).toHaveAttribute('data-landing-direction','A');
+  await page.getByRole('button',{name:'切换到英文'}).click();
+  await expect(page.locator('h1')).toContainText('More possibilities.');
+  await expect(page.frameLocator('.paper-preview iframe').locator('html')).toHaveAttribute('lang','en');
+  await page.locator('.paper-actions a').first().click();
+  await expect(page).toHaveURL(/#guided-demo$/);
+  await expect(page.locator('.demo-steps textarea').first()).toContainText('complete Variant Design skill');
+  for(const width of [320,390,1440]){
+    await page.setViewportSize({width,height:900});
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  }
+  await page.locator('.paper-footer a[href="/workbench"]').click();
+  await expect(page.locator('#generator')).toBeVisible();
 });
