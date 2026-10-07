@@ -25,7 +25,8 @@ class PackageTests(unittest.TestCase):
                     digest, name = line.split('  ', 1)
                     self.assertEqual(hashlib.sha256(archive.read(name)).hexdigest(), digest)
                 archive.extractall(root/'installed')
-            installed = root/'installed'
+            installed = root/'installed-alias'
+            installed.symlink_to(root/'installed', target_is_directory=True)
             manifest = json.loads((installed/'.codex-plugin/plugin.json').read_text())
             for field in ('logo', 'composerIcon'):
                 self.assertTrue((installed/manifest['interface'][field]).is_file())
