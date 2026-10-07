@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fixture } from './fixture.mjs';
-import { applyVariant, undoVariant } from '../scripts/variant-history.mjs';
+import { prepareVariant, applyVariant, undoVariant } from '../scripts/variant-history.mjs';
 const root=path.resolve('.generated'),candidate=path.resolve('.candidate');
 let server, base;
 test.beforeAll(async()=>{
@@ -26,7 +26,7 @@ test('React A/B/C render with working controls, locked font, comparison and keyb
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(errors).toEqual([]);
 });
 test('hero edit and undo render only B changes, preserve brand and footer',async({page})=>{
-  fs.cpSync(root,candidate,{recursive:true});const file=path.join(candidate,'VariantB.tsx');fs.writeFileSync(file,fs.readFileSync(file,'utf8').replace('Direction B','Evidence first'));
+  prepareVariant(root,'B',candidate);const file=path.join(candidate,'VariantB.tsx');fs.writeFileSync(file,fs.readFileSync(file,'utf8').replace('Direction B','Evidence first'));
   applyVariant(root,'B',candidate,{summary:'hero',zone:'hero'});
   await page.goto(`${base}/_preview/B.html`);await expect(page.getByRole('heading')).toHaveText('Evidence first');await expect(page.locator('main')).toHaveCSS('font-family','Georgia');await expect(page.locator('footer')).toHaveText('Evidence retained');
   undoVariant(root,'B');await page.reload();await expect(page.getByRole('heading')).toHaveText('Direction B');

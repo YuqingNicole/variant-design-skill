@@ -225,7 +225,7 @@ variant-output/
     └── dashboard-A-tokens.css    (when user extracts tokens)
 ```
 
-**Iteration files:** Keep stable output paths, but stage changes and save a verified snapshot before replacing them. Follow `references/preview-and-history.md`. Git does not preserve uncommitted intermediate edits.
+**Iteration files:** Keep stable output paths, but prepare a new candidate with a baseline before generating changes, reject stale candidates, and save a verified snapshot before replacing them. Follow `references/preview-and-history.md`. Git does not preserve uncommitted intermediate edits.
 
 ### Auto-Preview
 

@@ -404,7 +404,7 @@ Combine two variations into one. Accepts forms like "Mix A + B" or "A's layout +
 ## Variation Loop
 
 Track iteration count internally (reset per variation). After any variation action:
-1. Stage the candidate separately, then use the transactional apply workflow in `references/preview-and-history.md`. It saves a snapshot before replacing files at stable paths. An edit sets `activeVariant`, never `selectedVariant`. Support `undo B` without touching A/C or the selected winner.
+1. Run `variant-history.mjs prepare` into a new candidate directory before editing. Keep its baseline unchanged; on a conflict preserve the old candidate and reconcile into a freshly prepared one. Then use the transactional apply workflow in `references/preview-and-history.md`. It saves a snapshot before replacing files at stable paths. An edit sets `activeVariant`, never `selectedVariant`. Support `undo B` without touching A/C or the selected winner.
 2. **Re-open in browser** — use the preview workflow in `skills/shared/code-output.md`
 3. **Show a 2-3 line diff summary** in the terminal — what changed, not the full code
 4. Offer the grouped action menu again — the loop never ends until the user moves on

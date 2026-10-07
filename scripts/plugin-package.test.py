@@ -40,12 +40,18 @@ class PackageTests(unittest.TestCase):
             (output/'.variant-context.json').write_text(json.dumps(state))
             subprocess.run(['node', str(skill/'scripts/build-preview.mjs'), str(output)], cwd=root, check=True, capture_output=True)
             self.assertTrue((output/'_compare.html').exists())
-            candidate = root/'candidate'; candidate.mkdir()
+            candidate = root/'candidate'
+            subprocess.run(['node',str(skill/'scripts/variant-history.mjs'),'prepare',str(output),'B',str(candidate)],cwd=root,check=True,capture_output=True)
             (candidate/'variant-B.html').write_text((output/'variant-B.html').read_text().replace('<h1>B</h1>', '<h1>Better B</h1>'))
             change = root/'change.json'; change.write_text(json.dumps({'summary':'hero edit','zone':'hero'}))
             original = (output/'variant-B.html').read_bytes()
             for action, rest in [('apply',[str(candidate),str(change)]), ('undo',[])]:
                 subprocess.run(['node',str(skill/'scripts/variant-history.mjs'),action,str(output),'B',*rest],cwd=root,check=True,capture_output=True)
+            self.assertEqual((output/'variant-B.html').read_bytes(),original)
+            # The earlier candidate is stale even though undo restored the original bytes.
+            refused = subprocess.run(['node',str(skill/'scripts/variant-history.mjs'),'apply',str(output),'B',str(candidate),str(change)],cwd=root,capture_output=True,text=True)
+            self.assertNotEqual(refused.returncode, 0)
+            self.assertIn('Candidate conflict', refused.stderr)
             self.assertEqual((output/'variant-B.html').read_bytes(),original)
             self.assertIsNone(json.loads((output/'.variant-context.json').read_text())['selectedVariant'])
 

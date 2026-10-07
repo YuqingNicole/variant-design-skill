@@ -25,3 +25,7 @@ Checked 2026-10-07:
 - https://developers.openai.com/plugins/deploy/submission
 
 The supported Codex compatibility format uses `.codex-plugin/plugin.json`. The public submission flow includes ZIP validation and skills scanning under a verified publisher identity. Local package tests do not replace those checks. Before submission, test installation and skill discovery in the desktop plugin manager, verify publisher/listing metadata, and complete the release gates in `release-readiness.md`. Do not claim marketplace approval or install availability until observed.
+
+## Candidate workflow (RC2)
+
+Before editing, run `variant-history.mjs prepare <output> B <new-candidate-directory> [project-root]`. Apply requires that baseline; legacy candidates must be reconciled into a newly prepared directory. Original bytes remain in the candidate baseline for comparison. Do not upload candidate baselines: they contain project source.
