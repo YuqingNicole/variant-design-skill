@@ -44,6 +44,11 @@ class PackageTests(unittest.TestCase):
             profile = json.loads(profile_run.stdout)
             self.assertIn('variant-output/variant-B.html', profile['dependencyScope']['files'])
             self.assertEqual(profile['suitability']['integration'], 'unverified')
+            profile_file = root/'profile.json'; profile_file.write_text(json.dumps(profile))
+            brief = {'goal':'Inspect B','audience':'Author','route':'/B','coreTask':'Compare','allowedFiles':['variant-output/variant-B.html'],'preserve':['Heading'],'acceptance':['Heading visible'],'brandConstraints':[],'unknowns':[],'discoveryReview':[{'index':i,'status':'unresolved','reason':'Only fixture scope is covered','blocking':False} for i,_ in enumerate(profile['unknowns'])]}
+            brief_file = root/'brief.json'; brief_file.write_text(json.dumps(brief))
+            task_run = subprocess.run(['node', str(skill/'scripts/design-task.mjs'), 'create', str(profile_file), str(brief_file)], cwd=root, check=True, capture_output=True, text=True)
+            self.assertEqual(json.loads(task_run.stdout)['readiness'], 'ready-for-candidate-work')
             candidate = root/'candidate'; candidate.mkdir()
             (candidate/'variant-B.html').write_text((output/'variant-B.html').read_text().replace('<h1>B</h1>', '<h1>Better B</h1>'))
             change = root/'change.json'; change.write_text(json.dumps({'summary':'hero edit','zone':'hero'}))
