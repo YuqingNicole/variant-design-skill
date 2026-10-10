@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHash } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 
 export function localFile(root, relative) {
@@ -43,6 +43,85 @@ function owned(state, id) {
   }
   return files;
 }
+const baselineName = '.candidate-baseline.json';
+const digest = content => createHash('sha256').update(content).digest('hex');
+function canonical(value) {
+  if (Array.isArray(value)) return value.map(canonical);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(key => [key, canonical(value[key])]));
+  return value;
+}
+const same = (a, b) => JSON.stringify(canonical(a)) === JSON.stringify(canonical(b));
+function constraints(state, id) {
+  const { entry, tokens, comparison } = state.variants[id];
+  return { entry, tokens, comparison, designSystem: state.designSystem ?? null, taskContract: state.taskContract ?? null };
+}
+function projectRoot(root, project) {
+  const target = fs.realpathSync(project);
+  if (!fs.realpathSync(root).startsWith(target + path.sep)) throw new Error('Project root must contain variant output.');
+  return target;
+}
+function designSystemDigest(state, project) {
+  return state.designSystem?.file ? digest(fs.readFileSync(localFile(project, state.designSystem.file))) : null;
+}
+function conflict(details) {
+  throw new Error(`Candidate conflict: ${details}. Current files are unchanged. Keep this candidate and its baseline; compare/reconcile your edits, then prepare a NEW candidate from current output. Do not replace the old baseline.`);
+}
+function verifyBaseline(root, id, candidate, state) {
+  let saved;
+  try { saved = JSON.parse(fs.readFileSync(localFile(candidate, baselineName), 'utf8')); }
+  catch { throw new Error('Missing or invalid candidate baseline. Run prepare into a NEW directory before editing; preserve legacy candidates for manual comparison.'); }
+  if (saved?.schemaVersion !== 1 || !saved.files || typeof saved.files !== 'object' || Array.isArray(saved.files) || !Number.isInteger(saved.version) || !saved.constraints || typeof saved.projectRoot !== 'string') throw new Error('Invalid candidate baseline; prepare a new candidate.');
+  if (saved.output !== fs.realpathSync(root) || saved.variant !== id) conflict('different project or variant');
+  const project = projectRoot(root, saved.projectRoot);
+  const files = owned(state, id);
+  if (!same(Object.keys(saved.files).sort(), [...files].sort())) conflict('owned file set changed');
+  if (saved.version !== state.variants[id].version) conflict('variant version changed');
+  if (!same(saved.constraints, constraints(state, id))) conflict('entry, tokens, comparison, design system or task constraints changed');
+  for (const file of files) {
+    const record = saved.files[file];
+    if (!record || typeof record.content !== 'string' || !/^[a-f0-9]{64}$/.test(record.sha256) || digest(Buffer.from(record.content, 'base64')) !== record.sha256) throw new Error(`Invalid candidate baseline content: ${file}`);
+    let current;
+    try { current = digest(fs.readFileSync(localFile(root, file))); }
+    catch (error) { if (error.code === 'ENOENT') conflict(`file missing: ${file}`); throw error; }
+    if (current !== record.sha256) conflict(`file changed: ${file}`);
+  }
+  let ds;
+  try { ds = designSystemDigest(state, project); }
+  catch (error) { if (error.code === 'ENOENT') conflict('design system file missing'); throw error; }
+  if (ds !== saved.designSystemDigest) conflict('design system file content changed');
+}
+export function prepareVariant(root, id, destination, project = path.dirname(path.resolve(root))) {
+  return withLock(root, () => {
+    const state = readContext(root), files = owned(state, id);
+    const base = projectRoot(root, project);
+    if (!Number.isInteger(state.variants[id].version) || state.variants[id].version < 1) throw new Error('Variant version must be a positive integer.');
+    const records = Object.fromEntries(files.map(file => {
+      const bytes = fs.readFileSync(localFile(root, file));
+      return [file, { sha256: digest(bytes), content: bytes.toString('base64') }];
+    }));
+    const target = path.join(fs.realpathSync(path.dirname(path.resolve(destination))), path.basename(destination));
+    const output = fs.realpathSync(root);
+    if (target === output || target.startsWith(output + path.sep)) throw new Error('Candidate must be outside variant output.');
+    const baseline = { schemaVersion: 1, output, projectRoot: base, variant: id, version: state.variants[id].version,
+      constraints: constraints(state, id), designSystemDigest: designSystemDigest(state, base), files: records };
+    // Never retrofit a baseline onto an existing candidate, even an empty directory.
+    fs.mkdirSync(target);
+    try {
+      for (const [file, record] of Object.entries(records)) {
+        const dest = localFile(target, file); fs.mkdirSync(path.dirname(dest), { recursive: true });
+        fs.writeFileSync(dest, Buffer.from(record.content, 'base64'), { flag: 'wx' });
+      }
+      fs.writeFileSync(localFile(target, baselineName), JSON.stringify(baseline, null, 2) + '\n', { flag: 'wx', flush: true });
+      verifyBaseline(root, id, target, readContext(root));
+    } catch (error) {
+      // Retain partial copies for inspection; an unusable baseline cannot be applied.
+      const manifest = localFile(target, baselineName);
+      if (fs.existsSync(manifest)) fs.unlinkSync(manifest);
+      throw error;
+    }
+    return target;
+  });
+}
 function outsideZone(source, zone) {
   if (!/^[\w-]+$/.test(zone)) throw new Error('Invalid zone name.');
   const pairs = [
@@ -82,6 +161,7 @@ function transaction(root, state, before, after) {
 function applyUnlocked(root, id, candidate, change) {
   const state = readContext(root), files = owned(state, id), variant = state.variants[id];
   if (!change.summary) throw new Error('Change summary required.');
+  verifyBaseline(root, id, candidate, state);
   const before = {}, after = {};
   for (const file of files) {
     before[file] = fs.readFileSync(localFile(root, file)).toString('base64');
@@ -102,6 +182,10 @@ function applyUnlocked(root, id, candidate, change) {
   if (state.designSystem?.confirmed && change.tokens && JSON.stringify(change.tokens) !== JSON.stringify(variant.tokens)) {
     throw new Error('Locked design tokens cannot change during variation.');
   }
+  // Recheck immediately before snapshot/commit; external editors do not honor our lock.
+  const latest = readContext(root);
+  verifyBaseline(root, id, candidate, latest);
+  if (!same(state, latest)) conflict('context changed during apply');
   const key = snapshot(root, id, state, before, after, { tokens: change.tokens ?? variant.tokens, comparison: change.comparison ?? variant.comparison });
   state.variants[id] = { ...variant, tokens: change.tokens ?? variant.tokens,
     comparison: change.comparison ?? variant.comparison,
@@ -164,11 +248,12 @@ export const selectVariant = (root, id) => withLock(root, () => {
 if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href) {
   const [action, root = 'variant-output', id, candidate, metadata] = process.argv.slice(2);
   try {
-    if (action === 'apply') applyVariant(root, id, candidate, JSON.parse(fs.readFileSync(metadata, 'utf8')));
+    if (action === 'prepare') { if (!candidate) throw new Error('New candidate directory required.'); prepareVariant(root, id, candidate, metadata); }
+    else if (action === 'apply') applyVariant(root, id, candidate, JSON.parse(fs.readFileSync(metadata, 'utf8')));
     else if (action === 'undo') undoVariant(root, id);
     else if (action === 'select') selectVariant(root, id);
     else if (action === 'recover') { if (!candidate) throw new Error('Recovery directory required.'); recoverVariant(root, id, candidate); }
-    else throw new Error('Usage: variant-history.mjs apply <output> A|B|C <candidate-dir> <change.json> | undo/select <output> A|B|C | recover <output> A|B|C <new-directory>');
+    else throw new Error('Usage: variant-history.mjs prepare <output> A|B|C <new-candidate-dir> [project-root] | apply <output> A|B|C <candidate-dir> <change.json> | undo/select <output> A|B|C | recover <output> A|B|C <new-directory>');
     console.log(`${action} ${id}: saved`);
   } catch (error) { console.error(error.message); process.exitCode = 1; }
 }

@@ -70,7 +70,7 @@ Before design work, read `variant-output/.variant-context.json` when it exists. 
 
 - User instructions override persisted preferences.
 - A confirmed design system locks visual tokens, not content hierarchy or product judgment.
-- Preference writes are best-effort. Before replacing existing output, a successful durable snapshot is required; on failure keep the original and deliver a separate candidate.
+- Preference writes are best-effort. Before generating an edit, use `variant-history.mjs prepare` to create a new candidate with its original baseline; never retrofit a baseline onto an old candidate. Before replacing existing output, a successful durable snapshot is required; on failure keep the original and deliver a separate candidate.
 - `reset context` may remove only `variant-output/.variant-context.json` after resolving that exact path.
 
 ## Product-critical work

@@ -30,7 +30,15 @@ Read the project's scripts and run its existing typecheck/check command using it
 
 ## Safe iteration
 
-Generate local patches into a separate candidate directory, preserving the same relative file paths for **all files owned by the target variant**. Do not write the live artifact first. Write `change.json` with `summary`, optional `zone`, optional full `tokens` and `comparison` updates. For a hero edit:
+Before generating any patch, prepare a **new, nonexistent** candidate directory from current output:
+
+```bash
+node <skill-root>/scripts/variant-history.mjs prepare variant-output B work/candidate-B
+```
+
+The parent directory must exist. The command copies all B-owned files and writes `.candidate-baseline.json` with their original bytes, SHA-256 digests, version, task/brand constraints and the registered design-system file digest. The project root defaults to the parent of `variant-output`; for nested output pass the actual project root as the final argument. `designSystem.file` is resolved relative to that root. Missing registered design-system files fail preparation.
+
+Generate local patches **inside this prepared candidate**, preserving the same relative file paths for **all files owned by the target variant**. Do not modify its baseline or write the live artifact first. Write `change.json` with `summary`, optional `zone`, optional full `tokens` and `comparison` updates. For a hero edit:
 
 ```json
 {"summary":"Emphasize primary CTA", "zone":"hero"}
@@ -42,7 +50,7 @@ node <skill-root>/scripts/variant-history.mjs undo variant-output B
 node <skill-root>/scripts/variant-history.mjs select variant-output B
 ```
 
-Apply validates unique ownership, snapshots all B files and B metadata, verifies snapshot persistence, then replaces the files and updates context. It rejects changes outside exact zone markers for scoped actions. CSS overrides must stay in the marked zone; a local edit cannot alter shared root tokens. Keep the owned file set stable during one apply. To introduce a new owned file, explicitly register it with its initial content before the next transaction.
+Apply first checks the prepared baseline against current version, owned files, file contents, entry, tokens, comparison, task constraints and the registered design-system file. Changes made directly in an editor are detected even without a version bump. Selection changes alone do not invalidate the candidate. It then validates unique ownership, snapshots all B files and B metadata, verifies snapshot persistence, then replaces the files and updates context. It rejects changes outside exact zone markers for scoped actions. CSS overrides must stay in the marked zone; a local edit cannot alter shared root tokens. Keep the owned file set stable during one apply. To introduce a new owned file, explicitly register it with its initial content **before preparing a new candidate**. Registration after preparation invalidates that candidate.
 
 For configuration-driven React pages, `/* zone:hero:start */` / `/* zone:hero:end */` also delimit a standard JS/TS configuration block. Keep shared components read-only during that local edit and compare the rendered non-target sections; preserving wrapper bytes alone cannot prove rendered scope.
 
@@ -80,3 +88,13 @@ node <skill-root>/scripts/variant-history.mjs recover variant-output B work/reco
 ```
 
 The parent directory must exist and the destination must not exist. This extracts the last undo snapshot's files and metadata, leaving live files and history unchanged. Compare the recovered candidate with current files; reconcile user edits into a new candidate before using `apply`. Snapshots support crash recovery; multiple file replacements are not a filesystem-wide atomic commit. The operation lock coordinates these helpers, not external editors.
+
+## Stale candidates and baseline migration
+
+A missing, invalid or obsolete candidate baseline is rejected before live writes. There is no force flag or command to retrofit a baseline onto existing candidates. Keep the old candidate for comparison, prepare a new directory from current output, and reconcile the intended change there. Original source bytes are retained as base64 in the old baseline for manual three-way comparison; do not restore them over live files without review.
+
+The baseline is project/variant-specific and must remain local with its candidate. Do not publish it: it contains project source. Copying a candidate to a different project does not make it valid there. A successfully applied candidate cannot be applied again, including after undo, because the revision has advanced.
+
+Preflight failures preserve output files, context and history and leave the candidate available. Preparation refuses existing destinations (even empty ones). If preparation fails partway, partial copies may remain, but no usable baseline is retained; inspect them and prepare another new directory.
+
+The helper rechecks before snapshot/commit, but an external editor can still write after the last check. Its lock is cooperative, not an operating-system-wide lock; avoid editing the same files during commit. Multi-file process-crash recovery remains snapshot-based and manual; this change does not claim to eliminate that limitation.

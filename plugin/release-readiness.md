@@ -7,6 +7,7 @@ Target: a person opens an existing project, installs the plugin, obtains three m
 - Full distributable plugin with stable name, RC version, listing metadata and square icons.
 - Reproducible ZIP; checksum verification and fresh-directory unpack smoke test.
 - Installed-path comparison, scoped apply and undo execute outside the source checkout.
+- Prepared candidates detect stale versions, external source edits and registered design-system drift before apply.
 - Undo detects external file/metadata edits; sequential undo works with increasing revisions.
 - History helpers coordinate mutations with a lock; conflicting/legacy snapshots recover to a separate new directory.
 - Previous real React landing project and regression suite cover brand consistency, scope, responsive preview and reduced motion.
@@ -26,4 +27,4 @@ First close install/discovery and upgrade evidence. Then run the project matrix 
 
 ## Test record for this candidate
 
-Local package test and seven history/preview/scanner tests pass. Four website Node tests pass. CI repeats package/history tests and existing browser suites. Runtime tests are not a visual quality score. No public upload or policy attestation has been made.
+Local package test and fourteen history/preview/scanner tests pass. Four website Node tests pass. CI repeats package/history tests and existing browser suites. Runtime tests are not a visual quality score. No public upload or policy attestation has been made.

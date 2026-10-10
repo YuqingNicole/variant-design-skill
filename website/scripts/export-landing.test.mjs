@@ -5,22 +5,24 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { exportLanding } from './export-landing.mjs';
-import { applyVariant, undoVariant, readContext } from '../../scripts/variant-history.mjs';
+import { prepareVariant, applyVariant, undoVariant, readContext } from '../../scripts/variant-history.mjs';
 
 const project = fileURLToPath(new URL('../', import.meta.url));
 test('actual landing B hero edit, undo and named export preserve A/C and selection', t => {
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'landing-dogfood-'));
   t.after(() => fs.rmSync(temp, { recursive: true, force: true }));
   const output = path.join(temp, 'variant-output'), candidate = path.join(temp, 'candidate');
-  fs.mkdirSync(output); fs.mkdirSync(candidate); fs.mkdirSync(path.join(temp, 'src'));
+  fs.mkdirSync(output); fs.mkdirSync(path.join(temp, 'src'));
   for (const file of ['.variant-context.json', 'VariantA.tsx', 'VariantB.tsx', 'VariantC.tsx']) {
     fs.copyFileSync(path.join(project, 'variant-output', file), path.join(output, file));
   }
+  fs.copyFileSync(path.join(project, 'src/design-system.css'), path.join(temp, 'src/design-system.css'));
   fs.copyFileSync(path.join(project, 'src/landing-config.ts'), path.join(temp, 'src/landing-config.ts'));
   const initial = readContext(output);
   // Tests start a fresh undo stack; committed evidence may describe older local revisions.
   for (const value of Object.values(initial.variants)) { value.undo = []; value.history = []; }
   fs.writeFileSync(path.join(output, '.variant-context.json'), JSON.stringify(initial));
+  prepareVariant(output, 'B', candidate);
   const original = fs.readFileSync(path.join(output, 'VariantB.tsx'), 'utf8');
   fs.writeFileSync(path.join(candidate, 'VariantB.tsx'), original.replace('三个方案，', '把三个方案，'));
   applyVariant(output, 'B', candidate, { summary: 'Test hero copy only', zone: 'hero' });
