@@ -60,6 +60,10 @@ Design Read: [page or flow] for [audience] — [tone] · [constraints]
 
 An explicit request to execute, build, generate, or continue authorizes the fast path. Do not make the user confirm information they already supplied.
 
+## Existing project discovery
+
+Before generating or changing interfaces in an existing code project, read `references/project-discovery.md`. Establish the target entry, brand and behavior constraints, related dependencies and unknowns. The bundled read-only scanner assists this review; it does not prove complete understanding or runtime support.
+
 ## Shared context
 
 Before design work, read `variant-output/.variant-context.json` when it exists. For the schema and update rules, read `references/project-context.md`.
