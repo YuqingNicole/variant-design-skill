@@ -36,7 +36,8 @@ def package_files(root=ROOT):
     # All paths inside the existing router remain relative to its own skill root.
     required = ('SKILL.md', 'skills/variant-generate/SKILL.md', 'skills/shared/code-output.md',
                 'references/project-context.md', 'scripts/variant-history.mjs', 'scripts/build-preview.mjs',
-                'scripts/react-preview.mjs', 'scripts/quality-gate.mjs')
+                'scripts/react-preview.mjs', 'scripts/quality-gate.mjs',
+                'scripts/project-profile.mjs', 'scripts/design-task.mjs', 'references/project-discovery.md')
     for name in required:
         if f'skills/variant-design/{name}' not in files:
             raise ValueError(f'Missing runtime dependency: {name}')
