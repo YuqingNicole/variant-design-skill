@@ -68,6 +68,8 @@ Run `node --test scripts/variant-loop.test.mjs` for file/metadata and static sca
 
 Fixture tests verify the mechanics, not the quality of future generated designs. Run the same task-specific browser checks on the actual delivered output. If browser tooling is unavailable, list those checks as unverified.
 
+Before claiming verified delivery, record and recheck version-bound evidence following [artifact-verification.md](artifact-verification.md). Missing runtime checks remain unverified; static readiness cannot substitute for them.
+
 Export the explicitly named variant or selected winner from its current revision and tokens. Preserve source files/history. Include framework integration files, dependencies, and a short record of checks performed. Re-run the appropriate typecheck and open the exported artifact before reporting completion.
 
 ## Integration checkpoint learned from the landing page

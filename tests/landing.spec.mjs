@@ -264,3 +264,17 @@ test('inspiration previews load locally, link to sources and degrade without bro
  await expect(page.locator('.inspiration-grid article').first().locator('.inspiration-image-fallback')).toBeVisible();
  await expect(previews.first()).toHaveAttribute('href','https://linear.app/');
 });
+
+test('actual landing evidence names its observed font and unverified checks',async({page,browser})=>{
+ const fs=await import('node:fs');const path=await import('node:path');
+ const {verifyArtifact}=await import('../scripts/artifact-verification.mjs');
+ const project=path.resolve('../website'),root=path.join(project,'variant-output');
+ const dependencies=fs.readdirSync(path.join(project,'src'),{recursive:true}).filter(name=>fs.statSync(path.join(project,'src',name)).isFile()).map(name=>'src/'+name);
+ const state=JSON.parse(fs.readFileSync(path.join(root,'.variant-context.json'),'utf8'));
+ const result=await verifyArtifact(root,'B',{projectRoot:project,dependencies},async()=>{
+  await page.goto('/variant-output/_preview/B.html');await expect(page.locator('h1')).toBeVisible();
+  const family=await page.locator('h1').evaluate(el=>getComputedStyle(el).fontFamily);
+  return [{id:'brand',status:state.designSystem.fonts.some(font=>family.includes(font))?'passed':'failed',reason:'Observed the real B landing heading; other elements are outside this observation',tool:{name:'Chromium via Playwright',version:browser.version()},environment:{url:page.url(),viewport:page.viewportSize()},evidence:[family]}];
+ });
+ expect(result.report.checks.find(c=>c.id==='brand').status).toBe('passed');expect(result.status).toBe('unverified');
+});

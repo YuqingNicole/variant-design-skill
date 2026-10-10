@@ -2,9 +2,10 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 const extensions = new Set([".html", ".css", ".scss", ".js", ".jsx", ".ts", ".tsx", ".vue", ".svelte", ".astro"]);
-const ignoredDirectories = new Set([".git", "node_modules", "dist", "build", ".next", ".cache", ".history", "_harness"]);
+const ignoredDirectories = new Set([".git", "node_modules", "dist", "build", ".next", ".cache", ".history", ".verification", "_harness"]);
 
 function locationFor(source, index) {
   return source.slice(0, index).split("\n").length;
@@ -23,7 +24,7 @@ function addMatches(findings, source, file, rule) {
   }
 }
 
-function scanSource(source, file = "<memory>") {
+export function scanSource(source, file = "<memory>") {
   const findings = [];
   const rules = [
     {
@@ -158,6 +159,7 @@ function selfTest() {
   process.exit(0);
 }
 
+if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href) {
 const args = process.argv.slice(2);
 if (args.includes("--self-test")) selfTest();
 
@@ -193,3 +195,5 @@ if (json) {
 }
 
 process.exit(errors > 0 || (strict && warnings > 0) ? 1 : 0);
+
+}

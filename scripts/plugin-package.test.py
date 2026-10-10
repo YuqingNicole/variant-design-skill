@@ -40,6 +40,10 @@ class PackageTests(unittest.TestCase):
             (output/'.variant-context.json').write_text(json.dumps(state))
             subprocess.run(['node', str(skill/'scripts/build-preview.mjs'), str(output)], cwd=root, check=True, capture_output=True)
             self.assertTrue((output/'_compare.html').exists())
+            evidence = subprocess.run(['node',str(skill/'scripts/artifact-verification.mjs'),'run',str(output),'B'],cwd=root,capture_output=True,text=True)
+            self.assertEqual(evidence.returncode, 2)
+            self.assertEqual(json.loads(evidence.stdout)['status'], 'unverified')
+
             profile_run = subprocess.run(['node', str(skill/'scripts/project-profile.mjs'), 'scan', str(output.parent), 'variant-output/variant-B.html'], cwd=root, check=True, capture_output=True, text=True)
             profile = json.loads(profile_run.stdout)
             self.assertIn('variant-output/variant-B.html', profile['dependencyScope']['files'])
