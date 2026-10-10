@@ -43,3 +43,17 @@ test('edits during observation and later brief changes invalidate bindings',asyn
  const next=await observeTask(task,profile,async()=>observation());task.brief.goal='Different goal';
  assert.equal(inspectObservation(next,task,profile).status,'stale');
 });
+
+test('design references preserve provenance and distinguish inspiration from reuse',async t=>{
+ const {profile,brief}=fixture(t);
+ const ref={id:'pricing-layout',title:'Pricing comparison reference',url:'https://example.com/pricing',usage:'inspiration',borrow:'Plan comparison hierarchy',rationale:'Helps visitors compare required features',constraints:'Keep project typography and purchase action',directions:['A'],review:{status:'unverified'}};
+ const task=createTask(profile,{...brief,designReferences:[ref]});
+ assert.deepEqual(task.brief.designReferences,[ref]);
+ assert.throws(()=>createTask(profile,{...brief,designReferences:[ref,ref]}));
+ for(const patch of [{url:'javascript:alert(1)'},{directions:['D']},{rationale:''},{usage:'code'},{review:{status:'verified'}}]) assert.throws(()=>createTask(profile,{...brief,designReferences:[{...ref,...patch}]}));
+ const code={...ref,usage:'code',license:{status:'unknown',evidence:'Original license not checked'}};
+ assert.equal(createTask(profile,{...brief,designReferences:[code]}).brief.designReferences[0].license.status,'unknown');
+ const report=await observeTask(task,profile,async()=>observation());
+ task.brief.designReferences[0].borrow='Different interaction';
+ assert.equal(inspectObservation(report,task,profile).status,'stale');
+});

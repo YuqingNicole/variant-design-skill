@@ -70,3 +70,7 @@ The JavaScript API `observeTask(task, profile, asyncAdapter)` runs a trusted ada
 Allowed check statuses: passed, failed, unverified. Never invent tool results; missing/failed adapters or incomplete evidence remain unverified. Reports bind task content and profile content, record conditions/time, and become stale on changes during observation. `inspectObservation(report, task, profile)` checks source bindings; it always reports that current browser/environment freshness is not established. Evidence strings are trusted adapter assertions, not signed proof or screenshot storage. Do not include tokens, personal data or credential-bearing URLs.
 
 A passing report covers only its listed observations, not every acceptance criterion or the whole project. Screenshots, automatic adapter selection, task revision history, selection/change receipts and integration remain separate follow-up work. Preserve existing candidate snapshots and verification flows.
+
+## Reference selection before variants
+
+When outside references help the task, read `design-reference-selection.md` after project recognition and before generating A/B/C. Save source, borrowing intent, task fit and constraints in optional `brief.designReferences`; distinguish inspiration from code/asset reuse. Existing brand and functional constraints remain authoritative.

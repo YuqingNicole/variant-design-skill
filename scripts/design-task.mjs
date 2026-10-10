@@ -14,6 +14,22 @@ function validateBrief(brief, profile) {
   requireValue(brief.brandConstraints.every(item => text(item.rule) && text(item.evidence)), 'Brand rules require evidence or explicit user instruction');
   requireValue(brief.unknowns.every(item => text(item.reason) && typeof item.blocking === 'boolean'), 'Unknowns require reasons and blocking flags');
   requireValue(Array.isArray(brief.discoveryReview) && brief.discoveryReview.length === profile.unknowns.length, 'Review every discovery unknown');
+  if (brief.designReferences !== undefined) {
+    requireValue(Array.isArray(brief.designReferences), 'designReferences must be an array');
+    const ids = new Set();
+    for (const ref of brief.designReferences) {
+      requireValue(ref && ['id','title','borrow','rationale','constraints'].every(key => text(ref[key])), 'Design references require identity, borrowing intent, rationale and constraints');
+      requireValue(!ids.has(ref.id), 'Duplicate design reference id'); ids.add(ref.id);
+      let url;
+      try { url = new URL(ref.url); } catch { throw new Error('Reference requires a valid source URL'); }
+      requireValue(['https:','http:'].includes(url.protocol) && !url.username && !url.password, 'Reference URL must be HTTP(S) without credentials');
+      requireValue(['inspiration','code','asset'].includes(ref.usage), 'Reference usage must distinguish inspiration from reuse');
+      requireValue(Array.isArray(ref.directions) && ref.directions.length > 0 && new Set(ref.directions).size === ref.directions.length && ref.directions.every(id => ['A','B','C'].includes(id)), 'Reference must name target directions');
+      requireValue(ref.review && ['unverified','verified'].includes(ref.review.status), 'Reference needs an explicit review state');
+      if (ref.review.status === 'verified') requireValue(text(ref.review.evidence) && text(ref.review.checkedAt) && Number.isFinite(Date.parse(ref.review.checkedAt)), 'Verified references require dated evidence');
+      if (ref.usage !== 'inspiration') requireValue(ref.license && ['unknown','permitted','restricted'].includes(ref.license.status) && text(ref.license.evidence), 'Code and assets require an explicit license assessment');
+    }
+  }
   profile.unknowns.forEach((item,index) => {
     const review = brief.discoveryReview[index];
     requireValue(review?.index === index && text(review.reason) && ['resolved','unresolved'].includes(review.status) && typeof review.blocking === 'boolean', 'Discovery review requires status, reason and blocking flag');
