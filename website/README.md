@@ -38,6 +38,8 @@ npm start
 
 Generated HTML is rendered inside a sandboxed iframe. The server separates creative direction from implementation: users compare three lightweight design contracts first, then spend the long generation call only on the selected direction. Model output is sanitized and checked for a complete document, language, responsive structure, semantic landmarks, keyboard focus, reduced motion, implementation depth, and embedded active content. A failed direction gets one focused repair pass before the request fails.
 
+The published site runs on Vercel with the same API in one function (`api/index.mjs` at the repository root). Add the provider variables to the Vercel project with `vercel env add`; there they are public endpoints that spend the key for every visitor. See [CANVAS.md → Deployment](CANVAS.md#deployment) for setup and cost controls.
+
 ## Model routing
 
 `ANTHROPIC_MODEL` or `OPENAI_MODEL` remains the default for every stage. For production, each stage can use a different model without changing the client:

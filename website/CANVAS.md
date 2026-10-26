@@ -22,14 +22,25 @@ On any host other than `localhost`, `127.0.0.1` or `[::1]`, such as the publishe
 - Projects stay in that browser profile. Clearing site data deletes them, and they do not sync to other devices. Keep a copy with **下载项目备份 / Download project backup** in the delivery panel.
 - To continue a web project with an agent, import that backup on the local canvas start page (**导入项目备份**). Import creates a new project with the documents and chosen direction; undo history is not included. Both modes accept the same backup file.
 - Two tabs on the same project are protected by revisions: a tab working from an older revision is refused and reloads the current one.
-- There is no model, agent or MCP connection. AI generation and proposals are disabled, and the editor shows how to run the canvas locally instead.
+- AI generation and proposals use the site's model when one is configured. The browser sends the brief, or the selected subtree with embedded images replaced by a placeholder, to the stateless `POST /api/canvas/documents` and `POST /api/canvas/suggest` routes, validates the result and saves it locally. The server keeps nothing. Without a configured model these controls stay disabled.
+- Agents and MCP cannot reach a web project. The editor shows how to run the canvas locally and import a backup.
 - If the browser blocks IndexedDB, the project lives in memory for that tab and the editor warns that a reload will lose it.
 
 Add `?storage=browser` on localhost to try web mode against the local server (used by the browser regression); the choice stays in project links for that tab.
 
 ## Deployment
 
-The public site is deployed to Vercel as static files: `vercel.json` at the repository root installs and builds `website/` and serves `website/dist`, rewriting page routes to `index.html`. `.vercelignore` uploads only `website/` and `scripts/` and excludes `website/.env` and `website/.canvas-data/`. No server code runs there, so `/api/*` returns 404: the canvas uses web mode and the workbench reports that no model is configured. Deploy with `vercel deploy` (preview) or `vercel deploy --prod` from the repository root.
+The public site is deployed to Vercel. `vercel.json` at the repository root installs and builds `website/`, serves `website/dist`, and rewrites `/api/*` to one function, `api/index.mjs`, which runs the same `handleApi` as the local server. Page routes rewrite to `index.html`. `.vercelignore` uploads only `website/`, `scripts/` and `api/`, and excludes `website/.env` and `website/.canvas-data/`. Merging to `master` deploys production through the Vercel GitHub integration; pull requests get preview deployments.
+
+On Vercel, the canvas project routes refuse with 403 (the host is not loopback), so the canvas runs in web mode. Model routes work once a provider is configured in the Vercel project, using the same variables as `website/.env.example`:
+
+```sh
+vercel env add ANTHROPIC_API_KEY production   # paste the key when prompted
+vercel env add ANTHROPIC_MODEL production     # optional
+vercel deploy --prod                          # or merge to master
+```
+
+These routes are public: anyone who can open the site can spend that key on canvas generation, proposals and the `/workbench` generator. Cross-origin browser requests are refused, but that does not stop scripted clients. Set a spending limit on the provider key, and consider a Vercel Firewall rate-limit rule for `/api/`. The function's `maxDuration` is 300 seconds; generation makes three parallel model calls, each limited by `MODEL_TIMEOUT_MS`.
 
 ## Canvas operations
 
@@ -87,7 +98,7 @@ Example: `get_selection({projectId})`, then `set_text_content({projectId,directi
 
 ## HTTP API
 
-`POST /api/canvas/projects` accepts `{brief}` for template starts; `POST /api/canvas/import` accepts a project backup (`format: "variant-canvas-project"`, `version: 1`, `brief`, `selected`, `documents`), validates every document and creates a new project with `origin: "import"` (up to 30 MB, for embedded images); `POST /api/canvas/generate` accepts `{brief}` for provider-backed generation. `GET /api/canvas/projects/:id` returns documents, revision, active direction, selection, winner and history counts. With `?stamp=<revision>:<active>:<selection>:<winner>` it returns `204` when that is still current. A save lock older than 30 seconds is treated as left by a crashed process and is replaced.
+`POST /api/canvas/documents` (`{brief}` → `{documents}`) and `POST /api/canvas/suggest` (`{node, instruction}` → `{summary, commands}`) call the model without reading or writing projects, accept any same-origin host, and are what web mode uses. `POST /api/canvas/projects` accepts `{brief}` for template starts; `POST /api/canvas/import` accepts a project backup (`format: "variant-canvas-project"`, `version: 1`, `brief`, `selected`, `documents`), validates every document and creates a new project with `origin: "import"` (up to 30 MB, for embedded images); `POST /api/canvas/generate` accepts `{brief}` for provider-backed generation. `GET /api/canvas/projects/:id` returns documents, revision, active direction, selection, winner and history counts. With `?stamp=<revision>:<active>:<selection>:<winner>` it returns `204` when that is still current. A save lock older than 30 seconds is treated as left by a crashed process and is replaced.
 
 `POST /api/canvas/projects/:id/{edit,selection,select,undo,redo}` accepts `expectedRevision` and operation parameters. `edit` accepts `{direction,commands,summary}`. A selection changes UI context without creating an undo step or changing the content revision.
 
@@ -109,4 +120,4 @@ cd tests
 PLAYWRIGHT_CHANNEL=chrome npx playwright test -c canvas.config.mjs
 ```
 
-The browser regression covers creation, double-click editing, undo/redo, external synchronization, stale writes, drag ordering, mobile width, image upload, export download, persistence, FAQ and anchor navigation, plus web mode: IndexedDB persistence with one stored copy of an image, a refused stale undo from a second tab, preview, export and no `/api/canvas` requests, then importing its backup into the local canvas. MCP tests use a real SDK stdio client and HTTP server. Model-backed generation and proposals have mocked-provider regression coverage and still need provider-enabled quality acceptance testing.
+The browser regression covers creation, double-click editing, undo/redo, external synchronization, stale writes, drag ordering, mobile width, image upload, export download, persistence, FAQ and anchor navigation, plus web mode: IndexedDB persistence with one stored copy of an image, a refused stale undo from a second tab, preview, export and no `/api/canvas` requests, then importing its backup into the local canvas; and web-mode AI generation and proposals against mocked model routes. MCP tests use a real SDK stdio client and HTTP server. Model-backed generation and proposals have mocked-provider regression coverage and still need provider-enabled quality acceptance testing.
