@@ -44,3 +44,31 @@ test('style inputs accept everyday values, restore rejected ones, and shortcuts 
  await canvas.locator('#intro').dblclick();await page.keyboard.press('End');await page.keyboard.press('Shift+Enter');await page.keyboard.type('第二行');await page.keyboard.press('Enter');
  await expect(page.locator('.lc-project-title')).toContainText('版本 6');await expect(canvas.locator('#intro')).toContainText('第二行');
 });
+test('web mode keeps projects in this browser without calling the canvas API',async({page,context})=>{
+ const errors=[],apiCalls=[];page.on('pageerror',e=>errors.push(e.message));context.on('request',r=>{if(new URL(r.url()).pathname.startsWith('/api/canvas'))apiCalls.push(r.url());});
+ await page.goto('/canvas?new=1&storage=browser');await expect(page.getByText('想让 Agent 一起改？在本地运行画布')).toBeVisible();
+ await page.getByRole('button',{name:'创建三个可编辑起点'}).click();await page.getByRole('button',{name:'编辑 A'}).click();
+ await expect(page.locator('.lc-project-title')).toContainText('保存在此浏览器');
+ const canvas=page.frameLocator('iframe[title="可编辑 Landing 画布"]');
+ await canvas.locator('#headline').dblclick();await canvas.locator('#headline').fill('网页版保存的标题');await canvas.locator('#headline').press('Enter');
+ await expect(page.locator('.lc-project-title')).toContainText('版本 2');
+ await page.getByRole('button',{name:'↺ 撤销'}).click();await expect(canvas.locator('#headline')).not.toHaveText('网页版保存的标题');
+ await page.getByRole('button',{name:'↻ 重做'}).click();await expect(canvas.locator('#headline')).toHaveText('网页版保存的标题');
+ await page.locator('[data-layer-id="hero"]').click();await page.getByRole('button',{name:'＋ 添加图片'}).click();
+ await page.locator('input[type=file]').setInputFiles({name:'pixel.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jN1sAAAAASUVORK5CYII=','base64')});
+ await expect(canvas.locator('img')).toHaveAttribute('src',/^data:image\/png;base64,/);
+ await page.getByLabel('图片描述').fill('网页版图片');await page.getByLabel('图片描述').press('Tab');await expect(page.locator('.lc-project-title')).toContainText('版本 6');
+ const stored=await page.evaluate(()=>new Promise(resolve=>{const r=indexedDB.open('variant-canvas');r.onsuccess=()=>{const g=r.result.transaction('projects').objectStore('projects').getAll();g.onsuccess=()=>resolve(g.result.map(p=>({assets:Object.keys(p.assets||{}).length,inline:JSON.stringify({d:p.documents,u:p.undo}).includes('data:image')})));};}));
+ expect(stored).toEqual([{assets:1,inline:false}]);
+ // A second tab working from an older revision is refused instead of overwriting.
+ const other=await context.newPage();await other.goto(page.url());const otherCanvas=other.frameLocator('iframe[title="可编辑 Landing 画布"]');await expect(otherCanvas.locator('#headline')).toHaveText('网页版保存的标题');
+ await canvas.locator('#headline').dblclick();await canvas.locator('#headline').fill('第一个标签页');await canvas.locator('#headline').press('Enter');await expect(page.locator('.lc-project-title')).toContainText('版本 7');
+ await other.getByRole('button',{name:'↺ 撤销'}).click();
+ await expect(other.locator('.lc-error')).toContainText('页面已有新修改');await expect(otherCanvas.locator('#headline')).toHaveText('第一个标签页');await other.close();
+ await page.reload();await expect(canvas.locator('#headline')).toHaveText('第一个标签页');await expect(page.locator('.lc-project-title')).toContainText('保存在此浏览器');
+ await page.getByRole('button',{name:'预览与交付'}).click();await expect(page.getByRole('dialog')).toContainText('检查通过');await expect(page.getByRole('dialog')).not.toContainText('MCP 接入信息');
+ const popupPromise=page.waitForEvent('popup');await page.getByRole('button',{name:'打开可交互预览'}).click();const popup=await popupPromise;await expect(popup.locator('h1')).toHaveText('第一个标签页');await popup.close();
+ const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'下载 Landing HTML'}).click();const download=await downloadPromise;
+ const html=await (await import('node:fs/promises')).readFile(await download.path(),'utf8');expect(download.suggestedFilename()).toBe('landing-A.html');expect(html).toContain('第一个标签页');expect(html).toContain('data:image/png;base64,');expect(html).not.toContain('postMessage');
+ expect(apiCalls).toEqual([]);expect(errors).toEqual([]);
+});

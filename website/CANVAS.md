@@ -15,6 +15,17 @@ Projects persist to `website/.canvas-data/<uuid>.json`. Embedded images are stor
 
 The authoring API accepts loopback hosts only and rejects cross-origin browser requests. Do not expose this process as a multi-user service. Publishing an exported static landing does not publish the editor or its stored projects.
 
+## Web mode
+
+On any host other than `localhost`, `127.0.0.1` or `[::1]`, such as the published website, `/canvas` runs without the canvas server. `src/canvas-browser-store.ts` answers the same API routes inside the tab and keeps projects in this browser's IndexedDB (`variant-canvas` database). The state rules are shared with the local file store (`shared/canvas-state.mjs`): the same revisions, 30-step undo/redo, stale-write refusal and one stored copy of each image. Web mode never calls `/api/canvas`.
+
+- Projects stay in that browser profile. Clearing site data deletes them, and they do not sync to other devices or carry over to the local canvas. Export the HTML or page document to keep a copy.
+- Two tabs on the same project are protected by revisions: a tab working from an older revision is refused and reloads the current one.
+- There is no model, agent or MCP connection. AI generation and proposals are disabled, and the editor shows how to run the canvas locally instead.
+- If the browser blocks IndexedDB, the project lives in memory for that tab and the editor warns that a reload will lose it.
+
+Add `?storage=browser` on localhost to try web mode against the local server (used by the browser regression); the choice stays in project links for that tab.
+
 ## Canvas operations
 
 - Compare A/B/C, choose a delivery direction explicitly.
@@ -79,7 +90,7 @@ Example: `get_selection({projectId})`, then `set_text_content({projectId,directi
 
 ## Boundaries
 
-This version handles structured landing pages. It does not round-trip arbitrary existing HTML/React into editable nodes, expose computed styles/screenshots as MCP tools, submit forms, host a shared editing backend, or automatically deploy from the editor. Downloaded HTML can be published with a hosting service; that is a separate operation. Uploaded image data is self-contained; HTTPS images supplied through MCP still depend on those external URLs.
+This version handles structured landing pages. It does not round-trip arbitrary existing HTML/React into editable nodes, expose computed styles/screenshots as MCP tools, submit forms, host a shared editing backend (web mode stores projects per browser), or automatically deploy from the editor. Downloaded HTML can be published with a hosting service; that is a separate operation. Uploaded image data is self-contained; HTTPS images supplied through MCP still depend on those external URLs.
 
 The old file MCP (`mcp/server.mjs`) still has its original 13 tools and schema-v2 workflow. The new canvas MCP (`mcp/canvas-server.mjs`) has 18 tools and uses schema-v1 structured documents. These are distinct adapters, not 31 tools on one connection.
 
@@ -93,4 +104,4 @@ cd tests
 PLAYWRIGHT_CHANNEL=chrome npx playwright test -c canvas.config.mjs
 ```
 
-The browser regression covers creation, double-click editing, undo/redo, external synchronization, stale writes, drag ordering, mobile width, image upload, export download, persistence, FAQ and anchor navigation. MCP tests use a real SDK stdio client and HTTP server. Model-backed generation and proposals have mocked-provider regression coverage and still need provider-enabled quality acceptance testing.
+The browser regression covers creation, double-click editing, undo/redo, external synchronization, stale writes, drag ordering, mobile width, image upload, export download, persistence, FAQ and anchor navigation, plus web mode: IndexedDB persistence with one stored copy of an image, a refused stale undo from a second tab, preview, export and no `/api/canvas` requests. MCP tests use a real SDK stdio client and HTTP server. Model-backed generation and proposals have mocked-provider regression coverage and still need provider-enabled quality acceptance testing.

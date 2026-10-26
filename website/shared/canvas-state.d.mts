@@ -1,0 +1,9 @@
+import type { LandingDocument } from './landing-document.mjs';
+export type CanvasState = { id:string; revision:number; brief:string; origin:'template'|'model'; active:'A'|'B'|'C'; selected:'A'|'B'|'C'|null; selection:string|null; documents:Record<'A'|'B'|'C',LandingDocument>; undo:unknown[]; redo:unknown[]; log:{revision:number;action:string;summary:string;at:string}[]; createdAt:string };
+export type CanvasAction = { type:string; [key:string]:unknown };
+export function stateStamp(state:Pick<CanvasState,'revision'|'active'|'selection'|'selected'>):string;
+export function publicState(state:CanvasState):Omit<CanvasState,'undo'|'redo'>&{undoDepth:number;redoDepth:number};
+export function newProject(id:string,brief:string,documents?:Record<'A'|'B'|'C',LandingDocument>,now?:string):CanvasState;
+export function transition(state:CanvasState,expectedRevision:number,action:CanvasAction,now?:string):CanvasState;
+export function packAssets<T>(state:T,key:(value:string,index:number)=>string):T;
+export function unpackAssets<T>(state:T):T;
