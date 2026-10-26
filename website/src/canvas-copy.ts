@@ -1,8 +1,8 @@
 export const canvasEnglish:Record<string,string> = {
- '网页版不连接模型。仍可直接编辑；要让 Agent 接手，请在本地运行画布。':'The web version has no model connection. You can still edit directly; to let an agent take over, run the canvas locally.',
+ '这个网站没有配置模型。仍可直接编辑；要让 Agent 接手，请在本地运行画布。':'This site has no model configured. You can still edit directly; to let an agent take over, run the canvas locally.',
  '下载文件可部署至支持静态 HTML 的托管服务。项目只保存在这个浏览器里，清除网站数据会一并删除。':'Deploy the download to any static HTML host. This project is stored only in this browser; clearing site data deletes it.',
  '想让 Agent 一起改？在本地运行画布':'Want an agent to edit with you? Run the canvas locally',
- '网页版的项目只保存在这个浏览器里，不连接模型或 Agent。在本地运行后，项目存成文件，Claude Code 或 Codex 可以通过 MCP 读写同一个画布。':'Web projects are stored only in this browser and connect to no model or agent. Run locally and projects become files that Claude Code or Codex can read and edit through MCP.',
+ '网页版的项目只保存在这个浏览器里，Agent 无法读写。在本地运行后，项目存成文件，Claude Code 或 Codex 可以通过 MCP 读写同一个画布。':'Web projects are stored only in this browser, where agents cannot reach them. Run locally and projects become files that Claude Code or Codex can read and edit through MCP.',
  '另开终端，把画布接入 Claude Code：':'In another terminal, connect the canvas to Claude Code:',
  '然后打开 http://127.0.0.1:4188/canvas。在交付面板下载项目备份，再在本地画布的首页导入，就能接着改。':'Then open http://127.0.0.1:4188/canvas. Download a project backup from the delivery panel here and import it on the local canvas start page to keep editing.',
  '导入项目备份':'Import project backup','下载项目备份':'Download project backup','已导入项目备份。撤销记录不随备份保存。':'Project backup imported. Undo history is not included in backups.',

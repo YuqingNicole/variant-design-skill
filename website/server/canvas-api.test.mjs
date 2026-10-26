@@ -6,8 +6,8 @@ import path from 'node:path';
 import {Readable} from 'node:stream';
 import {handleCanvasApi} from './canvas-api.mjs';
 import {createLanding} from '../shared/landing-document.mjs';
-async function invoke(url,body,method='POST'){
- const req=Readable.from([Buffer.from(JSON.stringify(body??{}))]);req.url=url;req.method=method;req.headers={host:'127.0.0.1:4188',origin:'http://127.0.0.1:4188'};
+async function invoke(url,body,method='POST',headers={host:'127.0.0.1:4188',origin:'http://127.0.0.1:4188'}){
+ const req=Readable.from([Buffer.from(JSON.stringify(body??{}))]);req.url=url;req.method=method;req.headers=headers;
  let status,payload;const res={writeHead:s=>status=s,end:s=>payload=s===undefined?undefined:JSON.parse(s)};await handleCanvasApi(req,res);return{status,payload};
 }
 test('model documents validate before saving; proposals remain unapplied, scoped and revision-bound',async()=>{
@@ -48,4 +48,21 @@ test('a project backup imports as a new project with its documents and chosen di
   assert.equal((await invoke('/api/canvas/import',{documents:edited.documents})).status,400);
   const broken=projectBackup(edited);broken.documents.B.root.children[0].styles={position:'fixed'};assert.equal((await invoke('/api/canvas/import',broken)).status,400);
  }finally{if(old===undefined)delete process.env.CANVAS_DATA_DIR;else process.env.CANVAS_DATA_DIR=old;fs.rmSync(dir,{recursive:true,force:true});}
+});
+test('the published site gets stateless model routes but never the project store',async()=>{
+ const oldFetch=global.fetch,oldKey=process.env.ANTHROPIC_API_KEY,prompts=[];const site={host:'variant.example',origin:'https://variant.example'};
+ global.fetch=async(_url,init)=>{const prompt=JSON.parse(init.body).messages[0].content;prompts.push(prompt);const direction=prompt.match(/Direction ([ABC]):/)?.[1];
+  const value=direction?createLanding(direction):prompt.includes('Scope test')?{summary:'Outside',commands:[{type:'text',nodeId:'footer',text:'No'}]}:{summary:'Shorter',commands:[{type:'text',nodeId:'headline',text:'Short'}]};
+  return new Response(JSON.stringify({content:[{type:'text',text:JSON.stringify(value)}]}),{status:200});};
+ try{
+  delete process.env.ANTHROPIC_API_KEY;assert.equal((await invoke('/api/canvas/documents',{brief:'Web'},'POST',site)).status,503);
+  process.env.ANTHROPIC_API_KEY='test-only';
+  const generated=await invoke('/api/canvas/documents',{brief:'Web generation'},'POST',site);assert.equal(generated.status,200);assert.deepEqual(Object.keys(generated.payload.documents),['A','B','C']);
+  const hero=createLanding('B').root.children.find(n=>n.id==='hero');hero.children.push({id:'shot',type:'img',name:'Shot',text:'',children:[],styles:{},props:{src:'data:image/png;base64,'+'A'.repeat(50_000),alt:'x'}});
+  const suggestion=await invoke('/api/canvas/suggest',{node:hero,instruction:'Shorter'},'POST',site);assert.equal(suggestion.status,200);assert.deepEqual(suggestion.payload.commands,[{type:'text',nodeId:'headline',text:'Short'}]);
+  assert.ok(prompts.at(-1).includes('(embedded image)'));assert.ok(!prompts.at(-1).includes('AAAAAAAAAA'));
+  assert.equal((await invoke('/api/canvas/suggest',{node:hero,instruction:'Scope test'},'POST',site)).status,400);
+  assert.equal((await invoke('/api/canvas/documents',{brief:'Other site'},'POST',{host:'variant.example',origin:'https://elsewhere.example'})).status,403);
+  assert.equal((await invoke('/api/canvas/projects',{brief:'Store'},'POST',site)).status,403);
+ }finally{global.fetch=oldFetch;if(oldKey===undefined)delete process.env.ANTHROPIC_API_KEY;else process.env.ANTHROPIC_API_KEY=oldKey;}
 });

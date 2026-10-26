@@ -4,5 +4,19 @@
   "installCommand": "npm ci --prefix website",
   "buildCommand": "npm run build --prefix website",
   "outputDirectory": "website/dist",
-  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "functions": {
+    "api/index.mjs": {
+      "maxDuration": 300
+    }
+  }
 }

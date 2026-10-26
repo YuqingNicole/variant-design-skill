@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {createLanding} from '../website/shared/landing-document.mjs';
 test('canvas edits, revision history, live external changes and standalone delivery',async({page,request})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/canvas?new=1');await page.getByLabel('描述你的产品').fill('真实画布浏览器回归：比较、编辑与交付');await page.getByRole('button',{name:'创建三个可编辑起点'}).click();
@@ -79,4 +80,20 @@ test('web mode keeps projects in this browser without calling the canvas API, an
  await expect(local.frameLocator('iframe[title="可编辑 Landing 画布"]').locator('img')).toHaveAttribute('src',/^data:image\/png;base64,/);await expect(local.frameLocator('iframe[title="可编辑 Landing 画布"]').locator('#headline')).toHaveText('第一个标签页');
  const id=new URL(local.url()).searchParams.get('project');const saved=await(await local.request.get('/api/canvas/projects/'+id)).json();expect(saved.origin).toBe('import');expect(saved.documents.A.root.children.find(n=>n.id==='hero')).toBeTruthy();
  expect(errors).toEqual([]);
+});
+test('web mode uses the site model routes and keeps the generated project in this browser',async({page})=>{
+ const errors=[],calls=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.route('**/api/status',route=>route.fulfill({json:{configured:true,provider:'anthropic',model:'test'}}));
+ await page.route('**/api/canvas/**',async route=>{const url=new URL(route.request().url());calls.push(url.pathname);const body=route.request().postDataJSON();
+  if(url.pathname==='/api/canvas/documents'){const documents=Object.fromEntries(['A','B','C'].map(d=>{const doc=createLanding(d,body.brief);doc.root.children.find(n=>n.id==='hero').children.find(n=>n.id==='headline').text='模型方向 '+d;return [d,doc];}));return route.fulfill({json:{documents}});}
+  if(url.pathname==='/api/canvas/suggest'){expect(body.node.id).toBe('headline');return route.fulfill({json:{summary:'标题更短',commands:[{type:'text',nodeId:'headline',text:'模型建议的标题'}]}});}
+  return route.fulfill({status:500,json:{error:'unexpected '+url.pathname}});});
+ await page.goto('/canvas?new=1&storage=browser');await page.getByRole('button',{name:'用 AI 生成三个定制方向'}).click();
+ await expect(page.locator('.lc-comparison')).toContainText('AI 生成方向');await page.getByRole('button',{name:'编辑 B'}).click();
+ const canvas=page.frameLocator('iframe[title="可编辑 Landing 画布"]');await expect(canvas.locator('#headline')).toHaveText('模型方向 B');
+ await canvas.locator('#headline').click();await page.getByLabel('选区修改要求').fill('更短一些');await page.getByRole('button',{name:'生成修改建议'}).click();
+ await expect(page.getByRole('dialog')).toContainText('标题更短');await expect(canvas.locator('#headline')).toHaveText('模型方向 B');
+ await page.getByRole('button',{name:'应用这些修改'}).click();await expect(canvas.locator('#headline')).toHaveText('模型建议的标题');
+ await page.reload();await expect(canvas.locator('#headline')).toHaveText('模型建议的标题');await expect(page.locator('.lc-project-title')).toContainText('保存在此浏览器');
+ expect(calls).toEqual(['/api/canvas/documents','/api/canvas/suggest']);expect(errors).toEqual([]);
 });

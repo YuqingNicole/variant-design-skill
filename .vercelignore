@@ -3,6 +3,7 @@
 !/website
 !/scripts
 !/vercel.json
+!/api
 **/node_modules
 /website/.env
 /website/.canvas-data

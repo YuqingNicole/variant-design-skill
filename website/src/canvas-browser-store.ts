@@ -1,4 +1,4 @@
-import { inspectLanding, renderLanding } from '../shared/landing-document.mjs';
+import { applyCommands, findNode, inspectLanding, renderLanding } from '../shared/landing-document.mjs';
 import { newProject, packAssets, projectFromBackup, publicState, stateStamp, transition, unpackAssets, type CanvasState } from '../shared/canvas-state.mjs';
 // Web mode: the hosted site has no canvas server, so the same API runs in this tab and stores
 // projects in this browser only. Local mode (loopback host) keeps the file store and MCP access.
@@ -29,12 +29,18 @@ async function update(id:string, change:(state:CanvasState|null)=>CanvasState, w
 async function read(id:string){return update(id,state=>{if(!state)throw fail('Project not found.',404);return state;},false);}
 const json = (value:unknown,status=200) => new Response(JSON.stringify(value),{status,headers:{'content-type':'application/json'}});
 const html = (doc:Parameters<typeof renderLanding>[0]) => new Response(renderLanding(doc),{headers:{'content-type':'text/html; charset=utf-8'}});
-// Mirrors server/canvas-api.mjs for the routes the canvas UI uses. Model routes report that no model is available.
+// The site's stateless model routes return documents or commands; this tab decides what to save.
+async function remote(path:string,body:unknown){
+  const res=await fetch(path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+  let data:{error?:string}&Record<string,unknown>;try{data=await res.json();}catch{throw fail('这个网站没有可用的模型服务。',res.ok?502:res.status);}
+  if(!res.ok)throw fail(data.error||'模型请求失败。',res.status);return data;
+}
+// Mirrors server/canvas-api.mjs for the routes the canvas UI uses.
 export async function browserFetch(input:string,init?:RequestInit):Promise<Response>{
   const url=new URL(input,location.origin),body=init?.body?JSON.parse(String(init.body)):{};
   try{
-    if(url.pathname==='/api/status')return json({configured:false});
-    if(url.pathname==='/api/canvas/generate')throw fail('网页版不连接模型。可以使用内置起点，或在本地运行画布后让 Agent 接手。',503);
+    if(url.pathname==='/api/status')return fetch('/api/status').then(r=>r.ok?r:json({configured:false})).catch(()=>json({configured:false}));
+    if(url.pathname==='/api/canvas/generate'){const {documents}=await remote('/api/canvas/documents',{brief:body.brief});const id=crypto.randomUUID();return json(publicState(await update(id,()=>newProject(id,body.brief,documents as CanvasState['documents']))),201);}
     if(url.pathname==='/api/canvas/projects'&&init?.method==='POST'){const id=crypto.randomUUID();return json(publicState(await update(id,()=>newProject(id,body.brief))),201);}
     if(url.pathname==='/api/canvas/import'&&init?.method==='POST'){const id=crypto.randomUUID();return json(publicState(await update(id,()=>projectFromBackup(id,body))),201);}
     const match=url.pathname.match(/^\/api\/canvas\/projects\/([a-f\d-]{36})(?:\/(\w+))?$/);
@@ -48,7 +54,14 @@ export async function browserFetch(input:string,init?:RequestInit):Promise<Respo
       if(operation==='preview'||operation==='export')return html(doc);
       throw fail('Not found.',404);
     }
-    if(operation==='propose')throw fail('网页版不连接模型。可以直接编辑画布，或在本地运行画布后通过 MCP 连接你的 Agent。',503);
+    if(operation==='propose'){
+      const state=await read(id);if(state.revision!==body.expectedRevision)throw fail('页面已更新，请重新发起修改。',409);
+      const doc=state.documents[body.direction as 'A'|'B'|'C'],node=doc&&findNode(doc,body.nodeId);if(!node)throw fail('请选择元素并输入修改要求。');
+      const result=await remote('/api/canvas/suggest',{node,instruction:body.instruction}) as {summary:string;commands:Parameters<typeof applyCommands>[1]};
+      applyCommands(doc,result.commands);
+      // Like the local server, a proposal is only shown; applying it is a normal revision-checked edit.
+      return json({...result,expectedRevision:state.revision,direction:body.direction});
+    }
     if(!['edit','selection','undo','redo','select'].includes(operation))throw fail('Not found.',404);
     return json(publicState(await update(id,state=>{if(!state)throw fail('Project not found.',404);return transition(state,body.expectedRevision,{...body,type:operation});})));
   }catch(error){const e=error as {message?:string;statusCode?:number};return json({error:e.message||'Canvas request failed.'},e.statusCode||400);}
