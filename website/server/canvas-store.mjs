@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { randomUUID, createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { newProject, packAssets, publicState, stateStamp, transition, unpackAssets } from '../shared/canvas-state.mjs';
+import { newProject, packAssets, projectFromBackup, publicState, stateStamp, transition, unpackAssets } from '../shared/canvas-state.mjs';
 import { localFile } from '../../scripts/variant-history.mjs';
 const defaultDirectory = fileURLToPath(new URL('../.canvas-data/',import.meta.url));
 const staleLockMs = 30_000;
@@ -15,6 +15,7 @@ export function canvasStore(directory = process.env.CANVAS_DATA_DIR || defaultDi
   function save(state) { const target=file(state.id),tmp=target+'.'+randomUUID()+'.tmp',content=JSON.stringify(packAssets(state,sha256)); try{fs.writeFileSync(tmp,content,{flag:'wx',flush:true});if(fs.readFileSync(tmp,'utf8')!==content)throw new Error('Snapshot verification failed.');fs.renameSync(tmp,target);}finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp);} return state; }
   function read(id) { try{return unpackAssets(JSON.parse(fs.readFileSync(file(id),'utf8')));}catch(e){if(e.code==='ENOENT')throw Object.assign(new Error('Project not found.'),{statusCode:404});throw e;} }
   const create = (brief, documents) => save(newProject(randomUUID(),brief,documents));
+  const importBackup = backup => save(projectFromBackup(randomUUID(),backup));
   function mutate(id,expectedRevision,action) {
     const lock = file(id)+'.lock';
     const acquire=()=>{try{fs.mkdirSync(lock);return true;}catch(e){if(e.code!=='EEXIST')throw e;return false;}};
@@ -24,5 +25,5 @@ export function canvasStore(directory = process.env.CANVAS_DATA_DIR || defaultDi
       return save(transition(read(id),expectedRevision,action));
     }finally{fs.rmdirSync(lock);}
   }
-  return {read,create,mutate,directory};
+  return {read,create,importBackup,mutate,directory};
 }

@@ -1,5 +1,5 @@
 import { inspectLanding, renderLanding } from '../shared/landing-document.mjs';
-import { newProject, packAssets, publicState, stateStamp, transition, unpackAssets, type CanvasState } from '../shared/canvas-state.mjs';
+import { newProject, packAssets, projectFromBackup, publicState, stateStamp, transition, unpackAssets, type CanvasState } from '../shared/canvas-state.mjs';
 // Web mode: the hosted site has no canvas server, so the same API runs in this tab and stores
 // projects in this browser only. Local mode (loopback host) keeps the file store and MCP access.
 const loopback = /^(localhost|127\.0\.0\.1|\[::1\])$/;
@@ -36,6 +36,7 @@ export async function browserFetch(input:string,init?:RequestInit):Promise<Respo
     if(url.pathname==='/api/status')return json({configured:false});
     if(url.pathname==='/api/canvas/generate')throw fail('网页版不连接模型。可以使用内置起点，或在本地运行画布后让 Agent 接手。',503);
     if(url.pathname==='/api/canvas/projects'&&init?.method==='POST'){const id=crypto.randomUUID();return json(publicState(await update(id,()=>newProject(id,body.brief))),201);}
+    if(url.pathname==='/api/canvas/import'&&init?.method==='POST'){const id=crypto.randomUUID();return json(publicState(await update(id,()=>projectFromBackup(id,body))),201);}
     const match=url.pathname.match(/^\/api\/canvas\/projects\/([a-f\d-]{36})(?:\/(\w+))?$/);
     if(!match)throw fail('Not found.',404);
     const [,id,operation]=match;

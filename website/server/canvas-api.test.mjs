@@ -36,3 +36,16 @@ test('polling with the current stamp returns 204 without the project body',async
   const changed=await invoke(base+'?stamp='+encodeURIComponent(stamp),undefined,'GET');assert.equal(changed.status,200);assert.equal(changed.payload.selection,'headline');
  }finally{if(old===undefined)delete process.env.CANVAS_DATA_DIR;else process.env.CANVAS_DATA_DIR=old;fs.rmSync(dir,{recursive:true,force:true});}
 });
+test('a project backup imports as a new project with its documents and chosen direction, without history',async()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'canvas-import-')),old=process.env.CANVAS_DATA_DIR;process.env.CANVAS_DATA_DIR=dir;
+ try{const {projectBackup}=await import('../shared/canvas-state.mjs');
+  const source=(await invoke('/api/canvas/projects',{brief:'Backup source'})).payload,base='/api/canvas/projects/'+source.id;
+  await invoke(base+'/edit',{expectedRevision:1,direction:'C',commands:[{type:'text',nodeId:'headline',text:'Edited before backup'}]});
+  const edited=(await invoke(base+'/select',{expectedRevision:2,direction:'C'})).payload;
+  const imported=await invoke('/api/canvas/import',JSON.parse(JSON.stringify(projectBackup(edited))));
+  assert.equal(imported.status,201);assert.notEqual(imported.payload.id,source.id);assert.equal(imported.payload.origin,'import');assert.equal(imported.payload.selected,'C');assert.equal(imported.payload.revision,1);assert.equal(imported.payload.undoDepth,0);
+  assert.deepEqual(imported.payload.documents,edited.documents);
+  assert.equal((await invoke('/api/canvas/import',{documents:edited.documents})).status,400);
+  const broken=projectBackup(edited);broken.documents.B.root.children[0].styles={position:'fixed'};assert.equal((await invoke('/api/canvas/import',broken)).status,400);
+ }finally{if(old===undefined)delete process.env.CANVAS_DATA_DIR;else process.env.CANVAS_DATA_DIR=old;fs.rmSync(dir,{recursive:true,force:true});}
+});

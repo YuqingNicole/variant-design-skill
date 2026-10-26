@@ -44,7 +44,7 @@ test('style inputs accept everyday values, restore rejected ones, and shortcuts 
  await canvas.locator('#intro').dblclick();await page.keyboard.press('End');await page.keyboard.press('Shift+Enter');await page.keyboard.type('第二行');await page.keyboard.press('Enter');
  await expect(page.locator('.lc-project-title')).toContainText('版本 6');await expect(canvas.locator('#intro')).toContainText('第二行');
 });
-test('web mode keeps projects in this browser without calling the canvas API',async({page,context})=>{
+test('web mode keeps projects in this browser without calling the canvas API, and a backup moves them to the local canvas',async({page,context,browser})=>{
  const errors=[],apiCalls=[];page.on('pageerror',e=>errors.push(e.message));context.on('request',r=>{if(new URL(r.url()).pathname.startsWith('/api/canvas'))apiCalls.push(r.url());});
  await page.goto('/canvas?new=1&storage=browser');await expect(page.getByText('想让 Agent 一起改？在本地运行画布')).toBeVisible();
  await page.getByRole('button',{name:'创建三个可编辑起点'}).click();await page.getByRole('button',{name:'编辑 A'}).click();
@@ -70,5 +70,13 @@ test('web mode keeps projects in this browser without calling the canvas API',as
  const popupPromise=page.waitForEvent('popup');await page.getByRole('button',{name:'打开可交互预览'}).click();const popup=await popupPromise;await expect(popup.locator('h1')).toHaveText('第一个标签页');await popup.close();
  const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'下载 Landing HTML'}).click();const download=await downloadPromise;
  const html=await (await import('node:fs/promises')).readFile(await download.path(),'utf8');expect(download.suggestedFilename()).toBe('landing-A.html');expect(html).toContain('第一个标签页');expect(html).toContain('data:image/png;base64,');expect(html).not.toContain('postMessage');
+ const backupPromise=page.waitForEvent('download');await page.getByRole('button',{name:'下载项目备份'}).click();const backup=await backupPromise;expect(backup.suggestedFilename()).toBe('variant-canvas-project.json');
  expect(apiCalls).toEqual([]);expect(errors).toEqual([]);
+ // The backup carries the web project into the local canvas, where agents can reach it.
+ const local=await (await browser.newContext()).newPage();local.on('pageerror',e=>errors.push(e.message));await local.goto('/canvas?new=1');
+ await local.getByLabel('导入项目备份').setInputFiles(await backup.path());await expect(local.locator('.lc-comparison')).toContainText('从项目备份导入');
+ await local.getByRole('button',{name:'编辑 A'}).click();await expect(local.locator('.lc-project-title')).toContainText('本地保存');
+ await expect(local.frameLocator('iframe[title="可编辑 Landing 画布"]').locator('img')).toHaveAttribute('src',/^data:image\/png;base64,/);await expect(local.frameLocator('iframe[title="可编辑 Landing 画布"]').locator('#headline')).toHaveText('第一个标签页');
+ const id=new URL(local.url()).searchParams.get('project');const saved=await(await local.request.get('/api/canvas/projects/'+id)).json();expect(saved.origin).toBe('import');expect(saved.documents.A.root.children.find(n=>n.id==='hero')).toBeTruthy();
+ expect(errors).toEqual([]);
 });

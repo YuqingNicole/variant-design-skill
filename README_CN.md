@@ -10,7 +10,7 @@
 
 ## 交互式网站
 
-**[在线体验 →](https://variant-design-studio.nicole-chen144768.chatgpt.site/)** · [网站源码](./website) · [安装 Skill](#安装)
+**[在线体验 →](https://variant-design-skill.vercel.app/)** · [网站源码](./website) · [安装 Skill](#安装)
 
 使用双语提示词体验站：
 

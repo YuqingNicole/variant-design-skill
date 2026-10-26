@@ -3,10 +3,18 @@ import { applyCommands, createLanding, findNode, validateDocument } from './land
 const fail = (message, statusCode = 400) => Object.assign(new Error(message), { statusCode });
 export const stateStamp = state => `${state.revision}:${state.active}:${state.selection ?? ''}:${state.selected ?? ''}`;
 export function publicState(state){const {undo,redo,...rest}=state;return {...rest,undoDepth:undo.length,redoDepth:redo.length};}
-export function newProject(id, brief, documents, now = new Date().toISOString()) {
+export function newProject(id, brief, documents, {origin = documents ? 'model' : 'template', selected = null, now = new Date().toISOString()} = {}) {
   if(typeof brief!=='string'||!brief.trim()||brief.length>600)throw fail('请输入 1–600 字的设计命题。');
   if(documents)for(const d of ['A','B','C']){validateDocument(documents[d]);if(documents[d].direction!==d)throw new Error('Direction mismatch.');}
-  return {id,revision:1,brief,origin:documents?'model':'template',active:'B',selected:null,selection:null,documents:documents||Object.fromEntries(['A','B','C'].map(d=>[d,createLanding(d,brief)])),undo:[],redo:[],log:[],createdAt:now};
+  if(selected!==null&&!['A','B','C'].includes(selected))throw new Error('Invalid direction.');
+  return {id,revision:1,brief,origin,active:selected??'B',selected,selection:null,documents:documents||Object.fromEntries(['A','B','C'].map(d=>[d,createLanding(d,brief)])),undo:[],redo:[],log:[],createdAt:now};
+}
+// A portable copy of a project: documents and the chosen direction, without undo history.
+export const backupFormat = 'variant-canvas-project';
+export const projectBackup = state => ({format:backupFormat,version:1,brief:state.brief,selected:state.selected,documents:state.documents,exportedAt:new Date().toISOString()});
+export function projectFromBackup(id, backup) {
+  if(!backup||backup.format!==backupFormat||backup.version!==1||!backup.documents)throw Object.assign(new Error('这不是 Variant 画布的项目备份文件。'),{statusCode:400});
+  return newProject(id,backup.brief,backup.documents,{origin:'import',selected:backup.selected??null});
 }
 // Mutates and returns `state`; callers persist it. Throws 409 when the revision is stale.
 export function transition(state, expectedRevision, action, now = new Date().toISOString()) {

@@ -1,7 +1,7 @@
 import { canvasStore, publicState, stateStamp } from './canvas-store.mjs';
 import { findNode, inspectLanding, renderLanding, applyCommands, createLanding, validateDocument } from '../shared/landing-document.mjs';
 import { callJson, getProviderStatus } from './ai.mjs';
-export async function readCanvasJson(request){let size=0;const chunks=[];for await(const chunk of request){size+=chunk.length;if(size>4_000_000)throw Object.assign(new Error('请求过大，请使用小于 2 MB 的图片。'),{statusCode:413});chunks.push(chunk);}try{return JSON.parse(Buffer.concat(chunks).toString()||'{}');}catch{throw Object.assign(new Error('Invalid JSON.'),{statusCode:400});}}
+export async function readCanvasJson(request,limit=4_000_000){let size=0;const chunks=[];for await(const chunk of request){size+=chunk.length;if(size>limit)throw Object.assign(new Error('请求过大，请使用小于 2 MB 的图片。'),{statusCode:413});chunks.push(chunk);}try{return JSON.parse(Buffer.concat(chunks).toString()||'{}');}catch{throw Object.assign(new Error('Invalid JSON.'),{statusCode:400});}}
 function json(res,status,value){res.writeHead(status,{'content-type':'application/json; charset=utf-8','cache-control':'no-store'});res.end(JSON.stringify(value));}
 export async function handleCanvasApi(req,res){
   const url=new URL(req.url||'/','http://localhost');if(!url.pathname.startsWith('/api/canvas'))return false;
@@ -22,6 +22,8 @@ export async function handleCanvasApi(req,res){
       }));
       json(res,201,publicState(store.create(brief,Object.fromEntries(documents.map(d=>[d.direction,d])))));return true;
     }
+    // Backups can hold several embedded images, each up to 2 MB.
+    if(url.pathname==='/api/canvas/import'&&req.method==='POST'){json(res,201,publicState(store.importBackup(await readCanvasJson(req,30_000_000))));return true;}
     if(url.pathname==='/api/canvas/projects'&&req.method==='POST'){const input=await readCanvasJson(req);json(res,201,publicState(store.create(input.brief)));return true;}
     const match=url.pathname.match(/^\/api\/canvas\/projects\/([a-f\d-]{36})(?:\/(edit|selection|undo|redo|select|export|preview|propose|validate))?$/);
     if(!match){json(res,404,{error:'Not found.'});return true;}

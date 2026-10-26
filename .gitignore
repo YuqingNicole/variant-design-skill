@@ -20,3 +20,4 @@ __pycache__/
 **/.variant-mcp-candidates/
 website/.canvas-data/
 .canvas-delivery/
+.vercel
