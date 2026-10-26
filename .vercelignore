@@ -1,0 +1,11 @@
+# Upload only what the static website build needs. Never upload local secrets or canvas projects.
+/*
+!/website
+!/scripts
+!/vercel.json
+**/node_modules
+/website/.env
+/website/.canvas-data
+/website/dist
+/scripts/*.test.mjs
+/scripts/*.py

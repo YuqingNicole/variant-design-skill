@@ -10,7 +10,7 @@ A Claude Code skill inspired by the [Variant](https://variant.com) design commun
 
 ## Interactive website
 
-**[Live website →](https://variant-design-studio.nicole-chen144768.chatgpt.site/)** · [Website source](./website) · [Install the skill](#installation)
+**[Live website →](https://variant-design-skill.vercel.app/)** · [Website source](./website) · [Install the skill](#installation)
 
 Use the bilingual prompt playground to:
 
