@@ -350,6 +350,10 @@ Open any example directly in your browser to see the interactions in action.
 
 Built with [Claude Code Skills](https://claude.ai/code). Design system powered by [Impeccable](https://github.com/tychografie/impeccable).
 
+## Local MCP server
+
+The [local MCP adapter](mcp/README.md) exposes 13 tools for reading existing variant output, preparing and applying edits with conflict checks, managing tokens and revision history, selecting a winner, and building previews. It uses stdio and works with MCP clients independently of the website. See the adapter README for installation, scope, and tests.
+
 ## Codex plugin release candidate
 
 A self-contained Codex plugin package and fresh-directory smoke test are available. See [build instructions](plugin/README.md) and [release gates](plugin/release-readiness.md). This candidate is not yet published in the plugin directory.

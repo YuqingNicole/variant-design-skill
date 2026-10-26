@@ -1,4 +1,5 @@
 import { buildWithModel, generateWithModel, getProviderStatus, iterateWithModel } from "./ai.mjs";
+import { handleCanvasApi } from './canvas-api.mjs';
 
 async function readJson(request) {
   const chunks = [];
@@ -14,6 +15,7 @@ function send(response, statusCode, payload) {
 }
 
 export async function handleApi(request, response) {
+  if (await handleCanvasApi(request, response)) return true;
   const url = new URL(request.url || "/", "http://localhost");
   if (!url.pathname.startsWith("/api/")) return false;
 

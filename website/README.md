@@ -59,3 +59,7 @@ Upstream requests time out after 120 seconds by default and retry once for trans
 ### Guided homepage case
 
 Open `/#guided-demo` to inspect the three real site directions, compare tradeoffs, and copy prompts for installation/generation, scoped editing, undo, and integration into your project. The selected viewing card only changes the prompts; it does not select a final winner or execute file operations. Follow these prompts in an agent chat with your project open. The optional online generator remains separate and requires a configured model provider.
+
+## Editable landing canvas
+
+Open `/canvas` to create three built-in landing layouts, select/edit nodes, reorder sections, replace images, undo/redo and export a standalone HTML page. The optional canvas MCP edits the same persisted document as the browser. See [CANVAS.md](CANVAS.md) for setup, architecture, tool inventory, validation and current boundaries.

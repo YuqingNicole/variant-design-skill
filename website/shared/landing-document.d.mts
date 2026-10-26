@@ -1,0 +1,11 @@
+export type LandingNode = { id:string; type:string; name:string; text:string; children:LandingNode[]; styles:Record<string,string>; props:Record<string,string>; hidden?:boolean };
+export type LandingDocument = {schemaVersion:1; direction:'A'|'B'|'C';title:string;description?:string;root:LandingNode;tokens:Record<string,string>};
+export type EditCommand = { type:string;nodeId:string;[key:string]:unknown };
+export function createLanding(direction?:string,brief?:string):LandingDocument;
+export function walk(node:LandingNode, fn:(node:LandingNode,parent:LandingNode|null)=>void,parent?:LandingNode|null):void;
+export function findNode(doc:LandingDocument,id:string):LandingNode|undefined;
+export function validateDocument(doc:LandingDocument):LandingDocument;
+export function applyCommands(doc:LandingDocument,commands:EditCommand[]):LandingDocument;
+export function renderLanding(doc:LandingDocument,options?:{editor?:boolean;revision?:number}):string;
+export function inspectLanding(doc:LandingDocument):{issues:{nodeId:string;message:string}[];scope:string;note:string};
+export function safeUrl(value:string,image?:boolean):boolean;
