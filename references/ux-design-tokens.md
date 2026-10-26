@@ -292,6 +292,24 @@ radius-2xl:    16px
 radius-full:   9999px   (pill / fully rounded)
 ```
 
+### Nested Radius
+
+When a rounded element sits inside another rounded element, the inner corner must follow the outer one, or the gap between them looks pinched at the corners:
+
+```
+R_inner = max(0, R_outer − B − P)
+
+R_outer  outer container radius
+B        outer container border width
+P        padding between the outer edge and the inner element
+```
+
+Example: a card with `radius-2xl` (16px), a 1px border and 12px padding gives its inner well a 3px radius. With 16px or more of padding the inner corner is square (0).
+
+- Encode the relationship, not the result: `--radius-inner: max(0px, calc(var(--radius-card) - var(--border-card) - var(--space-card)))`. If the card radius or padding changes, the inner radius follows.
+- If the formula lands off the radius scale, prefer the computed value over snapping to the nearest step. A visibly wrong corner costs more than one off-scale value.
+- `radius-full` (pill) parents are the exception: an inner pill stays a pill.
+
 ---
 
 ## Multi-Brand and Theming
@@ -381,5 +399,6 @@ When reviewing a design system's token implementation:
 - [ ] Dark mode overrides semantic tier (not component tier)
 - [ ] Motion tokens used for all transitions (no hardcoded `200ms`)
 - [ ] Spacing uses the token scale (no magic numbers like `17px` outside the scale)
+- [ ] Nested radii derive from their parent (`R_outer − B − P`), not hand-picked
 - [ ] Tokens are documented with intended use, not just value
 - [ ] Single source of truth: tokens defined once, exported to all platforms
