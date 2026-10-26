@@ -42,7 +42,8 @@ test('hero edit and undo render only B changes, preserve brand and footer',async
   prepareVariant(root,'B',candidate);const file=path.join(candidate,'VariantB.tsx');fs.writeFileSync(file,fs.readFileSync(file,'utf8').replace('Direction B','Evidence first'));
   applyVariant(root,'B',candidate,{summary:'hero',zone:'hero'});
   await page.goto(`${base}/_preview/B.html`);await expect(page.getByRole('heading')).toHaveText('Evidence first');await expect(page.locator('main')).toHaveCSS('font-family','Georgia');await expect(page.locator('footer')).toHaveText('Evidence retained');
-  undoVariant(root,'B');await page.reload();await expect(page.getByRole('heading')).toHaveText('Direction B');
+  // The dev server may reload the page itself after the undo rewrites the file, aborting our reload.
+  undoVariant(root,'B');await expect(async()=>{await page.reload();await expect(page.getByRole('heading')).toHaveText('Direction B',{timeout:2000});}).toPass({timeout:15000});
 });
 test('actual coffee example settles counters immediately and stops frames on preference change',async({page})=>{
   await page.route('https://**/*',route=>route.fulfill({status:200,body:''}));
