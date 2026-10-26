@@ -60,8 +60,12 @@ export function applyCommands(document, commands) {
         const target = findNode(doc, cmd.parentId);
         let cycle = false; walk(node, n => { if (n.id === cmd.parentId) cycle = true; });
         if (!parent || !target || !containers.has(target.type) || cycle || !Number.isInteger(cmd.index) || cmd.index < 0) throw new Error('Invalid move.');
+        // Page frame: navigation that leads the page stays first, a closing footer stays last.
+        const kids = () => doc.root.children, head = kids()[0]?.type === 'nav', tail = kids().at(-1)?.type === 'footer';
         parent.children = parent.children.filter(n => n.id !== node.id);
-        target.children.splice(Math.min(cmd.index, target.children.length), 0, node); break;
+        target.children.splice(Math.min(cmd.index, target.children.length), 0, node);
+        if ((head && kids()[0]?.type !== 'nav') || (tail && kids().at(-1)?.type !== 'footer')) throw new Error('导航需保持在最前，页脚需保持在最后。');
+        break;
       }
       case 'duplicate': {
         if (!parent || typeof cmd.prefix !== 'string' || !/^[a-zA-Z][\w-]{0,20}$/.test(cmd.prefix)) throw new Error('Invalid duplicate.');

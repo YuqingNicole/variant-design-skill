@@ -1,5 +1,8 @@
 import {test,expect} from '@playwright/test';
 import {createLanding} from '../website/shared/landing-document.mjs';
+// The editor iframe is sandboxed without same-origin, so Chrome runs it out of process. Playwright
+// mis-aims locator clicks inside it while the board is CSS-scaled; real pointer input is unaffected.
+// Tests that click inside the canvas therefore work at 100% zoom.
 test('canvas edits, revision history, live external changes and standalone delivery',async({page,request})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/canvas?new=1');await page.getByLabel('描述你的产品').fill('真实画布浏览器回归：比较、编辑与交付');await page.getByRole('button',{name:'创建三个可编辑起点'}).click();
@@ -7,6 +10,8 @@ test('canvas edits, revision history, live external changes and standalone deliv
  await page.getByRole('button',{name:'编辑 B'}).click();
  const canvas=page.frameLocator('iframe[title="可编辑 Landing 画布"]');
  await page.getByLabel('画布缩放').selectOption('100');
+ expect(await page.locator('iframe[title="可编辑 Landing 画布"]').getAttribute('sandbox')).toBe('allow-scripts');
+ expect(await canvas.locator('body').evaluate(()=>{try{return parent.document?'reachable':'reachable';}catch{return 'blocked';}})).toBe('blocked');
  await canvas.locator('#headline').dblclick();await canvas.locator('#headline').fill('按 Esc 应当放弃');await canvas.locator('#headline').press('Escape');
  await expect(canvas.locator('#headline')).toHaveText('好设计，值得多一个方向。');await expect(page.locator('.lc-project-title')).toContainText('版本 1');
  await canvas.locator('#headline').dblclick();await canvas.locator('#headline').fill('浏览器亲手修改的标题');await canvas.locator('#headline').press('Enter');
@@ -19,6 +24,10 @@ test('canvas edits, revision history, live external changes and standalone deliv
  const conflict=await request.post('/api/canvas/projects/'+id+'/edit',{data:{expectedRevision:initial.revision,direction:'B',commands:[{type:'delete',nodeId:'hero'}]}});expect(conflict.status()).toBe(409);
  await page.locator('[data-drag-id="features"]').dragTo(page.locator('[data-drag-id="process"]'));
  await expect.poll(()=>canvas.locator('main > *').evaluateAll(ns=>ns.map(n=>n.id)).catch(()=>[])).toEqual(['navigation','hero','process','features','faq','footer']);
+ await expect(page.locator('[data-drag-id="navigation"]')).toBeDisabled();await expect(page.locator('[data-drag-id="footer"]')).toBeDisabled();
+ await expect(page.locator('[data-section-id="hero"]').getByRole('button',{name:/^上移/})).toBeDisabled();await expect(page.locator('[data-section-id="faq"]').getByRole('button',{name:/^下移/})).toBeDisabled();
+ const latest=await(await request.get('/api/canvas/projects/'+id)).json();const outOfFrame=await request.post('/api/canvas/projects/'+id+'/edit',{data:{expectedRevision:latest.revision,direction:'B',commands:[{type:'move',nodeId:'footer',parentId:'page',index:0}]}});
+ expect(outOfFrame.status()).toBe(400);expect((await outOfFrame.json()).error).toContain('页脚');
  await page.getByRole('button',{name:'手机 390'}).click();expect(await canvas.locator('html').evaluate(n=>({width:innerWidth,overflow:n.scrollWidth>innerWidth}))).toEqual({width:390,overflow:false});
  await page.locator('[data-layer-id="hero"]').click();await page.getByRole('button',{name:'＋ 添加图片'}).click();
  await page.locator('input[type=file]').setInputFiles({name:'pixel.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jN1sAAAAASUVORK5CYII=','base64')});
@@ -34,7 +43,7 @@ test('canvas edits, revision history, live external changes and standalone deliv
 });
 test('style inputs accept everyday values, restore rejected ones, and shortcuts undo and redo',async({page})=>{
  await page.goto('/canvas?new=1');await page.getByRole('button',{name:'创建三个可编辑起点'}).click();await page.getByRole('button',{name:'编辑 A'}).click();
- const canvas=page.frameLocator('iframe[title="可编辑 Landing 画布"]');await canvas.locator('#headline').click();
+ await page.getByLabel('画布缩放').selectOption('100');const canvas=page.frameLocator('iframe[title="可编辑 Landing 画布"]');await page.locator('[data-layer-id="headline"]').click();
  const color=page.getByRole('textbox',{name:'文字颜色',exact:true});await color.fill('red');await color.press('Tab');
  await expect(canvas.locator('#headline')).toHaveCSS('color','rgb(255, 0, 0)');
  const size=page.getByLabel(/字号/);await size.fill('48');await size.press('Tab');await expect(canvas.locator('#headline')).toHaveCSS('font-size','48px');
@@ -50,7 +59,7 @@ test('web mode keeps projects in this browser without calling the canvas API, an
  await page.goto('/canvas?new=1&storage=browser');await expect(page.getByText('想让 Agent 一起改？在本地运行画布')).toBeVisible();
  await page.getByRole('button',{name:'创建三个可编辑起点'}).click();await page.getByRole('button',{name:'编辑 A'}).click();
  await expect(page.locator('.lc-project-title')).toContainText('保存在此浏览器');
- const canvas=page.frameLocator('iframe[title="可编辑 Landing 画布"]');
+ await page.getByLabel('画布缩放').selectOption('100');const canvas=page.frameLocator('iframe[title="可编辑 Landing 画布"]');
  await canvas.locator('#headline').dblclick();await canvas.locator('#headline').fill('网页版保存的标题');await canvas.locator('#headline').press('Enter');
  await expect(page.locator('.lc-project-title')).toContainText('版本 2');
  await page.getByRole('button',{name:'↺ 撤销'}).click();await expect(canvas.locator('#headline')).not.toHaveText('网页版保存的标题');
@@ -63,7 +72,7 @@ test('web mode keeps projects in this browser without calling the canvas API, an
  expect(stored).toEqual([{assets:1,inline:false}]);
  // A second tab working from an older revision is refused instead of overwriting.
  const other=await context.newPage();await other.goto(page.url());const otherCanvas=other.frameLocator('iframe[title="可编辑 Landing 画布"]');await expect(otherCanvas.locator('#headline')).toHaveText('网页版保存的标题');
- await canvas.locator('#headline').dblclick();await canvas.locator('#headline').fill('第一个标签页');await canvas.locator('#headline').press('Enter');await expect(page.locator('.lc-project-title')).toContainText('版本 8');
+ await page.bringToFront();await canvas.locator('#headline').dblclick();await canvas.locator('#headline').fill('第一个标签页');await canvas.locator('#headline').press('Enter');await expect(page.locator('.lc-project-title')).toContainText('版本 8');
  await other.getByRole('button',{name:'↺ 撤销'}).click();
  await expect(other.locator('.lc-error')).toContainText('页面已有新修改');await expect(otherCanvas.locator('#headline')).toHaveText('第一个标签页');await other.close();
  await page.reload();await expect(canvas.locator('#headline')).toHaveText('第一个标签页');await expect(page.locator('.lc-project-title')).toContainText('保存在此浏览器');
@@ -90,8 +99,9 @@ test('web mode uses the site model routes and keeps the generated project in thi
   return route.fulfill({status:500,json:{error:'unexpected '+url.pathname}});});
  await page.goto('/canvas?new=1&storage=browser');await page.getByRole('button',{name:'用 AI 生成三个定制方向'}).click();
  await expect(page.locator('.lc-comparison')).toContainText('AI 生成方向');await page.getByRole('button',{name:'编辑 B'}).click();
- const canvas=page.frameLocator('iframe[title="可编辑 Landing 画布"]');await expect(canvas.locator('#headline')).toHaveText('模型方向 B');
- await canvas.locator('#headline').click();await page.getByLabel('选区修改要求').fill('更短一些');await page.getByRole('button',{name:'生成修改建议'}).click();
+ await page.getByLabel('画布缩放').selectOption('100');const canvas=page.frameLocator('iframe[title="可编辑 Landing 画布"]');await expect(canvas.locator('#headline')).toHaveText('模型方向 B');
+ // Retried because Playwright can drop a click into the out-of-process editor frame (see top of file).
+ await expect(async()=>{await canvas.locator('#headline').click();await expect(page.locator('.lc-selected-name')).toContainText('headline',{timeout:1000});}).toPass();await page.getByLabel('选区修改要求').fill('更短一些');await page.getByRole('button',{name:'生成修改建议'}).click();
  await expect(page.getByRole('dialog')).toContainText('标题更短');await expect(canvas.locator('#headline')).toHaveText('模型方向 B');
  await page.getByRole('button',{name:'应用这些修改'}).click();await expect(canvas.locator('#headline')).toHaveText('模型建议的标题');
  await page.reload();await expect(canvas.locator('#headline')).toHaveText('模型建议的标题');await expect(page.locator('.lc-project-title')).toContainText('保存在此浏览器');
