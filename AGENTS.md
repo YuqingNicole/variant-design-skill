@@ -59,7 +59,7 @@ cd tests && PLAYWRIGHT_CHANNEL=chrome npx playwright test -c landing.config.mjs 
 npm ci --prefix mcp && npm test --prefix mcp
 ```
 
-- Use `PLAYWRIGHT_CHANNEL=chrome` when the Playwright browser is not downloaded. CI installs Chromium instead.
+- Use `PLAYWRIGHT_CHANNEL=chrome` when the Playwright browser is not downloaded. CI does the same with the runner's preinstalled Chrome, because installing Chromium's system dependencies there hangs intermittently.
 - CI (`.github/workflows/variant-loop.yml`) runs a `loop` job and a `landing` job on Node 22. When you add a `scripts/*.test.mjs` file, add it to the `node --test` line there.
 - When you add a runtime script that the skill depends on, add it to `required` in `scripts/build-plugin.py`.
 

@@ -18,8 +18,14 @@ jobs:
       - run: node scripts/quality-gate.mjs examples/coffee-brand-interactive.html --strict
       - run: npm ci
         working-directory: tests
-      - run: npx playwright install --with-deps chromium
+      # Installing Chromium's apt dependencies has hung for 10+ minutes on hosted runners.
+      # The runner image already has Chrome; fall back to Playwright's Chromium only without it.
+      - name: Select browser
         working-directory: tests
+        timeout-minutes: 12
+        run: |
+          if command -v google-chrome >/dev/null; then google-chrome --version; echo "PLAYWRIGHT_CHANNEL=chrome" >> "$GITHUB_ENV"
+          else for attempt in 1 2; do timeout 300 npx playwright install --with-deps chromium && exit 0; done; exit 1; fi
       - run: npm test
         working-directory: tests
       - run: npm run typecheck
@@ -46,8 +52,14 @@ jobs:
         working-directory: website
       - run: npm ci
         working-directory: tests
-      - run: npx playwright install --with-deps chromium
+      # Installing Chromium's apt dependencies has hung for 10+ minutes on hosted runners.
+      # The runner image already has Chrome; fall back to Playwright's Chromium only without it.
+      - name: Select browser
         working-directory: tests
+        timeout-minutes: 12
+        run: |
+          if command -v google-chrome >/dev/null; then google-chrome --version; echo "PLAYWRIGHT_CHANNEL=chrome" >> "$GITHUB_ENV"
+          else for attempt in 1 2; do timeout 300 npx playwright install --with-deps chromium && exit 0; done; exit 1; fi
       - run: npm run test:landing
         working-directory: tests
       - run: npx playwright test -c canvas.config.mjs
