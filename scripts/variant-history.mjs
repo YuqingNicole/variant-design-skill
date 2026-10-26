@@ -124,25 +124,30 @@ export function prepareVariant(root, id, destination, project = path.dirname(pat
 }
 function outsideZone(source, zone) {
   if (!/^[\w-]+$/.test(zone)) throw new Error('Invalid zone name.');
-  const pairs = [
-    [`<!-- zone:${zone}:start -->`, `<!-- zone:${zone}:end -->`],
-    [`{/* zone:${zone}:start */}`, `{/* zone:${zone}:end */}`],
-    [`/* zone:${zone}:start */`, `/* zone:${zone}:end */`],
-  ];
-  for (const [start, end] of pairs) {
-    if (!source.includes(start)) continue;
-    if (source.split(start).length !== 2 || source.split(end).length !== 2) throw new Error('Zone markers must be unique.');
-    const left = source.indexOf(start) + start.length, right = source.indexOf(end);
-    if (right < left) throw new Error('Invalid zone boundaries.');
-    return [source.slice(0, left), source.slice(right)];
+  // One file may mark the same zone in several places, e.g. hero markup plus its <style> rules.
+  // Each marker style (HTML, JSX, CSS/JS) may appear once; everything outside every pair is fixed.
+  const marker = new RegExp(`<!-- zone:${zone}:(start|end) -->|\\{/\\* zone:${zone}:(start|end) \\*/\\}|/\\* zone:${zone}:(start|end) \\*/`, 'g');
+  const found = [...source.matchAll(marker)].map(m => ({ edge: m[1] ?? m[2] ?? m[3], style: m[1] ? 'html' : m[2] ? 'jsx' : 'code', at: m.index, end: m.index + m[0].length }));
+  if (!found.length) return null;
+  const outside = [];
+  let cursor = 0;
+  const styles = new Set();
+  for (let i = 0; i < found.length; i += 2) {
+    const [start, end] = [found[i], found[i + 1]];
+    if (start.edge !== 'start' || end?.edge !== 'end' || start.style !== end.style) throw new Error('Invalid zone boundaries.');
+    if (styles.has(start.style)) throw new Error('Zone markers must be unique.');
+    styles.add(start.style);
+    outside.push(source.slice(cursor, start.end));
+    cursor = end.at;
   }
-  return null;
+  outside.push(source.slice(cursor));
+  return outside;
 }
-function snapshot(root, id, state, files, expectedAfter, expectedMetadata) {
+function snapshot(root, id, state, files, expectedAfter, expectedMetadata, request) {
   const key = `.history/${id}/${randomUUID()}.json`;
   const file = localFile(root, key);
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  const data = { variant: state.variants[id], files, expectedAfter, expectedMetadata };
+  const data = { variant: state.variants[id], files, expectedAfter, expectedMetadata, ...(request ? { request } : {}) };
   fs.writeFileSync(file, JSON.stringify(data, null, 2), { flag: 'wx', flush: true });
   if (fs.readFileSync(file, 'utf8') !== JSON.stringify(data, null, 2)) throw new Error('Snapshot verification failed.');
   return key;
@@ -161,6 +166,7 @@ function transaction(root, state, before, after) {
 function applyUnlocked(root, id, candidate, change) {
   const state = readContext(root), files = owned(state, id), variant = state.variants[id];
   if (!change.summary) throw new Error('Change summary required.');
+  if (change.request !== undefined && (typeof change.request !== 'string' || !change.request)) throw new Error('Change request must be a non-empty string.');
   verifyBaseline(root, id, candidate, state);
   const before = {}, after = {};
   for (const file of files) {
@@ -186,11 +192,11 @@ function applyUnlocked(root, id, candidate, change) {
   const latest = readContext(root);
   verifyBaseline(root, id, candidate, latest);
   if (!same(state, latest)) conflict('context changed during apply');
-  const key = snapshot(root, id, state, before, after, { tokens: change.tokens ?? variant.tokens, comparison: change.comparison ?? variant.comparison });
+  const key = snapshot(root, id, state, before, after, { tokens: change.tokens ?? variant.tokens, comparison: change.comparison ?? variant.comparison }, change.request);
   state.variants[id] = { ...variant, tokens: change.tokens ?? variant.tokens,
     comparison: change.comparison ?? variant.comparison,
     version: variant.version + 1, undo: [...(variant.undo ?? []), key],
-    history: [...(variant.history ?? []), { action: 'apply', version: variant.version + 1, snapshot: key, summary: change.summary, zone: change.zone, at: new Date().toISOString() }] };
+    history: [...(variant.history ?? []), { action: 'apply', version: variant.version + 1, snapshot: key, summary: change.summary, zone: change.zone, ...(change.request ? { request: change.request } : {}), at: new Date().toISOString() }] };
   state.activeVariant = id;
   transaction(root, state, before, after);
   return state;
@@ -199,15 +205,24 @@ function undoUnlocked(root, id) {
   const state = readContext(root), files = owned(state, id), variant = state.variants[id];
   const stack = [...(variant.undo ?? [])], key = stack.pop();
   if (!key) throw new Error(`No earlier revision for ${id}.`);
-  const saved = JSON.parse(fs.readFileSync(localFile(root, key), 'utf8'));
+  const load = snapshotKey => JSON.parse(fs.readFileSync(localFile(root, snapshotKey), 'utf8'));
+  // Applies that share a request id are one user action, so undo reverts all of them together.
+  const latest = load(key), restored = [key];
+  let saved = latest;
+  while (latest.request && stack.length) {
+    const previous = load(stack.at(-1));
+    if (previous.request !== latest.request) break;
+    saved = previous; restored.unshift(stack.pop());
+  }
   if (JSON.stringify(Object.keys(saved.files).sort()) !== JSON.stringify([...files].sort())) throw new Error('Snapshot file set differs; recover manually.');
   const before = Object.fromEntries(files.map(file => [file, fs.readFileSync(localFile(root, file)).toString('base64')]));
-  if (!saved.expectedAfter) throw new Error("Legacy snapshot has no edit baseline; recover into a separate directory and compare before restoring.");
-  if (files.some(file => before[file] !== saved.expectedAfter[file])) throw new Error("Files changed since the saved revision; preserve your edits and reconcile before undo.");
-  if (JSON.stringify(saved.expectedMetadata) !== JSON.stringify({ tokens: variant.tokens, comparison: variant.comparison })) throw new Error("Variant metadata changed since the saved revision; reconcile before undo.");
+  if (!latest.expectedAfter) throw new Error("Legacy snapshot has no edit baseline; recover into a separate directory and compare before restoring.");
+  if (files.some(file => before[file] !== latest.expectedAfter[file])) throw new Error("Files changed since the saved revision; preserve your edits and reconcile before undo.");
+  if (JSON.stringify(latest.expectedMetadata) !== JSON.stringify({ tokens: variant.tokens, comparison: variant.comparison })) throw new Error("Variant metadata changed since the saved revision; reconcile before undo.");
   const recovery = snapshot(root, id, state, before);
   state.variants[id] = { ...saved.variant, version: variant.version + 1, undo: stack,
-    history: [...variant.history, { action: 'undo', version: variant.version + 1, snapshot: recovery, restored: key, at: new Date().toISOString() }] };
+    history: [...variant.history, { action: 'undo', version: variant.version + 1, snapshot: recovery, restored: key,
+      ...(restored.length > 1 ? { request: latest.request, restoredSnapshots: restored } : {}), at: new Date().toISOString() }] };
   state.activeVariant = id;
   transaction(root, state, before, saved.files);
   return state;

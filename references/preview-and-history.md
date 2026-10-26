@@ -18,7 +18,15 @@ For standalone React components in a project with Vite already installed:
 node <skill-root>/scripts/react-preview.mjs <project-root> <project-root>/variant-output
 ```
 
-Start it as a managed background process. Open the printed comparison URL, then verify all three direct URLs render. The server binds localhost and chooses an available port. Report the actual URL and how to stop the process. It uses the project's React and Vite without editing its package or production entrypoint.
+Start it as a managed background process. Open the printed comparison URL, then verify all three direct URLs render. The server binds localhost and chooses an available port. Report the actual URL and how to stop the process.
+
+When the agent cannot bind a local port or open a browser (sandboxed Codex, CI, a headless session), build a self-contained snapshot instead:
+
+```bash
+node <skill-root>/scripts/react-preview.mjs <project-root> <project-root>/variant-output --static
+```
+
+It writes `variant-output/_static/` with the comparison page and A/B/C pages that open directly from `file://`, with scripts and styles inlined. Rebuild it after every edit, undo or selection. A hanging bundler fails after 180 seconds (`VARIANT_STATIC_TIMEOUT_MS` overrides it). Report the printed `file://` paths. When nothing can be rendered, give the user one command they can run themselves to start the live server, and list the visual checks as unverified. It uses the project's React and Vite without editing its package or production entrypoint.
 
 The helper intentionally does not load arbitrary project Vite configuration: import each variant's CSS and dependencies explicitly. If output depends on Tailwind/PostCSS, aliases, a router, providers, Next image/font/server components, or other framework behavior, choose a native isolated adapter instead. The agent must build this adapter; do not hand manual import work to the user:
 
@@ -33,24 +41,26 @@ Read the project's scripts and run its existing typecheck/check command using it
 Before generating any patch, prepare a **new, nonexistent** candidate directory from current output:
 
 ```bash
-node <skill-root>/scripts/variant-history.mjs prepare variant-output B work/candidate-B
+node <skill-root>/scripts/variant-history.mjs prepare variant-output B .variant-work/candidate-B
 ```
 
-The parent directory must exist. The command copies all B-owned files and writes `.candidate-baseline.json` with their original bytes, SHA-256 digests, version, task/brand constraints and the registered design-system file digest. The project root defaults to the parent of `variant-output`; for nested output pass the actual project root as the final argument. `designSystem.file` is resolved relative to that root. Missing registered design-system files fail preparation.
+Keep all working files (candidates, change files, screenshots, backups) under one `.variant-work/` directory in the project root, never in the project's source folders or outside the project. Create it first; it contains project source, so do not commit it. The command copies all B-owned files and writes `.candidate-baseline.json` with their original bytes, SHA-256 digests, version, task/brand constraints and the registered design-system file digest. The project root defaults to the parent of `variant-output`; for nested output pass the actual project root as the final argument. `designSystem.file` is resolved relative to that root. Missing registered design-system files fail preparation.
 
-Generate local patches **inside this prepared candidate**, preserving the same relative file paths for **all files owned by the target variant**. Do not modify its baseline or write the live artifact first. Write `change.json` with `summary`, optional `zone`, optional full `tokens` and `comparison` updates. For a hero edit:
+Generate local patches **inside this prepared candidate**, preserving the same relative file paths for **all files owned by the target variant**. Do not modify its baseline or write the live artifact first. Write `change.json` with `summary`, optional `zone`, optional full `tokens` and `comparison` updates, and a `request` id naming the user's request. For a hero edit:
 
 ```json
-{"summary":"Emphasize primary CTA", "zone":"hero"}
+{"summary":"Emphasize primary CTA", "zone":"hero", "request":"B-vary-subtle-hero-1"}
 ```
 
+One user request should normally be one apply: inspect and fix the candidate before applying it. When one request needs several applies (marking zones first, or fixing a problem found after rendering), give them all the same `request` id. `undo B` then reverts the whole request at once, matching what the user asked to undo. Use a new id for every new user request.
+
 ```bash
-node <skill-root>/scripts/variant-history.mjs apply variant-output B work/candidate-B work/change.json
+node <skill-root>/scripts/variant-history.mjs apply variant-output B .variant-work/candidate-B .variant-work/change.json
 node <skill-root>/scripts/variant-history.mjs undo variant-output B
 node <skill-root>/scripts/variant-history.mjs select variant-output B
 ```
 
-Apply first checks the prepared baseline against current version, owned files, file contents, entry, tokens, comparison, task constraints and the registered design-system file. Changes made directly in an editor are detected even without a version bump. Selection changes alone do not invalidate the candidate. It then validates unique ownership, snapshots all B files and B metadata, verifies snapshot persistence, then replaces the files and updates context. It rejects changes outside exact zone markers for scoped actions. CSS overrides must stay in the marked zone; a local edit cannot alter shared root tokens. Keep the owned file set stable during one apply. To introduce a new owned file, explicitly register it with its initial content **before preparing a new candidate**. Registration after preparation invalidates that candidate.
+Apply first checks the prepared baseline against current version, owned files, file contents, entry, tokens, comparison, task constraints and the registered design-system file. Changes made directly in an editor are detected even without a version bump. Selection changes alone do not invalidate the candidate. It then validates unique ownership, snapshots all B files and B metadata, verifies snapshot persistence, then replaces the files and updates context. It rejects changes outside exact zone markers for scoped actions. A file may mark the same zone once in markup and once in styles (`/* zone:hero:start */` … `/* zone:hero:end */`); edits are accepted inside either pair. Owned files without the zone's markers must stay byte-identical. CSS overrides must stay in a marked zone; a local edit cannot alter shared root tokens. Keep the owned file set stable during one apply. To introduce a new owned file, explicitly register it with its initial content **before preparing a new candidate**. Registration after preparation invalidates that candidate.
 
 For configuration-driven React pages, `/* zone:hero:start */` / `/* zone:hero:end */` also delimit a standard JS/TS configuration block. Keep shared components read-only during that local edit and compare the rendered non-target sections; preserving wrapper bytes alone cannot prove rendered scope.
 
@@ -72,6 +82,16 @@ Before claiming verified delivery, record and recheck version-bound evidence fol
 
 Export the explicitly named variant or selected winner from its current revision and tokens. Preserve source files/history. Include framework integration files, dependencies, and a short record of checks performed. Re-run the appropriate typecheck and open the exported artifact before reporting completion.
 
+To integrate into the project, write every final project file into a staging directory that mirrors project-relative paths, such as `.variant-work/integrate-B/src/App.tsx`. Then apply it with the bundled helper instead of copying files or writing a custom backup script:
+
+```bash
+node <skill-root>/scripts/variant-integrate.mjs apply variant-output B .variant-work/integrate-B
+node <skill-root>/scripts/variant-integrate.mjs rollback variant-output <integration-id>
+node <skill-root>/scripts/variant-integrate.mjs list variant-output
+```
+
+`apply` saves the prior bytes of every target in `variant-output/.integrations/<id>.json` before writing, refuses targets inside `variant-output/`, `.git/`, `node_modules/` or `.variant-work/`, and records each file as created, overwritten or unchanged. It does not select a winner; run `select` separately only when the user picks one. `rollback` restores those files and deletes created ones, but refuses without writing anything if the user edited an integrated file afterwards. In the delivery summary, give the changed files, the checks that actually ran, the preview URL, and the exact rollback command.
+
 ## Integration checkpoint learned from the landing page
 
 Run the target project's production build after integrating the named export. With Vite multiple HTML entries, register the comparison and A/B/C entries in `build.rollupOptions.input`; a working dev URL does not mean the preview survives a production build. Open the built application and every preview route and verify real controls, not just HTTP 200 (an SPA fallback can return the wrong page with 200).
@@ -86,7 +106,7 @@ History mutations use an exclusive `.variant-lock` directory. If another operati
 Snapshots from before 1.1 do not record the post-edit baseline, so automatic undo refuses them rather than guessing whether later user edits are safe to discard. Recover either legacy or conflicting history into a new, separate directory:
 
 ```bash
-node <skill-root>/scripts/variant-history.mjs recover variant-output B work/recovered-B
+node <skill-root>/scripts/variant-history.mjs recover variant-output B .variant-work/recovered-B
 ```
 
 The parent directory must exist and the destination must not exist. This extracts the last undo snapshot's files and metadata, leaving live files and history unchanged. Compare the recovered candidate with current files; reconcile user edits into a new candidate before using `apply`. Snapshots support crash recovery; multiple file replacements are not a filesystem-wide atomic commit. The operation lock coordinates these helpers, not external editors.

@@ -35,6 +35,34 @@ test('hero-only patch rejects outside changes, preserves other bytes, undo resto
   assert.equal(next.selectedVariant,'A');assert.equal(next.variants.B.version,3);
   assert.throws(()=>undoVariant(root,'B'),/No earlier/);
 });
+test('a zone marked in both styles and markup accepts edits inside either pair only',t=>{
+  const base=fs.mkdtempSync(path.join(os.tmpdir(),'variant-zone-'));t.after(()=>fs.rmSync(base,{recursive:true,force:true}));
+  const root=path.join(base,'output'),file='VariantB.tsx';fixture(root);
+  const original=`const css=`+'`/* zone:hero:start */h1{color:red}/* zone:hero:end */ footer{color:blue}`'+`;\n`+fs.readFileSync(path.join(root,file),'utf8');
+  fs.writeFileSync(path.join(root,file),original);
+  const outside=path.join(base,'outside');prepareVariant(root,'B',outside);
+  fs.writeFileSync(path.join(outside,file),original.replace('footer{color:blue}','footer{color:green}'));
+  assert.throws(()=>applyVariant(root,'B',outside,{summary:'footer style',zone:'hero'}),/Outside-zone/);
+  const inside=path.join(base,'inside');prepareVariant(root,'B',inside);
+  fs.writeFileSync(path.join(inside,file),original.replace('h1{color:red}','h1{color:teal}').replace('Direction B','Tidal B'));
+  applyVariant(root,'B',inside,{summary:'hero style and copy',zone:'hero'});
+  assert.match(fs.readFileSync(path.join(root,file),'utf8'),/h1\{color:teal\}[\s\S]*Tidal B/);
+});
+test('applies sharing a request id undo together; a different request stays separate',t=>{
+  const {root,candidate}=setup(t),file='VariantB.tsx',original=fs.readFileSync(path.join(root,file),'utf8');
+  fs.writeFileSync(path.join(candidate,file),original.replace('Direction B','Earlier B'));
+  applyVariant(root,'B',candidate,{summary:'earlier request',zone:'hero',request:'r1'});
+  const steps=[['Earlier B','Tidal B'],['Tidal B','Tidal-B']];
+  steps.forEach(([from,to],i)=>{const next=path.join(path.dirname(candidate),`step-${i}`);prepareVariant(root,'B',next);
+    fs.writeFileSync(path.join(next,file),fs.readFileSync(path.join(next,file),'utf8').replace(from,to));
+    applyVariant(root,'B',next,{summary:`vary subtle step ${i}`,zone:'hero',request:'r2'});});
+  assert.match(fs.readFileSync(path.join(root,file),'utf8'),/Tidal-B/);
+  undoVariant(root,'B');
+  assert.match(fs.readFileSync(path.join(root,file),'utf8'),/Earlier B/);
+  const state=readContext(root);assert.equal(state.variants.B.undo.length,1);assert.equal(state.variants.B.history.at(-1).restoredSnapshots.length,2);
+  undoVariant(root,'B');assert.equal(fs.readFileSync(path.join(root,file),'utf8'),original);
+  assert.throws(()=>applyVariant(root,'B',candidate,{summary:'bad',request:''}),/request/);
+});
 test('React comparison writes three real mounts, escapes summary text',t=>{
   const {root}=setup(t);const context=readContext(root);context.recommendation.reason='<script>bad()</script>';
   fs.writeFileSync(path.join(root,'.variant-context.json'),JSON.stringify(context));
