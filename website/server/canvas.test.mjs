@@ -37,3 +37,28 @@ test('delivery checks broken anchors and image content',()=>{
  const image={id:'photo',type:'img',name:'Product image',text:'',children:[],styles:{},props:{}};
  const next=applyCommands(doc,[{type:'insert',nodeId:'hero',node:image}]);assert.ok(inspectLanding(next).issues.some(i=>i.nodeId==='photo'));
 });
+test('embedded images are stored once across undo snapshots and restored on read',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'canvas-assets-'));
+ try{const store=canvasStore(dir),s=store.create('Image storage');const src='data:image/png;base64,'+'A'.repeat(400_000);
+  let state=store.mutate(s.id,1,{type:'edit',direction:'B',commands:[{type:'insert',nodeId:'hero',node:{id:'photo',type:'img',name:'Photo',text:'',children:[],styles:{},props:{src,alt:'Product'}}}]});
+  for(let i=0;i<8;i++)state=store.mutate(s.id,state.revision,{type:'edit',direction:'B',commands:[{type:'text',nodeId:'headline',text:'Edit '+i}]});
+  const raw=fs.readFileSync(path.join(dir,s.id+'.json'),'utf8');assert.equal(raw.split(src).length-1,1);assert.ok(raw.length<src.length*2);
+  const read=canvasStore(dir).read(s.id);assert.equal(findNode(read.documents.B,'photo').props.src,src);assert.equal(findNode(read.undo.at(-1).documents.B,'photo').props.src,src);
+  const undone=store.mutate(s.id,state.revision,{type:'undo'});assert.equal(findNode(undone.documents.B,'photo').props.src,src);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+test('a lock left by a crashed writer expires; a fresh lock still blocks',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'canvas-lock-'));
+ try{const store=canvasStore(dir),s=store.create('Lock recovery'),lock=path.join(dir,s.id+'.json.lock');
+  fs.mkdirSync(lock);assert.throws(()=>store.mutate(s.id,1,{type:'edit',direction:'B',commands:[{type:'text',nodeId:'headline',text:'Blocked'}]}),/正在保存/);
+  const old=new Date(Date.now()-60_000);fs.utimesSync(lock,old,old);
+  assert.equal(store.mutate(s.id,1,{type:'edit',direction:'B',commands:[{type:'text',nodeId:'headline',text:'Recovered'}]}).revision,2);assert.equal(fs.existsSync(lock),false);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+test('starters differ in type, order and hero treatment; padding accepts two values',()=>{
+ const [a,b,c]=['A','B','C'].map(d=>createLanding(d));
+ assert.deepEqual([a,b,c].map(d=>d.root.styles.fontFamily),['serif','sans-serif','sans-serif']);
+ assert.notDeepEqual(a.root.children.map(n=>n.id),b.root.children.map(n=>n.id));assert.ok(findNode(c,'hero').styles.backgroundColor);
+ assert.equal(findNode(applyCommands(b,[{type:'style',nodeId:'hero',styles:{padding:'40px 0'}}]),'hero').styles.padding,'40px 0');
+ assert.throws(()=>applyCommands(b,[{type:'style',nodeId:'hero',styles:{fontFamily:'Comic Sans'}}]),/fontFamily/);
+});

@@ -6,10 +6,12 @@ test('canvas edits, revision history, live external changes and standalone deliv
  await page.getByRole('button',{name:'编辑 B'}).click();
  const canvas=page.frameLocator('iframe[title="可编辑 Landing 画布"]');
  await page.getByLabel('画布缩放').selectOption('100');
- await canvas.locator('#headline').dblclick();await canvas.locator('#headline').fill('浏览器亲手修改的标题');await canvas.locator('#headline').press('Escape');
+ await canvas.locator('#headline').dblclick();await canvas.locator('#headline').fill('按 Esc 应当放弃');await canvas.locator('#headline').press('Escape');
+ await expect(canvas.locator('#headline')).toHaveText('好设计，值得多一个方向。');await expect(page.locator('.lc-project-title')).toContainText('版本 1');
+ await canvas.locator('#headline').dblclick();await canvas.locator('#headline').fill('浏览器亲手修改的标题');await canvas.locator('#headline').press('Enter');
  await expect(page.locator('.lc-project-title')).toContainText('版本 2');await expect(canvas.locator('#headline')).toHaveText('浏览器亲手修改的标题');
- await page.getByRole('button',{name:'↶ 撤销'}).click();await expect(canvas.locator('#headline')).toHaveText('好设计，值得多一个方向。');
- await page.getByRole('button',{name:'↷ 重做'}).click();await expect(canvas.locator('#headline')).toHaveText('浏览器亲手修改的标题');
+ await page.getByRole('button',{name:'↺ 撤销'}).click();await expect(canvas.locator('#headline')).toHaveText('好设计，值得多一个方向。');
+ await page.getByRole('button',{name:'↻ 重做'}).click();await expect(canvas.locator('#headline')).toHaveText('浏览器亲手修改的标题');
  const id=new URL(page.url()).searchParams.get('project');const initial=await(await request.get('/api/canvas/projects/'+id)).json();
  const edit=await request.post('/api/canvas/projects/'+id+'/edit',{data:{expectedRevision:initial.revision,direction:'B',commands:[{type:'text',nodeId:'intro',text:'外部 Agent 修改已经同步。'}]}});expect(edit.ok()).toBe(true);
  await expect(canvas.locator('#intro')).toHaveText('外部 Agent 修改已经同步。');await expect(canvas.locator('#headline')).toHaveText('浏览器亲手修改的标题');
@@ -28,4 +30,17 @@ test('canvas edits, revision history, live external changes and standalone deliv
  await page.reload();await expect(canvas.locator('#headline')).toHaveText('浏览器亲手修改的标题');
  await page.goto(`/api/canvas/projects/${id}/preview?direction=B`);await page.locator('summary').click();await expect(page.locator('details')).toHaveAttribute('open','');await page.locator('#nav-link').click();await expect(page).toHaveURL(/#process$/);
  expect(errors).toEqual([]);
+});
+test('style inputs accept everyday values, restore rejected ones, and shortcuts undo and redo',async({page})=>{
+ await page.goto('/canvas?new=1');await page.getByRole('button',{name:'创建三个可编辑起点'}).click();await page.getByRole('button',{name:'编辑 A'}).click();
+ const canvas=page.frameLocator('iframe[title="可编辑 Landing 画布"]');await canvas.locator('#headline').click();
+ const color=page.getByRole('textbox',{name:'文字颜色',exact:true});await color.fill('red');await color.press('Tab');
+ await expect(canvas.locator('#headline')).toHaveCSS('color','rgb(255, 0, 0)');
+ const size=page.getByLabel(/字号/);await size.fill('48');await size.press('Tab');await expect(canvas.locator('#headline')).toHaveCSS('font-size','48px');
+ await size.fill('huge');await size.press('Tab');await expect(page.getByRole('alert')).toContainText('请输入数字');await expect(page.getByLabel(/字号/)).toHaveValue('48px');
+ await page.locator('.lc-canvas-scroll').click({position:{x:10,y:10}});await page.keyboard.press('ControlOrMeta+z');await expect(canvas.locator('#headline')).not.toHaveCSS('font-size','48px');
+ await page.keyboard.press('ControlOrMeta+Shift+z');await expect(canvas.locator('#headline')).toHaveCSS('font-size','48px');
+ await expect(page.locator('.lc-project-title')).toContainText('版本 5');await expect(canvas.locator('body')).toBeVisible();
+ await canvas.locator('#intro').dblclick();await page.keyboard.press('End');await page.keyboard.press('Shift+Enter');await page.keyboard.type('第二行');await page.keyboard.press('Enter');
+ await expect(page.locator('.lc-project-title')).toContainText('版本 6');await expect(canvas.locator('#intro')).toContainText('第二行');
 });

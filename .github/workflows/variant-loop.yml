@@ -24,6 +24,10 @@ jobs:
         working-directory: tests
       - run: npm run typecheck
         working-directory: tests
+      - run: npm ci
+        working-directory: mcp
+      - run: npm test
+        working-directory: mcp
 
   landing:
     runs-on: ubuntu-24.04
@@ -45,4 +49,6 @@ jobs:
       - run: npx playwright install --with-deps chromium
         working-directory: tests
       - run: npm run test:landing
+        working-directory: tests
+      - run: npx playwright test -c canvas.config.mjs
         working-directory: tests

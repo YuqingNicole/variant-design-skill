@@ -8,7 +8,7 @@ import {handleCanvasApi} from './canvas-api.mjs';
 import {createLanding} from '../shared/landing-document.mjs';
 async function invoke(url,body,method='POST'){
  const req=Readable.from([Buffer.from(JSON.stringify(body??{}))]);req.url=url;req.method=method;req.headers={host:'127.0.0.1:4188',origin:'http://127.0.0.1:4188'};
- let status,payload;const res={writeHead:s=>status=s,end:s=>payload=JSON.parse(s)};await handleCanvasApi(req,res);return{status,payload};
+ let status,payload;const res={writeHead:s=>status=s,end:s=>payload=s===undefined?undefined:JSON.parse(s)};await handleCanvasApi(req,res);return{status,payload};
 }
 test('model documents validate before saving; proposals remain unapplied, scoped and revision-bound',async()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'canvas-api-')),oldFetch=global.fetch,oldEnv={...process.env};process.env.CANVAS_DATA_DIR=dir;process.env.ANTHROPIC_API_KEY='test-only';let calls=0,mode='generate';
@@ -26,4 +26,13 @@ test('model documents validate before saving; proposals remain unapplied, scoped
   const stale=await invoke(`/api/canvas/projects/${p.id}/edit`,{expectedRevision:proposal.payload.expectedRevision,direction:'B',commands:proposal.payload.commands});assert.equal(stale.status,409);
   mode='bad';const before=fs.readdirSync(dir).length;const bad=await invoke('/api/canvas/generate',{brief:'Invalid model response'});assert.equal(bad.status,400);assert.equal(fs.readdirSync(dir).length,before);
  }finally{global.fetch=oldFetch;for(const key of ['CANVAS_DATA_DIR','ANTHROPIC_API_KEY']){if(oldEnv[key]===undefined)delete process.env[key];else process.env[key]=oldEnv[key];}fs.rmSync(dir,{recursive:true,force:true});}
+});
+test('polling with the current stamp returns 204 without the project body',async()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'canvas-stamp-')),old=process.env.CANVAS_DATA_DIR;process.env.CANVAS_DATA_DIR=dir;
+ try{const created=(await invoke('/api/canvas/projects',{brief:'Polling'})).payload,base='/api/canvas/projects/'+created.id;
+  const stamp=`${created.revision}:${created.active}::`;
+  const same=await invoke(base+'?stamp='+encodeURIComponent(stamp),undefined,'GET');assert.equal(same.status,204);assert.equal(same.payload,undefined);
+  await invoke(base+'/selection',{expectedRevision:1,direction:'B',nodeId:'headline'});
+  const changed=await invoke(base+'?stamp='+encodeURIComponent(stamp),undefined,'GET');assert.equal(changed.status,200);assert.equal(changed.payload.selection,'headline');
+ }finally{if(old===undefined)delete process.env.CANVAS_DATA_DIR;else process.env.CANVAS_DATA_DIR=old;fs.rmSync(dir,{recursive:true,force:true});}
 });

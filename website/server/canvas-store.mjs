@@ -1,16 +1,34 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { applyCommands, createLanding, findNode, validateDocument } from '../shared/landing-document.mjs';
 import { localFile } from '../../scripts/variant-history.mjs';
 const defaultDirectory = fileURLToPath(new URL('../.canvas-data/',import.meta.url));
+const staleLockMs = 30_000;
+// Undo snapshots copy whole documents. Store each embedded image once so 30 snapshots of a
+// page with a 2 MB photo stay one photo on disk, not 60 MB rewritten on every edit.
+function packAssets(state){
+  const assets={},seen=new Map();
+  const json=JSON.stringify(state,(key,value)=>{
+    if(key!=='src'||typeof value!=='string'||!value.startsWith('data:'))return value;
+    let hash=seen.get(value);if(!hash){hash=createHash('sha256').update(value).digest('hex');seen.set(value,hash);assets[hash]=value;}
+    return 'asset:'+hash;
+  });
+  return Object.keys(assets).length?JSON.stringify({...JSON.parse(json),assets}):json;
+}
+function unpackAssets(state){
+  const {assets,...rest}=state;if(!assets)return state;
+  const visit=value=>{if(Array.isArray(value))value.forEach(visit);else if(value&&typeof value==='object')for(const [key,item] of Object.entries(value)){if(key==='src'&&typeof item==='string'&&item.startsWith('asset:')){if(!assets[item.slice(6)])throw new Error('Missing image asset.');value[key]=assets[item.slice(6)];}else visit(item);}};
+  visit(rest);return rest;
+}
+export const stateStamp = state => `${state.revision}:${state.active}:${state.selection ?? ''}:${state.selected ?? ''}`;
 export function canvasStore(directory = process.env.CANVAS_DATA_DIR || defaultDirectory) {
   fs.mkdirSync(directory,{recursive:true});
   if(fs.lstatSync(directory).isSymbolicLink())throw new Error('Canvas data directory cannot be a symlink.');
   const file = id => { if(!/^[a-f\d-]{36}$/.test(id)) throw Object.assign(new Error('Invalid project ID.'),{statusCode:400}); return localFile(directory,id+'.json'); };
-  function save(state) { const target=file(state.id),tmp=target+'.'+randomUUID()+'.tmp',content=JSON.stringify(state); try{fs.writeFileSync(tmp,content,{flag:'wx',flush:true});if(fs.readFileSync(tmp,'utf8')!==content)throw new Error('Snapshot verification failed.');fs.renameSync(tmp,target);}finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp);} return state; }
-  function read(id) { try{return JSON.parse(fs.readFileSync(file(id),'utf8'));}catch(e){if(e.code==='ENOENT')throw Object.assign(new Error('Project not found.'),{statusCode:404});throw e;} }
+  function save(state) { const target=file(state.id),tmp=target+'.'+randomUUID()+'.tmp',content=packAssets(state); try{fs.writeFileSync(tmp,content,{flag:'wx',flush:true});if(fs.readFileSync(tmp,'utf8')!==content)throw new Error('Snapshot verification failed.');fs.renameSync(tmp,target);}finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp);} return state; }
+  function read(id) { try{return unpackAssets(JSON.parse(fs.readFileSync(file(id),'utf8')));}catch(e){if(e.code==='ENOENT')throw Object.assign(new Error('Project not found.'),{statusCode:404});throw e;} }
   function create(brief, documents) {
     if(typeof brief!=='string'||!brief.trim()||brief.length>600)throw Object.assign(new Error('请输入 1–600 字的设计命题。'),{statusCode:400});
     if(documents)for(const id of ['A','B','C']){validateDocument(documents[id]);if(documents[id].direction!==id)throw new Error('Direction mismatch.');}
@@ -18,7 +36,9 @@ export function canvasStore(directory = process.env.CANVAS_DATA_DIR || defaultDi
   }
   function mutate(id,expectedRevision,action) {
     const lock = file(id)+'.lock';
-    try{fs.mkdirSync(lock);}catch(e){if(e.code==='EEXIST')throw Object.assign(new Error('项目正在保存，请重试。'),{statusCode:409});throw e;}
+    const acquire=()=>{try{fs.mkdirSync(lock);return true;}catch(e){if(e.code!=='EEXIST')throw e;return false;}};
+    // A crash between mkdir and rmdir would otherwise lock the project forever.
+    if(!acquire()){let stale=false;try{stale=Date.now()-fs.statSync(lock).mtimeMs>staleLockMs;}catch{}if(stale){fs.rmSync(lock,{recursive:true,force:true});}if(!stale||!acquire())throw Object.assign(new Error('项目正在保存，请重试。'),{statusCode:409});}
     try{
       const state=read(id);
       if(!Number.isInteger(expectedRevision)||state.revision!==expectedRevision)throw Object.assign(new Error('页面已有新修改。已保留当前版本，请刷新后重试。'),{statusCode:409});
