@@ -15,6 +15,20 @@ Every component spec needs these six dimensions:
 5. **Behavior** — What happens on interaction, keyboard, focus, error
 6. **Accessibility** — ARIA role, keyboard nav, screen reader output
 
+### Recording Values
+
+- **Never invent a value.** Every number comes from the source: tokens, CSS, component code, or a computed style read in the browser. A value you cannot find stays `[TBD]`, with a note on where it should come from. A plausible guess presented as a spec is worse than a gap.
+- **Specify architecture, not content.** Name slots by role and sizing behavior, not by sample copy: `TITLE · FILL`, `CLOSE ACTION · FIXED 32`, `FOOTER ACTIONS · HUG`. The spec should stay true when the text changes.
+- **Name the variables, then relate them.** Label repeated measurements once (`S1` padding, `S2` gap, `R1` outer radius, `B` border) and write derived sizes as formulas rather than loose numbers:
+
+```
+H_header = 2·S1 + H_title          header height follows its padding and title
+R_inner  = max(0, R1 − B − S1)     nested corner (see ux-design-tokens.md → Nested Radius)
+W_body   = W_dialog − 2·S1
+```
+
+A formula records intent. When `S1` changes, the reader knows which other sizes must move with it.
+
 ---
 
 ## Button
@@ -381,6 +395,9 @@ When reviewing or creating a component spec:
 - [ ] ARIA role, properties, and state documented
 - [ ] Touch target meets 44×44px minimum
 - [ ] Spacing uses design token values (not px values)
+- [ ] Every value traces to a source; unknowns are marked `[TBD]`, not guessed
+- [ ] Slots are named by role and sizing behavior (fill / hug / fixed), not by sample content
+- [ ] Derived sizes and nested radii are written as formulas over named variables
 - [ ] Focus indicator visible and meets 3:1 contrast ratio
 - [ ] Animation duration and easing from motion tokens
 - [ ] Responsive behavior defined (what changes at mobile breakpoint)
