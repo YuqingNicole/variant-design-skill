@@ -18,14 +18,13 @@ jobs:
       - run: node scripts/quality-gate.mjs examples/coffee-brand-interactive.html --strict
       - run: npm ci
         working-directory: tests
-      # Installing Chromium's apt dependencies has hung for 10+ minutes on hosted runners.
-      # The runner image already has Chrome; fall back to Playwright's Chromium only without it.
-      - name: Select browser
+      # Installing Chromium's apt dependencies (--with-deps) has hung for 10+ minutes on hosted
+      # runners. The image's preinstalled Chrome already brings the system libraries, so download
+      # only Playwright's own Chromium, which matches the pinned Playwright version.
+      - name: Install Playwright Chromium
         working-directory: tests
         timeout-minutes: 12
-        run: |
-          if command -v google-chrome >/dev/null; then google-chrome --version; echo "PLAYWRIGHT_CHANNEL=chrome" >> "$GITHUB_ENV"
-          else for attempt in 1 2; do timeout 300 npx playwright install --with-deps chromium && exit 0; done; exit 1; fi
+        run: for attempt in 1 2; do timeout 300 npx playwright install chromium && exit 0; done; exit 1
       - run: npm test
         working-directory: tests
       - run: npm run typecheck
@@ -52,14 +51,13 @@ jobs:
         working-directory: website
       - run: npm ci
         working-directory: tests
-      # Installing Chromium's apt dependencies has hung for 10+ minutes on hosted runners.
-      # The runner image already has Chrome; fall back to Playwright's Chromium only without it.
-      - name: Select browser
+      # Installing Chromium's apt dependencies (--with-deps) has hung for 10+ minutes on hosted
+      # runners. The image's preinstalled Chrome already brings the system libraries, so download
+      # only Playwright's own Chromium, which matches the pinned Playwright version.
+      - name: Install Playwright Chromium
         working-directory: tests
         timeout-minutes: 12
-        run: |
-          if command -v google-chrome >/dev/null; then google-chrome --version; echo "PLAYWRIGHT_CHANNEL=chrome" >> "$GITHUB_ENV"
-          else for attempt in 1 2; do timeout 300 npx playwright install --with-deps chromium && exit 0; done; exit 1; fi
+        run: for attempt in 1 2; do timeout 300 npx playwright install chromium && exit 0; done; exit 1
       - run: npm run test:landing
         working-directory: tests
       - run: npx playwright test -c canvas.config.mjs

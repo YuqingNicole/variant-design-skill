@@ -62,3 +62,10 @@ test('starters differ in type, order and hero treatment; padding accepts two val
  assert.equal(findNode(applyCommands(b,[{type:'style',nodeId:'hero',styles:{padding:'40px 0'}}]),'hero').styles.padding,'40px 0');
  assert.throws(()=>applyCommands(b,[{type:'style',nodeId:'hero',styles:{fontFamily:'Comic Sans'}}]),/fontFamily/);
 });
+test('moves keep a leading nav first and a closing footer last',()=>{
+  const doc=createLanding('B','Frame');const ids=d=>d.root.children.map(n=>n.id);const move=(nodeId,index)=>applyCommands(doc,[{type:'move',nodeId,parentId:doc.root.id,index}]);
+  assert.deepEqual(ids(doc).at(0),'navigation');assert.deepEqual(ids(doc).at(-1),'footer');
+  assert.throws(()=>move('footer',0),/页脚/);assert.throws(()=>move('navigation',3),/导航/);
+  assert.throws(()=>move('features',0),/导航/);assert.throws(()=>move('features',ids(doc).length),/页脚/);
+  const moved=move('faq',1);assert.deepEqual(ids(moved).slice(0,2),['navigation','faq']);assert.equal(ids(moved).at(-1),'footer');
+});

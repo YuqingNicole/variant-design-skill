@@ -50,12 +50,12 @@ These routes are public: anyone who can open the site can spend that key on canv
 - Style fields accept everyday input: `48` becomes `48px`, and color names or `rgb()` become hex values. Text color and background color also have a color picker. A rejected value shows a message and the field returns to its previous value.
 - Each starter has its own type family, section order and hero treatment. `fontFamily` accepts the generic `serif`, `sans-serif` or `monospace`; `padding` accepts one or two values, such as `40px 0`.
 - Pan and zoom; switch between 1120px desktop and 390px mobile frames.
-- Reorder top-level sections using drag handles or accessible up/down buttons.
+- Reorder top-level sections using drag handles or accessible up/down buttons. A navigation that leads the page stays first and a closing footer stays last; the document rules reject any move that breaks this, including moves sent through MCP or the API.
 - Duplicate, hide, delete and insert images. Generic node insertion is available through MCP.
 - Undo/redo document edits (30 snapshots), from the header buttons or with ⌘Z / Ctrl+Z and ⇧⌘Z / Ctrl+Y while focus is outside a text field. Selecting a direction is separate; undo/redo never changes the selected delivery winner.
 - Preview and export standalone HTML. Heading, image and internal-link checks block incomplete exports. These are structural checks, not a full accessibility audit or link-availability test.
 
-Only validated node types, properties and CSS styles are rendered. All text and attributes are escaped. The editor bridge is trusted application code, not model-supplied JavaScript. Its iframe uses same-origin access for browser compatibility; never put arbitrary generated HTML into this iframe. The exported page contains no editing bridge or dependency on React.
+Only validated node types, properties and CSS styles are rendered. All text and attributes are escaped. The editor bridge is trusted application code, not model-supplied JavaScript. Its iframe is sandboxed with `allow-scripts` only, so the page inside has an opaque origin and cannot reach the editor, its storage or the API; it talks to the editor through `postMessage`. Still, never put arbitrary generated HTML into this iframe. The exported page contains no editing bridge or dependency on React.
 
 Changing UI language leaves authored document content intact. Starter page content is Chinese; edit it to match the desired audience.
 

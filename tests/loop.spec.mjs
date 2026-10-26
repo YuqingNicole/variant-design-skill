@@ -12,11 +12,16 @@ test.beforeAll(async()=>{
   server=spawn(process.execPath,['../scripts/react-preview.mjs',process.cwd(),root],{stdio:['ignore','pipe','pipe']});
   base=await new Promise((resolve,reject)=>{let output='';const timeout=setTimeout(()=>reject(new Error(output)),20000);server.stdout.on('data',b=>{output+=b;const match=output.match(/Comparison: (http:\/\/[^\s]+)\/\_compare.html/);if(match){clearTimeout(timeout);resolve(match[1]);}});server.stderr.on('data',b=>output+=b);server.on('exit',code=>{clearTimeout(timeout);reject(new Error(`Preview exited ${code}: ${output}`));});});
 });
+// Tests rewrite fixture files and then navigate. Vite would push full reloads over its HMR socket at
+// unpredictable moments, so pages get a silent mock socket, and `open` retries until the dev server
+// serves the changed content instead of its previous transform.
+test.beforeEach(async({context})=>{await context.routeWebSocket(/./,()=>{});});
+const open=(page,url,ready)=>expect(async()=>{await page.goto(url);await ready();}).toPass({timeout:20000});
 test.afterAll(()=>{server?.kill();fs.rmSync(candidate,{recursive:true,force:true});});
 test('React A/B/C render with working controls, locked font, comparison and keyboard focus',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));page.on('console',msg=>{if(msg.type()==='error')errors.push(`${msg.text()} ${msg.location().url}`);});
   for(const id of ['A','B','C']){
-    await page.goto(`${base}/_preview/${id}.html`);await expect(page.getByRole('heading')).toHaveText(`Direction ${id}`);
+    await open(page,`${base}/_preview/${id}.html`,()=>expect(page.getByRole('heading')).toHaveText(`Direction ${id}`,{timeout:2000}));
     await expect(page.locator('main')).toHaveCSS('font-family','Georgia');
     await page.keyboard.press('Tab');const button=page.getByRole('button');await expect(button).toBeFocused();
     expect(await button.evaluate(el=>getComputedStyle(el).outlineStyle)).not.toBe('none');
@@ -32,7 +37,7 @@ test('static React preview opens from file:// without a server for sandboxed age
   expect(run.status,run.stderr).toBe(0);expect(run.stdout).toMatch(/Comparison: file:\/\//);
   const base=pathToFileURL(path.join(root,'_static')).href;
   for(const id of ['A','B','C']){
-    await page.goto(`${base}/_preview/${id}.html`);await expect(page.getByRole('heading')).toHaveText(`Direction ${id}`);
+    await open(page,`${base}/_preview/${id}.html`,()=>expect(page.getByRole('heading')).toHaveText(`Direction ${id}`,{timeout:2000}));
     await expect(page.locator('main')).toHaveCSS('font-family','Georgia');await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Inspect 1');
   }
   await page.goto(`${base}/_compare.html`);await expect(page.locator('iframe')).toHaveCount(3);
@@ -41,8 +46,8 @@ test('static React preview opens from file:// without a server for sandboxed age
 test('hero edit and undo render only B changes, preserve brand and footer',async({page})=>{
   prepareVariant(root,'B',candidate);const file=path.join(candidate,'VariantB.tsx');fs.writeFileSync(file,fs.readFileSync(file,'utf8').replace('Direction B','Evidence first'));
   applyVariant(root,'B',candidate,{summary:'hero',zone:'hero'});
-  await page.goto(`${base}/_preview/B.html`);await expect(page.getByRole('heading')).toHaveText('Evidence first');await expect(page.locator('main')).toHaveCSS('font-family','Georgia');await expect(page.locator('footer')).toHaveText('Evidence retained');
-  undoVariant(root,'B');await page.reload();await expect(page.getByRole('heading')).toHaveText('Direction B');
+  await open(page,`${base}/_preview/B.html`,()=>expect(page.getByRole('heading')).toHaveText('Evidence first',{timeout:2000}));await expect(page.locator('main')).toHaveCSS('font-family','Georgia');await expect(page.locator('footer')).toHaveText('Evidence retained');
+  undoVariant(root,'B');await open(page,`${base}/_preview/B.html`,()=>expect(page.getByRole('heading')).toHaveText('Direction B',{timeout:2000}));
 });
 test('actual coffee example settles counters immediately and stops frames on preference change',async({page})=>{
   await page.route('https://**/*',route=>route.fulfill({status:200,body:''}));
@@ -62,9 +67,7 @@ test('artifact evidence records computed font and focus, then detects implementa
  const file=path.join(root,'VariantB.tsx'),original=fs.readFileSync(file,'utf8');
  let expectedFixtureFont='Georgia';
  const observe=async()=>{
-  await page.goto(`${base}/_preview/B.html`);
-  // Wait for the dev server to serve the changed fixture, not its prior transform.
-  await expect(page.locator('main')).toHaveCSS('font-family',expectedFixtureFont);
+  await open(page,`${base}/_preview/B.html`,()=>expect(page.locator('main')).toHaveCSS('font-family',expectedFixtureFont,{timeout:2000}));
   const font=await page.locator('main').evaluate(el=>getComputedStyle(el).fontFamily);
   await page.keyboard.press('Tab');
   const outline=await page.getByRole('button').evaluate(el=>{const css=getComputedStyle(el);return {style:css.outlineStyle,width:parseFloat(css.outlineWidth)};});
@@ -89,9 +92,8 @@ test('runtime observations bind real browser checks to the reviewed task',async(
   let failure;
   const report=await observeTask(task,profile,async()=>{try{
     await page.setViewportSize({width:800,height:600});await page.emulateMedia({reducedMotion:'reduce',colorScheme:'light'});
-    await page.goto(`${base}/_preview/B.html`);
+    await open(page,`${base}/_preview/B.html`,()=>expect(page.locator('main')).toHaveCSS('font-family','Georgia',{timeout:2000}));
     await expect(page.getByRole('heading')).toHaveText('Direction B');
-    await expect(page.locator('main')).toHaveCSS('font-family','Georgia');
     await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Inspect 1');
     return {conditions:{url:page.url(),browser:browser.version(),language:await page.evaluate(()=>navigator.language),theme:'light',dataState:'fixture B',interactionState:'after one counter click',viewport:page.viewportSize(),reducedMotion:'reduce'},checks:[{id:'counter-and-brand',status:'passed',reason:'Counter incremented and Georgia font retained',tool:'Playwright',toolVersion:JSON.parse(fs.readFileSync('node_modules/@playwright/test/package.json','utf8')).version,evidence:'Heading Direction B; main computed font Georgia; button text Inspect 1'}]};
   }catch(error){failure=error;throw error;}});
