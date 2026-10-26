@@ -86,15 +86,17 @@ test('runtime observations bind real browser checks to the reviewed task',async(
   const {createTask,observeTask,inspectObservation}=await import('../scripts/design-task.mjs');
   const profile=discoverProject(root,'VariantB.tsx');
   const task=createTask(profile,{goal:'Preserve interactive preview',audience:'Project author',route:'/_preview/B.html',coreTask:'Inspect direction B',allowedFiles:['VariantB.tsx'],preserve:['Inspect counter'],acceptance:['Counter increments'],brandConstraints:[{rule:'Georgia font',evidence:'Fixture component styles'}],unknowns:[],discoveryReview:profile.unknowns.map((x,index)=>({index,status:'unresolved',reason:'This test observes only the known fixture counter and font; other semantics are not covered',blocking:false}))});
-  const report=await observeTask(task,profile,async()=>{
+  let failure;
+  const report=await observeTask(task,profile,async()=>{try{
     await page.setViewportSize({width:800,height:600});await page.emulateMedia({reducedMotion:'reduce',colorScheme:'light'});
     await page.goto(`${base}/_preview/B.html`);
     await expect(page.getByRole('heading')).toHaveText('Direction B');
     await expect(page.locator('main')).toHaveCSS('font-family','Georgia');
     await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Inspect 1');
     return {conditions:{url:page.url(),browser:browser.version(),language:await page.evaluate(()=>navigator.language),theme:'light',dataState:'fixture B',interactionState:'after one counter click',viewport:page.viewportSize(),reducedMotion:'reduce'},checks:[{id:'counter-and-brand',status:'passed',reason:'Counter incremented and Georgia font retained',tool:'Playwright',toolVersion:JSON.parse(fs.readFileSync('node_modules/@playwright/test/package.json','utf8')).version,evidence:'Heading Direction B; main computed font Georgia; button text Inspect 1'}]};
-  });
-  expect(report.status).toBe('passed-within-observed-scope');
+  }catch(error){failure=error;throw error;}});
+  // observeTask records adapter errors only as a generic reason; surface the real one.
+  expect(report.status,String(failure?.message??report.reason)).toBe('passed-within-observed-scope');
   expect(inspectObservation(report,task,profile).runtimeFreshness).toBe('not-established');
   const original=fs.readFileSync(path.join(root,'VariantB.tsx'),'utf8');
   try {fs.writeFileSync(path.join(root,'VariantB.tsx'),original+'\n// subsequent edit');expect(inspectObservation(report,task,profile).status).toBe('stale');}
