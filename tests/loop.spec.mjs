@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
+import { pathToFileURL } from 'node:url';
 import { fixture } from './fixture.mjs';
 import { prepareVariant, applyVariant, undoVariant } from '../scripts/variant-history.mjs';
 const root=path.resolve('.generated'),candidate=path.resolve('.candidate');
@@ -24,6 +25,18 @@ test('React A/B/C render with working controls, locked font, comparison and keyb
   await page.goto(`${base}/_compare.html`);await expect(page.getByRole('link',{name:'Open B'})).toBeVisible();
   await expect(page.locator('iframe')).toHaveCount(3);await page.setViewportSize({width:390,height:844});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(errors).toEqual([]);
+});
+test('static React preview opens from file:// without a server for sandboxed agents',async({page})=>{
+  const errors=[];page.on('pageerror',error=>errors.push(error.message));page.on('console',msg=>{if(msg.type()==='error')errors.push(msg.text());});
+  const run=spawnSync(process.execPath,['../scripts/react-preview.mjs',process.cwd(),root,'--static'],{encoding:'utf8'});
+  expect(run.status,run.stderr).toBe(0);expect(run.stdout).toMatch(/Comparison: file:\/\//);
+  const base=pathToFileURL(path.join(root,'_static')).href;
+  for(const id of ['A','B','C']){
+    await page.goto(`${base}/_preview/${id}.html`);await expect(page.getByRole('heading')).toHaveText(`Direction ${id}`);
+    await expect(page.locator('main')).toHaveCSS('font-family','Georgia');await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Inspect 1');
+  }
+  await page.goto(`${base}/_compare.html`);await expect(page.locator('iframe')).toHaveCount(3);
+  await expect(page.frameLocator('iframe[title="Variant C preview"]').getByRole('heading')).toHaveText('Direction C');expect(errors).toEqual([]);
 });
 test('hero edit and undo render only B changes, preserve brand and footer',async({page})=>{
   prepareVariant(root,'B',candidate);const file=path.join(candidate,'VariantB.tsx');fs.writeFileSync(file,fs.readFileSync(file,'utf8').replace('Direction B','Evidence first'));

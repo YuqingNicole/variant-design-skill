@@ -160,7 +160,9 @@ When generating initial HTML/TSX, annotate major sections with `data-zone`:
 
 For TSX, use a `data-zone` prop on the top-level element of each section component.
 
-For reliable local diffs, also bracket each editable zone with unique `<!-- zone:hero:start -->` / `<!-- zone:hero:end -->` markers (TSX: `{/* zone:hero:start */}` / `{/* zone:hero:end */}`). Keep its CSS overrides inside those boundaries. If an existing artifact lacks markers, snapshot before adding them in a separate preparation step and verify that rendering is unchanged.
+For reliable local diffs, also bracket each editable zone with unique `<!-- zone:hero:start -->` / `<!-- zone:hero:end -->` markers (TSX: `{/* zone:hero:start */}` / `{/* zone:hero:end */}`). Mark the zone's styles in the same first generation: wrap its rules with `/* zone:hero:start */` / `/* zone:hero:end */` in the `<style>` block or the variant's own stylesheet. One file may contain one markup pair and one style pair for the same zone. During a zoned edit, an owned file without that zone's markers is read-only, so unmarked styles make `B vary subtle — hero` impossible without an extra revision.
+
+If an existing artifact lacks markers, add them as a separate preparation revision (summary such as "mark hero zone, no visual change"), verify that rendering is unchanged, then apply the requested edit. Give the preparation revision and the edit the same `request` id in `change.json`, so `undo B` reverts both together, as the user expects.
 
 **Step 3: Isolate and rewrite the zone**
 

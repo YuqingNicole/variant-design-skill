@@ -237,6 +237,8 @@ node <skill-root>/scripts/open-preview.mjs variant-output/variant-dashboard-A.ht
 
 If the runtime cannot open a browser, provide the exact file path or preview URL instead of failing the task. Re-open or refresh after iterations so the user never has to locate the artifact manually.
 
+Sandboxed agents often cannot bind a port or open `file://` pages. HTML output still opens by double-click, so give its path. React output needs a server; build the self-contained snapshot with `react-preview.mjs ... --static` as described in `references/preview-and-history.md`, and give its `file://` paths. Never ask the user to wire up a preview by hand.
+
 ### Live Preview Server (Optional)
 
 If the user asks for live preview or says "watch mode", start the bundled static server:
