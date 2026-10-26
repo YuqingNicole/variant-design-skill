@@ -281,7 +281,7 @@ async function callModel(prompt, role, maxTokens, schema) {
   return result;
 }
 
-async function callJson(prompt, schema, role = "planner") {
+export async function callJson(prompt, schema, role = "planner") {
   return extractJson(await callModel(prompt, role, 6_000, schema));
 }
 

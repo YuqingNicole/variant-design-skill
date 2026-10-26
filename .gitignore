@@ -17,3 +17,6 @@ __pycache__/
 
 # Local verification reports may contain project diagnostics
 **/.verification/
+**/.variant-mcp-candidates/
+website/.canvas-data/
+.canvas-delivery/
