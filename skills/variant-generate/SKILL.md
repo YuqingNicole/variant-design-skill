@@ -1,7 +1,6 @@
----
-name: variant-generate
-description: "Generate 3 distinct design variations from a prompt. Each variation expresses a distinct product trade-off; locked brand tokens stay identical. Supports variation actions: Vary strong/subtle, Distill, Shuffle layout, Change style, Remix colors, Mix, Dramatize, Add motion, Make interactive, Polish, Critique, See other views, Extract tokens. Load skills/shared/code-output.md for framework detection and output conventions. Triggers on: design options for X, show me variations, give me UI directions, vary this design, change the style, remix colors, shuffle layout, design a dashboard/landing page/app/editorial"
----
+<!-- Sub-workflow of the variant-design skill, reached through the route table in ../../SKILL.md. It has no skill frontmatter on purpose: agents that scan folders recursively (Codex, `npx skills`) must not register it as a standalone skill, because its paths are relative to the skill root. -->
+
+> **variant-generate**: Generate 3 distinct design variations from a prompt. Each variation expresses a distinct product trade-off; locked brand tokens stay identical. Supports variation actions: Vary strong/subtle, Distill, Shuffle layout, Change style, Remix colors, Mix, Dramatize, Add motion, Make interactive, Polish, Critique, See other views, Extract tokens. Load skills/shared/code-output.md for framework detection and output conventions. Triggers on: design options for X, show me variations, give me UI directions, vary this design, change the style, remix colors, shuffle layout, design a dashboard/landing page/app/editorial
 
 > Before generating code, load `skills/shared/code-output.md`. Also read `references/project-context.md` and `references/quality-baseline.md`.
 

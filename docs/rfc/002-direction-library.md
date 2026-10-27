@@ -1,6 +1,6 @@
 # RFC-002 · 设计方向库：从"看到喜欢的"到"在自己项目里出三版"
 
-- 状态：已接受（2026-10-27），P0–P3 已实施。P3 的实测见 `docs/research/2026-10-27-direction-card-dogfood.md`。
+- 状态：已接受（2026-10-27），P0–P4 已实施。P3 实测见 `docs/research/2026-10-27-direction-card-dogfood.md`，P4 渠道核查见 `docs/research/2026-10-27-skill-distribution.md`。
 - 更新：2026-10-27。
 - 关联：RFC-001；PRD-006、007；Issue #40、#44。
 - 参考：recent.design 公开页面（首页、`/skills`、`/info`），2026-10-27 按普通访客方式阅读。只记录它公开呈现的形态，不抓取、不复制内容。
@@ -134,7 +134,7 @@ flowchart LR
 | P1 数据与校验（已完成） | `website/content/` 结构、校验脚本接入 CI；迁入网站自身的 A/B/C 和两个概念案例；在一次性项目里用技能实际产出产品界面和数据展示各一件 | 覆盖落地页、产品界面、数据展示；至少 3 件 `verified` 作品，证据与记录逐字一致；概念作品明确标注 |
 | P2 静态页面（已完成） | 作品流、详情页、分类页、预渲染、分享图、sitemap、RSS、旧路径跳转 | 每个详情页的 HTML 里直接包含各自的标题和描述；Playwright 覆盖作品流、详情页、手机宽度和旧路径跳转 |
 | P3 方向卡进入工作流（已完成） | `/d/:slug.json`、`references/direction-cards.md`、"试试"指令 | 在一个一次性项目里，用 Claude Code 和 Codex 各跑一次：技能读取方向卡，出 A/B/C，并且没有覆盖项目的品牌约束。结果记录到 `docs/research/` |
-| P4 技能目录与分发 | `/skills`；申请收录到 recent.design Skills 栏目和 skills.sh | 目录上线；收录申请已提交（不把"已提交"说成"已收录"） |
+| P4 技能目录与分发（已完成，收录申请无公开渠道） | `/skills`；申请收录到 recent.design Skills 栏目和 skills.sh | `/skills` 已上线，只收录实测过的技能。两个渠道都没有公开的投稿方式：skills.sh 按 `npx skills add` 的安装量排名；recent.design 只有付费赞助。所以没有提交，改为保证 `npx skills add` 能正确安装 |
 | 之后 | 投稿量、赞助位 | 有流量和投稿的证据后再立项 |
 
 工作台和画布移到 `/lab`，与 P2 一起做。

@@ -7,6 +7,7 @@ import { InspirationPage } from "./InspirationPage";
 import { SubmitPage } from "./SubmitPage";
 import { LibraryPage } from "./LibraryPage";
 import { LabPage } from "./LabPage";
+import { SkillsPage } from "./SkillsPage";
 import App from "./App";
 import { PaperLanding } from "./PaperLanding";
 import { PricingPage } from "./pricing";
@@ -18,7 +19,7 @@ const legacy = (path: string) => path === "/canvas" ? "/lab/canvas" : path === "
 let route = window.location.pathname.replace(/\/+$/, "") || "/";
 const moved = legacy(route);
 if (moved) { history.replaceState(null, "", moved + (moved.startsWith("/lab/") ? location.search : "") + location.hash); route = moved; }
-const page = route === "/lab/canvas" ? <LandingCanvas/> : route === "/lab/workbench" ? <App /> : route === "/lab" ? <LabPage/> : route === "/about" ? <PaperLanding />
+const page = route === "/lab/canvas" ? <LandingCanvas/> : route === "/lab/workbench" ? <App /> : route === "/lab" ? <LabPage/> : route === "/skills" ? <SkillsPage/> : route === "/about" ? <PaperLanding />
   : route === "/inspiration" ? <InspirationPage/> : route === "/submit" ? <SubmitPage/> : route === "/docs" ? <ContentPages page="docs"/>
   : route === "/directions" ? <ExpressiveDirections /> : route === "/showcase" ? <ShowcasePage /> : route === "/pricing" ? <PricingPage repositoryUrl="https://github.com/YuqingNicole/variant-design-skill" />
   : route === "/" ? <LibraryPage view={{kind:"feed"}}/> : route.startsWith("/c/") ? <LibraryPage view={{kind:"category",id:route.slice(3)}}/>

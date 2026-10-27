@@ -116,6 +116,14 @@ For Codex, clone into its skills directory (use your configured skills root if d
 git clone https://github.com/YuqingNicole/variant-design-skill.git ~/.codex/skills/variant-design
 ```
 
+Or install into the current project for Claude Code and Codex with the [skills CLI](https://github.com/vercel-labs/skills). It copies the complete repository to `.agents/skills/variant-design` and links it for Claude Code (checked with skills 1.7.4):
+
+```bash
+npx skills add YuqingNicole/variant-design-skill -a claude-code -a codex
+```
+
+The skills CLI reports installs to skills.sh unless `DISABLE_TELEMETRY=1` is set.
+
 For Claude Code or another local agent, install the same complete folder in that agent's skills location, or clone it into your workspace and point the agent to the absolute `SKILL.md` path. For Hermes/OpenClaw `AGENTS.md`, add a pointer to this installed entrypoint rather than pasting its text. The agent needs file access and Node.js for the bundled helpers.
 
 For web projects or API integrations, make the referenced directories available through the environment's file retrieval/execution tools as well as the entrypoint. Prompt text alone cannot provide preview servers or snapshot commands.
