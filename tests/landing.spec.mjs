@@ -245,24 +245,30 @@ test('inspiration references filter, create an original brief and recover from c
  await expect(page.locator('html')).toHaveAttribute('lang','en');
 });
 
-test('inspiration previews load locally, link to sources and degrade without broken images', async ({page})=>{
+test('inspiration references host no third-party images and link to their sources', async ({page})=>{
+ const imageRequests=[];page.on('request',r=>{if(r.resourceType()==='image'&&!new URL(r.url()).pathname.startsWith('/variant-mark'))imageRequests.push(r.url());});
  await page.goto('/inspiration');
- await expect(page.locator('.inspiration-moodboard img')).toHaveCount(3);
- const previews=page.locator('.inspiration-grid .inspiration-preview');
- await expect(previews).toHaveCount(24);
- await page.locator('.inspiration-grid img').evaluateAll(images=>images.forEach(img=>img.loading='eager'));
- await expect.poll(()=>page.locator('.inspiration-grid img').evaluateAll(images=>images.length===22&&images.every(img=>img.complete&&img.naturalWidth>0))).toBe(true);
- await expect(page.locator('.inspiration-grid .inspiration-image-fallback').first()).toContainText('暂无法取得预览');
+ await expect(page.locator('.inspiration-grid article')).toHaveCount(24);await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(24);
+ await expect(page.locator('.inspiration-page img:not(.site-brandmark)')).toHaveCount(0);await expect(page.locator('.inspiration-moodboard .inspiration-cover')).toHaveCount(3);
+ await expect(page.locator('.inspiration-grid article h2 a').first()).toHaveAttribute('href','https://linear.app/');await expect(page.locator('.inspiration-link-only').first()).toHaveText('仅链接');
+ await expect(page.locator('.inspiration-disclosure')).toContainText('不托管对方的截图');await expect(page.locator('.inspiration-disclosure a[href="/submit"]')).toBeVisible();
+ expect((await page.request.get('/inspiration/linear.webp')).headers()['content-type']).toContain('text/html');
  for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  }
  await page.emulateMedia({reducedMotion:'reduce'});
  expect(await page.locator('.inspiration-moodboard a').first().evaluate(el=>parseFloat(getComputedStyle(el).transitionDuration))).toBeLessThan(0.001);
- await page.route('**/inspiration/linear.webp',route=>route.abort());
- await page.reload();
- await expect(page.locator('.inspiration-grid article').first().locator('.inspiration-image-fallback')).toBeVisible();
- await expect(previews.first()).toHaveAttribute('href','https://linear.app/');
+ expect(imageRequests).toEqual([]);
+});
+
+test('submission page states the three entry kinds, permissions and takedown process in both languages', async ({page})=>{
+ await page.goto('/inspiration');await page.locator('.site-footer a[href="/submit"]').click();await expect(page).toHaveURL(/\/submit$/);
+ await expect(page.locator('h1')).toHaveText('投稿与授权');await expect(page.locator('.submit-sources li')).toHaveCount(3);
+ await expect(page.locator('[data-source="link-only"]')).toContainText('不托管对方的截图');await expect(page.getByRole('heading',{name:'撤下请求'})).toBeVisible();
+ await expect(page.locator('.content-reading a[href$="/issues/new/choose"]')).toBeVisible();
+ await page.getByRole('button',{name:'切换到英文'}).click();await expect(page.locator('h1')).toHaveText('Submissions & permissions');await expect(page.getByRole('heading',{name:'Takedown requests'})).toBeVisible();
+ for(const width of [320,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
 });
 
 test('actual landing evidence names its observed font and unverified checks',async({page,browser})=>{
