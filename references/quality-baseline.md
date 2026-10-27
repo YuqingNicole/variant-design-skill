@@ -14,6 +14,8 @@ The scanner checks common accessibility, resilience, copy, and AI-slop indicator
 
 Strict mode fails on warnings as well as errors. Use `--json` for machine-readable output and `--self-test` to validate the scanner itself.
 
+For A/B/C deliveries, also run `node <skill-root>/scripts/delivery-check.mjs variant-output [--project <root>] [--json]`. It reads `.variant-context.json` and the owned files: three registered directions with distinct comparisons, a shared task contract, a recommendation without a selection, and, under a design-system lock, recorded and declared fonts and recorded colors that match the locked file. Hex colors outside the locked file are warnings to explain, not errors.
+
 ## Visual gate
 
 Check the rendered result, not just source code:
