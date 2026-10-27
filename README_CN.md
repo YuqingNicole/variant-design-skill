@@ -162,6 +162,17 @@ AI agent 工具的落地页 — Dark Indigo 色板，Geist 字体，saas.md 中�
 
 **提示：** 你给出的约束越多（方向 + 色板 + 布局模式），输出越精准。提示词越开放，三个变体的差异越大。
 
+### 从方向卡开始
+
+[方向库](https://variant-design-skill.vercel.app/)的每件作品都以方向卡的形式发布在 `/d/<slug>.json`，内容是一个任务和它的 A/B/C 三个方向，以及每个方向优化什么、取舍什么、适合什么场景。把方向卡交给技能，就能据此做出你自己的三版：
+
+```
+用 variant-design 技能，参考 https://variant-design-skill.vercel.app/d/pulse.json 里的 A 方向，
+给我的周报页面出 A/B/C 三版：A 贴近这个方向，B 和 C 作为对照。
+```
+
+技能用 `scripts/direction-card.mjs` 读取方向卡，并把它记为一条灵感参考。你的品牌、设计系统和可访问性要求都优先于方向卡，卡片里的截图和文案一律不复用。在没有网络的沙箱里，可以把方向卡的 JSON 粘贴给 agent，或者保存成文件。详见 `references/direction-cards.md`。
+
 ### 定向提示词结构
 
 ```

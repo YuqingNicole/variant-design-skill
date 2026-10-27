@@ -13,6 +13,8 @@ Read `variant-output/.variant-context.json` when it exists and apply its known v
 
 Use the fast path when the brief or repository already reveals the product, audience, tone, and constraints: state consequential assumptions in one line and generate. Ask at most two questions only when the answers would materially change the result. Do not require a separate confirmation turn after an explicit request to build or generate.
 
+If the user points to a direction card (a library `/d/<slug>` page or its `.json`), read `references/direction-cards.md` and add the card as a design reference before generating.
+
 ### 1. Parse → Detect → Load
 
 Check `designSystem.confirmed` in context first:

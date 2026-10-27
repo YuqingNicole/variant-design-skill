@@ -204,6 +204,11 @@ test('direction library pages are prerendered, browsable and keep old links work
  await expect(page.locator('.library-recommendation')).toContainText('推荐不等于选定');
  await page.locator('.library-tabs button').nth(1).click();await expect(page).toHaveURL(/\/d\/pulse\?direction=B$/);await expect(page.locator('.library-figure img')).toHaveAttribute('src','/media/pulse/b.jpg');
  await expect(page.locator('.library-evidence a')).toHaveAttribute('href',/\/tree\/master\/website\/content\/evidence\/pulse\/variant-output$/);
+ const prompt=page.getByRole('textbox',{name:'给 agent 的指令'});
+ await expect(prompt).toHaveValue(/https:\/\/variant-design-skill\.vercel\.app\/d\/pulse\.json 里的 B 方向/);await expect(prompt).toHaveValue(/不要替我选定/);
+ await page.locator('.library-tabs button').nth(2).click();await expect(prompt).toHaveValue(/里的 C 方向/);
+ const card=await(await request.get('/d/pulse.json')).json();const {validateCard}=await import('../scripts/direction-card.mjs');
+ expect(validateCard(card)).toEqual([]);expect(card.url).toBe('https://variant-design-skill.vercel.app/d/pulse.json');expect(card.recommendation.variant).toBe('A');
  await page.goto('/d/offscript');await expect(page.locator('.library-source span')).toHaveText('概念作品');await expect(page.locator('.library-evidence')).toContainText('不是技能的产出');await expect(page.locator('.library-evidence a')).toHaveCount(0);
  await expect(page.locator('.library-figure a')).toHaveAttribute('href','/directions?direction=A&language=zh');
  await page.getByRole('button',{name:'切换到英文'}).click();await expect(page.locator('h1')).toHaveText('offscript: one brand, three personalities');await page.getByRole('button',{name:'Switch to Chinese'}).click();
@@ -218,6 +223,7 @@ test('direction library pages are prerendered, browsable and keep old links work
 
 test('docs recover from clipboard denial', async ({page})=>{
  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:()=>Promise.reject(new Error('denied'))}}));
+ await page.goto('/d/harbor');await page.getByRole('button',{name:'复制指令'}).click();await expect(page.locator('.library-try [role="status"]')).toContainText('手动复制');
  await page.goto('/docs');
  await page.getByRole('button',{name:'复制安装命令'}).click();
  await expect(page.getByRole('status')).toContainText('手动复制');
