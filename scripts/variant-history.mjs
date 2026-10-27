@@ -255,6 +255,7 @@ function withLock(root, action) {
   try { return action(); }
   finally { fs.rmdirSync(lock); }
 }
+export { withLock as withHistoryLock };
 export const applyVariant = (root, id, candidate, change) => withLock(root, () => applyUnlocked(root, id, candidate, change));
 export const undoVariant = (root, id) => withLock(root, () => undoUnlocked(root, id));
 export const selectVariant = (root, id) => withLock(root, () => {
