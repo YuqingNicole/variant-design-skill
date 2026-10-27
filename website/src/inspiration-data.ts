@@ -5,6 +5,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "SaaS",
     "url": "https://linear.app/",
+    "source": "link-only",
     "focus": [
       "主张 → 产品界面 → 工作流程",
       "Proposition → interface → workflow"
@@ -15,10 +16,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "notion",
@@ -26,6 +24,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "SaaS",
     "url": "https://www.notion.com/",
+    "source": "link-only",
     "focus": [
       "多能力产品的分层介绍",
       "Layered explanation of a multi-tool product"
@@ -36,10 +35,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "raycast",
@@ -47,6 +43,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "SaaS",
     "url": "https://www.raycast.com/",
+    "source": "link-only",
     "focus": [
       "核心入口与扩展能力的组织",
       "Core entry point and extensions"
@@ -57,10 +54,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "official-cover",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "cursor",
@@ -68,6 +62,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "AI",
     "url": "https://cursor.com/",
+    "source": "link-only",
     "focus": [
       "代码场景与产品价值的连接",
       "Connecting code scenarios to value"
@@ -78,10 +73,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "v0",
@@ -89,6 +81,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "AI",
     "url": "https://v0.app/",
+    "source": "link-only",
     "focus": [
       "输入框与示例起步的关系",
       "Prompt entry and example starting points"
@@ -99,10 +92,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "lovable",
@@ -110,6 +100,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "AI",
     "url": "https://lovable.dev/",
+    "source": "link-only",
     "focus": [
       "开始创建与案例发现的顺序",
       "Creation entry and example discovery"
@@ -120,10 +111,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "aesop",
@@ -131,6 +119,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "Commerce",
     "url": "https://www.aesop.com/",
+    "source": "link-only",
     "focus": [
       "产品分类、内容叙事与购买入口",
       "Categories, storytelling and purchase paths"
@@ -141,10 +130,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "unavailable",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "teenage",
@@ -152,6 +138,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "Commerce",
     "url": "https://teenage.engineering/",
+    "source": "link-only",
     "focus": [
       "产品家族与配件的展示关系",
       "Product families and accessories"
@@ -162,10 +149,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "nothing",
@@ -173,6 +157,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "Commerce",
     "url": "https://nothing.tech/",
+    "source": "link-only",
     "focus": [
       "活动、品类与单品入口",
       "Campaign, category and product entry points"
@@ -183,10 +168,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "unavailable",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "instrument",
@@ -194,6 +176,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "Studio",
     "url": "https://www.instrument.com/",
+    "source": "link-only",
     "focus": [
       "服务定位与项目证明的关系",
       "Service positioning and project evidence"
@@ -204,10 +187,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "official-cover",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "pentagram",
@@ -215,6 +195,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "Studio",
     "url": "https://www.pentagram.com/",
+    "source": "link-only",
     "focus": [
       "大量作品的索引与发现",
       "Indexing and discovering a broad portfolio"
@@ -225,10 +206,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "official-cover",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "basic",
@@ -236,6 +214,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "Studio",
     "url": "https://www.basicagency.com/",
+    "source": "link-only",
     "focus": [
       "品牌表达与精选项目的编排",
       "Brand expression and selected projects"
@@ -246,10 +225,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "official-cover",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "figma",
@@ -257,6 +233,7 @@ export const inspirationItems = [
     "category": "product",
     "tag": "Editor",
     "url": "https://www.figma.com/design/",
+    "source": "link-only",
     "focus": [
       "画布、协作与工具的功能分组",
       "Canvas, collaboration and tool groups"
@@ -267,10 +244,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "official-cover",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "framer",
@@ -278,6 +252,7 @@ export const inspirationItems = [
     "category": "product",
     "tag": "Editor",
     "url": "https://www.framer.com/",
+    "source": "link-only",
     "focus": [
       "设计、修改与发布的产品叙事",
       "Design, refine and publish narrative"
@@ -288,10 +263,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "wiki",
@@ -299,6 +271,7 @@ export const inspirationItems = [
     "category": "product",
     "tag": "Knowledge",
     "url": "https://www.notion.com/product/wikis",
+    "source": "link-only",
     "focus": [
       "知识组织与内容可信度",
       "Knowledge organization and trust"
@@ -309,10 +282,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "obsidian",
@@ -320,6 +290,7 @@ export const inspirationItems = [
     "category": "product",
     "tag": "Knowledge",
     "url": "https://obsidian.md/",
+    "source": "link-only",
     "focus": [
       "笔记、连接与知识导航",
       "Notes, connections and navigation"
@@ -330,10 +301,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "linear-features",
@@ -341,6 +309,7 @@ export const inspirationItems = [
     "category": "product",
     "tag": "Projects",
     "url": "https://linear.app/features",
+    "source": "link-only",
     "focus": [
       "任务、项目与规划的层级",
       "Issue, project and planning hierarchy"
@@ -351,10 +320,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "official-cover",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "asana",
@@ -362,6 +328,7 @@ export const inspirationItems = [
     "category": "product",
     "tag": "Projects",
     "url": "https://asana.com/product",
+    "source": "link-only",
     "focus": [
       "团队目标与工作管理的连接",
       "Connecting team goals to work"
@@ -372,10 +339,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "posthog",
@@ -383,6 +347,7 @@ export const inspirationItems = [
     "category": "product",
     "tag": "Analytics",
     "url": "https://posthog.com/product-analytics",
+    "source": "link-only",
     "focus": [
       "分析问题、图表与下钻入口",
       "Questions, charts and drill-downs"
@@ -393,10 +358,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "plausible",
@@ -404,6 +366,7 @@ export const inspirationItems = [
     "category": "product",
     "tag": "Analytics",
     "url": "https://plausible.io/",
+    "source": "link-only",
     "focus": [
       "核心指标与简化的分析界面",
       "Core metrics and simplified analytics"
@@ -414,10 +377,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "first-page",
@@ -425,6 +385,7 @@ export const inspirationItems = [
     "category": "flow",
     "tag": "Onboarding",
     "url": "https://www.notion.com/help/guides/creating-a-page",
+    "source": "link-only",
     "focus": [
       "首次创建的最小步骤",
       "Minimum steps to first creation"
@@ -435,10 +396,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "new-project",
@@ -446,6 +404,7 @@ export const inspirationItems = [
     "category": "flow",
     "tag": "Creation",
     "url": "https://linear.app/docs/projects",
+    "source": "link-only",
     "focus": [
       "项目创建、属性与持续管理",
       "Project creation, properties and management"
@@ -456,10 +415,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "history",
@@ -467,6 +423,7 @@ export const inspirationItems = [
     "category": "flow",
     "tag": "History",
     "url": "https://help.figma.com/hc/en-us/articles/360038006754-View-a-file-s-version-history",
+    "source": "link-only",
     "focus": [
       "查看历史与恢复的边界",
       "Boundaries between viewing and restoring"
@@ -477,10 +434,7 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   },
   {
     "id": "export",
@@ -488,6 +442,7 @@ export const inspirationItems = [
     "category": "flow",
     "tag": "Delivery",
     "url": "https://help.figma.com/hc/en-us/articles/13402894554519-Export-formats-and-settings-for-static-designs",
+    "source": "link-only",
     "focus": [
       "格式、配置与输出结果",
       "Format, settings and output"
@@ -498,9 +453,6 @@ export const inspirationItems = [
     ],
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "reuse": "reference-only; no redistribution permission established",
-    "previewKind": "screenshot",
-    "previewDate": "2026-10-07"
+    "mobile": "not-tested"
   }
 ];

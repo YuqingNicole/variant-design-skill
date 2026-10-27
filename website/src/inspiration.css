@@ -11,23 +11,27 @@
 .inspiration-moodboard>a:nth-child(2){right:0;top:48px;transform:rotate(7deg)}
 .inspiration-moodboard>a:nth-child(3){left:13%;top:114px;transform:rotate(-3deg)}
 .inspiration-moodboard>a:hover,.inspiration-moodboard>a:focus-visible{z-index:5;transform:rotate(0) translateY(-8px);box-shadow:0 20px 45px #26351b30}
-.inspiration-moodboard img{display:block;width:100%;height:190px;object-fit:cover;object-position:top;border-radius:2px}
+.inspiration-moodboard .inspiration-cover{height:190px;padding:16px;border-radius:2px}
 .inspiration-moodboard span{display:block;padding:9px 5px 5px;font:10px var(--font-mono);color:#46563c}
 .inspiration-moodboard b{color:#96a588;margin-right:12px;font-weight:400}
 .inspiration-moodboard>p{position:absolute;bottom:-10px;right:0;font:8px var(--font-mono);letter-spacing:.1em;color:#68755e}
 .inspiration-page .inspiration-disclosure{grid-column:1/-1;margin:0;font-size:11px;line-height:1.7;max-width:none}
-.inspiration-preview{position:relative;display:block;aspect-ratio:1.44;margin:-24px -24px 22px;overflow:hidden;background:#e9ece3;border-bottom:1px solid #d5ddcc;border-radius:4px 4px 0 0}
-.inspiration-preview img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .35s ease}
-.inspiration-preview:hover img,.inspiration-preview:focus-visible img{transform:scale(1.035)}
-.inspiration-preview>span{position:absolute;bottom:12px;right:12px;background:#fffffff0;color:#283622;padding:8px 11px;border-radius:3px;font-size:11px;box-shadow:0 2px 10px #0001}
 .inspiration-grid h2{margin-top:17px}
 .inspiration-grid dl{margin-top:18px}
 @media(max-width:900px){.inspiration-page .content-hero{gap:24px;grid-template-columns:1fr}.inspiration-moodboard{max-width:540px;width:100%;justify-self:center;margin:15px 0}.inspiration-intro>p:not(.content-kicker){max-width:650px}}
-@media(max-width:550px){.inspiration-page .content-hero{padding-top:38px}.inspiration-intro h1{font-size:38px}.inspiration-moodboard{height:280px}.inspiration-moodboard img{height:135px}.inspiration-moodboard>a:nth-child(3){top:90px}.inspiration-moodboard span{font-size:9px}.inspiration-moodboard>p{bottom:0;font-size:7px}.inspiration-preview{aspect-ratio:1.44}}
-@media(prefers-reduced-motion:reduce){.inspiration-moodboard>a,.inspiration-preview img{transition:none}.inspiration-preview:hover img,.inspiration-preview:focus-visible img{transform:none}}
-.inspiration-preview img.official-cover{object-fit:contain;background:#141414}
-.inspiration-image-label{position:absolute;top:10px;left:10px;background:#fffffff0;border-radius:3px;padding:5px 7px;color:#3a4931;font:9px var(--font-mono)}
-.inspiration-image-fallback{height:100%;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;background:#e9e5da;color:#4f5146;padding:25px;text-align:center}
-.inspiration-image-fallback b{font:36px Georgia,serif}.inspiration-image-fallback span{font-size:11px}
+@media(max-width:550px){.inspiration-page .content-hero{padding-top:38px}.inspiration-intro h1{font-size:38px}.inspiration-moodboard{height:280px}.inspiration-moodboard .inspiration-cover{height:135px}.inspiration-moodboard>a:nth-child(3){top:90px}.inspiration-moodboard span{font-size:9px}.inspiration-moodboard>p{bottom:0;font-size:7px}}
+@media(prefers-reduced-motion:reduce){.inspiration-moodboard>a{transition:none}}
 .inspiration-page .content-hero>.inspiration-disclosure{max-width:none;font-size:12px;line-height:1.7}
-.inspiration-moodboard img.official-cover{object-fit:cover;object-position:center}
+
+/* Typographic cover for link-only references; no third-party imagery is hosted. */
+.inspiration-cover{display:flex;flex-direction:column;justify-content:space-between;gap:8px;height:100%;padding:24px;background:#f3f5ee;color:#283622;transition:background .25s ease}
+.inspiration-cover small{font:10px var(--font-mono);letter-spacing:.08em;color:#6b7a60}
+.inspiration-cover b{font-size:clamp(24px,3vw,36px);font-weight:500;letter-spacing:-.02em;line-height:1.05}
+.inspiration-cover span{font-size:13px;line-height:1.5;color:#46563c;max-width:34ch}
+.inspiration-cover i{font:10px var(--font-mono);font-style:normal;color:#7d8a73}
+.inspiration-moodboard>a{text-decoration:none}
+.inspiration-moodboard .inspiration-cover b{font-size:24px}
+.inspiration-moodboard .inspiration-cover span{display:none}
+.inspiration-disclosure a{color:inherit}
+.inspiration-link-only{font-style:normal;margin-left:8px;padding:2px 6px;border:1px solid #d5ddcc;border-radius:3px;letter-spacing:0}
+@media(prefers-reduced-motion:reduce){.inspiration-cover{transition:none}}
