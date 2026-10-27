@@ -14,6 +14,7 @@ function sorted(value) {
   return value;
 }
 const identity = value => hash(JSON.stringify(sorted(value)));
+const checkerIdentity = () => Object.fromEntries(['artifact-verification.mjs','browser-verification.mjs'].map(file=>[file,hash(fs.readFileSync(new URL(file,import.meta.url)))]));
 function capture(root, id, project, dependencies) {
   const state = readContext(root), variant = state.variants?.[id];
   if (!['A','B','C'].includes(id) || !variant?.files?.length || !variant.files.includes(variant.entry)) throw new Error('Invalid registered variant.');
@@ -52,7 +53,7 @@ export async function verifyArtifact(root, id, options = {}, runChecks) {
   const report = {schemaVersion:1,id:randomUUID(),startedAt,finishedAt:new Date().toISOString(),
     fingerprint, dependencies, coverage:{mode:'declared-files',limitation:'Only owned files, registered design system, package manifests and explicitly listed dependencies are tracked. Environment changes require a new run.'},
     static:{status:findings.some(f=>f.severity==='error')?'failed':findings.length?'unverified':'passed',tool:{name:'variant-quality-gate',version:hash(fs.readFileSync(new URL('./quality-gate.mjs',import.meta.url)))},findings},
-    checks, changedDuringRun:!unchanged};
+    checks, checkerIdentity:checkerIdentity(), plan:options.plan ?? null, changedDuringRun:!unchanged};
   const file=localFile(root,`.verification/${id}/${report.id}.json`);
   fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,JSON.stringify(report,null,2)+'\n',{flag:'wx',flush:true});
   return {file,...inspectVerification(root,file)};
@@ -67,8 +68,22 @@ export function inspectVerification(root, file) {
   try {current=identity(capture(root,report.fingerprint.id,report.fingerprint.project,report.dependencies).fingerprint)===identity(report.fingerprint);}catch(error){reason=error.message;}
   if(report.changedDuringRun)current=false;
   if(report.static?.tool?.version!==hash(fs.readFileSync(new URL('./quality-gate.mjs',import.meta.url)))){current=false;reason='Static checker implementation changed; run verification again.';}
+  if(report.checkerIdentity && identity(report.checkerIdentity)!==identity(checkerIdentity())){current=false;reason='Verification implementation changed; run verification again.';}
   const status=!current?'stale':report.static.status==='failed'||report.checks.some(c=>c.status==='failed')?'failed':report.static.status!=='passed'||report.checks.some(c=>c.status==='unverified')?'unverified':'passed';
   return {status,reason:current?'Result applies only to the recorded checks and environment.':reason,report};
+}
+
+// Compare actual observations, never re-label an earlier failure as a passing result.
+// Changed diagnostics remain new-or-changed; a failed check alone is not proof of the same bug.
+export function compareVerificationReports(before, after) {
+  if (before.fingerprint.project!==after.fingerprint.project || before.fingerprint.output!==after.fingerprint.output || before.fingerprint.id!==after.fingerprint.id) throw new Error('Compare reports for the same project and variant.');
+  const failures=report=>[
+    ...report.static.findings.filter(f=>f.severity==='error').map(f=>({kind:'static',finding:f,tool:report.static.tool})),
+    ...report.checks.filter(c=>c.status==='failed').map(c=>({kind:'runtime',id:c.id,reason:c.reason,evidence:c.evidence,tool:c.tool,environment:c.environment}))
+  ];
+  const prior=failures(before),current=failures(after);
+  return {before:before.id,after:after.id,failures:current.map(f=>({...f,classification:prior.some(p=>identity(p)===identity(f))?'observed-before':'new-or-changed'})),
+    limitation:'Identical recorded diagnostics only; not proof of cause, unchanged environment or complete regression coverage.'};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(fs.realpathSync(process.argv[1])).href){
   const [action,root,idOrFile,config]=process.argv.slice(2);

@@ -217,3 +217,9 @@ Every output must meet these minimums:
 - **Layout:** No layout thrashing (read then write, never interleave). Avoid forced synchronous reflows
 
 For React projects without Vite, the preview helper accepts `--vite-root` for an isolated bundler package while reusing the project's React. Follow `references/workflow/preview.md`; unsupported framework behavior or unavailable installation remains unverified. Do not improvise a bundler.
+
+## Verification records
+
+For revision-bound delivery evidence, read `references/workflow/artifact-verification.md`. Use the reusable browser runner with explicit task expectations when Playwright is available. Capture non-target behavior and project-check failures before an edit, rerun after it, and retain both reports. Missing tools or expectations remain unverified; static scans alone cannot establish runtime success.
+
+Before generating files for project integration, prepare a source/target baseline using `skills/shared/export.md`. Applying staging without a prepared plan is rejected.

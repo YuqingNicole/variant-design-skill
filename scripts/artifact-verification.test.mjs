@@ -35,3 +35,16 @@ test('missing tools, failed checks and invalid attestations stay explicit',async
  await assert.rejects(()=>verifyArtifact(root,'B',{},()=>[{id:'brand',status:'passed',reason:'trust me'}]),/require tool/);
  await assert.rejects(()=>verifyArtifact(root,'B',{dependencies:['../outside']}),/relative/);
 });
+
+test('failure comparison separates observed-before diagnostics from new or changed failures',async t=>{
+ const {compareVerificationReports}=await import('./artifact-verification.mjs');
+ const {root}=setup(t);
+ const run=reason=>verifyArtifact(root,'B',{},()=>observations().map(c=>c.id==='project-checks'?{...c,status:'failed',reason}:c));
+ const before=await run('Existing type error');
+ const same=await run('Existing type error');
+ assert.equal(compareVerificationReports(before.report,same.report).failures[0].classification,'observed-before');
+ const changed=await run('Different type error');
+ assert.equal(compareVerificationReports(before.report,changed.report).failures[0].classification,'new-or-changed');
+ assert.equal(changed.status,'failed');
+ assert.throws(()=>compareVerificationReports(before.report,{...changed.report,fingerprint:{...changed.report.fingerprint,id:'A'}}),/same project/);
+});

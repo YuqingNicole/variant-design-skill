@@ -25,7 +25,7 @@ Read files only at the step that names them, and only the section you need. Do n
 | Zone edit | `B vary subtle — hero`, `zones A` | `skills/variant-generate/zones.md`, then `references/workflow/history.md` |
 | Undo, pick, recover | `undo B`, `pick B` | `references/workflow/history.md` |
 | Reopen or compare | `open B`, `compare` | `references/workflow/preview.md` |
-| Export or integrate | `react B`, `export to next`, `integrate B`, `copy` | `skills/shared/export.md` |
+| Export or integrate (prepare target baseline before staging) | `react B`, `export to next`, `integrate B`, `copy` | `skills/shared/export.md` |
 | Context | `show context`, `reset context` | `references/workflow/project-context.md` |
 
 ## 1. Context and fast path
@@ -98,6 +98,8 @@ node <skill-root>/scripts/delivery-check.mjs variant-output
 ```
 
 Scan only the current deliverables (name the files when the directory holds older output). Inspect quality-gate findings in context and fix confirmed ones. Fix every delivery-check error: missing or shared files, empty or repeated comparisons, a missing task contract or recommendation, or a changed locked font or color. A `selectedVariant` warning means a direction was selected without the user. Then review the rendered pages with `references/workflow/quality-baseline.md`: hierarchy, distinctness, responsive behavior and working interactions.
+
+When recording version-bound runtime checks, use `references/workflow/artifact-verification.md`: fill the browser plan from task expectations, and retain unverified items explicitly. For edits, compare pre-edit and post-edit observations.
 
 For product-critical UI, run `references/workflow/product-integrity-gate.md` and report it separately from visual quality; do not present a P0 result as complete. Report only checks that ran; never claim WCAG compliance, browser coverage or "no AI slop" from self-assessment.
 

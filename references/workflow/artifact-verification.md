@@ -47,8 +47,37 @@ Allowed check statuses: passed, failed, unverified. Never invent tool results; m
 
 A passing report covers only its listed observations, not every acceptance criterion or the whole project. Screenshots, automatic adapter selection, task revision history, selection/change receipts and integration remain separate follow-up work. Preserve existing candidate snapshots and verification flows.
 
+## Reusable Playwright checks
+
+`scripts/browser-verification.mjs` exports `verificationPlan(url)` and `verifyInBrowser(output, id, options, adapter)`. Reuse a Playwright Page available in the target project or agent environment; this helper does not install dependencies or launch a browser. Start with the empty plan and fill expectations from the task and brand rules. Missing entries remain unverified.
+
+```js
+const plan = {
+  url: previewURL,
+  brand: [{selector:'h1', property:'font-family', expected:'Georgia'}],
+  'keyboard-focus': [{selector:'#primary', maxTabs:40}],
+  'reduced-motion': {settled:[{selector:'#counter', property:'text', expected:'100'}]},
+  'scope-preservation': [{selector:'#outside-count', property:'text', expected:'1'}]
+};
+const result = await verifyInBrowser(output, 'B', {plan, dependencies}, {
+  page, version: browser.version(),
+  ready: async page => { /* assert rebuilt preview identity, not just HTTP success */ },
+  startMotion: async page => { /* trigger the actual animation */ },
+  exerciseScope: async page => { /* perform a representative non-target interaction */ },
+  projectChecks: async () => { /* run existing checks; return a project-checks observation */ }
+});
+```
+
+Implement callbacks with real assertions and interactions; the comments illustrate required adapter responsibilities, not runnable verification. Keep the plan and adapter in `.variant-work/` and include their relative paths in `dependencies`. `ready` must confirm the preview's current source identity on every navigation. No callback means no evidence for that behavior.
+
+Focus checks use Tab navigation and compare focused/unfocused styles. An alternative may specify `indicator: {property:'boxShadow', expected:'rgb(0, 0, 255) 0px 0px 0px 3px'}` (or `backgroundColor`). An always-present decoration does not qualify. These measurements do not establish contrast, occlusion or WCAG compliance; visually review the indicator too. Static outline findings remain visible even when a runtime alternative passes.
+
+Motion checks run with reduced motion initially and switch to it during an exercised animation. They compare declared settled values and observe requestAnimationFrame callbacks over a bounded interval (defaults: 100 ms settle, 150 ms sample). This covers exercised callbacks and selectors, not every timer, canvas, video or future animation. Specify `startMs`, `settleMs`, `sampleMs` when the actual interaction requires different timing. Missing expectations or callbacks remain unverified. Scope assertions must come from a recorded pre-edit observation; do not invent the expected result after editing.
+
+`compareVerificationReports(before.report, after.report)` lists identical failed diagnostics as `observed-before`, and other failures as `new-or-changed`. Run the before checks before edits, under the same environment and plan, and retain both report IDs. This comparison never turns failures into passes and does not infer their root causes. Changed checker implementations invalidate newly recorded evidence. Continue to inspect current report status at delivery.
+
 ## Current coverage and remaining work
 
 Regression coverage includes actual computed font/focus drift in a React fixture and a heading-font observation on the real landing B artifact with shared website source tracked. Remaining checks in that real landing report deliberately stay unverified. Existing reduced-motion regression still checks the coffee example, not every new generated artifact.
 
-This is the evidence infrastructure for PRD-002. Automatic project-specific browser check plans, comprehensive non-target behavior comparison, runtime acceptance of alternative focus indicators, and complete verification of every newly generated artifact remain adapter work. These gaps must stay open on the tracking issue; this implementation must not be described as full PRD-002 completion.
+This is the evidence infrastructure for PRD-002. Project-specific expectations, complete task coverage, and real-delivery validation still require an adapter and recorded observations. The reusable runner covers explicit alternate focus, motion and scope checks; it does not infer the correct assertions for arbitrary products. These gaps must stay open on the tracking issue; this implementation must not be described as full PRD-002 completion.

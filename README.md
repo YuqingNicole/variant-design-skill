@@ -144,6 +144,10 @@ Implementation and verification: [preview](references/workflow/preview.md), [his
 
 React previews can use an isolated Vite package with `--vite-root` while keeping the project’s own React; portable client components can then open as static HTML. Native Next features still require a framework adapter. See [preview limits and setup](references/workflow/preview.md).
 
+Project integration now requires a prepared source/target baseline before staging; changed source or target files are rejected before writing. See [integration](skills/shared/export.md).
+
+Runtime evidence can use a reusable Playwright check plan for named brand elements, keyboard focus, exercised motion and non-target interactions. Reports track the artifact revision; missing checks remain unverified. See [verification evidence](references/workflow/artifact-verification.md).
+
 ## Usage
 
 ### Basic triggers
