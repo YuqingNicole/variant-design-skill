@@ -79,6 +79,8 @@ Adapted from Vercel's [Web Interface Guidelines](https://github.com/vercel-labs/
 
 Scanner success is only a static preflight. Keyboard-tab through actual controls and inspect the computed focus indicator; an unrelated `:focus-visible` selector proves nothing. Test the same output under `prefers-reduced-motion: reduce`: counters must show final values immediately, reveals must leave content visible, and JavaScript loops, timers, and smooth scrolling must honor the preference (including a change while running).
 
+Run browser checks with, in order: the environment's own browser tooling; the project's installed Playwright or Puppeteer; or a locally installed Chrome or Chromium in headless mode (`--headless=new --screenshot` or `--dump-dom` with a small probe script). Do not borrow `node_modules` from the skill directory; user installs do not ship them. If none of these is available, report the rendered checks as unverified. Put probe scripts, screenshots and other check files in the project's `.variant-work/`, not in `/tmp` or the project's source folders.
+
 For the five regression scenarios and executable checks, read `references/preview-and-history.md`. Record the artifact, viewport, action, expected result, actual result, and any untested behavior. Do not describe fixture coverage as validation of every future generated page.
 
 ## Product integrity
