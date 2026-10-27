@@ -46,3 +46,22 @@
 - 每个任务只跑了一轮，也没有用 #37 之前的版本做对照，所以只能说"新规则被执行了"，不能说"比以前好多少"。
 - 只测了 Claude Code，没有测 Codex。
 - 没有让真实设计师或工程师使用这份规格；任务 2 的按钮没有在触屏真机、Safari、Firefox 或屏幕阅读器上测试。
+
+## 复测：#57 合并后
+
+#57 针对发现 1、2 补了说明：浏览器检查按"环境自带工具 → 项目里的 Playwright 或 Puppeteer → 本机无头 Chrome"的顺序选，不借用技能目录的 `node_modules`，检查文件放进项目的 `.variant-work/`。同一天用 master `3377795` 重跑任务 2。
+
+- 方法：从同一基准克隆新项目 `larkshop-buttons2`，项目级安装 `3377795`。运行时读取的仍是全局目录（发现 3），全局目录当时也在 `3377795`，并确认里面有 #57 的新段落。提示词与任务 2 相同。
+- 耗时 / 费用：API 244 s，$1.38，31 轮。
+
+| 检查项 | 第一次 | 复测 |
+|---|---|---|
+| 检查文件位置 | `/tmp/cr.mjs`、`/tmp/lkcheck`，事后由记录者清理 | 全部在 `.variant-work/`：`desktop.png`、`mobile.png`、`mobile390.png`、`probe-mobile.html`、`probe-flows.html`；工具调用里没有写 `/tmp` |
+| 浏览器 | 借用技能目录的 `tests/node_modules` 里的 Playwright，试了 3 次 | 项目里没有 Playwright，先 `which` 查找，再直接用本机 Chrome `--headless=new --screenshot`，第一次就成功 |
+| 发现的问题 | — | 390px 宽度下演示区被长标题撑到 468px，已自行修复 |
+| 质量扫描 | `--strict` 0 / 0 | `--strict` 0 / 0 |
+| 未验证项的报告 | — | 主动说明没有用真实 Tab 键检查聚焦；无头浏览器里过渡不推进，所以关掉过渡后才读到成功色；Figtree 未加载 |
+
+结论：发现 1、2 在这一轮里没有再出现。仍只跑了一轮，也只测了 Claude Code。
+
+新的小发现：`.variant-work/` 没有被加进项目的 `.gitignore`，`git status` 里显示为未跟踪目录。技能说明里目前没有提到 `.gitignore`。这次没有误提交，先记录，不改。
