@@ -24,7 +24,7 @@ Choose one route and read its file. Each route file has a load map: read the oth
 | WeChat article layout | `references/tasks/wechat.md` |
 | Chinese cultural or Wu Xing brand color | `references/tasks/wuxing-colors.md` |
 | Copywriting or removing AI tone | `references/tasks/voice.md` |
-| Checking for skill updates | run `node <skill-root>/scripts/check-update.mjs --quiet` (contacts GitHub) |
+| Checking for skill updates | run `node <skill-root>/scripts/check-update.mjs --quiet` (contacts GitHub) and give the command it prints; a Codex plugin install updates through the plugin manager. Never edit the installed files |
 
 ## Rules for every route
 

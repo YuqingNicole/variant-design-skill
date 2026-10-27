@@ -98,7 +98,8 @@ function updateCommand() {
   if (fs.existsSync(path.join(skillRoot, ".git"))) {
     return `git -C ${JSON.stringify(skillRoot)} pull --ff-only`;
   }
-  return `claude skill install https://github.com/${repository}`;
+  // Copies installed by `npx skills add` (and anything else without .git) update through the same CLI.
+  return `npx skills update variant-design`;
 }
 
 function selfTest() {

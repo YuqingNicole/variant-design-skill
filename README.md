@@ -128,7 +128,7 @@ For Claude Code or another local agent, install the same complete folder in that
 
 For web projects or API integrations, make the referenced directories available through the environment's file retrieval/execution tools as well as the entrypoint. Prompt text alone cannot provide preview servers or snapshot commands.
 
-The optional release check runs at most once per 24 hours, reports an available release, and never updates automatically.
+The optional release check runs at most once per 24 hours, reports an available release, and never updates automatically. To update, run `git -C <install path> pull --ff-only` for a Git clone, or `npx skills update variant-design` for an `npx skills` install. Projects keep their `variant-output/` history across updates.
 
 ## Generate → compare → choose → refine → export
 

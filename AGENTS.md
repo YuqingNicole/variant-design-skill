@@ -93,7 +93,7 @@ node evals/run.mjs --agent claude --fixture pulse       # one real, graded agent
 - Do not commit to `master`. Use a branch per task (the history uses `codex/<topic>`) and open a pull request.
 - Other agent sessions may be working in this tree at the same time (for example on `mcp/`). Before committing, check `git status` and stage only the files you changed. Do not revert or reformat other people's in-progress work.
 - Never commit `.variant-work/`, `.verification/`, `.integrations/` from test projects, `website/.env`, or anything containing a user's project source.
-- `VERSION` follows semver with release-candidate tags (currently `1.1.0-rc.3`). Change it only as part of a release.
+- `VERSION` follows semver with release-candidate tags (currently `1.1.0`). Change it only as part of a release.
 
 ## Third-party products
 
