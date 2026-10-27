@@ -69,6 +69,8 @@ export function validateEntry(entry, { root = contentRoot, repo = repoRoot, file
     const label = `direction ${d?.id ?? '?'}`;
     if (!pair(d?.name)) fail(`${label} name needs [zh, en]`);
     for (const key of ['optimizes', 'tradeoff', 'bestFor']) if (!pair(d?.comparison?.[key])) fail(`${label} comparison.${key} needs [zh, en]`);
+    // Optional link to an interactive version hosted on this site.
+    if (d && 'preview' in d && !/^\/[\w./?=&-]*$/.test(d.preview ?? '')) fail(`${label} preview must be a path on this site`);
     const media = Array.isArray(d?.media) ? d.media : [];
     if (entry.source === 'link-only') { if (media.length) fail(`${label}: link-only entries cannot host media`); continue; }
     if (!media.length) fail(`${label} needs at least one image`);
@@ -122,6 +124,25 @@ export function loadEntries(root = contentRoot, options = {}) {
     entries.push(entry);
   }
   return { entries, problems };
+}
+
+const mediaTypes = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' };
+// Vite: fail the build on invalid entries, and serve entry images at /media in development.
+// Production copies the images in scripts/prerender.mjs.
+export function contentPlugin() {
+  const media = path.join(contentRoot, 'media');
+  return {
+    name: 'variant-content',
+    buildStart() { const { problems } = loadEntries(); if (problems.length) this.error(`Invalid direction library entries:\n${problems.join('\n')}`); },
+    configureServer(server) {
+      server.middlewares.use('/media', (request, response, next) => {
+        const relative = decodeURIComponent((request.url ?? '').split('?')[0]).replace(/^\/+/, '');
+        const file = inside(media, relative), type = mediaTypes[path.extname(relative).toLowerCase()];
+        if (!file || !type || !fs.statSync(file).isFile()) return next();
+        response.setHeader('content-type', type); fs.createReadStream(file).pipe(response);
+      });
+    },
+  };
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {

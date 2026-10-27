@@ -65,7 +65,8 @@ test('guided case previews real variants and hands off scoped, reversible prompt
   const edit = page.locator('.demo-steps details').nth(1);
   await expect(edit.locator('textarea')).toHaveValue(/正在试改 C，不是最终选定/);
   await edit.getByRole('button', { name: '复制指令' }).click();
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('只修改 C 的 hero');
+  // The copy resolves asynchronously; wait for the clipboard instead of reading it once.
+  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toContain('只修改 C 的 hero');
   await expect(page.locator('.demo-notice')).toContainText('粘贴到项目');
   await page.getByRole('button', { name: '切换到英文' }).click();
   await expect(page.locator('.demo-steps details').nth(1).locator('textarea')).toHaveValue(/Try a local edit of C/);
@@ -103,7 +104,7 @@ test('direction artwork switches accessibly and reduced motion cancels active en
 
 test('canvas homepage opens real directions and preserves the guided handoff across language and viewport changes', async ({page}) => {
   await page.emulateMedia({reducedMotion:'reduce'});
-  await page.goto('/');
+  await page.goto('/about');
   await expect(page.locator('h1')).toContainText('从看见可能开始');
   await page.locator('.canvas-sidebar button').first().click();
   await expect(page.frameLocator('.paper-preview iframe').locator('[data-showcase-direction]')).toHaveAttribute('data-showcase-direction','A');
@@ -117,12 +118,12 @@ test('canvas homepage opens real directions and preserves the guided handoff acr
     await page.setViewportSize({width,height:900});
     await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   }
-  await page.locator('.site-footer a[href="/workbench"]').click();
+  await page.locator('.site-footer a[href="/lab"]').click();await page.locator('a[href="/lab/workbench"]').click();
   await expect(page.locator('#generator')).toBeVisible();
 });
 
  test('capability studies preserve data across directions and undo only the example title', async ({page}) => {
- await page.goto('/');
+ await page.goto('/about');
  const frame=page.frameLocator('.paper-preview iframe');
  for(const [i,id] of ['A','B','C'].entries()){
  await page.locator('.canvas-sidebar button').nth(i).click();
@@ -142,7 +143,7 @@ test('canvas homepage opens real directions and preserves the guided handoff acr
  });
 
 test('expressive homepage gallery opens distinct complete directions with working calls to action', async ({page}) => {
- await page.goto('/');
+ await page.goto('/about');
  for(const id of ['A','B','C']) {
   const frame=page.frameLocator(`.demo-preview iframe[title^="${id} "]`);
   await expect(frame.locator('main')).toHaveAttribute('data-expressive-direction',id);
@@ -162,7 +163,7 @@ test('expressive homepage gallery opens distinct complete directions with workin
 });
 
  test('product pages share their visual system and pricing controls preserve language and values', async ({page})=>{
- await page.goto('/');
+ await page.goto('/about');
  const homeFont=await page.locator('h1').evaluate(el=>getComputedStyle(el).fontFamily);
  await page.locator('.site-nav a[href="/pricing"]').click();
  await expect(page.locator('h1')).toHaveCSS('font-family',homeFont);
@@ -178,43 +179,56 @@ test('expressive homepage gallery opens distinct complete directions with workin
  await page.locator('.pricing-card').first().getByRole('link').click();
  await expect(page).toHaveURL(/\/docs$/);
  await expect(page.locator('html')).toHaveAttribute('lang','en');
- await page.locator('.site-footer a[href="/workbench"]').click();
+ await page.locator('.site-footer a[href="/lab"]').click();await page.locator('a[href="/lab/workbench"]').click();
  await expect(page.locator('.site-workbench')).toHaveCSS('background-color','rgb(247, 247, 242)');
  await expect(page.locator('.site-nav')).toBeVisible();
  });
 
-test('case library links to working details and docs recover from clipboard denial', async ({page})=>{
- await page.goto('/showcase');
- await expect(page.locator('.content-case-grid article')).toHaveCount(3);
- await page.getByRole('button',{name:'已验证项目',exact:true}).click();
- await expect(page.locator('.content-case-grid article')).toHaveCount(1);
- await page.locator('.content-case-grid article>a').click();
- await expect(page).toHaveURL(/\/showcase\/variant-site$/);
- await page.locator('.content-directions button').first().click();
- await expect(page.frameLocator('.content-detail-preview iframe').locator('main')).toHaveAttribute('data-landing-direction','A');
- await expect(page.locator('.content-reading a')).toHaveAttribute('href',/\/pull\/10$/);
- for(const id of ['offscript','forma']){
- await page.goto(`/showcase/${id}`);
- await page.locator('.content-directions button').last().click();
- await expect(page.locator('.content-detail-preview')).toHaveAttribute('href',/direction=C/);
- }
+test('direction library pages are prerendered, browsable and keep old links working', async ({page,request})=>{
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const raw=await(await request.get('/d/harbor')).text();
+ expect(raw).toContain('<title>Harbor：成员与权限的三种管理方式 — Variant Design 方向库</title>');
+ expect(raw).toContain('<link rel="canonical" href="https://variant-design-skill.vercel.app/d/harbor">');
+ expect(raw).toContain('<meta property="og:image" content="https://variant-design-skill.vercel.app/media/harbor/a.jpg">');
+ expect(raw).toContain('Access Ledger');expect(raw).toContain('推荐 A');
+ expect(await(await request.get('/lab/canvas')).text()).not.toContain('rel="canonical"');
+ const sitemap=await(await request.get('/sitemap.xml')).text();
+ for(const slug of ['harbor','pulse','variant-site','offscript','forma'])expect(sitemap).toContain(`/d/${slug}</loc>`);
+ expect((await(await request.get('/feed.xml')).text()).match(/<item>/g)).toHaveLength(5);
+ await page.goto('/');
+ const cards=page.locator('.library-grid .library-card');await expect(cards).toHaveCount(5);await expect(cards.first()).toContainText('Harbor');
+ await expect.poll(()=>page.locator('.library-card img').evaluateAll(images=>images.every(img=>img.complete&&img.naturalWidth>0))).toBe(true);
+ await page.locator('.content-filters a[href="/c/data"]').click();await expect(page).toHaveURL(/\/c\/data$/);await expect(cards).toHaveCount(2);
+ await cards.filter({hasText:'Pulse'}).locator('a').click();await expect(page).toHaveURL(/\/d\/pulse$/);
+ await expect(page.locator('.library-tabs button').first()).toHaveAttribute('aria-pressed','true');await expect(page.locator('.library-recommendation')).toContainText('推荐 A');
+ await expect(page.locator('.library-recommendation')).toContainText('推荐不等于选定');
+ await page.locator('.library-tabs button').nth(1).click();await expect(page).toHaveURL(/\/d\/pulse\?direction=B$/);await expect(page.locator('.library-figure img')).toHaveAttribute('src','/media/pulse/b.jpg');
+ await expect(page.locator('.library-evidence a')).toHaveAttribute('href',/\/tree\/master\/website\/content\/evidence\/pulse\/variant-output$/);
+ await page.goto('/d/offscript');await expect(page.locator('.library-source span')).toHaveText('概念作品');await expect(page.locator('.library-evidence')).toContainText('不是技能的产出');await expect(page.locator('.library-evidence a')).toHaveCount(0);
+ await expect(page.locator('.library-figure a')).toHaveAttribute('href','/directions?direction=A&language=zh');
+ await page.getByRole('button',{name:'切换到英文'}).click();await expect(page.locator('h1')).toHaveText('offscript: one brand, three personalities');await page.getByRole('button',{name:'Switch to Chinese'}).click();
+ for(const url of ['/','/d/harbor','/c/product']){await page.goto(url);for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}}
+ await page.goto('/showcase/forma');await expect(page).toHaveURL(/\/d\/forma$/);await expect(page.locator('h1')).toContainText('Forma');
+ await page.goto('/showcase');await expect(page).toHaveURL(/\/$/);await expect(cards).toHaveCount(5);
+ await page.goto('/showcase?direction=B');await expect(page.locator('[data-showcase-direction]')).toHaveAttribute('data-showcase-direction','B');
+ await page.goto('/canvas?new=1');await expect(page).toHaveURL(/\/lab\/canvas\?new=1$/);
+ await page.goto('/d/missing-entry');await expect(page.locator('h1')).toHaveText('页面不存在');
+ expect(errors).toEqual([]);
+});
+
+test('docs recover from clipboard denial', async ({page})=>{
  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:()=>Promise.reject(new Error('denied'))}}));
  await page.goto('/docs');
  await page.getByRole('button',{name:'复制安装命令'}).click();
  await expect(page.getByRole('status')).toContainText('手动复制');
  await expect(page.getByRole('textbox',{name:'安装命令'})).toHaveValue(/git clone.*variant-design/);
- for(const url of ['/docs','/showcase','/showcase/offscript']){
- await page.goto(url);
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
- }
- await page.getByRole('button',{name:'切换到英文'}).click();
- await expect(page.locator('h1')).toHaveText('One brand. Three personalities.');
 });
 
 test('inspiration references filter, create an original brief and recover from copy denial', async ({page})=>{
  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:()=>Promise.reject(new Error('denied'))}}));
- await page.goto('/showcase');
- await page.locator('.content-library a[href="/inspiration"]').click();
+ await page.goto('/');
+ await page.locator('.library-more a[href="/inspiration"]').click();
  const cards=page.locator('.inspiration-grid article');
  await expect(cards).toHaveCount(24);
  for(const [name,count] of [['Landing',12],['产品界面',8],['关键流程',4]]){

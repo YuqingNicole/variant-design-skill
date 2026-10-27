@@ -84,4 +84,4 @@ The regression uses an actual MCP SDK client over stdio and temporary fixtures. 
 
 ## Editable canvas adapter
 
-For the new `/canvas` editor, use **`canvas-server.mjs`** instead. It exposes 18 node-level tools over the same local HTTP API as the browser, with revision checks, selection synchronization, undo/redo and HTML export. Start the website before connecting. See [canvas setup and limitations](../website/CANVAS.md). The 13 file-based tools documented above remain a separate connection.
+For the `/lab/canvas` editor, use **`canvas-server.mjs`** instead. It exposes 18 node-level tools over the same local HTTP API as the browser, with revision checks, selection synchronization, undo/redo and HTML export. Start the website before connecting. See [canvas setup and limitations](../website/CANVAS.md). The 13 file-based tools documented above remain a separate connection.

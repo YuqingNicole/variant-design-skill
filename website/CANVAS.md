@@ -1,6 +1,6 @@
 # Landing canvas
 
-The `/canvas` route is a local authoring application. It shares one versioned node document and renderer with the canvas MCP server. This is separate from the legacy `/workbench` HTML generator and the schema-v2 file-based MCP adapter.
+The `/lab/canvas` route (formerly `/canvas`, which still redirects) is a local authoring application. It shares one versioned node document and renderer with the canvas MCP server. This is separate from the legacy `/workbench` HTML generator and the schema-v2 file-based MCP adapter.
 
 ## Run
 
@@ -9,7 +9,7 @@ npm ci --prefix website
 npm run dev --prefix website -- --port 4188
 ```
 
-Open `http://127.0.0.1:4188/canvas`. The default create action starts with three explicitly labeled built-in layouts. With a provider configured, the separate AI generation action requests three structured documents and saves them only after all pass validation. The brief becomes editable introductory copy. Use the layer list or double-click canvas text to edit. Images are PNG/JPEG/WebP up to 2 MB and are embedded in the document/export.
+Open `http://127.0.0.1:4188/lab/canvas`. The default create action starts with three explicitly labeled built-in layouts. With a provider configured, the separate AI generation action requests three structured documents and saves them only after all pass validation. The brief becomes editable introductory copy. Use the layer list or double-click canvas text to edit. Images are PNG/JPEG/WebP up to 2 MB and are embedded in the document/export.
 
 Projects persist to `website/.canvas-data/<uuid>.json`. Embedded images are stored once per file, however many undo snapshots reference them; set `CANVAS_DATA_DIR` to use another local directory. The browser remembers the last project ID, not the document itself. Keep this directory backed up. Project links work on the same server; they are not public sharing links. New projects retain old project files.
 
@@ -17,12 +17,12 @@ The authoring API accepts loopback hosts only and rejects cross-origin browser r
 
 ## Web mode
 
-On any host other than `localhost`, `127.0.0.1` or `[::1]`, such as the published website, `/canvas` runs without the canvas server. `src/canvas-browser-store.ts` answers the same API routes inside the tab and keeps projects in this browser's IndexedDB (`variant-canvas` database). The state rules are shared with the local file store (`shared/canvas-state.mjs`): the same revisions, 30-step undo/redo, stale-write refusal and one stored copy of each image. Web mode never calls `/api/canvas`.
+On any host other than `localhost`, `127.0.0.1` or `[::1]`, such as the published website, `/lab/canvas` runs without the canvas server. `src/canvas-browser-store.ts` answers the same API routes inside the tab and keeps projects in this browser's IndexedDB (`variant-canvas` database). The state rules are shared with the local file store (`shared/canvas-state.mjs`): the same revisions, 30-step undo/redo, stale-write refusal and one stored copy of each image. Web mode never calls `/api/canvas`.
 
 - Projects stay in that browser profile. Clearing site data deletes them, and they do not sync to other devices. Keep a copy with **下载项目备份 / Download project backup** in the delivery panel.
 - To continue a web project with an agent, import that backup on the local canvas start page (**导入项目备份**). Import creates a new project with the documents and chosen direction; undo history is not included. Both modes accept the same backup file.
 - Two tabs on the same project are protected by revisions: a tab working from an older revision is refused and reloads the current one.
-- AI generation and proposals use the site's model when one is configured. The browser sends the brief, or the selected subtree with embedded images replaced by a placeholder, to the stateless `POST /api/canvas/documents` and `POST /api/canvas/suggest` routes, validates the result and saves it locally. The server keeps nothing. Without a configured model these controls stay disabled.
+- AI generation and proposals use the site's model when the site enables it (see Deployment). The browser sends the brief, or the selected subtree with embedded images replaced by a placeholder, to the stateless `POST /api/canvas/documents` and `POST /api/canvas/suggest` routes, validates the result and saves it locally. The server keeps nothing. Without a configured model these controls stay disabled.
 - Agents and MCP cannot reach a web project. The editor shows how to run the canvas locally and import a backup.
 - If the browser blocks IndexedDB, the project lives in memory for that tab and the editor warns that a reload will lose it.
 
@@ -30,17 +30,18 @@ Add `?storage=browser` on localhost to try web mode against the local server (us
 
 ## Deployment
 
-The public site is deployed to Vercel. `vercel.json` at the repository root installs and builds `website/`, serves `website/dist`, and rewrites `/api/*` to one function, `api/index.mjs`, which runs the same `handleApi` as the local server. Page routes rewrite to `index.html`. `.vercelignore` uploads only `website/`, `scripts/` and `api/`, and excludes `website/.env` and `website/.canvas-data/`. Merging to `master` deploys production through the Vercel GitHub integration; pull requests get preview deployments.
+The public site is deployed to Vercel. `vercel.json` at the repository root installs and builds `website/`, serves `website/dist`, and rewrites `/api/*` to one function, `api/index.mjs`, which runs the same `handleApi` as the local server. Library routes are prerendered files (RFC-002); other page routes fall back to `app.html`, the unmodified app shell. `/canvas`, `/workbench` and the old `/showcase` case pages redirect with 301. `.vercelignore` uploads only `website/`, `scripts/` and `api/`, and excludes `website/.env` and `website/.canvas-data/`. Merging to `master` deploys production through the Vercel GitHub integration; pull requests get preview deployments.
 
-On Vercel, the canvas project routes refuse with 403 (the host is not loopback), so the canvas runs in web mode. Model routes work once a provider is configured in the Vercel project, using the same variables as `website/.env.example`:
+On Vercel, the canvas project routes refuse with 403 (the host is not loopback), so the canvas runs in web mode. **Model routes are off by default**: `api/index.mjs` answers `GET /api/status` with `{configured:false}` and every other route with 404 unless the project sets `PUBLIC_MODEL_ROUTES=1`. To enable them, also configure a provider with the same variables as `website/.env.example`:
 
 ```sh
+vercel env add PUBLIC_MODEL_ROUTES production # value: 1
 vercel env add ANTHROPIC_API_KEY production   # paste the key when prompted
 vercel env add ANTHROPIC_MODEL production     # optional
 vercel deploy --prod                          # or merge to master
 ```
 
-These routes are public: anyone who can open the site can spend that key on canvas generation, proposals and the `/workbench` generator. Cross-origin browser requests are refused, but that does not stop scripted clients. Set a spending limit on the provider key, and consider a Vercel Firewall rate-limit rule for `/api/`. The function's `maxDuration` is 300 seconds; generation makes three parallel model calls, each limited by `MODEL_TIMEOUT_MS`.
+Once enabled, these routes are public: anyone who can open the site can spend that key on canvas generation, proposals and the `/lab/workbench` generator. Cross-origin browser requests are refused, but that does not stop scripted clients. Set a spending limit on the provider key, and consider a Vercel Firewall rate-limit rule for `/api/`. The function's `maxDuration` is 300 seconds; generation makes three parallel model calls, each limited by `MODEL_TIMEOUT_MS`.
 
 ## Canvas operations
 

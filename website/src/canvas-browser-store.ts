@@ -6,7 +6,7 @@ const loopback = /^(localhost|127\.0\.0\.1|\[::1\])$/;
 function forcedBrowserMode(){try{if(new URLSearchParams(location.search).get('storage')==='browser')sessionStorage.setItem('variant-canvas-storage','browser');return sessionStorage.getItem('variant-canvas-storage')==='browser';}catch{return false;}}
 export const browserMode = !loopback.test(location.hostname) || forcedBrowserMode();
 // Keeps a forced web mode in project links, so reloads and new tabs on localhost stay in it.
-export const projectPath = (id:string) => `/canvas?project=${id}${browserMode&&loopback.test(location.hostname)?'&storage=browser':''}`;
+export const projectPath = (id:string) => `/lab/canvas?project=${id}${browserMode&&loopback.test(location.hostname)?'&storage=browser':''}`;
 type Stored = CanvasState & { assets?: Record<string,string> };
 const memory = new Map<string,Stored>();
 let persistent = true, database: Promise<IDBDatabase> | null = null;

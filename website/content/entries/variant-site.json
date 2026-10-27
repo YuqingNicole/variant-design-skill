@@ -55,7 +55,8 @@
             "Direction A first screen: explains the method first"
           ]
         }
-      ]
+      ],
+      "preview": "/variant-output/_preview/A.html"
     },
     {
       "id": "B",
@@ -87,7 +88,8 @@
             "Direction B first screen: shows the three tradeoffs directly"
           ]
         }
-      ]
+      ],
+      "preview": "/variant-output/_preview/B.html"
     },
     {
       "id": "C",
@@ -119,7 +121,8 @@
             "Direction C first screen: install command up front"
           ]
         }
-      ]
+      ],
+      "preview": "/variant-output/_preview/C.html"
     }
   ],
   "recommendation": {
