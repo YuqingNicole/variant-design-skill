@@ -59,3 +59,5 @@ Rebuild static previews after apply or undo. If React uses an isolated bundler, 
 Before a scoped edit, record representative non-target behavior with the browser plan in `references/workflow/artifact-verification.md`, then rerun the same assertions after applying. Byte preservation alone does not prove rendered behavior. Retain pre-edit project-check failures so delivery can distinguish identical prior diagnostics from new or changed errors.
 
 Project integration uses the same `.variant-lock` and a separate prepared source/target baseline. See `skills/shared/export.md` before generating integration files. Candidate preparation for edits does not replace integration preparation.
+
+Rebuilding the comparison after an edit or undo retains the preview-first layout and expandable direction details; expanding details or switching viewport does not select a direction.

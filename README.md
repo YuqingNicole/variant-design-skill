@@ -133,7 +133,7 @@ The optional release check runs at most once per 24 hours, reports an available 
 ## Generate → compare → choose → refine → export
 
 - Three directions retain the same core task, data, and required functions. Each explains **what it optimizes, what it sacrifices, and when to use it**, followed by a reasoned recommendation.
-- The comparison page opens by default. React output gets three isolated mounts and direct preview URLs; project type checks must include the generated files. Native adapters handle framework-specific dependencies.
+- The comparison page opens by default, with previews first and expandable direction details. React output gets three isolated mounts and direct preview URLs; project type checks must include the generated files. Native adapters handle framework-specific dependencies.
 - `B vary subtle — hero` edits B without selecting it. `pick B` explicitly chooses B. `undo B` restores B's last files and tokens while preserving A/C and the selected winner.
 - Schema v2 stores each direction's files, tokens, version, comparison, and history separately. A durable snapshot precedes every replacement; Git alone is not a snapshot.
 - Precedence: user constraints → product task and existing design system → accessibility → style advice. Report unresolved accessibility conflicts. Brand-locked output retains fonts/tokens; free exploration may vary them. There is no animation quota.

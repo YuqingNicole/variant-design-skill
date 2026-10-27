@@ -70,3 +70,5 @@ node <skill-root>/scripts/preview-server.mjs variant-output
 ```
 
 It starts at port 3333 and automatically tries the next available port when occupied. Use the printed URL; never assume a fixed port. Do not inject development polling code into exported files.
+
+The comparison puts aligned previews first. Each card keeps its full-page link above the preview and its complete comparison statements in an expandable section below. Recommendation rationale is expandable; the recommended direction is labeled without selecting it. Phone previews are centered at a shared 390px viewport. Rebuild existing `_compare.html` files to update the layout.

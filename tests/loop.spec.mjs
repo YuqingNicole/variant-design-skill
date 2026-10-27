@@ -163,3 +163,29 @@ test('reusable browser plan checks alternate focus, JS motion and non-target beh
  const missing=await verifyInBrowser(dir,'B',{plan},null);
  expect(missing.report.checks.every(c=>c.status==='unverified')).toBe(true);
 });
+
+test('comparison keeps long explanations below aligned previews and centers phone layouts',async({page})=>{
+ const {buildPreview}=await import('../scripts/build-preview.mjs');
+ const dir=path.join(root,'comparison-layout');fs.mkdirSync(dir,{recursive:true});
+ const variants=Object.fromEntries(['A','B','C'].map(id=>{
+  fs.writeFileSync(path.join(dir,`${id}.html`),`<!doctype html><html><body><h1>Direction ${id}</h1><button onclick="this.textContent='Done'">Inspect</button></body></html>`);
+  return [id,{entry:`${id}.html`,files:[`${id}.html`],version:1,comparison:{optimizes:'逐项对比。'.repeat(35),tradeoff:'信息密度高。'.repeat(30),bestFor:'了解需求的访客。'.repeat(20)}}];
+ }));
+ const state={schemaVersion:2,language:'zh',variants,recommendation:{variant:'B',reason:'推荐原因，尚未经过测试。'.repeat(40)}};
+ const context=path.join(dir,'.variant-context.json');fs.writeFileSync(context,JSON.stringify(state));buildPreview(dir);
+ await page.setViewportSize({width:1440,height:900});await page.goto(pathToFileURL(path.join(dir,'_compare.html')).href);
+ const stages=page.locator('.stage');
+ await expect(stages).toHaveCount(3);
+ const boxes=await stages.evaluateAll(elements=>elements.map(el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom};}));
+ expect(Math.max(...boxes.map(b=>b.top))-Math.min(...boxes.map(b=>b.top))).toBeLessThan(1);
+ for(const box of boxes){expect(box.top).toBeLessThan(260);expect(box.bottom).toBeLessThan(900);}
+ const explanation=page.locator('.direction-details').first();await explanation.locator('summary').focus();await page.keyboard.press('Enter');await expect(explanation.locator('dd').first()).toHaveText(variants.A.comparison.optimizes);
+ expect((await stages.first().boundingBox()).y).toBe(boxes[0].top);
+ await page.getByRole('button',{name:'手机布局'}).click();await expect(page.getByRole('button',{name:'手机布局'})).toHaveAttribute('aria-pressed','true');
+ const phone=await page.locator('iframe').first().evaluate(el=>{const a=el.getBoundingClientRect(),b=el.parentElement.getBoundingClientRect();return {width:el.style.width,left:a.left-b.left,right:b.right-a.right};});
+ expect(phone.width).toBe('390px');expect(Math.abs(phone.left-phone.right)).toBeLessThan(2);
+ await page.frameLocator('iframe').first().getByRole('button').click();await expect(page.frameLocator('iframe').first().getByRole('button')).toHaveText('Done');
+ await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await expect(page.getByRole('link',{name:'完整打开 A'})).toBeVisible();
+ expect(JSON.parse(fs.readFileSync(context,'utf8'))).toEqual(state);
+});
