@@ -188,4 +188,11 @@ test('comparison keeps long explanations below aligned previews and centers phon
  await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await expect(page.getByRole('link',{name:'完整打开 A'})).toBeVisible();
  expect(JSON.parse(fs.readFileSync(context,'utf8'))).toEqual(state);
+ state.language='en';state.preview={colorScheme:'dark'};fs.writeFileSync(context,JSON.stringify(state));buildPreview(dir);
+ await page.goto(pathToFileURL(path.join(dir,'_compare.html')).href);
+ await expect(page.locator('html')).toHaveCSS('color-scheme','dark');
+ await expect(page.getByRole('button',{name:'Desktop layout'})).toBeVisible();
+ await page.locator('.recommendation summary').focus();await page.keyboard.press('Enter');
+ await expect(page.locator('.recommendation p')).toHaveText(state.recommendation.reason);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });

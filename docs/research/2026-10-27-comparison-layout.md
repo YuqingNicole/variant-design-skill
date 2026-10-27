@@ -14,3 +14,11 @@ The supplied Ledger comparison screenshot placed long direction explanations bef
 Started with `node evals/run.mjs --agent codex --fixture ledger --out /tmp/variant-comparison-layout-eval`. Codex failed to spawn: the local binary symlink points to a missing application binary.
 
 Retried with `node evals/run.mjs --agent claude --fixture ledger --out /tmp/variant-comparison-layout-claude`. Claude returned a session-limit error without generating output; the grader subsequently failed with `q.errors is not iterable`. Neither attempt is a passing eval. No new full agent-workflow validation or measured user-performance improvement is claimed. The rendered evidence and regression tests cover the comparison layout only.
+
+## Presentation refinement
+
+Follow-up styling uses warm neutral surfaces, lighter dividers, restrained card shadows, compact status labels, a segmented viewport control and a muted green recommendation badge. Recommendation rationale and agent guidance move below the previews. No external fonts, assets or animation dependencies were introduced. The original variant contents are unchanged.
+
+Rebuilt the same real Ledger artifact and inspected desktop and narrow screenshots. The regression also checks English dark mode, keyboard expansion of the recommendation rationale, and narrow-width overflow. The previous fresh CLI failures remain the limits on agent-workflow evidence; styling is not evidence of a user-performance gain.
+
+After refinement, all 10 Chrome loop tests, the production comparison browser test, 52 helper tests, 2 package tests, typecheck and website build passed again. At 1440 × 900 the real Ledger preview starts at y=256.05 and is 355.19px high. Screenshots: `/tmp/variant-comparison-polished.png` and `/tmp/variant-comparison-mobile.png`.
