@@ -75,7 +75,10 @@ try {
   if (staticMode) await buildStatic(vite, require, result);
   else {
     const server = await vite.createServer({ ...viteOptions(require), appType: 'mpa',
-      server: { host: '127.0.0.1', port: 3333, fs: { allow: [project, output] } } });
+      // Vite's watcher drops a second change to the same file within 50ms, which leaves the preview on
+      // stale content after a quick apply-then-undo. Waiting for the write to settle coalesces instead.
+      server: { host: '127.0.0.1', port: 3333, fs: { allow: [project, output] },
+        watch: { awaitWriteFinish: { stabilityThreshold: 50, pollInterval: 10 } } } });
     await server.listen();
     const base = server.resolvedUrls.local[0];
     console.log(`Comparison: ${base}_compare.html`);

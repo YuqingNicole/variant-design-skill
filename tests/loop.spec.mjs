@@ -106,3 +106,15 @@ test('runtime observations bind real browser checks to the reviewed task',async(
   try {fs.writeFileSync(path.join(root,'VariantB.tsx'),original+'\n// subsequent edit');expect(inspectObservation(report,task,profile).status).toBe('stale');}
   finally {fs.writeFileSync(path.join(root,'VariantB.tsx'),original);}
 });
+test('preview serves a rewrite made right after the previous change',async()=>{
+  const file=path.join(root,'VariantB.tsx'),original=fs.readFileSync(file,'utf8');
+  const served=async()=>(await (await fetch(`${base}/VariantB.tsx`)).text()).match(/fontFamily:\s*"(\w+)"/)?.[1];
+  await new Promise(resolve=>setTimeout(resolve,100)); // start outside the window of an earlier test's write
+  try{
+    fs.writeFileSync(file,original.replace("fontFamily:'Georgia'","fontFamily:'Arial'"));
+    await expect.poll(served,{intervals:[5]}).toBe('Arial');
+    // Linux watchers dropped this second change when it landed within 50ms of the first one.
+    fs.writeFileSync(file,original);
+    await expect.poll(served,{timeout:3000}).toBe('Georgia');
+  }finally{if(fs.readFileSync(file,'utf8')!==original)fs.writeFileSync(file,original);}
+});
