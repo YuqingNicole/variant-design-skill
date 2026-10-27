@@ -21,6 +21,7 @@ const staticPages = {
   '/submit': ['投稿与授权 — Variant Design', 'Variant Design 方向库的收录、授权与撤下规则。'],
   '/pricing': ['价格 — Variant Design', 'Variant Design 的方案与价格。'],
   '/lab': ['实验室 — Variant Design', '工作台和画布等实验功能。'],
+  '/skills': ['设计技能 — Variant Design', '只收录在一次性项目里实际跑过、并公开了记录的设计交付技能。'],
 };
 
 function card(e) {

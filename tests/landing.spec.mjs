@@ -221,6 +221,16 @@ test('direction library pages are prerendered, browsable and keep old links work
  expect(errors).toEqual([]);
 });
 
+test('skills page lists only tried skills with records and a verified install command', async ({page,request})=>{
+ expect(await(await request.get('/skills')).text()).toContain('<title>设计技能 — Variant Design</title>');
+ await page.goto('/');await page.locator('.site-nav a[href="/skills"]').click();await expect(page).toHaveURL(/\/skills$/);
+ await expect(page.locator('.skills-entry')).toHaveCount(1);await expect(page.locator('.skills-entry h2')).toContainText('variant-design');
+ await expect(page.locator('.skills-entry code')).toHaveText('npx skills add YuqingNicole/variant-design-skill -a claude-code -a codex');
+ await expect(page.locator('.skills-records a')).toHaveCount(3);
+ for(const href of await page.locator('.skills-records a').evaluateAll(a=>a.map(x=>x.getAttribute('href'))))expect(href).toMatch(/\/blob\/master\/docs\/research\/2026-10-2[67]-[a-z-]+\.md$/);
+ for(const url of ['/skills','/','/d/pulse']){await page.goto(url);for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}}
+});
+
 test('docs recover from clipboard denial', async ({page})=>{
  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:()=>Promise.reject(new Error('denied'))}}));
  await page.goto('/d/harbor');await page.getByRole('button',{name:'复制指令'}).click();await expect(page.locator('.library-try [role="status"]')).toContainText('手动复制');

@@ -12,6 +12,15 @@ builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
 
 class PackageTests(unittest.TestCase):
+    def test_only_the_router_declares_a_skill(self):
+        # Codex and `npx skills` scan folders recursively. Sub-workflows with skill frontmatter
+        # would register as standalone skills whose relative paths break outside the router.
+        root = Path(__file__).resolve().parent.parent
+        declared = sorted(str(p.relative_to(root)) for p in root.rglob('SKILL.md')
+                          if 'node_modules' not in p.parts and not {'.claude', '.agents', '.codex'} & set(p.parts)
+                          and p.read_text().startswith('---\nname:'))
+        self.assertEqual(declared, ['SKILL.md'])
+
     def test_reproducible_complete_package_runs_outside_repository(self):
         with tempfile.TemporaryDirectory(prefix='variant-plugin-') as directory:
             root = Path(directory)

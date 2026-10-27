@@ -116,6 +116,14 @@ Codex 可克隆到技能目录（如果配置了其他技能根目录，使用�
 git clone https://github.com/YuqingNicole/variant-design-skill.git ~/.codex/skills/variant-design
 ```
 
+也可以用 [skills CLI](https://github.com/vercel-labs/skills) 安装到当前项目，同时支持 Claude Code 和 Codex。它会把完整仓库复制到 `.agents/skills/variant-design`，并为 Claude Code 建立链接（已在 skills 1.7.4 上验证）：
+
+```bash
+npx skills add YuqingNicole/variant-design-skill -a claude-code -a codex
+```
+
+除非设置 `DISABLE_TELEMETRY=1`，skills CLI 会把安装次数上报给 skills.sh。
+
 Claude Code 或其他本地 agent 同样需要完整目录；可以安装到对应技能位置，也可以克隆到工作区后让 agent 读取入口的绝对路径。Hermes/OpenClaw 的 `AGENTS.md` 应指向已安装的入口，而非粘贴入口文本。脚本需要文件访问权限和 Node.js。
 
 网页 Project 或 API 集成需要通过环境的文件检索和执行能力提供引用目录，仅粘贴提示词不能提供预览服务器和快照功能。

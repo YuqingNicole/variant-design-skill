@@ -1,7 +1,6 @@
----
-name: variant-design-system
-description: "Design System mode — tokens → components → pages three-layer workflow. Generate a complete token set (palette/type/spacing/motion/elevation/radius), confirm it, then all downstream outputs are visually consistent. Triggers on: ds, design system, tokens, create token set, define palette, define tokens, set up tokens, ds confirm, compose"
----
+<!-- Sub-workflow of the variant-design skill, reached through the route table in ../../SKILL.md. It has no skill frontmatter on purpose: agents that scan folders recursively (Codex, `npx skills`) must not register it as a standalone skill, because its paths are relative to the skill root. -->
+
+> **variant-design-system**: Design System mode — tokens → components → pages three-layer workflow. Generate a complete token set (palette/type/spacing/motion/elevation/radius), confirm it, then all downstream outputs are visually consistent. Triggers on: ds, design system, tokens, create token set, define palette, define tokens, set up tokens, ds confirm, compose
 
 > Before generating code, load `skills/shared/code-output.md`, `references/project-context.md`, and `references/quality-baseline.md`.
 

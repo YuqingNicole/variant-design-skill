@@ -1,7 +1,6 @@
----
-name: variant-ux
-description: "UX Review mode — heuristic evaluation (Nielsen's 10), cognitive load analysis, mental model diagnosis, affordance audit, dark pattern detection — grounded in NNG research. Load references/ux-heuristics.md and references/ux-psychology.md. Triggers on: ux review, heuristic evaluation, usability audit, cognitive load, mental models, affordances, dark patterns, review this design, check usability, is this good UX"
----
+<!-- Sub-workflow of the variant-design skill, reached through the route table in ../../SKILL.md. It has no skill frontmatter on purpose: agents that scan folders recursively (Codex, `npx skills`) must not register it as a standalone skill, because its paths are relative to the skill root. -->
+
+> **variant-ux**: UX Review mode — heuristic evaluation (Nielsen's 10), cognitive load analysis, mental model diagnosis, affordance audit, dark pattern detection — grounded in NNG research. Load references/ux-heuristics.md and references/ux-psychology.md. Triggers on: ux review, heuristic evaluation, usability audit, cognitive load, mental models, affordances, dark patterns, review this design, check usability, is this good UX
 
 ## UX Review Mode
 

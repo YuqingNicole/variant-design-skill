@@ -55,3 +55,13 @@
 @media(max-width:900px){.library-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.library-comparison{grid-template-columns:1fr;gap:18px}}
 @media(max-width:600px){.library-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.library-card-image img{transition:none}}
+.skills-entry{border-top:1px solid var(--site-line);padding:28px 0;max-width:860px}
+.skills-entry h2{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;font-size:26px;font-weight:500;margin:0 0 10px}
+.skills-entry h2 small{font:12px var(--font-mono);color:#7a846f}
+.skills-entry>p{line-height:1.8}
+.skills-entry dt{font:11px var(--font-mono);letter-spacing:.1em;color:#7a846f;margin-top:18px}
+.skills-entry dd{margin:6px 0 0;line-height:1.75}
+.skills-entry code{display:block;overflow-x:auto;white-space:nowrap;background:#fff;border:1px solid #ced6c4;border-radius:4px;padding:10px 12px;font:13px var(--font-mono);margin-bottom:8px}
+.skills-entry dd span{font-size:13px;color:var(--site-muted)}
+.skills-entry a{color:#456133}
+.skills-records{display:flex;flex-wrap:wrap;gap:8px 20px}
