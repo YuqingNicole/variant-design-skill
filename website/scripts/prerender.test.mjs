@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { loadEntries } from './content.mjs';
+import { loadEntries, toCard } from './content.mjs';
+import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
 import { escape, renderSite, rss, sitemap } from './prerender.mjs';
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 
@@ -35,4 +36,14 @@ test('sitemap and RSS list every entry', () => {
   for (const e of entries) { assert.ok(map.includes(`<loc>https://example.test/d/${e.slug}</loc>`)); assert.ok(feed.includes(`<link>https://example.test/d/${e.slug}</link>`)); }
   assert.equal(feed.match(/<item>/g).length, entries.length);
   assert.throws(() => renderSite(entries, '<html></html>', 'https://example.test'), /Could not place metadata/);
+});
+
+test('published direction cards pass the skill\'s own validator', () => {
+  for (const entry of loadEntries().entries) {
+    const card = toCard(entry, 'https://example.test');
+    assert.deepEqual(validateCard(card), [], entry.slug);
+    assert.equal(card.url, `https://example.test/d/${entry.slug}.json`);
+    assert.ok(card.directions.every(d => d.image?.startsWith(`https://example.test/media/${entry.slug}/`)));
+    assert.equal(cardToReference(card).usage, 'inspiration');
+  }
 });

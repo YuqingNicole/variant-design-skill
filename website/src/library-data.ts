@@ -9,6 +9,9 @@ export type Entry = { slug: string; title: Pair; summary: Pair; brief: Pair; cat
   directions: Direction[]; recommendation?: { variant: 'A' | 'B' | 'C'; reason: Pair };
   evidence?: { context: string }; featured: boolean; publishedAt: string };
 export const repository = 'https://github.com/YuqingNicole/variant-design-skill';
+// Cards are always referenced on the published site, so a copied prompt works from any agent.
+export const siteUrl = 'https://variant-design-skill.vercel.app';
+export const cardUrl = (entry: Entry) => `${siteUrl}/d/${entry.slug}.json`;
 export const categories: { id: string; name: Pair }[] = [
   { id: 'landing', name: ['落地页', 'Landing pages'] }, { id: 'product', name: ['产品界面', 'Product UI'] },
   { id: 'data', name: ['数据展示', 'Data'] }, { id: 'brand', name: ['品牌', 'Brand'] }, { id: 'component', name: ['组件', 'Components'] },

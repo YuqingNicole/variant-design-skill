@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { contentRoot, loadEntries } from './content.mjs';
+import { contentRoot, loadEntries, toCard } from './content.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const defaultSite = 'https://variant-design-skill.vercel.app';
 const categoryNames = { landing: '落地页', product: '产品界面', data: '数据展示', brand: '品牌', component: '组件' };
@@ -94,8 +94,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
     fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, html);
   }
   fs.cpSync(path.join(contentRoot, 'media'), path.join(dist, 'media'), { recursive: true });
+  for (const entry of entries) fs.writeFileSync(path.join(dist, 'd', `${entry.slug}.json`), JSON.stringify(toCard(entry, site), null, 2) + '\n');
   fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap(pages.keys(), site));
   fs.writeFileSync(path.join(dist, 'feed.xml'), rss(entries, site));
   fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site}/sitemap.xml\n`);
-  console.log(`Prerendered ${pages.size} routes for ${site}; sitemap.xml, feed.xml and robots.txt written.`);
+  console.log(`Prerendered ${pages.size} routes and ${entries.length} direction cards for ${site}; sitemap.xml, feed.xml and robots.txt written.`);
 }

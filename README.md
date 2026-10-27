@@ -162,6 +162,17 @@ reproduce the visual style of [site you described] — dark navy, monospace, swi
 
 **Tip:** the more constraints you name (direction + palette + layout pattern), the more targeted the output. The more open the prompt, the more divergent the three variations will be.
 
+### Start from a direction card
+
+The [direction library](https://variant-design-skill.vercel.app/) publishes each entry as a card at `/d/<slug>.json`: one brief and its A/B/C directions with what each optimizes, trades off and fits. Point the skill at a card to make your own A/B/C from it:
+
+```
+Use the variant-design skill with direction A from https://variant-design-skill.vercel.app/d/pulse.json.
+Make A/B/C for my weekly report page: A follows this direction, B and C are contrasts.
+```
+
+The skill reads the card with `scripts/direction-card.mjs` and records it as an inspiration reference. Your brand, design system and accessibility outrank the card, and nothing from the card's screenshots or copy is reused. In a sandbox without network, paste the card JSON or save it as a file. See `references/direction-cards.md`.
+
 ### Anatomy of a directed prompt
 
 ```

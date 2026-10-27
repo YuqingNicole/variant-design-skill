@@ -126,6 +126,23 @@ export function loadEntries(root = contentRoot, options = {}) {
   return { entries, problems };
 }
 
+// The direction card published at /d/<slug>.json for the skill (scripts/direction-card.mjs reads it).
+export function toCard(entry, site) {
+  const reuse = entry.source === 'own'
+    ? 'Inspiration only: borrow the structure and tradeoffs. Images are shown for reference and are not licensed for reuse in your project.'
+    : entry.source === 'permission' ? `Inspiration only: the author permitted showing this work on the Variant Design site, not reuse in other projects.`
+    : 'Inspiration only: our own notes about a public design. Do not copy its copy, marks or assets.';
+  return {
+    format: 'variant-direction-card', version: 1, url: `${site}/d/${entry.slug}.json`, page: `${site}/d/${entry.slug}`,
+    title: entry.title, summary: entry.summary, brief: entry.brief, category: entry.category, source: entry.source,
+    ...(entry.kind ? { kind: entry.kind } : {}), credit: entry.credit, reuse,
+    ...(entry.recommendation ? { recommendation: entry.recommendation } : {}),
+    directions: entry.directions.map(d => ({ id: d.id, name: d.name, comparison: d.comparison,
+      ...(entry.source !== 'link-only' && d.media?.[0] ? { image: `${site}/media/${entry.slug}/${d.media[0].file}` } : {}),
+      ...(d.preview ? { preview: site + d.preview } : {}) })),
+  };
+}
+
 const mediaTypes = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' };
 // Vite: fail the build on invalid entries, and serve entry images at /media in development.
 // Production copies the images in scripts/prerender.mjs.

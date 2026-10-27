@@ -37,6 +37,14 @@
 .library-comparison{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin:32px 0}
 .library-comparison dt{font:11px var(--font-mono);letter-spacing:.1em;color:#7a846f;margin-bottom:8px}
 .library-comparison dd{margin:0;line-height:1.75}
+.library-try{border:1px solid #b9c7ad;border-radius:6px;padding:22px 24px;margin:0 0 28px;max-width:860px;background:#fbfcf8}
+.library-try h2{font-size:20px;font-weight:500;margin:0 0 8px}
+.library-try p{line-height:1.8;color:var(--site-muted);margin:0 0 12px}
+.library-try p a,.library-try div a{color:#456133}
+.library-try textarea{width:100%;box-sizing:border-box;font:13px/1.7 var(--font-mono);border:1px solid #ced6c4;border-radius:4px;padding:12px;background:#fff;color:var(--site-ink);resize:vertical}
+.library-try div{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:12px}
+.library-try button{border:0;border-radius:4px;background:#2e4325;color:#fff;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.library-try [role=status]{margin:10px 0 0;font-size:13px}
 .library-recommendation{background:var(--site-surface);border-radius:6px;padding:22px 24px;max-width:860px}
 .library-recommendation p{line-height:1.8;margin:8px 0}
 .library-recommendation small{color:var(--site-muted)}
