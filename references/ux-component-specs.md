@@ -422,7 +422,7 @@ In addition to the six dimensions, record:
 
 ### Verify the Build Against the Spec
 
-- Compare computed values in the browser (`getComputedStyle` or DevTools), not screenshots judged by eye or a memory of the design.
+- Compare computed values in the browser (`getComputedStyle` or DevTools), not screenshots judged by eye or a memory of the design. Choose the browser and place probe files as in `quality-baseline.md` → Behavioral evidence: files go in the project's `.variant-work/`.
 - Walk every state and variant at every specified breakpoint, with realistic and extreme content.
 - Report each mismatch as spec against actual, with element, viewport and value: `card padding: spec S1 = 16, actual 20 @ 390px`.
 - A value marked `[TBD]` is not a mismatch. Resolve it in the spec first.

@@ -81,6 +81,7 @@ npm ci --prefix mcp && npm test --prefix mcp
 - Behavior changes need a regression test: unit tests for helper semantics, Playwright for rendering. Test against the real helper, not a mock of it.
 - Before claiming that the skill's user experience improved, dogfood it in a real CLI and record the evidence in `docs/research/`:
   - Use a throwaway project with a project-level install (`.codex/skills/`, `.claude/skills/`) so global skill directories stay untouched.
+  - A global install of the same skill can take precedence. In Claude Code 2.1.311, runs read `~/.claude/skills/variant-design` even with a project-level copy present. Check the paths in the run's tool calls (`--output-format stream-json --verbose`), and before testing unmerged changes, make sure the copy that is actually read contains them.
   - `codex exec` runs in a sandbox that cannot bind ports. `claude -p` stays alive while a background preview server runs.
 
 ## Git and collaboration
