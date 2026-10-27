@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>半山面包 · 每天早上七点出炉</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><strong class="brand">半山面包</strong><nav><a href="#menu">今日面包</a><a href="#visit">到店</a><a href="#order">预订</a></nav></header>
+<main>
+<section class="hero"><h1>每天早上七点出炉</h1><p>天然酵种、本地小麦，杭州西溪路 128 号。卖完即止。</p><a class="cta" href="#order">预订明早的面包</a></section>
+<section id="menu" class="menu"><h2>今日面包</h2>
+<ul><li><b>乡村酸种</b><span>¥38</span><small>剩 6 个</small></li><li><b>黑麦核桃</b><span>¥42</span><small>剩 2 个</small></li><li><b>可颂</b><span>¥16</span><small>已售罄</small></li></ul></section>
+<section id="visit" class="visit"><h2>到店</h2><p>周二至周日 7:00–14:00 · 周一休息</p></section>
+<section id="order" class="order"><h2>预订</h2>
+<form onsubmit="event.preventDefault();document.getElementById('ok').hidden=false"><label>手机号 <input required type="tel" pattern="1[0-9]{10}"></label><label>取货日期 <input required type="date"></label><button>提交预订</button><p id="ok" hidden>已收到，我们会短信确认。</p></form></section>
+</main>
+<footer>© 半山面包</footer>
+</body></html>

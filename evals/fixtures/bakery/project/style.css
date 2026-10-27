@@ -1,0 +1,5 @@
+:root{--flour:#f7f1e6;--crust:#8a4b22;--ink:#2b2118}
+body{margin:0;background:var(--flour);color:var(--ink);font-family:"Songti SC",serif}
+.top{display:flex;justify-content:space-between;padding:20px 32px}.top nav a{margin-left:16px;color:var(--crust)}
+.hero{padding:80px 32px}.hero h1{font-size:48px;margin:0}.cta{background:var(--crust);color:#fff;padding:12px 18px;display:inline-block;margin-top:16px;text-decoration:none}
+.menu,.visit,.order{padding:32px}.menu li{display:flex;gap:16px}form{display:grid;gap:12px;max-width:320px}

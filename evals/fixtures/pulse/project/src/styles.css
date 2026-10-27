@@ -1,0 +1,2 @@
+body { font-family: var(--font-sans); color: var(--color-ink); background: var(--color-paper); margin: 0; padding: 32px; }
+table { border-collapse: collapse; } td, th { padding: 6px 10px; text-align: left; }
