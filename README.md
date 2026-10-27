@@ -142,6 +142,8 @@ Implementation and verification: [preview](references/workflow/preview.md), [his
 
 ---
 
+React previews can use an isolated Vite package with `--vite-root` while keeping the project’s own React; portable client components can then open as static HTML. Native Next features still require a framework adapter. See [preview limits and setup](references/workflow/preview.md).
+
 ## Usage
 
 ### Basic triggers

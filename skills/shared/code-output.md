@@ -215,3 +215,5 @@ Every output must meet these minimums:
 - **CSS:** No `@import` for CSS files (blocks render) — only for Google Fonts in `<style>`. Use `content-visibility: auto` for off-screen sections
 - **Animation:** Only `transform` and `opacity` (GPU-composited). No `will-change` unless animation is imminent. Use `Intersection Observer` for scroll-triggered animations — never scroll event listeners
 - **Layout:** No layout thrashing (read then write, never interleave). Avoid forced synchronous reflows
+
+For React projects without Vite, the preview helper accepts `--vite-root` for an isolated bundler package while reusing the project's React. Follow `references/workflow/preview.md`; unsupported framework behavior or unavailable installation remains unverified. Do not improvise a bundler.

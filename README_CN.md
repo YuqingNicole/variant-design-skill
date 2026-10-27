@@ -142,6 +142,8 @@ Claude Code 或其他本地 agent 同样需要完整目录；可以安装到对�
 
 ---
 
+React 预览可通过 `--vite-root` 使用独立 Vite 工具包，同时保留项目自己的 React；可独立运行的客户端组件可生成静态 HTML。Next 原生功能仍需框架适配。见[预览配置与限制](references/workflow/preview.md)。
+
 ## 使用方法
 
 ### 基础触发
