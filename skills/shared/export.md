@@ -112,3 +112,5 @@ xclip -selection clipboard < variant-output/variant-coffee-A.html
 ```
 
 If no clipboard utility is available, return the exact file path instead of treating clipboard support as required.
+
+Rebuild `_compare.html` before delivery to include the preview-first cards and expandable comparison statements. Full-page links remain available above each preview.

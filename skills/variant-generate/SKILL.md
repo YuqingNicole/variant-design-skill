@@ -118,3 +118,5 @@ Then the recommendation and its reason, and the next actions:
 > **Animate** — Add motion · Dramatize · Make interactive
 > **Refine** — Polish · Critique · See other views
 > **Deliver** — pick B · react B · integrate B · tokens A
+
+The generated comparison shows previews before expandable direction details. Keep the full optimization, trade-off and suitable-scenario text in the manifest; rebuilding the comparison preserves it.
