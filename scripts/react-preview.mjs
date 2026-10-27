@@ -53,7 +53,8 @@ async function buildStatic(vite, require, result) {
       const js = read('.js').replaceAll('</script', '<\\/script'), css = read('.css').replaceAll('</style', '<\\/style');
       const html = fs.readFileSync(path.join(outDir, result.urls[id]), 'utf8')
         .replace(/\s*<script type="module"[^>]*><\/script>/g, '').replace(/\s*<link rel="stylesheet"[^>]*>/g, '')
-        .replace('</head>', `<style>${css}</style></head>`).replace('</body>', `<script>${js}</script></body>`);
+        // Replacer functions: a string replacement would expand $&, $` and $$ inside the bundle.
+        .replace('</head>', () => `<style>${css}</style></head>`).replace('</body>', () => `<script>${js}</script></body>`);
       fs.writeFileSync(path.join(target, result.urls[id]), html);
     }
     fs.copyFileSync(path.join(output, result.comparison), path.join(target, result.comparison));

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "scenario": "dashboard",
+  "framework": "vite-react",
+  "language": "zh",
+  "activeVariant": null,
+  "selectedVariant": null,
+  "taskContract": {
+    "primaryJob": "产品负责人周一早上读懂上周（Oct 19–25）发生了什么、哪里需要处理",
+    "data": "variant-output/shared/pulse-data.ts（数值逐字复制自 src/WeeklyReport.tsx）",
+    "requiredFunctions": ["4 个 KPI 及环比（方向感知：流失上升=变差）", "7 日 DAU 趋势", "渠道试用与转化对比", "2 条异常提示", "加载/错误/无异常状态（?state=loading|error|empty）"]
+  },
+  "designSystem": {
+    "confirmed": true,
+    "file": "src/tokens.css",
+    "fonts": ["Inter", "JetBrains Mono"],
+    "confirmedAt": "2026-10-27T00:00:00Z",
+    "source": "src/tokens.css 注释：Locked by the brand team: keep these fonts and colors."
+  },
+  "recommendation": {
+    "variant": "A",
+    "reason": "读者是周一早上的产品负责人、数据只有一周快照，首要问题是“要处理什么”：A 把两条异常放在最前并可逐条标记已看，最贴合这个任务。这是基于页面注释的推断，尚未经用户测试；若周会要横向比较渠道，B 更合适。"
+  },
+  "variants": {
+    "A": {
+      "entry": "VariantA.tsx",
+      "files": ["VariantA.tsx", "VariantA.css"],
+      "tokens": {"palette": "Pulse brand (src/tokens.css)", "fonts": ["Inter", "JetBrains Mono"], "colors": {"ink": "#14213d", "paper": "#fbfaf7", "accent": "#e85d04", "positive": "#2a9d8f", "negative": "#c1121f"}},
+      "comparison": {
+        "optimizes": "Monday Briefing：两条异常作为编号要点置顶，附带对应指标与日期，可逐条标记“已看”；指标、趋势、渠道退为背景信息。",
+        "tradeoff": "单栏阅读，一屏看不到全部数字；渠道只按转化率排序，不能切换；横向比较能力最弱。",
+        "bestFor": "周一早上快速了解“这周要处理什么”、准备站会；读者主要是负责人本人。"
+      },
+      "version": 1, "history": [], "undo": []
+    },
+    "B": {
+      "entry": "VariantB.tsx",
+      "files": ["VariantB.tsx", "VariantB.css"],
+      "tokens": {"palette": "Pulse brand (src/tokens.css)", "fonts": ["Inter", "JetBrains Mono"], "colors": {"ink": "#14213d", "paper": "#fbfaf7", "accent": "#e85d04", "positive": "#2a9d8f", "negative": "#c1121f"}},
+      "comparison": {
+        "optimizes": "Scorecard：4 个 KPI 同屏并标注 Better/Worse，DAU 图可逐日查看并带均值线，渠道表可按试用、转化、估算付费数排序并显示占比。",
+        "tradeoff": "信息密度最高，异常降为侧栏，需要读者自己判断优先级；“估算付费数”是派生数值，需要团队认可这种算法。",
+        "bestFor": "周会投屏、跨渠道/跨指标比较，读者熟悉这些指标。"
+      },
+      "version": 1, "history": [], "undo": []
+    },
+    "C": {
+      "entry": "VariantC.tsx",
+      "files": ["VariantC.tsx", "VariantC.css"],
+      "tokens": {"palette": "Pulse brand (src/tokens.css)", "fonts": ["Inter", "JetBrains Mono"], "colors": {"ink": "#14213d", "paper": "#fbfaf7", "accent": "#e85d04", "positive": "#2a9d8f", "negative": "#c1121f"}},
+      "comparison": {
+        "optimizes": "Evidence Trace：选中一条异常后按“信号 → 时间 → 来源”展开证据，高亮对应 KPI、日期与渠道；顶部常驻 KPI 条保证总览不丢。",
+        "tradeoff": "需要点选才能看到完整图表和渠道表（“Full week overview” 页签）；当前数据缺少同比和 cohort 明细，证据链第 3 步对流失异常只能说明“数据未包含”。",
+        "bestFor": "要追查原因、给团队解释“为什么”的场景；数据源扩充（按日渠道、cohort）后价值最大。"
+      },
+      "version": 1, "history": [], "undo": []
+    }
+  },
+  "notes": ["brand-locked: 品牌色 accent/positive 在 paper 上对比度只有 3.35/3.18:1，仅用于图形与图标，文字保持 ink"]
+}

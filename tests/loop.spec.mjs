@@ -38,6 +38,8 @@ test('static React preview opens from file:// without a server for sandboxed age
   const base=pathToFileURL(path.join(root,'_static')).href;
   for(const id of ['A','B','C']){
     await open(page,`${base}/_preview/${id}.html`,()=>expect(page.getByRole('heading')).toHaveText(`Direction ${id}`,{timeout:2000}));
+    // Inlining must not treat $&, $` and $$ in the bundle as replacement patterns.
+    await expect(page.locator('[data-literal]')).toHaveText("$&|$`|$'|$$");
     await expect(page.locator('main')).toHaveCSS('font-family','Georgia');await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Inspect 1');
   }
   await page.goto(`${base}/_compare.html`);await expect(page.locator('iframe')).toHaveCount(3);

@@ -1,6 +1,6 @@
 # RFC-002 · 设计方向库：从"看到喜欢的"到"在自己项目里出三版"
 
-- 状态：已接受（2026-10-27），P0 已实施。
+- 状态：已接受（2026-10-27），P0、P1 已实施。
 - 更新：2026-10-27。
 - 关联：RFC-001；PRD-006、007；Issue #40、#44。
 - 参考：recent.design 公开页面（首页、`/skills`、`/info`），2026-10-27 按普通访客方式阅读。只记录它公开呈现的形态，不抓取、不复制内容。
@@ -67,38 +67,37 @@ flowchart LR
 
 ## 6. 数据模型
 
-作品存放在仓库里：`content/entries/<slug>.json`，图片放在 `content/media/<slug>/`。新增和修改都走 PR，审核就是代码评审，历史天然可追溯。
+一条作品对应**一个任务和它的 A/B/C 三个方向**。这是技能的核心单位，也对应 recent.design 的多图轮播。作品存放在 `website/content/entries/<slug>.json`，图片放在 `website/content/media/<slug>/`。没有放在仓库根目录，是因为仓库本身就是被安装的技能，图片放在根目录会让每个用户的技能安装都变大。新增和修改都走 PR，审核就是代码评审。
 
 ```json
 {
-  "slug": "evidence-first-saas-hero",
-  "title": ["证据先行的 SaaS 首屏", "Evidence-first SaaS hero"],
-  "category": "landing",
-  "tags": ["saas", "editorial"],
-  "source": "own",
+  "slug": "variant-site",
+  "title": ["…", "…"], "summary": ["…", "…"], "brief": ["…", "…"],
+  "category": "landing", "tags": ["…"],
+  "source": "own", "kind": "verified",
   "credit": { "name": "Variant Design", "url": "https://github.com/YuqingNicole/variant-design-skill" },
-  "permission": null,
-  "media": [{ "file": "a.webp", "width": 1600, "height": 1000, "alt": ["…", "…"] }],
-  "direction": {
-    "intent": ["…", "…"],
-    "comparison": { "optimizes": ["…", "…"], "tradeoff": ["…", "…"], "bestFor": ["…", "…"] },
-    "rules": { "type": "serif display + sans body", "density": "low", "layout": "single column, proof before features", "color": "neutral ground, one accent" },
-    "avoid": ["…"]
-  },
-  "evidence": { "project": "examples/…", "variant": "B", "revision": 3 },
-  "featured": true,
-  "publishedAt": "2026-11-01"
+  "directions": [
+    { "id": "A", "name": ["…", "…"],
+      "comparison": { "optimizes": ["…", "…"], "tradeoff": ["…", "…"], "bestFor": ["…", "…"] },
+      "media": [{ "file": "a.jpg", "width": 1440, "height": 900, "alt": ["…", "…"] }] }
+  ],
+  "recommendation": { "variant": "B", "reason": ["…", "…"] },
+  "evidence": { "context": "website/variant-output/.variant-context.json" },
+  "featured": true, "publishedAt": "2026-10-27"
 }
 ```
 
 - 双语字段沿用网站已有的 `[zh, en]` 顺序。
-- `direction` 就是方向卡，同时提供给人看和给技能读。`comparison` 沿用技能在 `variant-output/.variant-context.json` 里每个方向的 `comparison`（`optimizes`、`tradeoff`、`bestFor`，见 `references/project-context.md`），只是改成双语，两边不各写一套。
-- 校验脚本 `website/scripts/content.test.mjs` 检查以下内容，并加入 CI：
-  - 必填字段齐全；
-  - `source` 与图片托管规则相符；
-  - 图片尺寸不超过上限，`alt` 双语齐全；
-  - `slug` 唯一；
-  - `own` 作品的 `evidence` 指向仓库里真实存在的产出。
+- `own` 作品分两类：
+  - `verified`：技能实际跑出来的，`evidence.context` 指向仓库里的 `.variant-context.json`。
+  - `concept`：我们手工做的概念演示，页面上明确标注，不声称是技能产出。
+- `comparison` 沿用技能 `.variant-context.json` 里每个方向的 `comparison`（`optimizes`、`tradeoff`、`bestFor`，见 `references/project-context.md`）。`verified` 作品的中文必须与记录逐字一致，推荐方向也必须一致，防止事后改写。
+- 作品只记录推荐，不记录"选定"。与技能"修改不等于选定"的规则一致。
+- 校验在 `website/scripts/content.mjs`，测试在 `content.test.mjs`，由 `npm test --prefix website` 运行，CI 已覆盖。校验内容包括：
+  - 必填字段齐全，各来源的托管规则；
+  - 授权记录；
+  - 图片存在、格式和文件名合法，实际尺寸与记录一致，单张不超过 400 KB；
+  - 证据路径不能指向仓库之外。
 
 ## 7. 渲染与部署
 
@@ -127,7 +126,7 @@ flowchart LR
 | 阶段 | 内容 | 验收 |
 |---|---|---|
 | P0 授权清理（已完成） | 24 条灵感降为 `link-only`，移除托管截图；写出投稿和授权规则 | 仓库当前版本中没有未授权的第三方截图；`/submit` 有公开规则；Playwright 检查灵感页不请求任何第三方图片 |
-| P1 数据与校验 | `content/` 结构、校验脚本接入 CI；把 3 个现有案例和网站自身的 A/B/C 迁成 `own` 作品 | 至少 6 件 `own` 作品通过校验，每件都有真实 `evidence` |
+| P1 数据与校验（已完成） | `website/content/` 结构、校验脚本接入 CI；迁入网站自身的 A/B/C 和两个概念案例；在一次性项目里用技能实际产出产品界面和数据展示各一件 | 覆盖落地页、产品界面、数据展示；至少 3 件 `verified` 作品，证据与记录逐字一致；概念作品明确标注 |
 | P2 静态页面 | 作品流、详情页、分类页、预渲染、分享图、sitemap、RSS、旧路径跳转 | 每个详情页的 HTML 里直接包含各自的标题和描述；Playwright 覆盖作品流、详情页、手机宽度和旧路径跳转 |
 | P3 方向卡进入工作流 | `/d/:slug.json`、`references/direction-cards.md`、"试试"指令 | 在一个一次性项目里，用 Claude Code 和 Codex 各跑一次：技能读取方向卡，出 A/B/C，并且没有覆盖项目的品牌约束。结果记录到 `docs/research/` |
 | P4 技能目录与分发 | `/skills`；申请收录到 recent.design Skills 栏目和 skills.sh | 目录上线；收录申请已提交（不把"已提交"说成"已收录"） |
@@ -147,4 +146,4 @@ flowchart LR
 1. P0 移除现有第三方截图：已执行。仓库中原有 22 张截图和来源清单已删除，24 条参考全部标为 `link-only`，改用文字卡片展示，并上线 `/submit` 投稿与授权规则和 GitHub Issue 模板。截图仍保留在 Git 历史中；是否改写历史，另行决定。
 2. 公开站点默认关闭模型接口：同意，随 P2 部署改动一起实施。之后 #39 和 #40 改为可选。
 3. 使用独立域名：同意，具体域名待定。
-4. 第一批 `own` 作品：落地页、产品界面、数据展示各两件。
+4. 第一批 `own` 作品：落地页、产品界面、数据展示各两件。P1 实施时调整为：一条作品就包含三个方向，所以每类先做一到两条；没有技能产出证据的作品标为概念，不算作已验证。
