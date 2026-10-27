@@ -81,6 +81,24 @@ export function scanSource(source, file = "<memory>") {
       pattern: /\b(?:elevate|seamless|unleash|next-gen|game-changer|delve|tapestry)\b/gi,
       message: "AI-associated cliché detected; replace it with specific product language.",
     },
+    {
+      id: "zoom-disabled",
+      severity: "error",
+      pattern: /user-scalable\s*=\s*(?:no|0)\b|maximum-scale\s*=\s*1(?![\d.])|userScalable\s*:\s*false\b|maximumScale\s*:\s*1(?![\d.])/gi,
+      message: "Viewport disables pinch zoom; users who need to enlarge text cannot.",
+    },
+    {
+      id: "transition-all",
+      severity: "warning",
+      pattern: /transition(?:-property)?\s*:\s*all\b|\btransition-all\b/gi,
+      message: "transition: all animates unintended properties; list the transitioned properties.",
+    },
+    {
+      id: "paste-blocked",
+      severity: "warning",
+      pattern: /onpaste\s*=\s*["']?[^>]{0,80}?(?:return\s+false|preventDefault)|onPaste\s*=\s*\{[^}]{0,120}preventDefault|addEventListener\(\s*["']paste["'][\s\S]{0,160}?preventDefault/gi,
+      message: "Paste is prevented; verify this is custom paste handling, not blocking password managers or pasted codes.",
+    },
   ];
 
   for (const rule of rules) addMatches(findings, source, file, rule);
@@ -135,6 +153,7 @@ function collectFiles(target) {
 
 function selfTest() {
   const good = `
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.5">
     <main><img src="cover.jpg" alt="Product dashboard"></main>
     <style>
       button:focus-visible { outline: 2px solid blue; }
@@ -143,12 +162,13 @@ function selfTest() {
     </style>`;
   const bad = `
     <img src="cover.jpg">
-    <p>Lorem ipsum</p><p>出错了，请重试</p>
-    <style>button { outline: none; animation: pop 1s; background: #000; }</style>`;
+    <meta name="viewport" content="width=device-width, maximum-scale=1">
+    <p>Lorem ipsum</p><p>出错了，请重试</p><input onpaste="return false">
+    <style>button { outline: none; animation: pop 1s; background: #000; transition: all 200ms; }</style>`;
 
   const goodFindings = scanSource(good);
   const badRules = new Set(scanSource(bad).map((finding) => finding.rule));
-  const expected = ["missing-img-alt", "lorem-ipsum", "generic-error-copy", "focus-outline-removed", "missing-reduced-motion", "pure-black-surface"];
+  const expected = ["missing-img-alt", "lorem-ipsum", "generic-error-copy", "focus-outline-removed", "missing-reduced-motion", "pure-black-surface", "zoom-disabled", "transition-all", "paste-blocked"];
 
   if (goodFindings.length || expected.some((rule) => !badRules.has(rule))) {
     console.error("quality-gate self-test failed");

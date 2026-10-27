@@ -76,6 +76,14 @@ test('focus-visible keyword and CSS reduced-motion do not hide unsafe JS/focus',
   let output;try{execFileSync(process.execPath,['scripts/quality-gate.mjs',bad,'--strict','--json']);}catch(e){output=JSON.parse(e.stdout.toString());}
   assert.ok(output.findings.some(f=>f.rule==='focus-visible-suppressed'));assert.ok(output.findings.some(f=>f.rule==='js-motion-review'));
 });
+test('quality gate flags disabled zoom, transition-all and blocked paste in JSX',t=>{
+  const {root}=setup(t), bad=path.join(root,'Bad.tsx'), good=path.join(root,'Good.tsx');
+  fs.writeFileSync(bad,'export const viewport={width:"device-width",maximumScale:1,userScalable:false};\nexport const Code=()=><input className="transition-all" onPaste={(e)=>e.preventDefault()}/>;');
+  fs.writeFileSync(good,'export const viewport={width:"device-width",initialScale:1,maximumScale:5};\nexport const Code=()=><input className="transition-colors" onPaste={handlePaste}/>;');
+  const scan=file=>{let out;try{out=execFileSync(process.execPath,['scripts/quality-gate.mjs',file,'--json'],{encoding:'utf8'});}catch(e){out=e.stdout;}return JSON.parse(out).findings.map(f=>f.rule);};
+  const rules=scan(bad);for(const rule of ['zoom-disabled','transition-all','paste-blocked'])assert.ok(rules.includes(rule),rule);
+  assert.deepEqual(scan(good).filter(r=>['zoom-disabled','transition-all','paste-blocked'].includes(r)),[]);
+});
 test('undo preserves edits made outside the history helper and releases its lock', t => {
   const {root,candidate}=setup(t);
   applyVariant(root,'B',candidate,{summary:'baseline'});

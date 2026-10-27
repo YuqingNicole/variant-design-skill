@@ -259,7 +259,7 @@
     padding: 10px 20px; border-radius: 100px; border: 1px solid var(--border);
     background: transparent; color: var(--muted);
     font-size: 0.85rem; font-weight: 500;
-    transition: all 200ms ease;
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
   }
   .filter-chip:hover { border-color: var(--text); color: var(--text); }
   .filter-chip.active {
@@ -318,7 +318,7 @@
     padding: 10px 20px; border-radius: 100px; border: 1px solid var(--accent);
     background: transparent; color: var(--accent);
     font-size: 0.8rem; font-weight: 600;
-    transition: all 200ms ease, transform 100ms ease;
+    transition: background-color 200ms ease, color 200ms ease, transform 100ms ease;
   }
   .product-btn:hover { background: var(--accent); color: var(--bg); }
   .product-btn:active { transform: scale(0.96); }

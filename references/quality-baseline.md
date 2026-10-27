@@ -59,6 +59,22 @@ Check the rendered result, not just source code:
 - Pair color with text, shape, icon, or pattern when it conveys meaning.
 - Add `prefers-reduced-motion` handling whenever animation or transition is used.
 
+## Implementation details
+
+Adapted from Vercel's [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines) (MIT). The scanner flags disabled zoom, `transition: all` and blocked paste. Check the rest in code and in the rendered result:
+
+- Use `<button>` for actions and `<a href>` for navigation. Do not put click handlers on `div` or `span`.
+- Give inputs the right `type`, `inputmode`, `autocomplete` and `name`. A checkbox or radio and its label share one hit target.
+- Keep submit enabled until the request starts, then show progress. Show errors inline and move focus to the first one.
+- Animate `transform` and `opacity`, list the transitioned properties, and let input interrupt an animation.
+- Text containers handle long content by truncating, clamping or wrapping. Flex children that truncate need `min-width: 0`.
+- Give images explicit `width` and `height`, or an `aspect-ratio`, so they do not shift layout.
+- Modals, drawers and sheets use `overscroll-behavior: contain`. Sticky headers must not cover the focused element (`scroll-padding-top`).
+- Dark themes set `color-scheme: dark` so scrollbars and native controls follow.
+- Destructive actions need a confirmation or an undo window.
+- Format dates and numbers with `Intl.DateTimeFormat` and `Intl.NumberFormat`.
+- Announce async status such as toasts and validation with `aria-live="polite"`.
+
 ## Behavioral evidence
 
 Scanner success is only a static preflight. Keyboard-tab through actual controls and inspect the computed focus indicator; an unrelated `:focus-visible` selector proves nothing. Test the same output under `prefers-reduced-motion: reduce`: counters must show final values immediately, reveals must leave content visible, and JavaScript loops, timers, and smooth scrolling must honor the preference (including a change while running).

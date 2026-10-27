@@ -5,7 +5,7 @@ description: "Generate isolated UI components with all 8 states and variants —
 
 > Before generating code, load `skills/shared/code-output.md` for framework detection and `references/quality-baseline.md` for verification.
 >
-> Load on demand only: `references/ux-component-specs.md` when the user asks for a spec, anatomy or measurements (follow its Recording Values rules: no invented values, unknowns stay `[TBD]`); the Nested Radius section of `references/ux-design-tokens.md` when a rounded element sits inside another.
+> Load on demand only: `references/ux-component-specs.md` when the user asks for a spec, handoff, anatomy or measurements (follow its Recording Values rules: no invented values, unknowns stay `[TBD]`; use Handoff and Build QA when the component goes to engineering or is checked against a spec); the Nested Radius section of `references/ux-design-tokens.md` when a rounded element sits inside another.
 
 ## Component Mode
 
