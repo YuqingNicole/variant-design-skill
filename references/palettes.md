@@ -23,7 +23,7 @@ Deep backgrounds, atmospheric depth, subtle glows. Default for trading terminals
 --positive:  #00C896   /* oklch(73% 0.14 168) */
 ```
 
-> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `references/design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Terminal Green *(DevOps / monitoring)*
 ```
@@ -106,7 +106,7 @@ White and near-white backgrounds, structured hierarchy. Enterprise software, pro
 --cta:       #0F172A   /* oklch(15% 0.03 260) */
 ```
 
-> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `references/design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Data Light *(analytics / business)*
 ```
@@ -163,7 +163,7 @@ Earthy tones, organic warmth. Consumer apps, food, wellness, East Asian markets.
 --cta:       #EA580C   /* oklch(60% 0.2 40) */
 ```
 
-> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `references/design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Academic Cream *(long-form / culture)*
 ```
@@ -231,7 +231,7 @@ High contrast, vivid accents, dominant color blocks. Consumer products, youth br
 --accent-2:  #FFFFFF   /* oklch(100% 0 0) */
 ```
 
-> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `references/design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Streetwear Bold *(fashion / youth)*
 ```
@@ -288,7 +288,7 @@ Raw, unconventional, broken grid. Portfolios, startups that want to stand out.
 --shadow:    4px 4px 0px #000000
 ```
 
-> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `references/design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Brutalist Dark
 ```
@@ -335,7 +335,7 @@ Dense, systematic. Monospace fonts, tight grids, information-first.
 --cta:       #6366F1   /* oklch(55% 0.22 275) */
 ```
 
-> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `references/design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Deep Ocean *(science / research)*
 ```
@@ -377,7 +377,7 @@ Maximum negative space, one hero image, sparse text. High-end real estate, watch
 --accent:    #C9A96E   /* oklch(74% 0.1 80) */
 ```
 
-> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `design-system/color-and-contrast.md` for OKLCH principles.
+> 💡 OKLCH values shown above. Convert other palettes using: `oklch(lightness% chroma hue)` — see `references/design-system/color-and-contrast.md` for OKLCH principles.
 
 ### Ivory Silence *(luxury goods / cosmetics)*
 ```

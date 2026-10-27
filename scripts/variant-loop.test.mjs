@@ -84,6 +84,12 @@ test('quality gate flags disabled zoom, transition-all and blocked paste in JSX'
   const rules=scan(bad);for(const rule of ['zoom-disabled','transition-all','paste-blocked'])assert.ok(rules.includes(rule),rule);
   assert.deepEqual(scan(good).filter(r=>['zoom-disabled','transition-all','paste-blocked'].includes(r)),[]);
 });
+test('quality gate skips generated preview bundles in an output directory',t=>{
+  const {root}=setup(t);
+  for(const dir of ['_static','_preview']){fs.mkdirSync(path.join(root,dir),{recursive:true});fs.writeFileSync(path.join(root,dir,'A.html'),'<img src="bundled.png"><div style="transition: all 1s">');}
+  let out;try{out=execFileSync(process.execPath,['scripts/quality-gate.mjs',root,'--json'],{encoding:'utf8'});}catch(e){out=e.stdout;}
+  assert.deepEqual(JSON.parse(out).findings.filter(f=>/_static|_preview/.test(f.file)),[]);
+});
 test('undo preserves edits made outside the history helper and releases its lock', t => {
   const {root,candidate}=setup(t);
   applyVariant(root,'B',candidate,{summary:'baseline'});

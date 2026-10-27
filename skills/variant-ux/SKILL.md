@@ -1,43 +1,43 @@
 <!-- Sub-workflow of the variant-design skill, reached through the route table in ../../SKILL.md. It has no skill frontmatter on purpose: agents that scan folders recursively (Codex, `npx skills`) must not register it as a standalone skill, because its paths are relative to the skill root. -->
 
-> **variant-ux**: UX Review mode — heuristic evaluation (Nielsen's 10), cognitive load analysis, mental model diagnosis, affordance audit, dark pattern detection — grounded in NNG research. Load references/ux-heuristics.md and references/ux-psychology.md. Triggers on: ux review, heuristic evaluation, usability audit, cognitive load, mental models, affordances, dark patterns, review this design, check usability, is this good UX
+> **variant-ux**: UX Review mode — heuristic evaluation (Nielsen's 10), cognitive load analysis, mental model diagnosis, affordance audit, dark pattern detection — grounded in NNG research. Load references/ux/heuristics.md and references/ux/psychology.md. Triggers on: ux review, heuristic evaluation, usability audit, cognitive load, mental models, affordances, dark patterns, review this design, check usability, is this good UX
 
 ## UX Review Mode
 
-When the user wants to evaluate usability rather than generate visuals, switch to UX Review mode. Load `references/ux-heuristics.md` and `references/ux-psychology.md`. Load additional references as the review scope demands (see "When to Load Which Reference" below).
+When the user wants to evaluate usability rather than generate visuals, switch to UX Review mode. Load `references/ux/heuristics.md` and `references/ux/psychology.md`. Load additional references as the review scope demands (see "When to Load Which Reference" below).
 
 ### Triggers
 
 | User says | Action | Load |
 |---|---|---|
-| "ux review" / "heuristic review" / "usability audit" | Full heuristic evaluation against Nielsen's 10 | `ux-heuristics.md` + `ux-psychology.md` |
-| "review this design" / "what's wrong with this UI" | Heuristic scan → findings list with severity | `ux-heuristics.md` |
-| "check usability" / "is this good UX" | Walk through flow, flag violations | `ux-heuristics.md` + `ux-psychology.md` |
-| "cognitive load" / "too complex?" | Cognitive load analysis → reduction suggestions | `ux-psychology.md` |
-| "why do users get confused here" | Mental model analysis → mismatch diagnosis | `ux-psychology.md` |
-| "affordances" / "does this look clickable" | Affordance/signifier audit | `ux-psychology.md` |
-| "dark patterns" / "is this ethical" | Dark pattern scan | `ux-psychology.md` |
-| "navigation" / "can't find" / "information architecture" / "IA" | IA audit — labels, hierarchy, findability | `ux-information-architecture.md` |
-| "site structure" / "how to organize" / "card sort" / "tree test" | IA design or validation | `ux-information-architecture.md` |
-| "accessibility" / "a11y" / "screen reader" / "keyboard navigation" | Accessibility audit against WCAG 2.1 AA | `ux-accessibility.md` |
-| "WCAG" / "alt text" / "aria" / "focus" | Specific accessibility check | `ux-accessibility.md` |
-| "user testing" / "how to test this" / "usability test" | Research method recommendation + test plan | `ux-research-methods.md` |
-| "what do users think" / "how do I get feedback" | Research method selection | `ux-research-methods.md` |
-| "NPS" / "SUS" / "survey" / "interview users" | Measurement framework or interview guidance | `ux-research-methods.md` |
-| "transition feels wrong" / "animation timing" / "state choreography" / "loading feels laggy" | Component transition audit | `ux-interaction-transitions.md` |
-| "touch target" / "thumb zone" / "mobile gesture" / "iOS vs Android" | Mobile interaction audit | `ux-mobile-patterns.md` |
-| "onboarding" / "empty state" / "first use" / "aha moment" / "activation" | Onboarding flow review | `ux-onboarding.md` |
-| "chart" / "dashboard" / "data viz" / "KPI card" / "which chart" | Data visualization audit or recommendation | `ux-data-visualization.md` |
-| "content model" / "taxonomy" / "multilingual" / "RTL" / "localization" | Content structure review | `ux-content-strategy.md` |
-| "design tokens" / "token naming" / "theming" / "dark mode architecture" | Token architecture review | `ux-design-tokens.md` |
-| "component spec" / "button states" / "modal behavior" / "ARIA" | Component spec review | `ux-component-specs.md` |
-| "design critique" / "feedback on design" / "design review meeting" | Critique framework guidance | `ux-design-critique.md` |
-| "conversion" / "landing page" / "trust signals" / "CTA copy" / "pricing page" | Conversion UX audit | `ux-conversion-patterns.md` |
-| "error message" / "error state" / "form error" / "validation" / "recovery path" / "prevent errors" | Error design audit — classification, messaging, prevention | `ux-error-design.md` |
-| "empty state" / "no data" / "blank state" / "nothing here" / "zero state" | Empty state design — all 4 types | `ux-empty-states.md` |
-| "notification" / "toast" / "banner" / "badge" / "push notification" / "alert priority" | Notification system design and priority rules | `ux-notifications.md` |
-| "table" / "data table" / "sorting" / "filtering" / "pagination" / "bulk select" / "row actions" | Table and list interaction design | `ux-tables-lists.md` |
-| "search" / "autocomplete" / "search results" / "search bar" / "faceted search" / "command palette" | Search pattern design — input, suggestions, results | `ux-search-patterns.md` |
+| "ux review" / "heuristic review" / "usability audit" | Full heuristic evaluation against Nielsen's 10 | `references/ux/heuristics.md` + `references/ux/psychology.md` |
+| "review this design" / "what's wrong with this UI" | Heuristic scan → findings list with severity | `references/ux/heuristics.md` |
+| "check usability" / "is this good UX" | Walk through flow, flag violations | `references/ux/heuristics.md` + `references/ux/psychology.md` |
+| "cognitive load" / "too complex?" | Cognitive load analysis → reduction suggestions | `references/ux/psychology.md` |
+| "why do users get confused here" | Mental model analysis → mismatch diagnosis | `references/ux/psychology.md` |
+| "affordances" / "does this look clickable" | Affordance/signifier audit | `references/ux/psychology.md` |
+| "dark patterns" / "is this ethical" | Dark pattern scan | `references/ux/psychology.md` |
+| "navigation" / "can't find" / "information architecture" / "IA" | IA audit — labels, hierarchy, findability | `references/ux/information-architecture.md` |
+| "site structure" / "how to organize" / "card sort" / "tree test" | IA design or validation | `references/ux/information-architecture.md` |
+| "accessibility" / "a11y" / "screen reader" / "keyboard navigation" | Accessibility audit against WCAG 2.1 AA | `references/ux/accessibility.md` |
+| "WCAG" / "alt text" / "aria" / "focus" | Specific accessibility check | `references/ux/accessibility.md` |
+| "user testing" / "how to test this" / "usability test" | Research method recommendation + test plan | `references/ux/research-methods.md` |
+| "what do users think" / "how do I get feedback" | Research method selection | `references/ux/research-methods.md` |
+| "NPS" / "SUS" / "survey" / "interview users" | Measurement framework or interview guidance | `references/ux/research-methods.md` |
+| "transition feels wrong" / "animation timing" / "state choreography" / "loading feels laggy" | Component transition audit | `references/ux/interaction-transitions.md` |
+| "touch target" / "thumb zone" / "mobile gesture" / "iOS vs Android" | Mobile interaction audit | `references/ux/mobile-patterns.md` |
+| "onboarding" / "empty state" / "first use" / "aha moment" / "activation" | Onboarding flow review | `references/ux/onboarding.md` |
+| "chart" / "dashboard" / "data viz" / "KPI card" / "which chart" | Data visualization audit or recommendation | `references/ux/data-visualization.md` |
+| "content model" / "taxonomy" / "multilingual" / "RTL" / "localization" | Content structure review | `references/ux/content-strategy.md` |
+| "design tokens" / "token naming" / "theming" / "dark mode architecture" | Token architecture review | `references/ux/design-tokens.md` |
+| "component spec" / "button states" / "modal behavior" / "ARIA" | Component spec review | `references/ux/component-specs.md` |
+| "design critique" / "feedback on design" / "design review meeting" | Critique framework guidance | `references/ux/design-critique.md` |
+| "conversion" / "landing page" / "trust signals" / "CTA copy" / "pricing page" | Conversion UX audit | `references/ux/conversion-patterns.md` |
+| "error message" / "error state" / "form error" / "validation" / "recovery path" / "prevent errors" | Error design audit — classification, messaging, prevention | `references/ux/error-design.md` |
+| "empty state" / "no data" / "blank state" / "nothing here" / "zero state" | Empty state design — all 4 types | `references/ux/empty-states.md` |
+| "notification" / "toast" / "banner" / "badge" / "push notification" / "alert priority" | Notification system design and priority rules | `references/ux/notifications.md` |
+| "table" / "data table" / "sorting" / "filtering" / "pagination" / "bulk select" / "row actions" | Table and list interaction design | `references/ux/tables-lists.md` |
+| "search" / "autocomplete" / "search results" / "search bar" / "faceted search" / "command palette" | Search pattern design — input, suggestions, results | `references/ux/search-patterns.md` |
 
 ### UX Review Workflow
 
@@ -219,25 +219,25 @@ Every generated design runs `<skill-root>/scripts/quality-gate.mjs` plus the rel
 
 | Question | Load |
 |---|---|
-| Nielsen heuristics evaluation | `references/ux-heuristics.md` |
-| Mental models, cognitive load, Gestalt, affordances | `references/ux-psychology.md` |
-| Navigation, findability, IA structure, labeling, search | `references/ux-information-architecture.md` |
-| Accessibility, WCAG, keyboard nav, screen readers, a11y | `references/ux-accessibility.md` |
-| User research methods, usability testing, interviews, surveys | `references/ux-research-methods.md` |
-| Component state transitions, timing, easing, choreography | `references/ux-interaction-transitions.md` |
-| Mobile gestures, thumb zones, iOS/Android conventions, touch targets | `references/ux-mobile-patterns.md` |
-| Onboarding, empty states, Aha moment, first-use experience | `references/ux-onboarding.md` |
-| Charts, dashboards, data visualization, chart selection | `references/ux-data-visualization.md` |
-| Content models, taxonomy, multilingual UX, content lifecycle | `references/ux-content-strategy.md` |
-| Design tokens, token architecture, theming, dark mode | `references/ux-design-tokens.md` |
-| Component specs, button/form/modal states, ARIA patterns | `references/ux-component-specs.md` |
-| Design critique, feedback frameworks, design review | `references/ux-design-critique.md` |
-| Conversion, landing pages, trust signals, pricing UX, CTAs | `references/ux-conversion-patterns.md` |
-| Error messages, validation, recovery paths, prevention layers | `references/ux-error-design.md` |
-| Empty states (first use / cleared / no results / error) | `references/ux-empty-states.md` |
-| Notifications — Toast, Banner, Badge, Push, priority management | `references/ux-notifications.md` |
-| Tables, lists, sorting, filtering, pagination, bulk selection | `references/ux-tables-lists.md` |
-| Search patterns — autocomplete, facets, results page, command palette | `references/ux-search-patterns.md` |
+| Nielsen heuristics evaluation | `references/ux/heuristics.md` |
+| Mental models, cognitive load, Gestalt, affordances | `references/ux/psychology.md` |
+| Navigation, findability, IA structure, labeling, search | `references/ux/information-architecture.md` |
+| Accessibility, WCAG, keyboard nav, screen readers, a11y | `references/ux/accessibility.md` |
+| User research methods, usability testing, interviews, surveys | `references/ux/research-methods.md` |
+| Component state transitions, timing, easing, choreography | `references/ux/interaction-transitions.md` |
+| Mobile gestures, thumb zones, iOS/Android conventions, touch targets | `references/ux/mobile-patterns.md` |
+| Onboarding, empty states, Aha moment, first-use experience | `references/ux/onboarding.md` |
+| Charts, dashboards, data visualization, chart selection | `references/ux/data-visualization.md` |
+| Content models, taxonomy, multilingual UX, content lifecycle | `references/ux/content-strategy.md` |
+| Design tokens, token architecture, theming, dark mode | `references/ux/design-tokens.md` |
+| Component specs, button/form/modal states, ARIA patterns | `references/ux/component-specs.md` |
+| Design critique, feedback frameworks, design review | `references/ux/design-critique.md` |
+| Conversion, landing pages, trust signals, pricing UX, CTAs | `references/ux/conversion-patterns.md` |
+| Error messages, validation, recovery paths, prevention layers | `references/ux/error-design.md` |
+| Empty states (first use / cleared / no results / error) | `references/ux/empty-states.md` |
+| Notifications — Toast, Banner, Badge, Push, priority management | `references/ux/notifications.md` |
+| Tables, lists, sorting, filtering, pagination, bulk selection | `references/ux/tables-lists.md` |
+| Search patterns — autocomplete, facets, results page, command palette | `references/ux/search-patterns.md` |
 | Full UX review | Load all relevant references above |
 
-**For generation tasks:** Load `ux-heuristics.md` and `ux-psychology.md` as silent quality constraints. Every generated design should pass the relevant mechanical and heuristic checks before being presented.
+**For generation tasks:** Load `references/ux/heuristics.md` and `references/ux/psychology.md` as silent quality constraints. Every generated design should pass the relevant mechanical and heuristic checks before being presented.

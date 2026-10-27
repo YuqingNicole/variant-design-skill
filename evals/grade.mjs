@@ -60,12 +60,12 @@ export function skillReading(transcript, project) {
   const install = ['.claude', '.agents', '.codex'].map(d => path.join(project, d, 'skills/variant-design')).find(d => fs.existsSync(d));
   if (!install) return null;
   const events = fs.readFileSync(transcript, 'utf8').split('\n').flatMap(l => { try { return [JSON.parse(l)]; } catch { return []; } });
-  // Only what the agent asked for (tool inputs and commands), not text the skill itself mentions.
-  let asked = events.flatMap(e => e.type === 'assistant' ? (e.message?.content ?? []).filter(c => c.type === 'tool_use').map(c => JSON.stringify(c.input)) : e.type === 'item.started' && e.item?.type === 'command_execution' ? [e.item.command] : []).join('\n');
+  // Only what the agent asked for (reads and commands, not files it wrote), with skill-relative paths after `cd` into the install.
+  let asked = events.flatMap(e => e.type === 'assistant' ? (e.message?.content ?? []).filter(c => c.type === 'tool_use' && !['Write', 'Edit', 'MultiEdit'].includes(c.name)).map(c => JSON.stringify(c.input)) : e.type === 'item.started' && e.item?.type === 'command_execution' ? [e.item.command] : []).join('\n');
   // Agents often alias the install (`S=.claude/skills/variant-design; cat $S/SKILL.md`).
   for (const [, name, value] of asked.matchAll(/\b(\w+)=["']?([^\s"';]*skills\/variant-design)\b/g)) asked = asked.replaceAll(`\${${name}}`, value).replaceAll(`$${name}`, value);
   const files = new Set(events.some(e => e.type === 'assistant' && e.message?.content?.some(c => c.type === 'tool_use' && c.name === 'Skill')) ? ['SKILL.md'] : []);
-  for (const m of asked.matchAll(/skills\/variant-design\/((?:SKILL\.md)|(?:skills|references)\/[\w./-]+?\.md)/g)) if (fs.existsSync(path.join(install, m[1]))) files.add(m[1]);
+  for (const m of asked.matchAll(/(?:skills\/variant-design\/|(?<![\w./-]))((?:SKILL\.md)|(?:skills|references)\/[\w./-]+?\.md)/g)) if (fs.existsSync(path.join(install, m[1]))) files.add(m[1]);
   const words = [...files].reduce((sum, f) => sum + fs.readFileSync(path.join(install, f), 'utf8').split(/\s+/).filter(Boolean).length, 0);
   return { files: [...files].sort(), words };
 }

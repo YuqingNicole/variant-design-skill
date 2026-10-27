@@ -3,9 +3,9 @@
 Functional interaction patterns that make designs work as real applications, not just static mockups. Each pattern includes complete, copy-paste JavaScript + CSS.
 
 > **Design system references for this library:**
-> - `design-system/micro-interactions.md` — animation building blocks used within these patterns
-> - `design-system/interaction-design.md` — state management, focus, keyboard nav
-> - `design-system/motion-design.md` — timing, easing, reduced motion
+> - `references/design-system/micro-interactions.md` — animation building blocks used within these patterns
+> - `references/design-system/interaction-design.md` — state management, focus, keyboard nav
+> - `references/design-system/motion-design.md` — timing, easing, reduced motion
 
 ---
 

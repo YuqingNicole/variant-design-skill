@@ -2,9 +2,9 @@
 
 > **variant-design-system**: Design System mode — tokens → components → pages three-layer workflow. Generate a complete token set (palette/type/spacing/motion/elevation/radius), confirm it, then all downstream outputs are visually consistent. Triggers on: ds, design system, tokens, create token set, define palette, define tokens, set up tokens, ds confirm, compose
 
-> Before generating code, load `skills/shared/code-output.md`, `references/project-context.md`, and `references/quality-baseline.md`.
+> Before generating code, load `skills/shared/code-output.md`, `references/workflow/project-context.md`, and `references/workflow/quality-baseline.md`.
 
-For product-critical work, also read `references/design-declaration.md` and `references/product-integrity-gate.md`. A confirmed design system locks the declaration's product constraints as well as visual tokens.
+For product-critical work, also read `references/workflow/design-declaration.md` and `references/workflow/product-integrity-gate.md`. A confirmed design system locks the declaration's product constraints as well as visual tokens.
 
 ## Design System Mode
 

@@ -33,6 +33,12 @@ test('every markdown file the skill names exists in the skill', () => {
   assert.deepEqual(broken, []);
 });
 
+test('markdown links resolve from the file that contains them', () => {
+  const broken = docs.flatMap(file => [...fs.readFileSync(path.join(root, file), 'utf8').matchAll(/\]\(([^)\s:#]+\.md)\)/g)]
+    .filter(m => !docs.includes(path.normalize(path.join(path.dirname(file), m[1])))).map(m => `${file} → ${m[1]}`));
+  assert.deepEqual(broken, []);
+});
+
 test('the skill names no repository-only files', () => {
   // Installed copies (the Codex plugin) ship only SKILL.md, skills/, references/, scripts/ and assets/, without tests.
   const shipped = docs.flatMap(file => [...fs.readFileSync(path.join(root, file), 'utf8').matchAll(/(?<![\w/.:-])((?:scripts|tests|website|docs|examples)\/[\w./-]+\.\w+)/g)]

@@ -62,7 +62,6 @@ test('the transcript shows which skill copy ran, and what it cost', () => {
   const dir = run(), transcript = path.join(dir, '..', path.basename(dir) + '.jsonl');
   const read = p => JSON.stringify({ type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path: p } }] } });
   fs.writeFileSync(transcript, [read(`${dir}/.claude/skills/variant-design/SKILL.md`), JSON.stringify({ type: 'result', total_cost_usd: 2.5, num_turns: 40, duration_ms: 400000 })].join('\n'));
-  assert.deepEqual(skillCopies(transcript, dir), { project: 1, other: [] });
   assert.deepEqual(usage(transcript), { costUsd: 2.5, turns: 40, durationSec: 400 });
   assert.equal(check(grade(dir, { transcript }), 'skill-under-test').pass, true);
   fs.appendFileSync(transcript, '\n' + read('/Users/someone/.claude/skills/variant-design/SKILL.md'));
@@ -83,4 +82,6 @@ test('skill reading counts the files an agent asked for, through relative paths 
   fs.writeFileSync(transcript, [tool('Skill', { skill: 'variant-design' }), tool('Bash', { command: 'S=.claude/skills/variant-design; cat $S/skills/variant-generate/SKILL.md $S/references/missing.md' })].join('\n'));
   assert.deepEqual(skillReading(transcript, dir), { files: ['SKILL.md', 'skills/variant-generate/SKILL.md'], words: 5 });
   assert.deepEqual(skillCopies(transcript, dir), { project: 1, other: [] });
+  fs.appendFileSync(transcript, '\n' + tool('Bash', { command: 'cd .claude/skills/variant-design && cat SKILL.md skills/variant-generate/SKILL.md' }) + '\n' + tool('Write', { file_path: 'brief.json', content: 'see references/workflow/never-read.md' }));
+  assert.deepEqual(skillReading(transcript, dir).words, 5);
 });

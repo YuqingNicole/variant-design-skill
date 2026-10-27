@@ -138,7 +138,7 @@ The optional release check runs at most once per 24 hours, reports an available 
 - Schema v2 stores each direction's files, tokens, version, comparison, and history separately. A durable snapshot precedes every replacement; Git alone is not a snapshot.
 - Precedence: user constraints → product task and existing design system → accessibility → style advice. Report unresolved accessibility conflicts. Brand-locked output retains fonts/tokens; free exploration may vary them. There is no animation quota.
 
-Implementation and verification: [preview and history](references/preview-and-history.md), [context schema](references/project-context.md), [regression tests](tests/README.md). Existing route-first routing, local zones, and Product Integrity Gate remain in place.
+Implementation and verification: [preview](references/workflow/preview.md), [history](references/workflow/history.md), [export and integration](skills/shared/export.md), [context schema](references/workflow/project-context.md), [regression tests](tests/README.md). Existing route-first routing, local zones, and Product Integrity Gate remain in place.
 
 ---
 
@@ -179,7 +179,7 @@ Use the variant-design skill with direction A from https://variant-design-skill.
 Make A/B/C for my weekly report page: A follows this direction, B and C are contrasts.
 ```
 
-The skill reads the card with `scripts/direction-card.mjs` and records it as an inspiration reference. Your brand, design system and accessibility outrank the card, and nothing from the card's screenshots or copy is reused. In a sandbox without network, paste the card JSON or save it as a file. See `references/direction-cards.md`.
+The skill reads the card with `scripts/direction-card.mjs` and records it as an inspiration reference. Your brand, design system and accessibility outrank the card, and nothing from the card's screenshots or copy is reused. In a sandbox without network, paste the card JSON or save it as a file. See `references/sources/direction-cards.md`.
 
 ### Anatomy of a directed prompt
 
@@ -281,36 +281,38 @@ Generated `.tsx` files go to `variant-output/` — move them to `src/components/
 
 ## Reference library
 
+`references/` is grouped by role: `workflow/` holds the rules every route shares (project context, discovery, history and preview, quality, product integrity), `sources/` the design-reference and direction-card contracts, `domains/` the scenario references below, `design-system/` and `ux/` the craft references, and `tasks/` the standalone presentation, WeChat, Wu Xing color and copywriting guides.
+
 ### Domain references
 Scenario-specific materials (starter prompts, palettes, typography, layouts, signature details):
 
 | File | Domain |
 |---|---|
-| `references/dashboard.md` | Data dashboards, analytics, monitoring, trading terminals |
-| `references/editorial.md` | Magazines, journalism, long-form, news |
-| `references/saas.md` | SaaS landing pages, B2B, developer tools |
-| `references/ecommerce.md` | E-commerce, consumer apps, fintech cards |
-| `references/education.md` | Learning apps, quizzes, language tools |
-| `references/creative.md` | Generative art, music tools, creative software |
-| `references/mobile.md` | iOS/Android apps, onboarding, home screens |
-| `references/portfolio.md` | Designer portfolios, developer showcases, freelancer sites |
-| `references/food-beverage.md` | Restaurants, recipes, coffee brands, bakeries, cocktail bars |
-| `references/fashion.md` | Fashion brands, streetwear, beauty, interior design, lifestyle |
+| `references/domains/dashboard.md` | Data dashboards, analytics, monitoring, trading terminals |
+| `references/domains/editorial.md` | Magazines, journalism, long-form, news |
+| `references/domains/saas.md` | SaaS landing pages, B2B, developer tools |
+| `references/domains/ecommerce.md` | E-commerce, consumer apps, fintech cards |
+| `references/domains/education.md` | Learning apps, quizzes, language tools |
+| `references/domains/creative.md` | Generative art, music tools, creative software |
+| `references/domains/mobile.md` | iOS/Android apps, onboarding, home screens |
+| `references/domains/portfolio.md` | Designer portfolios, developer showcases, freelancer sites |
+| `references/domains/food-beverage.md` | Restaurants, recipes, coffee brands, bakeries, cocktail bars |
+| `references/domains/fashion.md` | Fashion brands, streetwear, beauty, interior design, lifestyle |
 | `references/palettes.md` | Universal palette library — 40+ palettes across 7+ aesthetic directions, plus 7 attributed community palettes |
 | `references/interactive-patterns.md` | Filtering, drag-and-drop, charts, lightbox, carousels, multi-step forms |
-| `references/ux-heuristics.md` | Nielsen's 10 heuristics · Fitts's Law · Hick's Law · Jakob's Law · severity ratings · evaluation protocol |
-| `references/ux-psychology.md` | Mental models · cognitive load · Gestalt principles · reading patterns · affordances · attention · memory · trust |
-| `references/ux-information-architecture.md` | Navigation patterns · information scent · card sorting · tree testing · labeling rules · search design · IA anti-patterns |
-| `references/ux-accessibility.md` | WCAG 2.1 AA · keyboard navigation · semantic HTML · ARIA usage · color contrast · accessible forms · a11y code scans |
-| `references/ux-research-methods.md` | Usability testing · user interviews · SUS/NPS · A/B testing · analytics · research method selection matrix |
-| `references/ux-mobile-patterns.md` | Touch targets · thumb zones · gesture conventions · iOS vs Android · bottom gesture conflicts · mobile forms |
-| `references/ux-onboarding.md` | Aha moment · empty states · progressive disclosure · signup flow · activation funnel · onboarding anti-patterns |
-| `references/ux-data-visualization.md` | Chart selection · visual encoding hierarchy · dashboard density · color encoding · interactive patterns · data anti-patterns |
-| `references/ux-content-strategy.md` | Content models · taxonomy · multilingual UX · RTL layouts · content lifecycle · multi-surface design |
-| `references/ux-design-tokens.md` | Three-tier token architecture · naming conventions · semantic tokens · multi-brand theming · dark mode · Style Dictionary |
-| `references/ux-component-specs.md` | Button/input/modal/toggle full state machines · spacing specs · ARIA patterns · keyboard interaction |
-| `references/ux-design-critique.md` | Feedback frameworks · taste trap · HiPPO problem · async review · critique vs review · self-critique checklist |
-| `references/ux-conversion-patterns.md` | Trust signals · landing page anatomy · CTA copy · pricing page patterns · form conversion · dark pattern identification |
+| `references/ux/heuristics.md` | Nielsen's 10 heuristics · Fitts's Law · Hick's Law · Jakob's Law · severity ratings · evaluation protocol |
+| `references/ux/psychology.md` | Mental models · cognitive load · Gestalt principles · reading patterns · affordances · attention · memory · trust |
+| `references/ux/information-architecture.md` | Navigation patterns · information scent · card sorting · tree testing · labeling rules · search design · IA anti-patterns |
+| `references/ux/accessibility.md` | WCAG 2.1 AA · keyboard navigation · semantic HTML · ARIA usage · color contrast · accessible forms · a11y code scans |
+| `references/ux/research-methods.md` | Usability testing · user interviews · SUS/NPS · A/B testing · analytics · research method selection matrix |
+| `references/ux/mobile-patterns.md` | Touch targets · thumb zones · gesture conventions · iOS vs Android · bottom gesture conflicts · mobile forms |
+| `references/ux/onboarding.md` | Aha moment · empty states · progressive disclosure · signup flow · activation funnel · onboarding anti-patterns |
+| `references/ux/data-visualization.md` | Chart selection · visual encoding hierarchy · dashboard density · color encoding · interactive patterns · data anti-patterns |
+| `references/ux/content-strategy.md` | Content models · taxonomy · multilingual UX · RTL layouts · content lifecycle · multi-surface design |
+| `references/ux/design-tokens.md` | Three-tier token architecture · naming conventions · semantic tokens · multi-brand theming · dark mode · Style Dictionary |
+| `references/ux/component-specs.md` | Button/input/modal/toggle full state machines · spacing specs · ARIA patterns · keyboard interaction |
+| `references/ux/design-critique.md` | Feedback frameworks · taste trap · HiPPO problem · async review · critique vs review · self-critique checklist |
+| `references/ux/conversion-patterns.md` | Trust signals · landing page anatomy · CTA copy · pricing page patterns · form conversion · dark pattern identification |
 
 ### Design system references (Impeccable)
 Foundational design principles loaded for every generation:

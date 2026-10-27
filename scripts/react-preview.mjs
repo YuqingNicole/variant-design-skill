@@ -71,7 +71,7 @@ try {
   for (const name of ['react', 'react-dom/client']) require.resolve(name);
   let vite;
   try { vite = await import(pathToFileURL(require.resolve('vite')).href); }
-  catch { throw new Error('Vite is not installed in this project. Use a native framework adapter or the isolated harness described in references/preview-and-history.md.'); }
+  catch { throw new Error('Vite is not installed in this project. Use a native framework adapter or the isolated harness described in references/workflow/preview.md.'); }
   if (staticMode) await buildStatic(vite, require, result);
   else {
     const server = await vite.createServer({ ...viteOptions(require), appType: 'mpa',
