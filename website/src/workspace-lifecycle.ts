@@ -5,7 +5,7 @@ export const workspaceStorageKey='variant-workspace-v2';
 const object=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==='object'&&!Array.isArray(value);
 const strings=(value:unknown):value is string[]=>Array.isArray(value)&&value.every(v=>typeof v==='string');
 export function validDirection(value:unknown):value is DesignDirection {
- if(!object(value)||!['A','B','C'].includes(String(value.id))||!['editorial','system','expressive'].includes(String(value.layout)))return false;
+ if(!object(value)||typeof value.id!=='string'||!['A','B','C'].includes(value.id)||typeof value.layout!=='string'||!['editorial','system','expressive'].includes(value.layout))return false;
  if(!['name','thesis','typography','density','layoutLabel','motion','reason','sampleTitle','sampleMeta'].every(key=>typeof value[key]==='string'))return false;
  if(!strings(value.colors)||value.colors.length!==4||value.colors.some(c=>!/^#[0-9a-f]{6}$/i.test(c)))return false;
  if(value.html!==undefined&&typeof value.html!=='string')return false;
@@ -17,8 +17,8 @@ export function validDirections(value:unknown):value is DesignDirection[] {
 }
 function validVersion(value:unknown):value is WorkspaceVersion {
  if(!object(value)||(value.schemaVersion!==undefined&&value.schemaVersion!==2))return false;
- return typeof value.id==='string'&&!!value.id&&typeof value.brief==='string'&&['generated','built','varied','remixed','mixed'].includes(String(value.action))
-  &&['A','B','C'].includes(String(value.selectedId))&&typeof value.createdAt==='string'&&Number.isFinite(Date.parse(value.createdAt))&&new Date(value.createdAt).toISOString()===value.createdAt&&validDirections(value.directions);
+ return typeof value.id==='string'&&!!value.id&&typeof value.brief==='string'&&typeof value.action==='string'&&['generated','built','varied','remixed','mixed'].includes(value.action)
+  &&typeof value.selectedId==='string'&&['A','B','C'].includes(value.selectedId)&&typeof value.createdAt==='string'&&Number.isFinite(Date.parse(value.createdAt))&&new Date(value.createdAt).toISOString()===value.createdAt&&validDirections(value.directions);
 }
 export function loadWorkspace(storage:Pick<Storage,'getItem'>):{history:WorkspaceVersion[];issue:boolean} {
  try {

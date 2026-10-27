@@ -336,7 +336,7 @@ for(const action of ['build','iterate','generate']) test(`restoring history disc
 
 test('corrupt history is skipped, valid records reload, and quota failure keeps export available',async({page})=>{
  const valid=workspaceVersion('Valid',true);
- const records=[{...valid,id:'bad-date',createdAt:'invalid'}, {...valid,id:'missing',directions:[]},{...valid,id:'future',schemaVersion:99},valid];
+ const records=[{...valid,id:'bad-date',createdAt:'invalid'}, {...valid,id:'missing',directions:[]},{...valid,id:'future',schemaVersion:99},{...valid,id:'bad-action',action:{toString:null}},{...valid,id:'bad-selected',selectedId:{toString:null}},{...valid,id:'bad-direction',directions:[{...valid.directions[0],id:{toString:null}},...valid.directions.slice(1)]},{...valid,id:'bad-layout',directions:[{...valid.directions[0],layout:{toString:null}},...valid.directions.slice(1)]},valid];
  await page.addInitScript(records=>{
   if(!sessionStorage.getItem('seeded')){localStorage.setItem('variant-workspace-v2',JSON.stringify(records));sessionStorage.setItem('seeded','1');}
   const set=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key==='variant-workspace-v2')throw new DOMException('Quota full','QuotaExceededError');return set.call(this,key,value);};
