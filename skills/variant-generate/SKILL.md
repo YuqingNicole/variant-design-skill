@@ -25,7 +25,7 @@ Read files only at the step that names them, and only the section you need. Do n
 | Zone edit | `B vary subtle — hero`, `zones A` | `skills/variant-generate/zones.md`, then `references/workflow/history.md` |
 | Undo, pick, recover | `undo B`, `pick B` | `references/workflow/history.md` |
 | Reopen or compare | `open B`, `compare` | `references/workflow/preview.md` |
-| Export or integrate | `react B`, `export to next`, `integrate B`, `copy` | `skills/shared/export.md` |
+| Export or integrate (prepare target baseline before staging) | `react B`, `export to next`, `integrate B`, `copy` | `skills/shared/export.md` |
 | Context | `show context`, `reset context` | `references/workflow/project-context.md` |
 
 ## 1. Context and fast path

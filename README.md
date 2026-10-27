@@ -142,6 +142,8 @@ Implementation and verification: [preview](references/workflow/preview.md), [his
 
 ---
 
+Project integration now requires a prepared source/target baseline before staging; changed source or target files are rejected before writing. See [integration](skills/shared/export.md).
+
 Runtime evidence can use a reusable Playwright check plan for named brand elements, keyboard focus, exercised motion and non-target interactions. Reports track the artifact revision; missing checks remain unverified. See [verification evidence](references/workflow/artifact-verification.md).
 
 ## Usage

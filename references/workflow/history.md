@@ -55,3 +55,5 @@ Preflight failures preserve output files, context and history and leave the cand
 The helper rechecks before snapshot/commit, but an external editor can still write after the last check. Its lock is cooperative, not an operating-system-wide lock; avoid editing the same files during commit. Multi-file process-crash recovery remains snapshot-based and manual; this change does not claim to eliminate that limitation.
 
 Before a scoped edit, record representative non-target behavior with the browser plan in `references/workflow/artifact-verification.md`, then rerun the same assertions after applying. Byte preservation alone does not prove rendered behavior. Retain pre-edit project-check failures so delivery can distinguish identical prior diagnostics from new or changed errors.
+
+Project integration uses the same `.variant-lock` and a separate prepared source/target baseline. See `skills/shared/export.md` before generating integration files. Candidate preparation for edits does not replace integration preparation.
