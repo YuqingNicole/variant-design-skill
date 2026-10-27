@@ -348,7 +348,7 @@ Open any example directly in your browser to see the interactions in action.
 
 ---
 
-Built with [Claude Code Skills](https://claude.ai/code). Design system powered by [Impeccable](https://github.com/tychografie/impeccable).
+Built with [Claude Code Skills](https://claude.ai/code). Design system powered by [Impeccable](https://github.com/pbakaus/impeccable). Component handoff and implementation checks adapt Vercel's [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines), Anthropic's [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) design-handoff skill and [Owl-Listener/designer-skills](https://github.com/Owl-Listener/designer-skills).
 
 ## Local MCP server
 

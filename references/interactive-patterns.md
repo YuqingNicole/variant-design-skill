@@ -114,7 +114,7 @@ function setupFilters(container, itemsSelector) {
   padding: 8px 16px; border-radius: 100px;
   background: transparent; border: 1px solid var(--border);
   cursor: pointer; font-size: 0.875rem;
-  transition: all 200ms ease;
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
 }
 .filter-chip.active {
   background: var(--text); color: var(--bg);
@@ -460,7 +460,7 @@ function multiStepForm(form) {
 .progress-dot {
   width: 10px; height: 10px; border-radius: 50%;
   border: 2px solid var(--border); background: var(--bg);
-  transition: all 200ms ease;
+  transition: background-color 200ms ease, border-color 200ms ease;
 }
 .progress-dot.active { border-color: var(--accent); background: var(--accent); }
 .progress-dot.completed { border-color: var(--positive); background: var(--positive); }
@@ -480,7 +480,8 @@ function multiStepForm(form) {
   transform: translateY(-50%);
   color: var(--muted); font-size: 1rem;
   pointer-events: none;
-  transition: all 200ms var(--ease-out-expo);
+  transition: top 200ms var(--ease-out-expo), transform 200ms var(--ease-out-expo),
+    font-size 200ms var(--ease-out-expo), color 200ms var(--ease-out-expo);
 }
 .float-input:focus + .float-label,
 .float-input:not(:placeholder-shown) + .float-label {

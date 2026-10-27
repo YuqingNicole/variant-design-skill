@@ -347,7 +347,7 @@ export to next       →  将选定变体导出为 Next.js App Router 组件
 
 ---
 
-基于 [Claude Code Skills](https://claude.ai/code) 构建。设计系统由 [Impeccable](https://github.com/tychografie/impeccable) 驱动。
+基于 [Claude Code Skills](https://claude.ai/code) 构建。设计系统由 [Impeccable](https://github.com/pbakaus/impeccable) 驱动。组件交接与实现检查参考了 Vercel 的 [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines)、Anthropic [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) 中的 design-handoff skill，以及 [Owl-Listener/designer-skills](https://github.com/Owl-Listener/designer-skills)。
 
 ## Codex 插件候选版
 
