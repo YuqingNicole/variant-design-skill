@@ -12,21 +12,23 @@ const repo = path.resolve(here, '..');
 // Files an agent may create in a user's project; everything tracked at the baseline must stay byte-identical.
 const allowed = /^(variant-output|\.variant-work|\.claude|\.agents|\.codex|dist|node_modules)(\/|$)/;
 const generated = /(^|\/)(_static|\.preview|\.history|\.snapshots|node_modules)(\/|$)/;
+// Framework preview adapters the skill tells agents to create, such as a Next.js `app/variant-preview/` route.
+const adapter = /(^|\/)\(?_?variant[\w-]*\)?\//;
 
 export const loadFixture = name => JSON.parse(fs.readFileSync(path.join(here, 'fixtures', name, 'fixture.json'), 'utf8'));
 const git = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8' });
 const first = value => String(value).split(',')[0].trim().replace(/^['"]|['"]$/g, '').toLowerCase();
 
 function untouched(project) {
-  const problems = [];
+  const problems = [], notes = [];
   for (const line of git(project, 'status', '--porcelain', '--untracked-files=all').split('\n').filter(Boolean)) {
     const status = line.slice(0, 2), file = line.slice(3).replace(/^"|"$/g, '');
-    if (status === '??') { if (!allowed.test(file)) problems.push(`created ${file} outside variant-output/`); continue; }
+    if (status === '??') { if (allowed.test(file)) continue; if (adapter.test(file)) notes.push(`warning: preview adapter created at ${file}`); else problems.push(`created ${file} outside variant-output/`); continue; }
     // Adding ignore lines for the skill's working folders is fine; changing anything else is not.
     if (file === '.gitignore' && git(project, 'diff', '--unified=0', '--', '.gitignore').split('\n').filter(l => /^[-+](?![-+])/.test(l)).every(l => l.startsWith('+'))) continue;
     problems.push(`${status.trim() === 'D' ? 'deleted' : 'changed'} ${file}`);
   }
-  return problems;
+  return { problems, notes };
 }
 
 function quality(output) {
@@ -91,7 +93,7 @@ export function grade(project, { fixture = {}, transcript } = {}) {
   add('delivery-check', delivery.errors.length === 0, [...delivery.errors, ...delivery.warnings.map(w => `warning: ${w}`)]);
   add('not-selected', context ? context.selectedVariant == null : false, context?.selectedVariant != null ? [`selectedVariant is ${context.selectedVariant}; the prompt asked not to pick`] : []);
   const outside = untouched(project);
-  add('project-untouched', outside.length === 0, outside);
+  add('project-untouched', outside.problems.length === 0, [...outside.problems, ...outside.notes]);
   const q = quality(output);
   add('quality-gate', q.errors.length === 0, [...q.errors, ...q.warnings.map(w => `warning: ${w}`)]);
   if (fixture.locked) {

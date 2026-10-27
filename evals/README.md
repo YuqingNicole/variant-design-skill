@@ -28,7 +28,7 @@ Every run calls a real model: a Claude Code run has cost about $2–3 and 5–15
 | `generated` | there is no `variant-output/.variant-context.json` |
 | `delivery-check` | `scripts/delivery-check.mjs` reports an error |
 | `not-selected` | `selectedVariant` is set, although the prompt asks not to pick |
-| `project-untouched` | a baseline file changed or a file was created outside `variant-output/`, `.variant-work/` and the skill folders. Appending to `.gitignore` is allowed |
+| `project-untouched` | a baseline file changed or a file was created outside `variant-output/`, `.variant-work/` and the skill folders. Appending to `.gitignore` is allowed. New files under a `variant…` directory (a framework preview adapter such as `app/variant-preview/`) are listed as warnings |
 | `quality-gate` | `scripts/quality-gate.mjs` finds an error in the variants (generated preview bundles excluded) |
 | `brand-kept` | brand-locked fixtures only: the lock was not recorded, or a variant file declares a font outside the locked fonts |
 | `skill-under-test` | the transcript never reads the installed copy, or also references another copy |
@@ -44,5 +44,18 @@ The checks are deterministic and cover promises, not taste. Whether the three di
 | `pulse` | Vite + React weekly analytics report | Brand lock from `src/tokens.css` |
 | `harbor` | Vite + React members and permissions page | Exploration without brand constraints; destructive actions |
 | `bakery` | Plain HTML and CSS bakery page, in Chinese | Output without a framework or build step |
+| `ledger` | Next.js App Router pricing page with a shared plans module and a client context provider | A framework without Vite: the preview needs a native adapter route; brand lock from `app/globals.css` |
 
 A fixture is a `project/` folder and a `fixture.json` with `description`, `prompt` and optional `locked: {file, fonts}`. Keep fixtures small and written by us.
+
+## Blind review
+
+`docs/trials/blind-review.md` compares the skill with the same agent asked plainly for three directions. To build a review package:
+
+```sh
+node evals/run.mjs --agent claude --no-skill --out <plain-runs>     # control group: no skill, prompt in evals/blind/plain-prompt.txt
+PLAYWRIGHT_CHANNEL=chrome node evals/blind/pack.mjs --skill <skill-runs> --plain <plain-runs> --out <package>
+```
+
+The package is an `index.html` with screenshots of the original page and both groups (desktop and mobile), their trade-off notes and recommendation, labelled X and Y at random. The answer key is written next to it as `<package>-key.json`; keep it from reviewers. `pack.mjs` uses the Playwright install in `tests/`.
+
