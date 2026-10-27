@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BorderBeam } from "border-beam";
 import "./design-system.css";
 import "./styles.css";
@@ -14,17 +14,7 @@ import "./workbench-theme.css";
 import { landingHero } from "./landing-config";
 
 const repositoryUrl = "https://github.com/YuqingNicole/variant-design-skill";
-const workspaceStorageKey = "variant-workspace-v2";
-
-function loadWorkspace(): WorkspaceVersion[] {
-  try {
-    const stored = window.localStorage.getItem(workspaceStorageKey);
-    const parsed = stored ? JSON.parse(stored) : [];
-    return Array.isArray(parsed) ? parsed.slice(0, 12) : [];
-  } catch {
-    return [];
-  }
-}
+import { loadWorkspace, persistWorkspace, WorkspaceLifecycle, readPreference, writePreference } from "./workspace-lifecycle";
 
 function swatchForeground(hex: string) {
   const value = hex.replace("#", "");
@@ -42,13 +32,13 @@ const copy = {
     workbenchLabel: "交互式提示词演示", liveProof: "在线生成 / 需要模型服务", run: "方向引擎 / 001", ready: "等待命题", diverging: "分析中", providerChecking: "模型 / 检查中", providerOffline: "模型 / 未连接", providerReady: "模型", promptLabel: "描述产品、用户和你不想要的感觉。", defaultPrompt: "为一款面向独立开发者的 AI 财务工具设计首页，专业但不要像传统银行", directionsCode: "3 个定制方向", working: "分析中…", diverge: "生成三个方向", regenerate: "重新生成", statusReady: "等待你的设计命题", statusBuilding: "正在拆解产品、受众与视觉张力…", statusDone: "三个定制方向已就绪", emptyPrompt: "请先输入一个具体的设计命题。", longPrompt: "命题请控制在 600 个字符以内。", failedPrompt: "方向生成失败，请修改命题后重试。",
     paletteEyebrow: "01 / 内置色板", paletteTitle: ["先选择一种", "色彩立场。"], paletteBody: "七套三色色板来自设计师 346eur 的公开分享。选择一套，它会成为三个生成方向共同遵守的颜色约束。", paletteGroupLabel: "选择生成方向使用的色板", paletteAuto: "智能匹配", paletteAutoMood: "根据提示词自动选择", paletteSelected: "当前选择", paletteUse: "使用此色板", paletteSource: "查看灵感来源 ↗",
     marquee: ["理解", "发散", "比较", "推进"], directionEyebrow: "02 / 有纪律的发散", directionTitle: ["一份命题。", "三套系统。"], directionNote: "同一份命题，三种主张", directionBody: "每个方向改变视觉立场，但使用相同的评估维度，因此差异清晰、结果可比较。",
-    generatedFor: "本轮命题", thesisLabel: "设计主张", typeLabel: "字体", densityLabel: "密度", layoutLabel: "布局", motionLabel: "动效", reasonLabel: "为什么适合", selectDirection: "选择这个方向", selectedDirection: "已选中",
+    generatedFor: "本轮命题", thesisLabel: "设计主张", typeLabel: "字体", densityLabel: "密度", layoutLabel: "布局", motionLabel: "动效", reasonLabel: "为什么适合", selectDirection: "查看这个方向", selectedDirection: "正在查看",
     directions: [
       { id: "A", label: "编辑式克制", sub: "留白与叙事", image: "/sample-A-editorial.png", alt: "使用表达性衬线字体和大量留白的编辑式网站方案", tone: "衬线 / 安静 / 叙事" },
       { id: "B", label: "运营式清晰", sub: "密度与秩序", image: "/sample-B-dashboard.png", alt: "呈现密集运营数据的深色基础设施仪表盘方案", tone: "高密 / 技术 / 果断" },
       { id: "C", label: "面向转化的温度", sub: "人性与行动", image: "/sample-C-saas.png", alt: "使用绿色强调色和亲和字体的温暖软件产品发布页方案", tone: "人性 / 平静 / 转化" },
     ],
-    workspaceEyebrow: "03 / 产品工作台", workspaceTitle: ["选择。推进。", "留下版本。"], workspaceBody: "先比较三套设计契约，再为选中的方向生成完整页面。每次修改都会保存为可恢复的版本。", workspaceSelected: "当前方向", workspaceActions: "继续推进", buildAction: "生成完整页面", varyAction: "增强立场", remixAction: "重混配色", mixAction: "混合下一个", exportAction: "导出 HTML", historyTitle: "版本记录", historyEmpty: "生成方向后，版本会出现在这里。", restoreAction: "恢复", savedNotice: "版本已保存", exportedNotice: "HTML 已导出", mobilePreview: "移动端", desktopPreview: "桌面端", previewLabel: "所选方向预览",
+    workspaceEyebrow: "03 / 产品工作台", workspaceTitle: ["选择。推进。", "留下版本。"], workspaceBody: "先比较三套设计契约，再为选中的方向生成完整页面。每次修改都会保存为可恢复的版本。", workspaceSelected: "当前方向", workspaceActions: "继续推进", buildAction: "生成完整页面", varyAction: "增强立场", remixAction: "重混配色", mixAction: "混合下一个", exportAction: "导出 HTML", historyTitle: "版本记录", historyEmpty: "生成方向后，版本会出现在这里。", restoreAction: "恢复", savedNotice: "版本已保存", storageWarning: "未能保存到本机。当前修改仍可继续使用和导出；请释放存储空间后重试。", historyWarning: "部分历史无法读取，已跳过无效记录。当前页面仍可使用。", exportedNotice: "HTML 已导出", mobilePreview: "移动端", desktopPreview: "桌面端", previewLabel: "所选方向预览",
     manifestoA: "没有规则的变化只是噪音。", manifestoB: "系统让选择变得清晰。", methodEyebrow: "04 / 约束系统", methodTitle: ["发散需要", "共同的规则。"], methodBody: "所有方向共享同一组评估维度：层级、字体、密度、布局、动效和理由。这样审美判断才有可比较的基础。",
     methods: [
       { title: "界定问题", body: "在接触视觉表面之前，先识别产品类型、技术框架、受众和限制。", tag: "定位" },
@@ -67,13 +57,13 @@ const copy = {
     workbenchLabel: "Interactive prompt demonstration", liveProof: "LIVE GENERATION / MODEL SERVICE REQUIRED", run: "DIRECTION ENGINE / 001", ready: "AWAITING BRIEF", diverging: "ANALYSING", providerChecking: "MODEL / CHECKING", providerOffline: "MODEL / OFFLINE", providerReady: "MODEL", promptLabel: "Describe the product, its users, and what it should not feel like.", defaultPrompt: "Design a homepage for an AI finance tool for indie developers—professional, but nothing like a traditional bank", directionsCode: "3 tailored directions", working: "Analysing…", diverge: "Generate three directions", regenerate: "Regenerate", statusReady: "Ready for a design brief", statusBuilding: "Reading the product, audience, and visual tension…", statusDone: "Three tailored directions are ready", emptyPrompt: "Start with a specific design brief.", longPrompt: "Keep the brief under 600 characters.", failedPrompt: "Direction generation failed. Revise the brief and try again.",
     paletteEyebrow: "01 / Built-in palettes", paletteTitle: ["Choose a", "color position."], paletteBody: "Seven three-color palettes transcribed from designer 346eur’s public post. Pick one and all three generated directions will use it as a shared color constraint.", paletteGroupLabel: "Choose a palette for generated directions", paletteAuto: "Smart match", paletteAutoMood: "Choose from the prompt", paletteSelected: "Selected", paletteUse: "Use this palette", paletteSource: "View inspiration source ↗",
     marquee: ["READ", "DIVERGE", "COMPARE", "PUSH"], directionEyebrow: "02 / Disciplined divergence", directionTitle: ["ONE BRIEF.", "THREE SYSTEMS."], directionNote: "One brief, three positions", directionBody: "Each direction changes its visual position but uses the same evaluation dimensions, making differences clear and results comparable.",
-    generatedFor: "CURRENT BRIEF", thesisLabel: "Thesis", typeLabel: "Typography", densityLabel: "Density", layoutLabel: "Layout", motionLabel: "Motion", reasonLabel: "Why it fits", selectDirection: "Select this direction", selectedDirection: "Selected",
+    generatedFor: "CURRENT BRIEF", thesisLabel: "Thesis", typeLabel: "Typography", densityLabel: "Density", layoutLabel: "Layout", motionLabel: "Motion", reasonLabel: "Why it fits", selectDirection: "View this direction", selectedDirection: "Viewing",
     directions: [
       { id: "A", label: "Editorial restraint", sub: "Space and narrative", image: "/sample-A-editorial.png", alt: "Editorial website variation with expressive serif typography and generous whitespace", tone: "Serif-led / quiet / narrative" },
       { id: "B", label: "Operational clarity", sub: "Density and order", image: "/sample-B-dashboard.png", alt: "Dark infrastructure dashboard variation with dense operational data", tone: "Dense / technical / decisive" },
       { id: "C", label: "SaaS warmth", sub: "Human and actionable", image: "/sample-C-saas.png", alt: "Warm SaaS landing page variation with green accents and friendly typography", tone: "Human / calm / conversion-led" },
     ],
-    workspaceEyebrow: "03 / Product workspace", workspaceTitle: ["SELECT. PUSH.", "KEEP THE VERSIONS."], workspaceBody: "Compare three design contracts first, then build the selected direction as a complete page. Every change becomes a restorable version.", workspaceSelected: "Current direction", workspaceActions: "Push the work", buildAction: "Build full page", varyAction: "Vary strong", remixAction: "Remix colors", mixAction: "Mix with next", exportAction: "Export HTML", historyTitle: "Version history", historyEmpty: "Generate directions and versions will appear here.", restoreAction: "Restore", savedNotice: "Version saved", exportedNotice: "HTML exported", mobilePreview: "Mobile", desktopPreview: "Desktop", previewLabel: "Selected direction preview",
+    workspaceEyebrow: "03 / Product workspace", workspaceTitle: ["SELECT. PUSH.", "KEEP THE VERSIONS."], workspaceBody: "Compare three design contracts first, then build the selected direction as a complete page. Every change becomes a restorable version.", workspaceSelected: "Current direction", workspaceActions: "Push the work", buildAction: "Build full page", varyAction: "Vary strong", remixAction: "Remix colors", mixAction: "Mix with next", exportAction: "Export HTML", historyTitle: "Version history", historyEmpty: "Generate directions and versions will appear here.", restoreAction: "Restore", savedNotice: "Version saved", storageWarning: "Could not save locally. Keep working or export your current page; free storage space and try again.", historyWarning: "Some history could not be read. Invalid entries were skipped; the workspace is still available.", exportedNotice: "HTML exported", mobilePreview: "Mobile", desktopPreview: "Desktop", previewLabel: "Selected direction preview",
     manifestoA: "Variation without rules is noise.", manifestoB: "A system makes choices clear.", methodEyebrow: "04 / Constraint system", methodTitle: ["Divergence needs", "shared rules."], methodBody: "Every direction uses the same evaluation dimensions: hierarchy, typography, density, layout, motion, and rationale. That gives taste a comparable foundation.",
     methods: [
       { title: "Frame the problem", body: "Detect the product type, framework, audience, and constraints before touching the surface.", tag: "FRAME" },
@@ -102,25 +92,29 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
   const hero = suppliedHero ?? landingHero;
   const isVariantPreview = Boolean(suppliedHero);
   useLandingMotion(!isVariantPreview);
-  const [language, setLanguage] = useState<Language>(() => (new URLSearchParams(window.location.search).get("language") ?? window.localStorage.getItem("variant-language")) === "en" ? "en" : "zh");
+  const [language, setLanguage] = useState<Language>(() => (new URLSearchParams(window.location.search).get("language") ?? readPreference("variant-language")) === "en" ? "en" : "zh");
   const t = copy[language];
   const [selectedPaletteId, setSelectedPaletteId] = useState<PaletteId | undefined>(() => {
-    const stored = window.localStorage.getItem("variant-palette");
+    const stored = readPreference("variant-palette");
     if (stored === "auto") return undefined;
     return communityPalettes.some((palette) => palette.id === stored) ? stored as PaletteId : communityPalettes[0].id;
   });
-  const [prompt, setPrompt] = useState<string>(t.defaultPrompt);
-  const [directions, setDirections] = useState<DesignDirection[]>(() => createDirections(t.defaultPrompt, language, selectedPaletteId));
-  const [generatedBrief, setGeneratedBrief] = useState<string>(t.defaultPrompt);
+  const [loaded] = useState(() => {try{return loadWorkspace(window.localStorage);}catch{return {history:[],issue:true};}});
+  const lifecycle = useRef(new WorkspaceLifecycle());
+  const historyRef = useRef(loaded.history);
+  const [prompt, setPrompt] = useState<string>(loaded.history[0]?.brief ?? t.defaultPrompt);
+  const [directions, setDirections] = useState<DesignDirection[]>(() => loaded.history[0]?.directions ?? createDirections(t.defaultPrompt, language, selectedPaletteId));
+  const [generatedBrief, setGeneratedBrief] = useState<string>(loaded.history[0]?.brief ?? t.defaultPrompt);
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeTask, setActiveTask] = useState<"generate" | "build" | "iterate" | null>(null);
-  const [statusKey, setStatusKey] = useState<"ready" | "building" | "done">("ready");
+  const [statusKey, setStatusKey] = useState<"ready" | "building" | "done">(loaded.history.length ? "done" : "ready");
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [selectedDirectionId, setSelectedDirectionId] = useState<DesignDirection["id"]>("A");
-  const [workspaceHistory, setWorkspaceHistory] = useState<WorkspaceVersion[]>(loadWorkspace);
+  const [selectedDirectionId, setSelectedDirectionId] = useState<DesignDirection["id"]>(loaded.history[0]?.selectedId ?? "A");
+  const [workspaceHistory, setWorkspaceHistory] = useState<WorkspaceVersion[]>(loaded.history);
+  const [hasUnsavedVersions, setHasUnsavedVersions] = useState(false);
   const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
-  const [workspaceNotice, setWorkspaceNotice] = useState<string | null>(null);
+  const [workspaceNotice, setWorkspaceNotice] = useState<string | null>(loaded.issue ? t.historyWarning : null);
   const [providerStatus, setProviderStatus] = useState<{ configured: boolean; provider?: string; model?: string } | null>(null);
   const reducedMotion = usePrefersReducedMotion();
   const status = statusKey === "ready" ? t.statusReady : statusKey === "building" ? t.statusBuilding : t.statusDone;
@@ -131,11 +125,9 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
     document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
     document.title = t.pageTitle;
     document.querySelector('meta[name="description"]')?.setAttribute("content", t.pageDescription);
-    if (!isVariantPreview) window.localStorage.setItem("variant-language", language);
+    if (!isVariantPreview) writePreference("variant-language", language);
   }, [language, t.pageDescription, t.pageTitle, isVariantPreview]);
-  useEffect(() => {
-    window.localStorage.setItem(workspaceStorageKey, JSON.stringify(workspaceHistory.slice(0, 12)));
-  }, [workspaceHistory]);
+  useEffect(() => () => lifecycle.current.invalidate(), []);
   useEffect(() => {
     let active = true;
     fetch("/api/status").then((response) => response.json()).then((next) => { if (active) setProviderStatus(next); }).catch(() => { if (active) setProviderStatus({ configured: false }); });
@@ -144,9 +136,15 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
 
   function saveVersion(action: WorkspaceAction, nextDirections: DesignDirection[], nextSelectedId = selectedDirectionId, brief = generatedBrief) {
     const version = createWorkspaceVersion(action, brief, nextSelectedId, nextDirections);
-    setWorkspaceHistory((current) => [version, ...current].slice(0, 12));
-    setWorkspaceNotice(t.savedNotice);
-    window.setTimeout(() => setWorkspaceNotice(null), 1800);
+    const history = [version, ...historyRef.current].slice(0, 12);
+    historyRef.current = history; setWorkspaceHistory(history);
+    let saved=false;try{saved=persistWorkspace(window.localStorage,history);}catch{/* Access itself can be denied. */}
+    setHasUnsavedVersions(!saved); setWorkspaceNotice(saved ? t.savedNotice : t.storageWarning);
+  }
+
+  function retrySave() {
+    let saved=false;try{saved=persistWorkspace(window.localStorage,historyRef.current);}catch{/* Keep the in-memory versions. */}
+    setHasUnsavedVersions(!saved); setWorkspaceNotice(saved ? t.savedNotice : t.storageWarning);
   }
 
   function switchLanguage() {
@@ -162,18 +160,22 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
     if (isGenerating) return;
     if (!prompt.trim()) { setError(t.emptyPrompt); setStatusKey("ready"); return; }
     if (prompt.trim().length > 600) { setError(t.longPrompt); setStatusKey("ready"); return; }
+    const priorStatus = statusKey;
+    const request = lifecycle.current.begin();
     setIsGenerating(true); setActiveTask("generate"); setError(null); setStatusKey("building");
     try {
       const palette = selectedPaletteId ? communityPalettes.find((item) => item.id === selectedPaletteId)?.colors.map((color) => color.hex) : undefined;
-      const nextDirections = await generateRealDirections({ brief: prompt.trim(), language, palette });
+      const nextDirections = await generateRealDirections({ brief: prompt.trim(), language, palette }, request.signal);
+      if (!request.current()) return;
       setDirections(nextDirections); setGeneratedBrief(prompt.trim()); setSelectedDirectionId("A"); setStatusKey("done");
       saveVersion("generated", nextDirections, "A", prompt.trim());
       document.querySelector("#directions")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
     } catch (generationError) {
+      if (!request.current()) return;
       const code = generationError instanceof Error ? generationError.message : "generation_failed";
-      setError(code === "provider_missing" ? t.providerMissing : t.realGenerationFailed); setStatusKey("ready");
+      setError(code === "provider_missing" ? t.providerMissing : t.realGenerationFailed); setStatusKey(priorStatus);
     } finally {
-      setIsGenerating(false); setActiveTask(null);
+      if (request.current()) { setIsGenerating(false); setActiveTask(null); }
     }
   }
 
@@ -185,8 +187,8 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
 
   function selectPalette(paletteId?: PaletteId) {
     setSelectedPaletteId(paletteId);
-    if (paletteId) window.localStorage.setItem("variant-palette", paletteId);
-    else window.localStorage.setItem("variant-palette", "auto");
+    if (paletteId) writePreference("variant-palette", paletteId);
+    else writePreference("variant-palette", "auto");
     setError(null);
   }
 
@@ -204,35 +206,42 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
               ? `保留当前方向的核心主张，借用这个相邻方向的布局与视觉系统：${JSON.stringify(partnerContract)}`
               : `Keep the current direction's argument and borrow the layout and visual system from this adjacent direction: ${JSON.stringify(partnerContract)}`;
           })();
+    const request = lifecycle.current.begin();
     setIsGenerating(true); setActiveTask("iterate"); setError(null); setStatusKey("building");
     try {
-      const revised = await iterateRealDirection({ brief: generatedBrief, language, direction: selectedDirection, instruction });
+      const revised = await iterateRealDirection({ brief: generatedBrief, language, direction: selectedDirection, instruction }, request.signal);
+      if (!request.current()) return;
       const nextDirections = directions.map((direction, index) => index === selectedIndex ? revised : direction);
       setDirections(nextDirections); saveVersion(action, nextDirections); setStatusKey("done");
     } catch (generationError) {
+      if (!request.current()) return;
       const code = generationError instanceof Error ? generationError.message : "generation_failed";
       setError(code === "provider_missing" ? t.providerMissing : t.realGenerationFailed); setStatusKey("done");
     } finally {
-      setIsGenerating(false); setActiveTask(null);
+      if (request.current()) { setIsGenerating(false); setActiveTask(null); }
     }
   }
 
   async function buildSelectedDirection() {
     if (selectedDirection.html || isGenerating) return;
+    const request = lifecycle.current.begin();
     setIsGenerating(true); setActiveTask("build"); setError(null); setStatusKey("building");
     try {
-      const built = await buildRealDirection({ brief: generatedBrief, language, direction: selectedDirection });
+      const built = await buildRealDirection({ brief: generatedBrief, language, direction: selectedDirection }, request.signal);
+      if (!request.current()) return;
       const nextDirections = directions.map((direction) => direction.id === built.id ? built : direction);
       setDirections(nextDirections); saveVersion("built", nextDirections); setStatusKey("done");
     } catch (generationError) {
+      if (!request.current()) return;
       const code = generationError instanceof Error ? generationError.message : "generation_failed";
       setError(code === "provider_missing" ? t.providerMissing : t.realGenerationFailed); setStatusKey("done");
     } finally {
-      setIsGenerating(false); setActiveTask(null);
+      if (request.current()) { setIsGenerating(false); setActiveTask(null); }
     }
   }
 
   function restoreVersion(version: WorkspaceVersion) {
+    lifecycle.current.invalidate(); setIsGenerating(false); setActiveTask(null); setError(null);
     setDirections(version.directions); setSelectedDirectionId(version.selectedId); setPrompt(version.brief); setGeneratedBrief(version.brief); setStatusKey("done"); setWorkspaceNotice(null);
     document.querySelector("#workspace")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
   }
@@ -333,7 +342,7 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
               <dl className="direction-specs"><div><dt>{t.typeLabel}</dt><dd>{direction.typography}</dd></div><div><dt>{t.densityLabel}</dt><dd>{direction.density}</dd></div><div><dt>{t.layoutLabel}</dt><dd>{direction.layoutLabel}</dd></div><div><dt>{t.motionLabel}</dt><dd>{direction.motion}</dd></div></dl>
               <div className="palette" aria-label="Color palette">{direction.colors.map((color, colorIndex) => <span key={`${color}-${colorIndex}`} style={{ background: color }} title={color} />)}</div>
               <div className="direction-reason"><b>{t.reasonLabel}</b><p>{direction.reason}</p></div>
-              <button className="direction-select" type="button" aria-pressed={selectedDirectionId === direction.id} onClick={() => { setSelectedDirectionId(direction.id); document.querySelector("#workspace")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" }); }}><span>{selectedDirectionId === direction.id ? t.selectedDirection : t.selectDirection}</span><b>{selectedDirectionId === direction.id ? "✓" : "→"}</b></button>
+              <button className="direction-select" type="button" disabled={isGenerating} aria-pressed={selectedDirectionId === direction.id} onClick={() => { setSelectedDirectionId(direction.id); document.querySelector("#workspace")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" }); }}><span>{selectedDirectionId === direction.id ? t.selectedDirection : t.selectDirection}</span><b>{selectedDirectionId === direction.id ? "✓" : "→"}</b></button>
               <div className="card-caption"><span>{direction.name}</span><b>0{index + 1}</b></div>
             </article>)}
           </div>
@@ -358,7 +367,7 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
             </div>
             </BorderBeam>
             <aside className="workspace-panel">
-              <section><p className="workspace-label">{t.workspaceActions}</p><div className="workspace-actions"><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.contract || Boolean(selectedDirection.html)} onClick={buildSelectedDirection}><span>01</span>{t.buildAction}<b>↗</b></button><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.html} onClick={() => pushDirection("varied")}><span>02</span>{t.varyAction}<b>↗</b></button><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.html} onClick={() => pushDirection("remixed")}><span>03</span>{t.remixAction}<b>↗</b></button><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.html} onClick={() => pushDirection("mixed")}><span>04</span>{t.mixAction}<b>↗</b></button></div><button className="workspace-export" type="button" disabled={!selectedDirection.html} onClick={exportSelectedDirection}>{t.exportAction}<span>↓</span></button><p className={`workspace-notice ${error ? "is-error" : ""}`} role="status" aria-live="polite">{error ?? workspaceNotice ?? "\u00a0"}</p></section>
+              <section><p className="workspace-label">{t.workspaceActions}</p><div className="workspace-actions"><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.contract || Boolean(selectedDirection.html)} onClick={buildSelectedDirection}><span>01</span>{t.buildAction}<b>↗</b></button><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.html} onClick={() => pushDirection("varied")}><span>02</span>{t.varyAction}<b>↗</b></button><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.html} onClick={() => pushDirection("remixed")}><span>03</span>{t.remixAction}<b>↗</b></button><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.html} onClick={() => pushDirection("mixed")}><span>04</span>{t.mixAction}<b>↗</b></button></div><button className="workspace-export" type="button" disabled={!selectedDirection.html} onClick={exportSelectedDirection}>{t.exportAction}<span>↓</span></button>{hasUnsavedVersions && <button type="button" onClick={retrySave}>{language === "zh" ? "重新保存历史" : "Retry saving history"}</button>}<p className={`workspace-notice ${error ? "is-error" : ""}`} role="status" aria-live="polite">{error ?? workspaceNotice ?? "\u00a0"}</p></section>
               <section className="workspace-history"><p className="workspace-label">{t.historyTitle}</p>{workspaceHistory.length === 0 ? <p className="history-empty">{t.historyEmpty}</p> : <ol>{workspaceHistory.map((version, index) => <li key={version.id}><div><b>V{String(workspaceHistory.length - index).padStart(2, "0")}</b><span>{actionLabel(version.action, language)}</span><time dateTime={version.createdAt}>{new Intl.DateTimeFormat(language === "zh" ? "zh-CN" : "en", { hour: "2-digit", minute: "2-digit" }).format(new Date(version.createdAt))}</time></div><button type="button" onClick={() => restoreVersion(version)}>{t.restoreAction}</button></li>)}</ol>}</section>
             </aside>
           </div>

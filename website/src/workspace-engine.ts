@@ -3,6 +3,7 @@ import type { DesignDirection, Language } from "./direction-engine";
 export type WorkspaceAction = "generated" | "built" | "varied" | "remixed" | "mixed";
 
 export type WorkspaceVersion = {
+  schemaVersion?: 2;
   id: string;
   action: WorkspaceAction;
   brief: string;
@@ -27,6 +28,7 @@ export function createWorkspaceVersion(
   directions: DesignDirection[],
 ): WorkspaceVersion {
   return {
+    schemaVersion: 2,
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     action,
     brief,
