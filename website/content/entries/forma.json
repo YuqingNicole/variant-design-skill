@@ -1,0 +1,127 @@
+{
+  "slug": "forma",
+  "title": [
+    "Forma：同一份数据，三种决策方式",
+    "Forma: one dataset, three ways to decide"
+  ],
+  "summary": [
+    "同一周的增长数据，分别先放大异常、并排比较渠道，或展开证据。",
+    "The same week of growth data, leading with the signal, a channel comparison or the evidence."
+  ],
+  "brief": [
+    "为一个虚构的增长分析产品设计每周概览，帮助团队判断本周该关注什么。",
+    "Design a weekly overview for a fictional growth analytics product that helps a team decide what needs attention."
+  ],
+  "category": "data",
+  "tags": [
+    "dashboard",
+    "analytics",
+    "concept"
+  ],
+  "source": "own",
+  "kind": "concept",
+  "credit": {
+    "name": "Variant Design",
+    "url": "https://github.com/YuqingNicole/variant-design-skill"
+  },
+  "directions": [
+    {
+      "id": "A",
+      "name": [
+        "信号优先",
+        "Signal first"
+      ],
+      "comparison": {
+        "optimizes": [
+          "先把最需要处理的异常放大。",
+          "Surface the one signal that needs action first."
+        ],
+        "tradeoff": [
+          "渠道之间的横向比较要往下看。",
+          "Comparing channels side by side takes scrolling."
+        ],
+        "bestFor": [
+          "每周例会前快速判断问题的人。",
+          "People triaging before the weekly meeting."
+        ]
+      },
+      "media": [
+        {
+          "file": "a.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "累计收入趋势，旁边标出需要关注的渠道",
+            "Cumulative revenue trend beside the channel that needs attention"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": [
+        "比较优先",
+        "Compare first"
+      ],
+      "comparison": {
+        "optimizes": [
+          "把三个渠道并排，差异一眼可见。",
+          "Put the three channels side by side so differences are obvious."
+        ],
+        "tradeoff": [
+          "单个渠道的细节较少。",
+          "Less detail per channel."
+        ],
+        "bestFor": [
+          "分配渠道预算的人。",
+          "People allocating budget across channels."
+        ]
+      },
+      "media": [
+        {
+          "file": "b.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "三个渠道卡片并排，各带趋势线",
+            "Three channel cards side by side, each with a trend line"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": [
+        "证据优先",
+        "Evidence first"
+      ],
+      "comparison": {
+        "optimizes": [
+          "选一个渠道就能看到它的明细和数据来源，方便核对。",
+          "Pick a channel to see its figures and data source, ready to check."
+        ],
+        "tradeoff": [
+          "第一眼看不出结论。",
+          "The conclusion is not visible at a glance."
+        ],
+        "bestFor": [
+          "需要核对数字再做决定的分析师。",
+          "Analysts who verify numbers before deciding."
+        ]
+      },
+      "media": [
+        {
+          "file": "c.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "渠道列表与选中渠道的明细记录",
+            "Channel list with the selected channel's record"
+          ]
+        }
+      ]
+    }
+  ],
+  "featured": false,
+  "publishedAt": "2026-10-27"
+}

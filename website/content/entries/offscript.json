@@ -1,0 +1,127 @@
+{
+  "slug": "offscript",
+  "title": [
+    "offscript：一个品牌，三种性格",
+    "offscript: one brand, three personalities"
+  ],
+  "summary": [
+    "同一家独立创意工作室，分别用杂志编辑、实验海报和未来数字的语气介绍自己。",
+    "One independent creative studio, introduced in an editorial, an unconventional and a future-facing voice."
+  ],
+  "brief": [
+    "为一家虚构的独立创意工作室设计首页首屏，表达它与众不同的态度。",
+    "Design the first screen for a fictional independent creative studio that wants to stand apart."
+  ],
+  "category": "brand",
+  "tags": [
+    "studio",
+    "art direction",
+    "concept"
+  ],
+  "source": "own",
+  "kind": "concept",
+  "credit": {
+    "name": "Variant Design",
+    "url": "https://github.com/YuqingNicole/variant-design-skill"
+  },
+  "directions": [
+    {
+      "id": "A",
+      "name": [
+        "杂志编辑",
+        "Editorial warmth"
+      ],
+      "comparison": {
+        "optimizes": [
+          "用材质感与叙事建立品牌价值。",
+          "Build brand value through texture and storytelling."
+        ],
+        "tradeoff": [
+          "视觉节奏舒缓，信息密度较低。",
+          "A slower pace with less information density."
+        ],
+        "bestFor": [
+          "精品品牌、生活方式、创意工作室。",
+          "Boutique brands, lifestyle and creative studios."
+        ]
+      },
+      "media": [
+        {
+          "file": "a.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "衬线大标题与橘色雕塑构图",
+            "Serif headline beside an orange sculpture composition"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": [
+        "实验海报",
+        "Unconventional energy"
+      ],
+      "comparison": {
+        "optimizes": [
+          "以大胆排版和撞色制造记忆点。",
+          "Create recall through bold type and clashing color."
+        ],
+        "tradeoff": [
+          "态度鲜明，不适合保守的品牌语气。",
+          "A strong attitude that may not fit conservative brands."
+        ],
+        "bestFor": [
+          "文化活动、新消费、独立创作者。",
+          "Culture, consumer brands and independent creators."
+        ]
+      },
+      "media": [
+        {
+          "file": "b.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "超大无衬线标题与撞色贴纸",
+            "Oversized sans headline with clashing color stickers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": [
+        "未来数字",
+        "Digital frontier"
+      ],
+      "comparison": {
+        "optimizes": [
+          "用空间感与数字质感传达探索精神。",
+          "Express exploration through space and digital materials."
+        ],
+        "tradeoff": [
+          "氛围较强，需要简洁而清晰的文案。",
+          "Atmospheric visuals need clear, concise copy."
+        ],
+        "bestFor": [
+          "设计工具、科技产品、数字艺术。",
+          "Design tools, technology and digital art."
+        ]
+      },
+      "media": [
+        {
+          "file": "c.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "深色空间与数字材质的首屏",
+            "Dark spatial first screen with digital materials"
+          ]
+        }
+      ]
+    }
+  ],
+  "featured": true,
+  "publishedAt": "2026-10-27"
+}

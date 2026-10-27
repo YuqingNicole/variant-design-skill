@@ -1,0 +1,137 @@
+{
+  "slug": "harbor",
+  "title": [
+    "Harbor：成员与权限的三种管理方式",
+    "Harbor: three ways to manage members and access"
+  ],
+  "summary": [
+    "同一个成员页，分别把改动后果、批量效率和邀请上手放在最前面。",
+    "One members page, leading with the consequences of a change, bulk speed, or inviting and onboarding."
+  ],
+  "brief": [
+    "为一个小型团队的共享工作区重做成员页：邀请、改角色、移除成员、撤回邀请。",
+    "Redesign the members page of a small-team workspace: invite, change roles, remove members, revoke invites."
+  ],
+  "category": "product",
+  "tags": [
+    "settings",
+    "permissions",
+    "SaaS"
+  ],
+  "source": "own",
+  "kind": "verified",
+  "credit": {
+    "name": "Variant Design",
+    "url": "https://github.com/YuqingNicole/variant-design-skill"
+  },
+  "directions": [
+    {
+      "id": "A",
+      "name": [
+        "Access Ledger · 编辑排版",
+        "Access Ledger · editorial"
+      ],
+      "comparison": {
+        "optimizes": [
+          "权限变更的确定性：常驻角色说明，每次改角色/移除都在行内暂存，并以 +获得 / −失去 列出后果后再应用。",
+          "Certainty about permission changes: role descriptions stay visible, and every role change or removal is staged inline with what is gained and lost before it applies."
+        ],
+        "tradeoff": [
+          "每次改角色都多一步确认；左侧说明栏占宽，信息密度最低，成员多时需要滚动。",
+          "One extra confirmation per role change; the description column takes width, density is lowest, and long member lists need scrolling."
+        ],
+        "bestFor": [
+          "5–30 人团队、偶尔管理成员的 Owner，或内容敏感、改错权限代价高的工作区。",
+          "Owners of 5–30 person teams who manage members occasionally, or workspaces where a wrong permission is costly."
+        ]
+      },
+      "media": [
+        {
+          "file": "a.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "衬线标题、常驻角色说明栏与成员列表",
+            "Serif headline, a permanent role guide and the member list"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": [
+        "Roster Console · 深色数据",
+        "Roster Console · dark data"
+      ],
+      "comparison": {
+        "optimizes": [
+          "批量与审计速度：搜索（/ 快捷键）、带计数的角色筛选、闲置 ≥7 天标记、可排序列、一次粘贴多个邮箱批量邀请；只有升为 Admin 和移除才弹窗确认。",
+          "Speed for bulk work and audits: search with the / key, role filters with counts, idle-for-7-days flags, sortable columns and pasting several emails to invite at once; only promotion to Admin and removal ask for confirmation."
+        ],
+        "tradeoff": [
+          "密集深色界面对偶尔使用的人有压迫感；角色说明藏在弹窗里，降级不预先说明后果（只靠撤销）。",
+          "A dense dark interface can feel heavy for occasional users; role descriptions live in a dialog and demotions apply without previewing consequences, relying on undo."
+        ],
+        "bestFor": [
+          "30 人以上、需要季度权限审查或频繁增删成员的团队，由熟练管理员操作。",
+          "Teams of 30+ with quarterly access reviews or frequent membership changes, run by experienced admins."
+        ]
+      },
+      "media": [
+        {
+          "file": "b.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "深色成员表，带搜索、角色筛选和闲置标记",
+            "Dark member table with search, role filters and idle flags"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": [
+        "Crew Board · 温暖亲和",
+        "Crew Board · warm and friendly"
+      ],
+      "comparison": {
+        "optimizes": [
+          "邀请与上手：邀请是首屏主角，角色用白话卡片选择；成员按角色分栏，一眼看出谁能做什么；单人所有操作集中在一个对话框。",
+          "Inviting and onboarding: the invite is the first-screen focus with plain-language role cards; members are grouped in columns by role so who-can-do-what is visible at a glance; everything about one person lives in one dialog."
+        ],
+        "tradeoff": [
+          "密度最低，超过约 15 人时分栏高度失衡、难以扫描；改角色要先打开对话框，多一次点击；无搜索。",
+          "Lowest density: past about 15 people the columns become uneven and hard to scan; changing a role takes an extra click through the dialog; no search."
+        ],
+        "bestFor": [
+          "刚组建的小团队、首次邀请协作者的创始人，或不熟悉权限概念的管理员。",
+          "Newly formed small teams, founders inviting collaborators for the first time, or admins unfamiliar with permission concepts."
+        ]
+      },
+      "media": [
+        {
+          "file": "c.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "首屏邀请区与按角色分栏的成员卡片",
+            "Invite area up front, with member cards grouped by role"
+          ]
+        }
+      ]
+    }
+  ],
+  "recommendation": {
+    "variant": "A",
+    "reason": [
+      "Harbor 面向小型团队、成员页低频使用，最大风险是改错权限而非操作慢；A 在每次变更前展示获得/失去的能力，并常驻角色说明。这是基于产品描述的假设，尚未经过用户测试；若团队规模超过约 30 人或需要定期权限审计，B 更合适。",
+      "Harbor serves small teams and the members page is used rarely, so the main risk is a wrong permission, not slowness. A shows what is gained and lost before every change and keeps role descriptions visible. This is an assumption from the product description, not tested with users; for teams above about 30 people or regular access audits, B fits better."
+    ]
+  },
+  "evidence": {
+    "context": "website/content/evidence/harbor/variant-output/.variant-context.json"
+  },
+  "featured": true,
+  "publishedAt": "2026-10-27"
+}

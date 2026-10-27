@@ -1,0 +1,111 @@
+/* Variant A — Monday Briefing. Uses only Pulse brand tokens; muted ink is a mix of ink + paper. */
+:root { --va-muted: color-mix(in srgb, var(--color-ink) 68%, var(--color-paper)); --va-line: color-mix(in srgb, var(--color-ink) 14%, var(--color-paper)); }
+body { margin: 0; background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); line-height: 1.55; }
+.va { padding: 56px 24px 96px; }
+.va-page { max-width: 760px; margin: 0 auto; }
+.va-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.va-muted { color: var(--va-muted); font-weight: 400; }
+.va-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* zone:header:start */
+.va-masthead { border-bottom: 2px solid var(--color-ink); padding-bottom: 20px; margin-bottom: 40px; }
+.va-kicker { margin: 0; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--va-muted); }
+.va-masthead h1 { margin: 6px 0 4px; font-size: clamp(2.25rem, 1.6rem + 3vw, 3.5rem); line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; }
+.va-range { margin: 0; color: var(--va-muted); }
+/* zone:header:end */
+
+/* zone:attention:start */
+.va-attention { margin-bottom: 56px; }
+.va-attention-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; margin-bottom: 20px; }
+.va-attention-head h2 { margin: 0; font-size: 1.5rem; letter-spacing: -0.01em; }
+.va-progress { margin: 0; font-size: 0.875rem; color: var(--va-muted); }
+.va-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.va-item { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 20px; align-items: start; padding: 24px 24px 24px 20px; background: #fff; border-inline-start: 4px solid var(--color-accent); box-shadow: 0 1px 0 var(--va-line); transition: opacity 200ms ease-out; }
+.va-item.is-done { opacity: 0.62; border-inline-start-color: var(--va-line); }
+.va-num { font-family: var(--font-mono); font-size: 1.75rem; font-weight: 600; line-height: 1.1; color: var(--color-accent); }
+.va-item.is-done .va-num { color: var(--va-muted); }
+.va-item-body { min-width: 0; }
+.va-item h3 { margin: 0 0 4px; font-size: 1.25rem; line-height: 1.3; overflow-wrap: break-word; }
+.va-item p { margin: 0; }
+.va-evidence { margin-top: 12px !important; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; font-size: 0.875rem; color: var(--va-muted); }
+.va-evidence strong { color: var(--color-ink); }
+.va-dot { color: var(--va-line); }
+.va-check { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: 1px solid var(--va-line); border-radius: 6px; font-size: 0.875rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.va-check input { width: 18px; height: 18px; margin: 0; accent-color: var(--color-ink); }
+.va-check:has(input:focus-visible) { outline: 3px solid var(--color-ink); outline-offset: 2px; }
+.va-check:hover { border-color: var(--color-ink); }
+.va-empty { margin: 0; padding: 20px 24px; background: #fff; border-inline-start: 4px solid var(--color-positive); }
+/* zone:attention:end */
+
+/* Direction-aware deltas: color is paired with a glyph and the words better/worse. Text stays ink for contrast. */
+.va-delta { color: var(--color-ink); font-size: 0.875rem; }
+.va-delta [aria-hidden] { font-size: 0.75rem; }
+.va-delta.is-better [aria-hidden] { color: var(--color-positive); }
+.va-delta.is-worse [aria-hidden] { color: var(--color-negative); }
+
+/* zone:metrics:start */
+.va-section-h { margin: 0 0 16px; font-size: 1rem; font-weight: 700; }
+.va-context { margin-bottom: 48px; }
+.va-kpis { margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--va-line); }
+.va-kpi { padding: 16px 16px 0 0; }
+.va-kpi + .va-kpi { padding-inline-start: 16px; border-inline-start: 1px solid var(--va-line); }
+.va-kpi dt { font-size: 0.8125rem; color: var(--va-muted); }
+.va-kpi dd { margin: 0; }
+.va-kpi-value { font-size: 1.5rem; font-weight: 600; margin: 4px 0 2px !important; }
+/* zone:metrics:end */
+
+/* zone:chart:start */
+.va-block { margin-bottom: 48px; }
+.va-bars { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; height: 200px; align-items: end; border-bottom: 1px solid var(--color-ink); }
+.va-bars li { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; }
+.va-bar-value { font-size: 0.75rem; text-align: center; color: var(--va-muted); }
+.va-bar { display: block; background: color-mix(in srgb, var(--color-ink) 22%, var(--color-paper)); border-radius: 2px 2px 0 0; min-height: 4px; }
+.va-bars li.is-flagged .va-bar { background: var(--color-accent); }
+.va-bars li.is-flagged .va-bar-value { color: var(--color-ink); font-weight: 600; }
+.va-bar-label { position: absolute; bottom: -26px; inset-inline: 0; text-align: center; font-size: 0.8125rem; color: var(--va-muted); }
+.va-flag { color: var(--color-accent); font-size: 0.5rem; margin-inline-start: 3px; vertical-align: middle; }
+/* zone:chart:end */
+
+/* zone:channels:start */
+.va-block + .va-block { margin-top: 64px; }
+.va-channels { list-style: none; margin: 0; padding: 0; }
+.va-channels li { display: grid; grid-template-columns: 9rem 1fr 4rem 6.5rem; gap: 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--va-line); }
+.va-ch-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.va-channels li.is-flagged .va-ch-name::after { content: ' ● flagged'; color: var(--color-negative); font-size: 0.75rem; }
+.va-ch-track { height: 8px; background: var(--va-line); border-radius: 4px; overflow: hidden; }
+.va-ch-track span { display: block; height: 100%; background: var(--color-ink); }
+.va-ch-rate { text-align: end; font-weight: 600; }
+.va-ch-trials { text-align: end; font-size: 0.8125rem; }
+/* zone:channels:end */
+
+.va-btn { min-height: 44px; padding: 0 20px; border: 0; border-radius: 6px; background: var(--color-ink); color: var(--color-paper); font: inherit; font-weight: 600; cursor: pointer; }
+.va-btn:hover { background: color-mix(in srgb, var(--color-ink) 85%, var(--color-paper)); }
+.va-btn:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
+.va-error { padding: 24px; background: #fff; border-inline-start: 4px solid var(--color-negative); }
+.va-error h2 { margin: 0 0 8px; font-size: 1.25rem; }
+.va-error p { margin: 0 0 16px; }
+.va-loading { display: grid; gap: 16px; }
+.va-skel { height: 72px; border-radius: 4px; background: var(--va-line); animation: va-pulse 1.4s ease-in-out infinite; }
+.va-skel--lg { height: 120px; }
+.va-skel--short { width: 60%; }
+@keyframes va-pulse { 50% { opacity: 0.5; } }
+
+@media (max-width: 640px) {
+  .va { padding: 32px 16px 64px; }
+  .va-item { grid-template-columns: auto 1fr; padding: 20px 16px; }
+  .va-check { grid-column: 1 / -1; justify-self: start; margin-top: 8px; }
+  .va-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .va-kpi:nth-child(3) { padding-inline-start: 0; border-inline-start: 0; }
+  .va-kpi { padding-bottom: 16px; }
+  .va-bars { gap: 6px; height: 160px; }
+  .va-bar-value { font-size: 0.625rem; }
+  .va-channels li { grid-template-columns: 1fr auto; gap: 4px 12px; }
+  .va-dot { display: none; }
+  .va-evidence { flex-direction: column; align-items: flex-start; }
+  .va-ch-track { grid-column: 1 / -1; grid-row: 2; }
+  .va-ch-trials { grid-column: 1 / -1; text-align: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .va-skel { animation: none; }
+  .va-item { transition: none; }
+}

@@ -1,0 +1,137 @@
+{
+  "slug": "pulse",
+  "title": [
+    "Pulse：周报的三种读法",
+    "Pulse: three ways to read a weekly report"
+  ],
+  "summary": [
+    "同一周的数据和锁定的品牌，分别先列出要处理的事、并排比较指标，或追查异常的原因。",
+    "The same week of data under a locked brand, leading with what to act on, a side-by-side comparison, or tracing why."
+  ],
+  "brief": [
+    "为订阅类产品的每周数据报告重新设计，读者是周一早上的产品负责人；品牌字体和颜色已锁定。",
+    "Redesign the weekly analytics report of a subscription app for the product lead on Monday morning, with brand fonts and colors locked."
+  ],
+  "category": "data",
+  "tags": [
+    "dashboard",
+    "analytics",
+    "brand-locked"
+  ],
+  "source": "own",
+  "kind": "verified",
+  "credit": {
+    "name": "Variant Design",
+    "url": "https://github.com/YuqingNicole/variant-design-skill"
+  },
+  "directions": [
+    {
+      "id": "A",
+      "name": [
+        "Monday Briefing · 周一简报",
+        "Monday Briefing"
+      ],
+      "comparison": {
+        "optimizes": [
+          "Monday Briefing：两条异常作为编号要点置顶，附带对应指标与日期，可逐条标记“已看”；指标、趋势、渠道退为背景信息。",
+          "Monday Briefing: the two anomalies come first as numbered items with their metric and date, each can be marked as reviewed; metrics, trend and channels become background."
+        ],
+        "tradeoff": [
+          "单栏阅读，一屏看不到全部数字；渠道只按转化率排序，不能切换；横向比较能力最弱。",
+          "Single-column reading, so not every number fits on one screen; channels sort only by conversion; weakest for side-by-side comparison."
+        ],
+        "bestFor": [
+          "周一早上快速了解“这周要处理什么”、准备站会；读者主要是负责人本人。",
+          "Seeing what needs action this week on Monday morning before stand-up; the reader is mainly the lead."
+        ]
+      },
+      "media": [
+        {
+          "file": "a.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "编号列出两条需要处理的异常，下方是本周指标",
+            "Two numbered anomalies to act on, with the week's metrics below"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": [
+        "Scorecard · 计分卡",
+        "Scorecard"
+      ],
+      "comparison": {
+        "optimizes": [
+          "Scorecard：4 个 KPI 同屏并标注 Better/Worse，DAU 图可逐日查看并带均值线，渠道表可按试用、转化、估算付费数排序并显示占比。",
+          "Scorecard: four KPIs side by side marked Better/Worse, a day-by-day DAU chart with an average line, and a channel table sortable by trials, conversion and estimated paid with share bars."
+        ],
+        "tradeoff": [
+          "信息密度最高，异常降为侧栏，需要读者自己判断优先级；“估算付费数”是派生数值，需要团队认可这种算法。",
+          "Highest density; anomalies move to a side panel so readers judge priority themselves; estimated paid is a derived number the team must agree on."
+        ],
+        "bestFor": [
+          "周会投屏、跨渠道/跨指标比较，读者熟悉这些指标。",
+          "Projecting in the weekly meeting and comparing across channels and metrics, for readers who know these metrics."
+        ]
+      },
+      "media": [
+        {
+          "file": "b.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "四个指标卡、带均值线的日活柱状图和渠道表",
+            "Four KPI cards, a daily active users bar chart with an average line, and a channel table"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": [
+        "Evidence Trace · 证据追踪",
+        "Evidence Trace"
+      ],
+      "comparison": {
+        "optimizes": [
+          "Evidence Trace：选中一条异常后按“信号 → 时间 → 来源”展开证据，高亮对应 KPI、日期与渠道；顶部常驻 KPI 条保证总览不丢。",
+          "Evidence Trace: selecting an anomaly expands its evidence as signal → when → where, highlighting the KPI, date and channel; a KPI strip stays on top so the overview is never lost."
+        ],
+        "tradeoff": [
+          "需要点选才能看到完整图表和渠道表（“Full week overview” 页签）；当前数据缺少同比和 cohort 明细，证据链第 3 步对流失异常只能说明“数据未包含”。",
+          "The full chart and channel table need a click (Full week overview tab); the data lacks year-over-year and cohort detail, so step 3 of the churn trace can only say the data is not included."
+        ],
+        "bestFor": [
+          "要追查原因、给团队解释“为什么”的场景；数据源扩充（按日渠道、cohort）后价值最大。",
+          "Tracing causes and explaining why to the team; most valuable once the data includes daily channel and cohort detail."
+        ]
+      },
+      "media": [
+        {
+          "file": "c.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "选中异常后按信号、时间、来源展开证据",
+            "An anomaly expanded into signal, when and where"
+          ]
+        }
+      ]
+    }
+  ],
+  "recommendation": {
+    "variant": "A",
+    "reason": [
+      "读者是周一早上的产品负责人、数据只有一周快照，首要问题是“要处理什么”：A 把两条异常放在最前并可逐条标记已看，最贴合这个任务。这是基于页面注释的推断，尚未经用户测试；若周会要横向比较渠道，B 更合适。",
+      "The reader is the product lead on Monday morning and the data is a single week, so the first question is what to act on. A puts the two anomalies first and lets each be marked as reviewed, which fits that task best. This is inferred from the page's comments and not tested with users; if the weekly meeting compares channels, B fits better."
+    ]
+  },
+  "evidence": {
+    "context": "website/content/evidence/pulse/variant-output/.variant-context.json"
+  },
+  "featured": true,
+  "publishedAt": "2026-10-27"
+}

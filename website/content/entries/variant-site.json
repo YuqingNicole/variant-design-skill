@@ -1,0 +1,137 @@
+{
+  "slug": "variant-site",
+  "title": [
+    "Variant Design 官网：三种进入方式",
+    "The Variant Design site: three ways in"
+  ],
+  "summary": [
+    "同一个网站、同一组内容，分别把理解、试用和安装放在最前面。",
+    "One site and one set of content, leading with understanding, trying or installing."
+  ],
+  "brief": [
+    "理解 Variant Design，比较本站三版，安装并用于真实项目。",
+    "Understand Variant Design, compare the site's three versions, then install it in a real project."
+  ],
+  "category": "landing",
+  "tags": [
+    "product site",
+    "developer tool",
+    "bilingual"
+  ],
+  "source": "own",
+  "kind": "verified",
+  "credit": {
+    "name": "Variant Design",
+    "url": "https://github.com/YuqingNicole/variant-design-skill"
+  },
+  "directions": [
+    {
+      "id": "A",
+      "name": [
+        "理解优先",
+        "Understanding first"
+      ],
+      "comparison": {
+        "optimizes": [
+          "先理解产品方法，再进入操作",
+          "Understand the product method before acting"
+        ],
+        "tradeoff": [
+          "到达比较页面前需要多读一点说明",
+          "A little more reading before the comparison"
+        ],
+        "bestFor": [
+          "第一次接触多方案设计的人",
+          "People new to multi-direction design"
+        ]
+      },
+      "media": [
+        {
+          "file": "a.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "A 方向首屏：先解释产品方法",
+            "Direction A first screen: explains the method first"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": [
+        "体验优先",
+        "Experience first"
+      ],
+      "comparison": {
+        "optimizes": [
+          "直接检查真实产物，缩短到比较的路径",
+          "Inspect real output directly; shortest path to comparing"
+        ],
+        "tradeoff": [
+          "首屏的品牌叙事更简短",
+          "A shorter brand story in the first screen"
+        ],
+        "bestFor": [
+          "希望先试用，再判断是否安装的人",
+          "People who want to try it before deciding to install"
+        ]
+      },
+      "media": [
+        {
+          "file": "b.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "B 方向首屏：直接展示三种取舍",
+            "Direction B first screen: shows the three tradeoffs directly"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": [
+        "接入优先",
+        "Integration first"
+      ],
+      "comparison": {
+        "optimizes": [
+          "快速安装并进入自己的项目",
+          "Install quickly and move into your own project"
+        ],
+        "tradeoff": [
+          "对尚未理解技能的人解释较少",
+          "Less explanation for people new to the skill"
+        ],
+        "bestFor": [
+          "已熟悉工作方式的开发者",
+          "Developers who already know the workflow"
+        ]
+      },
+      "media": [
+        {
+          "file": "c.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "C 方向首屏：安装命令放在最前",
+            "Direction C first screen: install command up front"
+          ]
+        }
+      ]
+    }
+  ],
+  "recommendation": {
+    "variant": "B",
+    "reason": [
+      "当前任务是让人真实体验比较与迭代。B 首屏展示本站三种取舍，并把比较作为主要操作；这是产品判断，尚无转化数据。",
+      "The task is to let people actually try comparing and iterating. B shows this site's three tradeoffs in the first screen and makes comparison the main action. This is a product judgment; there is no conversion data yet."
+    ]
+  },
+  "evidence": {
+    "context": "website/variant-output/.variant-context.json"
+  },
+  "featured": true,
+  "publishedAt": "2026-10-27"
+}
