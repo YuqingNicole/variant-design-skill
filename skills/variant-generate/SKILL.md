@@ -113,7 +113,15 @@ Run the mechanical scanner on every generated variation before presenting it:
 node <skill-root>/scripts/quality-gate.mjs variant-output/variant-[scenario]-A.html --strict
 ```
 
-Repeat for B and C, or scan their containing directory when it contains only the current deliverables. Inspect findings in context and fix confirmed issues. Then review the rendered pages for hierarchy, distinctness, responsive behavior, and working interactions using `references/quality-baseline.md`.
+Repeat for B and C, or scan their containing directory when it contains only the current deliverables. Inspect findings in context and fix confirmed issues.
+
+Then check the recorded delivery:
+
+```bash
+node <skill-root>/scripts/delivery-check.mjs variant-output
+```
+
+It fails when A, B or C is missing or shares files, when a direction has no optimizes/tradeoff/bestFor or repeats another's, when the task contract or recommendation is missing, or when a locked design system's fonts or colors changed. It warns when `selectedVariant` is set, since only the user's explicit pick sets it. Fix every error before presenting; it does not judge rendering or taste. Then review the rendered pages for hierarchy, distinctness, responsive behavior, and working interactions using `references/quality-baseline.md`.
 
 For product-critical UI, also read `references/design-declaration.md` and run `references/product-integrity-gate.md`. Report product integrity separately from visual quality and do not present a P0 result as complete.
 

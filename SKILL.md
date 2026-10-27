@@ -107,8 +107,9 @@ Before presenting generated or materially changed interface code:
    ```
 
 3. Inspect every finding in context; fix confirmed errors and relevant warnings.
-4. Preview the result and check the actual rendered interface at desktop and mobile widths when browser control is available.
-5. For product-critical work, run the Product Integrity Gate separately. Do not average it into a visual score.
+4. For A/B/C deliveries, run `node <skill-root>/scripts/delivery-check.mjs variant-output` and fix every error. It checks the recorded directions, recommendation and design-system lock, not the rendering.
+5. Preview the result and check the actual rendered interface at desktop and mobile widths when browser control is available.
+6. For product-critical work, run the Product Integrity Gate separately. Do not average it into a visual score.
 
 The scanner is evidence, not a substitute for visual judgment. Do not claim WCAG compliance, cross-browser support, or a quality score unless it was actually tested.
 
