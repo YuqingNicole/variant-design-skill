@@ -3,11 +3,11 @@
 Designer portfolios, developer showcases, freelancer sites, personal brands, agency work.
 
 > **Design system references for this domain:**
-> - `design-system/typography.md` — expressive type scales, display font as identity, whitespace rhythm
-> - `design-system/color-and-contrast.md` — restrained palettes as personal brand signal
-> - `design-system/spatial-design.md` — masonry grids, asymmetric composition, full-bleed imagery
-> - `design-system/motion-design.md` — page transitions, scroll-triggered reveals, cursor effects
-> - `design-system/responsive-design.md` — art direction with `<picture>`, portfolio grid breakpoints
+> - `references/design-system/typography.md` — expressive type scales, display font as identity, whitespace rhythm
+> - `references/design-system/color-and-contrast.md` — restrained palettes as personal brand signal
+> - `references/design-system/spatial-design.md` — masonry grids, asymmetric composition, full-bleed imagery
+> - `references/design-system/motion-design.md` — page transitions, scroll-triggered reveals, cursor effects
+> - `references/design-system/responsive-design.md` — art direction with `<picture>`, portfolio grid breakpoints
 
 ## Table of Contents
 1. Starter Prompts

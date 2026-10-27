@@ -1,6 +1,6 @@
 # UX Mobile Patterns Reference
 
-Interaction design rules for mobile — gestures, thumb zones, platform conventions, and touch-first patterns. Distinct from visual mobile aesthetics (see `references/mobile.md`).
+Interaction design rules for mobile — gestures, thumb zones, platform conventions, and touch-first patterns. Distinct from visual mobile aesthetics (see `references/domains/mobile.md`).
 
 ---
 

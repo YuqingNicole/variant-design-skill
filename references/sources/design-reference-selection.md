@@ -34,4 +34,4 @@ Unresolved implementation dependencies belong in task `unknowns`; mark blocking 
 
 Explain which reference supports each direction's tradeoff. Reference records are included in the task digest, so changing them invalidates task-bound observations. External pages can change independently; a task digest does not certify the live source. Recheck relevant original sources before reuse.
 
-Direction cards from the Variant Design library convert into these records with `scripts/direction-card.mjs`; see `references/direction-cards.md`. This contract does not implement automatic resource retrieval or a paid resource library.
+Direction cards from the Variant Design library convert into these records with `scripts/direction-card.mjs`; see `references/sources/direction-cards.md`. This contract does not implement automatic resource retrieval or a paid resource library.

@@ -1,4 +1,4 @@
-# references/wuxing-colors.md · 五行配色系统
+# references/tasks/wuxing-colors.md · 五行配色系统
 
 ## Wu Xing — 五行主色
 

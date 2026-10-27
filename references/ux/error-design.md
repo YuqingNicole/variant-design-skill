@@ -252,7 +252,7 @@ Visual signal: Empty uses neutral tone (gray illustration, secondary text)
 
 ## Related References
 
-- `ux-empty-states.md` — Differentiating error from empty, empty state patterns
-- `ux-onboarding.md` — Error states during first-use flows
-- `ux-notifications.md` — Toast and banner placement for async errors
-- `design-system/micro-interactions.md` — Error animation (shake, pulse)
+- `references/ux/empty-states.md` — Differentiating error from empty, empty state patterns
+- `references/ux/onboarding.md` — Error states during first-use flows
+- `references/ux/notifications.md` — Toast and banner placement for async errors
+- `references/design-system/micro-interactions.md` — Error animation (shake, pulse)

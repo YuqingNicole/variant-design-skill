@@ -3,11 +3,11 @@
 3D parameter controllers, music synthesizers, generative art tools, AI creative interfaces, video/audio editors, live coding environments, digital painting canvases.
 
 > **Design system references for this domain:**
-> - `design-system/typography.md` — expressive display type, monospace for technical tools
-> - `design-system/color-and-contrast.md` — high-contrast dark UIs, accent-heavy palettes
-> - `design-system/spatial-design.md` — canvas layouts, toolbar/panel patterns
-> - `design-system/motion-design.md` — real-time feedback, parameter change animations
-> - `design-system/interaction-design.md` — keyboard shortcuts, drag-and-drop, multi-select
+> - `references/design-system/typography.md` — expressive display type, monospace for technical tools
+> - `references/design-system/color-and-contrast.md` — high-contrast dark UIs, accent-heavy palettes
+> - `references/design-system/spatial-design.md` — canvas layouts, toolbar/panel patterns
+> - `references/design-system/motion-design.md` — real-time feedback, parameter change animations
+> - `references/design-system/interaction-design.md` — keyboard shortcuts, drag-and-drop, multi-select
 
 ## Table of Contents
 1. Starter Prompts

@@ -14,7 +14,7 @@ Variant Design is an agent skill. It turns one brief into three comparable desig
 |---|---|---|
 | `SKILL.md` | Router entry point | Keep it short. It routes to one sub-skill; do not inline workflows here |
 | `skills/*/SKILL.md` | Sub-skills: generate, design-system, component, analyze, ux | `skills/shared/code-output.md` is the single source of truth for output, preview and export. Only the root `SKILL.md` has skill frontmatter: Codex and `npx skills` scan folders recursively and would register sub-skills as broken standalone skills (enforced by `plugin-package.test.py`) |
-| `references/` | Loaded on demand by the routes | Domain references follow the five-part structure in `README.md` → Contributing. `scripts/skill-links.test.mjs` fails on a named file that does not ship with the skill and on a reference no route reaches |
+| `references/` | Loaded on demand by the routes | Grouped by role: `workflow/` (context, discovery, history, quality and integrity rules shared by routes), `sources/` (design references and direction cards), `domains/`, `design-system/`, `ux/`, `tasks/` (routes the router sends straight to a reference), plus the shared `palettes.md` and `interactive-patterns.md`. Domain references follow the five-part structure in `README.md` → Contributing. `scripts/skill-links.test.mjs` fails on a named file that does not ship with the skill and on a reference no route reaches |
 | `scripts/*.mjs` | Runtime helpers that run inside **user projects** | Zero dependencies, Node 22+, ESM. Each has a CLI and exported functions |
 | `scripts/*.test.mjs` | `node:test` unit tests for the helpers | Excluded from the plugin package |
 | `tests/` | Playwright browser regressions (`loop.spec.mjs`, `landing.spec.mjs`) | Has its own `package.json` |
@@ -40,7 +40,7 @@ These rules are product promises. Tests enforce them, and agents in user project
 - **Zones.** A file may mark a zone once in markup (`<!-- zone:x:start -->` or `{/* zone:x:start */}`) and once in styles (`/* zone:x:start */`). A zoned edit must leave owned files without those markers byte-identical.
 - **One user request is one undo.** Applies that share `change.request` are reverted together.
 - **Paths stay inside their roots.** Symlinks are rejected (`localFile`). Working files belong in the target project's `.variant-work/`. Integration refuses `variant-output/`, `.git/`, `node_modules/` and `.variant-work/` as targets.
-- **Context schema is v2** (`references/project-context.md`). Do not silently migrate or reinterpret legacy fields.
+- **Context schema is v2** (`references/workflow/project-context.md`). Do not silently migrate or reinterpret legacy fields.
 
 ## Commands
 
@@ -74,7 +74,7 @@ node evals/run.mjs --agent claude --fixture pulse       # one real, graded agent
   - Skill files, references, scripts and the README: English.
   - `README_CN.md`, PRDs and RFCs: Chinese.
   - Website copy: both languages, with the `[zh, en]` order used in the existing data.
-- **The skill's own text is the product.** When you change behavior in `scripts/`, update every place that describes it in the same change: `references/preview-and-history.md`, `skills/shared/code-output.md`, the relevant `skills/*/SKILL.md`, and user-facing docs (`website/src/DocsGuide.tsx`, `README.md`, `README_CN.md`).
+- **The skill's own text is the product.** When you change behavior in `scripts/`, update every place that describes it in the same change: `references/workflow/preview-and-history.md`, `skills/shared/code-output.md`, the relevant `skills/*/SKILL.md`, and user-facing docs (`website/src/DocsGuide.tsx`, `README.md`, `README_CN.md`).
 - **Progressive loading.** `SKILL.md` routes to one sub-skill, and sub-skills load only the references they need. Do not add "read everything" instructions.
 - **Rule precedence** across routes: user constraints → product task and existing design system → accessibility → style suggestions.
 - **Dependencies.** Helpers stay dependency-free and reuse the target project's own React and Vite. Pin exact versions in `tests/`, `website/` and `mcp/` lockfiles. Rollup 4.64.0 hangs on production builds; keep `tests/` on 4.65.0 or later.

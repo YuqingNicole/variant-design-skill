@@ -2,9 +2,9 @@
 
 > **variant-component**: Generate isolated UI components with all 8 states and variants — button systems, forms, cards, modals, nav. Design System-aware when a token set is confirmed. Load skills/shared/code-output.md for framework detection and output conventions. Triggers on: component, button system, form component, card component, modal, navigation component, design a button, input components, component library
 
-> Before generating code, load `skills/shared/code-output.md` for framework detection and `references/quality-baseline.md` for verification.
+> Before generating code, load `skills/shared/code-output.md` for framework detection and `references/workflow/quality-baseline.md` for verification.
 >
-> Load on demand only: `references/ux-component-specs.md` when the user asks for a spec, handoff, anatomy or measurements (follow its Recording Values rules: no invented values, unknowns stay `[TBD]`; use Handoff and Build QA when the component goes to engineering or is checked against a spec); the Nested Radius section of `references/ux-design-tokens.md` when a rounded element sits inside another.
+> Load on demand only: `references/ux/component-specs.md` when the user asks for a spec, handoff, anatomy or measurements (follow its Recording Values rules: no invented values, unknowns stay `[TBD]`; use Handoff and Build QA when the component goes to engineering or is checked against a spec); the Nested Radius section of `references/ux/design-tokens.md` when a rounded element sits inside another.
 
 ## Component Mode
 

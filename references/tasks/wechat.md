@@ -1,4 +1,4 @@
-# references/wechat.md · 公众号排版
+# references/tasks/wechat.md · 公众号排版
 
 ---
 

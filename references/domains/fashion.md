@@ -3,11 +3,11 @@
 Fashion brands, lookbooks, lifestyle magazines, streetwear drops, luxury retail, beauty brands, interior design.
 
 > **Design system references for this domain:**
-> - `design-system/typography.md` — high-contrast serif/sans pairs, condensed headlines, editorial scales
-> - `design-system/color-and-contrast.md` — luxury neutrals, seasonal palettes, fashion photography contrast
-> - `design-system/spatial-design.md` — asymmetric grids, full-bleed imagery, editorial whitespace
-> - `design-system/motion-design.md` — parallax, smooth scroll reveals, lookbook transitions
-> - `design-system/responsive-design.md` — mobile-first shopping, image art direction by viewport
+> - `references/design-system/typography.md` — high-contrast serif/sans pairs, condensed headlines, editorial scales
+> - `references/design-system/color-and-contrast.md` — luxury neutrals, seasonal palettes, fashion photography contrast
+> - `references/design-system/spatial-design.md` — asymmetric grids, full-bleed imagery, editorial whitespace
+> - `references/design-system/motion-design.md` — parallax, smooth scroll reveals, lookbook transitions
+> - `references/design-system/responsive-design.md` — mobile-first shopping, image art direction by viewport
 
 ## Table of Contents
 1. Starter Prompts

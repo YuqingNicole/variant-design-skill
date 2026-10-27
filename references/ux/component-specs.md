@@ -414,7 +414,7 @@ In addition to the six dimensions, record:
 | Area | Record |
 |---|---|
 | Content | Character limits; the truncation rule (ellipsis, line clamp or wrap); minimum and maximum content; what an empty string or missing field renders |
-| Localization | Room for text expansion (design for 40%; see `ux-content-strategy.md` → Text expansion), RTL mirroring, locale date and number formats |
+| Localization | Room for text expansion (design for 40%; see `references/ux/content-strategy.md` → Text expansion), RTL mirroring, locale date and number formats |
 | Conditions | Loading on a slow connection, partial data, error, and offline where relevant |
 | Responsive | What changes at each breakpoint, not only that the component "adapts" |
 | Motion | Trigger, animated properties, duration and easing per transition, and the reduced-motion behavior |
@@ -422,7 +422,7 @@ In addition to the six dimensions, record:
 
 ### Verify the Build Against the Spec
 
-- Compare computed values in the browser (`getComputedStyle` or DevTools), not screenshots judged by eye or a memory of the design. Choose the browser and place probe files as in `quality-baseline.md` → Behavioral evidence: files go in the project's `.variant-work/`.
+- Compare computed values in the browser (`getComputedStyle` or DevTools), not screenshots judged by eye or a memory of the design. Choose the browser and place probe files as in `references/workflow/quality-baseline.md` → Behavioral evidence: files go in the project's `.variant-work/`.
 - Walk every state and variant at every specified breakpoint, with realistic and extreme content.
 - Report each mismatch as spec against actual, with element, viewport and value: `card padding: spec S1 = 16, actual 20 @ 390px`.
 - A value marked `[TBD]` is not a mismatch. Resolve it in the spec first.

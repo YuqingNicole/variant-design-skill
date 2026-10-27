@@ -284,7 +284,7 @@ For each list, grid, search result, or data view, verify:
 
 ## Related References
 
-- `ux-error-design.md` — Error classification, recovery path design
-- `ux-onboarding.md` — First-use flows, blank canvas problem
-- `ux-search-patterns.md` — No-results state in search context
-- `ux-notifications.md` — Async error toasts vs. inline empty state errors
+- `references/ux/error-design.md` — Error classification, recovery path design
+- `references/ux/onboarding.md` — First-use flows, blank canvas problem
+- `references/ux/search-patterns.md` — No-results state in search context
+- `references/ux/notifications.md` — Async error toasts vs. inline empty state errors

@@ -28,10 +28,10 @@ Choose one primary route. Read that file completely, then load only the referenc
 | A button, form, card, modal, navigation, or component library | `skills/variant-component/SKILL.md` |
 | Audit existing code, extract tokens, match a site, or plan migration | `skills/variant-analyze/SKILL.md` |
 | UX, accessibility, cognitive load, heuristics, research, or conversion review | `skills/variant-ux/SKILL.md` |
-| Pitch deck or slides | `references/presentation.md` |
-| WeChat article layout | `references/wechat.md` |
-| Chinese cultural or Wu Xing brand color | `references/wuxing-colors.md` |
-| Copywriting or removing AI tone | `references/voice.md` |
+| Pitch deck or slides | `references/tasks/presentation.md` |
+| WeChat article layout | `references/tasks/wechat.md` |
+| Chinese cultural or Wu Xing brand color | `references/tasks/wuxing-colors.md` |
+| Copywriting or removing AI tone | `references/tasks/voice.md` |
 
 If a request spans routes, select the route that produces the requested deliverable and load a second route only when its workflow is actually needed. For example, an accessibility review of a generated page uses UX Review first; generating the fixed page then adds Generate.
 
@@ -62,11 +62,11 @@ An explicit request to execute, build, generate, or continue authorizes the fast
 
 ## Existing project discovery
 
-Before generating or changing interfaces in an existing code project, read `references/project-discovery.md`. Establish the target entry, brand and behavior constraints, related dependencies and unknowns. The bundled read-only scanner assists this review; it does not prove complete understanding or runtime support.
+Before generating or changing interfaces in an existing code project, read `references/workflow/project-discovery.md`. Establish the target entry, brand and behavior constraints, related dependencies and unknowns. The bundled read-only scanner assists this review; it does not prove complete understanding or runtime support.
 
 ## Shared context
 
-Before design work, read `variant-output/.variant-context.json` when it exists. For the schema and update rules, read `references/project-context.md`.
+Before design work, read `variant-output/.variant-context.json` when it exists. For the schema and update rules, read `references/workflow/project-context.md`.
 
 - User instructions override persisted preferences.
 - A confirmed design system locks visual tokens, not content hierarchy or product judgment.
@@ -77,8 +77,8 @@ Before design work, read `variant-output/.variant-context.json` when it exists. 
 
 For money, privacy, permissions, deletion, health, safety, or AI-generated conclusions, read:
 
-- `references/design-declaration.md`
-- `references/product-integrity-gate.md`
+- `references/workflow/design-declaration.md`
+- `references/workflow/product-integrity-gate.md`
 
 Infer the declaration from available product evidence. Ask only about unknowns that change the primary job, trust boundary, or irreversible consequence. Label mock and inferred evidence explicitly. Product integrity outranks aesthetic preference.
 
@@ -99,7 +99,7 @@ Write complete runnable output. Never use `TODO`, omitted-code comments, or pros
 
 Before presenting generated or materially changed interface code:
 
-1. Read `references/quality-baseline.md`.
+1. Read `references/workflow/quality-baseline.md`.
 2. Run the deterministic scanner:
 
    ```bash
@@ -124,4 +124,4 @@ The scanner is evidence, not a substitute for visual judgment. Do not claim WCAG
 
 ## Version-bound verification
 
-For checks on generated artifacts, follow `references/artifact-verification.md`. Record evidence against the actual revision and recheck it before delivery; changes invalidate prior results. Static-only checks do not establish runtime correctness.
+For checks on generated artifacts, follow `references/workflow/artifact-verification.md`. Record evidence against the actual revision and recheck it before delivery; changes invalidate prior results. Static-only checks do not establish runtime correctness.

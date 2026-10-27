@@ -138,7 +138,7 @@ Claude Code 或其他本地 agent 同样需要完整目录；可以安装到对�
 - v2 上下文分别存储各版文件、tokens、版本、比较信息和历史。覆盖前必须保存持久快照，Git 本身不会保存中间修改。
 - 优先级：用户约束 → 产品任务和已有设计系统 → 可访问性 → 风格建议。无法解决的可访问性冲突要明确报告。品牌锁定保留字体和 tokens，自由探索允许变化；取消动效数量配额。
 
-实现与验证：[预览和历史](references/preview-and-history.md)、[上下文结构](references/project-context.md)、[回归测试](tests/README.md)。保留 route-first 路由、局部变体和 Product Integrity Gate。
+实现与验证：[预览和历史](references/workflow/preview-and-history.md)、[上下文结构](references/workflow/project-context.md)、[回归测试](tests/README.md)。保留 route-first 路由、局部变体和 Product Integrity Gate。
 
 ---
 
@@ -179,7 +179,7 @@ AI agent 工具的落地页 — Dark Indigo 色板，Geist 字体，saas.md 中�
 给我的周报页面出 A/B/C 三版：A 贴近这个方向，B 和 C 作为对照。
 ```
 
-技能用 `scripts/direction-card.mjs` 读取方向卡，并把它记为一条灵感参考。你的品牌、设计系统和可访问性要求都优先于方向卡，卡片里的截图和文案一律不复用。在没有网络的沙箱里，可以把方向卡的 JSON 粘贴给 agent，或者保存成文件。详见 `references/direction-cards.md`。
+技能用 `scripts/direction-card.mjs` 读取方向卡，并把它记为一条灵感参考。你的品牌、设计系统和可访问性要求都优先于方向卡，卡片里的截图和文案一律不复用。在没有网络的沙箱里，可以把方向卡的 JSON 粘贴给 agent，或者保存成文件。详见 `references/sources/direction-cards.md`。
 
 ### 定向提示词结构
 
@@ -281,35 +281,37 @@ export to next       →  将选定变体导出为 Next.js App Router 组件
 
 ## 参考库
 
+`references/` 按用途分组：`workflow/` 是各流程共用的规则（项目上下文、项目检查、历史与预览、质量、产品完整性），`sources/` 是设计参考和方向卡的约定，`domains/` 是下面的行业参考，`design-system/` 和 `ux/` 是设计与体验参考，`tasks/` 是演示文稿、公众号排版、五行配色和文案这几个独立任务。
+
 ### 领域参考
 场景专用素材（启动提示词、色板、排版、布局、签名细节）：
 
 | 文件 | 领域 |
 |---|---|
-| `references/dashboard.md` | 数据仪表盘、分析、监控、交易终端 |
-| `references/editorial.md` | 杂志、新闻、长篇、报道 |
-| `references/saas.md` | SaaS 落地页、B2B、开发者工具 |
-| `references/ecommerce.md` | 电商、消费类应用、金融科技卡片 |
-| `references/education.md` | 学习应用、测验、语言工具 |
-| `references/creative.md` | 生成艺术、音乐工具、创意软件 |
-| `references/mobile.md` | iOS/Android 应用、引导流程、主屏 |
-| `references/portfolio.md` | 设计师作品集、开发者展示、自由职业者、工作室 |
-| `references/food-beverage.md` | 餐厅、食谱、咖啡品牌、烘焙、鸡尾酒吧 |
-| `references/fashion.md` | 时尚品牌、潮牌、美妆、室内设计、生活方式 |
+| `references/domains/dashboard.md` | 数据仪表盘、分析、监控、交易终端 |
+| `references/domains/editorial.md` | 杂志、新闻、长篇、报道 |
+| `references/domains/saas.md` | SaaS 落地页、B2B、开发者工具 |
+| `references/domains/ecommerce.md` | 电商、消费类应用、金融科技卡片 |
+| `references/domains/education.md` | 学习应用、测验、语言工具 |
+| `references/domains/creative.md` | 生成艺术、音乐工具、创意软件 |
+| `references/domains/mobile.md` | iOS/Android 应用、引导流程、主屏 |
+| `references/domains/portfolio.md` | 设计师作品集、开发者展示、自由职业者、工作室 |
+| `references/domains/food-beverage.md` | 餐厅、食谱、咖啡品牌、烘焙、鸡尾酒吧 |
+| `references/domains/fashion.md` | 时尚品牌、潮牌、美妆、室内设计、生活方式 |
 | `references/palettes.md` | 通用色板库 — 39 个色板 × 7+ 审美方向（含 Pinterest 流行色板） |
-| `references/ux-heuristics.md` | Nielsen 10 启发式原则 · Fitts 定律 · Hick 定律 · Jakob 定律 · 严重程度评级 · 评估流程 |
-| `references/ux-psychology.md` | 心智模型 · 认知负荷 · 格式塔原则 · 阅读模式 · 可供性 · 注意力 · 记忆 · 信任 |
-| `references/ux-information-architecture.md` | 导航模式 · 信息气味 · 卡片分类 · 树测试 · 标签规则 · 搜索设计 · IA 反模式 |
-| `references/ux-accessibility.md` | WCAG 2.1 AA · 键盘导航 · 语义 HTML · ARIA 用法 · 色彩对比 · 无障碍表单 · a11y 代码扫描 |
-| `references/ux-research-methods.md` | 可用性测试 · 用户访谈 · SUS/NPS · A/B 测试 · 分析工具 · 研究方法选择矩阵 |
-| `references/ux-mobile-patterns.md` | 触摸目标 · 拇指区域 · 手势规范 · iOS/Android 差异 · 底部手势冲突 · 移动端表单 |
-| `references/ux-onboarding.md` | Aha moment · 空状态 · 渐进式披露 · 注册流程优化 · 激活漏斗 · 引导反模式 |
-| `references/ux-data-visualization.md` | 图表选型框架 · 视觉编码层级 · Dashboard 密度 · 色彩编码 · 交互模式 · 数据反模式 |
-| `references/ux-content-strategy.md` | 内容模型 · 分类体系 · 多语言 UX · RTL 布局 · 内容生命周期 · 多端适配 |
-| `references/ux-design-tokens.md` | 三层 Token 架构 · 命名规范 · 语义 Token · 多品牌主题 · 暗色模式 · Style Dictionary |
-| `references/ux-component-specs.md` | 按钮/输入框/Modal/Toggle 完整状态机 · 间距规范 · ARIA 模式 · 键盘交互 |
-| `references/ux-design-critique.md` | 反馈框架 · 品味陷阱 · HiPPO 问题 · 异步评审 · 批评 vs 评审 · 自我批评清单 |
-| `references/ux-conversion-patterns.md` | 信任信号 · 落地页解剖 · CTA 文案 · 定价页模式 · 表单转化 · 暗黑模式辨别 |
+| `references/ux/heuristics.md` | Nielsen 10 启发式原则 · Fitts 定律 · Hick 定律 · Jakob 定律 · 严重程度评级 · 评估流程 |
+| `references/ux/psychology.md` | 心智模型 · 认知负荷 · 格式塔原则 · 阅读模式 · 可供性 · 注意力 · 记忆 · 信任 |
+| `references/ux/information-architecture.md` | 导航模式 · 信息气味 · 卡片分类 · 树测试 · 标签规则 · 搜索设计 · IA 反模式 |
+| `references/ux/accessibility.md` | WCAG 2.1 AA · 键盘导航 · 语义 HTML · ARIA 用法 · 色彩对比 · 无障碍表单 · a11y 代码扫描 |
+| `references/ux/research-methods.md` | 可用性测试 · 用户访谈 · SUS/NPS · A/B 测试 · 分析工具 · 研究方法选择矩阵 |
+| `references/ux/mobile-patterns.md` | 触摸目标 · 拇指区域 · 手势规范 · iOS/Android 差异 · 底部手势冲突 · 移动端表单 |
+| `references/ux/onboarding.md` | Aha moment · 空状态 · 渐进式披露 · 注册流程优化 · 激活漏斗 · 引导反模式 |
+| `references/ux/data-visualization.md` | 图表选型框架 · 视觉编码层级 · Dashboard 密度 · 色彩编码 · 交互模式 · 数据反模式 |
+| `references/ux/content-strategy.md` | 内容模型 · 分类体系 · 多语言 UX · RTL 布局 · 内容生命周期 · 多端适配 |
+| `references/ux/design-tokens.md` | 三层 Token 架构 · 命名规范 · 语义 Token · 多品牌主题 · 暗色模式 · Style Dictionary |
+| `references/ux/component-specs.md` | 按钮/输入框/Modal/Toggle 完整状态机 · 间距规范 · ARIA 模式 · 键盘交互 |
+| `references/ux/design-critique.md` | 反馈框架 · 品味陷阱 · HiPPO 问题 · 异步评审 · 批评 vs 评审 · 自我批评清单 |
+| `references/ux/conversion-patterns.md` | 信任信号 · 落地页解剖 · CTA 文案 · 定价页模式 · 表单转化 · 暗黑模式辨别 |
 
 ### 设计系统参考（Impeccable）
 每次生成都会加载的基础设计原则：

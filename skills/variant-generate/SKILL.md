@@ -2,17 +2,17 @@
 
 > **variant-generate**: Generate 3 distinct design variations from a prompt. Each variation expresses a distinct product trade-off; locked brand tokens stay identical. Supports variation actions: Vary strong/subtle, Distill, Shuffle layout, Change style, Remix colors, Mix, Dramatize, Add motion, Make interactive, Polish, Critique, See other views, Extract tokens. Load skills/shared/code-output.md for framework detection and output conventions. Triggers on: design options for X, show me variations, give me UI directions, vary this design, change the style, remix colors, shuffle layout, design a dashboard/landing page/app/editorial
 
-> Before generating code, load `skills/shared/code-output.md`. Also read `references/project-context.md` and `references/quality-baseline.md`.
+> Before generating code, load `skills/shared/code-output.md`. Also read `references/workflow/project-context.md` and `references/workflow/quality-baseline.md`.
 
 ## Core Workflow
 
 ### 0. Load Persisted Context (Every Session)
 
-Read `variant-output/.variant-context.json` when it exists and apply its known values as soft constraints. Follow `references/project-context.md`; the current request always overrides persisted preferences.
+Read `variant-output/.variant-context.json` when it exists and apply its known values as soft constraints. Follow `references/workflow/project-context.md`; the current request always overrides persisted preferences.
 
 Use the fast path when the brief or repository already reveals the product, audience, tone, and constraints: state consequential assumptions in one line and generate. Ask at most two questions only when the answers would materially change the result. Do not require a separate confirmation turn after an explicit request to build or generate.
 
-If the user points to a direction card (a library `/d/<slug>` page or its `.json`), read `references/direction-cards.md` and add the card as a design reference before generating.
+If the user points to a direction card (a library `/d/<slug>` page or its `.json`), read `references/sources/direction-cards.md` and add the card as a design reference before generating.
 
 ### 1. Parse → Detect → Load
 
@@ -31,16 +31,16 @@ Check `designSystem.confirmed` in context first:
 
 | Domain | Reference |
 |---|---|
-| Dashboard, analytics, admin, CRM | `references/dashboard.md` |
-| Landing page, SaaS, B2B, product site | `references/saas.md` |
-| Editorial, report, article, newsletter | `references/editorial.md` |
-| E-commerce, marketplace, checkout | `references/ecommerce.md` |
-| Education, course, quiz, training | `references/education.md` |
-| Creative tool, music, 3D, generative art | `references/creative.md` |
-| Mobile app or mobile-first flow | `references/mobile.md` |
-| Portfolio or case study | `references/portfolio.md` |
-| Food, beverage, restaurant, recipe | `references/food-beverage.md` |
-| Fashion, beauty, furniture, lifestyle | `references/fashion.md` |
+| Dashboard, analytics, admin, CRM | `references/domains/dashboard.md` |
+| Landing page, SaaS, B2B, product site | `references/domains/saas.md` |
+| Editorial, report, article, newsletter | `references/domains/editorial.md` |
+| E-commerce, marketplace, checkout | `references/domains/ecommerce.md` |
+| Education, course, quiz, training | `references/domains/education.md` |
+| Creative tool, music, 3D, generative art | `references/domains/creative.md` |
+| Mobile app or mobile-first flow | `references/domains/mobile.md` |
+| Portfolio or case study | `references/domains/portfolio.md` |
+| Food, beverage, restaurant, recipe | `references/domains/food-beverage.md` |
+| Fashion, beauty, furniture, lifestyle | `references/domains/fashion.md` |
 
 Then load only the design-system references needed for the task:
 
@@ -80,11 +80,11 @@ First define a shared task contract: primary job, identical input data, necessar
 
 **For each variation, define before coding:**
 - Starter prompt (from reference or custom)
-- Color palette (from reference or `palettes.md`) — use OKLCH for perceptually uniform colors where possible
-- Typography: display font + body font; use the guidance and banned defaults in `references/quality-baseline.md`
-- Layout pattern (from reference) — consult `spatial-design.md` for grid and hierarchy principles
-- Motion strategy — consult `motion-design.md` for timing and easing
-- **Interaction plan** — which micro-interactions and interactive patterns from `micro-interactions.md` and `interactive-patterns.md` to include (only feedback and patterns that serve the task; no motion quota)
+- Color palette (from reference or `references/palettes.md`) — use OKLCH for perceptually uniform colors where possible
+- Typography: display font + body font; use the guidance and banned defaults in `references/workflow/quality-baseline.md`
+- Layout pattern (from reference) — consult `references/design-system/spatial-design.md` for grid and hierarchy principles
+- Motion strategy — consult `references/design-system/motion-design.md` for timing and easing
+- **Interaction plan** — which micro-interactions and interactive patterns from `references/design-system/micro-interactions.md` and `references/interactive-patterns.md` to include (only feedback and patterns that serve the task; no motion quota)
 - One signature detail that makes this variation unforgettable
 
 ### 3. Implement & Present
@@ -103,7 +103,7 @@ Present a **compact Summary Card** in the terminal for each variation:
 
 Persist these three sentences under each variant's `comparison` field. Add `recommendation: {variant, reason}` based on the user's priorities and observed behavior, clearly distinguishing hypotheses from tested evidence. A recommendation does not select a winner.
 
-Build and open the comparison page by default, with A/B/C direct links and the recommendation. Follow `references/preview-and-history.md` for React mounting, snapshots, undo, and checks. Show the actual URL.
+Build and open the comparison page by default, with A/B/C direct links and the recommendation. Follow `references/workflow/preview-and-history.md` for React mounting, snapshots, undo, and checks. Show the actual URL.
 
 ### 4. Quality Gate
 
@@ -121,9 +121,9 @@ Then check the recorded delivery:
 node <skill-root>/scripts/delivery-check.mjs variant-output
 ```
 
-It fails when A, B or C is missing or shares files, when a direction has no optimizes/tradeoff/bestFor or repeats another's, when the task contract or recommendation is missing, or when a locked design system's fonts or colors changed. It warns when `selectedVariant` is set, since only the user's explicit pick sets it. Fix every error before presenting; it does not judge rendering or taste. Then review the rendered pages for hierarchy, distinctness, responsive behavior, and working interactions using `references/quality-baseline.md`.
+It fails when A, B or C is missing or shares files, when a direction has no optimizes/tradeoff/bestFor or repeats another's, when the task contract or recommendation is missing, or when a locked design system's fonts or colors changed. It warns when `selectedVariant` is set, since only the user's explicit pick sets it. Fix every error before presenting; it does not judge rendering or taste. Then review the rendered pages for hierarchy, distinctness, responsive behavior, and working interactions using `references/workflow/quality-baseline.md`.
 
-For product-critical UI, also read `references/design-declaration.md` and run `references/product-integrity-gate.md`. Report product integrity separately from visual quality and do not present a P0 result as complete.
+For product-critical UI, also read `references/workflow/design-declaration.md` and run `references/workflow/product-integrity-gate.md`. Report product integrity separately from visual quality and do not present a P0 result as complete.
 
 Only report checks actually performed. Do not claim WCAG compliance, browser coverage, or “no AI slop” from self-assessment alone.
 
@@ -442,7 +442,7 @@ Combine two variations into one. Accepts forms like "Mix A + B" or "A's layout +
 ## Variation Loop
 
 Track iteration count internally (reset per variation). After any variation action:
-1. Run `variant-history.mjs prepare` into a new candidate directory before editing. Keep its baseline unchanged; on a conflict preserve the old candidate and reconcile into a freshly prepared one. Then use the transactional apply workflow in `references/preview-and-history.md`. It saves a snapshot before replacing files at stable paths. An edit sets `activeVariant`, never `selectedVariant`. Support `undo B` without touching A/C or the selected winner.
+1. Run `variant-history.mjs prepare` into a new candidate directory before editing. Keep its baseline unchanged; on a conflict preserve the old candidate and reconcile into a freshly prepared one. Then use the transactional apply workflow in `references/workflow/preview-and-history.md`. It saves a snapshot before replacing files at stable paths. An edit sets `activeVariant`, never `selectedVariant`. Support `undo B` without touching A/C or the selected winner.
 2. **Re-open in browser** — use the preview workflow in `skills/shared/code-output.md`
 3. **Show a 2-3 line diff summary** in the terminal — what changed, not the full code
 4. Offer the grouped action menu again — the loop never ends until the user moves on

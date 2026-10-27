@@ -1,4 +1,4 @@
-# references/voice.md · 反 AI 味写作规范
+# references/tasks/voice.md · 反 AI 味写作规范
 
 把审美和语言感写进规则。每条都有对应的真实教训。用于中文内容创作、公众号文章、产品文案。
 

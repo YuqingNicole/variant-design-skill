@@ -1,6 +1,6 @@
 # UX Data Visualization Reference
 
-Chart selection, dashboard information density, color encoding, and interactive data patterns. Distinct from aesthetic dashboard design (see `references/dashboard.md`) — this is the analytical layer.
+Chart selection, dashboard information density, color encoding, and interactive data patterns. Distinct from aesthetic dashboard design (see `references/domains/dashboard.md`) — this is the analytical layer.
 
 ---
 

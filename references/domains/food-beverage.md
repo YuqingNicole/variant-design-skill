@@ -3,11 +3,11 @@
 Restaurant sites, recipe apps, coffee brands, meal delivery, food blogs, cocktail menus, bakery storefronts.
 
 > **Design system references for this domain:**
-> - `design-system/typography.md` — warm serif pairings, menu hierarchy, recipe step formatting
-> - `design-system/color-and-contrast.md` — appetite-friendly palettes, warm tones, food photography contrast
-> - `design-system/spatial-design.md` — menu card grids, recipe step spacing, image-heavy layouts
-> - `design-system/responsive-design.md` — mobile menu ordering, responsive food photography
-> - `design-system/ux-writing.md` — menu descriptions, allergen callouts, ordering microcopy
+> - `references/design-system/typography.md` — warm serif pairings, menu hierarchy, recipe step formatting
+> - `references/design-system/color-and-contrast.md` — appetite-friendly palettes, warm tones, food photography contrast
+> - `references/design-system/spatial-design.md` — menu card grids, recipe step spacing, image-heavy layouts
+> - `references/design-system/responsive-design.md` — mobile menu ordering, responsive food photography
+> - `references/design-system/ux-writing.md` — menu descriptions, allergen callouts, ordering microcopy
 
 ## Table of Contents
 1. Starter Prompts

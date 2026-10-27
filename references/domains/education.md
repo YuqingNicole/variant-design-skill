@@ -3,11 +3,11 @@
 Language learning, science education, quiz/flashcard apps, tutoring interfaces, LMS platforms, kids learning, coding bootcamps.
 
 > **Design system references for this domain:**
-> - `design-system/typography.md` — readable body text, accessibility-first sizing
-> - `design-system/color-and-contrast.md` — semantic feedback colors (correct/incorrect), calming palettes
-> - `design-system/interaction-design.md` — quiz interactions, progress indicators, gamification states
-> - `design-system/motion-design.md` — celebration animations, progress transitions
-> - `design-system/ux-writing.md` — encouraging feedback copy, instructional microcopy
+> - `references/design-system/typography.md` — readable body text, accessibility-first sizing
+> - `references/design-system/color-and-contrast.md` — semantic feedback colors (correct/incorrect), calming palettes
+> - `references/design-system/interaction-design.md` — quiz interactions, progress indicators, gamification states
+> - `references/design-system/motion-design.md` — celebration animations, progress transitions
+> - `references/design-system/ux-writing.md` — encouraging feedback copy, instructional microcopy
 
 ## Table of Contents
 1. Starter Prompts

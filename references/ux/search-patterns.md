@@ -269,7 +269,7 @@ Default to **relevance** for intent-driven search (user is looking for a specifi
 
 ### No-results state
 
-See `ux-empty-states.md` — Type 3: No Results. Summary for search context:
+See `references/ux/empty-states.md` — Type 3: No Results. Summary for search context:
 - Echo the exact query: "No results for 'desgin systm'"
 - Spell-check suggestion if likely typo: "Did you mean 'design system'?"
 - Broaden scope suggestion: "Try searching in All Workspaces"
@@ -417,7 +417,7 @@ async function search(query: string) {
 
 ## Related References
 
-- `ux-empty-states.md` — No-results and error states for search
-- `ux-tables-lists.md` — Table-level filtering and search patterns
-- `ux-information-architecture.md` — When search replaces navigation
-- `interactive-patterns.md` — Dropdown and combobox interaction specs
+- `references/ux/empty-states.md` — No-results and error states for search
+- `references/ux/tables-lists.md` — Table-level filtering and search patterns
+- `references/ux/information-architecture.md` — When search replaces navigation
+- `references/interactive-patterns.md` — Dropdown and combobox interaction specs

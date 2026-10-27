@@ -83,11 +83,11 @@ Scanner success is only a static preflight. Keyboard-tab through actual controls
 
 Run browser checks with, in order: the environment's own browser tooling; the project's installed Playwright or Puppeteer; or a locally installed Chrome or Chromium in headless mode (`--headless=new --screenshot` or `--dump-dom` with a small probe script). Do not borrow `node_modules` from the skill directory; user installs do not ship them. If none of these is available, report the rendered checks as unverified. Put probe scripts, screenshots and other check files in the project's `.variant-work/`, not in `/tmp` or the project's source folders.
 
-For the five regression scenarios and executable checks, read `references/preview-and-history.md`. Record the artifact, viewport, action, expected result, actual result, and any untested behavior. Do not describe fixture coverage as validation of every future generated page.
+For the five regression scenarios and executable checks, read `references/workflow/preview-and-history.md`. Record the artifact, viewport, action, expected result, actual result, and any untested behavior. Do not describe fixture coverage as validation of every future generated page.
 
 ## Product integrity
 
-For money, privacy, permissions, deletion, health, safety, or AI-derived conclusions, also run `references/product-integrity-gate.md`. Report it separately:
+For money, privacy, permissions, deletion, health, safety, or AI-derived conclusions, also run `references/workflow/product-integrity-gate.md`. Report it separately:
 
 ```text
 Product Integrity: pass | conditional | block

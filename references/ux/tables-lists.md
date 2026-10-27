@@ -135,7 +135,7 @@ Always show active filters visibly — users forget what filters are active and 
 
 ### Empty state on over-filtering
 
-See `ux-empty-states.md` — no-results type. Always offer "Clear filters" as primary action.
+See `references/ux/empty-states.md` — no-results type. Always offer "Clear filters" as primary action.
 
 ---
 
@@ -355,8 +355,8 @@ For tables with hundreds or thousands of rows:
 
 ## Related References
 
-- `ux-search-patterns.md` — Table-level search, filter-as-search patterns
-- `ux-empty-states.md` — Empty tables (first use, filtered empty, error)
-- `ux-notifications.md` — Toast feedback for bulk actions
-- `ux-error-design.md` — Inline row errors, bulk operation failure states
-- `ux-data-visualization.md` — When a chart is better than a table
+- `references/ux/search-patterns.md` — Table-level search, filter-as-search patterns
+- `references/ux/empty-states.md` — Empty tables (first use, filtered empty, error)
+- `references/ux/notifications.md` — Toast feedback for bulk actions
+- `references/ux/error-design.md` — Inline row errors, bulk operation failure states
+- `references/ux/data-visualization.md` — When a chart is better than a table

@@ -1,6 +1,6 @@
 # UX Content Strategy Reference
 
-Content models, metadata architecture, multilingual UX, and content lifecycle design. Distinct from voice and copywriting style (see `references/voice.md`) — this is the structural layer of content.
+Content models, metadata architecture, multilingual UX, and content lifecycle design. Distinct from voice and copywriting style (see `references/tasks/voice.md`) — this is the structural layer of content.
 
 ---
 

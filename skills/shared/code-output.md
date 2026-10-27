@@ -97,7 +97,7 @@ Each framework has its own file template, preview command, and import note.
 
 #### React (Next.js, Vite, or generic)
 
-Write default-exported `VariantA.tsx`, `VariantB.tsx`, and `VariantC.tsx` into `variant-output/`. Mount them automatically using `references/preview-and-history.md`; the comparison view and three direct URLs are part of delivery. Starting the original project's server alone is insufficient. Keep production routes untouched. Use a native isolated route adapter when framework-specific imports/providers require it, and remove only files created by this task during cleanup.
+Write default-exported `VariantA.tsx`, `VariantB.tsx`, and `VariantC.tsx` into `variant-output/`. Mount them automatically using `references/workflow/preview-and-history.md`; the comparison view and three direct URLs are part of delivery. Starting the original project's server alone is insufficient. Keep production routes untouched. Use a native isolated route adapter when framework-specific imports/providers require it, and remove only files created by this task during cleanup.
 
 #### Vue 3 SFC
 
@@ -225,7 +225,7 @@ variant-output/
     └── dashboard-A-tokens.css    (when user extracts tokens)
 ```
 
-**Iteration files:** Keep stable output paths, but prepare a new candidate with a baseline before generating changes, reject stale candidates, and save a verified snapshot before replacing them. Follow `references/preview-and-history.md`. Git does not preserve uncommitted intermediate edits.
+**Iteration files:** Keep stable output paths, but prepare a new candidate with a baseline before generating changes, reject stale candidates, and save a verified snapshot before replacing them. Follow `references/workflow/preview-and-history.md`. Git does not preserve uncommitted intermediate edits.
 
 ### Auto-Preview
 
@@ -237,7 +237,7 @@ node <skill-root>/scripts/open-preview.mjs variant-output/variant-dashboard-A.ht
 
 If the runtime cannot open a browser, provide the exact file path or preview URL instead of failing the task. Re-open or refresh after iterations so the user never has to locate the artifact manually.
 
-Sandboxed agents often cannot bind a port or open `file://` pages. HTML output still opens by double-click, so give its path. React output needs a server; build the self-contained snapshot with `react-preview.mjs ... --static` as described in `references/preview-and-history.md`, and give its `file://` paths. Never ask the user to wire up a preview by hand.
+Sandboxed agents often cannot bind a port or open `file://` pages. HTML output still opens by double-click, so give its path. React output needs a server; build the self-contained snapshot with `react-preview.mjs ... --static` as described in `references/workflow/preview-and-history.md`, and give its `file://` paths. Never ask the user to wire up a preview by hand.
 
 ### Live Preview Server (Optional)
 
@@ -354,7 +354,7 @@ Print: `✦ Context cleared — next generation starts fresh.`
 
 ### Comparison View
 
-Build the comparison page on initial generation and refresh it after changes. Each card includes optimization, trade-off, best-fit scenario, and a direct preview link. Show the reasoned recommendation separately from the selected winner. Use titled, isolated iframes and a responsive single-column layout on narrow screens. Read `references/preview-and-history.md` for the bundled builder.
+Build the comparison page on initial generation and refresh it after changes. Each card includes optimization, trade-off, best-fit scenario, and a direct preview link. Show the reasoned recommendation separately from the selected winner. Use titled, isolated iframes and a responsive single-column layout on narrow screens. Read `references/workflow/preview-and-history.md` for the bundled builder.
 
 ### Framework Export
 
@@ -471,7 +471,7 @@ Every output must support its product task with working controls. Use motion onl
 
 **File output:**
 - Write to `variant-output/VariantA.tsx` (preserves same directory convention as HTML)
-- Automatically create an isolated preview entry; see `references/preview-and-history.md`.
+- Automatically create an isolated preview entry; see `references/workflow/preview-and-history.md`.
 
 **Component structure:**
 - Functional components only — no class components

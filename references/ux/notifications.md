@@ -373,7 +373,7 @@ function canShowToast(state: ActivityState, severity: Severity): boolean {
 
 ## Related References
 
-- `ux-error-design.md` — Error classification and when errors become notifications
-- `ux-empty-states.md` — How async error toasts relate to empty error states
-- `design-system/micro-interactions.md` — Toast entry/exit animation specs
-- `ux-interaction-transitions.md` — Notification animation choreography
+- `references/ux/error-design.md` — Error classification and when errors become notifications
+- `references/ux/empty-states.md` — How async error toasts relate to empty error states
+- `references/design-system/micro-interactions.md` — Toast entry/exit animation specs
+- `references/ux/interaction-transitions.md` — Notification animation choreography

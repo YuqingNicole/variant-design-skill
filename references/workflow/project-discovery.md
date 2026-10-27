@@ -73,4 +73,4 @@ A passing report covers only its listed observations, not every acceptance crite
 
 ## Reference selection before variants
 
-When outside references help the task, read `design-reference-selection.md` after project recognition and before generating A/B/C. Save source, borrowing intent, task fit and constraints in optional `brief.designReferences`; distinguish inspiration from code/asset reuse. Existing brand and functional constraints remain authoritative.
+When outside references help the task, read `references/sources/design-reference-selection.md` after project recognition and before generating A/B/C. Save source, borrowing intent, task fit and constraints in optional `brief.designReferences`; distinguish inspiration from code/asset reuse. Existing brand and functional constraints remain authoritative.
