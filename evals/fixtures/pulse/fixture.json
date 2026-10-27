@@ -1,0 +1,11 @@
+{
+  "description": "Weekly product analytics report for a Monday reader. Brand-locked: src/tokens.css says keep these fonts and colors. Vite + React.",
+  "prompt": "使用完整 Variant Design 技能。在当前项目中先检查页面结构和设计系统，再生成保留核心任务的 A/B/C 三个设计方向。已有品牌保持字体与 tokens；没有品牌约束时探索三种鲜明风格。打开三版预览，说明优化、取舍与适用场景，并给出有理由的推荐，但先不要替我选定最终方案。（这是无人值守运行：用 react-preview.mjs --static 生成可直接打开的预览，不要启动常驻服务器。）",
+  "locked": {
+    "file": "src/tokens.css",
+    "fonts": [
+      "Inter",
+      "JetBrains Mono"
+    ]
+  }
+}

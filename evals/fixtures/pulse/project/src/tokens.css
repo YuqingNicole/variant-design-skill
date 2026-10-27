@@ -1,0 +1,10 @@
+/* Pulse brand tokens. Locked by the brand team: keep these fonts and colors. */
+:root {
+  --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --color-ink: #14213d;
+  --color-paper: #fbfaf7;
+  --color-accent: #e85d04;
+  --color-positive: #2a9d8f;
+  --color-negative: #c1121f;
+}
