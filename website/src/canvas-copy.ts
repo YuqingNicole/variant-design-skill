@@ -4,7 +4,7 @@ export const canvasEnglish:Record<string,string> = {
  '想让 Agent 一起改？在本地运行画布':'Want an agent to edit with you? Run the canvas locally',
  '网页版的项目只保存在这个浏览器里，Agent 无法读写。在本地运行后，项目存成文件，Claude Code 或 Codex 可以通过 MCP 读写同一个画布。':'Web projects are stored only in this browser, where agents cannot reach them. Run locally and projects become files that Claude Code or Codex can read and edit through MCP.',
  '另开终端，把画布接入 Claude Code：':'In another terminal, connect the canvas to Claude Code:',
- '然后打开 http://127.0.0.1:4188/canvas。在交付面板下载项目备份，再在本地画布的首页导入，就能接着改。':'Then open http://127.0.0.1:4188/canvas. Download a project backup from the delivery panel here and import it on the local canvas start page to keep editing.',
+ '然后打开 http://127.0.0.1:4188/lab/canvas。在交付面板下载项目备份，再在本地画布的首页导入，就能接着改。':'Then open http://127.0.0.1:4188/lab/canvas. Download a project backup from the delivery panel here and import it on the local canvas start page to keep editing.',
  '导入项目备份':'Import project backup','下载项目备份':'Download project backup','已导入项目备份。撤销记录不随备份保存。':'Project backup imported. Undo history is not included in backups.',
  '这不是 Variant 画布的项目备份文件。':'This is not a Variant canvas project backup.','从项目备份导入 · 可独立编辑':'Imported from a project backup · Each direction is editable',
  '这个浏览器不允许保存网站数据，刷新后项目会丢失，请及时导出。':'This browser does not allow site storage. The project will be lost on reload, so export it before leaving.',

@@ -11,12 +11,40 @@
     },
     {
       "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "destination": "/app.html"
     }
   ],
   "functions": {
     "api/index.mjs": {
       "maxDuration": 300
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/canvas",
+      "destination": "/lab/canvas",
+      "permanent": true
+    },
+    {
+      "source": "/workbench",
+      "destination": "/lab/workbench",
+      "permanent": true
+    },
+    {
+      "source": "/showcase/:slug",
+      "destination": "/d/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/showcase",
+      "missing": [
+        {
+          "type": "query",
+          "key": "direction"
+        }
+      ],
+      "destination": "/",
+      "permanent": true
+    }
+  ]
 }

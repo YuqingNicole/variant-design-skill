@@ -55,7 +55,8 @@
             "Serif headline beside an orange sculpture composition"
           ]
         }
-      ]
+      ],
+      "preview": "/directions?direction=A"
     },
     {
       "id": "B",
@@ -87,7 +88,8 @@
             "Oversized sans headline with clashing color stickers"
           ]
         }
-      ]
+      ],
+      "preview": "/directions?direction=B"
     },
     {
       "id": "C",
@@ -119,7 +121,8 @@
             "Dark spatial first screen with digital materials"
           ]
         }
-      ]
+      ],
+      "preview": "/directions?direction=C"
     }
   ],
   "featured": true,

@@ -20,7 +20,9 @@ createServer(async (request, response) => {
   if (await handleApi(request, response)) return;
   const pathname = decodeURIComponent(new URL(request.url || "/", "http://localhost").pathname);
   const candidate = normalize(join(root, pathname === "/" ? "index.html" : pathname));
-  const file = candidate.startsWith(root) && existsSync(candidate) && statSync(candidate).isFile() ? candidate : join(root, "index.html");
+  // Prerendered routes are directories with index.html; everything else falls back to the app shell.
+  const page = candidate.startsWith(root) && existsSync(candidate) ? (statSync(candidate).isFile() ? candidate : existsSync(join(candidate, "index.html")) ? join(candidate, "index.html") : null) : null;
+  const file = page ?? (existsSync(join(root, "app.html")) ? join(root, "app.html") : join(root, "index.html"));
   response.writeHead(200, { "content-type": `${mime[extname(file)] || "application/octet-stream"}; charset=utf-8` });
   createReadStream(file).pipe(response);
 }).listen(port, "127.0.0.1", () => console.log(`Variant Design running at http://127.0.0.1:${port}`));

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "tsc --noEmit -p tsconfig.app.json && vite build",
+    "build": "tsc --noEmit -p tsconfig.app.json && vite build && node scripts/prerender.mjs",
     "test": "node --test server/*.test.mjs scripts/*.test.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "start": "node server.mjs",

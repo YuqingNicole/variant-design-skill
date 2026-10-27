@@ -25,7 +25,7 @@ The `/` route uses `PaperLanding` and scoped `paper-landing.css`. The structure 
 - Geometry: 1280px content maximum; 96px desktop outer allowance, 32px mobile; 4px control corners and 9px canvas shell. Fine gray-green borders; shadows reserved for actual artboards.
 - Product proof: live A/B/C iframe previews at 1200px internal width, scaled to their container; direction viewing remains distinct from final selection. All simulated workflow diagrams are decorative, not execution status.
 - Responsive: direction rail becomes a horizontal selector; feature columns stack; complete previews remain available through links.
-- Existing online generation and exploratory dark design are accessible at `/workbench`. Historical A/B/C output retains its original brand and rendering.
+- Existing online generation and exploratory dark design are accessible at `/lab/workbench`. Historical A/B/C output retains its original brand and rendering.
 
 ### Capability illustrations
 
@@ -41,7 +41,7 @@ Thumbnails render the actual pages. Concepts are not presented as client work. T
 
 ### Shared product shell
 
-`SiteChrome.tsx` and `site-system.css` define the shared wordmark, navigation, footer and light product tokens for `/`, `/pricing` and `/workbench`. Pricing uses a single stylesheet rather than layered legacy themes: paper backgrounds, sans-serif headings, sage plan emphasis, 4–6px radii, thin borders and dark primary buttons. Language persists between routes. Free-plan CTAs lead to the guided installation section.
+`SiteChrome.tsx` and `site-system.css` define the shared wordmark, navigation, footer and light product tokens for the library (`/`, `/c/*`, `/d/*`), `/about`, `/pricing` and `/lab/*`. Pricing uses a single stylesheet rather than layered legacy themes: paper backgrounds, sans-serif headings, sage plan emphasis, 4–6px radii, thin borders and dark primary buttons. Language persists between routes. Free-plan CTAs lead to the guided installation section.
 
 Workbench theme changes are scoped to `.site-workbench`; historical variant previews and expressive concept pages retain their intentionally distinct visual systems. Future product routes should use the shared shell instead of copying navigation markup.
 
@@ -51,7 +51,7 @@ The shared product logo uses three fanned artboards: pale sage, mid sage and dar
 
 ### Content routes
 
-`/showcase` is the filterable case library; `/showcase/offscript`, `/showcase/forma`, and `/showcase/variant-site` explain briefs, constraints, A/B/C choices and delivery boundaries. Concept studies are explicitly distinguished from the historical PR #10 workflow evidence. The existing `/showcase?direction=A|B|C` dashboard embed remains compatible.
+`/` is the direction library (RFC-002): a feed of entries from `website/content/`, category pages at `/c/:category` and entry pages at `/d/:slug`, each prerendered with its own metadata. Verified entries link to their recorded output; concept studies are labeled as such. The former `/showcase` library and `/showcase/:id` case pages redirect into it. The `/showcase?direction=A|B|C` dashboard and `/directions` studio pages remain as the interactive concept renders. The former homepage lives at `/about`.
 
 `/docs` provides full-directory installation, a first-project prompt, scoped edit/undo guidance and troubleshooting. Copy failures preserve selectable text. Shared navigation and primary start actions lead to the library/docs; language persists between routes. Use the shared paper/sage shell, with original project styles confined to scaled preview artboards.
 

@@ -55,7 +55,8 @@
             "Cumulative revenue trend beside the channel that needs attention"
           ]
         }
-      ]
+      ],
+      "preview": "/showcase?direction=A"
     },
     {
       "id": "B",
@@ -87,7 +88,8 @@
             "Three channel cards side by side, each with a trend line"
           ]
         }
-      ]
+      ],
+      "preview": "/showcase?direction=B"
     },
     {
       "id": "C",
@@ -119,7 +121,8 @@
             "Channel list with the selected channel's record"
           ]
         }
-      ]
+      ],
+      "preview": "/showcase?direction=C"
     }
   ],
   "featured": false,
