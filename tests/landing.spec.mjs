@@ -314,3 +314,81 @@ test('actual landing evidence names its observed font and unverified checks',asy
  });
  expect(result.report.checks.find(c=>c.id==='brand').status).toBe('passed');expect(result.status).toBe('unverified');
 });
+
+const workspaceDirections=(label,html)=>['A','B','C'].map(id=>({id,name:`${label} ${id}`,thesis:'A test direction',typography:'Georgia',density:'Balanced',layout:'editorial',layoutLabel:'Editorial',motion:'None',reason:'Testing history',colors:['#111111','#ffffff','#336699','#eeeeee'],sampleTitle:label,sampleMeta:'Fixture',contract:{artDirection:'Editorial',signatureMove:'Grid',contentPlan:['Hero'],avoid:['Noise']},...(html?{html:`<!doctype html><html><body><h1>${label}</h1></body></html>`}:{})}));
+const workspaceVersion=(label,html=false)=>({id:label,action:'generated',brief:label,selectedId:'A',directions:workspaceDirections(label,html),createdAt:'2026-10-27T00:00:00.000Z'});
+
+for(const action of ['build','iterate','generate']) test(`restoring history discards a pending ${action} result even if cancellation fails`,async({page})=>{
+ await page.addInitScript(versions=>localStorage.setItem('variant-workspace-v2',JSON.stringify(versions)),[workspaceVersion('Recent',action==='iterate'),workspaceVersion('Restored')]);
+ await page.addInitScript(()=>{const request=window.fetch;window.fetch=(url,options)=>request(url,{...options,signal:undefined});});
+ await page.route('**/api/status',route=>route.fulfill({json:{configured:true,provider:'test'}}));
+ let release;const gate=new Promise(resolve=>release=resolve);let started;const requested=new Promise(resolve=>started=resolve);
+ await page.route(`**/api/${action}`,async route=>{const input=route.request().postDataJSON();started();await gate;await route.fulfill({json:action==='generate'?{directions:workspaceDirections('Late result',true)}:{direction:{...input.direction,name:'Late result',html:'<!doctype html><html><body>Late</body></html>'}}}).catch(()=>{});});
+ await page.goto('/workbench');
+ await page.locator('.workspace-history li').first().getByRole('button').click();
+ await (action==='generate'?page.locator('#generator button[type=submit]'):page.locator('.workspace-actions button').nth(action==='build'?0:1)).click();await requested;
+ await page.locator('.workspace-history li').nth(1).getByRole('button').click();
+ release();await page.waitForTimeout(300);
+ await expect(page.locator('#design-prompt')).toHaveValue('Restored');
+ await expect(page.locator('.workspace-history li')).toHaveCount(2);
+ await expect(page.locator('#workspace')).not.toContainText('Late result');
+});
+
+test('corrupt history is skipped, valid records reload, and quota failure keeps export available',async({page})=>{
+ const valid=workspaceVersion('Valid',true);
+ const records=[{...valid,id:'bad-date',createdAt:'invalid'}, {...valid,id:'missing',directions:[]},{...valid,id:'future',schemaVersion:99},valid];
+ await page.addInitScript(records=>{
+  if(!sessionStorage.getItem('seeded')){localStorage.setItem('variant-workspace-v2',JSON.stringify(records));sessionStorage.setItem('seeded','1');}
+  const set=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key==='variant-workspace-v2')throw new DOMException('Quota full','QuotaExceededError');return set.call(this,key,value);};
+ },records);
+ await page.route('**/api/status',route=>route.fulfill({json:{configured:true,provider:'test'}}));
+ await page.route('**/api/iterate',route=>route.fulfill({json:{direction:{...valid.directions[0],name:'In memory'}}}));
+ await page.goto('/workbench');
+ await expect(page.locator('.workspace-history li')).toHaveCount(1);
+ await expect(page.locator('.workspace-notice')).toContainText('无效记录');
+ await expect(page.locator('#design-prompt')).toHaveValue('Valid');
+ await page.locator('.workspace-actions button').nth(1).click();
+ await expect(page.locator('.workspace-notice')).toContainText('未能保存');
+ await expect(page.locator('.workspace-history li')).toHaveCount(2);
+ const download=page.waitForEvent('download');await page.locator('.workspace-export').click();expect((await download).suggestedFilename()).toMatch(/\.html$/);
+ await page.reload();await expect(page.locator('.workspace-history li')).toHaveCount(1);await expect(page.locator('#design-prompt')).toHaveValue('Valid');
+});
+
+test('an obsolete failure cannot clear the busy state of a newer request',async({page})=>{
+ await page.addInitScript(versions=>{localStorage.setItem('variant-workspace-v2',JSON.stringify(versions));const request=window.fetch;window.fetch=(url,options)=>request(url,{...options,signal:undefined});},[workspaceVersion('Recent'),workspaceVersion('Restored')]);
+ await page.route('**/api/status',route=>route.fulfill({json:{configured:true,provider:'test'}}));
+ const requests=[];await page.route('**/api/build',route=>requests.push(route));
+ await page.goto('/workbench');await page.locator('.workspace-actions button').first().click();await expect.poll(()=>requests.length).toBe(1);
+ await page.locator('.workspace-history li').nth(1).getByRole('button').click();
+ await page.locator('.workspace-actions button').first().click();await expect.poll(()=>requests.length).toBe(2);
+ await requests[0].fulfill({status:500,json:{error:'old_failure'}});await page.waitForTimeout(100);
+ await expect(page.locator('.workspace-actions button').first()).toBeDisabled();await expect(page.locator('.workspace-notice')).not.toHaveClass(/is-error/);
+ const direction=requests[1].request().postDataJSON().direction;
+ await requests[1].fulfill({json:{direction:{...direction,html:'<!doctype html><html><body>Current result</body></html>'}}});
+ await expect(page.locator('.workspace-notice')).toContainText('已保存');
+ await expect(page.locator('#design-prompt')).toHaveValue('Restored');
+});
+
+test('invalid JSON and denied storage do not prevent the workspace from rendering',async({page})=>{
+ await page.addInitScript(()=>localStorage.setItem('variant-workspace-v2','{broken'));
+ await page.goto('/workbench');await expect(page.locator('.workspace-notice')).toContainText('无法读取');await expect(page.locator('.direction-card')).toHaveCount(3);
+ await page.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Denied','SecurityError');}}));
+ await page.reload();await expect(page.locator('.direction-card')).toHaveCount(3);await expect(page.locator('.workspace-notice')).toContainText('无法读取');
+});
+
+test('history retains twelve entries and retry saves in-memory work without another model call',async({page})=>{
+ const records=Array.from({length:15},(_,i)=>workspaceVersion(`Version ${i}`,true));
+ await page.addInitScript(records=>{
+  if(!sessionStorage.getItem('seeded')){localStorage.setItem('variant-workspace-v2',JSON.stringify(records));sessionStorage.setItem('seeded','1');}
+  window.rejectWorkspaceSave=true;const set=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key==='variant-workspace-v2'&&window.rejectWorkspaceSave)throw new DOMException('Quota full','QuotaExceededError');return set.call(this,key,value);};
+ },records);
+ await page.route('**/api/status',route=>route.fulfill({json:{configured:true,provider:'test'}}));
+ let calls=0;await page.route('**/api/iterate',route=>{calls++;return route.fulfill({json:{direction:{...records[0].directions[0],name:'Saved on retry'}}});});
+ await page.goto('/workbench');await expect(page.locator('.workspace-history li')).toHaveCount(12);
+ await page.locator('.workspace-actions button').nth(1).click();await expect(page.locator('.workspace-notice')).toContainText('未能保存');
+ await page.evaluate(()=>window.rejectWorkspaceSave=false);await page.getByRole('button',{name:'重新保存历史'}).click();
+ await expect(page.locator('.workspace-notice')).toContainText('已保存');expect(calls).toBe(1);
+ await page.reload();await expect(page.locator('.workspace-history li')).toHaveCount(12);
+ await expect(page.locator('.direction-card h3').first()).toHaveText('Saved on retry');
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('variant-workspace-v2')));expect(saved[0].schemaVersion).toBe(2);expect(saved[0].selectedVariant).toBeUndefined();
+});
