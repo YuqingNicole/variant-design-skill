@@ -215,3 +215,7 @@ Every output must meet these minimums:
 - **CSS:** No `@import` for CSS files (blocks render) — only for Google Fonts in `<style>`. Use `content-visibility: auto` for off-screen sections
 - **Animation:** Only `transform` and `opacity` (GPU-composited). No `will-change` unless animation is imminent. Use `Intersection Observer` for scroll-triggered animations — never scroll event listeners
 - **Layout:** No layout thrashing (read then write, never interleave). Avoid forced synchronous reflows
+
+## Verification records
+
+For revision-bound delivery evidence, read `references/workflow/artifact-verification.md`. Use the reusable browser runner with explicit task expectations when Playwright is available. Capture non-target behavior and project-check failures before an edit, rerun after it, and retain both reports. Missing tools or expectations remain unverified; static scans alone cannot establish runtime success.

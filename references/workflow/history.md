@@ -53,3 +53,5 @@ The baseline is project/variant-specific and must remain local with its candidat
 Preflight failures preserve output files, context and history and leave the candidate available. Preparation refuses existing destinations (even empty ones). If preparation fails partway, partial copies may remain, but no usable baseline is retained; inspect them and prepare another new directory.
 
 The helper rechecks before snapshot/commit, but an external editor can still write after the last check. Its lock is cooperative, not an operating-system-wide lock; avoid editing the same files during commit. Multi-file process-crash recovery remains snapshot-based and manual; this change does not claim to eliminate that limitation.
+
+Before a scoped edit, record representative non-target behavior with the browser plan in `references/workflow/artifact-verification.md`, then rerun the same assertions after applying. Byte preservation alone does not prove rendered behavior. Retain pre-edit project-check failures so delivery can distinguish identical prior diagnostics from new or changed errors.

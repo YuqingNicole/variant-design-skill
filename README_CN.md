@@ -142,6 +142,8 @@ Claude Code 或其他本地 agent 同样需要完整目录；可以安装到对�
 
 ---
 
+运行验证可复用 Playwright 检查计划，覆盖指定品牌元素、键盘焦点、实际触发的动效及非修改区域交互。记录绑定产物版本，未运行的检查明确保留为未验证。见[验证证据](references/workflow/artifact-verification.md)。
+
 ## 使用方法
 
 ### 基础触发

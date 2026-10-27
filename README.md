@@ -142,6 +142,8 @@ Implementation and verification: [preview](references/workflow/preview.md), [his
 
 ---
 
+Runtime evidence can use a reusable Playwright check plan for named brand elements, keyboard focus, exercised motion and non-target interactions. Reports track the artifact revision; missing checks remain unverified. See [verification evidence](references/workflow/artifact-verification.md).
+
 ## Usage
 
 ### Basic triggers
