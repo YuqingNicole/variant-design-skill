@@ -15,7 +15,6 @@ Data dashboards, monitoring panels, analytics views, KPI trackers, financial ter
 3. Typography Pairings
 4. Layout Patterns
 5. Signature Details
-6. Real Community Examples
 
 ---
 
@@ -34,7 +33,7 @@ Pick one as the content foundation, adapt to user's domain:
 - "A content performance dashboard: top articles by traffic, avg. time on page, scroll depth heatmap summary, SEO score per piece."
 
 **Infrastructure / DevOps**
-- "A cloud infrastructure monitor: cluster health indicators (Fluid Instance / Synthetic Ri / Geo-Cluster), latency p50/p95/p99, error rate sparklines, deployment history timeline."
+- "A cloud infrastructure monitor: cluster health indicators per cluster, latency p50/p95/p99, error rate sparklines, deployment history timeline."
 - "A Kubernetes pod status dashboard: node utilization rings, pod health matrix, alert log, resource quota gauges."
 
 **Political / Research**
@@ -193,28 +192,3 @@ Pick one as the content foundation, adapt to user's domain:
 - **Grid lines**: very subtle, 1px, 10% opacity — structure without noise
 - **Monospace numbers**: all metrics in tabular-nums, fixed-width
 - **Section separators**: thin horizontal rules + section label in ALL CAPS muted text
-
----
-
-## 6. Real Variant Community Examples
-
-### Financial Monitoring Dashboard — @yuanqizhang139 (32 likes)
-
-**Prompt:** "A real-time financial monitoring dashboard: dark #0A0E1A background, amber accent. 'DAILY MOST INTERESTING' header with live date. Left panel: ticker table showing FOC / PGH / RISK values with LOW / STABLE / HIGH status badges and a System Event Log below. Right panel: full-height line chart. Overall Integrity: 89% progress bar at the footer."
-
-**What makes it work:**
-- The "DAILY MOST INTERESTING" header reframes the dashboard as editorial — it signals curation rather than raw data firehose, which reduces cognitive load for the analyst skimming for signal.
-- LOW / STABLE / HIGH badges in colored pills (green / amber / red) give the risk column an instant scanability that numeric values alone can't match — the eye catches color before it reads text.
-- Placing the full-height line chart in a dedicated right column keeps the primary narrative (trend over time) visually dominant while the ticker table handles granular lookup on the left. Neither panel fights for attention because they serve different use patterns.
-- The 89% progress bar for "Overall Integrity" converts an abstract composite score into a spatial representation — users intuitively feel 89% as "almost full" rather than having to interpret a number.
-
----
-
-### Political Forecast Card — (Featured)
-
-**Prompt:** "An election probability dashboard card: green #16A34A background. Large serif statement headline: 'The incumbent's probability of winning has stabilized at 58%.' Sub-labels: ELECTION RISK / Forecast Score / Current Timeline. Trend line chart below the headline. Right panel: detailed swing-state breakdown table."
-
-**What makes it work:**
-- Writing the insight as a full declarative sentence ("has stabilized at 58%") rather than just showing the number "58%" forces the designer to commit to an interpretation — the result is a card that communicates journalism, not just data.
-- The green background is an unconventional choice for a data dashboard, which is precisely why it works: it signals political alignment visually (green party / go signal) while making the card instantly recognizable in a feed of dark-mode analytics panels.
-- Pairing the summary statement with a breakdown table on the right teaches the viewer the conclusion first, then lets them verify the supporting data — matching how analysts actually consume forecast information.

@@ -112,35 +112,6 @@ Before presenting generated or materially changed interface code:
 
 The scanner is evidence, not a substitute for visual judgment. Do not claim WCAG compliance, cross-browser support, or a quality score unless it was actually tested.
 
-## Reference routing
-
-Load one domain reference that best matches the request:
-
-| Domain | Reference |
-|---|---|
-| Dashboard, analytics, admin, CRM | `references/dashboard.md` |
-| Landing page, SaaS, B2B, product site | `references/saas.md` |
-| Editorial, report, article, newsletter | `references/editorial.md` |
-| E-commerce, marketplace, checkout | `references/ecommerce.md` |
-| Education, course, quiz, training | `references/education.md` |
-| Creative tool, music, 3D, generative art | `references/creative.md` |
-| Mobile app or mobile-first flow | `references/mobile.md` |
-| Portfolio or case study | `references/portfolio.md` |
-| Food, beverage, restaurant, recipe | `references/food-beverage.md` |
-| Fashion, beauty, furniture, lifestyle | `references/fashion.md` |
-
-Then load only the design-system references needed for the task:
-
-- type hierarchy → `references/design-system/typography.md`
-- palette and contrast → `references/design-system/color-and-contrast.md`
-- layout and spacing → `references/design-system/spatial-design.md`
-- motion → `references/design-system/motion-design.md`
-- micro-interactions → `references/design-system/micro-interactions.md`
-- forms and states → `references/design-system/interaction-design.md`
-- responsive behavior → `references/design-system/responsive-design.md`
-- interface copy → `references/design-system/ux-writing.md`
-- functional prototypes → `references/interactive-patterns.md`
-
 ## Non-negotiable invariants
 
 - Three generated directions must differ in design position, not just color.

@@ -15,19 +15,18 @@ Fashion brands, lookbooks, lifestyle magazines, streetwear drops, luxury retail,
 3. Typography Pairings
 4. Layout Patterns
 5. Signature Details
-6. Real Community Examples
 
 ---
 
 ## 1. Starter Prompts
 
 **Luxury & High Fashion**
-- "A luxury fashion brand homepage: full-screen video hero of a runway walk, brand name 'MAISON ÉCLAT' in 14px spaced caps centered, minimal nav — 'Collections / Boutiques / Monde'. Below the fold: two asymmetric editorial images from the latest collection with season label 'AUTUMN/WINTER 2026'. Palette: ivory, black, one gold accent."
+- "A luxury fashion brand homepage: full-screen video hero of a runway walk, the brand name in 14px spaced caps centered, minimal nav — 'Collections / Boutiques / Monde'. Below the fold: two asymmetric editorial images from the latest collection with season label 'AUTUMN/WINTER 2026'. Palette: ivory, black, one gold accent."
 - "A designer collection lookbook: sequential full-bleed images with model name and look number ('Look 14 · ARIA') in small text bottom-right, gentle parallax scroll between looks, no navigation visible — just the scroll experience. Black background between images."
 - "A fashion editorial spread: 'THE NEW MINIMALISM' in 120px condensed sans, two-column text wrapping around a central fashion photograph, pull quote in large italic: 'Less is not nothing — it is everything that remains after you remove what doesn't matter.' Cream on black."
 
 **Streetwear & Contemporary**
-- "A streetwear brand drop page: 'DROP 007 — CONCRETE GARDEN' in bold condensed caps, countdown timer to release (00:14:32:07), product grid showing hoodie, tee, cap, and cargo pants with hover-to-rotate effect. Black and white with one electric accent color. 'NOTIFY ME' button if sold out."
+- "A streetwear brand drop page: the drop number and title in bold condensed caps, countdown timer to release (00:14:32:07), product grid showing hoodie, tee, cap, and cargo pants with hover-to-rotate effect. Black and white with one electric accent color. 'NOTIFY ME' button if sold out."
 - "A sneaker product page: hero image of shoe at 45° angle on solid color background matching the shoe, shoe name 'AIR STRATUM' in large condensed type, colorway selector as circles, size grid, 'ADD TO BAG' button. Below: material breakdown, sustainability info, styling suggestions grid."
 - "A vintage clothing marketplace: Pinterest-style masonry grid of garment photos with era tags (70s / 80s / Y2K), price overlay bottom-left, seller rating stars. Filter bar: Era, Size, Category, Price range. Warm off-white background with retro typography."
 
@@ -237,8 +236,8 @@ Fashion brands, lookbooks, lifestyle magazines, streetwear drops, luxury retail,
 │  [BRAND]                    NOTIFY ME  │
 ├────────────────────────────────────────┤
 │                                        │
-│  DROP 007                              │
-│  CONCRETE GARDEN                       │
+│  DROP NUMBER                           │
+│  DROP TITLE                            │
 │                                        │
 │  RELEASES IN  00 : 14 : 32 : 07       │
 │               DAY  HR   MIN   SEC      │
@@ -271,38 +270,3 @@ Fashion brands, lookbooks, lifestyle magazines, streetwear drops, luxury retail,
 - **Video hero** — silent autoplay video of models/product in motion, sets mood before any text is read
 - **Dot leader navigation** — collection sections connected by dots in a vertical timeline on scroll
 - **Material texture close-ups** — small circular detail shots showing fabric weave, leather grain, stitching
-
----
-
-## 6. Real Community Examples
-
-### Luxury Brand — Silence as Identity
-
-**Prompt:** "A luxury fashion house homepage: ivory #F5F0EA background, brand name 'MAISON ÉCLAT' in 14px Cormorant Garamond letterspaced 0.3em centered at top, navigation 'Collections · Boutiques · Monde' in same size below. Single full-bleed editorial image at 70vh — model in cream coat walking through empty gallery space. Below: two asymmetric images (60/40 split) from AW26 collection, season label 'AUTUMN/WINTER 2026' in 11px caps between them. Zero decorative elements. Maximum whitespace."
-
-**What makes it work:**
-- The brand name at 14px (not 48px, not 96px) is a power move — it says "we don't need to shout, you already know who we are." This only works for brands with genuine recognition; for newer brands, it would read as invisible. The lesson: confidence in typography signals confidence in product.
-- A single hero image (not a carousel, not a grid) forces the brand to select their strongest visual. The empty gallery setting in the photo does double duty — it's both a fashion photograph and an architectural statement about the brand's relationship to space and art.
-- Zero decorative elements means the photography must carry the entire emotional load. This constraint produces better art direction — every photo session has to yield images that work without typographic support.
-
----
-
-### Streetwear Drop — Urgency as Design
-
-**Prompt:** "A streetwear drop page: white #F0F0F0 background, brand wordmark in heavy condensed black top-left. Hero: 'DROP 007 — CONCRETE GARDEN' in 72px Clash Display with 2px offset shadow in electric red #FF2D20. Countdown timer in monospace: '00:14:32:07' with labels (DAY HR MIN SEC). Below: 4-column product grid — each item shows product flat-lay on white, name in condensed caps, price, and [ADD TO BAG] button. Items sold out show crossed price and 'SOLD OUT' in red. Footer: 'FOLLOW @BRAND FOR RESTOCK ALERTS' in small caps."
-
-**What makes it work:**
-- The countdown timer is not decoration — it's a behavioral trigger. In streetwear, scarcity is the product as much as the clothing itself. The timer transforms browsing into a competition against time, which is exactly the emotional state that drives impulse purchases.
-- The 2px offset shadow on the headline is the only decorative element, and it's enough to signal "street" without descending into graffiti clichés. The red accent color is used only on the shadow and sold-out labels — two contexts where urgency matters.
-- Showing sold-out items (rather than hiding them) is deliberate social proof — it says "other people wanted this and you missed it," which increases the urgency to buy what's still available. The crossed-out price is a visual scar that drives FOMO.
-
----
-
-### Scandinavian Interior — Object as Hero
-
-**Prompt:** "A Scandinavian furniture brand product page: warm off-white #F8F6F2 background. Navigation: brand name + 'Living / Dining / Bedroom / Lighting' in 13px. Product: 'STRÖM LOUNGE CHAIR' in 28px Instrument Serif, price '€1,290' below. Large product image on white (70% viewport width) with material close-up thumbnails below. Right column: description paragraph, materials list (Oak Frame · Wool Upholstery · Brass Details), dimensions table, [ADD TO CART] button in sage green #5A7A5A. Below: 'COMPLETE THE LOOK' section with matching ottoman and side table."
-
-**What makes it work:**
-- Letting the product photo dominate 70% of the viewport is the digital equivalent of walking into a gallery and seeing one chair spotlit in the center of the room. Scandinavian design philosophy is about the object speaking for itself — the page design mirrors that belief.
-- Material close-up thumbnails (grain of oak, weave of wool, patina of brass) serve the same purpose as touching furniture in a showroom. They translate the tactile selling experience into a visual one, which is critical for high-priced furniture sold online.
-- The "Complete The Look" section is styled as editorial curation, not algorithmic recommendation. Showing a matched set (chair + ottoman + table) tells a design story that "Customers also bought" never could.

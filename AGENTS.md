@@ -14,7 +14,7 @@ Variant Design is an agent skill. It turns one brief into three comparable desig
 |---|---|---|
 | `SKILL.md` | Router entry point | Keep it short. It routes to one sub-skill; do not inline workflows here |
 | `skills/*/SKILL.md` | Sub-skills: generate, design-system, component, analyze, ux | `skills/shared/code-output.md` is the single source of truth for output, preview and export. Only the root `SKILL.md` has skill frontmatter: Codex and `npx skills` scan folders recursively and would register sub-skills as broken standalone skills (enforced by `plugin-package.test.py`) |
-| `references/` | Loaded on demand by the routes | Domain references follow the six-part structure in `README.md` → Contributing |
+| `references/` | Loaded on demand by the routes | Domain references follow the five-part structure in `README.md` → Contributing. `scripts/skill-links.test.mjs` fails on a named file that does not ship with the skill and on a reference no route reaches |
 | `scripts/*.mjs` | Runtime helpers that run inside **user projects** | Zero dependencies, Node 22+, ESM. Each has a CLI and exported functions |
 | `scripts/*.test.mjs` | `node:test` unit tests for the helpers | Excluded from the plugin package |
 | `tests/` | Playwright browser regressions (`loop.spec.mjs`, `landing.spec.mjs`) | Has its own `package.json` |
