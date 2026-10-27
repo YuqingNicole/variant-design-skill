@@ -119,6 +119,21 @@ test('preview serves a rewrite made right after the previous change',async()=>{
   }finally{if(fs.readFileSync(file,'utf8')!==original)fs.writeFileSync(file,original);}
 });
 
+test('static preview uses an isolated Vite package with the target project React',async({page})=>{
+ const os=await import('node:os');const project=fs.mkdtempSync(path.join(os.tmpdir(),'variant-no-vite-'));
+ try {
+  const output=path.join(project,'variant-output');fixture(output);
+  const manifest='{"name":"without-vite","dependencies":{"react":"19.1.1","react-dom":"19.1.1"}}';fs.writeFileSync(path.join(project,'package.json'),manifest);
+  for(const name of ['react','react-dom','scheduler'])fs.cpSync(path.resolve('node_modules',name),path.join(project,'node_modules',name),{recursive:true});
+  const command=['../scripts/react-preview.mjs',project,output,'--static'];
+  const missing=spawnSync(process.execPath,command,{encoding:'utf8'});expect(missing.status).not.toBe(0);expect(missing.stderr).toContain('--vite-root');
+  const built=spawnSync(process.execPath,[...command,'--vite-root',process.cwd()],{encoding:'utf8'});expect(built.status,built.stderr).toBe(0);
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  for(const id of ['A','B','C']){await page.goto(pathToFileURL(path.join(output,`_static/_preview/${id}.html`)).href);await expect(page.getByRole('heading')).toHaveText(`Direction ${id}`);await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Inspect 1');}
+  expect(errors).toEqual([]);expect(fs.readFileSync(path.join(project,'package.json'),'utf8')).toBe(manifest);expect(fs.existsSync(path.join(project,'node_modules/vite'))).toBe(false);
+ }finally{fs.rmSync(project,{recursive:true,force:true});}
+});
+
 test('reusable browser plan checks alternate focus, JS motion and non-target behavior on the recorded revision',async({page,browser})=>{
  const {verifyInBrowser,verificationPlan}=await import('../scripts/browser-verification.mjs');
  const {inspectVerification}=await import('../scripts/artifact-verification.mjs');

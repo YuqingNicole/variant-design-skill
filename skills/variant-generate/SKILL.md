@@ -88,7 +88,7 @@ Register A, B and C in `.variant-context.json` following `references/workflow/pr
 
 ## 5. Preview
 
-Build and open the comparison page with A/B/C direct links and the recommendation, following `references/workflow/preview.md`. Show the actual URL or `file://` path.
+Build and open the comparison page with A/B/C direct links and the recommendation, following `references/workflow/preview.md`. Show the actual URL or `file://` path. For portable React without Vite, use the isolated `--vite-root` path in that reference; native framework features still need their adapter.
 
 ## 6. Check
 

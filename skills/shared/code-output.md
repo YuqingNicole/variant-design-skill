@@ -216,6 +216,8 @@ Every output must meet these minimums:
 - **Animation:** Only `transform` and `opacity` (GPU-composited). No `will-change` unless animation is imminent. Use `Intersection Observer` for scroll-triggered animations — never scroll event listeners
 - **Layout:** No layout thrashing (read then write, never interleave). Avoid forced synchronous reflows
 
+For React projects without Vite, the preview helper accepts `--vite-root` for an isolated bundler package while reusing the project's React. Follow `references/workflow/preview.md`; unsupported framework behavior or unavailable installation remains unverified. Do not improvise a bundler.
+
 ## Verification records
 
 For revision-bound delivery evidence, read `references/workflow/artifact-verification.md`. Use the reusable browser runner with explicit task expectations when Playwright is available. Capture non-target behavior and project-check failures before an edit, rerun after it, and retain both reports. Missing tools or expectations remain unverified; static scans alone cannot establish runtime success.

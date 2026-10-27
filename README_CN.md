@@ -142,6 +142,8 @@ Claude Code 或其他本地 agent 同样需要完整目录；可以安装到对�
 
 ---
 
+React 预览可通过 `--vite-root` 使用独立 Vite 工具包，同时保留项目自己的 React；可独立运行的客户端组件可生成静态 HTML。Next 原生功能仍需框架适配。见[预览配置与限制](references/workflow/preview.md)。
+
 项目接入需要在生成接入文件前准备源稿与目标文件基准；源稿或目标文件变化时，会在写入前拒绝操作。见[接入流程](skills/shared/export.md)。
 
 运行验证可复用 Playwright 检查计划，覆盖指定品牌元素、键盘焦点、实际触发的动效及非修改区域交互。记录绑定产物版本，未运行的检查明确保留为未验证。见[验证证据](references/workflow/artifact-verification.md)。

@@ -9,9 +9,13 @@ import { buildPreview } from './build-preview.mjs';
 
 const args = process.argv.slice(2);
 const staticMode = args.includes('--static');
-const [projectArg, outputArg] = args.filter(arg => arg !== '--static');
-const project = path.resolve(projectArg ?? '.');
-const output = path.resolve(outputArg ?? path.join(project, 'variant-output'));
+const viteRootIndex=args.indexOf('--vite-root');
+if(viteRootIndex!==-1 && (!args[viteRootIndex+1] || args[viteRootIndex+1].startsWith('--'))) {console.error('--vite-root requires the isolated package directory.');process.exit(1);}
+const viteRoot=viteRootIndex===-1?null:path.resolve(args[viteRootIndex+1]);
+const [projectArg, outputArg] = args.filter((arg,i) => arg !== '--static' && (viteRootIndex===-1 || (i!==viteRootIndex && i!==viteRootIndex+1)));
+// Vite canonicalizes inputs; match its root on platforms where /tmp or /var are aliases.
+const project = fs.realpathSync(path.resolve(projectArg ?? '.'));
+const output = fs.realpathSync(path.resolve(outputArg ?? path.join(project, 'variant-output')));
 const buildTimeoutMs = Number(process.env.VARIANT_STATIC_TIMEOUT_MS) || 180_000;
 
 // Some bundler releases hang in a busy loop instead of failing, which no in-process timer can
@@ -70,8 +74,10 @@ try {
   const require = createRequire(path.join(project, 'package.json'));
   for (const name of ['react', 'react-dom/client']) require.resolve(name);
   let vite;
-  try { vite = await import(pathToFileURL(require.resolve('vite')).href); }
-  catch { throw new Error('Vite is not installed in this project. Use a native framework adapter or the isolated harness described in references/workflow/preview.md.'); }
+  try {
+    const bundlerRequire=viteRoot?createRequire(path.join(viteRoot,'package.json')):require;
+    vite = await import(pathToFileURL(bundlerRequire.resolve('vite')).href);
+  } catch { throw new Error('Vite is unavailable. Install a separate preview package in .variant-work/preview-harness with vite@7.3.6 and rollup@4.65.0, then repeat this command with --vite-root .variant-work/preview-harness. Keep the original project root so its React is reused. See references/workflow/preview.md for framework limits; do not write a custom bundler.'); }
   if (staticMode) await buildStatic(vite, require, result);
   else {
     const server = await vite.createServer({ ...viteOptions(require), appType: 'mpa',
