@@ -29,6 +29,24 @@ Each check requires `id`, `status` (`passed`, `failed`, `unverified`, `not-appli
 
 A report's aggregate status describes only the recorded checks and declared dependency coverage. All not-applicable claims must be justified; they are not a shortcut to asserting the product is production-ready. Never claim every element was checked when the adapter measured one heading. Missing browser tools or unknown expected styles must produce unverified checks.
 
+## Task observations
+
+The JavaScript API `observeTask(task, profile, asyncAdapter)` runs a trusted adapter between source freshness checks. It does not open a browser by itself. Use the available browser/test runner to perform the actual observations and return:
+
+```js
+{
+  conditions: {
+    url, browser, language, theme, dataState, interactionState,
+    viewport: { width, height }, reducedMotion: 'reduce' // or 'no-preference'
+  },
+  checks: [{ id, status: 'passed', reason, tool, toolVersion, evidence }]
+}
+```
+
+Allowed check statuses: passed, failed, unverified. Never invent tool results; missing/failed adapters or incomplete evidence remain unverified. Reports bind task content and profile content, record conditions/time, and become stale on changes during observation. `inspectObservation(report, task, profile)` checks source bindings; it always reports that current browser/environment freshness is not established. Evidence strings are trusted adapter assertions, not signed proof or screenshot storage. Do not include tokens, personal data or credential-bearing URLs.
+
+A passing report covers only its listed observations, not every acceptance criterion or the whole project. Screenshots, automatic adapter selection, task revision history, selection/change receipts and integration remain separate follow-up work. Preserve existing candidate snapshots and verification flows.
+
 ## Current coverage and remaining work
 
 Regression coverage includes actual computed font/focus drift in a React fixture and a heading-font observation on the real landing B artifact with shared website source tracked. Remaining checks in that real landing report deliberately stay unverified. Existing reduced-motion regression still checks the coffee example, not every new generated artifact.

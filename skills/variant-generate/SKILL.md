@@ -1,33 +1,48 @@
 <!-- Sub-workflow of the variant-design skill, reached through the route table in ../../SKILL.md. It has no skill frontmatter on purpose: agents that scan folders recursively (Codex, `npx skills`) must not register it as a standalone skill, because its paths are relative to the skill root. -->
 
-> **variant-generate**: Generate 3 distinct design variations from a prompt. Each variation expresses a distinct product trade-off; locked brand tokens stay identical. Supports variation actions: Vary strong/subtle, Distill, Shuffle layout, Change style, Remix colors, Mix, Dramatize, Add motion, Make interactive, Polish, Critique, See other views, Extract tokens. Load skills/shared/code-output.md for framework detection and output conventions. Triggers on: design options for X, show me variations, give me UI directions, vary this design, change the style, remix colors, shuffle layout, design a dashboard/landing page/app/editorial
+> **variant-generate**: Generate three distinct design directions from a brief, each with a distinct product trade-off; locked brand tokens stay identical. Then refine them with variation actions, zone edits, undo and export. Triggers on: design options for X, show me variations, give me UI directions, vary this design, change the style, remix colors, shuffle layout, design a dashboard/landing page/app/editorial
 
-> Before generating code, load `skills/shared/code-output.md`. Also read `references/workflow/project-context.md` and `references/workflow/quality-baseline.md`.
+# Generate
 
-## Core Workflow
+## Load map
 
-### 0. Load Persisted Context (Every Session)
+Read files only at the step that names them, and only the section you need. Do not read ahead: the first generation needs the files in the first block, later turns load the second block on demand.
 
-Read `variant-output/.variant-context.json` when it exists and apply its known values as soft constraints. Follow `references/workflow/project-context.md`; the current request always overrides persisted preferences.
+| When | Read |
+|---|---|
+| Existing project, before generating | `references/workflow/project-discovery.md` |
+| The user points to a direction card | `references/sources/direction-cards.md` |
+| Writing code | `skills/shared/code-output.md` |
+| Vue, Astro or Svelte output | `skills/shared/frameworks.md` |
+| Recording `.variant-context.json` | `references/workflow/project-context.md` |
+| Building the comparison and previews | `references/workflow/preview.md` |
+| Checking before presenting | `references/workflow/quality-baseline.md` |
+| Money, privacy, permissions, deletion, health, safety or AI-derived conclusions | `references/workflow/design-declaration.md`, then `references/workflow/product-integrity-gate.md` |
 
-Use the fast path when the brief or repository already reveals the product, audience, tone, and constraints: state consequential assumptions in one line and generate. Ask at most two questions only when the answers would materially change the result. Do not require a separate confirmation turn after an explicit request to build or generate.
+| Later turn | Example | Read |
+|---|---|---|
+| Variation action | `A vary strong`, `B remix colors`, `Mix A + B`, `Polish C`, `Critique B`, `tokens A`, `C → mobile` | `skills/variant-generate/actions.md`, then `references/workflow/history.md` |
+| Zone edit | `B vary subtle — hero`, `zones A` | `skills/variant-generate/zones.md`, then `references/workflow/history.md` |
+| Undo, pick, recover | `undo B`, `pick B` | `references/workflow/history.md` |
+| Reopen or compare | `open B`, `compare` | `references/workflow/preview.md` |
+| Export or integrate | `react B`, `export to next`, `integrate B`, `copy` | `skills/shared/export.md` |
+| Context | `show context`, `reset context` | `references/workflow/project-context.md` |
 
-If the user points to a direction card (a library `/d/<slug>` page or its `.json`), read `references/sources/direction-cards.md` and add the card as a design reference before generating.
+## 1. Context and fast path
 
-### 1. Parse → Detect → Load
+Read `variant-output/.variant-context.json` when it exists and apply its known values as soft constraints; the current request overrides them. In an existing project, run the discovery in `references/workflow/project-discovery.md` before generating.
 
-Check `designSystem.confirmed` in context first:
+Use the fast path when the brief or repository already reveals the product, audience, tone and constraints: state consequential assumptions in one line and generate. Ask at most two questions, only when the answers would materially change the result. An explicit request to build or generate needs no separate confirmation turn. If the user says "surprise me", choose three maximally different directions and proceed.
 
-**If `designSystem.confirmed: true`:**
-- Read `designSystem.file` relative to the target project root and load its tokens. Use `variant-output/design-system.css` only when no file is registered; existing projects may keep their confirmed system in `src/design-system.css`.
-- Print: `✦ DS locked: [palette] · [fonts] · variations differ in layout only`
-- Skip palette/font selection — tokens are fixed
-- Load the domain reference below for layout and interaction patterns only
+If the user points to a direction card (a library `/d/<slug>` page or its `.json`), follow `references/sources/direction-cards.md` and add the card to the task brief before generating.
 
-**If no confirmed DS:**
-- Standard flow: identify scenario, load domain reference file + relevant design system references, pick 3 starter prompts and palettes
+## 2. Lock or explore, then load one domain reference
 
-**Either way,** load the one domain reference that best matches the request:
+**Design system confirmed** (`designSystem.confirmed: true`, or a brand file the project marks as locked): read `designSystem.file` relative to the project root and use its tokens. Print `✦ DS locked: [palette] · [fonts] · variations differ in layout only`. Skip palette and font selection; the domain reference supplies layout and interaction patterns only.
+
+**No confirmed system:** identify the scenario, then pick three starter prompts and palettes from the domain reference and `references/palettes.md`.
+
+Load the one domain reference that best matches the request:
 
 | Domain | Reference |
 |---|---|
@@ -42,411 +57,62 @@ Check `designSystem.confirmed` in context first:
 | Food, beverage, restaurant, recipe | `references/domains/food-beverage.md` |
 | Fashion, beauty, furniture, lifestyle | `references/domains/fashion.md` |
 
-Then load only the design-system references needed for the task:
+Read a design-system reference only when a direction depends on it, and only the relevant section: type scale → `references/design-system/typography.md`; palette and contrast → `references/design-system/color-and-contrast.md`; grid and spacing → `references/design-system/spatial-design.md`; motion → `references/design-system/motion-design.md`; feedback animation → `references/design-system/micro-interactions.md`; forms and states → `references/design-system/interaction-design.md`; responsive behavior → `references/design-system/responsive-design.md`; interface copy → `references/design-system/ux-writing.md`; a working filter, chart, lightbox or multi-step form → its section of `references/interactive-patterns.md`.
 
-- type hierarchy → `references/design-system/typography.md`
-- palette and contrast → `references/design-system/color-and-contrast.md`
-- layout and spacing → `references/design-system/spatial-design.md`
-- motion → `references/design-system/motion-design.md`
-- micro-interactions → `references/design-system/micro-interactions.md`
-- forms and states → `references/design-system/interaction-design.md`
-- responsive behavior → `references/design-system/responsive-design.md`
-- interface copy → `references/design-system/ux-writing.md`
-- functional prototypes → `references/interactive-patterns.md`
+## 3. Task contract and three directions
 
-### 2. Generate 3 Distinct Variations
+First define a shared task contract: primary job, identical input data, necessary functions and success criteria. Give each direction a distinct optimization, an explicit cost and a suitable scenario. For a dashboard: A prioritizes anomaly detection, B comparison across objects, C evidence tracing. All three support the same core task and functions. Differences must be visible in layout and interaction, not only described.
 
-First define a shared task contract: primary job, identical input data, necessary functions, and success criteria. Give each direction a distinct optimization, explicit cost, and suitable scenario. For a dashboard: A prioritizes anomaly detection, B comparison across objects, C evidence tracing. All three still support the same core task and required functions. Differences must be visible in layout and interaction, not merely described in the card.
-
-**If DS confirmed:** Each variation = a different structural arrangement. Visual language (colors, fonts, components) does not change between A, B, C. Variations differ in:
-- Grid and layout pattern
-- Information hierarchy (what leads, what's secondary)
-- Density and spacing rhythm (using only DS spacing tokens)
-- Which components are focal vs. supporting
-
-**If no DS confirmed:** Each variation = a different studio's interpretation. Never two in the same direction.
-
-**Universal aesthetic directions:**
+- **Design system confirmed:** each direction is a different structural arrangement: grid and layout, information hierarchy, density and rhythm (DS spacing tokens only), and which components lead. Colors, fonts and components do not change between A, B and C.
+- **No confirmed system:** each direction is a different studio's interpretation; never two in the same aesthetic.
 
 | Direction | Feel | Signature |
 |---|---|---|
 | Minimal / Editorial | Type-driven, generous space | One strong font, minimal color |
 | Bold / Expressive | High contrast, graphic | Dominant color block |
-| Dark / Premium | Moody, atmospheric | Deep bg, elevated surfaces (not shadows) |
+| Dark / Premium | Moody, atmospheric | Deep background, elevated surfaces |
 | Warm / Human | Rounded, approachable | Soft palette, organic forms |
 | Data / Technical | Dense, systematic | Grid, monospace, tight |
 | Neo-brutalist | Raw, unconventional | Bold outlines, broken grid |
 | Luxury / Silence | Maximum negative space | One image, sparse text |
 
-**For each variation, define before coding:**
-- Starter prompt (from reference or custom)
-- Color palette (from reference or `references/palettes.md`) — use OKLCH for perceptually uniform colors where possible
-- Typography: display font + body font; use the guidance and banned defaults in `references/workflow/quality-baseline.md`
-- Layout pattern (from reference) — consult `references/design-system/spatial-design.md` for grid and hierarchy principles
-- Motion strategy — consult `references/design-system/motion-design.md` for timing and easing
-- **Interaction plan** — which micro-interactions and interactive patterns from `references/design-system/micro-interactions.md` and `references/interactive-patterns.md` to include (only feedback and patterns that serve the task; no motion quota)
-- One signature detail that makes this variation unforgettable
+Before coding, define for each direction: starter prompt, palette (OKLCH where possible), display and body fonts (guidance and banned defaults in `references/workflow/quality-baseline.md`), layout pattern, motion strategy, the interactions that serve the task (no motion quota), and one signature detail.
 
-### 3. Implement & Present
+## 4. Implement and record
 
-Working code — HTML (default) or React. Real content, no lorem ipsum. Visually complete.
+Follow `skills/shared/code-output.md` for format detection, file paths and the output spec. Write each direction to its own files in `variant-output/` with real content; never paste full code into the chat. Put shared data in one file all three import, so they compare the same content.
 
-**Write each variation to a separate file** following the CLI Output Convention (see `skills/shared/code-output.md`). Never dump full HTML into the chat — write to `variant-output/` and open in browser.
+Mark the major sections so later zone edits are possible: `data-zone="hero"` on the element, and `<!-- zone:hero:start -->` / `<!-- zone:hero:end -->` around it (TSX: `{/* zone:hero:start */}` / `{/* zone:hero:end */}`), plus `/* zone:hero:start */` / `/* zone:hero:end */` around its styles.
 
-Present a **compact Summary Card** in the terminal for each variation:
+Register A, B and C in `.variant-context.json` following `references/workflow/project-context.md`: owned files, tokens, version 1, and `comparison` with three sentences each (optimizes, tradeoff, bestFor). Record the `taskContract` and a `recommendation: {variant, reason}` that separates hypotheses from tested evidence. Leave `selectedVariant` empty: a recommendation is not a selection.
 
-> **A — [Name]** · [Direction] · [Palette] · [Fonts]
-> Layout: [pattern] · Signature: [detail] · Interactions: [list]
-> Optimizes: [task advantage].
-> Trade-off: [specific cost].
-> Best for: [scenario].
+## 5. Preview
 
-Persist these three sentences under each variant's `comparison` field. Add `recommendation: {variant, reason}` based on the user's priorities and observed behavior, clearly distinguishing hypotheses from tested evidence. A recommendation does not select a winner.
+Build and open the comparison page with A/B/C direct links and the recommendation, following `references/workflow/preview.md`. Show the actual URL or `file://` path.
 
-Build and open the comparison page by default, with A/B/C direct links and the recommendation. Follow `references/workflow/preview-and-history.md` for React mounting, snapshots, undo, and checks. Show the actual URL.
-
-### 4. Quality Gate
-
-Run the mechanical scanner on every generated variation before presenting it:
+## 6. Check
 
 ```bash
-node <skill-root>/scripts/quality-gate.mjs variant-output/variant-[scenario]-A.html --strict
-```
-
-Repeat for B and C, or scan their containing directory when it contains only the current deliverables. Inspect findings in context and fix confirmed issues.
-
-Then check the recorded delivery:
-
-```bash
+node <skill-root>/scripts/quality-gate.mjs variant-output --strict
 node <skill-root>/scripts/delivery-check.mjs variant-output
 ```
 
-It fails when A, B or C is missing or shares files, when a direction has no optimizes/tradeoff/bestFor or repeats another's, when the task contract or recommendation is missing, or when a locked design system's fonts or colors changed. It warns when `selectedVariant` is set, since only the user's explicit pick sets it. Fix every error before presenting; it does not judge rendering or taste. Then review the rendered pages for hierarchy, distinctness, responsive behavior, and working interactions using `references/workflow/quality-baseline.md`.
+Scan only the current deliverables (name the files when the directory holds older output). Inspect quality-gate findings in context and fix confirmed ones. Fix every delivery-check error: missing or shared files, empty or repeated comparisons, a missing task contract or recommendation, or a changed locked font or color. A `selectedVariant` warning means a direction was selected without the user. Then review the rendered pages with `references/workflow/quality-baseline.md`: hierarchy, distinctness, responsive behavior and working interactions.
 
-For product-critical UI, also read `references/workflow/design-declaration.md` and run `references/workflow/product-integrity-gate.md`. Report product integrity separately from visual quality and do not present a P0 result as complete.
+For product-critical UI, run `references/workflow/product-integrity-gate.md` and report it separately from visual quality; do not present a P0 result as complete. Report only checks that ran; never claim WCAG compliance, browser coverage or "no AI slop" from self-assessment.
 
-Only report checks actually performed. Do not claim WCAG compliance, browser coverage, or “no AI slop” from self-assessment alone.
+## 7. Present
 
-### 5. Offer Variation Actions
+Give a compact card per direction, and the files and preview path:
 
-After presenting, always offer grouped by intent:
+> **A — [Name]** · [Direction] · [Palette] · [Fonts]
+> Layout: [pattern] · Signature: [detail] · Interactions: [list]
+> Optimizes: [task advantage]. Trade-off: [specific cost]. Best for: [scenario].
 
-> Which direction resonates? Pick an action:
->
+Then the recommendation and its reason, and the next actions:
+
 > **Reshape** — Vary strong · Distill · Shuffle layout · Change style
 > **Tune** — Vary subtle · Remix colors · Mix (e.g. "Mix A + B")
 > **Animate** — Add motion · Dramatize · Make interactive
 > **Refine** — Polish · Critique · See other views
-> **Export** — Extract tokens
->
-> Can't decide? Say **"Mix A + B"** or **"A's layout + C's colors"**.
-
----
-
-## Zone-Level Variation
-
-By default, variation actions replace the entire design. **Zone syntax** lets you target a specific section — everything outside the zone stays untouched.
-
-### Zone Syntax
-
-```
-[variation] [action] — [zone]
-
-Examples:
-  A vary strong — hero
-  B remix colors — card
-  C shuffle layout — sidebar
-  A vary subtle — nav
-  B distill — footer
-```
-
-Zones are **semantic** — they refer to the role of the section, not a CSS class name. Recognized zone names:
-
-| Zone | Matches |
-|------|---------|
-| `hero` | Top section, headline, CTA, background |
-| `nav` / `header` | Navigation bar, logo, links |
-| `card` | Any card component or card grid |
-| `sidebar` | Side panel, filters, secondary nav |
-| `footer` | Bottom section |
-| `form` | Any form or input group |
-| `chart` / `data` | Data visualization, metrics, stats |
-| `cta` | Call-to-action button or section |
-| `modal` | Overlay, dialog, drawer |
-| `[custom]` | User can name any section: "pricing table", "testimonials", "team grid" |
-
-### How to Apply Zone Variations
-
-**Step 1: Identify the zone in the file**
-
-Before making changes, read the current file and locate the zone by its semantic role — look for the `data-zone` attribute (if present), or identify it from the HTML structure.
-
-**Step 2: Mark zones on first generation**
-
-When generating initial HTML/TSX, annotate major sections with `data-zone`:
-
-```html
-<section data-zone="hero"> ... </section>
-<nav data-zone="nav"> ... </nav>
-<section data-zone="cards"> ... </section>
-<aside data-zone="sidebar"> ... </aside>
-<section data-zone="cta"> ... </section>
-<footer data-zone="footer"> ... </footer>
-```
-
-For TSX, use a `data-zone` prop on the top-level element of each section component.
-
-For reliable local diffs, also bracket each editable zone with unique `<!-- zone:hero:start -->` / `<!-- zone:hero:end -->` markers (TSX: `{/* zone:hero:start */}` / `{/* zone:hero:end */}`). Mark the zone's styles in the same first generation: wrap its rules with `/* zone:hero:start */` / `/* zone:hero:end */` in the `<style>` block or the variant's own stylesheet. One file may contain one markup pair and one style pair for the same zone. During a zoned edit, an owned file without that zone's markers is read-only, so unmarked styles make `B vary subtle — hero` impossible without an extra revision.
-
-If an existing artifact lacks markers, add them as a separate preparation revision (summary such as "mark hero zone, no visual change"), verify that rendering is unchanged, then apply the requested edit. Give the preparation revision and the edit the same `request` id in `change.json`, so `undo B` reverts both together, as the user expects.
-
-**Step 3: Isolate and rewrite the zone**
-
-Read the current file. Extract only the content inside the target `data-zone`. Apply the action (vary strong, remix colors, etc.) to that section alone. Rewrite only that section in the file — preserve everything else character-for-character.
-
-**Step 4: Report**
-
-```
-✦ Variation A — Remix colors · hero zone only · iteration 3
-
-  Changed: hero background oklch(15% 0.02 240) → oklch(20% 0.15 45) (warm amber)
-  hero headline color, gradient, and CTA button updated to match
-  Cards, nav, footer unchanged
-
-  variant-output/variant-coffee-A.html ← updated & opened
-```
-
-### Zone Variation Rules
-
-- **Preserve outside zones exactly.** Do not reflow, re-indent, or reformat code outside the target zone — even if it looks messy.
-- **Tokens cascade.** If the zone uses CSS custom properties (`--color-accent`, `--bg`), update the token values in `:root` only if the zone exclusively uses them. If tokens are shared across zones, override inline within the zone instead.
-- **Motion is zone-scoped.** Only change animation/transition properties within the target zone. Don't touch `@keyframes` or animation values used by other zones.
-- **If zone not found:** Tell the user which zones are present (`data-zone` attributes found), and ask which one to target. Do not guess.
-
-### Zone Quick Triggers
-
-| User types | Action |
-|---|---|
-| `A vary strong — hero` | Vary strong applied to hero zone only |
-| `B remix colors — card` | Remix colors applied to card zone only |
-| `C shuffle layout — sidebar` | Shuffle layout applied to sidebar only |
-| `A vary subtle — nav` | Refine nav zone only |
-| `zones A` | List all `data-zone` sections found in Variation A |
-
----
-
-## Variation Action Definitions
-
-### Vary strong
-Amplify current direction to maximum. More contrast, stronger type, bolder color, more dramatic composition. Consult `references/design-system/typography.md` for scale ratios and `references/design-system/color-and-contrast.md` for high-contrast palette construction.
-
-*Before → After example:*
-- Body text 16px, heading 32px → Body 15px, heading 72px (ratio 1.25 → 1.5+)
-- Accent used on buttons only → Accent dominates hero section, bleeds into nav
-- Subtle 200ms fade-in → Dramatic 600ms staggered reveal with scale transform
-
-### Vary subtle
-Tighten spacing, refine hierarchy, soften where needed. Same direction, higher craft. Focus on vertical rhythm, optical alignment, and micro-interactions per `references/design-system/spatial-design.md` and `references/design-system/motion-design.md`.
-
-*Before → After example:*
-- Inconsistent padding (16/20/24px) → Locked to 4pt grid (16/24/32px)
-- Generic hover (opacity change) → Contextual hover (card lifts 2px, button darkens accent)
-- Missing OpenType → `tabular-nums` on data, `font-kerning: normal` on headlines
-
-### Distill
-Strip the design to its absolute essence. Inspired by the Impeccable *distill* philosophy — ruthless simplification reveals what truly matters.
-
-**Process:**
-1. Identify the single core purpose of the interface
-2. For each element, ask: "Does removing this break the core purpose?" If no, remove it.
-3. Simplify across all dimensions:
-   - **Information:** Reduce visible options, use progressive disclosure (`<details>`, hover reveals)
-   - **Visual:** Fewer colors (aim for 2–3 total), fewer type sizes, remove decorative elements
-   - **Layout:** Collapse sections, merge related content, eliminate redundant containers
-   - **Interaction:** Fewer clicks to complete the primary task, remove confirmation steps where undo works
-   - **Content:** Shorter headlines, tighter copy, remove introductory paragraphs that restate the heading
-4. Verify: Can a new user complete the core task faster? If not, you removed the wrong things.
-
-*Before → After example:*
-- 5-section landing page → 2 sections: hero with value prop + single CTA
-- Dashboard with 12 metric cards → 3 key metrics large + "Show all" expandable
-- Nav with 8 items → 4 primary + overflow menu
-
-### Change style
-Extract structure/layout DNA, replace entire visual language with a different direction from the table above.
-
-### Remix colors
-Keep all shapes, type, layout. Generate 3 palettes using OKLCH color space (per `references/design-system/color-and-contrast.md`):
-1. Analogous to current — shift hue ±30°, adjust chroma
-2. Complementary contrast — opposite hue, rebalanced lightness
-3. Unexpected/left-field — completely different mood
-
-Always tint neutrals toward the brand hue. Never use pure gray, pure black (#000), or pure white (#fff).
-
-*Before → After example (palette 3, unexpected):*
-- Dark indigo tech dashboard → Warm cream editorial palette with rust accent
-- All neutrals shift from cool blue-gray → warm stone-tinted
-
-### Add motion
-Layer additional micro-interactions and animations onto the current design. Consult `references/design-system/micro-interactions.md` for the full pattern library.
-
-**Process:**
-1. Audit current interactions — list what already moves and what's dead
-2. Add only motion that clarifies state, hierarchy, or the requested expressive direction; scroll reveals and card lifts are optional. Honor reduced motion in CSS and JavaScript.
-3. Choose relevant enhancements from the "Picking Micro-Interactions by Domain" table; no quota
-4. Wire up any static data displays: counter animations for numbers, bar/donut animations for charts
-5. Verify reduced motion fallbacks exist for every new animation
-
-*Before → After example:*
-- Static hero → Staggered entrance (title 100ms → subtitle 250ms → CTA 400ms → image 300ms)
-- Cards appear instantly → Scroll-triggered fade-up with 80ms stagger
-- Numbers display as-is → Count up from 0 with easeOutExpo on scroll into view
-- Image gallery static → Lightbox on click with keyboard navigation
-
-### Dramatize
-Push existing interactions to their cinematic maximum. Not just "add hover" — make the page feel like a directed experience.
-
-**Process:**
-1. Replace subtle scroll reveals with more expressive entrances (word-by-word text reveal, curtain reveal, scale-from-zero)
-2. Add parallax layers to hero sections (foreground moves faster than background)
-3. Upgrade hover effects: card lift → tilt-3D, link underline → magnetic cursor pull
-4. Add page-level choreography: scroll progress bar, sticky header morph, section transitions
-5. Include a "hero moment" — one interaction that makes the user pause (e.g., counter hitting a big number, image comparison slider, infinite marquee of client logos)
-
-*Before → After example:*
-- Simple fade-in on scroll → Staggered word reveal + parallax background + scroll progress bar
-- Card hover lifts 4px → Card tilts toward cursor in 3D perspective with glow
-- Static hero → Curtain reveal on page load + magnetic CTA button + background parallax
-
-### Make interactive
-Add functional interaction patterns that turn the design from a visual into a working prototype. Consult `references/interactive-patterns.md` for full implementations.
-
-**Process:**
-1. Identify what should be functional: Is there a form? Add validation + multi-step. Gallery? Add lightbox. Products? Add filtering. Data? Add live charts.
-2. Add the most impactful interaction from `references/interactive-patterns.md` for this domain (see "Picking Patterns by Domain" table)
-3. Wire up navigation: tabs work, accordions expand, drawers slide, modals open with proper focus trap
-4. Add data interactions: sorting, filtering, search — with animated transitions between states
-5. Add feedback loops: toast on action, copy-to-clipboard confirmation, form submission success state
-
-*Before → After example:*
-- Static product grid → Filter by category with animated show/hide + sort by price with FLIP animation
-- Image gallery → Lightbox with keyboard nav (←→ Esc) + zoom on hover + dot indicators
-- Contact form → Multi-step with progress bar, floating labels, real-time validation, submit→loading→success
-- Dashboard metrics → Animated bar chart on scroll, donut chart that draws in, sparklines that trace, flash-on-update for live data
-
-### Shuffle layout
-Same content + style. Rearrange structure: try full-bleed → asymmetric grid → editorial columns → card masonry. Consult `references/design-system/spatial-design.md` for grid systems and visual hierarchy principles.
-
-*Before → After example:*
-- Centered hero + 3-column grid → Full-bleed left-aligned hero + asymmetric 2-column with oversized feature
-
-### Polish
-Apply Impeccable design system refinements systematically:
-- **Typography** (`references/design-system/typography.md`): vertical rhythm, modular scale, OpenType features (tabular-nums for data, proper fractions), font-display: swap, size-adjust fallback metrics
-- **Spatial** (`references/design-system/spatial-design.md`): squint test, hierarchy through multiple dimensions, optical alignment (text negative margin -0.05em, icon center offsets)
-- **Interaction** (`references/design-system/interaction-design.md`): all 8 interactive states (default/hover/focus/active/disabled/loading/error/success), focus-visible rings, proper form design (visible labels, blur validation, `aria-describedby` errors)
-- **Motion** (`references/design-system/motion-design.md`): 100/300/500 rule, ease-out-expo for enters, exit at 75% of enter duration, staggered animations with CSS custom properties
-- **UX Writing** (`references/design-system/ux-writing.md`): specific button labels (verb + object), error formula (what → why → fix), empty states that teach the interface, link text with standalone meaning
-- **Clarify copy**: Scan all visible text — replace vague labels with specific ones, remove redundant intros, ensure every word earns its place. "Submit" → "Create account". "Error" → "Email needs to be in name@example.com format."
-
-### Critique
-Systematic audit against design system principles. Score each dimension and provide specific fixes:
-
-1. **Typography:** Is hierarchy clear? Scale ratio consistent? Fonts distinctive? Vertical rhythm locked?
-2. **Color:** WCAG contrast passing? Neutrals tinted? 60-30-10 balance? No pure black/white?
-3. **Layout:** Passes squint test? Varied spacing creates rhythm? Cards justified? No nested cards?
-4. **Motion:** Durations appropriate (100/300/500)? Ease-out for enters? Reduced motion respected? Only transform+opacity animated?
-5. **Interaction:** All 8 states designed? Focus rings present? Touch targets ≥44px? Skeleton > spinner?
-6. **Responsive:** Mobile-first? Content-driven breakpoints? Input method detected (`pointer`/`hover`)? Safe areas?
-7. **Writing:** Specific button labels? Helpful errors (what/why/fix)? Empty states that teach? No redundant copy?
-8. **Resilience:** Text truncation handled? Long content graceful? Loading/error states present? i18n-ready spacing?
-
-### Extract tokens
-Export the design's token system in the requested format:
-
-**CSS Custom Properties (default):**
-```css
-:root {
-  /* Primitives */
-  --blue-500: oklch(55% 0.2 260);
-  --stone-100: oklch(95% 0.01 60);
-  /* Semantic */
-  --color-primary: var(--blue-500);
-  --color-surface: var(--stone-100);
-  /* Typography */
-  --font-display: 'Fraunces', serif;
-  --font-body: 'Instrument Sans', sans-serif;
-  --text-xs: clamp(0.7rem, 0.65rem + 0.25vw, 0.75rem);
-  --text-base: clamp(0.95rem, 0.9rem + 0.25vw, 1.0625rem);
-  --text-xl: clamp(1.5rem, 1rem + 2.5vw, 3rem);
-  /* Spacing */
-  --space-xs: 4px; --space-sm: 8px; --space-md: 16px;
-  --space-lg: 24px; --space-xl: 48px; --space-2xl: 96px;
-  /* Motion */
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-instant: 100ms;
-  --duration-fast: 200ms;
-  --duration-normal: 350ms;
-}
-```
-
-**JSON (for design tools / Figma):** Same structure as flat key-value JSON.
-
-**Tailwind config:** Extend `theme` with `colors`, `fontFamily`, `spacing`, `transitionTimingFunction`.
-
-### See other views
-Render additional views with full design system compliance:
-
-- **Empty state** — not just "No items." Design as an onboarding moment:
-  1. Acknowledge briefly ("No projects yet")
-  2. Explain the value of filling it ("Create your first project to start tracking progress")
-  3. Provide a clear primary action (prominent CTA button)
-  4. Add visual interest (illustration, icon, or subtle pattern — never a sad face)
-  5. If applicable, show a preview of what it will look like when populated
-
-- **Data-filled state** — realistic volume: 3–7 items for lists, 6–12 months of data for charts, edge cases included (one very long name, one empty optional field)
-
-- **Mobile viewport** — not a shrunk desktop. Per `references/design-system/responsive-design.md`:
-  - Rethink for thumb zones (primary actions bottom-right for right-handed)
-  - Touch targets ≥44px with padding
-  - Navigation collapses to hamburger + drawer or bottom tab bar
-  - Tables transform to cards with `data-label` attributes
-  - Use `@media (pointer: coarse)` for larger tap areas
-
-- **Dark ↔ Light toggle** — per `references/design-system/color-and-contrast.md`:
-  - Dark mode uses lighter surfaces for depth (no shadows)
-  - Desaturate accent colors slightly for dark backgrounds
-  - Reduce font weight (light text on dark appears heavier)
-  - Never pure black (#000) background — use oklch(12-18% ...) tinted
-
-- **Onboarding flow** — per Impeccable *onboard* principles:
-  - Show Don't Tell: inline demos > text instructions
-  - Make It Optional: skip button always visible, no forced tours
-  - Time to Value: reach the "aha moment" in ≤3 steps
-  - Context Over Ceremony: teach at the moment of need, not upfront
-  - Respect User Intelligence: no condescending language, allow power-user shortcuts
-
-- **Hover / active / focus states** — all interactive elements with visible state changes
-
-### Mix
-Combine two variations into one. Accepts forms like "Mix A + B" or "A's layout + C's colors."
-
-**Process:**
-1. Use the first-named variation as the **structural base** (layout, hierarchy, component structure)
-2. Layer the second variation's **visual language** (palette, typography, motion, signature details)
-3. When elements conflict (e.g. both have a distinctive nav pattern), explicitly state the trade-off and pick the one that better serves the content
-4. Label result as "Mix [A+B]" and present with a Summary Card showing which parts came from where
-
----
-
-## Variation Loop
-
-Track iteration count internally (reset per variation). After any variation action:
-1. Run `variant-history.mjs prepare` into a new candidate directory before editing. Keep its baseline unchanged; on a conflict preserve the old candidate and reconcile into a freshly prepared one. Then use the transactional apply workflow in `references/workflow/preview-and-history.md`. It saves a snapshot before replacing files at stable paths. An edit sets `activeVariant`, never `selectedVariant`. Support `undo B` without touching A/C or the selected winner.
-2. **Re-open in browser** — use the preview workflow in `skills/shared/code-output.md`
-3. **Show a 2-3 line diff summary** in the terminal — what changed, not the full code
-4. Offer the grouped action menu again — the loop never ends until the user moves on
-5. If the user has iterated 3+ times on the same direction, proactively suggest: "Want to branch? I can apply this to one of the other variations."
-6. **At iteration 2:** Ask a direction-check — *"Still feeling this direction, or want to pivot?"*
-7. **At iteration 4:** Show a change summary — *"Over 4 rounds: [list key changes]. Want to keep refining or export?"*
-8. **At iteration 5+:** Suggest convergence — *"You've refined this 5 times — it's looking solid. Ready to export, or one more pass?"*
+> **Deliver** — pick B · react B · integrate B · tokens A

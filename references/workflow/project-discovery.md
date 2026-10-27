@@ -55,21 +55,7 @@ Both commands emit JSON to stdout. Store artifacts outside the scanned Git worki
 
 Do not dismiss unknowns just to obtain readiness. Explain why an unresolved item does or does not block this specific task. A blocking unknown yields `readiness: blocked` and exit 2. Stale input is rejected. Task IDs and profile digests bind the brief to its inputs. A changed brief is a new task record, not an in-place edit of a published record; creation currently starts at version 1 and does not implement revision history.
 
-The JavaScript API `observeTask(task, profile, asyncAdapter)` runs a trusted adapter between source freshness checks. It does not open a browser by itself. Use the available browser/test runner to perform the actual observations and return:
-
-```js
-{
-  conditions: {
-    url, browser, language, theme, dataState, interactionState,
-    viewport: { width, height }, reducedMotion: 'reduce' // or 'no-preference'
-  },
-  checks: [{ id, status: 'passed', reason, tool, toolVersion, evidence }]
-}
-```
-
-Allowed check statuses: passed, failed, unverified. Never invent tool results; missing/failed adapters or incomplete evidence remain unverified. Reports bind task content and profile content, record conditions/time, and become stale on changes during observation. `inspectObservation(report, task, profile)` checks source bindings; it always reports that current browser/environment freshness is not established. Evidence strings are trusted adapter assertions, not signed proof or screenshot storage. Do not include tokens, personal data or credential-bearing URLs.
-
-A passing report covers only its listed observations, not every acceptance criterion or the whole project. Screenshots, automatic adapter selection, task revision history, selection/change receipts and integration remain separate follow-up work. Preserve existing candidate snapshots and verification flows.
+Runtime observations bound to a task use the JavaScript adapter API described in `references/workflow/artifact-verification.md`; read it only when you record them.
 
 ## Reference selection before variants
 

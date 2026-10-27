@@ -138,7 +138,7 @@ Claude Code 或其他本地 agent 同样需要完整目录；可以安装到对�
 - v2 上下文分别存储各版文件、tokens、版本、比较信息和历史。覆盖前必须保存持久快照，Git 本身不会保存中间修改。
 - 优先级：用户约束 → 产品任务和已有设计系统 → 可访问性 → 风格建议。无法解决的可访问性冲突要明确报告。品牌锁定保留字体和 tokens，自由探索允许变化；取消动效数量配额。
 
-实现与验证：[预览和历史](references/workflow/preview-and-history.md)、[上下文结构](references/workflow/project-context.md)、[回归测试](tests/README.md)。保留 route-first 路由、局部变体和 Product Integrity Gate。
+实现与验证：[预览](references/workflow/preview.md)、[历史](references/workflow/history.md)、[导出与接入](skills/shared/export.md)、[上下文结构](references/workflow/project-context.md)、[回归测试](tests/README.md)。保留 route-first 路由、局部变体和 Product Integrity Gate。
 
 ---
 

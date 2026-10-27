@@ -38,7 +38,9 @@ def package_files(root=ROOT):
                 'references/workflow/project-context.md', 'scripts/variant-history.mjs', 'scripts/build-preview.mjs',
                 'scripts/react-preview.mjs', 'scripts/variant-integrate.mjs', 'scripts/quality-gate.mjs', 'scripts/artifact-verification.mjs',
                 'scripts/project-profile.mjs', 'scripts/design-task.mjs', 'references/workflow/project-discovery.md',
-                'scripts/direction-card.mjs', 'references/sources/direction-cards.md', 'scripts/delivery-check.mjs')
+                'scripts/direction-card.mjs', 'references/sources/direction-cards.md', 'scripts/delivery-check.mjs',
+                'references/workflow/preview.md', 'references/workflow/history.md', 'skills/shared/export.md',
+                'skills/variant-generate/actions.md', 'skills/variant-generate/zones.md')
     for name in required:
         if f'skills/variant-design/{name}' not in files:
             raise ValueError(f'Missing runtime dependency: {name}')

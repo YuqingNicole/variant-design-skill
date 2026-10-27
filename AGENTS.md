@@ -13,7 +13,7 @@ Variant Design is an agent skill. It turns one brief into three comparable desig
 | Path | Role | Notes |
 |---|---|---|
 | `SKILL.md` | Router entry point | Keep it short. It routes to one sub-skill; do not inline workflows here |
-| `skills/*/SKILL.md` | Sub-skills: generate, design-system, component, analyze, ux | `skills/shared/code-output.md` is the single source of truth for output, preview and export. Only the root `SKILL.md` has skill frontmatter: Codex and `npx skills` scan folders recursively and would register sub-skills as broken standalone skills (enforced by `plugin-package.test.py`) |
+| `skills/*/SKILL.md` | Sub-skills: generate, design-system, component, analyze, ux | Shared phases each have one source of truth: `skills/shared/code-output.md` (writing code), `references/workflow/preview.md`, `references/workflow/history.md` and `skills/shared/export.md`. Each route starts with a load map; files are read at the step that needs them. Only the root `SKILL.md` has skill frontmatter: Codex and `npx skills` scan folders recursively and would register sub-skills as broken standalone skills (enforced by `plugin-package.test.py`) |
 | `references/` | Loaded on demand by the routes | Grouped by role: `workflow/` (context, discovery, history, quality and integrity rules shared by routes), `sources/` (design references and direction cards), `domains/`, `design-system/`, `ux/`, `tasks/` (routes the router sends straight to a reference), plus the shared `palettes.md` and `interactive-patterns.md`. Domain references follow the five-part structure in `README.md` → Contributing. `scripts/skill-links.test.mjs` fails on a named file that does not ship with the skill and on a reference no route reaches |
 | `scripts/*.mjs` | Runtime helpers that run inside **user projects** | Zero dependencies, Node 22+, ESM. Each has a CLI and exported functions |
 | `scripts/*.test.mjs` | `node:test` unit tests for the helpers | Excluded from the plugin package |
@@ -74,8 +74,8 @@ node evals/run.mjs --agent claude --fixture pulse       # one real, graded agent
   - Skill files, references, scripts and the README: English.
   - `README_CN.md`, PRDs and RFCs: Chinese.
   - Website copy: both languages, with the `[zh, en]` order used in the existing data.
-- **The skill's own text is the product.** When you change behavior in `scripts/`, update every place that describes it in the same change: `references/workflow/preview-and-history.md`, `skills/shared/code-output.md`, the relevant `skills/*/SKILL.md`, and user-facing docs (`website/src/DocsGuide.tsx`, `README.md`, `README_CN.md`).
-- **Progressive loading.** `SKILL.md` routes to one sub-skill, and sub-skills load only the references they need. Do not add "read everything" instructions.
+- **The skill's own text is the product.** When you change behavior in `scripts/`, update every place that describes it in the same change: `references/workflow/preview.md`, `references/workflow/history.md`, `skills/shared/export.md`, `skills/shared/code-output.md`, the relevant `skills/*/SKILL.md`, and user-facing docs (`website/src/DocsGuide.tsx`, `README.md`, `README_CN.md`).
+- **Progressive loading.** `SKILL.md` routes to one sub-skill. Each sub-skill opens with a load map that names which file to read at which step; split files by the phase that needs them (first generation, edit, export), not only by topic. Do not add "read everything" or "always load" instructions. `node evals/run.mjs` reports the skill text each run read; check it when you change what a route loads.
 - **Rule precedence** across routes: user constraints → product task and existing design system → accessibility → style suggestions.
 - **Dependencies.** Helpers stay dependency-free and reuse the target project's own React and Vite. Pin exact versions in `tests/`, `website/` and `mcp/` lockfiles. Rollup 4.64.0 hangs on production builds; keep `tests/` on 4.65.0 or later.
 

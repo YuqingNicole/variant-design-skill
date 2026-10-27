@@ -138,7 +138,7 @@ The optional release check runs at most once per 24 hours, reports an available 
 - Schema v2 stores each direction's files, tokens, version, comparison, and history separately. A durable snapshot precedes every replacement; Git alone is not a snapshot.
 - Precedence: user constraints → product task and existing design system → accessibility → style advice. Report unresolved accessibility conflicts. Brand-locked output retains fonts/tokens; free exploration may vary them. There is no animation quota.
 
-Implementation and verification: [preview and history](references/workflow/preview-and-history.md), [context schema](references/workflow/project-context.md), [regression tests](tests/README.md). Existing route-first routing, local zones, and Product Integrity Gate remain in place.
+Implementation and verification: [preview](references/workflow/preview.md), [history](references/workflow/history.md), [export and integration](skills/shared/export.md), [context schema](references/workflow/project-context.md), [regression tests](tests/README.md). Existing route-first routing, local zones, and Product Integrity Gate remain in place.
 
 ---
 

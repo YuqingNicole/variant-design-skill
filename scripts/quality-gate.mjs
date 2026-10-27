@@ -5,7 +5,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 const extensions = new Set([".html", ".css", ".scss", ".js", ".jsx", ".ts", ".tsx", ".vue", ".svelte", ".astro"]);
-const ignoredDirectories = new Set([".git", "node_modules", "dist", "build", ".next", ".cache", ".history", ".verification", "_harness"]);
+const ignoredDirectories = new Set([".git", "node_modules", "dist", "build", ".next", ".cache", ".history", ".verification", "_harness", "_preview", "_static"]);
 
 function locationFor(source, index) {
   return source.slice(0, index).split("\n").length;
