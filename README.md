@@ -282,7 +282,7 @@ Generated `.tsx` files go to `variant-output/` — move them to `src/components/
 ## Reference library
 
 ### Domain references
-Scenario-specific materials (starter prompts, palettes, typography, layouts, real community examples):
+Scenario-specific materials (starter prompts, palettes, typography, layouts, signature details):
 
 | File | Domain |
 |---|---|
@@ -342,14 +342,15 @@ Foundational design principles loaded for every generation:
 
 ## Contributing
 
-PRs welcome. Each domain reference file follows a consistent 6-section schema:
+PRs welcome. Each domain reference file follows a consistent 5-section schema:
 
 1. Starter Prompts (domain-grouped)
 2. Color Palettes (CSS custom properties)
 3. Typography Pairings
 4. Layout Patterns
 5. Signature Details
-6. Real Community Examples
+
+Worked examples belong in the [direction library](https://variant-design-skill.vercel.app/), not in references: only our own runs or work its authors have licensed, never transcribed copy from other people's designs. `node --test scripts/skill-links.test.mjs` checks that every file the skill names exists and that every reference is reachable from `SKILL.md`.
 
 Design system references follow the Impeccable style structure with principles, code examples, and anti-patterns.
 

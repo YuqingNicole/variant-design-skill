@@ -419,6 +419,5 @@ async function search(query: string) {
 
 - `ux-empty-states.md` — No-results and error states for search
 - `ux-tables-lists.md` — Table-level filtering and search patterns
-- `ux-filters-patterns.md` — (if exists) Advanced filter composition
 - `ux-information-architecture.md` — When search replaces navigation
 - `interactive-patterns.md` — Dropdown and combobox interaction specs

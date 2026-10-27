@@ -15,19 +15,18 @@ B2B product pages, startup homepages, developer tools, pricing pages, feature sh
 3. Typography Pairings
 4. Layout Patterns
 5. Signature Details
-6. Real Community Examples
 
 ---
 
 ## 1. Starter Prompts
 
 **AI / Data Products**
-- "Landing page for an AI data platform: 'Mosaic builds datasets for humans and agents' — hero statement, feature grid (competitive intelligence / trend signals / MCP API access), social proof stats (2.4B+ daily, 14K+ sources), CTA."
+- "Landing page for an AI data platform: one-sentence hero statement of what the data is for and who uses it, feature grid of three data products, two large usage stats, CTA."
 - "Homepage for an AI agent marketplace: what agents can do, how to deploy, pricing tiers, featured agents."
 - "Product page for a vector database: benchmark chart vs. competitors, code snippet showing simple API, enterprise logos, latency guarantee."
 
 **Infrastructure / DevOps**
-- "Landing page for a cloud compute product: 'Structural Efficiency.' — dark hero, three-column feature cards (Fluid Instance / Synthetic Ri / Geo-Cluster), architecture diagram, get-started CTA."
+- "Landing page for a cloud compute product: short two-word headline on a dark hero, three-column feature cards for its core offerings, architecture diagram, get-started CTA."
 - "Developer tools homepage: code-first hero with syntax-highlighted snippet, feature icons, changelog feed, GitHub star count badge."
 - "Serverless functions product: cold start comparison chart, supported runtimes grid, pricing calculator, migration guide CTA."
 
@@ -174,7 +173,7 @@ B2B product pages, startup homepages, developer tools, pricing pages, feature sh
 ```
 ┌──────────────────────────────────────────┐
 │  [DARK BACKGROUND]                       │
-│  "Structural Efficiency."                │
+│  "Two-word headline."                    │
 │  One-line subhead                        │
 │  [CTA button]                            │
 ├──────────┬───────────┬───────────────────┤
@@ -198,22 +197,3 @@ B2B product pages, startup homepages, developer tools, pricing pages, feature sh
 - **Pricing toggle**: monthly/annual with annual savings badge
 - **Integration logos**: grid of logos with hover tooltips
 - **Trust badges**: SOC2 / GDPR / ISO 27001 inline near CTA
-
----
-
-## 6. Real Variant Community Examples
-
-**Mosaic (AI data product)**:
-- White/light background, clean layout
-- Hero: "Mosaic builds high-fidelity datasets for the people and systems that run modern marketing"
-- Feature list: competitive intelligence / trend signals & benchmarks / distributed + export / MCP API access / clean schema, zero hallucination
-- Stats: 2.4B+ (large), 14K+ (large)
-- Subtle grid/table showing dataset preview
-- "Mosaic Ads" sub-product callout at bottom
-
-**Structural Efficiency (cloud infra)**:
-- Dark `#111111` background
-- "Structural Efficiency." in large bold sans
-- Subtext: "REDUCTION AI DEPLOYS THREE CORE ARCHITECTURAL MODELS OPTIMIZED FOR LIQUIDITY, WELL-SPACE, AND MAXIMUM CAPITAL CAPTURE ACROSS CLOUD INFRASTRUCTURE."
-- Three cards: Fluid Instance / Synthetic Ri / Geo-Cluster
-- Each card: bold name + description paragraph

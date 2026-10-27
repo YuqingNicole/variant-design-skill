@@ -15,7 +15,6 @@
 3. Typography Pairings
 4. Layout Patterns
 5. Signature Details
-6. Real Community Examples
 
 ---
 
@@ -213,38 +212,3 @@ Pick one as the content foundation, adapt to user's domain:
 - **3D canvas**: dark bg, thin wireframe lines in accent color, axis indicators
 - **Keyboard shortcut hints**: "SCROLL TO ROTATE // CLICK TO EXPAND" in tiny muted text
 - **Export row**: icon buttons for different output formats
-
----
-
-## 6. Real Community Examples
-
-### Modular Synthesizer Rack — @patchwerk_ux
-
-**Prompt:** "A VCV Rack-style modular synthesizer UI: a grid of module slots, each module as a dark card with panel-printed labels, knobs (circular with indicator line), small monochrome displays, CV input/output jacks as colored circles (yellow = audio, red = CV, blue = gate). BPM clock module top-left, VCO and VCF modules center, output mixer right. Dark aluminum background with faint grid texture, neon teal patch cable lines connecting jacks."
-
-**What makes it work:**
-- The jack color system (yellow / red / blue by signal type) gives the dense grid instant visual hierarchy — users can parse signal flow at a glance without reading labels.
-- Patch cable lines drawn as curved paths in neon teal against the dark aluminum create a sense of physical depth; they read as objects on top of the surface, not part of it.
-- Each module card uses a slightly lighter dark surface than the background rack, using just 3–4 tonal steps to separate rack → module → knob — no borders needed.
-
----
-
-### Generative Art Parameter Controller — @fieldstudy_gen
-
-**Prompt:** "A generative art control panel for a reaction-diffusion simulation: split layout, left panel has labeled sliders for Feed Rate (0.055), Kill Rate (0.062), Diffusion A (1.0), Diffusion B (0.5), and Time Step (1.0); right panel is a full-height live canvas showing the evolving pattern in real time. Dark background, accent color #00FFB2, monospace labels, a RANDOMIZE button and EXPORT PNG button at the bottom. A small history strip of 5 thumbnail snapshots along the bottom edge."
-
-**What makes it work:**
-- Pairing exact numeric parameter values with a live canvas output turns abstract sliders into legible cause-and-effect — the viewer understands what each knob does just by seeing the prompt.
-- The thumbnail history strip at the bottom is a subtle but high-value detail: it implies an iterative workflow and adds temporal depth without needing a full version history UI.
-- Using a single high-saturation accent (#00FFB2) against an almost-black background keeps the interface from competing with the generated artwork, which is always the hero.
-
----
-
-### Live Music Visualizer — @audiovis_hx
-
-**Prompt:** "A live music visualizer performance interface: full-dark background, centered radial frequency ring that pulses with bass, BPM counter in large monospace at top-center (120 BPM), a horizontal waveform strip below the ring, a floating control panel bottom-right with AUDIO SOURCE selector (mic / line in / file), PALETTE toggle (neon / monochrome / thermal), and a RECORD button with elapsed time. LIVE badge top-left. Visualizer parameters panel slides in from the right: Smoothing 0.8, Gain 1.4, Color Shift 0.3."
-
-**What makes it work:**
-- Centering the radial ring and letting it dominate the viewport reinforces the performance context — the interface gets out of the way and lets the visual output fill the screen, which is exactly right for a live set.
-- The PALETTE toggle (neon / monochrome / thermal) is a single control that dramatically changes the visual mood without touching any other parameter — smart abstraction that feels powerful without overwhelming.
-- Floating the control panel bottom-right instead of docking it preserves the full-bleed feel of the canvas. The panel slides in on hover, keeping the resting state completely minimal.

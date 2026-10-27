@@ -15,7 +15,6 @@ iOS/Android app screens, onboarding flows, home screens, feed apps, detail views
 3. Typography Pairings
 4. Layout Patterns
 5. Signature Details
-6. Real Community Examples
 
 ---
 
@@ -247,38 +246,3 @@ Pick one as the content foundation, adapt to user's domain:
 - **Touch targets**: minimum 44px height for all interactive elements; add padding rather than increasing visual size
 - **Haptic hint text**: "Tap to expand" / "Swipe to dismiss" in tiny muted caption text (11–12px)
 - **Pull-to-refresh indicator** at top of scroll views with spinner or custom animation
-
----
-
-## 6. Real Community Examples
-
-### Night Sky Observer — @astrobuilder
-
-**Prompt:** "A dark-mode astronomy app showing a live sky map for tonight's Lyrid meteor shower. Top panel: interactive star map with constellation lines in muted blue, labeled stars (Vega, Altair, Deneb), and current meteor radiant marker. Bottom panel: observation log with 'Current visibility: Optimal' status chip, scroll-locked entry text, and a 'Begin Log' button. Status bar visible. Deep navy background #050A18."
-
-**What makes it work:**
-- The dual-panel split uses the full screen height intentionally — the star map gets ~55% of the viewport, establishing atmosphere before any text appears, which is the correct mobile hierarchy for an immersive utility app.
-- Constellation lines rendered at 15% opacity avoid competing with the labeled accent stars, showing restraint that keeps the map readable on a phone held at arm's length in the dark.
-- The "Current visibility: Optimal" status chip uses the accent blue (#4A9EFF) at full saturation as the one high-attention element — every other color on screen is desaturated, so the eye lands there first without fighting for attention.
-
----
-
-### Still — Daily Meditation — @calmui
-
-**Prompt:** "A meditation app home screen for 6:45 AM. Soft peach-to-lavender gradient background. Top section: greeting 'Good morning, Sarah' with today's date. Featured session card: 'Morning Clarity — 10 min' with a Play button, category tag 'Focus', and a faint wave illustration. Below: streak counter '14 days' with a flame icon. Mood check-in row: 5 emoji buttons (😴 😕 😐 🙂 😊) with 'How are you feeling?' label. Bottom tab bar with 5 icons."
-
-**What makes it work:**
-- The gradient background (#FDF0E8 to #EDE8F5) does the entire emotional job of the palette — every surface layer above it stays white or near-white, so the warmth reads as a considered design decision rather than noise.
-- Placing the streak counter below the featured session rather than above it respects the user's primary goal (starting a session) before surfacing the gamification layer — a subtle content hierarchy choice that keeps the app from feeling manipulative on first open.
-- The mood check-in uses emoji rather than sliders or text labels, cutting cognitive load to near zero at a time of day when the user is still waking up — the input mechanism matches the context.
-
----
-
-### Flare — Food Delivery Home — @deliveryux
-
-**Prompt:** "A food delivery app home screen. Warm white background #FDF6F0. Top: location header with pin icon 'Delivering to: 340 Oak Ave' and a dropdown chevron. Search bar below. Horizontal scrollable category chips: Pizza / Sushi / Burgers / Thai / Salads / Ramen — active chip filled in warm orange #F4622A with white text. Featured section 'Popular Near You': two large restaurant cards with cover photo, restaurant name, star rating (4.6 ★), cuisine tag, and '25–35 min' delivery estimate. Bottom tab bar. Floating cart button in orange with item count badge '3'."
-
-**What makes it work:**
-- The active category chip uses the full accent color (#F4622A fill, white label) while inactive chips stay border-only — this single pattern communicates filter state without any icon or checkmark, which is the right level of visual economy for a horizontal scroll component where space is tight.
-- Delivery time estimates ('25–35 min') appear on the card before price or distance, matching the actual mental model of a hungry user: feasibility first, cost second.
-- The floating cart button with a live item count badge stays anchored above the tab bar rather than replacing a tab — this preserves the navigation structure while keeping the purchase action permanently visible, which increases conversion without cluttering the information architecture.

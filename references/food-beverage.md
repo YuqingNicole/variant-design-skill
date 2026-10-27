@@ -15,7 +15,6 @@ Restaurant sites, recipe apps, coffee brands, meal delivery, food blogs, cocktai
 3. Typography Pairings
 4. Layout Patterns
 5. Signature Details
-6. Real Community Examples
 
 ---
 
@@ -252,38 +251,3 @@ Restaurant sites, recipe apps, coffee brands, meal delivery, food blogs, cocktai
 - **Cooking timer UI element** — step-by-step with time indicators and checkable steps
 - **Spice level indicator** — 🌶️ icons (1-3) or a small heat meter next to spicy dishes
 - **"Pairs with" suggestion** — wine or drink pairing note in italics below select dishes
-
----
-
-## 6. Real Community Examples
-
-### Farm-to-Table Restaurant — Seasonal Identity
-
-**Prompt:** "A farm-to-table restaurant homepage: warm cream #FAF6F0 background, logo 'TERROIR' in 96px Cormorant Garamond centered in hero, subtitle 'SEASONAL AMERICAN · EST. 2019 · BROOKLYN' in 12px spaced caps. Hero image: a rustic wooden table with seasonal vegetables, slightly desaturated. Below: 3 menu highlight cards with overhead dish photos, dish name in serif, short description in sans, price. Footer section split: left 'Our Philosophy' paragraph with farm photo, right 'Visit Us' with hours, address, reservation CTA in dark green #3D5A3A."
-
-**What makes it work:**
-- The desaturated hero photography is a deliberate choice — it signals "rustic" and "natural" in a way that over-saturated food photography (the Instagram default) cannot. The slight muting says "we care about the ingredient, not the filter."
-- Using Cormorant Garamond at 96px for the restaurant name gives it the weight of a carved wooden sign — the high contrast between thick and thin strokes in Cormorant evokes traditional signage without being literally rustic.
-- Three highlight cards (not six, not a full menu) forces editorial curation — the restaurant is saying "these three dishes define us right now," which is exactly what seasonal dining promises.
-
----
-
-### Specialty Coffee Brand — Origin Story
-
-**Prompt:** "A specialty coffee product page: deep brown #1A1510 background, product name 'ETHIOPIA YIRGACHEFFE' in 48px Fraunces with country of origin flag emoji, below: tasting notes 'Blueberry · Jasmine · Raw Honey' in 14px Instrument Sans with each note as a pill with subtle border. Left: coffee bag product shot on transparent background. Right: origin details — Region, Altitude (1,900-2,200m), Process (Washed), Roast Level (Light) in a specs table. Bottom: radar chart showing Acidity / Body / Sweetness / Aroma scored 1-5."
-
-**What makes it work:**
-- Presenting coffee like wine — with altitude, process method, and a flavor radar chart — elevates the product from commodity to craft. The data-heavy approach signals "we know exactly where this came from and how it tastes," which is the core value proposition of specialty coffee.
-- Tasting notes as individual pills (not a comma-separated list) gives each flavor its own visual weight. "Blueberry" and "Jasmine" and "Raw Honey" are each discoveries, not items in a list.
-- The dark brown background is the color of fresh-roasted coffee — it's not "dark mode," it's "we exist inside the product." The warm undertone prevents it from feeling techy.
-
----
-
-### Recipe Blog — Editorial Food Writing
-
-**Prompt:** "A food blog recipe page: white #FFFFFF background with warm cream #FAF6F0 content well. Masthead 'SALT & TIME' in 24px Newsreader italic. Hero: overhead photo of miso-glazed salmon at 60vh. Recipe title 'MISO-GLAZED SALMON WITH PICKLED RADISH' in 36px Playfair Display. Metadata bar: 4 pills (⏱ 40min total · 👤 4 servings · 📊 Easy · 🔥 380 cal). 2-column layout: ingredients with checkboxes left, numbered steps with inline process photos right. Each step has a small circular photo showing that specific stage."
-
-**What makes it work:**
-- The 2-column ingredient/instruction split solves the core recipe UX problem: you need to see ingredients while reading steps. Putting them side-by-side means no scrolling back and forth — a layout decision driven by cooking behavior, not aesthetics.
-- Checkable ingredients serve a real function — when cooking, you check off what you've measured out. This tiny interaction transforms a passive recipe page into an active cooking tool.
-- Inline step photos (not just a hero image) solve the "what should this look like?" anxiety that causes recipe abandonment. Each photo is a checkpoint: "if yours looks like this, you're on track."

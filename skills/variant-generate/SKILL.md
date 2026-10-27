@@ -22,10 +22,37 @@ Check `designSystem.confirmed` in context first:
 - Read `designSystem.file` relative to the target project root and load its tokens. Use `variant-output/design-system.css` only when no file is registered; existing projects may keep their confirmed system in `src/design-system.css`.
 - Print: `✦ DS locked: [palette] · [fonts] · variations differ in layout only`
 - Skip palette/font selection — tokens are fixed
-- Load scenario reference for layout and interaction patterns only
+- Load the domain reference below for layout and interaction patterns only
 
 **If no confirmed DS:**
 - Standard flow: identify scenario, load domain reference file + relevant design system references, pick 3 starter prompts and palettes
+
+**Either way,** load the one domain reference that best matches the request:
+
+| Domain | Reference |
+|---|---|
+| Dashboard, analytics, admin, CRM | `references/dashboard.md` |
+| Landing page, SaaS, B2B, product site | `references/saas.md` |
+| Editorial, report, article, newsletter | `references/editorial.md` |
+| E-commerce, marketplace, checkout | `references/ecommerce.md` |
+| Education, course, quiz, training | `references/education.md` |
+| Creative tool, music, 3D, generative art | `references/creative.md` |
+| Mobile app or mobile-first flow | `references/mobile.md` |
+| Portfolio or case study | `references/portfolio.md` |
+| Food, beverage, restaurant, recipe | `references/food-beverage.md` |
+| Fashion, beauty, furniture, lifestyle | `references/fashion.md` |
+
+Then load only the design-system references needed for the task:
+
+- type hierarchy → `references/design-system/typography.md`
+- palette and contrast → `references/design-system/color-and-contrast.md`
+- layout and spacing → `references/design-system/spatial-design.md`
+- motion → `references/design-system/motion-design.md`
+- micro-interactions → `references/design-system/micro-interactions.md`
+- forms and states → `references/design-system/interaction-design.md`
+- responsive behavior → `references/design-system/responsive-design.md`
+- interface copy → `references/design-system/ux-writing.md`
+- functional prototypes → `references/interactive-patterns.md`
 
 ### 2. Generate 3 Distinct Variations
 

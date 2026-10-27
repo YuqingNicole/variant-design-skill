@@ -15,7 +15,6 @@ Designer portfolios, developer showcases, freelancer sites, personal brands, age
 3. Typography Pairings
 4. Layout Patterns
 5. Signature Details
-6. Real Community Examples
 
 ---
 
@@ -224,38 +223,3 @@ Designer portfolios, developer showcases, freelancer sites, personal brands, age
 - **Sticky navigation** — minimal nav that compresses on scroll (logo shrinks, bg gets subtle blur)
 - **Color shift per project** — accent color changes to match each project's brand palette
 - **Infinite marquee** — skills or client names scrolling horizontally in a ticker
-
----
-
-## 6. Real Community Examples
-
-### Minimal Designer Portfolio — Type as Identity
-
-**Prompt:** "A graphic designer portfolio: off-white #F8F6F1 background, name 'SARAH CHEN' in 14px tracking-widest monospace top-left, nav 'Work / About / Contact' top-right in same size. Center of viewport: current project title 'REIMAGINING URBAN WAYFINDING' in 72px Clash Display with project image below at 60vw. Bottom-left: '01/08' project counter in muted text. Below fold: 2-column masonry grid of remaining projects, each with title overlay on hover."
-
-**What makes it work:**
-- The enormous project title centered on the viewport makes one project the star instead of competing for attention in a grid. This is the portfolio equivalent of a magazine cover — it declares "this is my best work, look at it first."
-- Using monospace for metadata (name, nav, counter) while using a bold display font for project titles creates a clear hierarchy without adding visual complexity — the font itself does the work of separating navigation from content.
-- The project counter (01/08) signals depth of work without cluttering the page. It's information architecture in two characters.
-
----
-
-### Developer Portfolio — Terminal Aesthetic
-
-**Prompt:** "A fullstack developer personal site: pure dark background #0C0C0C, green monospace text #4ADE80 for headings, gray #D4D4D4 for body. Hero section: 'const developer = { name: \"Alex Park\", focus: \"distributed systems\" }' rendered as real code syntax with subtle syntax highlighting. Below: project cards styled as terminal windows — title bar with three dots, project name as window title, description and tech stack pills inside. Skills section as a horizontal bar chart with labeled percentages."
-
-**What makes it work:**
-- Presenting personal information as a code object (`const developer = {}`) is a commitment to the developer identity — it signals that this person thinks in code even when describing themselves. The syntax highlighting makes it feel lived-in, not gimmicky.
-- Styling project cards as terminal windows creates immediate domain recognition — any developer who sees the three-dot title bar and monospace font knows exactly what kind of person built this site. The metaphor is honest.
-- Using a bar chart for skills instead of the tired "dots out of 5" pattern turns a subjective self-assessment into data visualization — it matches the analytical mindset of the target audience.
-
----
-
-### Photography Portfolio — Maximum Image
-
-**Prompt:** "A photographer portfolio: pure white #FFFFFF background, no visible chrome except a small wordmark 'K.TANAKA' in 11px uppercase top-left and a hamburger menu top-right. Hero: single photograph at 90vw × 70vh with 1px border in #EBEBEB. Below: masonry grid of photographs with 8px gap, no titles or captions visible — hover reveals 'Series Name · 2025' in small text overlay. Footer: 'Based in Tokyo · Available worldwide' in 12px muted centered."
-
-**What makes it work:**
-- Removing all UI chrome forces the photographs to justify themselves without the crutch of project descriptions or category labels. This is confidence in the work — if the images aren't strong enough to hold attention alone, no amount of UI will fix that.
-- The near-invisible 1px border on the hero image is a masterful detail — it separates the photograph from the white background without adding visual weight. Without it, light-edged photographs would bleed into the page; with a heavy border, the frame would compete with the content.
-- The 8px gap in the masonry grid is deliberately tight — it creates density that mimics a contact sheet or gallery wall, reinforcing the professional context. Wider gaps would make it feel like a social media feed.

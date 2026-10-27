@@ -68,7 +68,7 @@ The helper checks token metadata under a DS lock; it cannot prove that arbitrary
 
 ## Verification and export
 
-Run `node --test scripts/variant-loop.test.mjs` for file/metadata and static scanner regressions. For real rendering, install `tests/` dependencies and run its browser suite as described in `tests/README.md`. Required scenarios:
+The skill's own regression suite checks these mechanics with fixture projects in a real browser:
 
 1. Brand lock: A/B/C computed font families match the locked fonts after a layout edit.
 2. Hero-only edit: outside-zone bytes and other rendered sections remain unchanged; reject a candidate that edits the footer/shared CSS.
@@ -95,8 +95,6 @@ node <skill-root>/scripts/variant-integrate.mjs list variant-output
 ## Integration checkpoint learned from the landing page
 
 Run the target project's production build after integrating the named export. With Vite multiple HTML entries, register the comparison and A/B/C entries in `build.rollupOptions.input`; a working dev URL does not mean the preview survives a production build. Open the built application and every preview route and verify real controls, not just HTTP 200 (an SPA fallback can return the wrong page with 200).
-
-The repository's `website/` is a runnable dogfood project. `npm run export:landing -- B` exports the named hero configuration into its real React entrypoint, backs up the previous integration, and leaves the user's winner selection untouched. The three wrappers keep the complete site functional while sharing the locked brand system. See `website/iteration-log.md` for observed evidence and limitations.
 
 
 ## Conflicts, legacy history, and recovery

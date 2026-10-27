@@ -15,7 +15,6 @@ Language learning, science education, quiz/flashcard apps, tutoring interfaces, 
 3. Typography Pairings
 4. Layout Patterns
 5. Signature Details
-6. Real Community Examples
 
 ---
 
@@ -240,26 +239,3 @@ After flip:
 - **Streak counter**: 🔥 12 days (emoji acceptable in educational context)
 - **Correct/wrong flash**: green overlay vs. red shake animation
 - **Bilingual layout**: language A large left, language B smaller right
-
----
-
-## 6. Real Community Examples
-
-### Duolingo-Style Language Lesson — @learnfast_ui
-**Prompt:** "A French translation exercise app screen: bright green background (#58CC02), white card for the exercise area, bold Nunito heading 'TRANSLATE THIS SENTENCE', word chip row with [Le musée] [est] [fermé] [lundi], full-width yellow CHECK ANSWER button at bottom, 🔥 7-day streak in top right, XP progress bar at top."
-
-**What makes it work:** The high-chroma green background creates immediate energy without sacrificing legibility — the white card acts as a focused reading zone that pops off it. Word chips use generous padding (12px 20px) and a subtle drop shadow so they read as interactive objects rather than static labels. The single full-width CTA eliminates decision fatigue: there is only one next action.
-
----
-
-### Science Flashcard Deck — @khan_cards
-**Prompt:** "A spaced repetition flashcard app for high school biology: card-centered layout on a calm #F0F9FF background, front face shows 'Mitochondria' in 32px Plus Jakarta Sans bold, back face reveals a two-section definition (Function / Key Detail) with a small diagram area. Bottom bar has four rating buttons — Again / Hard / Good / Easy — in muted pill style. Progress ring in top right: 18 of 40 cards."
-
-**What makes it work:** The two-section back face (Function vs. Key Detail) mirrors how students naturally encode information — function first, then elaboration — which improves recall. Rating buttons use low-saturation colors so they don't compete with the card content; only the "Easy" button gets the accent green. The progress ring uses a thin 3px stroke so it stays informative without dominating the header.
-
----
-
-### Corporate Compliance Training Module — @lms_design_co
-**Prompt:** "A corporate LMS module screen for 'Data Privacy & GDPR Essentials': professional navy (#1A4FA0) header bar with company logo placeholder and course title, chapter list below showing 5 modules with locked/unlocked states and time estimates, current lesson area with embedded video player and a notes sidebar, bottom footer showing 'Module 3 of 5 — 60% complete' with a completion certificate progress indicator. Clean white surface, Poppins for headings and DM Sans for body."
-
-**What makes it work:** The locked/unlocked chapter states use a consistent iconography system (filled check, active play arrow, padlock) that communicates course linearity at a glance — learners always know where they are and what's next. The 60% progress indicator in the footer is persistent rather than modal, creating low-friction awareness of progress without interrupting the lesson flow. Navy as the sole accent color reads as institutional trust — appropriate for compliance content where authority signals matter.
