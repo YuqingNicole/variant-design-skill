@@ -53,3 +53,5 @@ The baseline is project/variant-specific and must remain local with its candidat
 Preflight failures preserve output files, context and history and leave the candidate available. Preparation refuses existing destinations (even empty ones). If preparation fails partway, partial copies may remain, but no usable baseline is retained; inspect them and prepare another new directory.
 
 The helper rechecks before snapshot/commit, but an external editor can still write after the last check. Its lock is cooperative, not an operating-system-wide lock; avoid editing the same files during commit. Multi-file process-crash recovery remains snapshot-based and manual; this change does not claim to eliminate that limitation.
+
+Rebuild static previews after apply or undo. If React uses an isolated bundler, retain the same original project root and `--vite-root` argument described in `references/workflow/preview.md`.
