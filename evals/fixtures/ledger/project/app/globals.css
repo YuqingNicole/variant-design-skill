@@ -1,0 +1,12 @@
+/* Ledger brand. Fonts and colors are set by the brand guide; spacing and layout are open. */
+:root {
+  --font-sans: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --color-ink: #1d2a24;
+  --color-paper: #f6f4ee;
+  --color-accent: #2f6f4f;
+  --color-muted: #6b746e;
+  --radius: 6px;
+}
+body { margin: 0; font-family: var(--font-sans); color: var(--color-ink); background: var(--color-paper); }
+a { color: var(--color-accent); }

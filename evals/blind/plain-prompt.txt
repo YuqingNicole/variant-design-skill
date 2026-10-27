@@ -1,0 +1,1 @@
+给这个项目里的页面做三个不同方向（A/B/C）的设计。保留原页面的核心任务、数据和功能；项目已有品牌时保持它的字体和颜色。写成可以直接双击打开的独立 HTML 文件：variant-output/A.html、variant-output/B.html、variant-output/C.html。另外写 variant-output/notes.json，格式为 {"A":{"optimizes":"","tradeoff":"","bestFor":""},"B":{…},"C":{…},"recommendation":{"variant":"","reason":""}}，分别说明每个方向优化什么、放弃什么、适合什么场景，再推荐一个。不要修改项目里的其他文件，不要启动常驻服务器。

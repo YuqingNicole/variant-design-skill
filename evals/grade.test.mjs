@@ -37,6 +37,9 @@ test('changing business code fails, ignoring the skill folders does not', () => 
   assert.deepEqual(check(stray, 'project-untouched').details, ['created src/New.tsx outside variant-output/']);
   const ignored = result(dir => fs.appendFileSync(path.join(dir, '.gitignore'), '.variant-work\n'));
   assert.equal(check(ignored, 'project-untouched').pass, true);
+  const adapter = result(dir => { fs.mkdirSync(path.join(dir, 'app/variant-preview'), { recursive: true }); fs.writeFileSync(path.join(dir, 'app/variant-preview/page.tsx'), ''); });
+  assert.equal(check(adapter, 'project-untouched').pass, true);
+  assert.deepEqual(check(adapter, 'project-untouched').details, ['warning: preview adapter created at app/variant-preview/page.tsx']);
   const rewritten = result(dir => fs.writeFileSync(path.join(dir, '.gitignore'), '.variant-work\n'));
   assert.equal(check(rewritten, 'project-untouched').pass, false);
 });

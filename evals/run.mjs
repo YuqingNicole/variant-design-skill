@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 // Runs the skill from this working tree in real agent CLIs on fixture projects, then grades each run.
-// Usage: node evals/run.mjs [--agent claude,codex] [--fixture pulse,harbor,bakery] [--out <dir>] [--timeout-min 25] [--jobs 3] [--prepare-only]
+// Usage: node evals/run.mjs [--agent claude,codex] [--fixture pulse,harbor,bakery,ledger] [--out <dir>] [--timeout-min 25] [--jobs 3] [--prepare-only] [--no-skill]
+// --no-skill runs the same agent on the same project without the skill and with the plain prompt in evals/blind/plain-prompt.txt (the blind-review control group).
 // Each run costs real model usage (a Claude run has cost about $2–3). Results stay outside the repository.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync, spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { grade, loadFixture } from './grade.mjs';
+import { grade, loadFixture, usage } from './grade.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -19,13 +20,15 @@ const timeoutMs = Number(opt('--timeout-min', 25)) * 60_000, jobs = Number(opt('
 const shipped = /^(SKILL\.md|VERSION|skills\/|references\/|assets\/|scripts\/(?!.*\.test\.)[^/]+\.mjs$)/;
 // Where each CLI discovers a project-level skill; `npx skills add` uses the same folders.
 const installDir = { claude: '.claude/skills/variant-design', codex: '.agents/skills/variant-design' };
+const plain = args.includes('--no-skill') ? fs.readFileSync(path.join(here, 'blind/plain-prompt.txt'), 'utf8').trim() : null;
 
 function prepare(fixture, agent) {
   const dir = path.join(out, `${fixture}-${agent}`);
   fs.cpSync(path.join(here, 'fixtures', fixture, 'project'), dir, { recursive: true });
   const git = (...a) => execFileSync('git', a, { cwd: dir, stdio: 'pipe' });
   git('init', '-q'); git('add', '-A'); git('-c', 'user.name=eval', '-c', 'user.email=eval@localhost', 'commit', '-qm', 'baseline');
-  if (fs.existsSync(path.join(dir, 'package-lock.json'))) execFileSync('npm', ['ci', '--no-audit', '--no-fund', '--loglevel=error'], { cwd: dir, stdio: 'pipe' });
+  if (fs.existsSync(path.join(dir, 'package-lock.json'))) execFileSync('npm', ['ci', '--prefer-offline', '--no-audit', '--no-fund', '--loglevel=error'], { cwd: dir, stdio: 'pipe' });
+  if (plain) return dir;
   // Install the working tree, including uncommitted changes, so a run tests exactly what is here.
   const files = execFileSync('git', ['ls-files', '-co', '--exclude-standard'], { cwd: repo, encoding: 'utf8' }).split('\n').filter(f => shipped.test(f) && fs.existsSync(path.join(repo, f)));
   for (const file of files) { const target = path.join(dir, installDir[agent], file); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.copyFileSync(path.join(repo, file), target); }
@@ -52,8 +55,9 @@ async function one(fixture, agent) {
   const config = loadFixture(fixture), dir = prepare(fixture, agent);
   if (args.includes('--prepare-only')) return { fixture, agent, dir };
   console.log(`▶ ${fixture} · ${agent}`);
-  const run = await runAgent(agent, config.prompt, dir);
-  const result = { fixture, agent, dir, ...run, ...grade(dir, { fixture: config, transcript: run.transcript }) };
+  const run = await runAgent(agent, plain ?? config.prompt, dir);
+  // The control group has no skill record to grade; keep what it cost.
+  const result = plain ? { fixture, agent, dir, ...run, pass: true, checks: [], usage: usage(run.transcript), recommendation: null } : { fixture, agent, dir, ...run, ...grade(dir, { fixture: config, transcript: run.transcript }) };
   fs.writeFileSync(path.join(out, `${fixture}-${agent}.json`), JSON.stringify(result, null, 2));
   console.log(`${result.pass ? '✓' : '✗'} ${fixture} · ${agent} (${run.seconds}s${run.timedOut ? ', timed out' : ''})`);
   return result;
