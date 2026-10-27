@@ -118,3 +118,33 @@ test('preview serves a rewrite made right after the previous change',async()=>{
     await expect.poll(served,{timeout:3000}).toBe('Georgia');
   }finally{if(fs.readFileSync(file,'utf8')!==original)fs.writeFileSync(file,original);}
 });
+
+test('reusable browser plan checks alternate focus, JS motion and non-target behavior on the recorded revision',async({page,browser})=>{
+ const {verifyInBrowser,verificationPlan}=await import('../scripts/browser-verification.mjs');
+ const {inspectVerification}=await import('../scripts/artifact-verification.mjs');
+ const dir=path.join(root,'runtime-plan');fs.mkdirSync(dir,{recursive:true});
+ const file=path.join(dir,'B.html');
+ const state={schemaVersion:2,variants:{B:{entry:'B.html',files:['B.html'],version:1,tokens:{fonts:['Georgia']}}}};
+ fs.writeFileSync(path.join(dir,'.variant-context.json'),JSON.stringify(state));
+ const html=`<!doctype html><html><head><style>body{font-family:Georgia}button:focus-visible{outline:none;box-shadow:rgb(0, 0, 255) 0px 0px 0px 3px}@media(prefers-reduced-motion:reduce){*{animation:none}}</style></head><body><h1>Report</h1><button id="outside">Inspect</button><output>0</output><span id="motion">100</span><script>
+ document.querySelector('button').onclick=()=>document.querySelector('output').textContent='1';
+ const preference=matchMedia('(prefers-reduced-motion: reduce)');let frame;
+ window.startMotion=()=>{cancelAnimationFrame(frame);if(preference.matches){document.querySelector('#motion').textContent='100';return;}const tick=()=>{document.querySelector('#motion').textContent='50';frame=requestAnimationFrame(tick)};tick()};
+ preference.addEventListener('change',()=>{if(preference.matches){cancelAnimationFrame(frame);document.querySelector('#motion').textContent='100'}});
+ </script></body></html>`;
+ fs.writeFileSync(file,html);
+ const plan={...verificationPlan(pathToFileURL(file).href),brand:[{selector:'h1',property:'font-family',expected:'Georgia'}],
+  'keyboard-focus':[{selector:'button',indicator:{property:'boxShadow',expected:'rgb(0, 0, 255) 0px 0px 0px 3px'}}],
+  'reduced-motion':{settled:[{selector:'#motion',property:'text',expected:'100'}]},
+  'scope-preservation':[{selector:'output',property:'text',expected:'1'}]};
+ const adapter={page,version:browser.version(),ready:async()=>expect(page.locator('h1')).toHaveText('Report'),startMotion:p=>p.evaluate(()=>window.startMotion()),exerciseScope:p=>p.locator('button').click()};
+ const good=await verifyInBrowser(dir,'B',{plan},adapter);
+ expect(good.report.checks.filter(c=>c.status==='passed').map(c=>c.id)).toEqual(['brand','keyboard-focus','reduced-motion','scope-preservation']);
+ expect(good.report.checks.find(c=>c.id==='project-checks').status).toBe('unverified');
+ fs.writeFileSync(file,html.replace('font-family:Georgia','font-family:Arial').replace('box-shadow:rgb(0, 0, 255) 0px 0px 0px 3px','box-shadow:none').replace('if(preference.matches){document','if(false){document').replace("if(preference.matches){cancelAnimationFrame(frame)","if(false){cancelAnimationFrame(frame)").replace("textContent='1'","textContent='2'"));
+ expect(inspectVerification(dir,good.file).status).toBe('stale');
+ const bad=await verifyInBrowser(dir,'B',{plan},adapter);
+ expect(bad.report.checks.filter(c=>c.status==='failed').map(c=>c.id)).toEqual(['brand','keyboard-focus','reduced-motion','scope-preservation']);
+ const missing=await verifyInBrowser(dir,'B',{plan},null);
+ expect(missing.report.checks.every(c=>c.status==='unverified')).toBe(true);
+});
