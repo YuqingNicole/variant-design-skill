@@ -412,6 +412,27 @@ test('reference pack keeps per-item intentions and source links in its brief', a
  await expect(pack.locator('fieldset')).toHaveCount(1);
 });
 
+test('reference pack restores locally and reports storage failures', async ({page})=>{
+ await page.goto('/inspiration');
+ await page.locator('.inspiration-grid article').first().getByRole('button',{name:'加入参考包'}).click();
+ await page.locator('.inspiration-pack').getByLabel('参考什么',{exact:true}).fill('信息层级');
+ await page.reload();
+ await expect(page.locator('.inspiration-pack').getByLabel('参考什么',{exact:true})).toHaveValue('信息层级',{timeout:15000});
+ await page.evaluate(()=>localStorage.setItem('variant-inspiration-pack-v1','invalid'));
+ await page.reload();
+ await expect(page.getByRole('alert')).toContainText('无法读取或保存');
+ await page.locator('.inspiration-grid article').first().getByRole('button',{name:'加入参考包'}).click();
+ expect(await page.evaluate(()=>localStorage.getItem('variant-inspiration-pack-v1'))).toBe('invalid');
+});
+
+test('reference pack reports failed local writes while keeping current edits', async ({page})=>{
+ await page.addInitScript(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key==='variant-inspiration-pack-v1')throw new Error('storage unavailable');return original.call(this,key,value)}});
+ await page.goto('/inspiration');
+ await page.locator('.inspiration-grid article').first().getByRole('button',{name:'加入参考包'}).click();
+ await expect(page.getByRole('alert')).toContainText('无法读取或保存');
+ await expect(page.locator('.inspiration-pack fieldset')).toHaveCount(1);
+});
+
 test('home connects reference discovery, cases and the project workflow', async ({page})=>{
  await page.goto('/');
  await expect(page.locator('.library-path li')).toHaveCount(3);
