@@ -585,3 +585,16 @@ export const inspirationTopics = [
     "linksCheckedAt": "2026-10-29"
   }
 ];
+
+// Outside directories, linked only. `kind` groups them on the home page; listing one is not an endorsement.
+export const inspirationSources = [
+  { "name": "Lapa Ninja", "url": "https://www.lapa.ninja/", "kind": "references", "type": ["落地页合集", "Landing galleries"] },
+  { "name": "Curated", "url": "https://curated.design/", "kind": "references", "type": ["视觉参考", "Visual references"] },
+  { "name": "Mobbin", "url": "https://mobbin.com/", "kind": "references", "type": ["产品界面参考", "Product references"] },
+  { "name": "Landingfolio", "url": "https://www.landingfolio.com/", "kind": "references", "type": ["落地页与区块", "Landing & sections"] },
+  { "name": "Framer Templates", "url": "https://www.framer.com/marketplace/templates/", "kind": "code", "type": ["网站模板", "Site templates"] },
+  { "name": "21st.dev", "url": "https://21st.dev/community/components", "kind": "code", "type": ["React 组件", "React components"] },
+  { "name": "shadcn/ui", "url": "https://ui.shadcn.com/blocks", "kind": "code", "type": ["应用区块", "Application blocks"] },
+  { "name": "recent.design Skills", "url": "https://recent.design/skills", "kind": "skills", "type": ["人工精选的设计技能目录", "Curated design skill directory"] },
+  { "name": "skills.sh", "url": "https://skills.sh/", "kind": "skills", "type": ["技能目录与安装", "Skill directory and installer"] }
+];

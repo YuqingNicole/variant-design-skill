@@ -418,6 +418,11 @@ test('reference pack keeps per-item intentions and source links in its brief', a
 });
 
 test('a topic narrows the library to its dated references and states what is unknown', async ({page})=>{
+ await page.goto('/inspiration?topic=saas-home');
+ await expect(page.locator('.inspiration-grid article')).toHaveCount(10);
+ await expect(page.getByRole('button',{name:'专题：SaaS 首页 · 10'})).toHaveAttribute('aria-pressed','true');
+ await page.goto('/inspiration?topic=unknown');
+ await expect(page.locator('.inspiration-grid article')).toHaveCount(26);
  await page.goto('/inspiration');
  const cards=page.locator('.inspiration-grid article');
  const topic=page.getByRole('button',{name:'专题：SaaS 首页 · 10'});
@@ -461,15 +466,15 @@ test('reference pack reports failed local writes while keeping current edits', a
 
 test('home connects reference discovery, cases and the project workflow', async ({page})=>{
  await page.goto('/');
- await expect(page.locator('.library-path li')).toHaveCount(3);
+ await expect(page.locator('.home-tasks li')).toHaveCount(4);
  await expect(page.locator('.site-nav a[href="/inspiration"]')).toBeVisible();
  await expect(page.locator('#works .library-card').first()).toBeVisible();
- await page.getByRole('link',{name:'寻找设计参考 ↗'}).click();
+ await page.getByRole('link',{name:'浏览设计参考 →'}).click();
  await expect(page).toHaveURL(/\/inspiration$/);
  await expect(page.locator('.site-nav a[href="/inspiration"]')).toHaveAttribute('aria-current','page');
  await page.goto('/');
  await page.getByRole('button',{name:'切换到英文'}).click();
- await expect(page.getByRole('heading',{name:'From inspiration to your own direction.'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Start with what you need to do.'})).toBeVisible();
  for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
@@ -497,10 +502,39 @@ test('home case switches recorded A/B/C evidence and preserves the chosen direct
 });
 test('home hero actions keep readable text contrast', async ({page})=>{
  await page.goto('/');
- const ratios=await page.locator('.library-hero-actions a').evaluateAll(links=>links.map(el=>{
+ const ratios=await page.locator('.home-actions a').evaluateAll(links=>links.map(el=>{
   const lum=c=>{const [r,g,b]=c.match(/\d+(\.\d+)?/g).slice(0,3).map(Number).map(v=>{v/=255;return v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4});return 0.2126*r+0.7152*g+0.0722*b};
   let bg=el,color='rgba(0, 0, 0, 0)';while(bg&&(color=getComputedStyle(bg).backgroundColor)==='rgba(0, 0, 0, 0)')bg=bg.parentElement;
   const [a,b]=[lum(getComputedStyle(el).color),lum(color)].sort((x,y)=>y-x);return (a+0.05)/(b+0.05)}));
  expect(ratios).toHaveLength(2);
  for(const ratio of ratios)expect(ratio).toBeGreaterThanOrEqual(4.5);
+});
+test('home works as a design navigation site with a switchable, sourced showcase', async ({page})=>{
+ await page.setViewportSize({width:1440,height:900});
+ await page.goto('/');
+ await expect(page).toHaveTitle('Variant Design — 设计导航，只收核对过的');
+ const inView=sel=>page.locator(sel).first().evaluate(el=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight});
+ for(const sel of ['.home-claim h1','.home-show-card','.home-action-primary','.home-shelves'])expect(await inView(sel)).toBe(true);
+ await expect(page.locator('.home-counts')).toHaveText('26 个参考 · 1 个专题 · 1 个实测技能 · 5 个案例');
+ const card=page.locator('.home-show-card');
+ await expect(card.locator('h3')).toHaveText('Linear');
+ await expect(card.locator('.home-marks li')).toHaveText(['仅链接','核对 2026-10-29','设计者未知']);
+ await expect(card.getByRole('link',{name:'打开来源 ↗'})).toHaveAttribute('href','https://linear.app/');
+ await expect(card.getByRole('link',{name:'看完整专题（10）→'})).toHaveAttribute('href','/inspiration?topic=saas-home');
+ await page.getByRole('button',{name:'/技能'}).click();
+ await expect(page.getByRole('button',{name:'/技能'})).toHaveAttribute('aria-pressed','true');
+ await expect(card.locator('h3')).toHaveText('variant-design');
+ await expect(card.locator('code')).toHaveText('npx skills add YuqingNicole/variant-design-skill -a claude-code -a codex');
+ await page.getByRole('button',{name:'/案例'}).focus();await page.keyboard.press('Enter');
+ await expect(card.locator('img')).toHaveAttribute('src','/media/pulse/a.jpg');
+ await expect(card.locator('.home-marks li').first()).toHaveText('技能产出 · 已验证');
+ const dirs=page.locator('#directories');
+ await expect(dirs.locator('li a')).toHaveCount(9);
+ await expect(dirs.getByRole('link',{name:'recent.design Skills ↗'})).toHaveAttribute('href','https://recent.design/skills');
+ await expect(dirs).toContainText('不代表我们试过或推荐');
+ await page.getByRole('button',{name:'切换到英文'}).click();
+ await expect(page.locator('.home-claim h1')).toHaveText('A design guide,checked before it’s listed.');
+ await page.setViewportSize({width:390,height:844});
+ for(const sel of ['.home-claim h1','.home-action-primary'])expect(await inView(sel)).toBe(true);
+ for(const width of [320,390]){await page.setViewportSize({width,height:844});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
 });

@@ -6,7 +6,7 @@ import './content-pages.css';
 import './library.css';
 type Copy = [string, string];
 // Skills directory (RFC-002 P4). Only skills we actually ran in throwaway projects, with public records.
-const skills: { id: string; name: string; source: string; summary: Copy; tried: Copy; install: string; records: { label: Copy; href: string }[] }[] = [
+export const skills: { id: string; name: string; source: string; summary: Copy; tried: Copy; install: string; records: { label: Copy; href: string }[] }[] = [
   { id: 'variant-design', name: 'variant-design', source: 'YuqingNicole/variant-design-skill',
     summary: ['把一个任务做成 A/B/C 三个可比较的方向，支持局部修改、快照撤回和可回滚的接入；可以从方向库的方向卡开始。', 'Turns one brief into three comparable directions in your project, with scoped edits, undo snapshots and integration you can roll back; can start from a direction card in this library.'],
     tried: ['在 Claude Code 和 Codex 的一次性项目里跑过完整流程（生成、局部修改、撤回、接入），以及从方向卡出三版；品牌锁定的项目都守住了字体和颜色。Codex 沙箱里浏览器检查受限，记录中已注明。', 'Run end to end in throwaway projects with Claude Code and Codex (generate, scoped edit, undo, integrate) and from a direction card; brand-locked projects kept their fonts and colors. Codex sandboxes limit browser checks, as the records note.'],
