@@ -53,7 +53,7 @@ function page(template, { site, route, title, description, image, type = 'websit
 export function renderSite(entries, template, site = defaultSite) {
   const sorted = order(entries), pages = new Map();
   const library = 'Variant Design 方向库';
-  pages.set('/', page(template, { site, route: '/', title: `${library} — 一个任务，三个方向`, description: '每件作品都是同一个任务的 A/B/C 三个方向，写明各自优化什么、牺牲什么、适合什么场景。', body: `<main><h1>一个任务，三个方向。</h1>${sorted.map(card).join('')}</main>` }));
+  pages.set('/', page(template, { site, route: '/', title: `${library} — 一个任务，三个方向`, description: '找到值得参考的设计，记录你的选择，在自己的项目里探索三种不同方向。', body: `<main><h1>一个任务，三个方向。</h1><p>找到值得参考的设计，记录你的选择，在自己的项目里探索三种不同方向。</p><nav><a href="/inspiration">寻找设计参考</a> · <a href="#works">查看 A/B/C 案例</a> · <a href="/docs">安装与使用</a></nav><section><h2>从喜欢，到做出来。</h2><p>浏览公开来源，记录想借鉴和避免的内容，再在项目里比较 A/B/C。</p><h3>示例：给 SaaS 产品做首页</h3><p>参考 Linear 的产品展示与 Notion 的分层介绍；研究信息层级，避免照搬品牌、文案和素材。</p></section><section id="works"><h2>一个任务，三种方向。</h2>${sorted.map(card).join('')}</section></main>` }));
   for (const category of [...new Set(sorted.map(e => e.category))]) {
     const name = categoryNames[category] ?? category, list = sorted.filter(e => e.category === category);
     pages.set(`/c/${category}`, page(template, { site, route: `/c/${category}`, title: `${name} — ${library}`, description: `${name}：${list.length} 件作品，每件包含同一个任务的三个方向。`, body: `<main><h1>${escape(name)}</h1>${list.map(card).join('')}</main>` }));
