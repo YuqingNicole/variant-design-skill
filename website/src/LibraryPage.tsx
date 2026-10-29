@@ -3,6 +3,7 @@ import type { Language } from './direction-engine';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { HomeCase } from './HomeCase';
 import { cardUrl, categories, coverDirection, entries, evidenceUrl, mediaUrl, type Direction, type Entry } from './library-data';
+import { inspirationItems } from './inspiration-data';
 import './content-pages.css';
 import './library.css';
 export type LibraryView = { kind: 'feed' } | { kind: 'category'; id: string } | { kind: 'entry'; slug: string };
@@ -31,7 +32,7 @@ function Feed({ category, ix, zh }: { category?: string; ix: number; zh: boolean
       {!category && <div className="library-feed-heading"><div><p className="content-kicker">A / B / C CASES</p><h2>{zh ? '一个任务，三种方向。' : 'One brief, three directions.'}</h2></div><p>{zh ? '浏览我们制作的案例：每个方向都说明优化、取舍和适用场景。技能产出与概念作品分别标注。' : 'Explore our cases, with each direction’s priorities, tradeoffs and fit. Skill outputs and concept studies are labeled separately.'}</p></div>}
       <nav className="content-filters" aria-label={zh ? '作品分类' : 'Categories'}><a href="/" aria-current={!category ? 'page' : undefined}>{zh ? '全部' : 'All'}</a>{used.map(c => <a key={c.id} href={`/c/${c.id}`} aria-current={category === c.id ? 'page' : undefined}>{c.name[ix]}</a>)}</nav>
       {shown.length ? <div className="library-grid">{shown.map(e => <Card key={e.slug} entry={e} ix={ix}/>)}</div> : <p className="library-empty">{zh ? '这个分类还没有作品。' : 'Nothing in this category yet.'}</p>}
-      <p className="library-more"><a href="/inspiration">{zh ? '外部参考：24 个只附链接的公开设计 →' : 'External references: 24 public designs, linked only →'}</a> <a href="/submit">{zh ? '投稿与授权 →' : 'Submissions & permissions →'}</a></p>
+      <p className="library-more"><a href="/inspiration">{zh ? `外部参考：${inspirationItems.length} 个只附链接的公开设计 →` : `External references: ${inspirationItems.length} public designs, linked only →`}</a> <a href="/submit">{zh ? '投稿与授权 →' : 'Submissions & permissions →'}</a></p>
     </section></>;
 }
 
