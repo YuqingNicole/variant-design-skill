@@ -17,7 +17,7 @@ export const inspirationItems = [
     "publisher": "Linear",
     "kind": "official-site",
     "designer": null,
-    "checkedAt": "2026-10-07",
+    "checkedAt": "2026-10-29",
     "verification": "official-public-source",
     "mobile": "not-tested"
   },
@@ -39,7 +39,7 @@ export const inspirationItems = [
     "publisher": "Notion",
     "kind": "official-site",
     "designer": null,
-    "checkedAt": "2026-10-07",
+    "checkedAt": "2026-10-29",
     "verification": "official-public-source",
     "mobile": "not-tested"
   },
@@ -61,7 +61,7 @@ export const inspirationItems = [
     "publisher": "Raycast",
     "kind": "official-site",
     "designer": null,
-    "checkedAt": "2026-10-07",
+    "checkedAt": "2026-10-29",
     "verification": "official-public-source",
     "mobile": "not-tested"
   },
@@ -83,7 +83,7 @@ export const inspirationItems = [
     "publisher": "Cursor",
     "kind": "official-site",
     "designer": null,
-    "checkedAt": "2026-10-07",
+    "checkedAt": "2026-10-29",
     "verification": "official-public-source",
     "mobile": "not-tested"
   },
@@ -105,7 +105,7 @@ export const inspirationItems = [
     "publisher": "Vercel",
     "kind": "official-site",
     "designer": null,
-    "checkedAt": "2026-10-07",
+    "checkedAt": "2026-10-29",
     "verification": "official-public-source",
     "mobile": "not-tested"
   },
@@ -293,17 +293,17 @@ export const inspirationItems = [
     "url": "https://www.framer.com/",
     "source": "link-only",
     "focus": [
-      "设计、修改与发布的产品叙事",
-      "Design, refine and publish narrative"
+      "设计代理 → 可编辑画布 → 发布上线",
+      "Design agent → editable canvas → published site"
     ],
     "application": [
-      "解释从画布到交付的完整过程",
-      "Explain the canvas-to-delivery journey"
+      "讲清从生成到交付的路径",
+      "Explain the path from generation to delivery"
     ],
     "publisher": "Framer",
     "kind": "official-site",
     "designer": null,
-    "checkedAt": "2026-10-07",
+    "checkedAt": "2026-10-29",
     "verification": "official-public-source",
     "mobile": "not-tested"
   },
@@ -347,7 +347,7 @@ export const inspirationItems = [
     "publisher": "Obsidian",
     "kind": "official-site",
     "designer": null,
-    "checkedAt": "2026-10-07",
+    "checkedAt": "2026-10-29",
     "verification": "official-public-source",
     "mobile": "not-tested"
   },
@@ -435,7 +435,7 @@ export const inspirationItems = [
     "publisher": "Plausible",
     "kind": "official-site",
     "designer": null,
-    "checkedAt": "2026-10-07",
+    "checkedAt": "2026-10-29",
     "verification": "official-public-source",
     "mobile": "not-tested"
   },
@@ -529,9 +529,9 @@ export const inspirationItems = [
   }
 ];
 
-// RFC-003 batch 1: one task-scoped topic. linksCheckedAt records only that each link answered
-// HTTP 200 to a scripted request; the study notes keep their own checkedAt. Lovable answered 403
-// and stays out until it is checked in a browser.
+// RFC-003 batch 1: one task-scoped topic. linksCheckedAt records that each link answered HTTP 200;
+// each item's checkedAt is when its note was compared with the live page. Lovable serves a bot
+// challenge to scripted and automated-browser requests and stays out until someone checks it by hand.
 export const inspirationTopics = [
   {
     "id": "saas-home",
