@@ -7,7 +7,7 @@ const read = name => { const start = source.indexOf(`export const ${name} = `); 
 const items = read('inspirationItems'), topics = read('inspirationTopics');
 const date = /^\d{4}-\d{2}-\d{2}$/;
 
-test('every external reference records provenance and leaves unknowns empty', () => {
+test('every external reference records provenance; unknown designers stay null', () => {
   assert.equal(new Set(items.map(i => i.id)).size, items.length);
   for (const i of items) {
     assert.equal(new URL(i.url).protocol, 'https:', i.id);

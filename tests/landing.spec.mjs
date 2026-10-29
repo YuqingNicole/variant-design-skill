@@ -426,6 +426,9 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(cards).toHaveCount(8);
  await expect(page.locator('.inspiration-topic')).toContainText('2026-10-29');
  await expect(cards.filter({hasText:'Lovable'})).toHaveCount(0);
+ await page.getByRole('searchbox').fill('Vercel');
+ await expect(cards).toHaveCount(1);await expect(cards.first()).toContainText('v0');
+ await page.getByRole('searchbox').fill('');
  await expect(cards.first().locator('dd').filter({hasText:'未知'})).toHaveCount(1);
  await page.getByRole('button',{name:'关键流程',exact:true}).click();
  await expect(cards).toHaveCount(0);
