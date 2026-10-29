@@ -14,6 +14,9 @@ export const inspirationItems = [
       "让交付物尽早出现",
       "Show deliverables early"
     ],
+    "publisher": "Linear",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -33,6 +36,9 @@ export const inspirationItems = [
       "减少首屏认知负担",
       "Reduce first-screen cognitive load"
     ],
+    "publisher": "Notion",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -52,6 +58,9 @@ export const inspirationItems = [
       "讲清核心动作，再展开生态",
       "Explain the core action before the ecosystem"
     ],
+    "publisher": "Raycast",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -71,6 +80,9 @@ export const inspirationItems = [
       "用具体任务证明 AI 能力",
       "Demonstrate AI through concrete tasks"
     ],
+    "publisher": "Cursor",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -90,6 +102,9 @@ export const inspirationItems = [
       "缩短从浏览到第一次尝试",
       "Shorten the path to a first attempt"
     ],
+    "publisher": "Vercel",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -109,6 +124,9 @@ export const inspirationItems = [
       "给空白输入提供起点",
       "Give blank inputs a starting point"
     ],
+    "publisher": "Lovable",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -128,6 +146,9 @@ export const inspirationItems = [
       "兼顾品牌叙事与商品发现",
       "Balance storytelling with product discovery"
     ],
+    "publisher": "Aesop",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -147,6 +168,9 @@ export const inspirationItems = [
       "用清楚的层级组织专业产品",
       "Organize specialist products clearly"
     ],
+    "publisher": "teenage engineering",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -166,6 +190,9 @@ export const inspirationItems = [
       "让品牌活动通向具体商品",
       "Connect campaigns to specific products"
     ],
+    "publisher": "Nothing",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -185,6 +212,9 @@ export const inspirationItems = [
       "以作品支持服务主张",
       "Support service claims with work"
     ],
+    "publisher": "Instrument",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -204,6 +234,9 @@ export const inspirationItems = [
       "构建可持续扩展的案例库",
       "Build an expandable case library"
     ],
+    "publisher": "Pentagram",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -223,6 +256,9 @@ export const inspirationItems = [
       "少量强案例建立记忆",
       "Build recall through fewer stronger cases"
     ],
+    "publisher": "BASIC/DEPT®",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -242,6 +278,9 @@ export const inspirationItems = [
       "为编辑器建立清楚的能力层级",
       "Create a clear hierarchy for editor capabilities"
     ],
+    "publisher": "Figma",
+    "kind": "product-page",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -261,6 +300,9 @@ export const inspirationItems = [
       "解释从画布到交付的完整过程",
       "Explain the canvas-to-delivery journey"
     ],
+    "publisher": "Framer",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -280,6 +322,9 @@ export const inspirationItems = [
       "让用户判断内容归属与可靠性",
       "Help users judge ownership and reliability"
     ],
+    "publisher": "Notion",
+    "kind": "product-page",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -299,6 +344,9 @@ export const inspirationItems = [
       "支持从局部内容回到整体结构",
       "Connect local content to the overall structure"
     ],
+    "publisher": "Obsidian",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -318,6 +366,9 @@ export const inspirationItems = [
       "避免所有对象挤在同一层",
       "Separate objects by hierarchy"
     ],
+    "publisher": "Linear",
+    "kind": "product-page",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -337,6 +388,9 @@ export const inspirationItems = [
       "把单个动作放回团队任务中",
       "Connect individual actions to team work"
     ],
+    "publisher": "Asana",
+    "kind": "product-page",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -356,6 +410,9 @@ export const inspirationItems = [
       "让图表回答问题并支持下一步",
       "Make charts answer questions and support action"
     ],
+    "publisher": "PostHog",
+    "kind": "product-page",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -375,6 +432,9 @@ export const inspirationItems = [
       "明确默认展示与次级信息",
       "Separate default and secondary information"
     ],
+    "publisher": "Plausible",
+    "kind": "official-site",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -394,6 +454,9 @@ export const inspirationItems = [
       "让新用户完成第一个有意义的动作",
       "Help new users complete a meaningful action"
     ],
+    "publisher": "Notion",
+    "kind": "documentation",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -413,6 +476,9 @@ export const inspirationItems = [
       "让创建表单对齐后续工作",
       "Align creation forms with later work"
     ],
+    "publisher": "Linear",
+    "kind": "documentation",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -432,6 +498,9 @@ export const inspirationItems = [
       "分开当前查看、试改与最终选择",
       "Separate viewing, editing and final selection"
     ],
+    "publisher": "Figma",
+    "kind": "documentation",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
@@ -451,8 +520,24 @@ export const inspirationItems = [
       "在交付前解释用户将得到什么",
       "Explain the deliverable before export"
     ],
+    "publisher": "Figma",
+    "kind": "documentation",
+    "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
+  }
+];
+
+// RFC-003 batch 1: one task-scoped topic. linksCheckedAt records only that each link answered
+// HTTP 200 to a scripted request; the study notes keep their own checkedAt. Lovable answered 403
+// and stays out until it is checked in a browser.
+export const inspirationTopics = [
+  {
+    "id": "saas-home",
+    "title": ["SaaS 首页", "SaaS homepages"],
+    "task": ["为一个数字产品的首页找结构参考：主张、产品画面和行动入口如何排序。", "Find structure for a digital product's homepage: how the claim, product view and call to action are ordered."],
+    "items": ["linear", "notion", "raycast", "cursor", "v0", "framer", "obsidian", "plausible"],
+    "linksCheckedAt": "2026-10-29"
   }
 ];
