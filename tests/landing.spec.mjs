@@ -450,3 +450,22 @@ test('home connects reference discovery, cases and the project workflow', async 
   await expect(page.locator('.site-nav a[href="/inspiration"]')).toBeVisible();
  }
 });
+
+test('home case switches recorded A/B/C evidence and preserves the chosen direction in English', async ({page})=>{
+ await page.goto('/');
+ const demo=page.locator('.home-case');
+ await expect(demo.getByRole('heading',{name:'同一个任务，试试三种解法。'})).toBeVisible();
+ await expect(demo.locator('img')).toHaveAttribute('src','/media/pulse/a.jpg');
+ await demo.getByRole('button',{name:/B.*计分卡/}).click();
+ await expect(demo.locator('img')).toHaveAttribute('src','/media/pulse/b.jpg');
+ await expect(demo.getByRole('button',{name:/B.*计分卡/})).toHaveAttribute('aria-pressed','true');
+ await expect(demo.locator('.home-case-notes')).toContainText('信息密度最高');
+ await expect(demo.getByRole('link',{name:'深入看这个方向 →'})).toHaveAttribute('href','/d/pulse?direction=B');
+ await demo.getByRole('button',{name:/C.*证据追踪/}).focus();
+ await page.keyboard.press('Enter');
+ await expect(demo.locator('img')).toHaveAttribute('src','/media/pulse/c.jpg');
+ await page.getByRole('button',{name:'切换到英文'}).click();
+ await expect(demo.getByRole('button',{name:/C.*Evidence Trace/})).toHaveAttribute('aria-pressed','true');
+ await expect(demo.locator('.home-case-notes')).toContainText('Full week overview');
+ for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
+});
