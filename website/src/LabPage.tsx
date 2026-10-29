@@ -6,6 +6,7 @@ import './library.css';
 type Copy = [string, string];
 // Experiments kept available but no longer extended (RFC-002 §4).
 const tools: { href: string; name: Copy; body: Copy }[] = [
+  { href: '/lab/forma/', name: ['Forma 灵感工作台', 'Forma inspiration studio'], body: ['浏览虚构设计案例，收藏并导出参考，或在本地演示内容管理。数据只保存在当前浏览器。', 'Browse fictional design examples, save and export references, and try local content management. Data stays in this browser.'] },
   { href: '/lab/workbench', name: ['工作台', 'Workbench'], body: ['输入一个命题，比较三种设计合同，再生成选中的方向。需要网站配置模型。', 'Enter a brief, compare three design contracts, then generate the chosen direction. Needs a model configured on the site.'] },
   { href: '/lab/canvas', name: ['画布', 'Canvas'], body: ['从三个可编辑的落地页起点开始，直接改字、改样式、排序和导出 HTML。网页版的项目只保存在你的浏览器里。', 'Start from three editable landing layouts, then edit text and styles, reorder sections and export HTML. On the web, projects stay in your browser.'] },
 ];
