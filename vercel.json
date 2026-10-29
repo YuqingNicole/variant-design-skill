@@ -6,6 +6,14 @@
   "outputDirectory": "website/dist",
   "rewrites": [
     {
+      "source": "/lab/forma",
+      "destination": "/lab/forma/index.html"
+    },
+    {
+      "source": "/lab/forma/",
+      "destination": "/lab/forma/index.html"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api"
     },
