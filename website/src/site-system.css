@@ -8,3 +8,4 @@ html:has(:is(.pricing-page,.site-workbench,.content-page)){color-scheme:light;ba
 @media(max-width:480px){.site-footer{align-items:flex-start}}
 .site-footer>div{flex-wrap:wrap;row-gap:12px}
 @media(max-width:480px){.site-nav{gap:10px}.site-nav .site-wordmark{font-size:16px;gap:6px}.site-nav .site-brandmark{width:28px;height:28px}.site-nav-links{font-size:11px;gap:10px}.site-language{font-size:12px;padding:8px;flex-shrink:0}}
+@media(max-width:650px){.site-nav-links{overflow-x:auto;white-space:nowrap;min-width:0;scrollbar-width:none}.site-nav-links::-webkit-scrollbar{display:none}.site-nav-links>a:first-child{display:block}.site-wordmark{flex-shrink:0}}

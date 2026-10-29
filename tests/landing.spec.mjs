@@ -432,3 +432,21 @@ test('reference pack reports failed local writes while keeping current edits', a
  await expect(page.getByRole('alert')).toContainText('无法读取或保存');
  await expect(page.locator('.inspiration-pack fieldset')).toHaveCount(1);
 });
+
+test('home connects reference discovery, cases and the project workflow', async ({page})=>{
+ await page.goto('/');
+ await expect(page.locator('.library-path li')).toHaveCount(3);
+ await expect(page.locator('.site-nav a[href="/inspiration"]')).toBeVisible();
+ await expect(page.locator('#works .library-card').first()).toBeVisible();
+ await page.getByRole('link',{name:'寻找设计参考 ↗'}).click();
+ await expect(page).toHaveURL(/\/inspiration$/);
+ await expect(page.locator('.site-nav a[href="/inspiration"]')).toHaveAttribute('aria-current','page');
+ await page.goto('/');
+ await page.getByRole('button',{name:'切换到英文'}).click();
+ await expect(page.getByRole('heading',{name:'From inspiration to your own direction.'})).toBeVisible();
+ for(const width of [320,390,1440]){
+  await page.setViewportSize({width,height:900});
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await expect(page.locator('.site-nav a[href="/inspiration"]')).toBeVisible();
+ }
+});
