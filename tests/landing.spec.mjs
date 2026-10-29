@@ -392,3 +392,22 @@ test('history retains twelve entries and retry saves in-memory work without anot
  await expect(page.locator('.direction-card h3').first()).toHaveText('Saved on retry');
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('variant-workspace-v2')));expect(saved[0].schemaVersion).toBe(2);expect(saved[0].selectedVariant).toBeUndefined();
 });
+
+test('reference pack keeps per-item intentions and source links in its brief', async ({page})=>{
+ await page.goto('/inspiration');
+ const cards=page.locator('.inspiration-grid article');
+ await cards.nth(0).getByRole('button',{name:'加入参考包'}).click();
+ await cards.nth(1).getByRole('button',{name:'加入参考包'}).click();
+ const pack=page.locator('.inspiration-pack');
+ await expect(pack.locator('fieldset')).toHaveCount(2);
+ await pack.locator('fieldset').first().getByLabel('参考什么',{exact:true}).fill('信息层级');
+ await pack.locator('fieldset').first().getByLabel('不参考什么').fill('深色背景');
+ await pack.getByRole('button',{name:'生成参考包指令'}).click();
+ const brief=page.getByRole('textbox',{name:'参考设计指令'});
+ await expect(brief).toHaveValue(/信息层级/);
+ await expect(brief).toHaveValue(/深色背景/);
+ await expect(brief).toHaveValue(/https:\/\/linear.app\//);
+ await expect(brief).toHaveValue(/其他用途未知/);
+ await pack.locator('fieldset').nth(1).getByRole('button',{name:'移除'}).click();
+ await expect(pack.locator('fieldset')).toHaveCount(1);
+});
