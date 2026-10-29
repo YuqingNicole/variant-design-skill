@@ -493,3 +493,12 @@ test('home case switches recorded A/B/C evidence and preserves the chosen direct
  await expect(demo.locator('.home-case-notes')).toContainText('Full week overview');
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
 });
+test('home hero actions keep readable text contrast', async ({page})=>{
+ await page.goto('/');
+ const ratios=await page.locator('.library-hero-actions a').evaluateAll(links=>links.map(el=>{
+  const lum=c=>{const [r,g,b]=c.match(/\d+(\.\d+)?/g).slice(0,3).map(Number).map(v=>{v/=255;return v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4});return 0.2126*r+0.7152*g+0.0722*b};
+  let bg=el,color='rgba(0, 0, 0, 0)';while(bg&&(color=getComputedStyle(bg).backgroundColor)==='rgba(0, 0, 0, 0)')bg=bg.parentElement;
+  const [a,b]=[lum(getComputedStyle(el).color),lum(color)].sort((x,y)=>y-x);return (a+0.05)/(b+0.05)}));
+ expect(ratios).toHaveLength(2);
+ for(const ratio of ratios)expect(ratio).toBeGreaterThanOrEqual(4.5);
+});
