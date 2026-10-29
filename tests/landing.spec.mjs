@@ -246,8 +246,8 @@ test('inspiration references filter, create an original brief and recover from c
  await page.goto('/');
  await page.locator('.library-more a[href="/inspiration"]').click();
  const cards=page.locator('.inspiration-grid article');
- await expect(cards).toHaveCount(24);
- for(const [name,count] of [['Landing',12],['产品界面',8],['关键流程',4]]){
+ await expect(cards).toHaveCount(26);
+ for(const [name,count] of [['Landing',14],['产品界面',8],['关键流程',4]]){
   await page.getByRole('button',{name,exact:true}).click();
   await expect(cards).toHaveCount(count);
  }
@@ -265,7 +265,7 @@ test('inspiration references filter, create an original brief and recover from c
  await expect(cards).toHaveCount(0);
  await expect(page.locator('.inspiration-empty')).toBeVisible();
  await page.locator('.inspiration-empty').getByRole('button',{name:'清除筛选'}).click();
- await expect(cards).toHaveCount(24);await expect(page.getByRole('searchbox')).toHaveValue('');
+ await expect(cards).toHaveCount(26);await expect(page.getByRole('searchbox')).toHaveValue('');
  await expect(page.getByRole('button',{name:'全部',exact:true})).toHaveAttribute('aria-pressed','true');
  await page.getByRole('button',{name:'切换到英文'}).click();
  await expect(page.locator('h1')).toHaveText('Turn inspiration into a brief.');
@@ -280,7 +280,7 @@ test('inspiration references filter, create an original brief and recover from c
 test('inspiration references host no third-party images and link to their sources', async ({page})=>{
  const imageRequests=[];page.on('request',r=>{if(r.resourceType()==='image'&&!new URL(r.url()).pathname.startsWith('/variant-mark'))imageRequests.push(r.url());});
  await page.goto('/inspiration');
- await expect(page.locator('.inspiration-grid article')).toHaveCount(24);await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(24);
+ await expect(page.locator('.inspiration-grid article')).toHaveCount(26);await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(26);
  await expect(page.locator('.inspiration-page img:not(.site-brandmark)')).toHaveCount(0);await expect(page.locator('.inspiration-moodboard .inspiration-cover')).toHaveCount(3);
  await expect(page.locator('.inspiration-grid article h2 a').first()).toHaveAttribute('href','https://linear.app/');await expect(page.locator('.inspiration-link-only').first()).toHaveText('仅链接');
  await expect(page.locator('.inspiration-disclosure')).toContainText('不托管对方的截图');await expect(page.locator('.inspiration-disclosure a[href="/submit"]')).toBeVisible();
@@ -420,12 +420,14 @@ test('reference pack keeps per-item intentions and source links in its brief', a
 test('a topic narrows the library to its dated references and states what is unknown', async ({page})=>{
  await page.goto('/inspiration');
  const cards=page.locator('.inspiration-grid article');
- const topic=page.getByRole('button',{name:'专题：SaaS 首页 · 8'});
+ const topic=page.getByRole('button',{name:'专题：SaaS 首页 · 10'});
  await topic.click();
  await expect(topic).toHaveAttribute('aria-pressed','true');
- await expect(cards).toHaveCount(8);
+ await expect(cards).toHaveCount(10);
  await expect(page.locator('.inspiration-topic')).toContainText('2026-10-29');
  await expect(cards.filter({hasText:'Lovable'})).toHaveCount(0);
+ await expect(cards.filter({hasText:'Impeccable'}).locator('h2 a')).toHaveAttribute('href','https://impeccable.style/');
+ await expect(page.locator('.inspiration-intro')).toContainText('26 个精选外部参考');await expect(page.locator('.inspiration-stats span').first()).toContainText('14');
  await page.getByRole('searchbox').fill('Vercel');
  await expect(cards).toHaveCount(1);await expect(cards.first()).toContainText('v0');
  await page.getByRole('searchbox').fill('');
@@ -434,7 +436,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(cards).toHaveCount(0);
  await page.locator('.inspiration-empty').getByRole('button',{name:'清除筛选'}).click();
  await expect(topic).toHaveAttribute('aria-pressed','false');
- await expect(cards).toHaveCount(24);
+ await expect(cards).toHaveCount(26);
 });
 test('reference pack restores locally and reports storage failures', async ({page})=>{
  await page.goto('/inspiration');

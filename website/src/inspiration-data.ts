@@ -66,6 +66,28 @@ export const inspirationItems = [
     "mobile": "not-tested"
   },
   {
+    "id": "resend",
+    "name": "Resend",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://resend.com/",
+    "source": "link-only",
+    "focus": [
+      "单一受众的主张 → 代码接入 → 功能分段",
+      "Single-audience claim → code integration → feature sections"
+    ],
+    "application": [
+      "主张之后立刻展示接入方式",
+      "Show the integration right after the claim"
+    ],
+    "publisher": "Resend",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-10-29",
+    "verification": "official-public-source",
+    "mobile": "not-tested"
+  },
+  {
     "id": "cursor",
     "name": "Cursor",
     "category": "landing",
@@ -128,6 +150,28 @@ export const inspirationItems = [
     "kind": "official-site",
     "designer": null,
     "checkedAt": "2026-10-07",
+    "verification": "official-public-source",
+    "mobile": "not-tested"
+  },
+  {
+    "id": "impeccable",
+    "name": "Impeccable",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://impeccable.style/",
+    "source": "link-only",
+    "focus": [
+      "前后对照演示：标出问题，再给出对应命令",
+      "Before/after demo that labels problems, then names the command"
+    ],
+    "application": [
+      "用一次可操作的对比证明产品价值",
+      "Prove the value with one interactive comparison"
+    ],
+    "publisher": "Impeccable",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-10-29",
     "verification": "official-public-source",
     "mobile": "not-tested"
   },
@@ -537,7 +581,7 @@ export const inspirationTopics = [
     "id": "saas-home",
     "title": ["SaaS 首页", "SaaS homepages"],
     "task": ["为一个数字产品的首页找结构参考：主张、产品画面和行动入口如何排序。", "Find structure for a digital product's homepage: how the claim, product view and call to action are ordered."],
-    "items": ["linear", "notion", "raycast", "cursor", "v0", "framer", "obsidian", "plausible"],
+    "items": ["linear", "notion", "raycast", "resend", "cursor", "v0", "impeccable", "framer", "obsidian", "plausible"],
     "linksCheckedAt": "2026-10-29"
   }
 ];

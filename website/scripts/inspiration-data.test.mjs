@@ -19,6 +19,11 @@ test('every external reference records provenance; unknown designers stay null',
   }
 });
 
+test('the prerendered description counts every reference', () => {
+  const prerender = fs.readFileSync(new URL('./prerender.mjs', import.meta.url), 'utf8');
+  assert.match(prerender, new RegExp(`'${items.length} 个外部设计参考`));
+});
+
 test('topics stay small, dated and point at existing references', () => {
   const ids = new Set(items.map(i => i.id));
   for (const t of topics) {
