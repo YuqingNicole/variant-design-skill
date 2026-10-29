@@ -418,6 +418,11 @@ test('reference pack keeps per-item intentions and source links in its brief', a
 });
 
 test('a topic narrows the library to its dated references and states what is unknown', async ({page})=>{
+ await page.goto('/inspiration?topic=saas-home');
+ await expect(page.locator('.inspiration-grid article')).toHaveCount(10);
+ await expect(page.getByRole('button',{name:'专题：SaaS 首页 · 10'})).toHaveAttribute('aria-pressed','true');
+ await page.goto('/inspiration?topic=unknown');
+ await expect(page.locator('.inspiration-grid article')).toHaveCount(26);
  await page.goto('/inspiration');
  const cards=page.locator('.inspiration-grid article');
  const topic=page.getByRole('button',{name:'专题：SaaS 首页 · 10'});
@@ -515,6 +520,7 @@ test('home works as a design navigation site with a switchable, sourced showcase
  await expect(card.locator('h3')).toHaveText('Linear');
  await expect(card.locator('.home-marks li')).toHaveText(['仅链接','核对 2026-10-29','设计者未知']);
  await expect(card.getByRole('link',{name:'打开来源 ↗'})).toHaveAttribute('href','https://linear.app/');
+ await expect(card.getByRole('link',{name:'看完整专题（10）→'})).toHaveAttribute('href','/inspiration?topic=saas-home');
  await page.getByRole('button',{name:'/技能'}).click();
  await expect(page.getByRole('button',{name:'/技能'})).toHaveAttribute('aria-pressed','true');
  await expect(card.locator('h3')).toHaveText('variant-design');

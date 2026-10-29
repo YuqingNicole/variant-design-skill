@@ -10,15 +10,15 @@ type Shelf = 'reference' | 'skill' | 'case';
 // Every showcase value comes from the same data the section pages use; nothing here is written for the home page alone.
 const verified = entries.filter(e => e.source === 'own' && e.kind === 'verified');
 const topic = inspirationTopics[0], reference = inspirationItems.find(i => i.id === topic.items[0])!;
-const skill = skills[0], pulse = verified.find(e => e.slug === 'pulse') ?? verified[0];
+const skill = skills[0] as typeof skills[number] | undefined, pulse = verified.find(e => e.slug === 'pulse') ?? verified[0];
 
 function Showcase({ shelf, zh, ix }: { shelf: Shelf; zh: boolean; ix: number }) {
   if (shelf === 'reference') return <article className="home-show-card" data-shelf="reference">
     <ul className="home-marks" aria-label={zh ? '核对标注' : 'Check notes'}><li>{zh ? '仅链接' : 'Link only'}</li><li>{zh ? `核对 ${reference.checkedAt}` : `Checked ${reference.checkedAt}`}</li><li>{zh ? '设计者未知' : 'Designer unknown'}</li></ul>
     <p className="home-show-kicker">{topic.title[ix]} / 01</p><h3>{reference.name}</h3><p className="home-show-body">{reference.focus[ix]}</p><p className="home-show-body home-show-apply">{zh ? '用在：' : 'Apply: '}{reference.application[ix]}</p>
     <p className="home-show-meta">{reference.publisher} · {new URL(reference.url).hostname}</p>
-    <p className="home-show-links"><a href={reference.url} target="_blank" rel="noreferrer">{zh ? '打开来源 ↗' : 'Open source ↗'}</a><a href="/inspiration">{zh ? `看完整专题（${topic.items.length}）→` : `See the topic (${topic.items.length}) →`}</a></p></article>;
-  if (shelf === 'skill') return <article className="home-show-card" data-shelf="skill">
+    <p className="home-show-links"><a href={reference.url} target="_blank" rel="noreferrer">{zh ? '打开来源 ↗' : 'Open source ↗'}</a><a href={`/inspiration?topic=${topic.id}`}>{zh ? `看完整专题（${topic.items.length}）→` : `See the topic (${topic.items.length}) →`}</a></p></article>;
+  if (shelf === 'skill' && skill) return <article className="home-show-card" data-shelf="skill">
     <ul className="home-marks" aria-label={zh ? '核对标注' : 'Check notes'}><li>{zh ? '实测：Claude Code' : 'Tried: Claude Code'}</li><li>{zh ? '实测：Codex' : 'Tried: Codex'}</li><li>{zh ? `公开记录 ${skill.records.length} 份` : `${skill.records.length} public records`}</li></ul>
     <p className="home-show-kicker">{zh ? '精选技能' : 'Featured skill'} / {skill.source}</p><h3>{skill.name}</h3><p className="home-show-body">{skill.summary[ix]}</p>
     <code className="home-show-code">{skill.install}</code>
@@ -45,13 +45,13 @@ export function HomeHero({ language }: { language: Language }) {
     <header className="site-shell home-hero">
       <div className="home-show">
         <div aria-live="polite"><Showcase shelf={shelf} zh={zh} ix={ix}/></div>
-        <div className="home-shelves" role="group" aria-label={zh ? '切换展示' : 'Switch showcase'}>{shelves.map(s => <button key={s.id} type="button" aria-pressed={shelf === s.id} onClick={() => setShelf(s.id)}>/{s.label[ix]}</button>)}</div>
+        <div className="home-shelves" role="group" aria-label={zh ? '切换展示' : 'Switch showcase'}>{shelves.filter(s => s.id !== 'skill' || skill).map(s => <button key={s.id} type="button" aria-pressed={shelf === s.id} onClick={() => setShelf(s.id)}>/{s.label[ix]}</button>)}</div>
       </div>
       <div className="home-claim">
         <p className="content-kicker">DESIGN NAVIGATION</p>
         <h1>{zh ? <>设计导航，<br/>只收核对过的。</> : <>A design guide,<br/>checked before it’s listed.</>}</h1>
-        <p>{zh ? '给用 AI 做产品的人：精选外部参考、实测过的设计技能和真实的 A/B/C 案例。每一条都写明来源、核对日期和还不知道的事。' : 'For people building products with AI: selected outside references, design skills we have actually tried, and recorded A/B/C cases. Each one states its source, when it was checked and what is still unknown.'}</p>
-        <div className="home-actions"><a className="home-action-primary" href="/inspiration">{zh ? '浏览设计参考 →' : 'Browse references →'}</a><a className="home-action-secondary" href="#featured-skill">{zh ? '精选技能：Variant Design' : 'Featured skill: Variant Design'}</a></div>
+        <p>{zh ? '给用 AI 做产品的人：精选外部参考、实测过的设计技能和真实的 A/B/C 案例。参考写明来源、核对日期和还不知道的事，技能附实测记录，案例附产出记录。' : 'For people building products with AI: selected outside references, design skills we have actually tried, and recorded A/B/C cases. References state their source, when they were checked and what is still unknown; skills link their trial records and cases their output records.'}</p>
+        <div className="home-actions"><a className="home-action-primary" href="/inspiration">{zh ? '浏览设计参考 →' : 'Browse references →'}</a>{skill && <a className="home-action-secondary" href="#featured-skill">{zh ? '精选技能：Variant Design' : 'Featured skill: Variant Design'}</a>}</div>
         <p className="home-counts">{zh ? `${inspirationItems.length} 个参考 · ${inspirationTopics.length} 个专题 · ${skills.length} 个实测技能 · ${entries.length} 个案例` : `${inspirationItems.length} references · ${inspirationTopics.length} topic · ${skills.length} tried skill · ${entries.length} cases`}</p>
       </div>
     </header>
@@ -59,11 +59,11 @@ export function HomeHero({ language }: { language: Language }) {
       <h2 id="home-tasks-title">{zh ? '从你要做的事开始。' : 'Start with what you need to do.'}</h2>
       <ol>{tasks.map((t, i) => <li key={t.href}><a href={t.href}><small>0{i + 1}</small><strong>{t.title[ix]} →</strong><span>{t.body[ix]}</span></a></li>)}</ol>
     </section>
-    <section className="site-shell home-featured" id="featured-skill" aria-labelledby="home-featured-title">
+    {skill && <section className="site-shell home-featured" id="featured-skill" aria-labelledby="home-featured-title">
       <p className="content-kicker">{zh ? '精选技能' : 'FEATURED SKILL'} / {skill.source}</p>
       <h2 id="home-featured-title">{skill.name}</h2><p>{skill.summary[ix]}</p>
       <p><code>{skill.install}</code> <a href="/docs">{zh ? '安装说明 →' : 'Install guide →'}</a></p>
-    </section>
+    </section>}
   </>;
 }
 
