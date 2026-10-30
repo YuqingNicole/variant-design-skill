@@ -5,7 +5,7 @@
 .home-hero>*{min-width:0}
 .home-show{display:grid;gap:14px}
 .home-show-card{background:#fdfdf9;border:1px solid var(--site-line);border-radius:12px;padding:30px 32px;min-height:310px;display:flex;flex-direction:column;gap:12px}
-.home-show-card h3{font-family:var(--font-display);font-weight:400;font-size:44px;letter-spacing:-.03em;line-height:1.05;margin:0}
+.home-show-card h3{font-family:var(--font-display);font-weight:500;font-size:44px;letter-spacing:-.01em;line-height:1.05;margin:0}
 .home-show-card h3 code{font:inherit;font-size:36px}
 .home-show-body{font-size:16px;line-height:1.7;color:#3d4339;margin:0;max-width:42ch}
 .home-show-apply{color:var(--site-muted)}
@@ -17,7 +17,7 @@
 .home-shelves{display:flex;flex-wrap:wrap;gap:4px;justify-self:start;background:var(--site-surface);border-radius:999px;padding:4px}
 .home-shelves button{font:inherit;font-size:14px;border:0;background:transparent;color:var(--site-muted);padding:8px 18px;border-radius:999px;cursor:pointer}
 .home-shelves button[aria-pressed=true]{background:#fdfdf9;color:var(--site-ink);box-shadow:0 1px 2px rgba(35,38,34,.14)}
-.home-claim h1{max-width:none;font-family:var(--font-display);font-weight:400;font-size:clamp(40px,4.6vw,66px);line-height:1.08;letter-spacing:-.03em;margin:0 0 24px}
+.home-claim h1{max-width:none;font-family:var(--font-display);font-weight:500;font-size:clamp(40px,4.6vw,66px);line-height:1.08;letter-spacing:-.01em;margin:0 0 24px}
 .home-claim>p{font-size:17px;line-height:1.75;color:#41463d;max-width:46ch;margin:0}
 .home-counts{color:var(--site-muted)}
 .home-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
@@ -25,13 +25,13 @@
 .content-page .home-actions .home-action-primary{background:#2e4325;color:#fff}
 .content-page .home-actions .home-action-secondary{color:#2e4325}
 .home-tasks,.home-directories{padding-block:72px;border-top:1px solid var(--site-line)}
-.home-tasks h2,.home-directories h2{font-family:var(--font-display);font-weight:400;font-size:clamp(30px,3.4vw,46px);letter-spacing:-.03em;margin:0 0 28px}
+.home-tasks h2,.home-directories h2{font-family:var(--font-display);font-weight:500;font-size:clamp(30px,3.4vw,46px);letter-spacing:-.01em;margin:0 0 28px}
 .home-tasks ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:64px}
 .home-tasks li{display:grid;grid-template-columns:8em minmax(0,1fr);gap:20px;align-items:baseline;padding:18px 0;border-top:1px solid var(--site-line)}
 .home-tasks li a{font-size:17px}
 .home-tasks li p{margin:0;font-size:14px;line-height:1.7;color:var(--site-muted)}
 .home-featured{padding-block:72px 0;border-top:1px solid var(--site-line)}
-.home-featured h2{font-family:var(--font-display);font-weight:400;font-size:clamp(28px,3vw,40px);letter-spacing:-.03em;margin:0 0 12px}
+.home-featured h2{font-family:var(--font-display);font-weight:500;font-size:clamp(28px,3vw,40px);letter-spacing:-.01em;margin:0 0 12px}
 .home-featured h2 code{font-size:.8em}
 .home-featured>p{max-width:68ch;color:#41463d;line-height:1.8;margin:0 0 12px}
 .home-featured>p code{font:13px var(--font-mono);background:var(--site-surface);border-radius:6px;padding:6px 10px;overflow-wrap:anywhere}

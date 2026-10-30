@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { BorderBeam } from "border-beam";
+import "@fontsource/libre-caslon-display/400.css";
+import "@fontsource/noto-serif-sc/500.css";
+import "@fontsource-variable/hanken-grotesk/wght.css";
+import "@fontsource/ibm-plex-mono/400.css";
 import "./design-system.css";
 import "./styles.css";
 import { createDirections, type DesignDirection, type Language } from "./direction-engine";
