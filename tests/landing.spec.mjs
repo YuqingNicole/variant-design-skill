@@ -211,7 +211,7 @@ test('direction library pages are prerendered, browsable and keep old links work
  expect(validateCard(card)).toEqual([]);expect(card.url).toBe('https://variant-design-skill.vercel.app/d/pulse.json');expect(card.recommendation.variant).toBe('A');
  await page.goto('/d/offscript');await expect(page.locator('.library-source span')).toHaveText('概念作品');await expect(page.locator('.library-evidence')).toContainText('不是技能的产出');await expect(page.locator('.library-evidence a')).toHaveCount(0);
  await expect(page.locator('.library-figure a')).toHaveAttribute('href','/directions?direction=A&language=zh');
- await page.getByRole('button',{name:'切换到英文'}).click();await expect(page.locator('h1')).toHaveText('offscript: one brand, three personalities');await page.getByRole('button',{name:'Switch to Chinese'}).click();
+ await page.getByRole('button',{name:'切换到英文'}).click();await expect(page.locator('h1')).toHaveText('offscript: one brand, three personalities');await page.getByRole('button',{name:'Switch to Chinese'}).click();await expect(page.locator('html')).toHaveAttribute('lang','zh-CN');
  for(const url of ['/','/d/harbor','/c/product']){await page.goto(url);for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}}
  await page.goto('/showcase/forma');await expect(page).toHaveURL(/\/d\/forma$/);await expect(page.locator('h1')).toContainText('Forma');
  await page.goto('/showcase');await expect(page).toHaveURL(/\/$/);await expect(cards).toHaveCount(5);
@@ -556,4 +556,19 @@ test('headings use LXGW Neo ZhiSong and visitors can switch back to the original
  await note.getByRole('button',{name:'改回霞鹜新致宋'}).click();
  await expect(page.locator('html')).not.toHaveAttribute('data-ipa-font','');
  await expect(page.locator('h1')).toHaveCSS('font-family',/LXGW Neo ZhiSong/);
+});
+
+test('home shelf switch runs a view transition, and reduced motion switches instantly', async ({page,browser})=>{
+ await page.goto('/');
+ const vt=()=>page.evaluate(()=>document.getAnimations().map(a=>String(a.effect?.pseudoElement||'')).filter(n=>n.startsWith('::view-transition')));
+ await page.locator('.home-shelves button').nth(1).click();
+ await expect.poll(async()=>(await vt()).join(' ')).toContain('home-shelf-pill');
+ await expect(page.locator('.home-shelves button[aria-pressed=true] .home-shelf-pill')).toHaveCount(1);
+ await expect(page.locator('.home-show-card')).toHaveAttribute('data-shelf','skill');
+ const reduced=await browser.newPage({reducedMotion:'reduce'});
+ await reduced.goto(page.url());
+ await reduced.locator('.home-shelves button').nth(2).click();
+ await expect(reduced.locator('.home-show-card')).toHaveAttribute('data-shelf','case');
+ expect(await reduced.evaluate(()=>document.getAnimations().filter(a=>String(a.effect?.pseudoElement||'').startsWith('::view-transition')).length)).toBe(0);
+ await reduced.close();
 });
