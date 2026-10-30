@@ -540,3 +540,20 @@ test('home works as a design navigation site with a switchable, sourced showcase
  for(const sel of ['.home-claim h1','.home-action-primary'])expect(await inView(sel)).toBe(true);
  for(const width of [320,390]){await page.setViewportSize({width,height:844});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
 });
+
+test('headings use LXGW Neo ZhiSong and visitors can switch back to the original IPA font', async ({page})=>{
+ await page.goto('/');
+ await expect.poll(()=>page.evaluate(async()=>{await document.fonts.ready;return document.fonts.check('500 60px "LXGW Neo ZhiSong"','设计导航')})).toBe(true);
+ const note=page.locator('.site-font-note');
+ await expect(note).toContainText('IPA Font License 1.0');
+ await expect(note.getByRole('link',{name:'字体许可'})).toHaveAttribute('href','/fonts/LICENSES.txt');
+ expect((await page.request.get('/fonts/LICENSES.txt')).status()).toBe(200);
+ await note.getByRole('button',{name:'改用 IPA 原版字体'}).click();
+ await expect(page.locator('html')).toHaveAttribute('data-ipa-font','');
+ await expect(page.locator('h1')).toHaveCSS('font-family',/IPAmjMincho/);
+ await page.reload();
+ await expect(page.locator('html')).toHaveAttribute('data-ipa-font','');
+ await note.getByRole('button',{name:'改回霞鹜新致宋'}).click();
+ await expect(page.locator('html')).not.toHaveAttribute('data-ipa-font','');
+ await expect(page.locator('h1')).toHaveCSS('font-family',/LXGW Neo ZhiSong/);
+});
