@@ -14,3 +14,5 @@ html:has(:is(.pricing-page,.site-workbench,.content-page)){color-scheme:light;ba
 .content-page ::selection{background:#d6e2c8;color:#232622}.content-page{caret-color:#2e4325;accent-color:#2e4325}.content-page :focus-visible{outline:2px solid #2e4325;outline-offset:2px}
 :root[data-ipa-font] :is(.paper-home,.pricing-page,.site-workbench,.content-page){--font-display:"Libre Caslon Display","IPAmjMincho","IPAexMincho","IPAMincho","Songti SC",serif}
 .site-footer{flex-wrap:wrap}.site-font-note{flex-basis:100%;margin:0;color:var(--site-muted)}.site-font-note :is(a,button){font:inherit;color:inherit;background:none;border:0;padding:6px 0;margin-left:12px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+::view-transition-group(*){animation-duration:.34s;animation-timing-function:cubic-bezier(.22,1,.36,1)}::view-transition-old(root),::view-transition-new(root){animation-duration:.18s}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.content-page :is(p,dd,li) a{transition:text-decoration-thickness .2s,text-underline-offset .2s}.content-page :is(p,dd,li) a:hover{text-decoration-thickness:2px;text-underline-offset:.18em}}

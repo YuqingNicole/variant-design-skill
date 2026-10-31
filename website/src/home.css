@@ -16,7 +16,7 @@
 .home-show-links a,.home-featured a,.home-tasks a{color:#2e4325;text-underline-offset:.25em;text-decoration-thickness:1px}
 .home-shelves{display:flex;flex-wrap:wrap;gap:4px;justify-self:start;background:var(--site-surface);border-radius:999px;padding:4px}
 .home-shelves button{font:inherit;font-size:14px;border:0;background:transparent;color:var(--site-muted);padding:8px 18px;border-radius:999px;cursor:pointer}
-.home-shelves button[aria-pressed=true]{background:#fdfdf9;color:var(--site-ink);box-shadow:0 1px 2px rgba(35,38,34,.14)}
+.home-shelves button{position:relative;isolation:isolate}.home-shelves button[aria-pressed=true]{color:var(--site-ink)}.home-shelf-pill{position:absolute;inset:0;z-index:-1;border-radius:999px;background:#fdfdf9;box-shadow:0 1px 2px rgba(35,38,34,.14);view-transition-name:home-shelf-pill}
 .home-claim h1{max-width:none;font-family:var(--font-display);font-weight:500;font-size:clamp(40px,4.6vw,66px);line-height:1.08;letter-spacing:-.01em;margin:0 0 24px}
 .home-claim>p{font-size:17px;line-height:1.75;color:#41463d;max-width:46ch;margin:0}
 .home-counts{color:var(--site-muted)}
@@ -46,3 +46,6 @@
 @media(max-width:1000px){.home-hero{grid-template-columns:1fr;gap:40px;padding-block:32px 56px}.home-claim{order:-1}.home-tasks ul{grid-template-columns:1fr}}
 @media(max-width:640px){.home-show-card{padding:22px;min-height:0}.home-show-card h3{font-size:34px}.home-tasks li{grid-template-columns:1fr;gap:4px}.home-directories>div{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:no-preference){.home-shelves button{transition:background-color .15s cubic-bezier(.16,1,.3,1),color .15s cubic-bezier(.16,1,.3,1)}}
+
+.home-show-card{view-transition-name:home-show-card}::view-transition-old(home-show-card){animation-duration:.14s}::view-transition-new(home-show-card){animation-delay:.08s}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.home-tasks li a{transition:text-decoration-thickness .2s,text-underline-offset .2s}.home-tasks li:hover a{text-decoration-thickness:2px;text-underline-offset:.18em}.home-tasks li{transition:border-color .2s}.home-tasks li:hover{border-top-color:var(--site-ink)}}

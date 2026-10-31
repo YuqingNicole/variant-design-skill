@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { transition } from './view-transition';
 import type { Language } from './direction-engine';
 import { entries, mediaUrl } from './library-data';
 import { inspirationItems, inspirationSources, inspirationTopics } from './inspiration-data';
@@ -44,7 +45,7 @@ export function HomeHero({ language }: { language: Language }) {
   return <>
     <header className="site-shell home-hero">
       <div className="home-show">
-        <div className="home-shelves" role="group" aria-label={zh ? '切换展示' : 'Switch showcase'}>{shelves.filter(s => s.id !== 'skill' || skill).map(s => <button key={s.id} type="button" aria-pressed={shelf === s.id} onClick={() => setShelf(s.id)}>{s.label[ix]}</button>)}</div>
+        <div className="home-shelves" role="group" aria-label={zh ? '切换展示' : 'Switch showcase'}>{shelves.filter(s => s.id !== 'skill' || skill).map(s => <button key={s.id} type="button" aria-pressed={shelf === s.id} onClick={() => transition(() => setShelf(s.id))}>{shelf === s.id && <span className="home-shelf-pill" aria-hidden="true"/>}<span style={{ viewTransitionName: `home-shelf-${s.id}` }}>{s.label[ix]}</span></button>)}</div>
         <div aria-live="polite"><Showcase shelf={shelf} zh={zh} ix={ix}/></div>
       </div>
       <div className="home-claim">
