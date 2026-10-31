@@ -10,7 +10,7 @@ function FontNote({language}:{language:Language}){
  const i=language==='zh'?0:1;
  const [ipa,setIpa]=useState(()=>{try{return localStorage.getItem(ipaFontKey)==='ipa'}catch{return false}});
  useEffect(()=>{document.documentElement.toggleAttribute('data-ipa-font',ipa);try{if(ipa)localStorage.setItem(ipaFontKey,'ipa');else localStorage.removeItem(ipaFontKey)}catch{/* storage blocked: the choice lasts for this page */}},[ipa]);
- return <p className="site-font-note">{fontNote[ipa?'ipa':'zhisong'][i]}<button type="button" onClick={()=>transition(()=>{document.documentElement.toggleAttribute('data-ipa-font',!ipa);setIpa(!ipa)})}>{fontNote[ipa?'toZhisong':'toIpa'][i]}</button><a href="/fonts/LICENSES.txt">{fontNote.licenses[i]}</a></p>;
+ return <p className="site-font-note">{fontNote[ipa?'ipa':'zhisong'][i]}<button type="button" onClick={()=>transition(()=>{const next=!document.documentElement.hasAttribute('data-ipa-font');document.documentElement.toggleAttribute('data-ipa-font',next);setIpa(next)})}>{fontNote[ipa?'toZhisong':'toIpa'][i]}</button><a href="/fonts/LICENSES.txt">{fontNote.licenses[i]}</a></p>;
 }
 export function SiteHeader({language,onLanguage,page='home'}:{language:Language;onLanguage:()=>void;page?:'home'|'pricing'|'library'|'inspiration'}){
  const zh=language==='zh';
