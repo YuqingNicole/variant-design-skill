@@ -13,7 +13,7 @@ test('every external reference records provenance; unknown designers stay null',
     assert.equal(new URL(i.url).protocol, 'https:', i.id);
     assert.equal(i.source, 'link-only', i.id);
     assert.ok(i.publisher?.trim(), i.id);
-    assert.ok(['official-site', 'product-page', 'documentation'].includes(i.kind), i.id);
+    assert.ok(['official-site', 'product-page', 'documentation', 'social-post'].includes(i.kind), i.id);
     assert.ok(i.designer === null || i.designer.trim(), i.id);
     assert.match(i.checkedAt, date, i.id);
   }
