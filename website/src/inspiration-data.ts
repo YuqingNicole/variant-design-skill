@@ -570,6 +570,28 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested"
+  },
+  {
+    "id": "paper-widgets",
+    "name": "Paper widgets",
+    "category": "motion",
+    "tag": "Widgets",
+    "url": "https://x.com/seanaiux/status/2116240216751247393",
+    "source": "link-only",
+    "focus": [
+      "纸感小组件依次浮入，数字递增，开关把卡片翻成深色",
+      "Paper widgets that rise in sequence, count up, and flip dark on a toggle"
+    ],
+    "application": [
+      "仪表盘、个人主页和状态卡片的入场节奏",
+      "Entry rhythm for dashboards, profiles and status cards"
+    ],
+    "publisher": "Sean Galt (@seanaiux)",
+    "kind": "social-post",
+    "designer": "Sean Galt",
+    "checkedAt": "2026-10-31",
+    "verification": "public-post",
+    "mobile": "not-tested"
   }
 ];
 
