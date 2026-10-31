@@ -18,7 +18,7 @@ Variant Design is an agent skill. It turns one brief into three comparable desig
 | `scripts/*.mjs` | Runtime helpers that run inside **user projects** | Zero dependencies, Node 22+, ESM. Each has a CLI and exported functions |
 | `scripts/*.test.mjs` | `node:test` unit tests for the helpers | Excluded from the plugin package |
 | `tests/` | Playwright browser regressions (`loop.spec.mjs`, `landing.spec.mjs`) | Has its own `package.json` |
-| `website/` | Bilingual React + Vite marketing site and online lab | Also the dogfood project: `website/variant-output/` holds real A/B/C history. `website/content/` holds direction-library entries (RFC-002), validated by `website/scripts/content.mjs` |
+| `website/` | Bilingual React + Vite marketing site and online lab | Also the dogfood project: `website/variant-output/` holds real A/B/C history. `website/content/` holds direction-library entries (RFC-002), validated by `website/scripts/content.mjs`. Visual rules (tokens, type, components, motion, known deviations) are in `docs/design-system.md` |
 | `mcp/` | Local stdio MCP adapter over the same history helpers | Has its own `package.json` and tests |
 | `evals/` | Real agent runs on fixture projects, graded automatically | See `evals/README.md`. Runs cost model usage; the grader tests do not |
 | `plugin/` | Codex plugin manifest and release-readiness notes | Built by `scripts/build-plugin.py` |
