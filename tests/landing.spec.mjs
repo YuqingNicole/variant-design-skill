@@ -443,21 +443,31 @@ test('a site detail shows the preview the link publishes and falls back when its
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
 });
 
-test('best practice is its own tab where each X post loads X embed, with the text as fallback', async ({page})=>{
+test('best practice shows each X post as its looping video, credits the author and falls back to the poster', async ({page})=>{
+ const media=JSON.parse(fs.readFileSync(new URL('../website/src/x-media.json',import.meta.url),'utf8'));
  const xRequests=[];page.on('request',r=>{if(/twitter\.com|x\.com|twimg\.com/.test(new URL(r.url()).hostname))xRequests.push(r.url())});
- await page.route(/platform\.twitter\.com/,r=>r.abort());
+ await page.route(/platform\.twitter\.com/,r=>r.abort());await page.route(/pbs\.twimg\.com/,r=>r.fulfill({contentType:'image/png',body:pixel}));
+ // The widgets video fails; the sheep video stays pending, so the suite never streams from X.
+ await page.route(/video\.twimg\.com/,r=>{if(r.request().url()===media['paper-widgets'].video)return r.abort()});
  await page.goto('/inspiration');await expect(page.locator('.insp-pills button')).toHaveText(['全部','Landing','产品界面','关键流程','Best practice']);
  expect(xRequests).toEqual([]);
  await page.getByRole('button',{name:'Best practice',exact:true}).click();
- const posts=page.locator('.insp-posts > li');await expect(posts).toHaveCount(2);await expect(page.locator('.inspiration-grid')).toHaveCount(0);
- await expect(posts.nth(0).locator('blockquote')).toContainText('I love minimalistic cards');await expect(posts.nth(1).locator('blockquote')).toContainText('sheep grazing grass!');
- await expect(posts.nth(1).locator('figcaption')).toContainText('没能连上 x.com');
- await expect(posts.nth(1).getByRole('link',{name:'在 X 上打开'})).toHaveAttribute('href','https://x.com/AreadneMaria/status/2114898325451444419');
- expect(xRequests.length).toBeGreaterThan(0);expect(xRequests.every(u=>u.startsWith('https://platform.twitter.com/'))).toBe(true);
- await posts.nth(1).getByRole('link',{name:'Sheep pasture'}).click();await expect(page).toHaveURL(/\/inspiration\/x-areadnemaria-444419$/);
+ const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(2);await expect(page.locator('.inspiration-grid')).toHaveCount(0);
+ await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
+ const sheep=cards.filter({has:page.locator('a[href="/inspiration/x-areadnemaria-444419"]')});
+ const video=sheep.locator('video');await expect(video).toHaveAttribute('poster',media['x-areadnemaria-444419'].poster);
+ await expect.poll(()=>video.evaluate(v=>v.currentSrc)).toBe(media['x-areadnemaria-444419'].video);
+ expect(await video.evaluate(v=>v.muted&&v.loop&&v.playsInline)).toBe(true);
+ await expect(sheep.locator('.insp-vcard-avatar')).toHaveAttribute('alt','areadne @AreadneMaria');
+ await expect(sheep.locator('.insp-card-out')).toHaveAttribute('href','https://x.com/AreadneMaria/status/2114898325451444419');
+ const widgets=cards.filter({has:page.locator('a[href="/inspiration/paper-widgets"]')});
+ await expect(widgets.locator('img.insp-vcard-media')).toHaveAttribute('src',media['paper-widgets'].poster);await expect(widgets.locator('video')).toHaveCount(0);
+ await sheep.locator('.insp-vcard-open').click();await expect(page).toHaveURL(/\/inspiration\/x-areadnemaria-444419$/);
  const dialog=page.getByRole('dialog');await expect(dialog.locator('.x-post blockquote')).toContainText('@AreadneMaria');await expect(dialog.locator('.x-post figcaption')).toContainText('没能连上 x.com');
  await page.keyboard.press('Escape');
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
+ await page.emulateMedia({reducedMotion:'reduce'});await page.reload();await page.getByRole('button',{name:'Best practice',exact:true}).click();
+ await page.waitForTimeout(800);expect(await sheep.locator('video').evaluate(v=>v.paused)).toBe(true);
 });
 
 test('a reference opens as a dialog from the grid and as its own page from a direct link', async ({page})=>{
