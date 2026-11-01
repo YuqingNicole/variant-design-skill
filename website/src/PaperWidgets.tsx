@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import './paper-widgets.css';
+import type { Locale } from './i18n/locales';
 // Our own study of a public post's motion idea (paper widgets in a bento grid): staggered entry,
 // numbers counting up, a ticking timer and a toggle that turns its card dark. No third-party code or media.
 const still=()=>typeof matchMedia!=='undefined'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -7,7 +8,7 @@ function useCount(target:number,run:number,ms=1400){const [v,setV]=useState(targ
 const copy={zh:{city:'上海',clear:'晴',playing:'正在播放',track:'低潮',artist:'纸上乐队',timer:'专注计时',deep:'深度工作',steps:'步数',goal:'目标 10,000',battery:'电量',devices:['手机','手表','耳机'],day:'星期五',month:'十月',events:[['10:00','设计评审'],['12:30','和 Ana 午饭'],['16:00','方向比较']],focus:'专注模式',on:'开',off:'关',hint:'点按切换',replay:'重播动效',play:'播放',pause:'暂停'},
  en:{city:'Shanghai',clear:'Clear',playing:'Now playing',track:'Low Tide',artist:'Paper Band',timer:'Focus timer',deep:'Deep work',steps:'Steps',goal:'Goal 10,000',battery:'Battery',devices:['Phone','Watch','Buds'],day:'Friday',month:'October',events:[['10:00','Design review'],['12:30','Lunch with Ana'],['16:00','Compare directions']],focus:'Focus',on:'On',off:'Off',hint:'Tap to toggle',replay:'Replay motion',play:'Play',pause:'Pause'}};
 const bars=[.42,.68,.5,.82,.6,.74,.95];
-export function PaperWidgets({zh,paused=false}:{zh:boolean;paused?:boolean}){const c=zh?copy.zh:copy.en;
+export function PaperWidgets({locale,paused=false}:{locale:Locale;paused?:boolean}){const c=copy[locale];
  const ref=useRef<HTMLDivElement>(null);const [run,setRun]=useState(0);const [seen,setSeen]=useState(false);const [focus,setFocus]=useState(false);const [playing,setPlaying]=useState(true);const [left,setLeft]=useState(25*60);
  useEffect(()=>{const el=ref.current;if(!el||typeof IntersectionObserver==='undefined'){setSeen(true);return}const io=new IntersectionObserver(([e])=>{if(e.isIntersecting){setSeen(true);io.disconnect()}},{threshold:.35});io.observe(el);return()=>io.disconnect()},[]);
  useEffect(()=>{if(!seen||paused)return;const id=setInterval(()=>setLeft(s=>s>0?s-1:25*60),1000);return()=>clearInterval(id)},[seen,paused]);
