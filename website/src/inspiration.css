@@ -128,3 +128,13 @@ div.insp-thumb{position:relative;display:grid;grid-template-rows:auto auto auto 
 @media(max-width:900px){.inspiration-sources>div{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.insp-bar>.site-shell{flex-wrap:wrap}.insp-pills{flex-basis:100%}.insp-search{flex:1}.insp-search input,.insp-search input:focus,.insp-search input:not(:placeholder-shown){width:100%}.inspiration-pack,.inspiration-brief{padding:18px}.inspiration-pack fieldset{grid-template-columns:1fr}.insp-detail-visual>.insp-thumb{padding:var(--space-4)}}
 @media(prefers-reduced-motion:reduce){.inspiration-page *{transition:none!important}.insp-dialog[open],.insp-dialog[open]::backdrop{animation:none}}
+/* Product images and motion studies fill the card; a chip keeps the name and rights visible at rest. */
+div.insp-thumb.insp-thumb-media{display:block;padding:0;background:var(--site-surface)}
+.insp-thumb-media>img{display:block;width:100%;height:100%;object-fit:cover}
+.insp-thumb-media>img.contain{object-fit:contain;padding:var(--space-5)}
+.insp-thumb-media>.rs-frame{position:absolute;inset:0;height:100%}
+.insp-thumb-chip{position:absolute;left:var(--space-2);bottom:var(--space-2);max-width:calc(100% - 56px);padding:3px var(--space-2);border-radius:var(--radius-pill);background:var(--site-card);border:1px solid var(--site-line);font-size:12px;color:var(--site-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.insp-thumb-chip b{font-weight:500;color:var(--site-ink);margin-right:2px}
+.inspiration-press{font-style:normal;color:var(--site-brand);margin-left:var(--space-1)}
+.insp-shot img{display:block;width:100%;height:auto;border:1px solid var(--site-line);border-radius:var(--radius-panel);background:var(--site-surface)}
+.insp-detail-visual .rs-frame{border:1px solid var(--site-line);border-radius:var(--radius-panel)}
