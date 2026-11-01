@@ -440,7 +440,7 @@ test('the motion tab opens our own live paper-widget demo in the detail layer', 
 });
 
 test('a reference opens as a dialog from the grid and as its own page from a direct link', async ({page})=>{
- await page.goto('/inspiration');
+ await page.goto('/about');await page.goto('/inspiration');
  const cards=page.locator('.inspiration-grid .insp-card');
  await expect(cards.locator('.insp-card-open').first()).toHaveAttribute('href','/inspiration/linear');
  await cards.first().locator('.insp-card-open').click();
@@ -453,9 +453,14 @@ test('a reference opens as a dialog from the grid and as its own page from a dir
  await dialog.getByRole('button',{name:'加入参考包'}).click();await expect(cards.first().locator('.insp-card-save')).toHaveAttribute('aria-pressed','true');
  await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);await expect(page).toHaveURL(/\/inspiration$/);
  await expect(page.locator('.inspiration-pack fieldset')).toHaveCount(1);
+ await expect(page).toHaveTitle('灵感参考 — Variant Design');
+ await page.goBack();await expect(page).toHaveURL(/\/about$/);
+ await page.goto('/inspiration');await cards.first().locator('.insp-card-open').click();await expect(dialog).toHaveCount(1);
+ await page.goBack();await expect(page).toHaveURL(/\/inspiration$/);await expect(dialog).toHaveCount(0);
  const response=await page.goto('/inspiration/notion');
  expect(await response.text()).toContain('<title>Notion — 灵感参考 — Variant Design</title>');
  await expect(page.locator('h1')).toHaveText('Notion');await expect(page.getByRole('dialog')).toHaveCount(0);
+ await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/^Notion：/);
  await expect(page.getByRole('link',{name:'访问原站'})).toHaveAttribute('href','https://www.notion.com/');
  await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/\/inspiration$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('27 个参考');
  await page.goto('/inspiration/no-such-reference');await expect(page).toHaveURL(/\/inspiration$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('27 个参考');

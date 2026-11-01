@@ -56,7 +56,7 @@
 .paper-widgets .pw-focus.is-on{background:#0d0e14;color:#fff}.pw-focus.is-on::after{opacity:.85}
 .pw-focus.is-on small,.pw-focus.is-on span{color:#b9bdd6}.pw-focus.is-on i{background:var(--pw-accent)}.pw-focus.is-on i::after{transform:translateX(12px)}
 .paper-widgets :is(.pw-focus,.pw-music button,.pw-replay):focus-visible{outline:2px solid var(--pw-accent);outline-offset:2px}
-.pw-replay{position:absolute;right:22px;bottom:16px;border:0;background:none;font:10px var(--font-mono);color:#4c4f48;cursor:pointer}
+.pw-replay{position:absolute;right:22px;bottom:16px;display:inline-flex;align-items:center;gap:5px;border:0;background:none;font:10px var(--font-mono);color:#4c4f48;cursor:pointer}
 .pw-replay:hover{color:var(--pw-ink);text-decoration:underline}
 @media(max-width:700px){.paper-widgets{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:'weather timer' 'music music' 'steps battery' 'cal cal' 'focus focus';padding:14px 14px 46px}}
 @media(prefers-reduced-motion:reduce){.paper-widgets .pw-card,.paper-widgets.is-in .pw-card,.paper-widgets .pw-calendar li{animation:none;opacity:1;transform:none}.pw-arc{stroke-dashoffset:.38}.is-in .pw-arc,.pw-bars i,.pw-battery i,.pw-art i,.pw-eq i,.pw-progress i{animation:none}.pw-bars i{transform:none}.pw-battery i{background-size:calc(var(--w)*100%) 100%,auto}.pw-progress i{transform:scaleX(.4)}.pw-focus,.pw-focus::after,.pw-focus i,.pw-focus i::after{transition:none}}

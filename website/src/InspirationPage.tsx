@@ -18,7 +18,7 @@ const labels:Record<string,[string,string]>={landing:['Landing','Landing'],produ
 const sketches:Record<string,number[]>={landing:[4,3,5],product:[6,5,7],flow:[3,4,3],motion:[5,4,6]};
 const variantOf=(id:string)=>[...id].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7)%3;
 function Thumb({item,zh}:{item:Item;zh:boolean}){const ix=zh?0:1;const shot=shotOf(item);
- if(shot)return <img className="insp-thumb" src={shot.src} width={shot.width} height={shot.height} alt=""/>;
+ if(shot)return <img className="insp-thumb" src={shot.src} width={shot.width} height={shot.height} alt={shot.alt[ix]}/>;
  const v=variantOf(item.id);return <div className={`insp-thumb insp-thumb-${item.category} insp-tint-${v%2}`} aria-hidden="true"><small className="insp-thumb-tag">{labels[item.category][ix]} · {item.tag} <em className="inspiration-link-only">{zh?'仅链接':'Link only'}</em></small><b>{item.name}</b><span>{item.focus[ix]}</span><div className={`insp-sketch insp-sk-${item.category}-${v}`}>{Array.from({length:(sketches[item.category]??[4,4,4])[v]},(_,i)=><i key={i}/>)}</div></div>}
 const Icon=({d}:{d:string})=><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={d}/></svg>;
 const icons={out:'M5 11 11 5M6 5h5v5',save:'M4 2.5h8v11L8 10.5l-4 3z',close:'M4 4l8 8M12 4l-8 8',prev:'M10 3 5 8l5 5',next:'M6 3l5 5-5 5',search:'M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM14 14l-3.5-3.5'};
@@ -34,7 +34,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
  // `page` is a detail opened by its own address; `modal` is one opened from the grid over it.
  const [open,setOpen]=useState<{id:string;mode:'page'|'modal'}|null>(()=>inspirationItems.some(i=>i.id===detail)?{id:detail,mode:'page'}:null);
  const openItem=inspirationItems.find(i=>i.id===open?.id);
- useEffect(()=>{document.title=openItem?`${openItem.name} — ${zh?'灵感参考':'Inspiration'} — Variant Design`:zh?'灵感参考 — Variant Design':'Inspiration — Variant Design';document.documentElement.lang=zh?'zh-CN':'en';localStorage.setItem('variant-language',language);document.querySelector('meta[name="description"]')?.setAttribute('content',zh?`${total} 个外部设计参考，连接观察、设计任务与原创实践。`:`${total} external references connecting design observation to original work.`)},[language,zh,openItem]);
+ useEffect(()=>{document.title=openItem?`${openItem.name} — ${zh?'灵感参考':'Inspiration'} — Variant Design`:zh?'灵感参考 — Variant Design':'Inspiration — Variant Design';document.documentElement.lang=zh?'zh-CN':'en';localStorage.setItem('variant-language',language);document.querySelector('meta[name="description"]')?.setAttribute('content',openItem?(zh?`${openItem.name}：${openItem.focus[0]}。用在${openItem.application[0]}。`:`${openItem.name}: ${openItem.focus[1]}. Use it to ${openItem.application[1].toLowerCase()}.`):zh?`${total} 个外部设计参考，连接观察、设计任务与原创实践。`:`${total} external references connecting design observation to original work.`)},[language,zh,openItem]);
  const [initialPack]=useState(loadPack);const [selection,setSelection]=useState<Record<string,Intent>>(initialPack.selection);const [storageError,setStorageError]=useState(initialPack.error);
  function saveSelection(next:Record<string,Intent>){setSelection(next);try{if(initialPack.error)throw new Error();localStorage.setItem(packKey,JSON.stringify(next));setStorageError(false)}catch{setStorageError(true)}}
  const selected=inspirationItems.filter(item=>selection[item.id]);
@@ -49,9 +49,11 @@ export function InspirationPage({detail=''}:{detail?:string}){
  function useReference(item:Item){setNotice('');setPrompt(zh?`参考 ${item.name}（${item.url}），重点研究“${item.focus[0]}”，用于“${item.application[0]}”。先打开当前来源核对，不复制其文案、商标与素材。在我的项目中检查已有品牌约束，然后围绕同一核心任务生成 A/B/C 三种原创设计。解释取舍，提供可运行预览，并检查桌面和手机布局。复用代码前核对具体许可证。`:`Study ${item.name} (${item.url}), focusing on ${item.focus[1]} to ${item.application[1].toLowerCase()}. Recheck the current source; do not copy its text, marks or assets. Inspect my project's brand constraints, then create three original directions for the same core task. Explain tradeoffs, provide working previews, and verify desktop/mobile layouts. Check the specific license before reusing code.`)}
  async function copy(){try{await navigator.clipboard.writeText(prompt);setNotice(zh?'已复制，粘贴到你的项目 Agent 中继续。':'Copied. Continue in your project agent.')}catch{setNotice(zh?'请在文本框中选择并手动复制。':'Select the text and copy it manually.')}}
  useEffect(()=>{if(detail&&!inspirationItems.some(i=>i.id===detail))history.replaceState(null,'','/inspiration'+location.search)},[detail]);
- useEffect(()=>{const onPop=()=>{const id=location.pathname.split('/')[2]??'';setOpen(current=>inspirationItems.some(i=>i.id===id)?{id,mode:current?.mode??'page'}:null)};addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
- function show(id:string,mode:'page'|'modal'){if(location.pathname!==`/inspiration/${id}`)history[open?'replaceState':'pushState'](null,'',`/inspiration/${id}${location.search}`);setOpen({id,mode})}
- function close(){history.pushState(null,'','/inspiration'+location.search);setOpen(null)}
+ useEffect(()=>{const onPop=()=>{const id=location.pathname.split('/')[2]??'';pushed.current=false;setOpen(current=>inspirationItems.some(i=>i.id===id)?{id,mode:current?.mode??'page'}:null)};addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
+ // A dialog opened from the grid pushes one history entry, so closing it goes back instead of stacking another list entry.
+ const pushed=useRef(false);
+ function show(id:string,mode:'page'|'modal'){if(location.pathname!==`/inspiration/${id}`){if(open)history.replaceState(null,'',`/inspiration/${id}${location.search}`);else{history.pushState(null,'',`/inspiration/${id}${location.search}`);pushed.current=true}}setOpen({id,mode})}
+ function close(){if(pushed.current){pushed.current=false;history.back()}else history.replaceState(null,'','/inspiration'+location.search);setOpen(null)}
  function step(by:number){if(!openItem)return;const list=results.some(r=>r.id===openItem.id)?results:inspirationItems;const at=list.findIndex(r=>r.id===openItem.id);show(list[(at+by+list.length)%list.length].id,open!.mode)}
  const dialogRef=useRef<HTMLDialogElement>(null);
  useEffect(()=>{const d=dialogRef.current;if(!d)return;if(open?.mode==='modal'&&!d.open)d.showModal();if(open?.mode!=='modal'&&d.open)d.close()},[open]);
