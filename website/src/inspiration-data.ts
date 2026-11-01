@@ -49,7 +49,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "SaaS",
     "url": "https://www.raycast.com/",
-    "source": "press-kit",
+    "source": "link-only",
     "focus": [
       "核心入口与扩展能力的组织",
       "Core entry point and extensions"
@@ -63,22 +63,7 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "media": {
-      "src": "/inspiration-media/raycast.webp",
-      "width": 1600,
-      "height": 1200,
-      "alt": [
-        "Raycast 扩展商店界面：搜索框下列出精选和热门扩展",
-        "Raycast extension store: featured and trending extensions under a search field"
-      ],
-      "permission": {
-        "grantedBy": "Raycast press page",
-        "url": "https://www.raycast.com/press",
-        "grantedAt": "2026-11-01",
-        "terms": "Everything you need to write about Raycast — brand assets, product screenshots, and press coverage, all in one place."
-      }
-    }
+    "mobile": "not-tested"
   },
   {
     "id": "resend",
@@ -86,7 +71,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "SaaS",
     "url": "https://resend.com/",
-    "source": "press-kit",
+    "source": "link-only",
     "focus": [
       "单一受众的主张 → 代码接入 → 功能分段",
       "Single-audience claim → code integration → feature sections"
@@ -100,22 +85,7 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "media": {
-      "src": "/inspiration-media/resend.webp",
-      "width": 1600,
-      "height": 902,
-      "alt": [
-        "Resend 邮件列表界面：左侧导航，右侧是带发送状态的邮件表格",
-        "Resend emails view: side navigation and a table of emails with delivery status"
-      ],
-      "permission": {
-        "grantedBy": "Resend brand page",
-        "url": "https://resend.com/brand",
-        "grantedAt": "2026-11-01",
-        "terms": "Use the following product screenshot when presenting Resend to avoid showing any sensitive information."
-      }
-    }
+    "mobile": "not-tested"
   },
   {
     "id": "cursor",
@@ -365,7 +335,7 @@ export const inspirationItems = [
     "category": "landing",
     "tag": "Fintech",
     "url": "https://ramp.com/",
-    "source": "press-kit",
+    "source": "link-only",
     "focus": [
       "客户数、节省金额和证言贯穿全页，首屏下方就是证据",
       "Customer count, savings and quotes throughout, with proof right under the hero"
@@ -379,22 +349,7 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-11-01",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "media": {
-      "src": "/inspiration-media/ramp.webp",
-      "width": 1400,
-      "height": 557,
-      "alt": [
-        "Ramp 黑色公司卡产品图",
-        "Ramp black corporate card artwork"
-      ],
-      "permission": {
-        "grantedBy": "Ramp press page and media kit (September 2026)",
-        "url": "https://ramp.com/press",
-        "grantedAt": "2026-11-01",
-        "terms": "Download our press kit of images which you can use royalty free in web or print."
-      }
-    }
+    "mobile": "not-tested"
   },
   {
     "id": "cal-com",
@@ -768,7 +723,16 @@ export const inspirationItems = [
     "designer": "Sean Galt",
     "checkedAt": "2026-10-31",
     "verification": "public-post",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "post": {
+      "id": "2116240216751247393",
+      "author": "Sean Galt",
+      "handle": "seanaiux",
+      "date": "2026-10-30",
+      "lang": "en",
+      "text": "I love minimalistic cards\n\nFree prompt here ↓",
+      "hasMedia": true
+    }
   },
   {
     "id": "x-areadnemaria-444419",

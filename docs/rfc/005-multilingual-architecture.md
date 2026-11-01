@@ -13,7 +13,7 @@
 
 | 方面 | 现在的做法 | 加第三种语言或让英文可收录时的问题 |
 |---|---|---|
-| 数据里的文案 | 位置数组 `[中文, 英文]`：`inspiration-data.ts`、`website/content/entries/*.json`、`DocsGuide.tsx`、动效演示的 `Copy` 类型等 | 第三种语言只能追加到第 3 位，读的地方都写死了 `[0]`、`[1]` 或 `[ix]`；缺译时没有办法表示 |
+| 数据里的文案 | 位置数组 `[中文, 英文]`：`inspiration-data.ts`、`website/content/entries/*.json`、`DocsGuide.tsx` 等 | 第三种语言只能追加到第 3 位，读的地方都写死了 `[0]`、`[1]` 或 `[ix]`；缺译时没有办法表示 |
 | 组件里的文案 | 17 个文件里约 400 处 `zh?'…':'…'` 三元表达式，另有约 170 处按位置读 `[ix]`、`[0]`、`[1]`（`node website/scripts/i18n-inventory.mjs` 统计，2026-11-01 为 404 / 177） | 只能表达两种语言；文案散在 JSX 里，翻译时找不全 |
 | 语言状态 | 9 个页面各自读 `localStorage` 的 `variant-language`，各自设置 `document.documentElement.lang`；工作台另外读 `?language=` | 同一个地址显示两种语言，搜索引擎和分享出去的链接只能看到一种；页面之间靠本地存储同步 |
 | 预渲染 | `prerender.mjs` 只输出中文正文、标题、描述；每页一个 canonical；sitemap 只有中文地址；没有 `hreflang` | 英文内容对不执行 JavaScript 的抓取器和 AI 不可见 |
@@ -90,7 +90,7 @@ export function has(value: Localized<unknown>, locale: Locale): boolean
 ### 3.6 第三方内容和引文
 
 - X 帖子的正文、外部网站的名称和原文引用保持原文，并带 `lang` 属性，不翻译。
-- 我们自己写的「研究什么」「用在哪里」、条款说明要翻译；官方素材的条款原文保持原文，旁边可以附我们的翻译，并写明以原文为准。
+- 我们自己写的「研究什么」「用在哪里」要翻译；链接预览里对方自己的标题和描述保持原文。
 
 ### 3.7 字体
 

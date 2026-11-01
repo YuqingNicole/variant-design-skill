@@ -11,7 +11,7 @@ test('every external reference records provenance; unknown designers stay null',
   assert.equal(new Set(items.map(i => i.id)).size, items.length);
   for (const i of items) {
     assert.equal(new URL(i.url).protocol, 'https:', i.id);
-    assert.equal(i.source, i.media ? 'press-kit' : 'link-only', i.id);
+    assert.equal(i.source, 'link-only', i.id);
     assert.ok(i.publisher?.trim(), i.id);
     assert.ok(['official-site', 'product-page', 'documentation', 'social-post'].includes(i.kind), i.id);
     assert.ok(i.designer === null || i.designer.trim(), i.id);
@@ -19,21 +19,9 @@ test('every external reference records provenance; unknown designers stay null',
   }
 });
 
-test('a source screenshot ships only with a recorded permission and as a local file', () => {
-  for (const i of items.filter(i => i.media)) {
-    const { src, width, height, alt, permission } = i.media;
-    assert.match(src, /^\/inspiration-media\/[a-z0-9-]+\.(webp|png|jpg)$/, i.id);
-    assert.ok(fs.existsSync(new URL(`../public${src}`, import.meta.url)), i.id);
-    assert.ok(width > 0 && height > 0 && alt.length === 2, i.id);
-    assert.ok(permission?.grantedBy?.trim() && permission?.terms?.trim(), i.id);
-    assert.equal(new URL(permission.url).protocol, 'https:', i.id);
-    assert.match(permission.grantedAt, date, i.id);
-  }
-});
-
-test('best-practice entries are X posts with the oEmbed fields their card renders', () => {
-  for (const i of items.filter(i => i.category === 'practice' || i.post)) {
-    assert.equal(i.category, 'practice', i.id); assert.equal(i.kind, 'social-post', i.id); assert.equal(i.source, 'link-only', i.id);
+test('best-practice entries and other X links carry the oEmbed fields their card renders', () => {
+  for (const i of items.filter(i => i.category === 'practice' || i.post || i.kind === 'social-post')) {
+    assert.ok(i.post, i.id); assert.equal(i.kind, 'social-post', i.id); assert.equal(i.source, 'link-only', i.id);
     const m = /^https:\/\/x\.com\/([A-Za-z0-9_]+)\/status\/(\d+)$/.exec(i.url); assert.ok(m, i.id);
     assert.equal(i.post.handle, m[1], i.id); assert.equal(i.post.id, m[2], i.id);
     assert.ok(i.post.author.trim() && i.post.text.trim() && typeof i.post.hasMedia === 'boolean', i.id); assert.match(i.post.date, date, i.id);

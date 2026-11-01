@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import fs from 'node:fs';
 
 test('production comparison opens three complete pages with matching brand and true desktop/mobile widths', async ({ page }) => {
   const errors = [];
@@ -279,23 +280,33 @@ test('inspiration references filter, create an original brief and recover from c
  await expect(page.locator('html')).toHaveAttribute('lang','en');
 });
 
-test('inspiration references host no third-party images and link to their sources', async ({page})=>{
+// External preview images are stubbed so the suite never depends on another site being up.
+const previews=JSON.parse(fs.readFileSync(new URL('../website/src/link-previews.json',import.meta.url),'utf8'));
+const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
+const stubPreviews=(page,fail=[])=>page.route(u=>u.protocol==='https:'&&!['localhost','127.0.0.1'].includes(u.hostname)&&!/twitter|x\.com|twimg/.test(u.hostname),r=>r.request().resourceType()!=='image'?r.continue():fail.some(id=>previews[id].image===r.request().url())?r.abort():r.fulfill({contentType:'image/png',body:pixel}));
+
+test('inspiration thumbnails map each link\'s own preview, loaded from the source', async ({page})=>{
  const imageRequests=[];page.on('request',r=>{if(r.resourceType()==='image'&&!new URL(r.url()).pathname.startsWith('/variant-mark'))imageRequests.push(r.url());});
+ await stubPreviews(page,['linear']);
  await page.goto('/inspiration');
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('34 个参考');await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(24);
- await page.getByRole('button',{name:'加载更多（还有 10 个）'}).click();await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(31);await expect(page.locator('.inspiration-grid .inspiration-press')).toHaveCount(3);
- await expect(page.locator('.inspiration-grid .insp-thumb-media')).toHaveCount(34);
- for(const src of await page.locator('.inspiration-page img:not(.site-brandmark)').evaluateAll(els=>els.map(e=>new URL(e.src).pathname)))expect(src).toMatch(/^\/inspiration-media\/[a-z-]+\.webp$/);await expect(page.locator('.inspiration-grid div.insp-thumb')).toHaveCount(34);
+ await page.getByRole('button',{name:'加载更多（还有 10 个）'}).click();await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(34);
+ await expect(page.locator('.inspiration-grid .insp-thumb-post')).toHaveCount(2);await expect(page.locator('.inspiration-grid div.insp-thumb')).toHaveCount(34);
+ await expect(page.locator('.inspiration-grid .insp-thumb-media img')).toHaveCount(28);
+ const linear=page.locator('.insp-card').filter({has:page.locator('a[href="/inspiration/linear"]')});await expect(linear.locator('div.insp-thumb-landing b')).toHaveText('Linear');
+ for(const [href,src,policy] of await page.locator('.insp-card').evaluateAll(els=>els.flatMap(li=>{const img=li.querySelector('.insp-thumb-media img');return img?[[li.querySelector('.insp-card-open').getAttribute('href'),img.getAttribute('src'),img.getAttribute('referrerpolicy')]]:[]})))
+  {expect(src).toBe(previews[href.split('/')[2]].image);expect(policy).toBe('no-referrer')}
+ for(const id of ['aesop','nothing'])await expect(page.locator(`.insp-card:has(a[href="/inspiration/${id}"]) div.insp-thumb:not(.insp-thumb-media)`)).toHaveCount(1);
  await expect(page.locator('.inspiration-grid .insp-card-out').first()).toHaveAttribute('href','https://linear.app/');await expect(page.locator('.inspiration-link-only').first()).toHaveText('仅链接');
- await expect(page.locator('.inspiration-disclosure')).toContainText('不托管对方的截图');await expect(page.locator('.insp-title a[href="/submit"]')).toBeVisible();
- expect((await page.request.get('/inspiration/linear.webp')).headers()['content-type']).toContain('text/html');
+ await expect(page.locator('.inspiration-disclosure')).toContainText('不保存对方的截图');await expect(page.locator('.insp-title a[href="/submit"]')).toBeVisible();
  for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  }
  await page.emulateMedia({reducedMotion:'reduce'});
  expect(await page.locator('.insp-card-open').first().evaluate(el=>parseFloat(getComputedStyle(el).transitionDuration))).toBeLessThan(0.001);
- expect(imageRequests.filter(u=>!new URL(u).pathname.startsWith('/inspiration-media/'))).toEqual([]);
+ const allowed=new Set(Object.values(previews).map(p=>p.image));
+ expect(imageRequests.filter(u=>!allowed.has(u))).toEqual([]);
 });
 
 test('submission page states the three entry kinds, permissions and takedown process in both languages', async ({page})=>{
@@ -421,55 +432,28 @@ test('reference pack keeps per-item intentions and source links in its brief', a
  await expect(pack.locator('fieldset')).toHaveCount(1);
 });
 
-test('the motion tab opens our own live paper-widget demo in the detail layer', async ({page})=>{
+test('the motion tab maps the X post itself instead of a demo of our own', async ({page})=>{
+ const xRequests=[];page.on('request',r=>{if(/twitter\.com|x\.com|twimg\.com/.test(new URL(r.url()).hostname))xRequests.push(r.url())});
  await page.goto('/inspiration');
  await page.getByRole('button',{name:'动效',exact:true}).click();
  const card=page.locator('.inspiration-grid .insp-card');
- await expect(card).toHaveCount(1);
+ await expect(card).toHaveCount(1);await expect(card.locator('.insp-thumb-post')).toContainText('I love minimalistic cards');
  await expect(card.locator('.insp-card-out')).toHaveAttribute('href','https://x.com/seanaiux/status/2116240216751247393');
  await card.locator('.insp-card-open').click();
  await expect(page).toHaveURL(/\/inspiration\/paper-widgets$/);
- const demo=page.getByRole('dialog').locator('.paper-widgets');
- await expect(demo).toHaveClass(/is-in/);await expect(demo.locator('.pw-steps b')).toHaveText('8,240',{timeout:5000});
- const focus=demo.getByRole('button',{name:/专注模式/});
- await expect(focus).toHaveAttribute('aria-pressed','false');await focus.click();await expect(focus).toHaveAttribute('aria-pressed','true');
- await expect.poll(()=>focus.evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgb(13, 14, 20)');
- await expect(page.locator('.inspiration-page img:not(.site-brandmark), .inspiration-page video, .inspiration-page iframe')).toHaveCount(0);
- for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
- await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/inspiration/paper-widgets');
- await expect(page.locator('.pw-card').first()).toHaveCSS('opacity','1');await expect(page.locator('.pw-steps b')).toHaveText('8,240');
+ const dialog=page.getByRole('dialog');await expect(dialog.locator('.x-post blockquote')).toContainText('@seanaiux');
+ await expect(dialog.getByRole('button',{name:/加载 X 原帖/})).toBeVisible();expect(xRequests).toEqual([]);
 });
 
-test('startup references show our own motion studies and press-kit images with their terms', async ({page})=>{
- await page.goto('/inspiration?topic=startup-home');
- const attio=page.locator('.insp-card').filter({has:page.locator('a[href="/inspiration/attio"]')});
- await expect(attio.locator('.rs-frame')).toHaveCount(1);await expect(attio.locator('.insp-thumb-chip')).toContainText('仅链接');
- const before=await attio.locator('.rs-stages li.on').textContent();await attio.hover();
- await expect.poll(()=>attio.locator('.rs-stages li.on').textContent(),{timeout:6000}).not.toBe(before);
- await page.goto('/inspiration/tldraw');
- const canvas=page.locator('.insp-detail-visual .rs-canvas svg');await expect(page.locator('.insp-detail-visual .rs-frame')).toHaveAttribute('role','group');
- const box=await canvas.boundingBox();await page.mouse.move(box.x+40,box.y+40);await page.mouse.down();await page.mouse.move(box.x+120,box.y+90,{steps:5});await page.mouse.up();
- await expect(canvas.locator('path.rs-user')).toHaveCount(1);
+test('a site detail shows the preview the link publishes and falls back when its image fails', async ({page})=>{
+ await stubPreviews(page,['ramp']);
  await page.goto('/inspiration/raycast');
- const shot=page.locator('.insp-shot img');await expect(shot).toHaveAttribute('src','/inspiration-media/raycast.webp');await expect(shot).toHaveAttribute('alt',/扩展商店/);
- expect(await shot.evaluate(img=>img.complete&&img.naturalWidth)).toBe(1600);
- await expect(page.locator('.insp-detail-label .inspiration-press')).toHaveText('官方素材');
- await expect(page.locator('.insp-detail dd a[href="https://www.raycast.com/press"]')).toBeVisible();await expect(page.locator('.insp-detail dd').last()).toContainText('“Everything you need to write about Raycast');
- await page.goto('/inspiration/ramp');await expect(page.locator('.insp-shot img')).toHaveCount(1);await expect(page.locator('.insp-detail-visual .rs-proof')).toHaveCount(1);
+ const shot=page.locator('.insp-detail-visual .insp-shot img');await expect(shot).toHaveAttribute('src',previews.raycast.image);await expect(shot).toHaveAttribute('alt',previews.raycast.title);
+ await expect(page.locator('.insp-shot figcaption')).toContainText(previews.raycast.description);await expect(page.locator('.insp-shot figcaption')).toContainText('www.raycast.com 为分享链接公开的预览');
+ await page.goto('/inspiration/ramp');await expect(page.locator('.insp-shot img')).toHaveCount(0);await expect(page.locator('.insp-shot figcaption')).toContainText('图片暂时无法加载');await expect(page.locator('.insp-shot > div.insp-thumb b')).toHaveText('Ramp');
+ await page.goto('/inspiration/raycast');await page.getByRole('button',{name:'下一个'}).click();await expect(page).toHaveURL(/\/inspiration\/resend$/);await expect(page.locator('.insp-shot img')).toHaveAttribute('src',previews.resend.image);await expect(page.locator('.insp-shot figcaption span')).toHaveAttribute('lang',previews.resend.lang);
+ await page.goto('/inspiration/aesop');await expect(page.locator('.insp-detail-visual > div.insp-thumb b')).toHaveText('Aesop');
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
- await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/inspiration/ramp');
- await expect(page.locator('.rs-proof-num b')).toHaveText('48,200');
- await page.goto('/inspiration/attio');const on=await page.locator('.rs-stages li.on').textContent();await page.waitForTimeout(2600);await expect(page.locator('.rs-stages li.on')).toHaveText(on);
-});
-
-test('every reference detail shows a press-kit image or our own motion study', async ({page})=>{
- test.setTimeout(120000);
- await page.goto('/inspiration');await page.getByRole('button',{name:/加载更多/}).click();
- const ids=await page.locator('.insp-card-open').evaluateAll(els=>els.map(a=>new URL(a.href).pathname.split('/')[2]));
- expect(ids).toHaveLength(34);
- for(const id of ids){await page.goto('/inspiration/'+id);await expect(page.locator('.insp-detail-visual :is(.rs-frame, .insp-shot img, .paper-widgets)').first(),id).toBeVisible();await expect(page.locator('.insp-detail-visual > .insp-thumb'),id).toHaveCount(0)}
- await page.goto('/inspiration/raycast');await expect(page.locator('.insp-shot figcaption')).toContainText('没有合作或赞助关系');
- await page.goto('/inspiration/notion');await expect(page.locator('.insp-detail-visual .rs-frame')).toHaveAttribute('role','img');
 });
 
 test('best practice shows shared X posts as text first and loads X only on request', async ({page})=>{
@@ -480,8 +464,6 @@ test('best practice shows shared X posts as text first and loads X only on reque
  await cards.locator('.insp-card-open').click();const dialog=page.getByRole('dialog');
  await expect(dialog.locator('.x-post blockquote')).toContainText('sheep grazing grass!');await expect(dialog.locator('.x-post blockquote')).toContainText('@AreadneMaria');
  expect(xRequests).toEqual([]);
- const sheep=dialog.getByRole('button',{name:'第 4 只羊'});await sheep.click();await expect(sheep).toHaveAttribute('aria-pressed','true');
- const jump=dialog.getByRole('toolbar',{name:'羊的状态'}).getByRole('button',{name:'跳',exact:true});await jump.click();await expect(jump).toHaveAttribute('aria-pressed','true');await expect(sheep).toHaveClass(/m3/);
  await dialog.getByRole('button',{name:/加载 X 原帖/}).click();
  await expect(dialog.locator('.x-post figcaption')).toContainText('没能连上 x.com');await expect(dialog.locator('.x-post blockquote')).toBeVisible();
  await expect(dialog.getByRole('link',{name:'在 X 上打开'})).toHaveAttribute('href','https://x.com/AreadneMaria/status/2114898325451444419');
