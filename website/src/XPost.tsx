@@ -15,7 +15,7 @@ const m={shown:{zh:'原帖由 X 的官方嵌入组件显示，内容来自 x.com
 const xLang:Record<Locale,string>={zh:'zh-cn',en:'en'};
 function loadWidgets(){const w=window as Window&{twttr?:Twttr};if(w.twttr?.widgets)return Promise.resolve(w.twttr);
  return widgets??=new Promise<Twttr>((resolve,reject)=>{const s=document.createElement('script');s.src='https://platform.twitter.com/widgets.js';s.async=true;s.charset='utf-8';
-  s.onload=()=>{const t=(window as Window&{twttr?:Twttr}).twttr;t?.widgets?resolve(t):reject(new Error('no widgets'))};s.onerror=()=>{widgets=null;reject(new Error('blocked'))};document.head.appendChild(s)})}
+  s.onload=()=>{const t=(window as Window&{twttr?:Twttr}).twttr;if(t?.widgets)resolve(t);else{widgets=null;reject(new Error('no widgets'))}};s.onerror=()=>{widgets=null;reject(new Error('blocked'))};document.head.appendChild(s)})}
 export function XPost({post,url,locale,autoload=false}:{post:Post;url:string;locale:Locale;autoload?:boolean}){const l=(k:keyof typeof m)=>t(m[k],locale);const box=useRef<HTMLDivElement>(null);const [state,setState]=useState<'idle'|'loading'|'shown'|'failed'>('idle');
  // `run` is bumped on every load and unmount, so an embed that resolves late (React re-running effects, a fast
  // switch to another post) is discarded instead of stacking a second player.
