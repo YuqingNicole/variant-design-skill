@@ -4,6 +4,7 @@ import { SiteHeader, SiteFooter } from './SiteChrome';
 import { transition } from './view-transition';
 import { PaperWidgets } from './PaperWidgets';
 import { ReferenceStudy, StudyFrame, referenceStudies } from './ReferenceStudies';
+import { XPost, type Post } from './XPost';
 import { inspirationItems, inspirationSources, inspirationTopics } from './inspiration-data';
 import './content-pages.css';
 import './inspiration.css';
@@ -15,7 +16,8 @@ type Item=typeof inspirationItems[number];
 // study of the reference's key interaction, or our analysis card: name, one insight, a structural sketch.
 type Shot={src:string;width:number;height:number;alt:[string,string];permission:{grantedBy:string;url:string;grantedAt:string;terms:string}};
 const shotOf=(item:Item)=>(item as Item&{media?:Shot}).media;
-const labels:Record<string,[string,string]>={landing:['Landing','Landing'],product:['产品界面','Product'],flow:['关键流程','Flow'],motion:['动效','Motion']};
+const labels:Record<string,[string,string]>={landing:['Landing','Landing'],product:['产品界面','Product'],flow:['关键流程','Flow'],motion:['动效','Motion'],practice:['Best practice','Best practice']};
+const postOf=(item:Item)=>(item as Item&{post?:Post}).post;
 // Three structural sketches per category, picked by id, so neighbouring cards do not repeat.
 const sketches:Record<string,number[]>={landing:[4,3,5],product:[6,5,7],flow:[3,4,3],motion:[5,4,6]};
 const variantOf=(id:string)=>[...id].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7)%3;
@@ -81,9 +83,10 @@ export function InspirationPage({detail=''}:{detail?:string}){
     <dl><dt>{zh?'研究什么':'Study'}</dt><dd>{item.focus[ix]}</dd><dt>{zh?'用在哪里':'Apply'}</dt><dd>{item.application[ix]}</dd><dt>{zh?'出处':'Source'}</dt><dd><a href={item.url} target="_blank" rel="noreferrer">{item.publisher}</a> · {kinds[item.kind][ix]} · {item.checkedAt}</dd><dt>{zh?'设计者':'Designer'}</dt><dd>{item.designer ?? (zh?'未知':'Unknown')}</dd><dt>{zh?'还不知道':'Unknown'}</dt><dd>{unknowns(item,zh)}</dd>{shot&&<><dt>{zh?'图片来源与条款':'Image source and terms'}</dt><dd><a href={shot.permission.url} target="_blank" rel="noreferrer">{shot.permission.grantedBy}</a> · {zh?'核对于':'checked'} {shot.permission.grantedAt}<br/>“{shot.permission.terms}”</dd></>}</dl>
     <button type="button" className="insp-detail-brief" onClick={()=>brief(item)}>{zh?'生成参考指令':'Create brief'}</button>
    </div>
-   <div className="insp-detail-visual">{item.id==='paper-widgets'&&<figure className="inspiration-demo"><PaperWidgets zh={zh}/><figcaption>{zh?'我们按原帖动效思路自己写的演示，可点按；不含原作者的视频、代码或 prompt。':'Our own demo of the post\'s motion idea, interactive; none of the author\'s video, code or prompt.'}</figcaption></figure>}
+   <div className="insp-detail-visual">{postOf(item)&&<XPost post={postOf(item)!} url={item.url} zh={zh}/>}
+    {item.id==='paper-widgets'&&<figure className="inspiration-demo"><PaperWidgets zh={zh}/><figcaption>{zh?'我们按原帖动效思路自己写的演示，可点按；不含原作者的视频、代码或 prompt。':'Our own demo of the post\'s motion idea, interactive; none of the author\'s video, code or prompt.'}</figcaption></figure>}
     {shot&&<figure className="inspiration-demo insp-shot"><img src={shot.src} width={shot.width} height={shot.height} alt={shot.alt[ix]}/><figcaption>{zh?`图片来自 ${item.publisher} 的官方媒体素材，按其公开条款使用，未作修改。本站与 ${item.publisher} 没有合作或赞助关系。`:`Image from ${item.publisher}'s official press kit, used under its published terms, unaltered. This site has no partnership with or sponsorship from ${item.publisher}.`}</figcaption></figure>}
-    {referenceStudies[item.id]&&<figure className="inspiration-demo"><ReferenceStudy id={item.id} zh={zh} play interactive={item.id==='tldraw'}/><figcaption>{referenceStudies[item.id].title[ix]}。{zh?'我们按原站交互思路自己写的演示，占位内容，不含对方的代码、文案或素材。':' Our own study of the source\'s interaction with placeholder content; none of its code, copy or assets.'}</figcaption></figure>}
+    {referenceStudies[item.id]&&<figure className="inspiration-demo"><ReferenceStudy id={item.id} zh={zh} play interactive={Boolean(referenceStudies[item.id].interactive)}/><figcaption>{referenceStudies[item.id].title[ix]}。{zh?'我们按原站交互思路自己写的演示，占位内容，不含对方的代码、文案或素材。':' Our own study of the source\'s interaction with placeholder content; none of its code, copy or assets.'}</figcaption></figure>}
     {item.id!=='paper-widgets'&&!shot&&!referenceStudies[item.id]&&<Thumb item={item} zh={zh}/>}
     <a className="content-button insp-visit" href={item.url} target="_blank" rel="noreferrer">{zh?'访问原站':'Visit source'}<Icon d={icons.out}/></a></div>
   </article>};
@@ -97,11 +100,11 @@ export function InspirationPage({detail=''}:{detail?:string}){
  return <main className="content-page inspiration-page">{header}
   <header className="site-shell insp-head">
    <div className="insp-title"><h1>{zh?'灵感参考':'Inspiration'}</h1><p>{zh?`${total} 个精选外部参考。研究结构、任务与交互，再做出属于你的表达。`:`${total} selected external references. Study the structure, task and interaction, then make something of your own.`}</p><a href="/submit">{zh?'投稿与授权规则':'Submissions & permissions'}</a></div>
-   <p className="insp-counts">{(['landing','product','flow','motion'] as const).map(c=>`${count(c)} ${labels[c][ix]}`).join(' · ')}</p>
+   <p className="insp-counts">{(['landing','product','flow','motion','practice'] as const).map(c=>`${count(c)} ${labels[c][ix]}`).join(' · ')}</p>
    <details className="inspiration-disclosure"><summary>{zh?'只放链接、我们自己的分析，以及条款允许的官方素材':'Links, our own notes, and press-kit images where the terms allow'}</summary><p>{zh?'这些是外部参考。除标着「官方素材」的产品图外，本站不托管对方的截图、商标或素材，只提供我们自己的分析和原站链接，作品版权归原作者。缩略图是我们自己画的分析卡或自己写的动效演示；标着「官方素材」的条目，产品图来自对方公开的媒体素材，条款和核对日期写在详情里。登录后操作和手机体验未实测。':'These are external references. Apart from product images marked “Press kit”, this site hosts none of their screenshots, marks or assets: only our own notes and a link to the source, whose work belongs to its owners. Thumbnails are our own analysis cards or motion studies; entries marked “Press kit” show a product image from the company’s published press kit, with its terms and check date in the detail view. Authenticated flows and mobile behavior not tested.'}</p></details>
   </header>
   <div className="insp-bar"><div className="site-shell">
-   <div className="insp-pills" role="group" aria-label={zh?'参考类型':'Reference type'}>{[['all',zh?'全部':'All'],['landing','Landing'],['product',zh?'产品界面':'Product'],['flow',zh?'关键流程':'Flow'],['motion',zh?'动效':'Motion']].map(([id,label])=><button key={id} aria-pressed={category===id} onClick={()=>filter(()=>setCategory(id))}>{label}</button>)}</div>
+   <div className="insp-pills" role="group" aria-label={zh?'参考类型':'Reference type'}>{[['all',zh?'全部':'All'],['landing','Landing'],['product',zh?'产品界面':'Product'],['flow',zh?'关键流程':'Flow'],['motion',zh?'动效':'Motion'],['practice','Best practice']].map(([id,label])=><button key={id} aria-pressed={category===id} onClick={()=>filter(()=>setCategory(id))}>{label}</button>)}</div>
    <select aria-label={zh?'专题':'Topic'} value={topic} onChange={e=>{const v=e.target.value;filter(()=>setTopic(v))}}><option value="">{zh?'全部专题':'All topics'}</option>{inspirationTopics.map(t=><option key={t.id} value={t.id}>{t.title[ix]} · {t.items.length}</option>)}</select>
    <label className="insp-search"><Icon d={icons.search}/><span className="insp-visually-hidden">{zh?'搜索参考':'Search references'}</span><input ref={searchRef} type="search" value={query} onChange={e=>{setQuery(e.target.value);setVisible(pageSize)}} placeholder={zh?'搜索 ⌘K':'Search ⌘K'}/></label>
    <select aria-label={zh?'排序':'Sort'} value={sort} onChange={e=>{const v=e.target.value;filter(()=>setSort(v))}}><option value="default">{zh?'推荐顺序':'Curated'}</option><option value="checked">{zh?'最近核对':'Recently checked'}</option><option value="name">{zh?'按名称':'By name'}</option></select>

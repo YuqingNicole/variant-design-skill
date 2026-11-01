@@ -57,12 +57,12 @@ function Mosaic({play,ix}:{play:boolean;ix:number}){const step=useStep(play,3,18
  return <div className="rs-mosaic"><p className="rs-gen"><span>{ix?'Q3 review for the board, 8 slides':'给董事会的第三季度回顾，8 页'}</span><b className={step>=1?'busy':''}>{step>=2?(ix?'Done':'完成'):(ix?'Generate':'生成')}</b></p>
   <div className={`rs-cols${play?'':' paused'}`}>{[0,1,2].map(c=><div key={c} className={c===1?'up':'down'}><div>{[...slideTones,...slideTones].map((t,i)=><i key={i} className={`t-${t}`}><b/><span/></i>)}</div></div>)}</div></div>}
 
-export const referenceStudies:Record<string,{title:Copy;render:(p:{play:boolean;ix:number;interactive:boolean})=>ReactNode}>={
+export const referenceStudies:Record<string,{title:Copy;interactive?:boolean;render:(p:{play:boolean;ix:number;interactive:boolean})=>ReactNode}>={
  attio:{title:['分阶段切换：每个阶段换一张产品画面','Stage tabs that swap the product view'],render:p=><Stages {...p}/>},
  ramp:{title:['数字递增、客户墙滚动、证言轮换','Count-up numbers, a scrolling logo wall, rotating quotes'],render:p=><Proof {...p}/>},
  'cal-com':{title:['选日期 → 出时段 → 预约确认','Pick a day → slots appear → booking confirmed'],render:p=><Booking {...p}/>},
  rive:{title:['输入提示 → 逐步构建 → 预览跑起来','Prompt → step-by-step build → live preview'],render:p=><Build {...p}/>},
- tldraw:{title:['复制安装命令，画布上直接画','Copy the install command, draw right on the canvas'],render:p=><Canvas {...p}/>},
+ tldraw:{interactive:true,title:['复制安装命令，画布上直接画','Copy the install command, draw right on the canvas'],render:p=><Canvas {...p}/>},
  ...moreStudies,
  pitch:{title:['产出先行：幻灯片缩略图滚动拼贴','Output first: a scrolling mosaic of slides'],render:p=><Mosaic {...p}/>},
 };

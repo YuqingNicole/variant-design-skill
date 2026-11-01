@@ -31,6 +31,16 @@ test('a source screenshot ships only with a recorded permission and as a local f
   }
 });
 
+test('best-practice entries are X posts with the oEmbed fields their card renders', () => {
+  for (const i of items.filter(i => i.category === 'practice' || i.post)) {
+    assert.equal(i.category, 'practice', i.id); assert.equal(i.kind, 'social-post', i.id); assert.equal(i.source, 'link-only', i.id);
+    const m = /^https:\/\/x\.com\/([A-Za-z0-9_]+)\/status\/(\d+)$/.exec(i.url); assert.ok(m, i.id);
+    assert.equal(i.post.handle, m[1], i.id); assert.equal(i.post.id, m[2], i.id);
+    assert.ok(i.post.author.trim() && i.post.text.trim() && typeof i.post.hasMedia === 'boolean', i.id); assert.match(i.post.date, date, i.id);
+    assert.doesNotMatch(i.focus[0] + i.application[0] + i.name, /TODO/, i.id);
+  }
+});
+
 test('the prerendered description counts every reference', () => {
   const prerender = fs.readFileSync(new URL('./prerender.mjs', import.meta.url), 'utf8');
   assert.match(prerender, new RegExp(`'${items.length} 个外部设计参考`));

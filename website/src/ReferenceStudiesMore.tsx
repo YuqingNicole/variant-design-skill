@@ -69,6 +69,16 @@ function Plausible({play,ix}:P){const [n,setN]=useState(12480);useEffect(()=>{if
   <svg viewBox="0 0 584 120" className={play&&!still()?'anim':''}><path d="M0 100 L60 80 L120 88 L180 60 L240 66 L300 40 L360 52 L420 30 L480 36 L584 14" pathLength={1}/></svg>
   <div className="rm-sources">{[[T(ix,'搜索','Search'),82],[T(ix,'直接访问','Direct'),54],[T(ix,'社交','Social'),31]].map(([l,w])=><p key={l as string}><i style={{width:`${w}%`}}/><span>{l}</span></p>)}</div></div>}
 
+/* Best practice */
+// areadne's sheep pasture: selecting one object pins its measurements and a state toolbar right beside it.
+const flock=[[120,150],[250,110],[380,170],[200,260],[460,270]];const modes:Copy[]=[['待着','Idle'],['吃草','Graze'],['走动','Walk'],['跳','Jump']];
+function Pasture({play,ix,interactive}:P){const step=useStep(play,6,1400,1);const [manual,setManual]=useState<{pick:number;mode:number[]}|null>(null);
+ const auto={pick:[1,1,3,3,4,4][step],mode:flock.map((_,i)=>i===[1,1,3,3,4,4][step]?[0,2,1,3,2,1][step]:(i%2))};const s=manual??auto;const [x,y]=flock[s.pick];
+ const set=(pick:number,mode?:number)=>setManual(m=>{const cur=m??auto;return {pick,mode:cur.mode.map((v,i)=>i===pick&&mode!==undefined?mode:v)}});
+ return <div className="rm-pasture"><i className="rm-path"/>{flock.map(([fx,fy],i)=><button key={i} type="button" tabIndex={interactive?0:-1} className={`rm-sheep m${s.mode[i]}`} style={{left:fx,top:fy}} aria-label={T(ix,`第 ${i+1} 只羊`,`Sheep ${i+1}`)} aria-pressed={i===s.pick} onClick={()=>set(i)}><b/><i/></button>)}
+  <span className="rm-select" style={{left:x-14,top:y-12}}><em>{T(ix,`${(1.6+s.pick*.13).toFixed(2)} × 1.40 m · ${38+s.pick*6} m 外`,`${(1.6+s.pick*.13).toFixed(2)} × 1.40 m · ${38+s.pick*6} m away`)}</em></span>
+  <div className="rm-bar" role="toolbar" aria-label={T(ix,'羊的状态','Sheep state')} style={{left:Math.min(Math.max(x-90,8),640-56-236),top:y+48}}>{modes.map((m,i)=><button key={i} type="button" tabIndex={interactive?0:-1} aria-pressed={s.mode[s.pick]===i} onClick={()=>set(s.pick,i)}>{m[ix]}</button>)}</div></div>}
+
 /* Flow */
 function FirstPage({play,ix}:P){const step=useStep(play,4,1500);const title=useTyped(T(ix,'第一页','My first page'),play&&step>=1,700);
  return <div className="rm-first"><aside><p className={step===0?'on':''}>{T(ix,'新建页面','New page')}</p><L w={60}/><L w={50}/></aside><div><b className={step>=1?'in':''}>{step>=1?title:T(ix,'无标题','Untitled')}</b>{step>=2&&<p className="rm-slash"><code>/</code>{[[T(ix,'待办清单','To-do list')],[T(ix,'标题','Heading')],[T(ix,'表格','Table')]].map(([o],i)=><span key={i} className={i===0?'on':''}>{o}</span>)}</p>}{step>=3&&<p className="rm-todo"><em/>{T(ix,'写下第一件事','Write the first thing')}</p>}</div></div>}
@@ -81,7 +91,8 @@ function Export({play,ix}:P){const step=useStep(play,3,1700);const fmts=['PNG','
  return <div className="rm-export"><div className="rm-panel"><small>{T(ix,'导出','Export')}</small><p>{fmts.map((f,i)=><span key={f} className={i===step?'on':''}>{f}</span>)}</p><p><span className="on">2×</span><span>1×</span></p><b>{T(ix,'导出所选','Export selection')}</b></div>
   <div className="rm-file" key={step}><i>{fmts[step]}</i><p>{T(ix,'首页-设计','home-design')}.{fmts[step].toLowerCase()}</p><small>{sizes[step]} · {step===1?T(ix,'矢量，可无损缩放','vector, scales cleanly'):step===2?T(ix,'可打印','print-ready'):T(ix,'2 倍像素','2× pixels')}</small></div></div>}
 
-export const moreStudies:Record<string,{title:Copy;render:(p:P)=>ReactNode}>={
+export const moreStudies:Record<string,{title:Copy;interactive?:boolean;render:(p:P)=>ReactNode}>={
+ 'x-areadnemaria-444419':{title:['选中一只羊，标注和状态工具条贴在它旁边','Select a sheep; its measurements and state toolbar sit beside it'],interactive:true,render:p=><Pasture {...p}/>},
  linear:{title:['主张 → 产品界面 → 任务在流程里移动','Claim → product view → work moving through states'],render:p=><Linear {...p}/>},
  notion:{title:['能力逐层展开，一次只讲一层','Capabilities unfold one layer at a time'],render:p=><Notion {...p}/>},
  cursor:{title:['在真实代码里提出修改、接受','A suggested change in real code, then accepted'],render:p=><Cursor {...p}/>},

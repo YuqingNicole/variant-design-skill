@@ -769,6 +769,37 @@ export const inspirationItems = [
     "checkedAt": "2026-10-31",
     "verification": "public-post",
     "mobile": "not-tested"
+  },
+  {
+    "id": "x-areadnemaria-444419",
+    "name": "Sheep pasture",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/AreadneMaria/status/2114898325451444419",
+    "source": "link-only",
+    "focus": [
+      "选中场景里的一只羊，尺寸和距离标注、状态工具条就贴在它旁边",
+      "Select one sheep and its size, distance and a state toolbar appear right beside it"
+    ],
+    "application": [
+      "画布、地图、3D 场景里对单个对象的就地编辑",
+      "In-place editing of a single object on a canvas, map or 3D scene"
+    ],
+    "publisher": "areadne (@AreadneMaria)",
+    "kind": "social-post",
+    "designer": "areadne",
+    "checkedAt": "2026-11-01",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2114898325451444419",
+      "author": "areadne",
+      "handle": "AreadneMaria",
+      "date": "2026-10-27",
+      "lang": "en",
+      "text": "sheep grazing grass! 🐑🌱",
+      "hasMedia": true
+    }
   }
 ];
 
