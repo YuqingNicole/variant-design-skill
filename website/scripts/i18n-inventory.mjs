@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Counts what RFC-005 P1 still has to migrate: inline zh/en ternaries, positional [zh, en] reads and pages that
-// keep their own language state. Run before and after a P1 change; the totals should only go down.
+// keep their own language state. Run before and after a P1 change; the totals should only go down. The counts are a
+// lower bound: they find the patterns the site uses today, so P1 also ends with a manual search for other forms.
 // Usage: node website/scripts/i18n-inventory.mjs [--json]
 import fs from 'node:fs';
 import path from 'node:path';
@@ -16,6 +17,9 @@ export function inventory(dir = src) {
   for (const file of fs.readdirSync(dir, { recursive: true }).filter(f => /\.(tsx?|mts)$/.test(f) && !f.startsWith('i18n'))) {
     const text = fs.readFileSync(path.join(dir, file), 'utf8'), row = { file };
     for (const [k, re] of Object.entries(patterns)) row[k] = (text.match(re) ?? []).length;
+    // Any other index variable derived from the language, e.g. `const i=language==='zh'?0:1`, counts as pair reads too.
+    for (const [, name] of text.matchAll(/(?:const|let)\s+([A-Za-z_$][\w$]*)\s*=\s*[^;,\n]*?(?:zh|en|lang|language|locale)[^;,\n]*?\?\s*[01]\s*:\s*[01]/g))
+      if (name !== 'ix') row.pairReads += (text.match(new RegExp(`\\[${name.replace(/\$/g, '\\$')}\\]`, 'g')) ?? []).length;
     if (row.ternaries || row.pairReads || row.languageState) rows.push(row);
   }
   const total = Object.fromEntries(Object.keys(patterns).map(k => [k, rows.reduce((n, r) => n + r[k], 0)]));
