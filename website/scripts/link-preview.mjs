@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Reads each reference's own link preview: the og:/twitter: title, description and image a site publishes so
 // that shared links unfurl. One request per link, like a chat app's unfurl; nothing else on the page is read.
-// The image stays on the source's server and is loaded from there; we store only its address.
+// We store only the image's address. On the site, Vercel fetches it and serves a resized copy, so each image host
+// must be listed in vercel.json `images.remotePatterns`; the CLI keeps that list in step.
 // Usage: node website/scripts/link-preview.mjs   (rewrites src/link-previews.json)
 import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
@@ -27,6 +28,14 @@ export function parsePreview(html, base) {
   return image ? { image, title, description, lang } : null;
 }
 
+// The https image hosts of every preview, added to the existing remotePatterns (others are kept).
+export function withImageHosts(config, previews) {
+  const patterns = config.images?.remotePatterns ?? [];
+  const known = new Set(patterns.map(p => p.hostname));
+  const added = [...new Set(Object.values(previews).flatMap(p => p.image?.startsWith('https://') ? [new URL(p.image).hostname] : []))].filter(h => !known.has(h)).sort();
+  return { ...config, images: { ...config.images, remotePatterns: [...patterns, ...added.map(hostname => ({ protocol: 'https', hostname }))] } };
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const source = fs.readFileSync(new URL('../src/inspiration-data.ts', import.meta.url), 'utf8');
   const from = source.indexOf('[', source.indexOf('export const inspirationItems = '));
@@ -44,4 +53,6 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     } catch (e) { if (stored[i.id]) out[i.id] = stored[i.id]; console.error(`fail ${i.id} (${e.message})`); }
   }
   fs.writeFileSync(new URL('../src/link-previews.json', import.meta.url), `${JSON.stringify(out, null, 2)}\n`);
+  const vercel = new URL('../../vercel.json', import.meta.url);
+  fs.writeFileSync(vercel, `${JSON.stringify(withImageHosts(JSON.parse(fs.readFileSync(vercel, 'utf8')), out), null, 2)}\n`);
 }

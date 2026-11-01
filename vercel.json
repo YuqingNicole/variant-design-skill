@@ -54,5 +54,97 @@
       "destination": "/",
       "permanent": true
     }
-  ]
+  ],
+  "images": {
+    "sizes": [
+      640,
+      1280
+    ],
+    "formats": [
+      "image/webp"
+    ],
+    "minimumCacheTTL": 604800,
+    "remotePatterns": [
+      {
+        "protocol": "https",
+        "hostname": "a-us.storyblok.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "a.storyblok.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "assets.asana.biz"
+      },
+      {
+        "protocol": "https",
+        "hostname": "assets.teenage.engineering"
+      },
+      {
+        "protocol": "https",
+        "hostname": "cdn.sanity.io"
+      },
+      {
+        "protocol": "https",
+        "hostname": "framerusercontent.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "help.figma.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "images.ctfassets.net"
+      },
+      {
+        "protocol": "https",
+        "hostname": "impeccable.style"
+      },
+      {
+        "protocol": "https",
+        "hostname": "linear.app"
+      },
+      {
+        "protocol": "https",
+        "hostname": "next.ramp.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "obsidian.md"
+      },
+      {
+        "protocol": "https",
+        "hostname": "plausible.io"
+      },
+      {
+        "protocol": "https",
+        "hostname": "ptht05hbb1ssoooe.public.blob.vercel-storage.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "res.cloudinary.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "resend.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "v0.app"
+      },
+      {
+        "protocol": "https",
+        "hostname": "www.notion.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "www.pentagram.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "www.raycast.com"
+      }
+    ]
+  }
 }

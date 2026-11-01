@@ -19,6 +19,12 @@ const mime = { ".css": "text/css", ".html": "text/html", ".js": "text/javascript
 createServer(async (request, response) => {
   if (await handleApi(request, response)) return;
   const pathname = decodeURIComponent(new URL(request.url || "/", "http://localhost").pathname);
+  // Vercel resizes remote previews at /_vercel/image; locally the original is served instead.
+  if (pathname === "/_vercel/image") {
+    const source = new URL(request.url, "http://localhost").searchParams.get("url") || "";
+    response.writeHead(source.startsWith("https://") ? 302 : 400, source.startsWith("https://") ? { location: source } : {});
+    return response.end();
+  }
   const candidate = normalize(join(root, pathname === "/" ? "index.html" : pathname));
   // Prerendered routes are directories with index.html; everything else falls back to the app shell.
   const page = candidate.startsWith(root) && existsSync(candidate) ? (statSync(candidate).isFile() ? candidate : existsSync(join(candidate, "index.html")) ? join(candidate, "index.html") : null) : null;

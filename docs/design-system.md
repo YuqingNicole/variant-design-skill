@@ -137,7 +137,7 @@
 | 筛选按钮 | `.content-filters button` | 4px 边框按钮，选中态由 `aria-pressed` 表示（灵感页以外的内容页） |
 | 筛选胶囊 | `.insp-pills button` | 32px 高，`--site-surface` 底，无边框；选中是品牌绿底、纸色字，由 `aria-pressed` 表示 |
 | 缩略图卡片 | `.insp-card` | 静止时只有缩略图，名称和一句研究要点写在链接的 `aria-label` 里。悬停或键盘聚焦时显出：左下"分类 · 标签 仅链接"、右上"加入参考包"、右下"打开来源"。图标用 16×16 线性 SVG，不用字形符号 |
-| 链接预览 | `Thumb`、`LinkPreview`（`InspirationPage.tsx`） | 网站条目的缩略图就是该网站为分享链接公开的预览图（og:image），详情里再配它自己的标题和描述；X 帖子条目显示帖子原文。图片从原站加载，加载失败时换成分析卡 |
+| 链接预览 | `Thumb`、`LinkPreview`（`InspirationPage.tsx`） | 网站条目的缩略图就是该网站为分享链接公开的预览图（og:image），详情里再配它自己的标题和描述；X 帖子条目显示帖子原文。图片取自原站、经 Vercel 缩小，缩小失败时直接加载原图，再失败换成分析卡 |
 | 缩略图标签 | `.insp-thumb-chip` | 预览图铺满卡片时，左下角常显「名称 分类 · 标签 仅链接」 |
 | 分析卡 | `Thumb`（`InspirationPage.tsx`） | 链接没有公开预览、或预览图加载失败时的缩略图。我们自己画的：衬线名称、一句研究要点、按分类画的结构草图。每个分类 3 种草图、2 种底色，按 id 选，相邻卡片不重复 |
 | 详情 | `.insp-detail` | 工具条（关闭或"全部参考"、加入参考包、上一个 / 下一个）→ "分类 · 标签 仅链接" → 衬线标题 → 域名 → `dl`：研究什么 / 用在哪里 / 出处（链接）/ 设计者 / 还不知道 → "生成参考指令"。弹层用原生 `<dialog>` 的 `showModal()`，焦点锁定和 Esc 关闭由浏览器负责；← → 切换上一个和下一个 |
@@ -153,7 +153,7 @@
 - **诚实**：不知道的事直接写出来，比如"设计者：未知""登录后操作未实测"。没测过的东西不写成"支持"。
 - **第三方内容**：只放链接和我们自己写的研究笔记，不复制对方的文案、商标和截图。
 - **X 帖子（Best practice）**：用 `node website/scripts/x-post.mjs <帖子链接> --tag <标签>` 通过 X 官方 oEmbed 生成草稿，只记作者、日期、语言和正文；看过原帖后再手写「研究什么」「用在哪里」，草稿里的 TODO 不能留下（单元测试会查）。X 帖子只出现在 Best practice 这一个 tab 里，不进「全部」网格。卡片就是帖子视频本身：静音、循环，只在可见时播放，减少动效时停在封面；左下角是作者头像，右上收藏、右下打开原帖。视频地址、封面和头像由 `node website/scripts/x-media.mjs` 从 X 嵌入组件背后的接口（`cdn.syndication.twimg.com`，未公开文档）读出，写进 `website/src/x-media.json`，不下载、不转存，页面直接从 video.twimg.com 播放。video.twimg.com 拒绝带其他网站来源的请求，所以灵感页在播放前把文档的 referrer 策略设为 `no-referrer`。这条路径是维护者 2026-11-01 明确选择的例外，等于绕过 X 的防盗链，X 随时可能堵住；失败时卡片退回封面图。详情页仍用 X 官方嵌入组件，说明里写明 X 可能记录这次访问。嵌入加载完成前先显示存下来的正文；连不上 x.com 时保留正文和「在 X 上打开」。不下载、不托管帖子里的媒体，也不另写演示复刻帖子里的效果。
-- **网站缩略图**：直接用链接自己的内容，不自己再画或再写一遍对方的页面。`node website/scripts/link-preview.mjs` 对每个链接请求一次，读出对方为分享链接公开的 og:/twitter: 预览（图片、标题、描述），写进 `website/src/link-previews.json`；页面只存图片地址，图片从原站加载（`referrerPolicy=no-referrer`），不下载、不转存、不裁切。没有预览的（2026-11-01：Lovable、Aesop 拒绝脚本访问，Nothing 没有 og:image）和加载失败的显示分析卡。不嵌入整站：多数站点用 X-Frame-Options 或 frame-ancestors 禁止被嵌入。不自己截图或录屏。
+- **网站缩略图**：直接用链接自己的内容，不自己再画或再写一遍对方的页面。`node website/scripts/link-preview.mjs` 对每个链接请求一次，读出对方为分享链接公开的 og:/twitter: 预览（图片、标题、描述），写进 `website/src/link-previews.json`；页面只存图片地址，仓库里不下载、不转存、不裁切；显示时经 Vercel 图片服务（`/_vercel/image`，`vercel.json` 的 `images`）按显示尺寸缩小成 WebP 并缓存，卡片 640px、详情 1280px（2026-11-01 维护者为加载速度选定）。缩小失败时直接从原站加载（`referrerPolicy=no-referrer`）。`link-preview.mjs` 会把新图片的域名同步进 `remotePatterns`。没有预览的（2026-11-01：Lovable、Aesop 拒绝脚本访问，Nothing 没有 og:image）和加载失败的显示分析卡。不嵌入整站：多数站点用 X-Frame-Options 或 frame-ancestors 禁止被嵌入。不自己截图或录屏。
 
 ## 9. 不要做
 
