@@ -5,6 +5,7 @@ import { transition } from './view-transition';
 import { PaperWidgets } from './PaperWidgets';
 import { ReferenceStudy, StudyFrame, referenceStudies } from './ReferenceStudies';
 import { XPost, type Post } from './XPost';
+import type { Locale } from './i18n/locales';
 import { inspirationItems, inspirationSources, inspirationTopics } from './inspiration-data';
 import './content-pages.css';
 import './inspiration.css';
@@ -23,11 +24,11 @@ const sketches:Record<string,number[]>={landing:[4,3,5],product:[6,5,7],flow:[3,
 const variantOf=(id:string)=>[...id].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7)%3;
 const rights=(item:Item,zh:boolean)=>shotOf(item)?<em className="inspiration-press">{zh?'官方素材':'Press kit'}</em>:<em className="inspiration-link-only">{zh?'仅链接':'Link only'}</em>;
 const rightsText=(item:Item,zh:boolean)=>shotOf(item)?(zh?'官方素材':'Press kit'):(zh?'仅链接':'Link only');
-function Thumb({item,zh,play=false}:{item:Item;zh:boolean;play?:boolean}){const ix=zh?0:1;const shot=shotOf(item);
+function Thumb({item,locale,play=false}:{item:Item;locale:Locale;play?:boolean}){const zh=locale==='zh';const ix=zh?0:1;const shot=shotOf(item);
  const chip=<small className="insp-thumb-chip"><b>{item.name}</b> {labels[item.category][ix]} · {item.tag} {rights(item,zh)}</small>;
  if(shot)return <div className="insp-thumb insp-thumb-media" aria-hidden="true"><img src={shot.src} width={shot.width} height={shot.height} alt="" loading="lazy" className={shot.width/shot.height>2?'contain':''}/>{chip}</div>;
- if(item.id==='paper-widgets')return <div className="insp-thumb insp-thumb-media" aria-hidden="true"><StudyFrame label={item.focus[ix]} play={play}><PaperWidgets zh={zh} paused={!play}/></StudyFrame>{chip}</div>;
- if(referenceStudies[item.id])return <div className="insp-thumb insp-thumb-media" aria-hidden="true"><ReferenceStudy id={item.id} zh={zh} play={play}/>{chip}</div>;
+ if(item.id==='paper-widgets')return <div className="insp-thumb insp-thumb-media" aria-hidden="true"><StudyFrame label={item.focus[ix]} play={play}><PaperWidgets locale={locale} paused={!play}/></StudyFrame>{chip}</div>;
+ if(referenceStudies[item.id])return <div className="insp-thumb insp-thumb-media" aria-hidden="true"><ReferenceStudy id={item.id} locale={locale} play={play}/>{chip}</div>;
  const v=variantOf(item.id);return <div className={`insp-thumb insp-thumb-${item.category} insp-tint-${v%2}`} aria-hidden="true"><small className="insp-thumb-tag">{labels[item.category][ix]} · {item.tag} {rights(item,zh)}</small><b>{item.name}</b><span>{item.focus[ix]}</span><div className={`insp-sketch insp-sk-${item.category}-${v}`}>{Array.from({length:(sketches[item.category]??[4,4,4])[v]},(_,i)=><i key={i}/>)}</div></div>}
 const Icon=({d}:{d:string})=><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={d}/></svg>;
 const icons={out:'M5 11 11 5M6 5h5v5',save:'M4 2.5h8v11L8 10.5l-4 3z',close:'M4 4l8 8M12 4l-8 8',prev:'M10 3 5 8l5 5',next:'M6 3l5 5-5 5',search:'M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM14 14l-3.5-3.5'};
@@ -83,11 +84,11 @@ export function InspirationPage({detail=''}:{detail?:string}){
     <dl><dt>{zh?'研究什么':'Study'}</dt><dd>{item.focus[ix]}</dd><dt>{zh?'用在哪里':'Apply'}</dt><dd>{item.application[ix]}</dd><dt>{zh?'出处':'Source'}</dt><dd><a href={item.url} target="_blank" rel="noreferrer">{item.publisher}</a> · {kinds[item.kind][ix]} · {item.checkedAt}</dd><dt>{zh?'设计者':'Designer'}</dt><dd>{item.designer ?? (zh?'未知':'Unknown')}</dd><dt>{zh?'还不知道':'Unknown'}</dt><dd>{unknowns(item,zh)}</dd>{shot&&<><dt>{zh?'图片来源与条款':'Image source and terms'}</dt><dd><a href={shot.permission.url} target="_blank" rel="noreferrer">{shot.permission.grantedBy}</a> · {zh?'核对于':'checked'} {shot.permission.grantedAt}<br/>“{shot.permission.terms}”</dd></>}</dl>
     <button type="button" className="insp-detail-brief" onClick={()=>brief(item)}>{zh?'生成参考指令':'Create brief'}</button>
    </div>
-   <div className="insp-detail-visual">{postOf(item)&&<XPost post={postOf(item)!} url={item.url} zh={zh}/>}
-    {item.id==='paper-widgets'&&<figure className="inspiration-demo"><PaperWidgets zh={zh}/><figcaption>{zh?'我们按原帖动效思路自己写的演示，可点按；不含原作者的视频、代码或 prompt。':'Our own demo of the post\'s motion idea, interactive; none of the author\'s video, code or prompt.'}</figcaption></figure>}
+   <div className="insp-detail-visual">{postOf(item)&&<XPost post={postOf(item)!} url={item.url} locale={language}/>}
+    {item.id==='paper-widgets'&&<figure className="inspiration-demo"><PaperWidgets locale={language}/><figcaption>{zh?'我们按原帖动效思路自己写的演示，可点按；不含原作者的视频、代码或 prompt。':'Our own demo of the post\'s motion idea, interactive; none of the author\'s video, code or prompt.'}</figcaption></figure>}
     {shot&&<figure className="inspiration-demo insp-shot"><img src={shot.src} width={shot.width} height={shot.height} alt={shot.alt[ix]}/><figcaption>{zh?`图片来自 ${item.publisher} 的官方媒体素材，按其公开条款使用，未作修改。本站与 ${item.publisher} 没有合作或赞助关系。`:`Image from ${item.publisher}'s official press kit, used under its published terms, unaltered. This site has no partnership with or sponsorship from ${item.publisher}.`}</figcaption></figure>}
-    {referenceStudies[item.id]&&<figure className="inspiration-demo"><ReferenceStudy id={item.id} zh={zh} play interactive={Boolean(referenceStudies[item.id].interactive)}/><figcaption>{referenceStudies[item.id].title[ix]}。{zh?'我们按原站交互思路自己写的演示，占位内容，不含对方的代码、文案或素材。':' Our own study of the source\'s interaction with placeholder content; none of its code, copy or assets.'}</figcaption></figure>}
-    {item.id!=='paper-widgets'&&!shot&&!referenceStudies[item.id]&&<Thumb item={item} zh={zh}/>}
+    {referenceStudies[item.id]&&<figure className="inspiration-demo"><ReferenceStudy id={item.id} locale={language} play interactive={Boolean(referenceStudies[item.id].interactive)}/><figcaption>{referenceStudies[item.id].title[ix]}。{zh?'我们按原站交互思路自己写的演示，占位内容，不含对方的代码、文案或素材。':' Our own study of the source\'s interaction with placeholder content; none of its code, copy or assets.'}</figcaption></figure>}
+    {item.id!=='paper-widgets'&&!shot&&!referenceStudies[item.id]&&<Thumb item={item} locale={language}/>}
     <a className="content-button insp-visit" href={item.url} target="_blank" rel="noreferrer">{zh?'访问原站':'Visit source'}<Icon d={icons.out}/></a></div>
   </article>};
  const tail=<>
@@ -113,7 +114,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
    {activeTopic&&<p className="inspiration-topic">{activeTopic.task[ix]} {zh?`链接于 ${activeTopic.linksCheckedAt} 复查可访问；研究笔记的观察日期见各条。`:`Links rechecked as reachable on ${activeTopic.linksCheckedAt}; each note shows its own observation date.`}</p>}
    <p className="inspiration-count" role="status">{results.length} {zh?'个参考':'references'}</p>
    <ul className="inspiration-grid">{shown.map(item=><li key={item.id} className="insp-card" style={{viewTransitionName:`ref-${item.id}`}} onPointerEnter={()=>setHovered(item.id)} onPointerLeave={()=>setHovered(h=>h===item.id?'':h)} onFocus={()=>setHovered(item.id)} onBlur={()=>setHovered(h=>h===item.id?'':h)}>
-    <a className="insp-card-open" href={`/inspiration/${item.id}`} aria-label={`${item.name}：${item.focus[ix]}（${labels[item.category][ix]} · ${rightsText(item,zh)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();show(item.id,'modal')}}><Thumb item={item} zh={zh} play={hovered===item.id}/></a>
+    <a className="insp-card-open" href={`/inspiration/${item.id}`} aria-label={`${item.name}：${item.focus[ix]}（${labels[item.category][ix]} · ${rightsText(item,zh)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();show(item.id,'modal')}}><Thumb item={item} locale={language} play={hovered===item.id}/></a>
     <button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${selection[item.id]?(zh?'移出参考包':'Remove from pack'):(zh?'加入参考包':'Add to pack')}：${item.name}`}><Icon d={icons.save}/></button>
     <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${zh?'打开来源':'Open source'}：${item.name}`}><Icon d={icons.out}/></a>
    </li>)}</ul>

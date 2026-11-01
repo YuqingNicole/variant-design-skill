@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Check, still, useStep, type Copy } from './study-kit';
+import type { Locale } from './i18n/locales';
 import { moreStudies } from './ReferenceStudiesMore';
 import './reference-studies.css';
 // Our own motion studies of the one interaction that carries each reference's homepage. Placeholder content,
@@ -68,5 +69,6 @@ export const referenceStudies:Record<string,{title:Copy;interactive?:boolean;ren
 };
 // Frames another demo (such as PaperWidgets) on the same scaled stage.
 export function StudyFrame({label,play,children}:{label:string;play:boolean;children:ReactNode}){return <Stage label={label} interactive={false} play={play}>{children}</Stage>}
-export function ReferenceStudy({id,zh,play,interactive=false}:{id:string;zh:boolean;play:boolean;interactive?:boolean}){const study=referenceStudies[id];if(!study)return null;const ix=zh?0:1;
+// Studies still index their copy by position (0 = zh, 1 = en); RFC-005 P1 moves them to Localized next.
+export function ReferenceStudy({id,locale,play,interactive=false}:{id:string;locale:Locale;play:boolean;interactive?:boolean}){const study=referenceStudies[id];if(!study)return null;const ix=locale==='en'?1:0;
  return <Stage label={study.title[ix]} interactive={interactive} play={play}>{study.render({play,ix,interactive})}</Stage>}
