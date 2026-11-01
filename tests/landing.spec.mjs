@@ -450,7 +450,8 @@ test('a site detail shows the preview the link publishes and falls back when its
  await page.goto('/inspiration/raycast');
  const shot=page.locator('.insp-detail-visual .insp-shot img');await expect(shot).toHaveAttribute('src',previews.raycast.image);await expect(shot).toHaveAttribute('alt',previews.raycast.title);
  await expect(page.locator('.insp-shot figcaption')).toContainText(previews.raycast.description);await expect(page.locator('.insp-shot figcaption')).toContainText('www.raycast.com 为分享链接公开的预览');
- await page.goto('/inspiration/ramp');await expect(page.locator('.insp-shot img')).toHaveCount(0);await expect(page.locator('.insp-shot figcaption')).toContainText('图片暂时无法加载');
+ await page.goto('/inspiration/ramp');await expect(page.locator('.insp-shot img')).toHaveCount(0);await expect(page.locator('.insp-shot figcaption')).toContainText('图片暂时无法加载');await expect(page.locator('.insp-shot > div.insp-thumb b')).toHaveText('Ramp');
+ await page.goto('/inspiration/raycast');await page.getByRole('button',{name:'下一个'}).click();await expect(page).toHaveURL(/\/inspiration\/resend$/);await expect(page.locator('.insp-shot img')).toHaveAttribute('src',previews.resend.image);await expect(page.locator('.insp-shot figcaption span')).toHaveAttribute('lang',previews.resend.lang);
  await page.goto('/inspiration/aesop');await expect(page.locator('.insp-detail-visual > div.insp-thumb b')).toHaveText('Aesop');
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
 });

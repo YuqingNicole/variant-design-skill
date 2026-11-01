@@ -8,7 +8,7 @@ type Copy=[string,string];
 const sources:{id:string;name:Copy;rule:Copy;images:Copy}[]=[
  {id:'own',name:['自产作品','Our own work'],rule:['用 Variant Design 在示例项目里实际跑出来的方向，附带产出记录作为证据。','Directions actually produced with Variant Design in a sample project, with the output history as evidence.'],images:['可以托管','Hosted']},
  {id:'permission',name:['授权投稿','Licensed submissions'],rule:['作者明确授权在本站展示的作品。授权记录随作品一起保存。','Work whose author has granted permission to show it here. The permission is stored with the entry.'],images:['按授权范围托管','Hosted within the granted scope']},
- {id:'link-only',name:['外部参考','External references'],rule:['公开作品，只有我们自己写的分析和原站链接。','Public work, shown only through our own notes and a link to the source.'],images:['不托管对方的截图、商标或素材；缩略图是对方为分享链接公开的预览图，从原站加载','None of their screenshots, marks or assets are hosted; the thumbnail is the preview the site publishes for shared links, loaded from the site itself']},
+ {id:'link-only',name:['外部参考','External references'],rule:['公开作品，只有我们自己写的分析和原站链接。','Public work, shown only through our own notes and a link to the source.'],images:['不托管对方的截图、商标或素材；网站有公开的分享预览图时，缩略图就用它，从原站加载；X 帖子显示帖子原文；两者都没有时显示我们写的分析卡','None of their screenshots, marks or assets are hosted. When a site publishes a preview image for shared links, the thumbnail uses it, loaded from the site itself; an X post shows its text; otherwise the thumbnail is our own analysis card']},
 ];
 const permission:Copy[]=[
  ['授权人姓名或团队名称，以及你有权授权这件作品的说明','Your name or team, and why you hold the rights to grant permission'],

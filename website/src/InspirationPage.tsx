@@ -14,7 +14,7 @@ type Item=typeof inspirationItems[number];
 // Thumbnails map the link itself: an X post shows its own text and embed; a site shows the preview it publishes
 // for shared links (og:image, title, description; scripts/link-preview.mjs), loaded from its own server. A link
 // without a preview, or whose image fails to load, falls back to our analysis card.
-type Preview={image:string;title:string;description:string;fetchedAt:string};
+type Preview={image:string;title:string;description:string;lang:string;fetchedAt:string};
 const previewOf=(item:Item):Preview|undefined=>(linkPreviews as Record<string,Preview>)[item.id];
 const labels:Record<string,[string,string]>={landing:['Landing','Landing'],product:['产品界面','Product'],flow:['关键流程','Flow'],motion:['动效','Motion'],practice:['Best practice','Best practice']};
 const postOf=(item:Item)=>(item as Item&{post?:Post}).post;
@@ -26,9 +26,11 @@ function Thumb({item,locale}:{item:Item;locale:Locale}){const zh=locale==='zh';c
  const chip=<small className="insp-thumb-chip"><b>{item.name}</b> {labels[item.category][ix]} · {item.tag} {rights(zh)}</small>;
  if(post)return <div className="insp-thumb insp-thumb-post" aria-hidden="true"><small className="insp-thumb-tag">{post.author} @{post.handle} · {post.date}</small><b lang={post.lang}>{post.text}</b>{chip}</div>;
  if(preview&&!failed)return <div className="insp-thumb insp-thumb-media" aria-hidden="true"><img src={preview.image} alt="" loading="lazy" referrerPolicy="no-referrer" onError={()=>setFailed(true)}/>{chip}</div>;
- const v=variantOf(item.id);return <div className={`insp-thumb insp-thumb-${item.category} insp-tint-${v%2}`} aria-hidden="true"><small className="insp-thumb-tag">{labels[item.category][ix]} · {item.tag} {rights(zh)}</small><b>{item.name}</b><span>{item.focus[ix]}</span><div className={`insp-sketch insp-sk-${item.category}-${v}`}>{Array.from({length:(sketches[item.category]??[4,4,4])[v]},(_,i)=><i key={i}/>)}</div></div>}
+ return <AnalysisCard item={item} zh={zh}/>}
+function AnalysisCard({item,zh}:{item:Item;zh:boolean}){const ix=zh?0:1;const v=variantOf(item.id);return <div className={`insp-thumb insp-thumb-${item.category} insp-tint-${v%2}`} aria-hidden="true"><small className="insp-thumb-tag">{labels[item.category][ix]} · {item.tag} {rights(zh)}</small><b>{item.name}</b><span>{item.focus[ix]}</span><div className={`insp-sketch insp-sk-${item.category}-${v}`}>{Array.from({length:(sketches[item.category]??[4,4,4])[v]},(_,i)=><i key={i}/>)}</div></div>}
 function LinkPreview({item,preview,zh}:{item:Item;preview:Preview;zh:boolean}){const [failed,setFailed]=useState(false);const host=new URL(item.url).hostname;
- return <figure className="inspiration-demo insp-shot">{!failed&&<img src={preview.image} alt={preview.title} referrerPolicy="no-referrer" onError={()=>setFailed(true)}/>}<figcaption><b>{preview.title}</b>{preview.description&&<> — {preview.description}</>}<br/>{zh?`${host} 为分享链接公开的预览，图片从原站加载，${preview.fetchedAt} 读取。${failed?'图片暂时无法加载。':''}`:`The preview ${host} publishes for shared links; the image loads from the source, read ${preview.fetchedAt}.${failed?' The image could not load right now.':''}`}</figcaption></figure>}
+ const lang=preview.lang||undefined;
+ return <figure className="inspiration-demo insp-shot">{failed?<AnalysisCard item={item} zh={zh}/>:<img src={preview.image} alt={preview.title} lang={lang} referrerPolicy="no-referrer" onError={()=>setFailed(true)}/>}<figcaption><span lang={lang}><b>{preview.title}</b>{preview.description&&<> — {preview.description}</>}</span><br/>{zh?`${host} 为分享链接公开的预览，图片从原站加载，${preview.fetchedAt} 读取。${failed?'图片暂时无法加载。':''}`:`The preview ${host} publishes for shared links; the image loads from the source, read ${preview.fetchedAt}.${failed?' The image could not load right now.':''}`}</figcaption></figure>}
 const Icon=({d}:{d:string})=><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={d}/></svg>;
 const icons={out:'M5 11 11 5M6 5h5v5',save:'M4 2.5h8v11L8 10.5l-4 3z',close:'M4 4l8 8M12 4l-8 8',prev:'M10 3 5 8l5 5',next:'M6 3l5 5-5 5',search:'M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM14 14l-3.5-3.5'};
 const pageSize=24;
@@ -83,7 +85,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
     <dl><dt>{zh?'研究什么':'Study'}</dt><dd>{item.focus[ix]}</dd><dt>{zh?'用在哪里':'Apply'}</dt><dd>{item.application[ix]}</dd><dt>{zh?'出处':'Source'}</dt><dd><a href={item.url} target="_blank" rel="noreferrer">{item.publisher}</a> · {kinds[item.kind][ix]} · {item.checkedAt}</dd><dt>{zh?'设计者':'Designer'}</dt><dd>{item.designer ?? (zh?'未知':'Unknown')}</dd><dt>{zh?'还不知道':'Unknown'}</dt><dd>{unknowns(item,zh)}</dd></dl>
     <button type="button" className="insp-detail-brief" onClick={()=>brief(item)}>{zh?'生成参考指令':'Create brief'}</button>
    </div>
-   <div className="insp-detail-visual">{post?<XPost post={post} url={item.url} locale={language}/>:preview?<LinkPreview item={item} preview={preview} zh={zh}/>:<Thumb item={item} locale={language}/>}
+   <div className="insp-detail-visual">{post?<XPost key={item.id} post={post} url={item.url} locale={language}/>:preview?<LinkPreview key={item.id} item={item} preview={preview} zh={zh}/>:<Thumb key={item.id} item={item} locale={language}/>}
     <a className="content-button insp-visit" href={item.url} target="_blank" rel="noreferrer">{zh?'访问原站':'Visit source'}<Icon d={icons.out}/></a></div>
   </article>};
  const tail=<>
