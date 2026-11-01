@@ -22,7 +22,7 @@
 .library-source a{color:inherit}
 .library-detail{padding-bottom:80px}
 .library-brief{border-left:2px solid #b9c7ad;padding:4px 0 4px 18px;margin-bottom:32px;max-width:760px}
-.library-brief b{font:11px var(--font-mono);letter-spacing:.1em;color:#7a846f}
+.library-brief b{font:11px var(--font-mono);letter-spacing:.1em;color:var(--site-muted)}
 .library-brief p{margin:6px 0 0;line-height:1.8}
 .library-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
 .library-tabs button{display:flex;align-items:center;gap:10px;border:1px solid #ced6c4;border-radius:4px;background:transparent;color:#4b5b40;padding:10px 16px;font:inherit;font-size:14px;cursor:pointer}
@@ -35,7 +35,7 @@
 .library-figure figcaption{margin-top:10px;font-size:13px;color:var(--site-muted)}
 .library-figure a{color:#456133}
 .library-comparison{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin:32px 0}
-.library-comparison dt{font:11px var(--font-mono);letter-spacing:.1em;color:#7a846f;margin-bottom:8px}
+.library-comparison dt{font:11px var(--font-mono);letter-spacing:.1em;color:var(--site-muted);margin-bottom:8px}
 .library-comparison dd{margin:0;line-height:1.75}
 .library-try{border:1px solid #b9c7ad;border-radius:6px;padding:22px 24px;margin:0 0 28px;max-width:860px;background:#fbfcf8}
 .library-try h2{font-size:20px;font-weight:500;margin:0 0 8px}
@@ -57,9 +57,9 @@
 @media(prefers-reduced-motion:reduce){.library-card-image img{transition:none}}
 .skills-entry{border-top:1px solid var(--site-line);padding:28px 0;max-width:860px}
 .skills-entry h2{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;font-size:26px;font-weight:500;margin:0 0 10px}
-.skills-entry h2 small{font:12px var(--font-mono);color:#7a846f}
+.skills-entry h2 small{font:12px var(--font-mono);color:var(--site-muted)}
 .skills-entry>p{line-height:1.8}
-.skills-entry dt{font:11px var(--font-mono);letter-spacing:.1em;color:#7a846f;margin-top:18px}
+.skills-entry dt{font:11px var(--font-mono);letter-spacing:.1em;color:var(--site-muted);margin-top:18px}
 .skills-entry dd{margin:6px 0 0;line-height:1.75}
 .skills-entry code{display:block;overflow-x:auto;white-space:nowrap;background:#fff;border:1px solid #ced6c4;border-radius:4px;padding:10px 12px;font:13px var(--font-mono);margin-bottom:8px}
 .skills-entry dd span{font-size:13px;color:var(--site-muted)}

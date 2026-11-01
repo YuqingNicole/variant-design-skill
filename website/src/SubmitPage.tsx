@@ -30,7 +30,7 @@ export function SubmitPage(){
  const [language,setLanguage]=useState<Language>(()=>localStorage.getItem('variant-language')==='en'?'en':'zh');const zh=language==='zh',ix=zh?0:1;
  useEffect(()=>{document.title=zh?'投稿与授权 — Variant Design':'Submissions & permissions — Variant Design';document.documentElement.lang=zh?'zh-CN':'en';localStorage.setItem('variant-language',language);document.querySelector('meta[name="description"]')?.setAttribute('content',zh?'Variant Design 方向库的收录、授权与撤下规则。':'How the Variant Design direction library accepts, licenses and removes work.');},[language,zh]);
  return <main className="content-page submit-page"><SiteHeader language={language} onLanguage={()=>setLanguage(zh?'en':'zh')}/>
-  <header className="content-hero site-shell"><p className="content-kicker">SUBMISSIONS / PERMISSIONS</p><h1>{zh?'投稿与授权':'Submissions & permissions'}</h1><p>{zh?'方向库只展示我们自己做的作品、作者授权的作品，以及只附链接的外部参考。':'The direction library shows our own work, work its authors have licensed, and external references shown only as links.'}</p></header>
+  <header className="content-hero site-shell"><h1>{zh?'投稿与授权':'Submissions & permissions'}</h1><p>{zh?'方向库只展示我们自己做的作品、作者授权的作品，以及只附链接的外部参考。':'The direction library shows our own work, work its authors have licensed, and external references shown only as links.'}</p></header>
   <section className="content-reading site-shell">
    <h2>{zh?'三类作品':'Three kinds of entries'}</h2>
    <ul className="submit-sources">{sources.map(s=><li key={s.id} data-source={s.id}><strong>{s.name[ix]}</strong> — {s.rule[ix]} <em>{s.images[ix]}</em></li>)}</ul>

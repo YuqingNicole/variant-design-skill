@@ -106,11 +106,11 @@ test('direction artwork switches accessibly and reduced motion cancels active en
 test('canvas homepage opens real directions and preserves the guided handoff across language and viewport changes', async ({page}) => {
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.goto('/about');
-  await expect(page.locator('h1')).toContainText('从看见可能开始');
+  await expect(page.locator('h1')).toContainText('三个能运行的方向');
   await page.locator('.canvas-sidebar button').first().click();
   await expect(page.frameLocator('.paper-preview iframe').locator('[data-showcase-direction]')).toHaveAttribute('data-showcase-direction','A');
   await page.getByRole('button',{name:'切换到英文'}).click();
-  await expect(page.locator('h1')).toContainText('More possibilities.');
+  await expect(page.locator('h1')).toContainText('three directions that run.');
   await expect(page.frameLocator('.paper-preview iframe').locator('html')).toHaveAttribute('lang','en');
   await page.locator('.paper-actions a').first().click();
   await expect(page).toHaveURL(/\/docs$/);
