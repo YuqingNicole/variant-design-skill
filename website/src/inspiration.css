@@ -138,3 +138,12 @@ div.insp-thumb.insp-thumb-media{display:block;padding:0;background:var(--site-su
 .inspiration-press{font-style:normal;color:var(--site-brand);margin-left:var(--space-1)}
 .insp-shot img{display:block;width:100%;height:auto;border:1px solid var(--site-line);border-radius:var(--radius-panel);background:var(--site-surface)}
 .insp-detail-visual .rs-frame{border:1px solid var(--site-line);border-radius:var(--radius-panel)}
+/* A shared X post: its text first, X's own embed on request. */
+.x-post{margin:0;display:grid;gap:var(--space-3)}
+.x-post blockquote{margin:0;padding:var(--space-5);border:1px solid var(--site-line);border-radius:var(--radius-panel);background:var(--site-card)}
+.x-post blockquote p{margin:0 0 var(--space-3);font-size:18px;line-height:1.5;white-space:pre-line}
+.x-post blockquote footer{font-size:13px;color:var(--site-muted)}.x-post blockquote b{font-weight:500;color:var(--site-ink)}
+.x-post-embed{display:flex;justify-content:center;min-height:0}.x-post-embed[hidden]{display:none}
+.x-post figcaption{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-3);font-size:12px;color:var(--site-muted)}
+.x-post figcaption button{height:32px;padding:0 var(--space-4);border:1px solid var(--site-line);border-radius:var(--radius-pill);background:var(--site-card);color:var(--site-ink);font-size:13px}
+.x-post figcaption a{color:var(--site-brand);text-underline-offset:3px}
