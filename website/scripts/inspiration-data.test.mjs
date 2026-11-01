@@ -13,9 +13,20 @@ test('every external reference records provenance; unknown designers stay null',
     assert.equal(new URL(i.url).protocol, 'https:', i.id);
     assert.equal(i.source, 'link-only', i.id);
     assert.ok(i.publisher?.trim(), i.id);
-    assert.ok(['official-site', 'product-page', 'documentation'].includes(i.kind), i.id);
+    assert.ok(['official-site', 'product-page', 'documentation', 'social-post'].includes(i.kind), i.id);
     assert.ok(i.designer === null || i.designer.trim(), i.id);
     assert.match(i.checkedAt, date, i.id);
+  }
+});
+
+test('a source screenshot ships only with a recorded permission and as a local file', () => {
+  for (const i of items.filter(i => i.media)) {
+    const { src, width, height, alt, permission } = i.media;
+    assert.match(src, /^\/inspiration-media\/[a-z0-9-]+\.(webp|png|jpg)$/, i.id);
+    assert.ok(fs.existsSync(new URL(`../public${src}`, import.meta.url)), i.id);
+    assert.ok(width > 0 && height > 0 && alt.length === 2, i.id);
+    assert.ok(permission?.grantedBy?.trim() && permission?.terms?.trim(), i.id);
+    assert.match(permission.grantedAt, date, i.id);
   }
 });
 
