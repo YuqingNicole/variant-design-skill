@@ -10,7 +10,7 @@
 
 ## X 设计样本收集箱
 
-把链接贴在这里，每条写一句好在哪。代理会把它加到灵感页：带视频的进 Best practice 自动播放，其他用 X 官方嵌入。加完就从这里删掉。
+把链接贴在这里，每条写一句好在哪。代理先把它登记进 `website/src/inspiration-data.ts`（带 `post` 字段），再运行 `node website/scripts/x-media.mjs` 取视频并提交 `website/src/x-media.json`：带视频的进 Best practice 自动播放，其他用 X 官方嵌入。加完就从这里删掉。
 
 <!-- 格式：- https://x.com/<handle>/status/<id> — 好在哪（可选：分类） -->
 
