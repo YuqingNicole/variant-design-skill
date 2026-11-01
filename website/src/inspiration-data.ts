@@ -308,6 +308,138 @@ export const inspirationItems = [
     "mobile": "not-tested"
   },
   {
+    "id": "attio",
+    "name": "Attio",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://attio.com/",
+    "source": "link-only",
+    "focus": [
+      "分阶段标签切换，每个阶段配一张对应的产品画面",
+      "Tabbed stages, each paired with its own product view"
+    ],
+    "application": [
+      "按工作阶段讲清一个多功能产品",
+      "Explain a multi-stage product by stage of work"
+    ],
+    "publisher": "Attio Ltd",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-01",
+    "verification": "official-public-source",
+    "mobile": "not-tested"
+  },
+  {
+    "id": "ramp",
+    "name": "Ramp",
+    "category": "landing",
+    "tag": "Fintech",
+    "url": "https://ramp.com/",
+    "source": "link-only",
+    "focus": [
+      "客户数、节省金额和证言贯穿全页，首屏下方就是证据",
+      "Customer count, savings and quotes throughout, with proof right under the hero"
+    ],
+    "application": [
+      "需要先建立信任的金融或企业产品首页",
+      "Homepages for finance or enterprise products that must earn trust first"
+    ],
+    "publisher": "Ramp Business Corporation",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-01",
+    "verification": "official-public-source",
+    "mobile": "not-tested"
+  },
+  {
+    "id": "cal-com",
+    "name": "Cal.com",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://cal.com/",
+    "source": "link-only",
+    "focus": [
+      "用提醒卡片和可用时间模型直接展示产品在做什么",
+      "Reminder cards and an availability mock show the product at work"
+    ],
+    "application": [
+      "工具类产品的功能说明和三步上手",
+      "Feature explanation and three-step onboarding for utility products"
+    ],
+    "publisher": "Cal.com, Inc.",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-01",
+    "verification": "official-public-source",
+    "mobile": "not-tested"
+  },
+  {
+    "id": "rive",
+    "name": "Rive",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://rive.app/",
+    "source": "link-only",
+    "focus": [
+      "首屏给可复制的 agent 提示，并写明何时该用 HTML 而不是 Rive",
+      "A copyable agent prompt up front, and an honest note on when HTML beats Rive"
+    ],
+    "application": [
+      "开发者工具首页的第一步行动和产品边界",
+      "First action and honest product limits on a developer-tool homepage"
+    ],
+    "publisher": "Rive, Inc.",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-01",
+    "verification": "official-public-source",
+    "mobile": "not-tested"
+  },
+  {
+    "id": "tldraw",
+    "name": "tldraw SDK",
+    "category": "landing",
+    "tag": "Developer",
+    "url": "https://tldraw.dev/",
+    "source": "link-only",
+    "focus": [
+      "安装命令和代码片段做首屏，社区数字放在页面中段",
+      "Install command and code sample as the hero, community numbers mid-page"
+    ],
+    "application": [
+      "SDK 和开源项目的首页",
+      "Homepages for SDKs and open-source projects"
+    ],
+    "publisher": "tldraw",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-01",
+    "verification": "official-public-source",
+    "mobile": "not-tested"
+  },
+  {
+    "id": "pitch",
+    "name": "Pitch",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://pitch.com/",
+    "source": "link-only",
+    "focus": [
+      "首屏用真实幻灯片缩略图拼贴，先展示产出再解释",
+      "A mosaic of real slide thumbnails shows the output before any explanation"
+    ],
+    "application": [
+      "生成类产品先展示交付物",
+      "Show the deliverable first for generative products"
+    ],
+    "publisher": "Pitch Software GmbH",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-01",
+    "verification": "official-public-source",
+    "mobile": "not-tested"
+  },
+  {
     "id": "figma",
     "name": "Figma Design",
     "category": "product",
@@ -595,7 +727,7 @@ export const inspirationItems = [
   }
 ];
 
-// RFC-003 batch 1: one task-scoped topic. linksCheckedAt records that each link answered HTTP 200;
+// RFC-003: task-scoped topics. linksCheckedAt records that each link answered HTTP 200;
 // each item's checkedAt is when its note was compared with the live page. Lovable serves a bot
 // challenge to scripted and automated-browser requests and stays out until someone checks it by hand.
 export const inspirationTopics = [
@@ -605,6 +737,13 @@ export const inspirationTopics = [
     "task": ["为一个数字产品的首页找结构参考：主张、产品画面和行动入口如何排序。", "Find structure for a digital product's homepage: how the claim, product view and call to action are ordered."],
     "items": ["linear", "notion", "raycast", "resend", "cursor", "v0", "impeccable", "framer", "obsidian", "plausible"],
     "linksCheckedAt": "2026-10-29"
+  },
+  {
+    "id": "startup-home",
+    "title": ["初创公司首页", "Startup homepages"],
+    "task": ["看初创公司怎样在一屏内讲清产品，并用产品画面、数字或代码建立信任。", "See how startups explain the product in one screen and earn trust with product views, numbers or code."],
+    "items": ["attio", "ramp", "cal-com", "rive", "tldraw", "pitch", "linear", "resend", "raycast", "cursor", "v0"],
+    "linksCheckedAt": "2026-11-01"
   }
 ];
 
