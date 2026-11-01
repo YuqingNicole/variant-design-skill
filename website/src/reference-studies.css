@@ -75,3 +75,6 @@
 .t-a{background:var(--rs-ink);color:var(--rs-paper)}.t-b{background:var(--rs-wash);color:var(--rs-ink)}.t-c{background:var(--rs-card);color:var(--rs-ink);box-shadow:inset 0 0 0 1px var(--rs-line)}.t-d{background:var(--rs-brand);color:var(--rs-paper)}.t-e{background:#e9c9a8;color:var(--rs-ink)}.t-f{background:var(--rs-surface);color:var(--rs-ink)}
 
 @media(prefers-reduced-motion:reduce){.rs-frame *{animation:none!important;transition:none!important}.rs-ink{stroke-dashoffset:0}}
+.rs-stage>.paper-widgets{height:100%;padding:12px 12px 12px;grid-template-rows:repeat(3,1fr);grid-auto-rows:auto;border-radius:0}.rs-stage>.paper-widgets .pw-replay{display:none}
+/* Looping parts hold still until the study plays (hover in the grid, always in the detail view). */
+.rs-rest :is(.rs-prompt i,.rs-preview b,.rs-gen b,.rm-canvas2 .sel,.pw-art i,.pw-eq i,.pw-progress i,.rs-marquee>div,.rs-cols>div>div,.rm-gallery>div){animation-play-state:paused!important}

@@ -1,17 +1,13 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { Check, still, useStep, type Copy } from './study-kit';
+import { moreStudies } from './ReferenceStudiesMore';
 import './reference-studies.css';
 // Our own motion studies of the one interaction that carries each reference's homepage. Placeholder content,
 // our palette, no code or assets from the sources. Each draws on a 640×400 stage scaled to its frame.
-type Copy=[string,string];
-const still=()=>typeof matchMedia!=='undefined'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-// Advances 0…count-1 every `ms` while playing; with reduced motion it rests on `rest`.
-function useStep(play:boolean,count:number,ms:number,rest=count-1){const [step,setStep]=useState(0);const reduced=still();
- useEffect(()=>{if(reduced||!play)return;const id=setInterval(()=>setStep(s=>(s+1)%count),ms);return()=>clearInterval(id)},[play,count,ms,reduced]);return reduced?rest:step}
-const Check=()=><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 6.5 5 9l4.5-6"/></svg>;
 // Autoplaying stages are pictures to assistive tech; the interactive canvas stays a labelled group.
-function Stage({children,label,interactive}:{children:ReactNode;label:string;interactive:boolean}){const ref=useRef<HTMLDivElement>(null);const [scale,setScale]=useState(1);
+function Stage({children,label,interactive,play}:{children:ReactNode;label:string;interactive:boolean;play:boolean}){const ref=useRef<HTMLDivElement>(null);const [scale,setScale]=useState(1);
  useEffect(()=>{const el=ref.current;if(!el)return;const fit=()=>setScale(el.clientWidth/640);fit();if(typeof ResizeObserver==='undefined')return;const ro=new ResizeObserver(fit);ro.observe(el);return()=>ro.disconnect()},[]);
- return <div ref={ref} className="rs-frame" role={interactive?'group':'img'} aria-label={label}><div className="rs-stage" style={{transform:`scale(${scale})`}} aria-hidden={interactive?undefined:true}>{children}</div></div>}
+ return <div ref={ref} className={`rs-frame${play?"":" rs-rest"}`} role={interactive?'group':'img'} aria-label={label}><div className="rs-stage" style={{transform:`scale(${scale})`}} aria-hidden={interactive?undefined:true} inert={!interactive}>{children}</div></div>}
 
 const stages:Copy[]=[['找线索','Find leads'],['推进交易','Move deals'],['跟进邮件','Follow up'],['预测收入','Forecast'],['续约扩展','Expand']];
 function Stages({play,ix}:{play:boolean;ix:number}){const step=useStep(play,stages.length,2200,1);
@@ -25,8 +21,8 @@ function Stages({play,ix}:{play:boolean;ix:number}){const step=useStep(play,stag
   </div></div>}
 
 const quotes:Copy[]=[['“月底对账从三天变成一个下午。”','“Month-end close went from three days to one afternoon.”'],['“我们终于知道每一笔钱花在哪。”','“We finally know where every dollar goes.”'],['“审批不再卡在邮件里。”','“Approvals stopped getting stuck in email.”']];
-function Proof({play,ix}:{play:boolean;ix:number}){const step=useStep(play,3,2600,0);const [n,setN]=useState(still()?48200:0);
- useEffect(()=>{if(still()||!play)return;let raf=0;const t0=performance.now();const f=(t:number)=>{const p=Math.min(1,(t-t0)/1500);setN(Math.round(48200*(1-Math.pow(1-p,3))));if(p<1)raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f);return()=>cancelAnimationFrame(raf)},[play]);
+function Proof({play,ix}:{play:boolean;ix:number}){const step=useStep(play,3,2600,0);const [n,setN]=useState(48200);
+ useEffect(()=>{if(still()||!play){setN(48200);return}let raf=0;const t0=performance.now();const f=(t:number)=>{const p=Math.min(1,(t-t0)/1500);setN(Math.round(48200*(1-Math.pow(1-p,3))));if(p<1)raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f);return()=>cancelAnimationFrame(raf)},[play]);
  return <div className="rs-proof"><p className="rs-proof-num"><b>{n.toLocaleString('en-US')}</b><span>{ix?'teams already switched':'个团队已经换过来'}</span></p>
   <div className={`rs-marquee${play?'':' paused'}`}><div>{['Northwind','Acme','Globex','Initech','Umbrella','Hooli','Northwind','Acme','Globex','Initech','Umbrella','Hooli'].map((l,i)=><span key={i}>{l}</span>)}</div></div>
   <div className="rs-proof-stats">{[['−38%',ix?'spend':'支出'],['4.2×',ix?'faster close':'对账速度'],['0',ix?'lost receipts':'丢失票据']].map(([v,l])=><p key={l}><b>{v}</b><span>{l}</span></p>)}</div>
@@ -67,7 +63,10 @@ export const referenceStudies:Record<string,{title:Copy;render:(p:{play:boolean;
  'cal-com':{title:['选日期 → 出时段 → 预约确认','Pick a day → slots appear → booking confirmed'],render:p=><Booking {...p}/>},
  rive:{title:['输入提示 → 逐步构建 → 预览跑起来','Prompt → step-by-step build → live preview'],render:p=><Build {...p}/>},
  tldraw:{title:['复制安装命令，画布上直接画','Copy the install command, draw right on the canvas'],render:p=><Canvas {...p}/>},
+ ...moreStudies,
  pitch:{title:['产出先行：幻灯片缩略图滚动拼贴','Output first: a scrolling mosaic of slides'],render:p=><Mosaic {...p}/>},
 };
+// Frames another demo (such as PaperWidgets) on the same scaled stage.
+export function StudyFrame({label,play,children}:{label:string;play:boolean;children:ReactNode}){return <Stage label={label} interactive={false} play={play}>{children}</Stage>}
 export function ReferenceStudy({id,zh,play,interactive=false}:{id:string;zh:boolean;play:boolean;interactive?:boolean}){const study=referenceStudies[id];if(!study)return null;const ix=zh?0:1;
- return <Stage label={study.title[ix]} interactive={interactive}>{study.render({play,ix,interactive})}</Stage>}
+ return <Stage label={study.title[ix]} interactive={interactive} play={play}>{study.render({play,ix,interactive})}</Stage>}

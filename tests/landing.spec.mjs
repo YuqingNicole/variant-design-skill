@@ -283,7 +283,8 @@ test('inspiration references host no third-party images and link to their source
  const imageRequests=[];page.on('request',r=>{if(r.resourceType()==='image'&&!new URL(r.url()).pathname.startsWith('/variant-mark'))imageRequests.push(r.url());});
  await page.goto('/inspiration');
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('33 个参考');await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(24);
- await page.getByRole('button',{name:'加载更多（还有 9 个）'}).click();await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(30);await expect(page.locator('.inspiration-grid .inspiration-press')).toHaveCount(3);
+ await page.getByRole('button',{name:'加载更多（还有 9 个）'}).click();await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(29);await expect(page.locator('.inspiration-grid .inspiration-press')).toHaveCount(4);
+ await expect(page.locator('.inspiration-grid .insp-thumb-media')).toHaveCount(33);
  for(const src of await page.locator('.inspiration-page img:not(.site-brandmark)').evaluateAll(els=>els.map(e=>new URL(e.src).pathname)))expect(src).toMatch(/^\/inspiration-media\/[a-z-]+\.webp$/);await expect(page.locator('.inspiration-grid div.insp-thumb')).toHaveCount(33);
  await expect(page.locator('.inspiration-grid .insp-card-out').first()).toHaveAttribute('href','https://linear.app/');await expect(page.locator('.inspiration-link-only').first()).toHaveText('仅链接');
  await expect(page.locator('.inspiration-disclosure')).toContainText('不托管对方的截图');await expect(page.locator('.insp-title a[href="/submit"]')).toBeVisible();
@@ -459,6 +460,15 @@ test('startup references show our own motion studies and press-kit images with t
  await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/inspiration/ramp');
  await expect(page.locator('.rs-proof-num b')).toHaveText('48,200');
  await page.goto('/inspiration/attio');const on=await page.locator('.rs-stages li.on').textContent();await page.waitForTimeout(2600);await expect(page.locator('.rs-stages li.on')).toHaveText(on);
+});
+
+test('every reference detail shows a press-kit image or our own motion study', async ({page})=>{
+ test.setTimeout(120000);
+ await page.goto('/inspiration');await page.getByRole('button',{name:/加载更多/}).click();
+ const ids=await page.locator('.insp-card-open').evaluateAll(els=>els.map(a=>new URL(a.href).pathname.split('/')[2]));
+ expect(ids).toHaveLength(33);
+ for(const id of ids){await page.goto('/inspiration/'+id);await expect(page.locator('.insp-detail-visual :is(.rs-frame, .insp-shot img, .paper-widgets)').first(),id).toBeVisible();await expect(page.locator('.insp-detail-visual > .insp-thumb'),id).toHaveCount(0)}
+ await page.goto('/inspiration/framer');await expect(page.locator('.insp-shot figcaption')).toContainText('没有合作或赞助关系');
 });
 
 test('a reference opens as a dialog from the grid and as its own page from a direct link', async ({page})=>{
