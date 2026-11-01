@@ -283,9 +283,13 @@ test('inspiration references filter, create an original brief and recover from c
 // External preview images are stubbed so the suite never depends on another site being up.
 const previews=JSON.parse(fs.readFileSync(new URL('../website/src/link-previews.json',import.meta.url),'utf8'));
 const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
-const stubPreviews=(page,fail=[])=>page.route(u=>u.protocol==='https:'&&!['localhost','127.0.0.1'].includes(u.hostname)&&!/twitter|x\.com|twimg/.test(u.hostname),r=>r.request().resourceType()!=='image'?r.continue():fail.some(id=>previews[id].image===r.request().url())?r.abort():r.fulfill({contentType:'image/png',body:pixel}));
+const sized=(src,w)=>`/_vercel/image?url=${encodeURIComponent(src)}&w=${w}&q=75`;
+// Stands in for each source and for Vercel's resizer (redirects are not routed, so the local redirect cannot be stubbed); `fail` previews fail at both.
+const stubPreviews=async(page,fail=[])=>{const failed=src=>fail.some(id=>previews[id].image===src);
+ await page.route(/\/_vercel\/image\?/,r=>failed(new URL(r.request().url()).searchParams.get('url'))?r.abort():r.fulfill({contentType:'image/png',body:pixel}));
+ await page.route(u=>u.protocol==='https:'&&!['localhost','127.0.0.1'].includes(u.hostname)&&!/twitter|x\.com|twimg/.test(u.hostname),r=>r.request().resourceType()!=='image'?r.continue():failed(r.request().url())?r.abort():r.fulfill({contentType:'image/png',body:pixel}));};
 
-test('inspiration thumbnails map each link\'s own preview, loaded from the source', async ({page})=>{
+test('inspiration thumbnails map each link\'s own preview, resized from the source', async ({page})=>{
  const imageRequests=[];page.on('request',r=>{if(r.resourceType()==='image'&&!new URL(r.url()).pathname.startsWith('/variant-mark'))imageRequests.push(r.url());});
  await stubPreviews(page,['linear']);
  await page.goto('/inspiration');
@@ -295,18 +299,26 @@ test('inspiration thumbnails map each link\'s own preview, loaded from the sourc
  await expect(page.locator('.inspiration-grid .insp-thumb-media img')).toHaveCount(28);
  const linear=page.locator('.insp-card').filter({has:page.locator('a[href="/inspiration/linear"]')});await expect(linear.locator('div.insp-thumb-landing b')).toHaveText('Linear');
  for(const [href,src,policy] of await page.locator('.insp-card').evaluateAll(els=>els.flatMap(li=>{const img=li.querySelector('.insp-thumb-media img');return img?[[li.querySelector('.insp-card-open').getAttribute('href'),img.getAttribute('src'),img.getAttribute('referrerpolicy')]]:[]})))
-  {expect(src).toBe(previews[href.split('/')[2]].image);expect(policy).toBe('no-referrer')}
+  {expect(src).toBe(sized(previews[href.split('/')[2]].image,640));expect(policy).toBe('no-referrer')}
  for(const id of ['aesop','nothing'])await expect(page.locator(`.insp-card:has(a[href="/inspiration/${id}"]) div.insp-thumb:not(.insp-thumb-media)`)).toHaveCount(1);
  await expect(page.locator('.inspiration-grid .insp-card-out').first()).toHaveAttribute('href','https://linear.app/');await expect(page.locator('.inspiration-link-only').first()).toHaveText('仅链接');
- await expect(page.locator('.inspiration-disclosure')).toContainText('不保存对方的截图');await expect(page.locator('.insp-title a[href="/submit"]')).toBeVisible();
+ await expect(page.locator('.inspiration-disclosure')).toContainText('不在仓库里保存对方的截图');await expect(page.locator('.insp-title a[href="/submit"]')).toBeVisible();
  for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  }
  await page.emulateMedia({reducedMotion:'reduce'});
  expect(await page.locator('.insp-card-open').first().evaluate(el=>parseFloat(getComputedStyle(el).transitionDuration))).toBeLessThan(0.001);
- const allowed=new Set(Object.values(previews).map(p=>p.image));
+ const allowed=new Set(Object.values(previews).flatMap(p=>[p.image,new URL(sized(p.image,640),page.url()).href]));
  expect(imageRequests.filter(u=>!allowed.has(u))).toEqual([]);
+ await expect(page.locator('.insp-card:has(a[href="/inspiration/linear"]) .insp-thumb-media')).toHaveCount(0);
+});
+
+test('a page downloads only its own code, with every stylesheet up front', async ({page})=>{
+ const scripts=[],styles=[];page.on('request',r=>{const u=new URL(r.url());if(u.pathname.startsWith('/assets/'))(r.resourceType()==='script'?scripts:r.resourceType()==='stylesheet'?styles:[]).push(u.pathname)});
+ await stubPreviews(page);await page.goto('/inspiration');await expect(page.locator('.insp-title h1')).toBeVisible();
+ expect(scripts.some(p=>/\/InspirationPage-/.test(p))).toBe(true);expect(scripts.filter(p=>/\/(App|LandingCanvas|LibraryPage|pricing|PaperLanding)-/.test(p))).toEqual([]);
+ expect(styles.length).toBe(2);
 });
 
 test('submission page states the three entry kinds, permissions and takedown process in both languages', async ({page})=>{
@@ -435,10 +447,10 @@ test('reference pack keeps per-item intentions and source links in its brief', a
 test('a site detail shows the preview the link publishes and falls back when its image fails', async ({page})=>{
  await stubPreviews(page,['ramp']);
  await page.goto('/inspiration/raycast');
- const shot=page.locator('.insp-detail-visual .insp-shot img');await expect(shot).toHaveAttribute('src',previews.raycast.image);await expect(shot).toHaveAttribute('alt',previews.raycast.title);
+ const shot=page.locator('.insp-detail-visual .insp-shot img');await expect(shot).toHaveAttribute('src',sized(previews.raycast.image,1280));await expect(shot).toHaveAttribute('alt',previews.raycast.title);
  await expect(page.locator('.insp-shot figcaption')).toContainText(previews.raycast.description);await expect(page.locator('.insp-shot figcaption')).toContainText('www.raycast.com 为分享链接公开的预览');
  await page.goto('/inspiration/ramp');await expect(page.locator('.insp-shot img')).toHaveCount(0);await expect(page.locator('.insp-shot figcaption')).toContainText('图片暂时无法加载');await expect(page.locator('.insp-shot > div.insp-thumb b')).toHaveText('Ramp');
- await page.goto('/inspiration/raycast');await page.getByRole('button',{name:'下一个'}).click();await expect(page).toHaveURL(/\/inspiration\/resend$/);await expect(page.locator('.insp-shot img')).toHaveAttribute('src',previews.resend.image);await expect(page.locator('.insp-shot figcaption span')).toHaveAttribute('lang',previews.resend.lang);
+ await page.goto('/inspiration/raycast');await page.getByRole('button',{name:'下一个'}).click();await expect(page).toHaveURL(/\/inspiration\/resend$/);await expect(page.locator('.insp-shot img')).toHaveAttribute('src',sized(previews.resend.image,1280));await expect(page.locator('.insp-shot figcaption span')).toHaveAttribute('lang',previews.resend.lang);
  await page.goto('/inspiration/aesop');await expect(page.locator('.insp-detail-visual > div.insp-thumb b')).toHaveText('Aesop');
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
 });

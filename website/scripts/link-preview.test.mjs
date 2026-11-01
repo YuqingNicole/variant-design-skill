@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { parsePreview } from './link-preview.mjs';
+import { parsePreview, withImageHosts } from './link-preview.mjs';
 
 test('reads og tags in either attribute order and resolves relative images', () => {
   const html = `<html lang="en-US"><title>Fallback</title><meta content="/og.png" property="og:image"><meta property="og:title" content="Acme &amp; Co"><meta name="description" content="Plain">`;
@@ -27,4 +27,13 @@ test('stored previews belong to existing link entries and point at https images'
     assert.equal(typeof p.lang, 'string', id);
     assert.match(p.fetchedAt, /^\d{4}-\d{2}-\d{2}$/, id);
   }
+});
+
+test('every preview image host may be resized by Vercel, and syncing keeps existing hosts', () => {
+  const config = JSON.parse(fs.readFileSync(new URL('../../vercel.json', import.meta.url), 'utf8'));
+  const previews = JSON.parse(fs.readFileSync(new URL('../src/link-previews.json', import.meta.url), 'utf8'));
+  assert.deepEqual(withImageHosts(config, previews), config);
+  assert.deepEqual(config.images.sizes, [640, 1280]);
+  const next = withImageHosts({ images: { sizes: [640], remotePatterns: [{ protocol: 'https', hostname: 'old.example' }] } }, { a: { image: 'https://new.example/og.png' }, b: { image: 'http://plain.example/og.png' }, c: {} });
+  assert.deepEqual(next.images, { sizes: [640], remotePatterns: [{ protocol: 'https', hostname: 'old.example' }, { protocol: 'https', hostname: 'new.example' }] });
 });
