@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
 import { importTs } from './ts-module.mjs';
-const { locales, localeCodes, publishedLocales, fallbackChain, isLocale, sourceLocale } = await importTs(new URL('../src/i18n/locales.ts', import.meta.url).pathname);
-const { t, has, resolvedLocale, fromPair, completeIn, isLocalized } = await importTs(new URL('../src/i18n/localized.ts', import.meta.url).pathname);
-const { formatDate, formatNumber, collator } = await importTs(new URL('../src/i18n/format.ts', import.meta.url).pathname);
+const { locales, localeCodes, publishedLocales, fallbackChain, isLocale, sourceLocale } = await importTs(fileURLToPath(new URL('../src/i18n/locales.ts', import.meta.url)));
+const { t, has, resolvedLocale, fromPair, completeIn, isLocalized } = await importTs(fileURLToPath(new URL('../src/i18n/localized.ts', import.meta.url)));
+const { formatDate, formatNumber, collator } = await importTs(fileURLToPath(new URL('../src/i18n/format.ts', import.meta.url)));
 
 test('the locale table keeps Chinese unprefixed and every other language on its own prefix', () => {
   assert.equal(sourceLocale, 'zh'); assert.equal(locales.zh.path, ''); assert.equal(locales.zh.fallback, null);
