@@ -20,7 +20,7 @@ let route = window.location.pathname.replace(/\/+$/, "") || "/";
 const moved = legacy(route);
 if (moved) { history.replaceState(null, "", moved + (moved.startsWith("/lab/") ? location.search : "") + location.hash); route = moved; }
 const page = route === "/lab/canvas" ? <LandingCanvas/> : route === "/lab/workbench" ? <App /> : route === "/lab" ? <LabPage/> : route === "/skills" ? <SkillsPage/> : route === "/about" ? <PaperLanding />
-  : route === "/inspiration" ? <InspirationPage/> : route === "/submit" ? <SubmitPage/> : route === "/docs" ? <ContentPages page="docs"/>
+  : route === "/inspiration" ? <InspirationPage/> : route.startsWith("/inspiration/") ? <InspirationPage detail={route.slice(13)}/> : route === "/submit" ? <SubmitPage/> : route === "/docs" ? <ContentPages page="docs"/>
   : route === "/directions" ? <ExpressiveDirections /> : route === "/showcase" ? <ShowcasePage /> : route === "/pricing" ? <PricingPage repositoryUrl="https://github.com/YuqingNicole/variant-design-skill" />
   : route === "/" ? <LibraryPage view={{kind:"feed"}}/> : route.startsWith("/c/") ? <LibraryPage view={{kind:"category",id:route.slice(3)}}/>
   : route.startsWith("/d/") ? <LibraryPage key={route} view={{kind:"entry",slug:route.slice(3)}}/> : <LibraryPage view={{kind:"entry",slug:""}}/>;

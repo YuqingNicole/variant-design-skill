@@ -19,6 +19,17 @@ test('every external reference records provenance; unknown designers stay null',
   }
 });
 
+test('a source screenshot ships only with a recorded permission and as a local file', () => {
+  for (const i of items.filter(i => i.media)) {
+    const { src, width, height, alt, permission } = i.media;
+    assert.match(src, /^\/inspiration-media\/[a-z0-9-]+\.(webp|png|jpg)$/, i.id);
+    assert.ok(fs.existsSync(new URL(`../public${src}`, import.meta.url)), i.id);
+    assert.ok(width > 0 && height > 0 && alt.length === 2, i.id);
+    assert.ok(permission?.grantedBy?.trim() && permission?.terms?.trim(), i.id);
+    assert.match(permission.grantedAt, date, i.id);
+  }
+});
+
 test('the prerendered description counts every reference', () => {
   const prerender = fs.readFileSync(new URL('./prerender.mjs', import.meta.url), 'utf8');
   assert.match(prerender, new RegExp(`'${items.length} 个外部设计参考`));

@@ -24,6 +24,15 @@ const staticPages = {
   '/skills': ['设计技能 — Variant Design', '只收录在一次性项目里实际跑过、并公开了记录的设计交付技能。'],
 };
 
+// The reference library lives in a TS module of plain JSON literals; read it without a TS loader.
+export function loadReferences() {
+  const source = fs.readFileSync(path.join(here, '../src/inspiration-data.ts'), 'utf8'), start = source.indexOf('export const inspirationItems = ');
+  const from = source.indexOf('[', start);
+  return JSON.parse(source.slice(from, source.indexOf('\n];', from) + 2));
+}
+function referenceBody(r) {
+  return `<main><p><a href="/inspiration">灵感参考</a></p><h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus[0])}</dd><dt>用在哪里</dt><dd>${escape(r.application[0])}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}</dd></dl><p><a href="${escape(r.url)}">访问原站</a></p></main>`;
+}
 function card(e) {
   const { image } = cover(e);
   return `<article><a href="/d/${e.slug}"><img src="/media/${e.slug}/${escape(image.file)}" width="${image.width}" height="${image.height}" alt="${escape(image.alt[0])}"><p>${escape(categoryNames[e.category] ?? e.category)} · ${escape(kindLabel(e))}</p><h2>${escape(e.title[0])}</h2><p>${escape(e.summary[0])}</p></a></article>`;
@@ -50,7 +59,7 @@ function page(template, { site, route, title, description, image, type = 'websit
   return html;
 }
 
-export function renderSite(entries, template, site = defaultSite) {
+export function renderSite(entries, template, site = defaultSite, references = []) {
   const sorted = order(entries), pages = new Map();
   const library = 'Variant Design 方向库';
   pages.set('/', page(template, { site, route: '/', title: 'Variant Design — 设计导航，只收核对过的', description: '给用 AI 做产品的人：精选外部参考、实测过的设计技能和真实的 A/B/C 案例。参考写明来源、核对日期和还不知道的事，技能附实测记录，案例附产出记录。', body: `<main><h1>设计导航，只收核对过的。</h1><p>给用 AI 做产品的人：精选外部参考、实测过的设计技能和真实的 A/B/C 案例。参考写明来源、核对日期和还不知道的事，技能附实测记录，案例附产出记录。</p><nav><a href="/inspiration">浏览设计参考</a> · <a href="/skills">设计技能</a> · <a href="#works">A/B/C 案例</a> · <a href="/docs">安装与使用</a></nav><section><h2>精选技能：variant-design</h2><p>把一个任务做成 A/B/C 三个可比较的方向，支持局部修改、快照撤回和可回滚的接入。</p><a href="/d/pulse">查看 Pulse 案例与产出记录</a></section><section id="works"><h2>一个任务，三种方向。</h2>${sorted.map(card).join('')}</section></main>` }));
@@ -63,6 +72,7 @@ export function renderSite(entries, template, site = defaultSite) {
     pages.set(`/d/${e.slug}`, page(template, { site, route: `/d/${e.slug}`, type: 'article', title: `${e.title[0]} — ${library}`, description: e.summary[0],
       image: { src: `/media/${e.slug}/${image.file}`, width: image.width, height: image.height, alt: image.alt[0] }, body: entryBody(e) }));
   }
+  for (const r of references) pages.set(`/inspiration/${r.id}`, page(template, { site, route: `/inspiration/${r.id}`, title: `${r.name} — 灵感参考 — Variant Design`, description: `${r.name}：${r.focus[0]}。用在${r.application[0]}。`, body: referenceBody(r) }));
   for (const [route, [title, description]] of Object.entries(staticPages)) pages.set(route, page(template, { site, route, title, description }));
   return pages;
 }
@@ -89,7 +99,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   // The untouched shell stays available as app.html: the fallback for routes without their own page.
   const shell = path.join(dist, 'app.html');
   if (!fs.existsSync(shell)) fs.copyFileSync(path.join(dist, 'index.html'), shell);
-  const template = fs.readFileSync(shell, 'utf8'), pages = renderSite(entries, template, site);
+  const template = fs.readFileSync(shell, 'utf8'), pages = renderSite(entries, template, site, loadReferences());
   for (const [route, html] of pages) {
     const file = route === '/' ? path.join(dist, 'index.html') : path.join(dist, route.slice(1), 'index.html');
     fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, html);
@@ -99,5 +109,5 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap(pages.keys(), site));
   fs.writeFileSync(path.join(dist, 'feed.xml'), rss(entries, site));
   fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site}/sitemap.xml\n`);
-  console.log(`Prerendered ${pages.size} routes and ${entries.length} direction cards for ${site}; sitemap.xml, feed.xml and robots.txt written.`);
+  console.log(`Prerendered ${pages.size} routes (including reference details) and ${entries.length} direction cards for ${site}; sitemap.xml, feed.xml and robots.txt written.`);
 }

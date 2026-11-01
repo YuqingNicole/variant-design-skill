@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
-import { escape, renderSite, rss, sitemap } from './prerender.mjs';
+import { escape, loadReferences, renderSite, rss, sitemap } from './prerender.mjs';
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 
 test('every entry and category gets its own page with metadata and readable content', () => {
@@ -45,5 +45,15 @@ test('published direction cards pass the skill\'s own validator', () => {
     assert.equal(card.url, `https://example.test/d/${entry.slug}.json`);
     assert.ok(card.directions.every(d => d.image?.startsWith(`https://example.test/media/${entry.slug}/`)));
     assert.equal(cardToReference(card).usage, 'inspiration');
+  }
+});
+
+test('every reference gets its own detail page with an escaped title and a link back to the library', () => {
+  const references = loadReferences(), pages = renderSite([], template, 'https://example.test', references);
+  for (const r of references) {
+    const html = pages.get(`/inspiration/${r.id}`);
+    assert.ok(html, r.id);
+    assert.match(html, new RegExp(`<title>${escape(r.name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} — 灵感参考`));
+    assert.ok(html.includes('href="/inspiration"') && html.includes(`href="${escape(r.url)}"`), r.id);
   }
 });
