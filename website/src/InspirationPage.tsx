@@ -3,6 +3,7 @@ import type { Language } from './direction-engine';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { transition } from './view-transition';
 import { XPost, type Post } from './XPost';
+import { XVideo, mediaOf } from './XVideo';
 import type { Locale } from './i18n/locales';
 import { inspirationItems, inspirationSources, inspirationTopics } from './inspiration-data';
 import linkPreviews from './link-previews.json';
@@ -100,7 +101,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
   <header className="site-shell insp-head">
    <div className="insp-title"><h1>{zh?'灵感参考':'Inspiration'}</h1><p>{zh?`${total} 个精选外部参考。研究结构、任务与交互，再做出属于你的表达。`:`${total} selected external references. Study the structure, task and interaction, then make something of your own.`}</p><a href="/submit">{zh?'投稿与授权规则':'Submissions & permissions'}</a></div>
    <p className="insp-counts">{(['landing','product','flow','practice'] as const).map(c=>`${count(c)} ${labels[c][ix]}`).join(' · ')}</p>
-   <details className="inspiration-disclosure"><summary>{zh?'只放链接，缩略图就是链接自己的预览':'Links only; each thumbnail is the link’s own preview'}</summary><p>{zh?'这些是外部参考，作品版权归原作者。本站不保存对方的截图或素材：网站条目显示该网站为分享链接公开的预览图、标题和描述，图片从原站加载；X 帖子放在 Best practice 里，视频由 X 官方嵌入直接播放，X 可能记录这次访问。没有公开预览的条目显示我们写的分析卡。登录后操作和手机体验未实测。':'These are external references, and the work belongs to its owners. This site stores none of their screenshots or assets: a website entry shows the preview image, title and description the site publishes for shared links, loaded from the site itself; X posts sit under Best practice, where their video plays through X’s official embed, which may record the visit. Entries without a public preview show our own analysis card. Authenticated flows and mobile behavior not tested.'}</p></details>
+   <details className="inspiration-disclosure"><summary>{zh?'只放链接，缩略图就是链接自己的预览':'Links only; each thumbnail is the link’s own preview'}</summary><p>{zh?'这些是外部参考，作品版权归原作者。本站不保存对方的截图或素材：网站条目显示该网站为分享链接公开的预览图、标题和描述，图片从原站加载；X 帖子放在 Best practice 里，卡片直接从 X 的服务器播放帖子视频（静音循环），详情用 X 官方嵌入，X 可能记录这次访问。没有公开预览的条目显示我们写的分析卡。登录后操作和手机体验未实测。':'These are external references, and the work belongs to its owners. This site stores none of their screenshots or assets: a website entry shows the preview image, title and description the site publishes for shared links, loaded from the site itself; X posts sit under Best practice, where each card streams the post’s video from X (muted, looping) and the detail uses X’s official embed; X may record the visit. Entries without a public preview show our own analysis card. Authenticated flows and mobile behavior not tested.'}</p></details>
   </header>
   <div className="insp-bar"><div className="site-shell">
    <div className="insp-pills" role="group" aria-label={zh?'参考类型':'Reference type'}>{[['all',zh?'全部':'All'],['landing','Landing'],['product',zh?'产品界面':'Product'],['flow',zh?'关键流程':'Flow'],['practice','Best practice']].map(([id,label])=><button key={id} aria-pressed={category===id} onClick={()=>filter(()=>setCategory(id))}>{label}</button>)}</div>
@@ -111,8 +112,12 @@ export function InspirationPage({detail=''}:{detail?:string}){
   <section className="site-shell insp-body">
    {activeTopic&&<p className="inspiration-topic">{activeTopic.task[ix]} {zh?`链接于 ${activeTopic.linksCheckedAt} 复查可访问；研究笔记的观察日期见各条。`:`Links rechecked as reachable on ${activeTopic.linksCheckedAt}; each note shows its own observation date.`}</p>}
    <p className="inspiration-count" role="status">{results.length} {zh?'个参考':'references'}</p>
-   {category==='practice'?<ul className="insp-posts">{results.map(item=><li key={item.id}><XPost post={postOf(item)!} url={item.url} locale={language} autoload/>
-    <p><a href={`/inspiration/${item.id}`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();show(item.id,'modal')}}>{item.name}</a> {item.focus[ix]}</p></li>)}</ul>:<>
+   {category==='practice'?<ul className="insp-videos">{results.map(item=>{const media=mediaOf(item.id),post=postOf(item)!;return <li key={item.id} className="insp-card insp-vcard">
+    {media?<><a className="insp-vcard-open" href={`/inspiration/${item.id}`} style={{aspectRatio:`${media.width}/${media.height}`}} aria-label={`${item.name}：${item.focus[ix]}（${post.author} @${post.handle}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();show(item.id,'modal')}}><XVideo media={media}/></a>
+     {media.avatar&&<img className="insp-vcard-avatar" src={media.avatar} width="44" height="44" alt={`${post.author} @${post.handle}`} title={`${post.author} @${post.handle}`} referrerPolicy="no-referrer"/>}</>
+     :<XPost post={post} url={item.url} locale={language} autoload/>}
+    <button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${selection[item.id]?(zh?'移出参考包':'Remove from pack'):(zh?'加入参考包':'Add to pack')}：${item.name}`}><Icon d={icons.save}/></button>
+    <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${zh?'在 X 上打开':'Open on X'}：${item.name}`}><Icon d={icons.out}/></a></li>})}</ul>:<>
    <ul className="inspiration-grid">{shown.map(item=><li key={item.id} className="insp-card" style={{viewTransitionName:`ref-${item.id}`}}>
     <a className="insp-card-open" href={`/inspiration/${item.id}`} aria-label={`${item.name}：${item.focus[ix]}（${labels[item.category][ix]} · ${zh?"仅链接":"Link only"}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();show(item.id,'modal')}}><Thumb item={item} locale={language}/></a>
     <button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${selection[item.id]?(zh?'移出参考包':'Remove from pack'):(zh?'加入参考包':'Add to pack')}：${item.name}`}><Icon d={icons.save}/></button>
