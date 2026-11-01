@@ -15,7 +15,7 @@ export function LabPage() {
   const zh = language === 'zh', ix = zh ? 0 : 1;
   useEffect(() => { document.title = zh ? '实验室 — Variant Design' : 'Lab — Variant Design'; document.documentElement.lang = zh ? 'zh-CN' : 'en'; localStorage.setItem('variant-language', language); }, [language, zh]);
   return <main className="content-page library-page"><SiteHeader language={language} onLanguage={() => setLanguage(zh ? 'en' : 'zh')}/>
-    <header className="content-hero site-shell"><p className="content-kicker">LAB / EXPERIMENTS</p><h1>{zh ? '实验室' : 'Lab'}</h1><p>{zh ? '这些是实验功能，会继续可用，但不再扩展。日常使用请在自己的项目里用技能。' : 'These experiments stay available but are no longer extended. For real work, use the skill in your own project.'}</p></header>
+    <header className="content-hero site-shell"><h1>{zh ? '实验室' : 'Lab'}</h1><p>{zh ? '这些是实验功能，会继续可用，但不再扩展。日常使用请在自己的项目里用技能。' : 'These experiments stay available but are no longer extended. For real work, use the skill in your own project.'}</p></header>
     <section className="site-shell library-feed"><div className="library-grid">{tools.map(t => <article key={t.href} className="library-card"><a href={t.href}><strong>{t.name[ix]} →</strong><span className="library-card-summary">{t.body[ix]}</span></a></article>)}</div></section>
     <SiteFooter language={language}/></main>;
 }

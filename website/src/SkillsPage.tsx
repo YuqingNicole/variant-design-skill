@@ -22,7 +22,7 @@ export function SkillsPage() {
   const zh = language === 'zh', ix = zh ? 0 : 1;
   useEffect(() => { document.title = zh ? '设计技能 — Variant Design' : 'Design skills — Variant Design'; document.documentElement.lang = zh ? 'zh-CN' : 'en'; localStorage.setItem('variant-language', language); }, [language, zh]);
   return <main className="content-page library-page"><SiteHeader language={language} onLanguage={() => setLanguage(zh ? 'en' : 'zh')}/>
-    <header className="content-hero site-shell"><p className="content-kicker">SKILLS / TRIED IN REAL PROJECTS</p><h1>{zh ? '设计技能' : 'Design skills'}</h1>
+    <header className="content-hero site-shell"><h1>{zh ? '设计技能' : 'Design skills'}</h1>
       <p>{zh ? '只收录我们在一次性项目里实际跑过、并公开了记录的设计交付技能。目前只有一个通过。没试过的技能，不会因为热门就列在这里。' : 'Only design-delivery skills we have actually run in throwaway projects, with public records. One qualifies so far. Popularity alone does not get a skill listed here.'}</p></header>
     <section className="site-shell library-feed skills-list">{skills.map(s => <article key={s.id} className="skills-entry">
       <h2>{s.name}<small>{s.source}</small></h2><p>{s.summary[ix]}</p>

@@ -11,8 +11,8 @@ function PageFrame({children,title,language,setLanguage}:{children:React.ReactNo
 export function ContentPages({page}:{page:'docs'}){
  const [language,setLanguage]=useState<Language>(()=>localStorage.getItem('variant-language')==='en'?'en':'zh');const zh=language==='zh';const title=zh?'安装与开始使用':'Install & get started';
  return <PageFrame title={title} language={language} setLanguage={setLanguage}>
- <header className="content-hero site-shell"><p className="content-kicker">GET STARTED / IN YOUR PROJECT</p><h1>{title}</h1><p>{zh?'安装、确认可用，然后在你的项目里走完一次：生成、比较、试改、撤回、接入。':'Install, confirm it works, then go through one full loop in your project: generate, compare, refine, undo, integrate.'}</p></header>
+ <header className="content-hero site-shell"><h1>{title}</h1><p>{zh?'安装、确认可用，然后在你的项目里走完一次：生成、比较、试改、撤回、接入。':'Install, confirm it works, then go through one full loop in your project: generate, compare, refine, undo, integrate.'}</p></header>
  {page==='docs'&&<DocsGuide language={language}/>}
- <section className="content-closing site-shell"><p className="content-kicker">MAKE IT YOURS</p><h2>{zh?'下一个案例，可以是你的项目。':'Your project could be next.'}</h2><a className="content-button" href="/">{zh?'先看方向库':'Explore the library'} ↗</a><a className="content-secondary" href="/pricing">{zh?'了解价格与计划':'Explore plans & pricing'} →</a></section>
+ <section className="content-closing site-shell"><h2>{zh?'下一个案例，可以是你的项目。':'Your project could be next.'}</h2><a className="content-button" href="/">{zh?'先看方向库':'Explore the library'} ↗</a><a className="content-secondary" href="/pricing">{zh?'了解价格与计划':'Explore plans & pricing'} →</a></section>
  </PageFrame>
 }

@@ -23,7 +23,7 @@ function Card({ entry, ix }: { entry: Entry; ix: number }) {
 function Feed({ category, ix, zh }: { category?: string; ix: number; zh: boolean }) {
   const shown = entries.filter(e => !category || e.category === category), used = categories.filter(c => entries.some(e => e.category === c.id));
   return <>
-    {category ? <header className="content-hero site-shell library-hero"><p className="content-kicker">DIRECTION LIBRARY</p>
+    {category ? <header className="content-hero site-shell library-hero">
       <h1>{categoryName(category, ix)}</h1><p>{zh ? '同一个任务，比较三个方向的取舍。' : 'Compare three directions for the same brief.'}</p></header>
       : <HomeHero language={zh ? 'zh' : 'en'}/>}
     {!category && <HomeCase language={zh ? 'zh' : 'en'}/>}
