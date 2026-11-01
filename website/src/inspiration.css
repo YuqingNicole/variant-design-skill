@@ -1,5 +1,5 @@
 /* Reference library: a title row, a sticky filter bar, an image-first grid and a detail layer.
-   Thumbnails are our own analysis cards unless an entry records permission for a source screenshot. */
+   Thumbnails map the link itself (its published preview or the post's text); analysis cards are the fallback. */
 .inspiration-page :is(a,button,select,input,textarea,summary):focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
 .insp-head{display:grid;gap:var(--space-2);padding-block:var(--space-6) var(--space-5)}
 .insp-title{display:flex;align-items:baseline;gap:var(--space-2) var(--space-4);flex-wrap:wrap}
@@ -131,13 +131,10 @@ div.insp-thumb{position:relative;display:grid;grid-template-rows:auto auto auto 
 /* Product images and motion studies fill the card; a chip keeps the name and rights visible at rest. */
 div.insp-thumb.insp-thumb-media{display:block;padding:0;background:var(--site-surface)}
 .insp-thumb-media>img{display:block;width:100%;height:100%;object-fit:cover}
-.insp-thumb-media>img.contain{object-fit:contain;padding:var(--space-5)}
-.insp-thumb-media>.rs-frame{position:absolute;inset:0;height:100%}
+.insp-thumb-post b{font-size:18px;line-height:1.35;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .insp-thumb-chip{position:absolute;left:var(--space-2);bottom:var(--space-2);max-width:calc(100% - 56px);padding:3px var(--space-2);border-radius:var(--radius-pill);background:var(--site-card);border:1px solid var(--site-line);font-size:12px;color:var(--site-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .insp-thumb-chip b{font-weight:500;color:var(--site-ink);margin-right:2px}
-.inspiration-press{font-style:normal;color:var(--site-brand);margin-left:var(--space-1)}
 .insp-shot img{display:block;width:100%;height:auto;border:1px solid var(--site-line);border-radius:var(--radius-panel);background:var(--site-surface)}
-.insp-detail-visual .rs-frame{border:1px solid var(--site-line);border-radius:var(--radius-panel)}
 /* A shared X post: its text first, X's own embed on request. */
 .x-post{margin:0;display:grid;gap:var(--space-3)}
 .x-post blockquote{margin:0;padding:var(--space-5);border:1px solid var(--site-line);border-radius:var(--radius-panel);background:var(--site-card)}

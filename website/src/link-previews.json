@@ -1,0 +1,176 @@
+{
+  "linear": {
+    "image": "https://linear.app/api/og/main?title=Linear&v=4",
+    "title": "Linear – The system for product development",
+    "description": "Purpose-built for planning and building products with AI agents.",
+    "fetchedAt": "2026-11-01"
+  },
+  "notion": {
+    "image": "https://www.notion.com/front-static/meta/teams-and-agents.jpg",
+    "title": "The AI workspace that works for you. | Notion",
+    "description": "Build Custom Agents, search across all your apps, and automate busywork. The AI workspace where teams get more done, faster.",
+    "fetchedAt": "2026-11-01"
+  },
+  "raycast": {
+    "image": "https://www.raycast.com/opengraph-image-pwu6ef.png?opengraph-image.1f-98etzkaz5s.png",
+    "title": "Raycast - Your shortcut to everything",
+    "description": "A collection of powerful productivity tools all within an extendable launcher.",
+    "fetchedAt": "2026-11-01"
+  },
+  "resend": {
+    "image": "https://resend.com/static/cover.jpg",
+    "title": "Resend · Email for developers",
+    "description": "The best way to reach humans instead of spam folders. Deliver transactional and marketing emails at scale.",
+    "fetchedAt": "2026-11-01"
+  },
+  "cursor": {
+    "image": "https://ptht05hbb1ssoooe.public.blob.vercel-storage.com/assets/og/opengraph-default.png",
+    "title": "AI Coding Agent for Building Ambitious Software | Cursor",
+    "description": "Built to make you extraordinarily productive, agents turn ideas into code. Accelerate development by handing off tasks to Cursor.",
+    "fetchedAt": "2026-11-01"
+  },
+  "v0": {
+    "image": "https://v0.app/chat/api/og",
+    "title": "v0 by Vercel - Build Full-Stack Web Apps with AI",
+    "description": "Your collaborative AI assistant to design, iterate, and scale full-stack applications for the web.",
+    "fetchedAt": "2026-11-01"
+  },
+  "impeccable": {
+    "image": "https://impeccable.style/og-image-v6.png",
+    "title": "The missing design vocabulary for agents.",
+    "description": "Turn AI slop into interfaces you’re proud to ship. Impeccable gives your agent the design expertise to build from scratch, improve what you have, and stay true to your design system.",
+    "fetchedAt": "2026-11-01"
+  },
+  "teenage": {
+    "image": "https://assets.teenage.engineering/_img/6ac7e2a34e770874f80da65c_1024.webp",
+    "title": "teenage engineering",
+    "description": "teenage engineering creates high quality, well designed, electronic products for all people who love sound and music.",
+    "fetchedAt": "2026-11-01"
+  },
+  "instrument": {
+    "image": "https://a-us.storyblok.com/f/1004432/1200x630/e7ff102c87/000.png/m/1200x630/filters:format(png)/",
+    "title": "Instrument | Redefining brands and experiences | Instrument",
+    "description": "We are a multidisciplinary creative company that redefines brands and experiences.",
+    "fetchedAt": "2026-11-01"
+  },
+  "pentagram": {
+    "image": "https://www.pentagram.com/pentagram_social.png",
+    "title": "Pentagram — The world’s largest independent design consultancy",
+    "description": "Pentagram is the world’s largest independent design consultancy. The firm is owned and run by 24 partners, each of whom are leaders in their individual fields.",
+    "fetchedAt": "2026-11-01"
+  },
+  "basic": {
+    "image": "https://cdn.sanity.io/images/8nn8fua5/production/d300e3dee1aa4ff7768bbaa9be1df0fd07986ad7-1200x630.png",
+    "title": "BASIC/DEPT® | Digital Branding & Product Design Agency",
+    "description": "We design digital products, services, and eCommerce experiences for brands like Google, Airbnb, Patagonia, Apple, Beats by Dre and other category leaders.",
+    "fetchedAt": "2026-11-01"
+  },
+  "attio": {
+    "image": "https://a.storyblok.com/f/234930/1200x630/df480627b4/attio-og-image.jpg",
+    "title": "Attio: The CRM for agentic revenue",
+    "description": "The system for revenue teams to build pipeline, accelerate deals, and grow accounts around the clock.",
+    "fetchedAt": "2026-11-01"
+  },
+  "ramp": {
+    "image": "https://next.ramp.com/assets/images/default-og-image.jpg",
+    "title": "Spend Management, Corporate Cards & Accounts Payable Solutions | Ramp",
+    "description": "Make expense management easy with Ramp's spend management platform. Combine global corporate cards, travel, expenses and accounts payable to automate finance operations and improve efficiency.",
+    "fetchedAt": "2026-11-01"
+  },
+  "cal-com": {
+    "image": "https://framerusercontent.com/images/pPSh5HDe1qaySb4R7xBgMHudhU.png",
+    "title": "Cal.com | Scheduling Software for Online Bookings",
+    "description": "A fully customizable scheduling software for individuals, businesses taking calls and developers building scheduling platforms where users meet users.",
+    "fetchedAt": "2026-11-01"
+  },
+  "rive": {
+    "image": "https://framerusercontent.com/images/yEWMbP7UtsS81SlkoxTasfabvc.png",
+    "title": "Rive: agent-native 2D and 3D engine for games, apps, and UI",
+    "description": "Behind Duolingo and Spotify Wrapped. Build 2D and 3D games, apps, and interactive UI with your coding agent and pro design and animation tools.",
+    "fetchedAt": "2026-11-01"
+  },
+  "tldraw": {
+    "image": "https://cdn.sanity.io/images/ij3ytvrl/production/9bbdab1656512165d2426e787a553be0a8fd60a6-512x256.webp?w=1200&fit=max",
+    "title": "tldraw: Infinite Canvas SDK for React",
+    "description": "The tldraw SDK provides tools, services, and APIs to build beautiful whiteboards and infinite canvas applications with real-time collaboration and a powerful React-based canvas.",
+    "fetchedAt": "2026-11-01"
+  },
+  "pitch": {
+    "image": "https://framerusercontent.com/assets/WJrArV3ktU515VCNK75vEu7SjNg.jpg",
+    "title": "The AI presentation workspace",
+    "description": "Pitch is the collaborative presentation platform for teams that want to create, share, and deliver better work.",
+    "fetchedAt": "2026-11-01"
+  },
+  "figma": {
+    "image": "https://cdn.sanity.io/images/599r6htc/regionalized/135d2170e6a27e5d4249b3e4029bc9cd1e512457-2400x1260.jpg?w=1200&q=70&fit=max&auto=format",
+    "title": "Free Design Tool for Websites, Product Design & More | Figma",
+    "description": "Our free, website design software allows you to create, collaborate & streamline your workflow. Bring together powerful design features built for the future of web.",
+    "fetchedAt": "2026-11-01"
+  },
+  "framer": {
+    "image": "https://framerusercontent.com/images/vt65Mbfi3w8ymfTyRfbmgM4Tyo.png",
+    "title": "Framer: Free website builder and AI design agent",
+    "description": "The free website builder with a design agent that takes you from idea to launch. Changes stay editable, with hosting, CMS, analytics, SEO, and AEO built in.",
+    "fetchedAt": "2026-11-01"
+  },
+  "wiki": {
+    "image": "https://www.notion.com/front-static/meta/global-evergreen-02.png",
+    "title": "Your connected workspace for wiki, docs & projects | Notion",
+    "description": "It’s hard to move fast if you’ve got a clunky and disorganized workspace. Centralize all your knowledge in Notion instead.",
+    "fetchedAt": "2026-11-01"
+  },
+  "obsidian": {
+    "image": "https://obsidian.md/images/banner.png",
+    "title": "Obsidian - Sharpen your thinking",
+    "description": "The free and flexible app for your private thoughts.",
+    "fetchedAt": "2026-11-01"
+  },
+  "linear-features": {
+    "image": "https://linear.app/api/og/generic?title=Features&v=5",
+    "title": "Features – Linear",
+    "description": "Linear is the system for modern product development. Streamline work across the entire development cycle, from roadmap to release.",
+    "fetchedAt": "2026-11-01"
+  },
+  "asana": {
+    "image": "https://assets.asana.biz/transform/8f92fea7-093e-47f7-a498-cbf1122f79df/CN24-web-product-ui-overlay-goals",
+    "title": "Asana Work Management - Features, Uses & Product • Asana",
+    "description": "What is Asana? Read about features, how to use it, and signing up for an account. Asana has business features for your projects, workflows, goals, and team!",
+    "fetchedAt": "2026-11-01"
+  },
+  "posthog": {
+    "image": "https://res.cloudinary.com/dmukukwp6/image/upload/product_analytics_d5ab5a02cb.jpg",
+    "title": "Product Analytics – Funnels, retention, and paths | PostHog",
+    "description": "Track funnels, retention, user paths, and feature adoption with Product Analytics. Autocapture events, query with SQL, and get 1M events free monthly.",
+    "fetchedAt": "2026-11-01"
+  },
+  "plausible": {
+    "image": "https://plausible.io/assets/images/plausible_promo.jpg",
+    "title": "Plausible Analytics",
+    "description": "Plausible is a lightweight and open-source Google Analytics alternative. Your website data is 100% yours and the privacy of your visitors is respected.",
+    "fetchedAt": "2026-11-01"
+  },
+  "first-page": {
+    "image": "https://images.ctfassets.net/spoqsaf9291f/3NOGXxdVV5dIdTht2gwssh/ba46b20f8bdf31aad2957d2905c74656/creating-a-page.png",
+    "title": "Creating a page",
+    "description": "New to Notion? Learn how to get started by adding a new page to your Notion workspace.",
+    "fetchedAt": "2026-11-01"
+  },
+  "new-project": {
+    "image": "https://linear.app/api/og/docs?title=Projects",
+    "title": "Projects – Linear Docs",
+    "description": "Create Projects for features or large units of work.",
+    "fetchedAt": "2026-11-01"
+  },
+  "history": {
+    "image": "https://help.figma.com/hc/theming_assets/01HZFG1N1QJPKABHT3PHQQ0J9J",
+    "title": "View a file's version history",
+    "description": "Before you start\nWho can use this feature\n\n\nAll plans\n\n\n\n\nKeep track of changes you've made to your files with version history. Explore a timeline of events dating back to the file's creation.\n\nVie...",
+    "fetchedAt": "2026-11-01"
+  },
+  "export": {
+    "image": "https://help.figma.com/hc/theming_assets/01HZFG1N1QJPKABHT3PHQQ0J9J",
+    "title": "Export formats and settings for static designs",
+    "description": "Figma Design supports a variety of export formats and settings. Use this article to determine which format best suits your needs. When you’re ready to export your designs, check out Export from Fig...",
+    "fetchedAt": "2026-11-01"
+  }
+}
