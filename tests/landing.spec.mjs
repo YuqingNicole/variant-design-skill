@@ -283,8 +283,8 @@ test('inspiration references host no third-party images and link to their source
  const imageRequests=[];page.on('request',r=>{if(r.resourceType()==='image'&&!new URL(r.url()).pathname.startsWith('/variant-mark'))imageRequests.push(r.url());});
  await page.goto('/inspiration');
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('33 个参考');await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(24);
- await page.getByRole('button',{name:'加载更多（还有 9 个）'}).click();await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(33);
- await expect(page.locator('.inspiration-page img:not(.site-brandmark)')).toHaveCount(0);await expect(page.locator('.inspiration-grid div.insp-thumb')).toHaveCount(33);
+ await page.getByRole('button',{name:'加载更多（还有 9 个）'}).click();await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(30);await expect(page.locator('.inspiration-grid .inspiration-press')).toHaveCount(3);
+ for(const src of await page.locator('.inspiration-page img:not(.site-brandmark)').evaluateAll(els=>els.map(e=>new URL(e.src).pathname)))expect(src).toMatch(/^\/inspiration-media\/[a-z-]+\.webp$/);await expect(page.locator('.inspiration-grid div.insp-thumb')).toHaveCount(33);
  await expect(page.locator('.inspiration-grid .insp-card-out').first()).toHaveAttribute('href','https://linear.app/');await expect(page.locator('.inspiration-link-only').first()).toHaveText('仅链接');
  await expect(page.locator('.inspiration-disclosure')).toContainText('不托管对方的截图');await expect(page.locator('.insp-title a[href="/submit"]')).toBeVisible();
  expect((await page.request.get('/inspiration/linear.webp')).headers()['content-type']).toContain('text/html');
@@ -294,7 +294,7 @@ test('inspiration references host no third-party images and link to their source
  }
  await page.emulateMedia({reducedMotion:'reduce'});
  expect(await page.locator('.insp-card-open').first().evaluate(el=>parseFloat(getComputedStyle(el).transitionDuration))).toBeLessThan(0.001);
- expect(imageRequests).toEqual([]);
+ expect(imageRequests.filter(u=>!new URL(u).pathname.startsWith('/inspiration-media/'))).toEqual([]);
 });
 
 test('submission page states the three entry kinds, permissions and takedown process in both languages', async ({page})=>{
@@ -437,6 +437,28 @@ test('the motion tab opens our own live paper-widget demo in the detail layer', 
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
  await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/inspiration/paper-widgets');
  await expect(page.locator('.pw-card').first()).toHaveCSS('opacity','1');await expect(page.locator('.pw-steps b')).toHaveText('8,240');
+});
+
+test('startup references show our own motion studies and press-kit images with their terms', async ({page})=>{
+ await page.goto('/inspiration?topic=startup-home');
+ const attio=page.locator('.insp-card').filter({has:page.locator('a[href="/inspiration/attio"]')});
+ await expect(attio.locator('.rs-frame')).toHaveCount(1);await expect(attio.locator('.insp-thumb-chip')).toContainText('仅链接');
+ const before=await attio.locator('.rs-stages li.on').textContent();await attio.hover();
+ await expect.poll(()=>attio.locator('.rs-stages li.on').textContent(),{timeout:6000}).not.toBe(before);
+ await page.goto('/inspiration/tldraw');
+ const canvas=page.locator('.insp-detail-visual .rs-canvas svg');await expect(page.locator('.insp-detail-visual .rs-frame')).toHaveAttribute('role','group');
+ const box=await canvas.boundingBox();await page.mouse.move(box.x+40,box.y+40);await page.mouse.down();await page.mouse.move(box.x+120,box.y+90,{steps:5});await page.mouse.up();
+ await expect(canvas.locator('path.rs-user')).toHaveCount(1);
+ await page.goto('/inspiration/raycast');
+ const shot=page.locator('.insp-shot img');await expect(shot).toHaveAttribute('src','/inspiration-media/raycast.webp');await expect(shot).toHaveAttribute('alt',/扩展商店/);
+ expect(await shot.evaluate(img=>img.complete&&img.naturalWidth)).toBe(1600);
+ await expect(page.locator('.insp-detail-label .inspiration-press')).toHaveText('官方素材');
+ await expect(page.locator('.insp-detail dd a[href="https://www.raycast.com/press"]')).toBeVisible();await expect(page.locator('.insp-detail dd').last()).toContainText('“Everything you need to write about Raycast');
+ await page.goto('/inspiration/ramp');await expect(page.locator('.insp-shot img')).toHaveCount(1);await expect(page.locator('.insp-detail-visual .rs-proof')).toHaveCount(1);
+ for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
+ await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/inspiration/ramp');
+ await expect(page.locator('.rs-proof-num b')).toHaveText('48,200');
+ await page.goto('/inspiration/attio');const on=await page.locator('.rs-stages li.on').textContent();await page.waitForTimeout(2600);await expect(page.locator('.rs-stages li.on')).toHaveText(on);
 });
 
 test('a reference opens as a dialog from the grid and as its own page from a direct link', async ({page})=>{

@@ -11,7 +11,7 @@ test('every external reference records provenance; unknown designers stay null',
   assert.equal(new Set(items.map(i => i.id)).size, items.length);
   for (const i of items) {
     assert.equal(new URL(i.url).protocol, 'https:', i.id);
-    assert.equal(i.source, 'link-only', i.id);
+    assert.equal(i.source, i.media ? 'press-kit' : 'link-only', i.id);
     assert.ok(i.publisher?.trim(), i.id);
     assert.ok(['official-site', 'product-page', 'documentation', 'social-post'].includes(i.kind), i.id);
     assert.ok(i.designer === null || i.designer.trim(), i.id);
@@ -26,6 +26,7 @@ test('a source screenshot ships only with a recorded permission and as a local f
     assert.ok(fs.existsSync(new URL(`../public${src}`, import.meta.url)), i.id);
     assert.ok(width > 0 && height > 0 && alt.length === 2, i.id);
     assert.ok(permission?.grantedBy?.trim() && permission?.terms?.trim(), i.id);
+    assert.equal(new URL(permission.url).protocol, 'https:', i.id);
     assert.match(permission.grantedAt, date, i.id);
   }
 });
