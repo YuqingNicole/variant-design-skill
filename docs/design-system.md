@@ -154,7 +154,7 @@
 - **数字**：从数据算出来，比如"26 个参考"由 `inspirationItems.length` 得出，不要手写。
 - **诚实**：不知道的事直接写出来，比如"设计者：未知""登录后操作未实测"。没测过的东西不写成"支持"。
 - **第三方内容**：只放链接和我们自己写的研究笔记，不复制对方的文案、商标和截图。
-- **产品图**：只用两种来源：对方官方媒体素材（press kit、brand 页）里条款允许使用的产品图，或对方的书面授权。数据里写 `media`：本地文件路径（`/inspiration-media/` 下，转成 WebP，不裁切、不改色、不加效果）、尺寸、中英替代文字，以及 `permission`（来源页名称、链接、核对日期、条款原文）；`source` 改为 `press-kit`，卡片和详情标「官方素材」。`website/scripts/inspiration-data.test.mjs` 会检查这些字段和文件。只有标志、没有产品图的素材包不用；条款不明（比如素材包要单独申请）的不用；不用 og:image，不热链，不自己截图或录屏。图片说明里写明本站与该公司没有合作或赞助关系。2026-11-01 核对时，Raycast、Resend、Ramp、Framer 符合条件；Attio、Cursor、Linear、Vercel、Lovable、Obsidian、PostHog 只提供标志；Cal.com、Pitch、Plausible、Impeccable、Nothing、Instrument、Pentagram、BASIC/DEPT 没有公开素材或条款；Figma（截图只许教学用途）和 teenage engineering（未写许可）条款不够；Notion、Asana 的素材包要登录、表单或脚本渲染才能看到条款；Aesop 拒绝自动访问。这些条目都用我们自己写的动效演示。
+- **产品图**：只用两种来源：对方官方媒体素材（press kit、brand 页）里条款允许使用的产品图，或对方的书面授权。数据里写 `media`：本地文件路径（`/inspiration-media/` 下，转成 WebP，不裁切、不改色、不加效果）、尺寸、中英替代文字，以及 `permission`（来源页名称、链接、核对日期、条款原文）；`source` 改为 `press-kit`，卡片和详情标「官方素材」。`website/scripts/inspiration-data.test.mjs` 会检查这些字段和文件。只有标志、没有产品图的素材包不用；条款不明（比如素材包要单独申请）的不用；不用 og:image，不热链，不自己截图或录屏。图片说明里写明本站与该公司没有合作或赞助关系。2026-11-01 核对时，Raycast、Resend、Ramp 符合条件；Framer 的条款只写了新闻稿和博客文章，不含图库展示，暂不用；Attio、Cursor、Linear、Vercel、Lovable、Obsidian、PostHog 只提供标志；Cal.com、Pitch、Plausible、Impeccable、Nothing、Instrument、Pentagram、BASIC/DEPT 没有公开素材或条款；Figma（截图只许教学用途）和 teenage engineering（未写许可）条款不够；Notion、Asana 的素材包要登录、表单或脚本渲染才能看到条款；Aesop 拒绝自动访问。这些条目都用我们自己写的动效演示。
 
 ## 9. 不要做
 

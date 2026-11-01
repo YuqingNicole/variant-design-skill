@@ -512,7 +512,7 @@ export const inspirationItems = [
     "category": "product",
     "tag": "Editor",
     "url": "https://www.framer.com/",
-    "source": "press-kit",
+    "source": "link-only",
     "focus": [
       "设计代理 → 可编辑画布 → 发布上线",
       "Design agent → editable canvas → published site"
@@ -526,22 +526,7 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested",
-    "media": {
-      "src": "/inspiration-media/framer.webp",
-      "width": 1600,
-      "height": 1200,
-      "alt": [
-        "Framer 设计画布：左侧页面列表，中间是网页画布，右侧是样式面板",
-        "Framer design canvas: pages list, the web page canvas and the style panel"
-      ],
-      "permission": {
-        "grantedBy": "Framer brand page",
-        "url": "https://www.framer.com/brand",
-        "grantedAt": "2026-11-01",
-        "terms": "Use these Framer product shots in press releases and blog articles to show the canvas, CMS, and analytics in action with Framer Agents on real sites."
-      }
-    }
+    "mobile": "not-tested"
   },
   {
     "id": "wiki",
