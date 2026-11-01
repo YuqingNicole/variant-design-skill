@@ -706,8 +706,8 @@ export const inspirationItems = [
   {
     "id": "paper-widgets",
     "name": "Paper widgets",
-    "category": "motion",
-    "tag": "Widgets",
+    "category": "practice",
+    "tag": "Motion",
     "url": "https://x.com/seanaiux/status/2116240216751247393",
     "source": "link-only",
     "focus": [
