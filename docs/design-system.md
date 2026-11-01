@@ -139,9 +139,9 @@
 | 筛选按钮 | `.content-filters button` | 4px 边框按钮，选中态由 `aria-pressed` 表示（灵感页以外的内容页） |
 | 筛选胶囊 | `.insp-pills button` | 32px 高，`--site-surface` 底，无边框；选中是品牌绿底、纸色字，由 `aria-pressed` 表示 |
 | 缩略图卡片 | `.insp-card` | 静止时只有缩略图，名称和一句研究要点写在链接的 `aria-label` 里。悬停或键盘聚焦时显出：左下"分类 · 标签 仅链接"、右上"加入参考包"、右下"打开来源"。图标用 16×16 线性 SVG，不用字形符号 |
-| 动效演示 | `ReferenceStudy`（`ReferenceStudies.tsx`） | 我们自己写的、复现某个参考首页关键交互的演示：在 640×400 的舞台上画，按容器宽度缩放。只用站点配色和占位内容，不用对方的代码、文案或素材。自动播放的演示对读屏软件是一张带说明的图（`role=img`），可操作的（比如能画的画布）是带标签的分组 |
+| 动效演示 | `ReferenceStudy`（`ReferenceStudies.tsx`、`ReferenceStudiesMore.tsx`，共用 `study-kit.tsx`） | 我们自己写的、复现某个参考首页关键交互的演示：在 640×400 的舞台上画，按容器宽度缩放。只用站点配色和占位内容，不用对方的代码、文案或素材。自动播放的演示对读屏软件是一张带说明的图（`role=img`），可操作的（比如能画的画布）是带标签的分组 |
 | 缩略图标签 | `.insp-thumb-chip` | 图片或演示铺满卡片时，左下角常显「名称 分类 · 标签 权限」，权限是「仅链接」或「官方素材」 |
-| 分析卡 | `Thumb`（`InspirationPage.tsx`） | 我们自己画的缩略图：衬线名称、一句研究要点、按分类画的结构草图。每个分类 3 种草图、2 种底色，按 id 选，相邻卡片不重复 |
+| 分析卡 | `Thumb`（`InspirationPage.tsx`） | 新条目在写好动效演示或拿到官方图之前的占位缩略图。我们自己画的缩略图：衬线名称、一句研究要点、按分类画的结构草图。每个分类 3 种草图、2 种底色，按 id 选，相邻卡片不重复 |
 | 详情 | `.insp-detail` | 工具条（关闭或"全部参考"、加入参考包、上一个 / 下一个）→ "分类 · 标签 仅链接" → 衬线标题 → 域名 → `dl`：研究什么 / 用在哪里 / 出处（链接）/ 设计者 / 还不知道 → "生成参考指令"。弹层用原生 `<dialog>` 的 `showModal()`，焦点锁定和 Esc 关闭由浏览器负责；← → 切换上一个和下一个 |
 | 代码块 | `.home-show-code` | Plex Mono 13px，surface 底，6px 圆角，`overflow-wrap: anywhere` |
 
@@ -154,7 +154,7 @@
 - **数字**：从数据算出来，比如"26 个参考"由 `inspirationItems.length` 得出，不要手写。
 - **诚实**：不知道的事直接写出来，比如"设计者：未知""登录后操作未实测"。没测过的东西不写成"支持"。
 - **第三方内容**：只放链接和我们自己写的研究笔记，不复制对方的文案、商标和截图。
-- **产品图**：只用两种来源：对方官方媒体素材（press kit、brand 页）里条款允许使用的产品图，或对方的书面授权。数据里写 `media`：本地文件路径（`/inspiration-media/` 下，转成 WebP，不裁切、不改色、不加效果）、尺寸、中英替代文字，以及 `permission`（来源页名称、链接、核对日期、条款原文）；`source` 改为 `press-kit`，卡片和详情标「官方素材」。`website/scripts/inspiration-data.test.mjs` 会检查这些字段和文件。只有标志、没有产品图的素材包不用；条款不明（比如素材包要单独申请）的不用；不用 og:image，不热链，不自己截图或录屏。2026-11-01 核对时，Raycast、Resend、Ramp 符合条件；Attio、Cursor、Linear 只提供标志，Cal.com、Pitch 没有公开条款，所以这些条目用动效演示或分析卡。
+- **产品图**：只用两种来源：对方官方媒体素材（press kit、brand 页）里条款允许使用的产品图，或对方的书面授权。数据里写 `media`：本地文件路径（`/inspiration-media/` 下，转成 WebP，不裁切、不改色、不加效果）、尺寸、中英替代文字，以及 `permission`（来源页名称、链接、核对日期、条款原文）；`source` 改为 `press-kit`，卡片和详情标「官方素材」。`website/scripts/inspiration-data.test.mjs` 会检查这些字段和文件。只有标志、没有产品图的素材包不用；条款不明（比如素材包要单独申请）的不用；不用 og:image，不热链，不自己截图或录屏。图片说明里写明本站与该公司没有合作或赞助关系。2026-11-01 核对时，Raycast、Resend、Ramp 符合条件；Framer 的条款只写了新闻稿和博客文章，不含图库展示，暂不用；Attio、Cursor、Linear、Vercel、Lovable、Obsidian、PostHog 只提供标志；Cal.com、Pitch、Plausible、Impeccable、Nothing、Instrument、Pentagram、BASIC/DEPT 没有公开素材或条款；Figma（截图只许教学用途）和 teenage engineering（未写许可）条款不够；Notion、Asana 的素材包要登录、表单或脚本渲染才能看到条款；Aesop 拒绝自动访问。这些条目都用我们自己写的动效演示。
 
 ## 9. 不要做
 
