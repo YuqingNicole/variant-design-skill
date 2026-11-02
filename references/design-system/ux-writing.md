@@ -1,3 +1,4 @@
+<!-- From Impeccable (https://github.com/pbakaus/impeccable, source/skills/frontend-design/reference/ux-writing.md at 6d8c851), Copyright 2025 Paul Bakaus, Apache License 2.0. Unchanged apart from this comment; see NOTICE and LICENSES/Apache-2.0.txt. -->
 # UX Writing
 
 ## The Button Label Problem

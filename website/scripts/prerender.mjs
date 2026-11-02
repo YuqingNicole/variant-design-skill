@@ -17,7 +17,7 @@ const cover = e => { const d = e.directions.find(x => x.id === e.recommendation?
 const order = entries => [...entries].sort((a, b) => Number(b.featured) - Number(a.featured) || b.publishedAt.localeCompare(a.publishedAt) || a.slug.localeCompare(b.slug));
 // Pages outside the library only get their own title and description.
 const staticPages = {
-  '/about': ['关于 Variant Design', '一个提示词，生成三种有明确立场的视觉方向。比较、批判、变化，再交付真正值得保留的方案。'],
+  '/about': ['关于 Variant Design', '一份需求，在你的项目里做出三个能运行的方向：任务、数据和功能相同，取舍不同。局部修改先存快照，可以撤回，不会覆盖你没看过的改动。'],
   '/docs': ['安装与开始使用 — Variant Design', '安装技能，确认可用，然后在你的项目里走完一次：生成、比较、试改、撤回、接入。'],
   '/inspiration': ['灵感参考 — Variant Design', '94 个外部设计参考，只附我们自己的分析和原站链接。'],
   '/submit': ['投稿与授权 — Variant Design', 'Variant Design 方向库的收录、授权与撤下规则。'],
@@ -30,7 +30,7 @@ const staticPages = {
 };
 
 const staticPagesEn = references => ({
-  '/about': ['About Variant Design', 'One prompt, three visual directions with a clear point of view. Compare, critique and vary them, then ship what is worth keeping.'],
+  '/about': ['About Variant Design', 'One brief becomes three runnable directions in your own project: the same task, data and functions, different tradeoffs. Scoped edits are snapshotted first, can be undone and never overwrite changes you have not seen.'],
   '/docs': ['Install & get started — Variant Design', 'Install the skill, confirm it works, then go through one full loop in your project: generate, compare, refine, undo, integrate.'],
   '/inspiration': ['Inspiration — Variant Design', `${references} outside design references, with only our own notes and links to the source.`],
   '/submit': ['Submissions & permissions — Variant Design', 'How the Variant Design direction library handles submissions, permissions and takedowns.'],
