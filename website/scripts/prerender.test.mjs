@@ -63,9 +63,10 @@ test('the install guide, structured data and llms.txt are readable without JavaS
   const { entries } = loadEntries(), references = loadReferences(), site = 'https://example.test';
   const pages = renderSite(entries, template, site, references, { docs, version: '9.9.9' });
   const data = html => [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(m => JSON.parse(m[1]));
-  const guide = pages.get('/docs');
-  assert.ok(guide.includes(escape(docs.installCommand)) && guide.includes(escape(docs.prompts.first[0])));
-  for (const [q, a] of docs.faq) assert.ok(guide.includes(escape(q[0])) && guide.includes(escape(a[0])), q[1]);
+  const guide = pages.get('/docs'), body = guide.replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.ok(body.includes(escape(docs.installCommand)) && body.includes(escape(docs.prompts.first.zh)));
+  for (const a of docs.agents) assert.ok(body.includes(escape(docs.verify(a.path, true))), a.id);
+  for (const [q, a] of docs.faq) assert.ok(body.includes(escape(q.zh)) && body.includes(escape(a.zh)), q.en);
   const [howTo, faqPage] = data(guide)[0]['@graph'];
   assert.equal(howTo['@type'], 'HowTo');
   assert.equal(faqPage.mainEntity.length, docs.faq.length);
@@ -78,7 +79,8 @@ test('the install guide, structured data and llms.txt are readable without JavaS
   assert.match(brief, /^# Variant Design\n\n> /);
   assert.ok(brief.includes(docs.installCommand) && brief.includes(`${site}/docs`) && brief.includes(`${references.length} curated`));
   for (const e of entries) assert.ok(brief.includes(`(${site}/d/${e.slug})`), e.slug);
-  for (const [q] of docs.faq) assert.ok(full.includes(`### ${q[0]}`) && full.includes(`### ${q[1]}`), q[1]);
+  for (const [q] of docs.faq) assert.ok(full.includes(`### ${q.zh}`) && full.includes(`### ${q.en}`), q.en);
+  for (const a of docs.agents) assert.ok(full.includes(docs.verify(a.path, false)) && full.includes(docs.verify(a.path, true)), a.id);
 });
 
 test('structured data cannot close its script tag', () => {

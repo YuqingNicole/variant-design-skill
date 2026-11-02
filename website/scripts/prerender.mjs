@@ -36,19 +36,19 @@ function referenceBody(r) {
   return `<main><p><a href="/inspiration">灵感参考</a></p><h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus.zh)}</dd><dt>用在哪里</dt><dd>${escape(r.application.zh)}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}${r.via ? ` · <a href="${escape(r.via)}">经 ${escape(new URL(r.via).hostname)} 发现</a>` : ''}</dd></dl><p><a href="${escape(r.url)}">访问原站</a></p></main>`;
 }
 // The install guide (src/docs-content.ts) as static HTML, so /docs reads without JavaScript.
-function docsBody(d, ix = 0) {
-  const list = rows => `<ul>${rows.map(r => `<li>${escape(r[ix])}</li>`).join('')}</ul>`, code = c => `<pre><code>${escape(c)}</code></pre>`;
-  const commands = rows => `<dl>${rows.map(([c, t]) => `<dt><code>${escape(typeof c === 'string' ? c : c[ix])}</code></dt><dd>${escape(t[ix])}</dd>`).join('')}</dl>`;
-  const x = k => escape(d.text[k][ix]);
-  return `<main><h1>${ix ? 'Install and get started' : '安装与开始使用'}</h1>`
+function docsBody(d, lang = 'zh') {
+  const list = rows => `<ul>${rows.map(r => `<li>${escape(r[lang])}</li>`).join('')}</ul>`, code = c => `<pre><code>${escape(c)}</code></pre>`;
+  const commands = rows => `<dl>${rows.map(([c, t]) => `<dt><code>${escape(typeof c === 'string' ? c : c[lang])}</code></dt><dd>${escape(t[lang])}</dd>`).join('')}</dl>`;
+  const x = k => escape(d.text[k][lang]);
+  return `<main><h1>${lang === 'en' ? 'Install and get started' : '安装与开始使用'}</h1>`
     + `<section id="before"><h2>${x('before')}</h2>${list(d.prerequisites)}</section>`
-    + `<section id="install"><h2>${x('install')}</h2><p>${x('installIntro')}</p>${d.agents.map(a => `<h3>${escape(a.label || (ix ? 'Other agents' : '其他 Agent'))}</h3>${code(a.id === 'codex' ? d.installCommand : d.clone(a.path))}<p>${escape(a.note[ix])}</p>`).join('')}`
-    + `<h3>${x('confirm')}</h3><p>${x('confirmNode')}</p>${code(d.verify(d.agents[0].path, !ix))}<p>${x('confirmPrompt')}</p>${code(d.prompts.check[ix])}</section>`
-    + `<section id="first-project"><h2>${x('firstProject')}</h2><p>${x('firstIntro')}</p>${code(d.prompts.first[ix])}<h3>${x('outcomes')}</h3>${list(d.outcomes)}</section>`
+    + `<section id="install"><h2>${x('install')}</h2><p>${x('installIntro')}</p>${d.agents.map(a => `<h3>${escape(a.label || (lang === 'en' ? 'Other agents' : '其他 Agent'))}</h3>${code(a.id === 'codex' ? d.installCommand : d.clone(a.path))}<p>${escape(a.note[lang])}</p>`).join('')}`
+    + `<h3>${x('confirm')}</h3><p>${x('confirmNode')}</p>${d.agents.map(a => code(d.verify(a.path, lang === 'zh'))).join('')}<p>${x('confirmPrompt')}</p>${code(d.prompts.check[lang])}</section>`
+    + `<section id="first-project"><h2>${x('firstProject')}</h2><p>${x('firstIntro')}</p>${code(d.prompts.first[lang])}<h3>${x('outcomes')}</h3>${list(d.outcomes)}</section>`
     + `<section id="refine"><h2>${x('refine')}</h2><p>${x('refineIntro')}</p>${commands(d.refine)}</section>`
-    + `<section id="deliver"><h2>${x('deliver')}</h2>${commands(d.deliver)}<p>${x('integrate')}</p>${code(d.prompts.integrate[ix])}<h3>${x('handoff')}</h3>${list(d.handoff)}</section>`
+    + `<section id="deliver"><h2>${x('deliver')}</h2>${commands(d.deliver)}<p>${x('integrate')}</p>${code(d.prompts.integrate[lang])}<h3>${x('handoff')}</h3>${list(d.handoff)}</section>`
     + `<section id="more"><h2>${x('more')}</h2><p>${x('moreIntro')}</p>${commands(d.otherUses)}</section>`
-    + `<section id="faq"><h2>${x('faq')}</h2>${d.faq.map(([q, a]) => `<h3>${escape(q[ix])}</h3><p>${escape(a[ix])}</p>`).join('')}</section></main>`;
+    + `<section id="faq"><h2>${x('faq')}</h2>${d.faq.map(([q, a]) => `<h3>${escape(q[lang])}</h3><p>${escape(a[lang])}</p>`).join('')}</section></main>`;
 }
 const skillData = (site, version) => ({ '@type': 'SoftwareSourceCode', '@id': `${site}/#skill`, name: 'variant-design', version,
   description: '开源 Agent 技能：在你自己的项目里把一个设计任务做成 A/B/C 三个可比较的方向，支持局部修改、快照撤回和可回滚的接入。适用于 Codex、Claude Code 等本地 Agent。',
@@ -56,10 +56,10 @@ const skillData = (site, version) => ({ '@type': 'SoftwareSourceCode', '@id': `$
 function docsData(d, site) {
   return { '@graph': [
     { '@type': 'HowTo', name: '安装 Variant Design 并在项目里生成 A/B/C 三个方向', url: `${site}/docs`, inLanguage: 'zh-CN',
-      supply: d.prerequisites.map(p => ({ '@type': 'HowToSupply', name: p[0] })),
-      step: [['install', 'installIntro', d.installCommand], ['confirm', 'confirmPrompt', d.prompts.check[0]], ['firstProject', 'firstIntro', d.prompts.first[0]], ['refine', 'refineIntro'], ['deliver', 'integrate', d.prompts.integrate[0]]]
-        .map(([h, p, c], i) => ({ '@type': 'HowToStep', position: i + 1, name: d.text[h][0], text: [d.text[p][0], c].filter(Boolean).join('\n'), url: `${site}/docs#${['install', 'install', 'first-project', 'refine', 'deliver'][i]}` })) },
-    { '@type': 'FAQPage', mainEntity: d.faq.map(([q, a]) => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: a[0] } })) }] };
+      supply: d.prerequisites.map(p => ({ '@type': 'HowToSupply', name: p.zh })),
+      step: [['install', 'installIntro', d.installCommand], ['confirm', 'confirmPrompt', d.prompts.check.zh], ['firstProject', 'firstIntro', d.prompts.first.zh], ['refine', 'refineIntro'], ['deliver', 'integrate', d.prompts.integrate.zh]]
+        .map(([h, p, c], i) => ({ '@type': 'HowToStep', position: i + 1, name: d.text[h].zh, text: [d.text[p].zh, c].filter(Boolean).join('\n'), url: `${site}/docs#${['install', 'install', 'first-project', 'refine', 'deliver'][i]}` })) },
+    { '@type': 'FAQPage', mainEntity: d.faq.map(([q, a]) => ({ '@type': 'Question', name: q.zh, acceptedAnswer: { '@type': 'Answer', text: a.zh } })) }] };
 }
 
 function card(e) {
@@ -115,7 +115,7 @@ export function llms(entries, docs, site = defaultSite, references = []) {
 > Variant Design is an open-source agent skill for Codex and Claude Code that turns one design brief into three distinct, comparable directions (A/B/C) inside your own project, with scoped edits, snapshot undo and an integration step you can roll back. Its website is a bilingual (Chinese/English) design navigation site: curated external references with sources and check dates, design skills that were actually run, and real A/B/C cases with their output records.
 
 - Install for Codex: \`${docs.installCommand}\`
-- Install for Claude Code: \`${docs.clone(docs.agents[1].path)}\`
+- Install for Claude Code: \`${docs.clone(docs.agents.find(a => a.id === 'claude').path)}\`
 - Or, inside a project: \`npx skills add YuqingNicole/variant-design-skill -a codex\` (or \`-a claude-code\`).
 - Requires Git and Node.js 22+. Your agent supplies the model; there is no hosted service. MIT licensed.
 - Editing a direction does not select it: only an explicit \`pick B\` records the final choice. Output goes to \`variant-output/\` in your project.
@@ -143,17 +143,17 @@ ${cases}
 }
 // The whole install guide as Markdown, English then Chinese.
 export function llmsFull(entries, docs, site = defaultSite, references = []) {
-  const guide = ix => {
-    const x = k => docs.text[k][ix], list = rows => rows.map(r => `- ${r[ix]}`).join('\n'), code = c => '```\n' + c + '\n```';
-    const commands = rows => rows.map(([c, t]) => `- \`${typeof c === 'string' ? c : c[ix]}\`: ${t[ix]}`).join('\n');
-    return [`# ${ix ? 'Install and get started' : '安装与开始使用'}`, `## ${x('before')}`, list(docs.prerequisites), `## ${x('install')}`, x('installIntro'),
-      ...docs.agents.flatMap(a => [`### ${a.label || (ix ? 'Other agents' : '其他 Agent')}`, code(a.id === 'codex' ? docs.installCommand : docs.clone(a.path)), a.note[ix]]),
-      `### ${x('confirm')}`, x('confirmNode'), code(docs.verify(docs.agents[0].path, !ix)), x('confirmPrompt'), code(docs.prompts.check[ix]),
-      `## ${x('firstProject')}`, x('firstIntro'), code(docs.prompts.first[ix]), `### ${x('outcomes')}`, list(docs.outcomes),
-      `## ${x('refine')}`, x('refineIntro'), commands(docs.refine), `## ${x('deliver')}`, commands(docs.deliver), x('integrate'), code(docs.prompts.integrate[ix]), `### ${x('handoff')}`, list(docs.handoff),
-      `## ${x('more')}`, x('moreIntro'), commands(docs.otherUses), `## ${x('faq')}`, ...docs.faq.flatMap(([q, a]) => [`### ${q[ix]}`, a[ix]])].join('\n\n');
+  const guide = lang => {
+    const x = k => docs.text[k][lang], list = rows => rows.map(r => `- ${r[lang]}`).join('\n'), code = c => '```\n' + c + '\n```';
+    const commands = rows => rows.map(([c, t]) => `- \`${typeof c === 'string' ? c : c[lang]}\`: ${t[lang]}`).join('\n');
+    return [`# ${lang === 'en' ? 'Install and get started' : '安装与开始使用'}`, `## ${x('before')}`, list(docs.prerequisites), `## ${x('install')}`, x('installIntro'),
+      ...docs.agents.flatMap(a => [`### ${a.label || (lang === 'en' ? 'Other agents' : '其他 Agent')}`, code(a.id === 'codex' ? docs.installCommand : docs.clone(a.path)), a.note[lang]]),
+      `### ${x('confirm')}`, x('confirmNode'), ...docs.agents.map(a => code(docs.verify(a.path, lang === 'zh'))), x('confirmPrompt'), code(docs.prompts.check[lang]),
+      `## ${x('firstProject')}`, x('firstIntro'), code(docs.prompts.first[lang]), `### ${x('outcomes')}`, list(docs.outcomes),
+      `## ${x('refine')}`, x('refineIntro'), commands(docs.refine), `## ${x('deliver')}`, commands(docs.deliver), x('integrate'), code(docs.prompts.integrate[lang]), `### ${x('handoff')}`, list(docs.handoff),
+      `## ${x('more')}`, x('moreIntro'), commands(docs.otherUses), `## ${x('faq')}`, ...docs.faq.flatMap(([q, a]) => [`### ${q[lang]}`, a[lang]])].join('\n\n');
   };
-  return `${llms(entries, docs, site, references)}\n---\n\n${guide(1)}\n\n---\n\n${guide(0)}\n`;
+  return `${llms(entries, docs, site, references)}\n---\n\n${guide('en')}\n\n---\n\n${guide('zh')}\n`;
 }
 
 export function sitemap(routes, site = defaultSite) {
