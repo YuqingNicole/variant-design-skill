@@ -22,6 +22,20 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(named, [])
         self.assertTrue((root/'SKILL.md').read_text().startswith('---\nname: variant-design\n'))
 
+    def test_third_party_files_carry_their_notice(self):
+        # Apache-2.0 section 4: ship the license, keep the NOTICE attributions, mark each copied file.
+        root = Path(__file__).resolve().parent.parent
+        notice = (root/'NOTICE').read_text()
+        listed = [line.strip() for line in notice.splitlines() if line.startswith('  references/')]
+        self.assertEqual(len(listed), 7)
+        for name in listed:
+            self.assertTrue((root/name).read_text().startswith('<!-- From Impeccable ('), name)
+        self.assertIn('Copyright 2025 Paul Bakaus', notice)
+        self.assertIn('Apache License', (root/'LICENSES/Apache-2.0.txt').read_text())
+        names = builder.package_files(root)
+        for name in ('NOTICE', 'skills/variant-design/NOTICE', 'skills/variant-design/LICENSES/Apache-2.0.txt'):
+            self.assertIn(name, names)
+
     def test_claude_marketplace_lists_only_the_router(self):
         root = Path(__file__).resolve().parent.parent
         marketplace = json.loads((root/'.claude-plugin/marketplace.json').read_text())

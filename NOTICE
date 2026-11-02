@@ -1,0 +1,43 @@
+Variant Design
+Copyright (c) 2026 YuqingNicole
+Licensed under the MIT License (see LICENSE), except for the third-party files listed below.
+
+Third-party files
+=================
+
+Impeccable design references (Apache License 2.0)
+-------------------------------------------------
+
+These files are copies of Impeccable's frontend-design reference files, taken from
+https://github.com/pbakaus/impeccable at commit 6d8c851c254990d62cd96c0afedf407f82fca69c
+(source/skills/frontend-design/reference/<name>.md). They are licensed under the
+Apache License, Version 2.0; a copy is in LICENSES/Apache-2.0.txt. Their text is
+unchanged apart from a one-line origin comment added at the top of each file.
+
+  references/design-system/color-and-contrast.md
+  references/design-system/interaction-design.md
+  references/design-system/motion-design.md
+  references/design-system/responsive-design.md
+  references/design-system/spatial-design.md
+  references/design-system/typography.md
+  references/design-system/ux-writing.md
+
+Impeccable's NOTICE file, reproduced as section 4(d) of the Apache License requires:
+
+    # Notice
+
+    Impeccable
+    Copyright 2025 Paul Bakaus
+
+    ## Anthropic frontend-design Skill
+
+    The `frontend-design` skill in this project builds on Anthropic's original frontend-design skill.
+
+    **Original work:** https://github.com/anthropics/skills/tree/main/skills/frontend-design
+    **Original license:** Apache License 2.0
+    **Copyright:** 2025 Anthropic, PBC
+
+    This project extends the original with:
+    - 7 domain-specific reference files (typography, color-and-contrast, spatial-design, motion-design, interaction-design, responsive-design, ux-writing)
+    - 17 steering commands
+    - Expanded patterns and anti-patterns

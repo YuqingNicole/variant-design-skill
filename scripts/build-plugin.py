@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parent.parent
 def package_files(root=ROOT):
     manifest = json.loads((root / 'plugin/plugin.json').read_text())
     files = {'.codex-plugin/plugin.json': (json.dumps(manifest, indent=2) + '\n').encode(),
-             'LICENSE': (root / 'LICENSE').read_bytes()}
+             'LICENSE': (root / 'LICENSE').read_bytes(), 'NOTICE': (root / 'NOTICE').read_bytes()}
     for name in ('composerIcon', 'logo'):
         relative = manifest['interface'][name]
         if not relative.startswith('./assets/') or '..' in Path(relative).parts:
@@ -20,7 +20,8 @@ def package_files(root=ROOT):
         if file.is_symlink():
             raise ValueError('Symlinks are not distributable')
         files[relative[2:]] = file.read_bytes()
-    source_files = [root / name for name in ('SKILL.md', 'VERSION', 'LICENSE')]
+    # NOTICE and the Apache-2.0 text travel with the third-party references they cover (see NOTICE).
+    source_files = [root / name for name in ('SKILL.md', 'VERSION', 'LICENSE', 'NOTICE', 'LICENSES/Apache-2.0.txt')]
     for folder in ('references', 'skills', 'scripts', 'assets'):
         for file in sorted((root / folder).rglob('*')):
             if file.is_symlink():

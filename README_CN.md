@@ -2,9 +2,9 @@
 
 **[English](./README.md)** | 中文
 
-> 解决空白画布问题。提示词 → 3 个完整的差异化设计 → 迭代 → 导出。
+> 开源的 Agent 技能，用于 Codex 和 Claude Code：把一份设计需求变成你项目里三个完整、可比较的方向（A/B/C），支持局部修改、快照撤回，接入后也能回滚。
 
-一个受 [Variant](https://variant.com) 设计社区启发的 Claude Code 技能，内置 **Impeccable 设计系统**。输入一个提示词，获得三个截然不同的设计方向——每个来自不同工作室的审美——然后用一个词迭代。
+三个方向的任务、数据和功能相同，各自说明优化了什么、放弃了什么。修改前先保存快照，不会覆盖你还没看过的改动。受 [Variant](https://variant.com) 设计社区启发。
 
 ---
 
@@ -328,8 +328,8 @@ export to next       →  将选定变体导出为 Next.js App Router 组件
 | `references/ux/design-critique.md` | 反馈框架 · 品味陷阱 · HiPPO 问题 · 异步评审 · 批评 vs 评审 · 自我批评清单 |
 | `references/ux/conversion-patterns.md` | 信任信号 · 落地页解剖 · CTA 文案 · 定价页模式 · 表单转化 · 暗黑模式辨别 |
 
-### 设计系统参考（Impeccable）
-每次生成都会加载的基础设计原则：
+### 设计系统参考
+各流程在需要时加载的设计原则。其中 7 个文件原样复制自 [Impeccable](https://github.com/pbakaus/impeccable) 的参考文件，按 Apache License 2.0 使用，清单见 [NOTICE](NOTICE)。
 
 | 文件 | 涵盖内容 |
 |---|---|
@@ -368,7 +368,7 @@ export to next       →  将选定变体导出为 Next.js App Router 组件
 
 完整案例放在[方向库](https://variant-design-skill.vercel.app/)，不放进参考文件：只收我们自己跑出来的或作者授权的作品，不转录别人作品的文案。`node --test scripts/skill-links.test.mjs` 会检查技能提到的每个文件都存在，且每个参考文件都能从 `SKILL.md` 找到。
 
-设计系统参考遵循 Impeccable 风格结构，包含原则、代码示例和反模式。
+设计系统参考包含原则、代码示例和反模式。
 
 ---
 
@@ -384,7 +384,7 @@ export to next       →  将选定变体导出为 Next.js App Router 组件
 
 ---
 
-基于 [Claude Code Skills](https://claude.ai/code) 构建。设计系统由 [Impeccable](https://github.com/pbakaus/impeccable) 驱动。组件交接与实现检查参考了 Vercel 的 [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines)、Anthropic [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) 中的 design-handoff skill，以及 [Owl-Listener/designer-skills](https://github.com/Owl-Listener/designer-skills)。
+基于 [Claude Code Skills](https://claude.ai/code) 构建。7 个设计系统参考文件原样来自 [Impeccable](https://github.com/pbakaus/impeccable)（Apache-2.0，Copyright 2025 Paul Bakaus，见 [NOTICE](NOTICE)）。组件交接与实现检查参考了 Vercel 的 [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines)、Anthropic [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) 中的 design-handoff skill，以及 [Owl-Listener/designer-skills](https://github.com/Owl-Listener/designer-skills)。
 
 ## Codex 插件候选版
 
