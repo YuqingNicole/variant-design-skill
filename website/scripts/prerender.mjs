@@ -31,7 +31,7 @@ export function loadReferences() {
   return JSON.parse(source.slice(from, source.indexOf('\n];', from) + 2));
 }
 function referenceBody(r) {
-  return `<main><p><a href="/inspiration">灵感参考</a></p><h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus[0])}</dd><dt>用在哪里</dt><dd>${escape(r.application[0])}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}</dd></dl><p><a href="${escape(r.url)}">访问原站</a></p></main>`;
+  return `<main><p><a href="/inspiration">灵感参考</a></p><h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus.zh)}</dd><dt>用在哪里</dt><dd>${escape(r.application.zh)}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}</dd></dl><p><a href="${escape(r.url)}">访问原站</a></p></main>`;
 }
 function card(e) {
   const { image } = cover(e);
@@ -72,7 +72,7 @@ export function renderSite(entries, template, site = defaultSite, references = [
     pages.set(`/d/${e.slug}`, page(template, { site, route: `/d/${e.slug}`, type: 'article', title: `${e.title[0]} — ${library}`, description: e.summary[0],
       image: { src: `/media/${e.slug}/${image.file}`, width: image.width, height: image.height, alt: image.alt[0] }, body: entryBody(e) }));
   }
-  for (const r of references) pages.set(`/inspiration/${r.id}`, page(template, { site, route: `/inspiration/${r.id}`, title: `${r.name} — 灵感参考 — Variant Design`, description: `${r.name}：${r.focus[0]}。用在${r.application[0]}。`, body: referenceBody(r) }));
+  for (const r of references) pages.set(`/inspiration/${r.id}`, page(template, { site, route: `/inspiration/${r.id}`, title: `${r.name} — 灵感参考 — Variant Design`, description: `${r.name}：${r.focus.zh}。用在${r.application.zh}。`, body: referenceBody(r) }));
   for (const [route, [title, description]] of Object.entries(staticPages)) pages.set(route, page(template, { site, route, title, description }));
   return pages;
 }

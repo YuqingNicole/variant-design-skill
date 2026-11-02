@@ -25,7 +25,7 @@ test('best-practice entries and other X links carry the oEmbed fields their card
     const m = /^https:\/\/x\.com\/([A-Za-z0-9_]+)\/status\/(\d+)$/.exec(i.url); assert.ok(m, i.id);
     assert.equal(i.post.handle, m[1], i.id); assert.equal(i.post.id, m[2], i.id);
     assert.ok(i.post.author.trim() && i.post.text.trim() && typeof i.post.hasMedia === 'boolean', i.id); assert.match(i.post.date, date, i.id);
-    assert.doesNotMatch(i.focus[0] + i.application[0] + i.name, /TODO/, i.id);
+    assert.doesNotMatch(i.focus.zh + i.application.zh + i.name, /TODO/, i.id);
   }
 });
 
@@ -41,6 +41,17 @@ test('topics stay small, dated and point at existing references', () => {
     assert.equal(new Set(t.items).size, t.items.length, t.id);
     for (const id of t.items) assert.ok(ids.has(id), `${t.id}: ${id}`);
     assert.match(t.linksCheckedAt, date, t.id);
-    assert.equal(t.title.length, 2); assert.equal(t.task.length, 2);
+  }
+});
+
+// RFC-005 P1: our own notes are values per language, never positional pairs; both published languages are written.
+test('every note, topic and source label is written in both languages', () => {
+  const sources = read('inspirationSources');
+  const fields = [...items.flatMap(i => [[`${i.id}.focus`, i.focus], [`${i.id}.application`, i.application]]),
+    ...topics.flatMap(t => [[`${t.id}.title`, t.title], [`${t.id}.task`, t.task]]), ...sources.map(s => [`${s.name}.type`, s.type])];
+  for (const [name, value] of fields) {
+    assert.ok(value && !Array.isArray(value), name);
+    assert.deepEqual(Object.keys(value), ['zh', 'en'], name);
+    assert.ok(value.zh.trim() && value.en.trim(), name);
   }
 });

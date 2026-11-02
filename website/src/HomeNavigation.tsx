@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { transition } from './view-transition';
 import type { Language } from './direction-engine';
+import { t } from './i18n/localized';
 import { entries, mediaUrl } from './library-data';
 import { inspirationItems, inspirationSources, inspirationTopics } from './inspiration-data';
 import { skills } from './SkillsPage';
@@ -14,11 +15,11 @@ const topic = inspirationTopics[0], reference = inspirationItems.find(i => i.id 
 const skill = skills[0] as typeof skills[number] | undefined, pulse = verified.find(e => e.slug === 'pulse') ?? verified[0];
 const facts = (list: string[]) => <p className="home-show-facts">{list.join(' · ')}</p>;
 
-function Showcase({ shelf, zh, ix }: { shelf: Shelf; zh: boolean; ix: number }) {
+function Showcase({ shelf, language, zh, ix }: { shelf: Shelf; language: Language; zh: boolean; ix: number }) {
   if (shelf === 'reference') return <article className="home-show-card" data-shelf="reference">
-    <h3>{reference.name}</h3><p className="home-show-body">{reference.focus[ix]}</p><p className="home-show-body home-show-apply">{zh ? '用在：' : 'Apply: '}{reference.application[ix]}</p>
+    <h3>{reference.name}</h3><p className="home-show-body">{t(reference.focus, language)}</p><p className="home-show-body home-show-apply">{zh ? '用在：' : 'Apply: '}{t(reference.application, language)}</p>
     {facts(zh ? [`${reference.publisher} 官网`, '仅链接', `核对于 ${reference.checkedAt}`, '设计者未知'] : [`${reference.publisher} site`, 'Link only', `Checked ${reference.checkedAt}`, 'Designer unknown'])}
-    <p className="home-show-links"><a href={reference.url} target="_blank" rel="noreferrer">{zh ? '打开来源' : 'Open source'}</a><a href={`/inspiration?topic=${topic.id}`}>{zh ? `看「${topic.title[0]}」专题的 ${topic.items.length} 条` : `See all ${topic.items.length} in ${topic.title[1]}`}</a></p></article>;
+    <p className="home-show-links"><a href={reference.url} target="_blank" rel="noreferrer">{zh ? '打开来源' : 'Open source'}</a><a href={`/inspiration?topic=${topic.id}`}>{zh ? `看「${topic.title.zh}」专题的 ${topic.items.length} 条` : `See all ${topic.items.length} in ${topic.title.en}`}</a></p></article>;
   if (shelf === 'skill' && skill) return <article className="home-show-card" data-shelf="skill">
     <h3><code>{skill.name}</code></h3><p className="home-show-body">{skill.summary[ix]}</p>
     <code className="home-show-code">{skill.install}</code>
@@ -46,7 +47,7 @@ export function HomeHero({ language }: { language: Language }) {
     <header className="site-shell home-hero">
       <div className="home-show">
         <div className="home-shelves" role="group" aria-label={zh ? '切换展示' : 'Switch showcase'}>{shelves.filter(s => s.id !== 'skill' || skill).map(s => <button key={s.id} type="button" aria-pressed={shelf === s.id} onClick={() => transition(() => setShelf(s.id))}>{shelf === s.id && <span className="home-shelf-pill" aria-hidden="true"/>}<span style={{ viewTransitionName: `home-shelf-${s.id}` }}>{s.label[ix]}</span></button>)}</div>
-        <div aria-live="polite"><Showcase shelf={shelf} zh={zh} ix={ix}/></div>
+        <div aria-live="polite"><Showcase shelf={shelf} language={language} zh={zh} ix={ix}/></div>
       </div>
       <div className="home-claim">
         <h1>{zh ? <>设计导航，<br/>只收核对过的。</> : <>A design guide,<br/>checked before it’s listed.</>}</h1>
@@ -71,6 +72,6 @@ export function HomeDirectories({ language }: { language: Language }) {
   return <section className="site-shell home-directories" id="directories" aria-labelledby="home-directories-title">
     <h2 id="home-directories-title">{zh ? '更多设计目录' : 'More design directories'}</h2>
     <p>{zh ? '这些是外部目录，只给链接，不代表我们试过或推荐其中的每一项。复用素材和代码前，请查看具体条目的许可。' : 'Outside directories, linked only. Listing one does not mean we tried or recommend everything in it. Check each item’s license before reusing assets or code.'}</p>
-    <div>{groups.map(g => <div key={g.kind}><h3>{g.title[ix]}</h3><ul>{inspirationSources.filter(s => s.kind === g.kind).map(s => <li key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.name}</a><span>{s.type[ix]}</span></li>)}</ul></div>)}</div>
+    <div>{groups.map(g => <div key={g.kind}><h3>{g.title[ix]}</h3><ul>{inspirationSources.filter(s => s.kind === g.kind).map(s => <li key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.name}</a><span>{t(s.type, language)}</span></li>)}</ul></div>)}</div>
   </section>;
 }
