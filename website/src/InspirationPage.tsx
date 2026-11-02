@@ -143,7 +143,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
    <details className="inspiration-disclosure"><summary>{l('disclosure')}</summary><p>{l('disclosureBody')}</p></details>
   </header>
   <div className="insp-bar"><div className="site-shell">
-   <div className="insp-pills" role="group" aria-label={l('refType')}>{[['all',l('all')],...(['landing','product','flow','practice'] as const).map(c=>[c,t(labels[c],language)])].map(([id,label])=><button key={id} aria-pressed={category===id} onClick={()=>filter(()=>setCategory(id))}>{label}</button>)}</div>
+   <div className="insp-pills" role="group" aria-label={l('refType')}>{[['practice',t(labels.practice,language)],['all',l('all')],...(['landing','product','flow'] as const).map(c=>[c,t(labels[c],language)])].map(([id,label])=><button key={id} aria-pressed={category===id} onClick={()=>filter(()=>setCategory(id))}>{label}</button>)}</div>
    <select aria-label={l('topic')} value={topic} onChange={e=>{const v=e.target.value;filter(()=>setTopic(v))}}><option value="">{l('allTopics')}</option>{inspirationTopics.map(tp=><option key={tp.id} value={tp.id}>{t(tp.title,language)} · {tp.items.length}</option>)}</select>
    <label className="insp-search"><Icon d={icons.search}/><span className="insp-visually-hidden">{l('search')}</span><input ref={searchRef} type="search" value={query} onChange={e=>{setQuery(e.target.value);setVisible(pageSize)}} placeholder={l('searchHint')}/></label>
    <select aria-label={l('sort')} value={sort} onChange={e=>{const v=e.target.value;filter(()=>setSort(v))}}><option value="default">{l('curated')}</option><option value="checked">{l('recent')}</option><option value="name">{l('byName')}</option></select>
