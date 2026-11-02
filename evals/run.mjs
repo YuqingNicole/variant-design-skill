@@ -38,7 +38,9 @@ function prepare(fixture, agent) {
 function command(agent, prompt, dir) {
   // --setting-sources without "user" keeps ~/.claude/skills out, so a global install cannot shadow the copy under test.
   if (agent === 'claude') return ['claude', ['-p', '--dangerously-skip-permissions', '--setting-sources', 'project,local', '--output-format', 'stream-json', '--verbose', prompt]];
-  return ['codex', ['exec', '--skip-git-repo-check', '-s', 'workspace-write', '-c', 'approval_policy="never"', '--json', '-o', path.join(dir, '..', `${path.basename(dir)}.last.txt`), prompt]];
+  // --ignore-user-config, --ignore-rules and hooks off keep the runner's own Codex setup (MCP servers such as Computer Use,
+  // plugin marketplaces, hooks, exec rules) out of the run; --ephemeral keeps runs out of the session history. Login still works.
+  return ['codex', ['exec', '--skip-git-repo-check', '-s', 'workspace-write', '-c', 'approval_policy="never"', '-c', 'features.hooks=false', '--ignore-user-config', '--ignore-rules', '--ephemeral', '--json', '-o', path.join(dir, '..', `${path.basename(dir)}.last.txt`), prompt]];
 }
 
 function runAgent(agent, prompt, dir) {
