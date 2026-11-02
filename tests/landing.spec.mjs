@@ -761,6 +761,7 @@ test('English has its own addresses: readable without JavaScript, linked both wa
   await page.reload();
   await expect(page).toHaveURL(/\/docs$/);
   await expect(page.locator('.site-language-notice')).toContainText('available in English');
+  await expect(page.locator('.site-language-notice')).toHaveCSS('background-color', 'rgb(35, 38, 34)');
   await page.locator('.site-language-notice a').click();
   await expect(page).toHaveURL(/\/en\/docs$/);
   await expect(page.locator('.site-language-notice')).toHaveCount(0);
