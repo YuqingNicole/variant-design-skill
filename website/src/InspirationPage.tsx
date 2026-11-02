@@ -70,7 +70,8 @@ function LinkPreview({item,preview,locale}:{item:Item;preview:Preview;locale:Loc
  return <figure className="inspiration-demo insp-shot">{failed?<AnalysisCard item={item} locale={locale}/>:<img src={tries?preview.image:sized(preview.image,1280)} alt={preview.title} lang={lang} referrerPolicy="no-referrer" onError={()=>setTries(t=>t+1)}/>}<figcaption><span lang={lang}><b>{preview.title}</b>{preview.description&&<> — {preview.description}</>}</span><br/>{t(f.caption,locale)(host,preview.fetchedAt,failed)}</figcaption></figure>}
 const Icon=({d}:{d:string})=><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={d}/></svg>;
 const icons={out:'M5 11 11 5M6 5h5v5',save:'M4 2.5h8v11L8 10.5l-4 3z',close:'M4 4l8 8M12 4l-8 8',prev:'M10 3 5 8l5 5',next:'M6 3l5 5-5 5',search:'M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM14 14l-3.5-3.5'};
-const pageSize=24;
+// A multiple of the grid's columns (5 at 1440px, 3 at tablet width) so a partial page ends on a full row.
+const pageSize=30;
 type Intent={use:string;avoid:string};
 const kinds:Record<string,Localized>={'official-site':{zh:'官网',en:'Official site'},'product-page':{zh:'产品页',en:'Product page'},documentation:{zh:'帮助文档',en:'Documentation'},'social-post':{zh:'社交帖子',en:'Social post'}};
 // Everything the record does not establish goes into the brief as an explicit unknown (RFC-003 §3).

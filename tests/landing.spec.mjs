@@ -295,9 +295,10 @@ const stubPreviews=async(page,fail=[])=>{const failed=src=>fail.some(id=>preview
 test('inspiration thumbnails map each link\'s own preview, resized from the source', async ({page})=>{
  const imageRequests=[];page.on('request',r=>{if(r.resourceType()==='image'&&!new URL(r.url()).pathname.startsWith('/variant-mark'))imageRequests.push(r.url());});
  await stubPreviews(page,['linear']);
- await page.goto('/inspiration');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(24);
- await page.getByRole('button',{name:'加载更多（还有 8 个）'}).click();await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(32);
+ // A short window keeps the load-more sentinel out of reach, so the first page and the fallback button can be checked.
+ await page.setViewportSize({width:1280,height:360});await page.goto('/inspiration');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(30);
+ await page.getByRole('button',{name:'加载更多（还有 2 个）'}).click();await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(32);
  await expect(page.locator('.inspiration-grid .insp-thumb-post')).toHaveCount(0);await expect(page.locator('.inspiration-grid div.insp-thumb')).toHaveCount(32);
  await expect(page.locator('.inspiration-grid .insp-thumb-media img')).toHaveCount(28);
  const linear=page.locator('.insp-card').filter({has:page.locator('a[href="/inspiration/linear"]')});await expect(linear.locator('div.insp-thumb-landing b')).toHaveText('Linear');
