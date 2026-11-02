@@ -9,6 +9,8 @@ export const mediaOf=(id:string):XMedia|undefined=>(xMedia as Record<string,XMed
 function dropReferrer(){if(document.querySelector('meta[name="referrer"]'))return;const m=document.createElement('meta');m.name='referrer';m.content='no-referrer';document.head.appendChild(m)}
 export function XVideo({media}:{media:XMedia}){const ref=useRef<HTMLVideoElement>(null);const [failed,setFailed]=useState(false);
  useEffect(()=>{const v=ref.current;if(!v)return;dropReferrer();
+  // Without IntersectionObserver the poster stays and no file attaches.
+  if(typeof IntersectionObserver==='undefined')return;
   // The file attaches only as the card nears the screen, so a long tab does not open every video at once.
   let visible=false;const play=()=>{if(visible&&v.getAttribute('src'))v.play().catch(()=>{});else v.pause()};
   const near=new IntersectionObserver(([e])=>{if(e.isIntersecting){v.src=media.video;near.disconnect();play()}},{rootMargin:'600px 0px'});near.observe(v);

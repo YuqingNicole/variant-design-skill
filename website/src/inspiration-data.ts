@@ -1049,7 +1049,7 @@ export const inspirationItems = [
       "handle": "nickbakeddesign",
       "date": "2026-10-27",
       "lang": "en",
-      "text": "4th one in this series!\n\nThe Agentic Data Company by @CVestergaard_ &amp; @matiasdrejer YC F26",
+      "text": "4th one in this series!\n\nThe Agentic Data Company by @CVestergaard_ & @matiasdrejer YC F26",
       "hasMedia": true
     }
   },

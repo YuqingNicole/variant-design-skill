@@ -27,7 +27,8 @@ test('best-practice entries and other X links carry the oEmbed fields their card
     // A media-only post has no text; it must then carry media and the no-linguistic-content language tag.
     assert.ok(i.post.author.trim() && typeof i.post.text === 'string' && typeof i.post.hasMedia === 'boolean', i.id);
     if (!i.post.text.trim()) { assert.ok(i.post.hasMedia, i.id); assert.equal(i.post.lang, 'zxx', i.id); }
-    if (i.via) assert.match(i.via, /^https:\/\/[^/]+\//, i.id); assert.match(i.post.date, date, i.id);
+    if (i.via) assert.match(i.via, /^https:\/\/[^/]+\//, i.id);
+    assert.doesNotMatch(i.post.text, /&(amp|lt|gt|quot|#\d+);/, `${i.id}: store decoded text`); assert.match(i.post.date, date, i.id);
     assert.doesNotMatch(i.focus.zh + i.application.zh + i.name, /TODO/, i.id);
   }
 });
