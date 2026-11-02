@@ -336,7 +336,7 @@ test('submission page states the three entry kinds, permissions and takedown pro
 test('sponsor page states the rules without prices and links to an inquiry template, in both languages', async ({page})=>{
  await page.goto('/submit');
  await page.locator('.site-footer a[href="/sponsor"]').click();await expect(page).toHaveURL(/\/sponsor$/);await expect(page).toHaveTitle('赞助 — Variant Design');
- await expect(page.locator('h1')).toHaveText('赞助 Variant Design');await expect(page.locator('.sponsor-rules li')).toHaveCount(4);await expect(page.locator('a[href*="template=sponsorship.md"]')).toBeVisible();
+ await expect(page.locator('h1')).toHaveText('赞助 Variant Design');await expect(page.locator('.sponsor-rules li')).toHaveCount(4);await expect(page.locator('.home-action-primary[href*="template=sponsorship.md"]')).toHaveCount(2);await page.locator('.home-action-secondary[href="#rules"]').click();await expect(page.locator('#rules')).toBeInViewport();
  await page.getByRole('button',{name:'切换到英文'}).click();await expect(page.locator('h1')).toHaveText('Sponsor Variant Design');await expect(page).toHaveTitle('Sponsor — Variant Design');
 });
 

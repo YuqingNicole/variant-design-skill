@@ -6,3 +6,14 @@
 @media(max-width:600px){.docs-command{grid-template-columns:1fr;gap:6px}}
 .guide-code{margin:18px 0;padding:16px 18px;overflow-x:auto;white-space:pre-wrap;font-size:13px;line-height:1.6;background:rgba(0,0,0,.04);border-radius:8px}.guide-list{display:grid;gap:34px;padding-block:20px 80px}.guide-list h2{margin:0 0 10px;font-size:26px}.guide-list a{color:inherit;text-underline-offset:4px}.guide-list p{margin:0;max-width:72ch}
 .guide-hero h1{font-size:clamp(34px,4.6vw,60px);line-height:1.15;text-wrap:balance}.guide-hero>p:not(.content-back){max-width:72ch}
+/* /sponsor: home-style sections (docs/design-system.md §4, §7): a top line per section, heading left, rows right. */
+.sponsor-hero{padding-block:64px 72px}.sponsor-hero h1{margin:0 0 24px}.sponsor-hero>p{font-size:17px;line-height:1.75;color:#41463d;max-width:46ch;margin:0}
+.sponsor-section{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:64px;padding-block:72px;border-top:1px solid var(--site-line)}.sponsor-section>*{min-width:0}
+.sponsor-section h2{font-size:clamp(30px,3.4vw,46px);line-height:1.15;margin:0}
+.sponsor-rows{list-style:none;margin:0;padding:0}.sponsor-rows li{display:grid;grid-template-columns:9em minmax(0,1fr);gap:20px;align-items:baseline;padding:18px 0;border-top:1px solid var(--site-line)}.sponsor-rows li:first-child{border-top:0;padding-top:0}
+.sponsor-rows strong{font-size:17px;font-weight:500;color:var(--site-ink)}.sponsor-rows p,.sponsor-note{margin:0;font-size:15px;line-height:1.7;color:var(--site-muted);max-width:68ch}
+.sponsor-rows code{font:13px var(--font-mono);background:var(--site-surface);border-radius:var(--radius-control);padding:1px 6px;color:var(--site-ink)}
+.sponsor-note{margin-top:24px;padding-top:18px;border-top:1px solid var(--site-line);max-width:none}
+.sponsor-section .home-actions{margin-top:32px}.sponsor-page :is(a,button):focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
+@media(max-width:1000px){.sponsor-section{grid-template-columns:1fr;gap:28px;padding-block:56px}}
+@media(max-width:640px){.sponsor-hero{padding-block:40px 56px}.sponsor-rows li{grid-template-columns:1fr;gap:4px}}
