@@ -9,6 +9,8 @@ import { inspirationItems, inspirationSources, inspirationTopics } from './inspi
 import linkPreviews from './link-previews.json';
 import './content-pages.css';
 import './inspiration.css';
+import { useLocale } from './i18n/LocaleProvider';
+import { localePath, parseLocale } from './i18n/locale-route';
 const total=inspirationItems.length,count=(c:string)=>inspirationItems.filter(i=>i.category===c).length;
 const sources=inspirationSources.filter(s=>s.kind!=='skills');
 type Item=typeof inspirationItems[number];
@@ -79,11 +81,11 @@ const unknowns=(item:Item,locale:Locale)=>[...(item.designer?[]:[m.unknownDesign
 const packKey='variant-inspiration-pack-v1';
 function loadPack():{selection:Record<string,Intent>;error:boolean}{try{const raw=localStorage.getItem(packKey);if(!raw)return {selection:{},error:false};const parsed:unknown=JSON.parse(raw);if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error();const selection:Record<string,Intent>={};for(const [id,value] of Object.entries(parsed)){if(!inspirationItems.some(item=>item.id===id)||!value||typeof value!=='object'||typeof value.use!=='string'||typeof value.avoid!=='string')throw new Error();selection[id]={use:value.use,avoid:value.avoid}}return {selection,error:false}}catch{return {selection:{},error:true}}}
 export function InspirationPage({detail=''}:{detail?:string}){
- const [language,setLanguage]=useState<Locale>(()=>localStorage.getItem('variant-language')==='en'?'en':'zh');const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);const [category,setCategory]=useState(()=>{const c=new URLSearchParams(location.search).get('category');return c&&c in labels&&c!=='motion'?c:'all'});const [query,setQuery]=useState('');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [sort,setSort]=useState('default');const [visible,setVisible]=useState(pageSize);
+ const language = useLocale();const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);const [category,setCategory]=useState(()=>{const c=new URLSearchParams(location.search).get('category');return c&&c in labels&&c!=='motion'?c:'all'});const [query,setQuery]=useState('');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [sort,setSort]=useState('default');const [visible,setVisible]=useState(pageSize);
  // `page` is a detail opened by its own address; `modal` is one opened from the grid over it.
  const [open,setOpen]=useState<{id:string;mode:'page'|'modal'}|null>(()=>inspirationItems.some(i=>i.id===detail)?{id:detail,mode:'page'}:null);
  const openItem=inspirationItems.find(i=>i.id===open?.id);
- useEffect(()=>{document.title=t(f.docTitle,language)(openItem?.name);document.documentElement.lang=locales[language].htmlLang;localStorage.setItem('variant-language',language);document.querySelector('meta[name="description"]')?.setAttribute('content',openItem?t(f.itemDescription,language)(openItem):t(f.pageDescription,language)(total))},[language,openItem]);
+ useEffect(()=>{document.title=t(f.docTitle,language)(openItem?.name);document.documentElement.lang=locales[language].htmlLang;document.querySelector('meta[name="description"]')?.setAttribute('content',openItem?t(f.itemDescription,language)(openItem):t(f.pageDescription,language)(total))},[language,openItem]);
  const [initialPack]=useState(loadPack);const [selection,setSelection]=useState<Record<string,Intent>>(initialPack.selection);const [storageError,setStorageError]=useState(initialPack.error);
  function saveSelection(next:Record<string,Intent>){setSelection(next);try{if(initialPack.error)throw new Error();localStorage.setItem(packKey,JSON.stringify(next));setStorageError(false)}catch{setStorageError(true)}}
  const selected=inspirationItems.filter(item=>selection[item.id]);
@@ -98,12 +100,12 @@ export function InspirationPage({detail=''}:{detail?:string}){
  const shown=results.slice(0,visible);
  function useReference(item:Item){setNotice('');setPrompt(fl('useReference')(item))}
  async function copy(){try{await navigator.clipboard.writeText(prompt);setNotice(l('copied'))}catch{setNotice(l('copyManually'))}}
- useEffect(()=>{if(detail&&!inspirationItems.some(i=>i.id===detail))history.replaceState(null,'','/inspiration'+location.search)},[detail]);
- useEffect(()=>{const onPop=()=>{const id=location.pathname.split('/')[2]??'';pushed.current=false;setOpen(current=>inspirationItems.some(i=>i.id===id)?{id,mode:current?.mode??'page'}:null)};addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
+ useEffect(()=>{if(detail&&!inspirationItems.some(i=>i.id===detail))history.replaceState(null,'',localePath('/inspiration',language)+location.search)},[detail]);
+ useEffect(()=>{const onPop=()=>{const id=parseLocale(location.pathname).route.split('/')[2]??'';pushed.current=false;setOpen(current=>inspirationItems.some(i=>i.id===id)?{id,mode:current?.mode??'page'}:null)};addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
  // A dialog opened from the grid pushes one history entry, so closing it goes back instead of stacking another list entry.
  const pushed=useRef(false);
- function show(id:string,mode:'page'|'modal'){if(location.pathname!==`/inspiration/${id}`){if(open)history.replaceState(null,'',`/inspiration/${id}${location.search}`);else{history.pushState(null,'',`/inspiration/${id}${location.search}`);pushed.current=true}}setOpen({id,mode})}
- function close(){if(pushed.current){pushed.current=false;history.back()}else history.replaceState(null,'','/inspiration'+location.search);setOpen(null)}
+ function show(id:string,mode:'page'|'modal'){if(parseLocale(location.pathname).route!==`/inspiration/${id}`){if(open)history.replaceState(null,'',localePath(`/inspiration/${id}`,language)+location.search);else{history.pushState(null,'',localePath(`/inspiration/${id}`,language)+location.search);pushed.current=true}}setOpen({id,mode})}
+ function close(){if(pushed.current){pushed.current=false;history.back()}else history.replaceState(null,'',localePath('/inspiration',language)+location.search);setOpen(null)}
  function step(by:number){if(!openItem)return;const list=results.some(r=>r.id===openItem.id)?results:inspirationItems;const at=list.findIndex(r=>r.id===openItem.id);show(list[(at+by+list.length)%list.length].id,open!.mode)}
  const dialogRef=useRef<HTMLDialogElement>(null);
  useEffect(()=>{const d=dialogRef.current;if(!d)return;if(open?.mode==='modal'&&!d.open)d.showModal();if(open?.mode!=='modal'&&d.open)d.close()},[open]);
@@ -116,7 +118,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
  const detailView=(item:Item,asPage:boolean)=>{const H=asPage?'h1':'h2';const post=postOf(item);const preview=previewOf(item);
   return <article className="insp-detail" aria-labelledby={`detail-${item.id}`}>
    <div className="insp-detail-notes">
-    <nav className="insp-detail-tools" aria-label={l('refNav')}>{asPage?<a href="/inspiration" onClick={e=>{e.preventDefault();close()}}><Icon d={icons.prev}/>{l('allRefs')}</a>:<button type="button" onClick={()=>{dialogRef.current?.close()}} aria-label={l('close')}><Icon d={icons.close}/></button>}
+    <nav className="insp-detail-tools" aria-label={l('refNav')}>{asPage?<a href={localePath('/inspiration',language)} onClick={e=>{e.preventDefault();close()}}><Icon d={icons.prev}/>{l('allRefs')}</a>:<button type="button" onClick={()=>{dialogRef.current?.close()}} aria-label={l('close')}><Icon d={icons.close}/></button>}
      <button type="button" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])}><Icon d={icons.save}/>{l(selection[item.id]?'removePack':'addPack')}</button>
      <span><button type="button" onClick={()=>step(-1)} aria-label={l('prev')}><Icon d={icons.prev}/></button><button type="button" onClick={()=>step(1)} aria-label={l('next')}><Icon d={icons.next}/></button></span></nav>
     <p className="insp-detail-label">{t(labels[item.category],language)} · {item.tag} {rights(language)}</p>
@@ -132,11 +134,11 @@ export function InspirationPage({detail=''}:{detail?:string}){
   {selected.length>0&&<section className="inspiration-pack" aria-labelledby="pack-title"><h2 id="pack-title">{l('pack')} ({selected.length})</h2><p>{l('packNote')}</p>{selected.map(item=><fieldset key={item.id}><legend>{item.name}</legend><label>{l('useFor')}<textarea aria-label={l('useFor')} value={selection[item.id].use} onChange={e=>updateIntent(item.id,'use',e.target.value)}/></label><label>{l('avoid')}<textarea aria-label={l('avoid')} value={selection[item.id].avoid} onChange={e=>updateIntent(item.id,'avoid',e.target.value)}/></label><button type="button" onClick={()=>toggleSelection(item.id)}>{l('remove')}</button></fieldset>)}<button className="content-button" onClick={createPack}>{l('packBrief')}</button></section>}
   {prompt&&<section ref={briefRef} tabIndex={-1} className="inspiration-brief" aria-labelledby="reference-brief-title"><h2 id="reference-brief-title">{l('takeIt')}</h2><textarea aria-label={l('briefLabel')} readOnly value={prompt} rows={6}/><button className="content-button" onClick={copy}>{l('copyBrief')}</button><button className="inspiration-dismiss" onClick={()=>{setPrompt('');setNotice('')}}>{l('dismiss')}</button><p role="status">{notice}</p></section>}
  </>;
- const header=<SiteHeader language={language} onLanguage={()=>setLanguage(language==='zh'?'en':'zh')} page="inspiration"/>;
+ const header=<SiteHeader language={language} page="inspiration"/>;
  if(open?.mode==='page'&&openItem)return <main className="content-page inspiration-page">{header}<div className="site-shell insp-page-detail">{detailView(openItem,true)}{tail}</div><SiteFooter language={language}/></main>;
  return <main className="content-page inspiration-page">{header}
   <header className="site-shell insp-head">
-   <div className="insp-title"><h1>{l('title')}</h1><p>{fl('intro')(total)}</p><a href="/submit">{l('submissions')}</a></div>
+   <div className="insp-title"><h1>{l('title')}</h1><p>{fl('intro')(total)}</p><a href={localePath('/submit',language)}>{l('submissions')}</a></div>
    <p className="insp-counts">{(['landing','product','flow','practice'] as const).map(c=>`${count(c)} ${t(labels[c],language)}`).join(' · ')}</p>
    <details className="inspiration-disclosure"><summary>{l('disclosure')}</summary><p>{l('disclosureBody')}</p></details>
   </header>
@@ -150,20 +152,20 @@ export function InspirationPage({detail=''}:{detail?:string}){
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
    {category==='practice'?<ul className="insp-videos">{results.map(item=>{const media=mediaOf(item.id),post=postOf(item)!;return <li key={item.id} className="insp-card insp-vcard">
-    {media?<><a className="insp-vcard-open" href={`/inspiration/${item.id}`} style={{aspectRatio:`${media.width}/${media.height}`}} aria-label={`${item.name}：${t(item.focus,language)}（${post.author} @${post.handle}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();show(item.id,'modal')}}><XVideo media={media}/></a>
+    {media?<><a className="insp-vcard-open" href={localePath(`/inspiration/${item.id}`,language)} style={{aspectRatio:`${media.width}/${media.height}`}} aria-label={`${item.name}：${t(item.focus,language)}（${post.author} @${post.handle}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();show(item.id,'modal')}}><XVideo media={media}/></a>
      {media.avatar&&<img className="insp-vcard-avatar" src={media.avatar} width="44" height="44" alt={`${post.author} @${post.handle}`} title={`${post.author} @${post.handle}`} referrerPolicy="no-referrer"/>}</>
      :<XPost post={post} url={item.url} locale={language} autoload/>}
     <button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${l(selection[item.id]?'removePack':'addPack')}：${item.name}`}><Icon d={icons.save}/></button>
     <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l('openOnX')}：${item.name}`}><Icon d={icons.out}/></a></li>})}</ul>:<>
    <ul className="inspiration-grid">{shown.map(item=><li key={item.id} className="insp-card" style={{viewTransitionName:`ref-${item.id}`}}>
-    <a className="insp-card-open" href={`/inspiration/${item.id}`} aria-label={`${item.name}：${t(item.focus,language)}（${t(labels[item.category],language)} · ${l('linkOnly')}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();show(item.id,'modal')}}><Thumb item={item} locale={language}/></a>
+    <a className="insp-card-open" href={localePath(`/inspiration/${item.id}`,language)} aria-label={`${item.name}：${t(item.focus,language)}（${t(labels[item.category],language)} · ${l('linkOnly')}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();show(item.id,'modal')}}><Thumb item={item} locale={language}/></a>
     <button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${l(selection[item.id]?'removePack':'addPack')}：${item.name}`}><Icon d={icons.save}/></button>
     <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l('openSource')}：${item.name}`}><Icon d={icons.out}/></a>
    </li>)}</ul>
    {visible<results.length&&<div ref={sentinel} className="insp-more"><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}</>}
    {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setCategory('all');setTopic('');setQuery('')})}>{l('clear')}</button></p>}
    {tail}
-   <section className="inspiration-sources"><h2>{l('explore')}</h2><p>{l('exploreNote')}</p><div>{sources.map(s=><a key={s.name} href={s.url} target="_blank" rel="noreferrer"><strong>{s.name}</strong><span>{t(s.type,language)}</span></a>)}</div></section><section className="content-closing"><h2>{l('closing')}</h2><a className="content-button" href="/docs">{l('install')}</a><a className="content-secondary" href="/">{l('studies')}</a><p className="inspiration-count">{l('checked')}</p></section>
+   <section className="inspiration-sources"><h2>{l('explore')}</h2><p>{l('exploreNote')}</p><div>{sources.map(s=><a key={s.name} href={s.url} target="_blank" rel="noreferrer"><strong>{s.name}</strong><span>{t(s.type,language)}</span></a>)}</div></section><section className="content-closing"><h2>{l('closing')}</h2><a className="content-button" href={localePath('/docs',language)}>{l('install')}</a><a className="content-secondary" href={localePath('/',language)}>{l('studies')}</a><p className="inspiration-count">{l('checked')}</p></section>
   </section>
   <dialog ref={dialogRef} className="insp-dialog" aria-label={openItem?.name} onClose={()=>{if(open?.mode==='modal')close()}} onKeyDown={e=>{if(e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLInputElement)return;if(e.key==='ArrowLeft')step(-1);if(e.key==='ArrowRight')step(1)}} onClick={e=>{if(e.target===e.currentTarget)dialogRef.current?.close()}}>{open?.mode==='modal'&&openItem&&detailView(openItem,false)}</dialog>
   <SiteFooter language={language}/></main>

@@ -4,6 +4,8 @@ import { SiteHeader, SiteFooter } from './SiteChrome';
 import { repository } from './library-data';
 import './content-pages.css';
 import './library.css';
+import { useLocale } from './i18n/LocaleProvider';
+import { localePath } from './i18n/locale-route';
 type Copy = [string, string];
 // Skills directory (RFC-002 P4). Only skills we actually ran in throwaway projects, with public records.
 export const skills: { id: string; name: string; source: string; summary: Copy; tried: Copy; install: string; records: { label: Copy; href: string }[] }[] = [
@@ -18,16 +20,16 @@ export const skills: { id: string; name: string; source: string; summary: Copy; 
     ] },
 ];
 export function SkillsPage() {
-  const [language, setLanguage] = useState<Language>(() => localStorage.getItem('variant-language') === 'en' ? 'en' : 'zh');
+  const language = useLocale();
   const zh = language === 'zh', ix = zh ? 0 : 1;
-  useEffect(() => { document.title = zh ? '设计技能 — Variant Design' : 'Design skills — Variant Design'; document.documentElement.lang = zh ? 'zh-CN' : 'en'; localStorage.setItem('variant-language', language); }, [language, zh]);
-  return <main className="content-page library-page"><SiteHeader language={language} onLanguage={() => setLanguage(zh ? 'en' : 'zh')}/>
+  useEffect(() => { document.title = zh ? '设计技能 — Variant Design' : 'Design skills — Variant Design'; document.documentElement.lang = zh ? 'zh-CN' : 'en'; }, [language, zh]);
+  return <main className="content-page library-page"><SiteHeader language={language}/>
     <header className="content-hero site-shell"><h1>{zh ? '设计技能' : 'Design skills'}</h1>
       <p>{zh ? '只收录我们在一次性项目里实际跑过、并公开了记录的设计交付技能。目前只有一个通过。没试过的技能，不会因为热门就列在这里。' : 'Only design-delivery skills we have actually run in throwaway projects, with public records. One qualifies so far. Popularity alone does not get a skill listed here.'}</p></header>
     <section className="site-shell library-feed skills-list">{skills.map(s => <article key={s.id} className="skills-entry">
       <h2>{s.name}<small>{s.source}</small></h2><p>{s.summary[ix]}</p>
-      <dl><dt>{zh ? '我们怎么试的' : 'How we tried it'}</dt><dd>{s.tried[ix]}</dd><dt>{zh ? '安装' : 'Install'}</dt><dd><code>{s.install}</code><span>{zh ? '装到当前项目的 .agents/skills，并为 Claude Code 建软链接。也可以用 git clone 完整仓库，见' : 'Installs into this project’s .agents/skills and links it for Claude Code. A full git clone also works; see'} <a href="/docs">{zh ? '安装说明' : 'the docs'}</a>{zh ? '。' : '.'}</span></dd>
+      <dl><dt>{zh ? '我们怎么试的' : 'How we tried it'}</dt><dd>{s.tried[ix]}</dd><dt>{zh ? '安装' : 'Install'}</dt><dd><code>{s.install}</code><span>{zh ? '装到当前项目的 .agents/skills，并为 Claude Code 建软链接。也可以用 git clone 完整仓库，见' : 'Installs into this project’s .agents/skills and links it for Claude Code. A full git clone also works; see'} <a href={localePath('/docs',language)}>{zh ? '安装说明' : 'the docs'}</a>{zh ? '。' : '.'}</span></dd>
         <dt>{zh ? '公开记录' : 'Public records'}</dt><dd className="skills-records">{s.records.map(r => <a key={r.href} href={r.href} target="_blank" rel="noreferrer">{r.label[ix]} ↗</a>)}</dd></dl></article>)}
-      <p className="library-more"><a href="/submit">{zh ? '推荐一个技能：我们实测后再决定是否收录 →' : 'Suggest a skill: we list it only after trying it →'}</a></p></section>
+      <p className="library-more"><a href={localePath('/submit',language)}>{zh ? '推荐一个技能：我们实测后再决定是否收录 →' : 'Suggest a skill: we list it only after trying it →'}</a></p></section>
     <SiteFooter language={language}/></main>;
 }

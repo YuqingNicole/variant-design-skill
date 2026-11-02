@@ -4,11 +4,11 @@
 
 ## 待办
 
-- [ ] RFC-005 第一阶段（文案改成按语言取值）的其余页面：灵感页、首页、作品页、分类页和 `/docs` 已完成，`node website/scripts/i18n-inventory.mjs` 列出剩下的文件，按计数从多到少做。英文已定为第一个可收录语言，下一步是 P2 和 P3。
+- [ ] RFC-005 第一阶段（文案改成按语言取值）的其余页面：灵感页、首页、作品页、分类页和 `/docs` 已完成，`node website/scripts/i18n-inventory.mjs` 列出剩下的文件，按计数从多到少做。英文已有独立地址并按语言预渲染（P2、P3）。
 - [ ] 改写两句口号：定价页「审美免费。连续性值得付费。」，/about 标题「你的品牌，可以如此不同。」。
 - [ ] /about 页示意图里的英文小标签改成双语。
-- [ ] GEO 第一层剩余两项（策略见 `docs/research/2026-11-02-geo-strategy.md`）：首页、`/docs`、`/inspiration` 的英文预渲染和 hreflang；GitHub 仓库的主页地址、描述和 topics（措辞先给维护者确认）。
-- [ ] GEO 第二、三层：继续按真实提问写回答页（已有 3 篇，见 `website/src/guides-content.ts`）、公开实测页、投稿到 skill 资源合集和社区。回答页的英文要等 RFC-005 P3 才能被收录。
+- [ ] GEO 第一层剩余一项（策略见 `docs/research/2026-11-02-geo-strategy.md`）：GitHub 仓库的主页地址、描述和 topics（措辞先给维护者确认）。英文预渲染和 hreflang 已完成。
+- [ ] GEO 第二、三层：继续按真实提问写回答页（已有 3 篇，见 `website/src/guides-content.ts`）、公开实测页、投稿到 skill 资源合集和社区。回答页的英文已有 `/en/guides/...` 地址，但由代理撰写，发布前需要人工审阅。
 
 ## X 设计样本收集箱
 
@@ -22,3 +22,4 @@
 
 - 每两周按 GEO 策略里的 10 个问题测一次 AI 搜索是否提到并引用本站，结果记在 `docs/research/`。
 - X 视频只剩封面、不再播放时，运行 `node website/scripts/x-media.mjs` 刷新 `website/src/x-media.json`。
+- [ ] 英文上线后在 Search Console 检查 `/en/...` 页面的索引和 `hreflang` 报告（不以 HTTP 200 为准）；实现 RFC-005 §3.5 的逐条翻译状态。

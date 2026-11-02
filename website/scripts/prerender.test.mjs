@@ -78,8 +78,8 @@ test('the install guide, structured data and llms.txt are readable without JavaS
   assert.deepEqual(data(pages.get('/about')), []);
   const brief = llms(entries, docs, site, references), full = llmsFull(entries, docs, site, references);
   assert.match(brief, /^# Variant Design\n\n> /);
-  assert.ok(brief.includes(docs.installCommand) && brief.includes(`${site}/docs`) && brief.includes(`${references.length} curated`));
-  for (const e of entries) assert.ok(brief.includes(`(${site}/d/${e.slug})`), e.slug);
+  assert.ok(brief.includes(docs.installCommand) && brief.includes(`${site}/en/docs`) && brief.includes(`${references.length} curated`));
+  for (const e of entries) assert.ok(brief.includes(`(${site}/en/d/${e.slug})`), e.slug);
   for (const [q] of docs.faq) assert.ok(full.includes(`### ${q.zh}`) && full.includes(`### ${q.en}`), q.en);
   for (const a of docs.agents) assert.ok(full.includes(docs.verify(a.path, false)) && full.includes(docs.verify(a.path, true)), a.id);
 });
@@ -115,3 +115,32 @@ test('guides get their own pages, are listed for search and read in both languag
   }
 });
 
+test('language versions name each other, themselves and the default', () => {
+  const site = 'https://example.test', { entries } = loadEntries(), [e] = entries, english = { '/': '<h1>Home</h1>', [`/d/${e.slug}`]: '<h1>English entry</h1>' };
+  const pages = renderSite(entries, template, site, [], { english });
+  const zh = pages.get(`/d/${e.slug}`), en = pages.get(`/en/d/${e.slug}`);
+  for (const html of [zh, en]) for (const [tag, href] of [['zh-CN', `${site}/d/${e.slug}`], ['en', `${site}/en/d/${e.slug}`], ['x-default', `${site}/d/${e.slug}`]]) assert.ok(html.includes(`<link rel="alternate" hreflang="${tag}" href="${href}">`), tag);
+  assert.ok(en.includes(`<link rel="canonical" href="${site}/en/d/${e.slug}">`) && zh.includes(`<link rel="canonical" href="${site}/d/${e.slug}">`));
+  assert.ok(en.includes('<h1>English entry</h1>') && en.includes(`<title>${escape(e.title[1])} — Variant Design direction library</title>`));
+  assert.ok(pages.get('/en').includes('<link rel="canonical" href="https://example.test/en">'));
+  // No English render means no English page and no hreflang promising one.
+  const other = entries.find(x => x.slug !== e.slug);
+  assert.ok(!pages.has(`/en/d/${other.slug}`) && !pages.get(`/d/${other.slug}`).includes('hreflang'));
+  const map = sitemap(pages.keys(), site);
+  assert.ok(map.includes(`<loc>${site}/en/d/${e.slug}</loc><xhtml:link rel="alternate" hreflang="zh-CN" href="${site}/d/${e.slug}"/>`));
+  assert.ok(map.includes(`<loc>${site}/d/${other.slug}</loc></url>`));
+});
+
+test('addresses and languages convert both ways', async () => {
+  const { localePath, parseLocale } = await importTs(new URL('../src/i18n/locale-route.ts', import.meta.url).pathname);
+  assert.deepEqual(parseLocale('/en'), { locale: 'en', route: '/' });
+  assert.deepEqual(parseLocale('/en/d/pulse'), { locale: 'en', route: '/d/pulse' });
+  assert.deepEqual(parseLocale('/docs'), { locale: 'zh', route: '/docs' });
+  assert.deepEqual(parseLocale('/english'), { locale: 'zh', route: '/english' });
+  assert.deepEqual(parseLocale('/en/lab'), { locale: 'zh', route: '/en/lab' });
+  assert.equal(localePath('/', 'en'), '/en');
+  assert.equal(localePath('/#works', 'en'), '/en#works');
+  assert.equal(localePath('/inspiration?topic=x', 'en'), '/en/inspiration?topic=x');
+  assert.equal(localePath('/docs', 'zh'), '/docs');
+  for (const fixed of ['/lab', '/lab/forma', '/d/pulse.json', '/fonts/LICENSES.txt', 'https://example.test/a', '#works', '//example.test/a']) assert.equal(localePath(fixed, 'en'), fixed);
+});

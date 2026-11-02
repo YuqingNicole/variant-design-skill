@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import type { Language } from './direction-engine';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import './content-pages.css';
+import { useLocale } from './i18n/LocaleProvider';
+import { localePath } from './i18n/locale-route';
 const repo='https://github.com/YuqingNicole/variant-design-skill';
 type Copy=[string,string];
 // Public content policy for the direction library (RFC-002 §5). Keep in step with docs/rfc/002-direction-library.md.
@@ -27,9 +29,9 @@ const takedown:Copy[]=[
  ['我们会先下线相关内容，再核实；处理结果在 Issue 里回复并留档。','We take the content down first and verify afterwards; the outcome is recorded in the issue.'],
 ];
 export function SubmitPage(){
- const [language,setLanguage]=useState<Language>(()=>localStorage.getItem('variant-language')==='en'?'en':'zh');const zh=language==='zh',ix=zh?0:1;
- useEffect(()=>{document.title=zh?'投稿与授权 — Variant Design':'Submissions & permissions — Variant Design';document.documentElement.lang=zh?'zh-CN':'en';localStorage.setItem('variant-language',language);document.querySelector('meta[name="description"]')?.setAttribute('content',zh?'Variant Design 方向库的收录、授权与撤下规则。':'How the Variant Design direction library accepts, licenses and removes work.');},[language,zh]);
- return <main className="content-page submit-page"><SiteHeader language={language} onLanguage={()=>setLanguage(zh?'en':'zh')}/>
+ const language = useLocale();const zh=language==='zh',ix=zh?0:1;
+ useEffect(()=>{document.title=zh?'投稿与授权 — Variant Design':'Submissions & permissions — Variant Design';document.documentElement.lang=zh?'zh-CN':'en';document.querySelector('meta[name="description"]')?.setAttribute('content',zh?'Variant Design 方向库的收录、授权与撤下规则。':'How the Variant Design direction library accepts, licenses and removes work.');},[language,zh]);
+ return <main className="content-page submit-page"><SiteHeader language={language}/>
   <header className="content-hero site-shell"><h1>{zh?'投稿与授权':'Submissions & permissions'}</h1><p>{zh?'方向库只展示我们自己做的作品、作者授权的作品，以及只附链接的外部参考。':'The direction library shows our own work, work its authors have licensed, and external references shown only as links.'}</p></header>
   <section className="content-reading site-shell">
    <h2>{zh?'三类作品':'Three kinds of entries'}</h2>

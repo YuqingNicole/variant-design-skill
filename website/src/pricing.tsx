@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import type { Language } from "./direction-engine";
 import { SiteHeader, SiteFooter } from "./SiteChrome";
 import "./pricing.css";
+import { useLocale } from './i18n/LocaleProvider';
+import { localePath } from './i18n/locale-route';
 
 type PricingPageProps = { repositoryUrl: string };
 type Billing = "monthly" | "annual";
@@ -52,7 +54,7 @@ const pricingCopy = {
 } as const;
 
 export function PricingPage({ repositoryUrl }: PricingPageProps) {
-  const [language, setLanguage] = useState<Language>(() => window.localStorage.getItem("variant-language") === "en" ? "en" : "zh");
+  const language = useLocale();
   const [billing, setBilling] = useState<Billing>("annual");
   const t = pricingCopy[language];
 
@@ -60,12 +62,11 @@ export function PricingPage({ repositoryUrl }: PricingPageProps) {
     document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
     document.title = t.pageTitle;
     document.querySelector('meta[name="description"]')?.setAttribute("content", t.description);
-    window.localStorage.setItem("variant-language", language);
   }, [language, t.description, t.pageTitle]);
 
   return <main className="pricing-page" data-language={language}>
     <section className="pricing-hero">
-      <SiteHeader language={language} onLanguage={()=>setLanguage(language === "zh" ? "en" : "zh")} page="pricing"/>
+      <SiteHeader language={language} page="pricing"/>
       <div className="pricing-hero-grid shell">
         <div><h1>{t.title[0]}<em>{t.title[1]}</em></h1></div>
         <div className="pricing-hero-aside"><p>{t.lede}</p><div className="billing-switch" role="group" aria-label={t.billingLabel}><button type="button" aria-pressed={billing === "monthly"} onClick={() => setBilling("monthly")}>{t.monthly}</button><button type="button" aria-pressed={billing === "annual"} onClick={() => setBilling("annual")}>{t.annual}<span>{t.annualNote}</span></button></div></div>
@@ -81,7 +82,7 @@ export function PricingPage({ repositoryUrl }: PricingPageProps) {
           <div className="price"><strong>${price}</strong><span>{plan.suffix === "seat" ? t.perSeat : t.perMonth}</span></div>
           <small>{index === 0 ? t.freeForever : billing === "annual" ? `${t.billedAnnual} · ${t.earlyAccess}` : t.earlyAccess}</small>
           <ul>{plan.features.map((feature) => <li key={feature}><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg>{feature}</li>)}</ul>
-          <a className="pricing-button" href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noreferrer" : undefined}>{plan.cta}</a>
+          <a className="pricing-button" href={localePath(href,language)} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noreferrer" : undefined}>{plan.cta}</a>
         </article>;
       })}
     </section>
@@ -94,7 +95,7 @@ export function PricingPage({ repositoryUrl }: PricingPageProps) {
 
     <section className="pricing-faq shell"><h2>{t.faqTitle}</h2><div>{t.faqs.map((faq, index) => <details key={faq.q}><summary>{faq.q}<b><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M8 3v10M3 8h10"/></svg></b></summary><p>{faq.a}</p></details>)}</div></section>
 
-    <section className="pricing-final"><div className="shell"><h2>{t.finalTitle}</h2><p>{t.finalBody}</p><div><a className="pricing-button" href="/docs">{t.finalPrimary}</a><a href={repositoryUrl} target="_blank" rel="noreferrer">{t.finalSecondary}</a></div></div></section>
+    <section className="pricing-final"><div className="shell"><h2>{t.finalTitle}</h2><p>{t.finalBody}</p><div><a className="pricing-button" href={localePath('/docs',language)}>{t.finalPrimary}</a><a href={repositoryUrl} target="_blank" rel="noreferrer">{t.finalSecondary}</a></div></div></section>
     <SiteFooter language={language}/>
   </main>;
 }

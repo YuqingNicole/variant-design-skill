@@ -1,6 +1,6 @@
 # RFC-005 · 网站多语言架构
 
-- 状态：已接受，P0 已实施（`website/src/i18n/`）；P1 逐页推进，灵感页已完成（2026-11-02：`inspiration-data.ts` 改为按语言取值，`InspirationPage.tsx` 的三元表达式和位置读取清零，中英文页面文字与 `aria-label` 前后对比一致）；首页、作品页、分类页和 `/docs` 也已完成（2026-11-02，同样做了前后对比）。先把结构定下来，再按 §5 的阶段推进。维护者 2026-11-02 决定：英文是第一个可独立收录的语言版本，试点页面为首页、`/docs`、`/inspiration`、作品页、分类页和 `/guides`。
+- 状态：已接受，P0 已实施（`website/src/i18n/`）；P1 逐页推进，灵感页已完成（2026-11-02：`inspiration-data.ts` 改为按语言取值，`InspirationPage.tsx` 的三元表达式和位置读取清零，中英文页面文字与 `aria-label` 前后对比一致）；首页、作品页、分类页和 `/docs` 也已完成（2026-11-02，同样做了前后对比）。先把结构定下来，再按 §5 的阶段推进。P2、P3 已实施（2026-11-02）：`website/src/i18n/locale-route.ts` 和 `LocaleProvider.tsx`，除 `/lab`、工作台、画布外的公开页面都有 `/en/...` 地址，按语言预渲染并输出 `hreflang` 和 sitemap 语言对照。英文正文由构建时的 React 渲染生成，渲染不出 `<h1>` 时构建失败；§3.5 的逐条 `translations` 状态还没有实现，现有英文按已发布处理，`/guides` 的英文待人工审阅。维护者 2026-11-02 决定：英文是第一个可独立收录的语言版本，试点页面为首页、`/docs`、`/inspiration`、作品页、分类页和 `/guides`。
 - 日期：2026-11-01。
 - 关联：RFC-002（方向库路由、预渲染、方向卡）、RFC-003 §5（多语言、SEO 与 GEO 的目标和验收）、`docs/design-system.md`。
 - 范围：`website/` 的文案模型、语言状态、路由、预渲染、字体和测试。技能本身（`SKILL.md`、`skills/`、`references/`）不在范围内。

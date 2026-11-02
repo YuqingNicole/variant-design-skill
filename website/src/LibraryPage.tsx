@@ -9,6 +9,8 @@ import { cardUrl, categories, coverDirection, entries, evidenceUrl, mediaUrl, ty
 import { inspirationItems } from './inspiration-data';
 import './content-pages.css';
 import './library.css';
+import { useLocale } from './i18n/LocaleProvider';
+import { localePath } from './i18n/locale-route';
 const m={compareThreeDirectionsFor:{zh:'同一个任务，比较三个方向的取舍。',en:'Compare three directions for the same brief.'},
  oneBriefThreeDirections:{zh:'一个任务，三种方向。',en:'One brief, three directions.'},
  exploreOurCasesWith:{zh:'浏览我们制作的案例：每个方向都说明优化、取舍和适用场景。技能产出与概念作品分别标注。',en:'Explore our cases, with each direction’s priorities, tradeoffs and fit. Skill outputs and concept studies are labeled separately.'},
@@ -49,7 +51,7 @@ const categoryName = (id: string, language: Language) => { const name = categori
 
 function Card({ entry, language }: { entry: Entry; language: Language }) {
   const cover = coverDirection(entry), image = cover.media[0];
-  return <article className="library-card"><a href={`/d/${entry.slug}`}>
+  return <article className="library-card"><a href={localePath(`/d/${entry.slug}`,language)}>
     <span className="library-card-image"><img src={mediaUrl(entry, image.file)} width={image.width} height={image.height} alt={t(image.alt,language)} loading="lazy" decoding="async"/><small>A · B · C</small></span>
     <span className="library-card-meta">{categoryName(entry.category, language)} · {sourceLabel(entry, language)}</span>
     <strong>{t(entry.title,language)}</strong><span className="library-card-summary">{t(entry.summary,language)}</span>
@@ -65,9 +67,9 @@ function Feed({ category, language }: { category?: string; language: Language })
     {!category && <HomeCase language={language}/>}
     <section className="site-shell library-feed" id="works">
       {!category && <div className="library-feed-heading"><div><h2>{t(m.oneBriefThreeDirections,language)}</h2></div><p>{t(m.exploreOurCasesWith,language)}</p></div>}
-      <nav className="content-filters" aria-label={t(m.categories,language)}><a href="/" aria-current={!category ? 'page' : undefined}>{t(m.all,language)}</a>{used.map(c => <a key={c.id} href={`/c/${c.id}`} aria-current={category === c.id ? 'page' : undefined}>{t(c.name,language)}</a>)}</nav>
+      <nav className="content-filters" aria-label={t(m.categories,language)}><a href={localePath('/',language)} aria-current={!category ? 'page' : undefined}>{t(m.all,language)}</a>{used.map(c => <a key={c.id} href={localePath(`/c/${c.id}`,language)} aria-current={category === c.id ? 'page' : undefined}>{t(c.name,language)}</a>)}</nav>
       {shown.length ? <div className="library-grid">{shown.map(e => <Card key={e.slug} entry={e} language={language}/>)}</div> : <p className="library-empty">{t(m.nothingInThisCategory,language)}</p>}
-      <p className="library-more"><a href="/inspiration">{t({zh:`外部参考：${inspirationItems.length} 个只附链接的公开设计`,en:`External references: ${inspirationItems.length} public designs, linked only`},language)}</a> <a href="/submit">{t(m.submissionsPermissions,language)}</a></p>
+      <p className="library-more"><a href={localePath('/inspiration',language)}>{t({zh:`外部参考：${inspirationItems.length} 个只附链接的公开设计`,en:`External references: ${inspirationItems.length} public designs, linked only`},language)}</a> <a href={localePath('/submit',language)}>{t(m.submissionsPermissions,language)}</a></p>
     </section>
     {!category && <HomeDirectories language={language}/>}</>;
 }
@@ -79,7 +81,7 @@ function TryIt({ entry, direction, language }: { entry: Entry; direction: Direct
   useEffect(() => setStatus(''), [prompt]);
   async function copy() { try { await navigator.clipboard.writeText(prompt); setStatus(t(m.copiedPasteItInto,language)); } catch { setStatus(t(m.couldNotCopyAutomatically,language)); } }
   return <section className="library-try" aria-labelledby="try-title"><h2 id="try-title">{t(m.tryItInYour,language)}</h2>
-    <p>{t(m.installTheSkillThen,language)} <a href="/docs">{t(m.install,language)}</a></p>
+    <p>{t(m.installTheSkillThen,language)} <a href={localePath('/docs',language)}>{t(m.install,language)}</a></p>
     <textarea readOnly aria-label={t(m.promptForYourAgent,language)} value={prompt} rows={4} onFocus={e => e.currentTarget.select()}/>
     <div><button onClick={copy}>{t(m.copyPrompt,language)}</button><a href={cardUrl(entry)} target="_blank" rel="noreferrer">{t(m.viewTheCardJson,language)}</a></div>
     <p role="status">{status}</p></section>;
@@ -89,10 +91,10 @@ function Detail({ entry, language }: { entry: Entry; language: Language }) {
   const initial = new URLSearchParams(location.search).get('direction');
   const [active, setActive] = useState(() => entry.directions.find(d => d.id === initial)?.id ?? coverDirection(entry).id);
   const direction = entry.directions.find(d => d.id === active)!, image = direction.media[0], evidence = evidenceUrl(entry);
-  const choose = (id: typeof active) => { setActive(id); history.replaceState(null, '', `/d/${entry.slug}?direction=${id}`); };
+  const choose = (id: typeof active) => { setActive(id); history.replaceState(null, '', localePath(`/d/${entry.slug}?direction=${id}`, language)); };
   const related = entries.filter(e => e.slug !== entry.slug && e.category === entry.category).concat(entries.filter(e => e.slug !== entry.slug && e.category !== entry.category)).slice(0, 3);
   return <>
-    <header className="content-hero site-shell library-detail-hero"><p className="content-back"><a href="/">{t(m.library,language)}</a> / <a href={`/c/${entry.category}`}>{categoryName(entry.category, language)}</a></p>
+    <header className="content-hero site-shell library-detail-hero"><p className="content-back"><a href={localePath('/',language)}>{t(m.library,language)}</a> / <a href={localePath(`/c/${entry.category}`,language)}>{categoryName(entry.category, language)}</a></p>
       <h1>{t(entry.title,language)}</h1><p>{t(entry.summary,language)}</p>
       <p className="library-source"><span data-kind={entry.kind ?? entry.source}>{sourceLabel(entry, language)}</span> {t(m.by,language)} <a href={entry.credit.url} target="_blank" rel="noreferrer">{entry.credit.name}</a> · {entry.publishedAt}</p></header>
     <section className="site-shell library-detail">
@@ -108,16 +110,16 @@ function Detail({ entry, language }: { entry: Entry; language: Language }) {
 }
 
 export function LibraryPage({ view }: { view: LibraryView }) {
-  const [language, setLanguage] = useState<Language>(() => localStorage.getItem('variant-language') === 'en' ? 'en' : 'zh');
+  const language = useLocale();
   const entry = view.kind === 'entry' ? entries.find(e => e.slug === view.slug) : undefined;
   const known = view.kind === 'feed' || (view.kind === 'category' && categories.some(c => c.id === view.id)) || !!entry;
   useEffect(() => {
-    document.documentElement.lang = locales[language].htmlLang; localStorage.setItem('variant-language', language);
+    document.documentElement.lang = locales[language].htmlLang;
     const site = t(m.variantDesignDirectionLibrary,language);
     document.title = entry ? `${t(entry.title,language)} — ${site}` : view.kind === 'category' && known ? `${categoryName(view.id, language)} — ${site}` : known ? (t(m.variantDesignADesign,language)) : (t(m.notFoundVariantDesign,language));
   }, [language, entry, view, known]);
-  return <main className="content-page library-page"><SiteHeader language={language} onLanguage={() => setLanguage(language === 'zh' ? 'en' : 'zh')} page="library"/>
-    {!known ? <header className="content-hero site-shell"><h1>{t(m.notFound,language)}</h1><p><a href="/">{t(m.backToTheLibrary,language)}</a></p></header>
+  return <main className="content-page library-page"><SiteHeader language={language} page="library"/>
+    {!known ? <header className="content-hero site-shell"><h1>{t(m.notFound,language)}</h1><p><a href={localePath('/',language)}>{t(m.backToTheLibrary,language)}</a></p></header>
       : entry ? <Detail entry={entry} language={language}/> : <Feed category={view.kind === 'category' ? view.id : undefined} language={language}/>}
     <SiteFooter language={language}/></main>;
 }
