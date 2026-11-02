@@ -1,5 +1,6 @@
 import { DirectionStage } from "./DirectionStage";
 import type { Language } from "./direction-engine";
+import { installCommand } from "./docs-content";
 import "./landing-introduction.css";
 
 export type LandingHeroConfig = {
@@ -12,7 +13,6 @@ export type LandingHeroConfig = {
   note: Record<Language, string>;
 };
 const compareUrl = "/variant-output/_compare.html";
-const installCommand = "git clone https://github.com/YuqingNicole/variant-design-skill.git ~/.codex/skills/variant-design";
 export { installCommand };
 
 export function LandingIntroduction({ config, language, onInstall, copied, guided = false }: {
