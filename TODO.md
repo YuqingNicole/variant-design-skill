@@ -28,7 +28,7 @@
 
 - [ ] 决定要不要做“在比较页上直接选某个区域”：Impeccable 的 Live Mode、Subframe 和 Claude Design 都让用户在页面上点选。先决定做还是明确不做，再动手。
 - [ ] 给 `Refine premium` 和形容词翻译加 eval fixture：让真实 Agent 把一个页面“做得更高级”，评分检查 `style-budget.mjs` 计数下降、没有改成深色加金色（`docs/research/2026-11-02-premium-style-budget.md`）。
-- [ ] 评估把 `quality-gate.mjs` 的规则整理成公开的反模式目录（参考 Impeccable 的 `/slop` 这种做法，不复制它的文字）。
+- [ ] 【维护者】决定要不要做公开的界面代码检查页。评估见 `docs/research/2026-11-02-antipattern-catalog-evaluation.md`：建议做成一页、先把规则改成共用数据，不仿 `/slop` 做视觉目录。
 
 ## 5. 网站维护
 
