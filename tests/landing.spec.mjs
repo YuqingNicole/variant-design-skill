@@ -620,6 +620,7 @@ test('home case switches recorded A/B/C evidence and preserves the chosen direct
 });
 test('home hero actions keep readable text contrast', async ({page})=>{
  await page.goto('/');
+ await expect(page.locator('.home-actions a')).toHaveCount(2);
  const ratios=await page.locator('.home-actions a').evaluateAll(links=>links.map(el=>{
   const lum=c=>{const [r,g,b]=c.match(/\d+(\.\d+)?/g).slice(0,3).map(Number).map(v=>{v/=255;return v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4});return 0.2126*r+0.7152*g+0.0722*b};
   let bg=el,color='rgba(0, 0, 0, 0)';while(bg&&(color=getComputedStyle(bg).backgroundColor)==='rgba(0, 0, 0, 0)')bg=bg.parentElement;
@@ -678,9 +679,10 @@ test('headings use LXGW Neo ZhiSong and visitors can switch back to the original
 
 test('home shelf switch runs a view transition, and reduced motion switches instantly', async ({page,browser})=>{
  await page.goto('/');
- const vt=()=>page.evaluate(()=>document.getAnimations().map(a=>String(a.effect?.pseudoElement||'')).filter(n=>n.startsWith('::view-transition')));
+ // The transition lasts about 0.3s, shorter than the gaps between polls, so record every frame instead of sampling.
+ await page.evaluate(()=>{const seen=window.seenTransitions=new Set();const frame=()=>{for(const a of document.getAnimations()){const name=String(a.effect?.pseudoElement||'');if(name.startsWith('::view-transition'))seen.add(name)}requestAnimationFrame(frame)};frame()});
  await page.locator('.home-shelves button').nth(1).click();
- await expect.poll(async()=>(await vt()).join(' ')).toContain('home-shelf-pill');
+ await expect.poll(()=>page.evaluate(()=>[...window.seenTransitions].join(' '))).toContain('home-shelf-pill');
  await expect(page.locator('.home-shelves button[aria-pressed=true] .home-shelf-pill')).toHaveCount(1);
  await expect(page.locator('.home-show-card')).toHaveAttribute('data-shelf','skill');
  const reduced=await browser.newPage({reducedMotion:'reduce'});
