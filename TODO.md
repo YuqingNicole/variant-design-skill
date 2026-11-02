@@ -4,7 +4,7 @@
 
 ## 待办
 
-- [ ] RFC-005 第一阶段（文案改成按语言取值）的其余页面：灵感页已完成，`node website/scripts/i18n-inventory.mjs` 列出剩下的文件，按计数从多到少做。
+- [ ] RFC-005 第一阶段（文案改成按语言取值）的其余页面：灵感页、首页、作品页、分类页和 `/docs` 已完成，`node website/scripts/i18n-inventory.mjs` 列出剩下的文件，按计数从多到少做。英文已定为第一个可收录语言，下一步是 P2 和 P3。
 - [ ] 改写两句口号：定价页「审美免费。连续性值得付费。」，/about 标题「你的品牌，可以如此不同。」。
 - [ ] /about 页示意图里的英文小标签改成双语。
 - [ ] GEO 第一层剩余两项（策略见 `docs/research/2026-11-02-geo-strategy.md`）：首页、`/docs`、`/inspiration` 的英文预渲染和 hreflang；GitHub 仓库的主页地址、描述和 topics（措辞先给维护者确认）。
