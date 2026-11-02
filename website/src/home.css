@@ -54,3 +54,5 @@
 
 .home-show-card{view-transition-name:home-show-card}::view-transition-old(home-show-card){animation-duration:.14s}::view-transition-new(home-show-card){animation-delay:.08s}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){.home-tasks li a{transition:text-decoration-thickness .2s,text-underline-offset .2s}.home-tasks li:hover a{text-decoration-thickness:2px;text-underline-offset:.18em}.home-tasks li{transition:border-color .2s}.home-tasks li:hover{border-top-color:var(--site-ink)}}
+/* Phones: 44px touch targets for the standalone links on home cards and section heads. */
+@media(max-width:650px){.home-show-links{gap:0 20px}.home-show-links a,.home-practice-head a{display:inline-flex;align-items:center;min-height:44px}}

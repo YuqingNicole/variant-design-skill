@@ -152,3 +152,5 @@ div.insp-thumb.insp-thumb-media{display:block;padding:0;background:var(--site-su
 .insp-vcard-avatar{position:absolute;left:var(--space-4);bottom:var(--space-4);width:44px;height:44px;border-radius:50%;border:2px solid var(--site-card);pointer-events:none}
 .insp-vcard :is(.insp-card-save,.insp-card-out){width:44px;height:44px;background:rgba(35,38,34,.45);border-color:transparent;color:#fff}
 .insp-vcard .insp-card-save{right:var(--space-4);top:var(--space-4)}.insp-vcard .insp-card-out{right:var(--space-4);bottom:var(--space-4)}
+/* Phones: a 44px search field and filters with 16px text (iOS zooms smaller fields on focus), and a 44px header link. */
+@media(max-width:650px){.insp-search,.insp-bar select{height:44px;font-size:16px}.insp-search input{font-size:16px}.insp-title>a{display:inline-flex;align-items:center;min-height:44px}}

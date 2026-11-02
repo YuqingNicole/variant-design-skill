@@ -815,3 +815,23 @@ test('without JavaScript the inspiration page links every reference, and with it
   await expect(page.locator('.insp-card').first()).toBeVisible();
 });
 
+
+test('on phones, links and fields are big enough to tap and read', async ({ page }) => {
+  // 44px follows Apple and Material touch guidance (WCAG 2.5.8 only asks 24px); 16px fields stop iOS zooming on focus.
+  await page.setViewportSize({ width: 375, height: 800 });
+  const targets = '.site-nav-links a, .site-footer > div a, .docs-layout > aside a, .content-back a, .content-link a, .content-secondary, .library-more a, .home-show-links a, .home-practice-head a, .home-case-brief > a, .insp-title > a, .insp-search, .paper-actions > a, .canvas-label > a';
+  for (const route of ['/', '/en/docs', '/guides/git-or-snapshot-undo', '/inspiration', '/about', '/en/skills', '/d/pulse', '/changelog']) {
+    await page.goto(route, { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('h1').first()).toBeVisible();
+    const problems = await page.evaluate(sel => {
+      const shown = el => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden'; };
+      const label = el => (el.textContent || el.getAttribute('aria-label') || el.className).trim().slice(0, 30);
+      const out = [...document.querySelectorAll(sel)].filter(shown).filter(el => el.getBoundingClientRect().height < 44).map(el => `target ${label(el)} ${Math.round(el.getBoundingClientRect().height)}px`);
+      for (const el of document.querySelectorAll('input, select, textarea')) if (shown(el) && parseFloat(getComputedStyle(el).fontSize) < 16) out.push(`field ${label(el)} ${getComputedStyle(el).fontSize}`);
+      for (const el of document.querySelectorAll('body *')) if (shown(el) && [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && parseFloat(getComputedStyle(el).fontSize) < 12 && !el.closest('.paper-preview, .cap-study-art, .library-card-image, .home-case-frame, svg')) out.push(`text ${label(el)} ${getComputedStyle(el).fontSize}`);
+      return out;
+    }, targets);
+    expect(problems, route).toEqual([]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), route).toBe(true);
+  }
+});

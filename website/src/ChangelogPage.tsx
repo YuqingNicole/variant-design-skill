@@ -42,7 +42,7 @@ export function ChangelogPage() {
             {s.items.length > 0 && <ul>{s.items.map(item => <li key={item}><Text value={item}/></li>)}</ul>}</div>)}
         </section>;
       })}
-      <p><a href="https://github.com/YuqingNicole/variant-design-skill/blob/master/CHANGELOG.md" target="_blank" rel="noreferrer">{t(m.source, language)} ↗</a></p></div></div>
+      <p className="content-link"><a href="https://github.com/YuqingNicole/variant-design-skill/blob/master/CHANGELOG.md" target="_blank" rel="noreferrer">{t(m.source, language)} ↗</a></p></div></div>
     <section className="content-closing site-shell"><a className="content-button" href={localePath('/docs', language)}>{t(m.start, language)} ↗</a></section>
     <SiteFooter language={language}/></main>;
 }
