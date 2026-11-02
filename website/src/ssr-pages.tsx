@@ -3,6 +3,7 @@
 import './ssr-shim';
 import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { ChangelogPage } from './ChangelogPage';
 import { ContentPages } from './ContentPages';
 import { GuidesPage } from './GuidesPage';
 import { guides } from './guides-content';
@@ -20,7 +21,7 @@ import { SubmitPage } from './SubmitPage';
 
 const standalone: Record<string, ReactNode> = {
   '/about': <PaperLanding/>, '/pricing': <PricingPage repositoryUrl="https://github.com/YuqingNicole/variant-design-skill"/>,
-  '/skills': <SkillsPage/>, '/submit': <SubmitPage/>, '/sponsor': <SponsorPage/>, '/guides': <GuidesPage/>, '/inspiration': <InspirationPage/>,
+  '/skills': <SkillsPage/>, '/submit': <SubmitPage/>, '/sponsor': <SponsorPage/>, '/guides': <GuidesPage/>, '/changelog': <ChangelogPage/>, '/inspiration': <InspirationPage/>,
   ...Object.fromEntries(guides.map(g => [`/guides/${g.slug}`, <GuidesPage slug={g.slug}/>])),
 };
 const library: Record<string, ReactNode> = {

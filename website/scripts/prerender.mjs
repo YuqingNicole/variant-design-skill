@@ -25,6 +25,7 @@ const staticPages = {
   '/sponsor': ['赞助 — Variant Design', '品牌赞助 Variant Design 的方式与规则：明确标注，与编辑精选分开。'],
   '/lab': ['实验室 — Variant Design', '工作台和画布等实验功能。'],
   '/guides': ['指南 — Variant Design', '用 AI 做界面时常见问题的回答：怎么比较方向、怎么撤回修改、怎么避免千篇一律。'],
+  '/changelog': ['更新记录 — Variant Design', 'Variant Design 技能每个版本的改动，来自仓库里的 CHANGELOG.md。'],
   '/skills': ['设计技能 — Variant Design', '只收录在一次性项目里实际跑过、并公开了记录的设计交付技能。'],
 };
 
@@ -35,6 +36,7 @@ const staticPagesEn = references => ({
   '/submit': ['Submissions & permissions — Variant Design', 'How the Variant Design direction library handles submissions, permissions and takedowns.'],
   '/sponsor': ['Sponsor Variant Design', 'How brands can sponsor Variant Design: clearly labeled and kept separate from editorial picks.'],
   '/pricing': ['Pricing — Variant Design', 'Variant Design plans and pricing.'],
+  '/changelog': ['Changelog — Variant Design', 'What changed in each version of the Variant Design skill, from CHANGELOG.md in the repository.'],
   '/skills': ['Design skills — Variant Design', 'Only design delivery skills we ran in throwaway projects, with public records.'],
   '/guides': ['Guides — Variant Design', 'Answers to common questions about designing interfaces with AI: comparing directions, undoing changes and avoiding generic results.'],
 });

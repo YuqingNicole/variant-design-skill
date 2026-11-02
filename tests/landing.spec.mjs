@@ -705,7 +705,7 @@ test('home shelf switch runs a view transition, and reduced motion switches inst
 
 test('pages read without JavaScript, guides render in both languages, and unknown paths are not indexable', async ({ browser, page, request }) => {
   const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
-  for (const [route, text] of [['/about', 'Variant'], ['/pricing', '本地版'], ['/skills', 'variant-design'], ['/submit', '投稿'], ['/inspiration', '灵感'], ['/guides', '怎么撤回 AI 对设计的修改'], ['/guides/undo-ai-design-changes', 'undo B'], ['/guides/git-or-snapshot-undo', 'git stash'], ['/guides/design-references-with-sources', '核对日期']]) {
+  for (const [route, text] of [['/about', 'Variant'], ['/pricing', '本地版'], ['/skills', 'variant-design'], ['/submit', '投稿'], ['/inspiration', '灵感'], ['/guides', '怎么撤回 AI 对设计的修改'], ['/guides/undo-ai-design-changes', 'undo B'], ['/guides/git-or-snapshot-undo', 'git stash'], ['/guides/design-references-with-sources', '核对日期'], ['/changelog', '更新记录']]) {
     await reader.goto(route);
     await expect(reader.locator('h1').first(), route).toBeVisible();
     await expect(reader.locator('#root'), route).toContainText(text);
@@ -729,7 +729,7 @@ test('pages read without JavaScript, guides render in both languages, and unknow
 
 test('English has its own addresses: readable without JavaScript, linked both ways and never forced', async ({ browser, page, request }) => {
   const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
-  for (const [route, text] of [['/en', 'A design guide'], ['/en/docs', 'Install'], ['/en/inspiration', 'Inspiration'], ['/en/d/pulse', 'Pulse: three ways to read a weekly report'], ['/en/c/landing', 'Landing pages'], ['/en/guides/undo-ai-design-changes', 'How to undo design changes made by AI'], ['/en/about', 'Variant'], ['/en/pricing', 'Local'], ['/en/submit', 'Submissions'], ['/en/sponsor', 'Sponsor'], ['/en/skills', 'skills']]) {
+  for (const [route, text] of [['/en', 'A design guide'], ['/en/docs', 'Install'], ['/en/inspiration', 'Inspiration'], ['/en/d/pulse', 'Pulse: three ways to read a weekly report'], ['/en/c/landing', 'Landing pages'], ['/en/guides/undo-ai-design-changes', 'How to undo design changes made by AI'], ['/en/about', 'Variant'], ['/en/pricing', 'Local'], ['/en/submit', 'Submissions'], ['/en/sponsor', 'Sponsor'], ['/en/skills', 'skills'], ['/en/changelog', 'Changelog']]) {
     await reader.goto(route);
     await expect(reader.locator('html'), route).toHaveAttribute('lang', 'en');
     await expect(reader.locator('#root'), route).toContainText(text);

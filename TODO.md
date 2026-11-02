@@ -16,7 +16,6 @@
 - [ ] 【维护者】自有域名：买好后在 Vercel 绑定，代理负责改 `SITE_URL`、`library-data.ts` 里写死的地址，并把旧地址 301 过去。越晚做，已被收录的旧地址越多。
 - [ ] 【维护者】Search Console：用新域名验证并提交 sitemap，检查 `/en/...` 的索引和 `hreflang` 报告（不以 HTTP 200 为准）。
 - [ ] 【维护者】投稿到 claudemarketplaces.com（免费，可以投技能仓库或插件市场仓库）、Codex 插件合集和 skills.sh 一类目录。
-- [ ] 加一个 Claude Code 插件市场清单，支持 `/plugin marketplace add YuqingNicole/variant-design-skill`。同类技能都有这条安装路径。
 - [ ] 【维护者】第一次做 AI 搜索基线测量（GEO 策略里的 10 个问题），之后每两周一次，见“定期维护”。
 
 ## 3. 内容：选对手还没答好的问题
@@ -24,8 +23,6 @@
 - [ ] 【维护者】审阅 `/guides` 的英文（5 篇）。目前由代理撰写，已经发布在 `/en/guides/...`。
 - [ ] 对比页：Variant Design 和 Impeccable、Taste Skill、frontend-design 的区别（完整方向和撤回，对比元素级变体）。只用公开事实，不用对方的品牌素材；代理起草，【维护者】确认后发布。
 - [ ] `/skills` 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 `evals/run.mjs` 在一次性项目里跑 Impeccable、Taste Skill、UI UX Pro Max，公开记录后收录。发布涉及 Anthropic 技能的对比前，先由【维护者】确认条款。
-- [ ] 把 `CHANGELOG.md` 做成中英文的 `/changelog` 页面。
-- [ ] `llms.txt` 加一段写给 Agent 的用法：什么时候用这个技能、命令写法、不能声称什么。
 - [ ] 案例页加一个总览：每个 A/B/C 案例一张三联图。
 
 ## 4. 产品

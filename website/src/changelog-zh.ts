@@ -1,0 +1,42 @@
+// Chinese for CHANGELOG.md, one string per block in the same order (see changelog.ts).
+// Keep code spans identical to the English; scripts/changelog.test.mjs checks both.
+export const changelogZh: Record<string, { title?: string; blocks: string[] }> = {
+  Unreleased: {
+    title: '未发布',
+    blocks: [
+      '安装',
+      'Claude Code 插件市场：先运行 `claude plugin marketplace add YuqingNicole/variant-design-skill`，再运行 `claude plugin install variant-design@variant-design`。用这种方式安装时，更新检查会给出插件的更新命令。',
+      '子流程文件从 `SKILL.md` 改名为 `skills/*/ROUTE.md`，所以 Claude Code 插件、Codex 和 `npx skills` 都只会把入口注册为技能。',
+    ],
+  },
+  '1.1.0': {
+    blocks: [
+      '技能现在可以在已有项目里从检查一路做到接入，并且每一步都保护用户自己的改动。',
+      '结合项目的流程',
+      '生成前先只读检查项目（`scripts/project-profile.mjs`），任务说明和检查结果绑定，并记录运行时的观察（`scripts/design-task.mjs`）。',
+      '任务说明里记录设计参考及其复用条款。Variant Design 方向库的方向卡可以转成这种记录（`scripts/direction-card.mjs`）。',
+      '展示 A/B/C 之前做交付检查（`scripts/delivery-check.mjs`）：三个已登记的方向取舍各不相同，共享同一份任务约定，推荐不等于选定，设计系统锁定没有被破坏。',
+      '安全修改和接入',
+      '候选版本带内容基准；过期的候选版本和区域外的改动会被拒绝（`variant-history.mjs prepare` / `apply`）。',
+      '一次请求就是一次撤回，即使它分了几次 apply。',
+      '`variant-integrate.mjs` 在接入方向前备份每个目标文件；文件之后被改过，就拒绝回滚。',
+      '产物验证绑定版本，记录哪些检查针对哪个版本运行过。',
+      '预览',
+      'React 预览用项目自己的 Vite 挂载；`react-preview.mjs --static` 生成不需要服务器就能打开的预览，供沙箱里的 Agent 使用。',
+      '修复静态预览的一个问题：打包代码里含有 `$&`、`$$` 或 `` $` `` 时内容会被破坏。',
+      '技能文字',
+      '按阶段加载。入口只有路由表和共用规则；生成流程开头是一张加载表。变体动作、区域修改、历史、预览、导出和接入分成不同文件，用到那一步才读。`code-output.md` 不再每次都强制加载交互模式库。',
+      '参考文件按用途分组：`workflow/`、`sources/`、`domains/`、`design-system/`、`ux/`、`tasks/`。',
+      '质量检查跳过生成的预览包（`_static/`、`_preview/`），所以可以用严格模式扫描整个 `variant-output/`。',
+      '从领域参考里删掉了转录的第三方“社区示例”。',
+      '只有根目录的 `SKILL.md` 声明技能，Codex 和 `npx skills` 不再把子流程注册成无法使用的独立技能。',
+      '组件交接说明和网页界面检查。',
+      '安装',
+      '`npx skills add YuqingNicole/variant-design-skill -a claude-code -a codex` 安装完整技能。',
+      '给贡献者',
+      '`evals/run.mjs` 在示例项目上用 Claude Code 和 Codex 运行当前工作区的技能，并自动评分。',
+      '`scripts/skill-links.test.mjs` 检查技能提到的每个文件都存在，每个参考文件都能从入口找到。',
+      '升级：Git 克隆安装运行 `git -C <install path> pull --ff-only`，或者运行 `npx skills update variant-design`。对没有 `.git` 的安装，更新检查现在会给出 `npx skills` 命令。升级不会改动 `variant-output/` 里的项目文件；上下文结构仍是 v2。',
+    ],
+  },
+};
