@@ -5,6 +5,7 @@ import { SiteHeader, SiteFooter } from './SiteChrome';
 import './content-pages.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
+const msg={} satisfies Record<string,Localized>;
 // Brand sponsorship (RFC-003 step 7). No prices or traffic figures until there is real data to quote.
 const contact='https://github.com/YuqingNicole/variant-design-skill/issues/new?template=sponsorship.md';
 const m={
@@ -40,7 +41,7 @@ function Rows({rows,language,className,ordered}:{rows:Row[];language:Language;cl
 }
 export function SponsorPage(){
  const language = useLocale();const zh=language==='zh';const l=(k:keyof typeof m)=>t(m[k],language);
- useEffect(()=>{document.title=l('metaTitle');document.documentElement.lang=zh?'zh-CN':'en';document.querySelector('meta[name="description"]')?.setAttribute('content',l('metaDescription'));},[language,zh]);
+ useEffect(()=>{document.title=l('metaTitle');document.documentElement.lang=t({zh:'zh-CN',en:'en'},language);document.querySelector('meta[name="description"]')?.setAttribute('content',l('metaDescription'));},[language,zh]);
  const inquiry=<a className="home-action-primary" href={contact} target="_blank" rel="noreferrer">{l('cta')}</a>;
  return <main className="content-page sponsor-page"><SiteHeader language={language}/>
   <header className="content-hero site-shell sponsor-hero"><h1>{l('title')}</h1><p>{l('lead')}</p><div className="home-actions">{inquiry}<a className="home-action-secondary" href="#rules">{l('toRules')}</a></div></header>

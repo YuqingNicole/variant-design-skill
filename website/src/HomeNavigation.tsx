@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { transition } from './view-transition';
 import type { Language } from './direction-engine';
-import { fromPair, t, type Localized } from './i18n/localized';
+import { t, type Localized } from './i18n/localized';
 import { XVideo, mediaOf } from './XVideo';
 import type { Post } from './XPost';
 import { entries, mediaUrl } from './library-data';
@@ -37,7 +37,7 @@ function Showcase({ shelf, language }: { shelf: Shelf; language: Language }) {
     {facts(t({zh:[`${reference.publisher} 官网`, '仅链接', `核对于 ${reference.checkedAt}`, '设计者未知'],en:[`${reference.publisher} site`, 'Link only', `Checked ${reference.checkedAt}`, 'Designer unknown']},language))}
     <p className="home-show-links"><a href={reference.url} target="_blank" rel="noreferrer">{t(m.openSource,language)}</a><a href={localePath(`/inspiration?topic=${topic.id}`,language)}>{t({zh:`看「${topic.title.zh}」专题的 ${topic.items.length} 条`,en:`See all ${topic.items.length} in ${topic.title.en}`},language)}</a></p></article>;
   if (shelf === 'skill' && skill) return <article className="home-show-card" data-shelf="skill">
-    <h3><code>{skill.name}</code></h3><p className="home-show-body">{t(fromPair(skill.summary),language)}</p>
+    <h3><code>{skill.name}</code></h3><p className="home-show-body">{t(skill.summary,language)}</p>
     <code className="home-show-code">{skill.install}</code>
     {facts(t({zh:['在 Claude Code 和 Codex 中实测', `公开记录 ${skill.records.length} 份`],en:['Tried in Claude Code and Codex', `${skill.records.length} public records`]},language))}
     <p className="home-show-links"><a href="#featured-skill">{t(m.tryABC,language)}</a><a href={localePath('/skills',language)}>{t(m.howWeTriedIt,language)}</a></p></article>;
@@ -77,7 +77,7 @@ export function HomeHero({ language }: { language: Language }) {
       <ul>{tasks.map(task => <li key={task.href}><a href={localePath(task.href,language)}>{t(task.title,language)}</a><p>{t(task.body,language)}</p></li>)}</ul>
     </section>
     {skill && <section className="site-shell home-featured" id="featured-skill" aria-labelledby="home-featured-title">
-      <h2 id="home-featured-title">{t(m.featuredSkill,language)}<code>{skill.name}</code></h2><p>{t(fromPair(skill.summary),language)}</p>
+      <h2 id="home-featured-title">{t(m.featuredSkill,language)}<code>{skill.name}</code></h2><p>{t(skill.summary,language)}</p>
       <p><code>{skill.install}</code> <a href={localePath('/docs',language)}>{t(m.installGuide,language)}</a></p>
     </section>}
   </>;
