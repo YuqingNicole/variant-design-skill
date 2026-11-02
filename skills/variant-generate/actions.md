@@ -1,4 +1,4 @@
-<!-- Part of the variant-generate route (../../SKILL.md → skills/variant-generate/SKILL.md). Read it when the user asks for a variation action such as `A vary strong`, `Mix A + B`, `Polish C`, `Critique B` or `tokens A`. -->
+<!-- Part of the variant-generate route (../../SKILL.md → skills/variant-generate/ROUTE.md). Read it when the user asks for a variation action such as `A vary strong`, `Mix A + B`, `Polish C`, `Critique B` or `tokens A`. -->
 
 # Variation actions
 
@@ -40,7 +40,7 @@ Strip the design to its absolute essence. Inspired by the Impeccable *distill* p
 - Nav with 8 items → 4 primary + overflow menu
 
 ### Change style
-Extract structure/layout DNA, replace the entire visual language with a different direction from the table in `skills/variant-generate/SKILL.md`.
+Extract structure/layout DNA, replace the entire visual language with a different direction from the table in `skills/variant-generate/ROUTE.md`.
 
 ### Remix colors
 Keep all shapes, type, layout. Generate 3 palettes using OKLCH color space (per `references/design-system/color-and-contrast.md`):

@@ -124,11 +124,20 @@ npx skills add YuqingNicole/variant-design-skill -a claude-code -a codex
 
 The skills CLI reports installs to skills.sh unless `DISABLE_TELEMETRY=1` is set.
 
+For Claude Code, you can also install it as a plugin from this repository's marketplace (checked with Claude Code 2.1.316). Inside a session, `/plugin marketplace add YuqingNicole/variant-design-skill` does the same as the first line:
+
+```bash
+claude plugin marketplace add YuqingNicole/variant-design-skill
+claude plugin install variant-design@variant-design
+```
+
+The plugin loads the complete directory as one skill, `variant-design:variant-design`.
+
 For Claude Code or another local agent, install the same complete folder in that agent's skills location, or clone it into your workspace and point the agent to the absolute `SKILL.md` path. For Hermes/OpenClaw `AGENTS.md`, add a pointer to this installed entrypoint rather than pasting its text. The agent needs file access and Node.js for the bundled helpers.
 
 For web projects or API integrations, make the referenced directories available through the environment's file retrieval/execution tools as well as the entrypoint. Prompt text alone cannot provide preview servers or snapshot commands.
 
-The optional release check runs at most once per 24 hours, reports an available release, and never updates automatically. To update, run `git -C <install path> pull --ff-only` for a Git clone, or `npx skills update variant-design` for an `npx skills` install. Projects keep their `variant-output/` history across updates.
+The optional release check runs at most once per 24 hours, reports an available release, and never updates automatically. To update, run `git -C <install path> pull --ff-only` for a Git clone, `npx skills update variant-design` for an `npx skills` install, or `claude plugin marketplace update variant-design` followed by `claude plugin update variant-design@variant-design` for the Claude Code plugin. Projects keep their `variant-output/` history across updates.
 
 ## Generate → compare → choose → refine → export
 
