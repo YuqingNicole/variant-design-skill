@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
-import { escape, loadReferences, renderSite, rss, sitemap } from './prerender.mjs';
+import { escape, llms, llmsFull, loadReferences, renderSite, rss, sitemap } from './prerender.mjs';
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 
 test('every entry and category gets its own page with metadata and readable content', () => {
@@ -56,4 +56,35 @@ test('every reference gets its own detail page with an escaped title and a link 
     assert.match(html, new RegExp(`<title>${escape(r.name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} — 灵感参考`));
     assert.ok(html.includes('href="/inspiration"') && html.includes(`href="${escape(r.url)}"`), r.id);
   }
+});
+
+test('the install guide, structured data and llms.txt are readable without JavaScript', async () => {
+  const { importTs } = await import('./ts-module.mjs'), docs = await importTs(new URL('../src/docs-content.ts', import.meta.url).pathname);
+  const { entries } = loadEntries(), references = loadReferences(), site = 'https://example.test';
+  const pages = renderSite(entries, template, site, references, { docs, version: '9.9.9' });
+  const data = html => [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(m => JSON.parse(m[1]));
+  const guide = pages.get('/docs'), body = guide.replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.ok(body.includes(escape(docs.installCommand)) && body.includes(escape(docs.prompts.first.zh)));
+  for (const a of docs.agents) assert.ok(body.includes(escape(docs.verify(a.path, true))), a.id);
+  for (const [q, a] of docs.faq) assert.ok(body.includes(escape(q.zh)) && body.includes(escape(a.zh)), q.en);
+  const [howTo, faqPage] = data(guide)[0]['@graph'];
+  assert.equal(howTo['@type'], 'HowTo');
+  assert.equal(faqPage.mainEntity.length, docs.faq.length);
+  const skill = data(pages.get('/'))[0]['@graph'].find(g => g['@type'] === 'SoftwareSourceCode');
+  assert.equal(skill.version, '9.9.9');
+  assert.match(skill.codeRepository, /^https:\/\/github\.com\//);
+  for (const e of entries) assert.equal(data(pages.get(`/d/${e.slug}`))[0].url, `${site}/d/${e.slug}`);
+  assert.deepEqual(data(pages.get('/about')), []);
+  const brief = llms(entries, docs, site, references), full = llmsFull(entries, docs, site, references);
+  assert.match(brief, /^# Variant Design\n\n> /);
+  assert.ok(brief.includes(docs.installCommand) && brief.includes(`${site}/docs`) && brief.includes(`${references.length} curated`));
+  for (const e of entries) assert.ok(brief.includes(`(${site}/d/${e.slug})`), e.slug);
+  for (const [q] of docs.faq) assert.ok(full.includes(`### ${q.zh}`) && full.includes(`### ${q.en}`), q.en);
+  for (const a of docs.agents) assert.ok(full.includes(docs.verify(a.path, false)) && full.includes(docs.verify(a.path, true)), a.id);
+});
+
+test('structured data cannot close its script tag', () => {
+  const [entry] = loadEntries().entries;
+  const html = renderSite([{ ...entry, slug: 'tricky', title: ['</script><b>', 'x'] }], template, 'https://example.test').get('/d/tricky');
+  assert.ok(!html.includes('</script><b>') && html.includes('\\u003c/script>\\u003cb>'));
 });

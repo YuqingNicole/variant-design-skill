@@ -196,6 +196,9 @@ test('direction library pages are prerendered, browsable and keep old links work
  const sitemap=await(await request.get('/sitemap.xml')).text();
  for(const slug of ['harbor','pulse','variant-site','offscript','forma'])expect(sitemap).toContain(`/d/${slug}</loc>`);
  expect((await(await request.get('/feed.xml')).text()).match(/<item>/g)).toHaveLength(5);
+ const llms=await request.get('/llms.txt');expect(llms.headers()['content-type']).toContain('text/plain');expect(await llms.text()).toContain('/d/pulse)');
+ expect((await request.get('/missing.txt')).status()).toBe(404);
+ expect(await(await request.get('/docs')).text()).toContain('"@type":"FAQPage"');
  await page.goto('/');
  const cards=page.locator('.library-grid .library-card');await expect(cards).toHaveCount(5);await expect(cards.first()).toContainText('Harbor');
  await expect.poll(()=>page.locator('.library-card img').evaluateAll(images=>images.every(img=>img.complete&&img.naturalWidth>0))).toBe(true);

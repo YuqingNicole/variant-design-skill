@@ -3,6 +3,7 @@
 !/website
 !/scripts
 !/vercel.json
+!/VERSION
 !/api
 **/node_modules
 /website/.env

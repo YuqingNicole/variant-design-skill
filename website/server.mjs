@@ -14,7 +14,7 @@ if (existsSync(envPath)) {
 }
 const root = join(projectRoot, "dist");
 const port = Number(process.env.PORT || 4173);
-const mime = { ".css": "text/css", ".html": "text/html", ".js": "text/javascript", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml", ".jpg": "image/jpeg" };
+const mime = { ".css": "text/css", ".html": "text/html", ".js": "text/javascript", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml", ".jpg": "image/jpeg", ".txt": "text/plain", ".xml": "application/xml" };
 
 createServer(async (request, response) => {
   if (await handleApi(request, response)) return;
@@ -26,8 +26,10 @@ createServer(async (request, response) => {
     return response.end();
   }
   const candidate = normalize(join(root, pathname === "/" ? "index.html" : pathname));
-  // Prerendered routes are directories with index.html; everything else falls back to the app shell.
+  // Prerendered routes are directories with index.html; other routes fall back to the app shell and,
+  // as on Vercel (vercel.json), a missing file with an extension is a 404.
   const page = candidate.startsWith(root) && existsSync(candidate) ? (statSync(candidate).isFile() ? candidate : existsSync(join(candidate, "index.html")) ? join(candidate, "index.html") : null) : null;
+  if (!page && /\.[A-Za-z0-9]+$/.test(pathname)) { response.writeHead(404); return response.end(); }
   const file = page ?? (existsSync(join(root, "app.html")) ? join(root, "app.html") : join(root, "index.html"));
   response.writeHead(200, { "content-type": `${mime[extname(file)] || "application/octet-stream"}; charset=utf-8` });
   createReadStream(file).pipe(response);
