@@ -5,6 +5,8 @@ import { SiteHeader, SiteFooter } from './SiteChrome';
 import './content-pages.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
+const copyText={msg:{zh:'。',en:'.'}} satisfies Record<string,Localized>;
+const msg={} satisfies Record<string,Localized>;
 // Brand sponsorship (RFC-003 step 7). No prices or traffic figures until there is real data to quote.
 const contact='https://github.com/YuqingNicole/variant-design-skill/issues/new?template=sponsorship.md';
 const m={
@@ -35,12 +37,12 @@ const steps:Row[]=[
  {title:{zh:'我们回复',en:'We reply'},text:{zh:'附上当时的真实访问数据、可用的位置和方式。网站目前还没有赞助位，位置在洽谈时一起确定。',en:'With current traffic data and the placements and formats available. The site has no sponsor placements yet; they are agreed as part of the conversation.'}},
 ];
 function Rows({rows,language,className,ordered}:{rows:Row[];language:Language;className?:string;ordered?:boolean}){
- const items=rows.map(r=><li key={r.title.en}><strong>{t(r.title,language)}</strong><p>{t(r.text,language)}{r.code&&<> <code>{r.code}</code>{language==='zh'?'。':'.'}</>}</p></li>);
+ const items=rows.map(r=><li key={r.title.en}><strong>{t(r.title,language)}</strong><p>{t(r.text,language)}{r.code&&<> <code>{r.code}</code>{t(copyText.msg,language)}</>}</p></li>);
  return ordered?<ol className={`sponsor-rows ${className??''}`}>{items}</ol>:<ul className={`sponsor-rows ${className??''}`}>{items}</ul>;
 }
 export function SponsorPage(){
  const language = useLocale();const zh=language==='zh';const l=(k:keyof typeof m)=>t(m[k],language);
- useEffect(()=>{document.title=l('metaTitle');document.documentElement.lang=zh?'zh-CN':'en';document.querySelector('meta[name="description"]')?.setAttribute('content',l('metaDescription'));},[language,zh]);
+ useEffect(()=>{document.title=l('metaTitle');document.documentElement.lang=t({zh:'zh-CN',en:'en'},language);document.querySelector('meta[name="description"]')?.setAttribute('content',l('metaDescription'));},[language,zh]);
  const inquiry=<a className="home-action-primary" href={contact} target="_blank" rel="noreferrer">{l('cta')}</a>;
  return <main className="content-page sponsor-page"><SiteHeader language={language}/>
   <header className="content-hero site-shell sponsor-hero"><h1>{l('title')}</h1><p>{l('lead')}</p><div className="home-actions">{inquiry}<a className="home-action-secondary" href="#rules">{l('toRules')}</a></div></header>
