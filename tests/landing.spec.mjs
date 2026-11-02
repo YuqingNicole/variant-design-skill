@@ -778,3 +778,17 @@ test('English has its own addresses: readable without JavaScript, linked both wa
   expect(map).toContain('hreflang="x-default"');
 });
 
+test('every navigation link stays visible on narrow screens in both languages', async ({ page }) => {
+  for (const width of [320, 390, 600]) for (const route of ['/', '/docs', '/en', '/en/inspiration', '/pricing']) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto(route);
+    await expect(page.locator('.site-nav-links a').last()).toBeVisible();
+    const clipped = await page.locator('.site-nav-links').evaluate(nav => {
+      const box = nav.getBoundingClientRect(), vw = document.documentElement.clientWidth;
+      return [...nav.querySelectorAll('a')].filter(a => getComputedStyle(a).display !== 'none').filter(a => { const r = a.getBoundingClientRect(); return r.right > Math.min(box.right, vw) + 0.5 || r.left < Math.max(box.left, 0) - 0.5; }).map(a => a.textContent);
+    });
+    expect(clipped, `${route} at ${width}`).toEqual([]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `${route} at ${width}`).toBe(true);
+  }
+});
+
