@@ -133,10 +133,14 @@ test('canvas homepage opens real directions and preserves the guided handoff acr
  }
  await frame.getByRole('button',{name:/Organic search/}).click();
  await expect(frame.locator('.cap-inspector h3')).toHaveText('Organic search');
+ // Diagram labels follow the page language; only the sample Forma screens keep their own English UI.
+ await expect(page.locator('.cap-study-art .cap-art-tag').first()).toContainText('先看异常');
+ await expect(page.locator('.cap-history-card header')).toContainText('版本记录');
  const original=await page.locator('.cap-edit-region h4').textContent();
  const metrics=await page.locator('.cap-edit-kpis').textContent();
  await page.getByRole('button',{name:'试改这个标题 ↗'}).click();
  await expect(page.locator('.cap-edit-region')).toHaveAttribute('data-refined','true');
+ await expect(page.locator('.cap-history-card ol b').nth(1)).toHaveText('当前');
  await expect(page.locator('.cap-edit-kpis')).toHaveText(metrics);
  await page.getByRole('button',{name:'↶ 撤回示例修改'}).click();
  await expect(page.locator('.cap-edit-region h4')).toHaveText(original);

@@ -6,7 +6,7 @@ const msg={livePageThumbnail:{zh:"真实页面缩略预览",en:"live page thumbn
 const m={completeStep1First:{zh:"先完成第 1 步，以下操作针对当前项目新生成的方案。",en:"Complete step 1 first. The following action targets the newly generated project variants. "},
  copiedPasteIntoYour:{zh:"已复制，粘贴到项目的 Agent 对话中继续。",en:"Copied. Paste into your project's agent chat to continue."},
  clipboardUnavailableSelectAnd:{zh:"无法访问剪贴板，请在下方文本框中选择并复制指令。",en:"Clipboard unavailable. Select and copy the prompt below."},
- yourBrandCouldFeel:{zh:"你的品牌，可以如此不同。",en:"Your brand could feel this different."},
+ yourBrandCouldFeel:{zh:"同一个工作室，三种表达。",en:"One studio, three ways to present it."},
  seeTheWorkMake:{zh:"先看结果，再做选择。",en:"See the work. Make a choice."},
  oneCreativeStudioThree:{zh:"同一个创意工作室，三种自由探索方向。字体、色彩、构图与材质一起变化，保留作品介绍与咨询路径。打开完整页面，感受哪种表达更适合你；已有品牌的项目仍可锁定设计系统。",en:"One creative studio. Three expressive directions. Type, color, composition and materials change together while the portfolio and inquiry paths remain. Explore each page to find your fit; existing brands can still lock their design system."},
  oneBriefHelpVisitors:{zh:"同一份需求：让访客理解 Variant Design，看到实际效果，并开始在自己的项目里使用。三版共用品牌、内容和必要功能，改变首屏的信息优先级。",en:"One brief: help visitors understand Variant Design, inspect real results and start using it in their project. All three share the brand, content and essential features, with different priorities in the hero."},
