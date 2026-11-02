@@ -19,6 +19,8 @@ type Preview={image:string;title:string;description:string;lang:string;fetchedAt
 const previewOf=(item:Item):Preview|undefined=>(linkPreviews as Record<string,Preview>)[item.id];
 const labels:Record<string,Localized>={landing:{zh:'Landing',en:'Landing'},product:{zh:'产品界面',en:'Product'},flow:{zh:'关键流程',en:'Flow'},motion:{zh:'动效',en:'Motion'},practice:{zh:'Best practice',en:'Best practice'}};
 const postOf=(item:Item)=>(item as Item&{post?:Post}).post;
+// Where we found the work, when another curator surfaced it first; credited beside the source.
+const viaOf=(item:Item)=>(item as Item&{via?:string}).via;
 // Three structural sketches per category, picked by id, so neighbouring cards do not repeat.
 const sketches:Record<string,number[]>={landing:[4,3,5],product:[6,5,7],flow:[3,4,3],motion:[5,4,6]};
 const variantOf=(id:string)=>[...id].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7)%3;
@@ -54,6 +56,7 @@ const f={
  useReference:{zh:(item:Item)=>`参考 ${item.name}（${item.url}），重点研究“${item.focus.zh}”，用于“${item.application.zh}”。先打开当前来源核对，不复制其文案、商标与素材。在我的项目中检查已有品牌约束，然后围绕同一核心任务生成 A/B/C 三种原创设计。解释取舍，提供可运行预览，并检查桌面和手机布局。复用代码前核对具体许可证。`,
   en:(item:Item)=>`Study ${item.name} (${item.url}), focusing on ${item.focus.en} to ${item.application.en.toLowerCase()}. Recheck the current source; do not copy its text, marks or assets. Inspect my project's brand constraints, then create three original directions for the same core task. Explain tradeoffs, provide working previews, and verify desktop/mobile layouts. Check the specific license before reusing code.`},
  topicNote:{zh:(at:string)=>`链接于 ${at} 复查可访问；研究笔记的观察日期见各条。`,en:(at:string)=>`Links rechecked as reachable on ${at}; each note shows its own observation date.`},
+ via:{zh:(host:string)=>`经 ${host} 发现`,en:(host:string)=>`found via ${host}`},
  loadMore:{zh:(n:number)=>`加载更多（还有 ${n} 个）`,en:(n:number)=>`Load more (${n} left)`}};
 const rights=(locale:Locale)=><em className="inspiration-link-only">{t(m.linkOnly,locale)}</em>;
 function Thumb({item,locale}:{item:Item;locale:Locale}){const preview=previewOf(item);const post=postOf(item);const [tries,setTries]=useState(0);
@@ -117,7 +120,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
      <span><button type="button" onClick={()=>step(-1)} aria-label={l('prev')}><Icon d={icons.prev}/></button><button type="button" onClick={()=>step(1)} aria-label={l('next')}><Icon d={icons.next}/></button></span></nav>
     <p className="insp-detail-label">{t(labels[item.category],language)} · {item.tag} {rights(language)}</p>
     <H id={`detail-${item.id}`}>{item.name}</H><p className="inspiration-host">{new URL(item.url).hostname}</p>
-    <dl><dt>{l('study')}</dt><dd>{t(item.focus,language)}</dd><dt>{l('apply')}</dt><dd>{t(item.application,language)}</dd><dt>{l('source')}</dt><dd><a href={item.url} target="_blank" rel="noreferrer">{item.publisher}</a> · {t(kinds[item.kind],language)} · {item.checkedAt}</dd><dt>{l('designer')}</dt><dd>{item.designer ?? l('unknownDesigner')}</dd><dt>{l('stillUnknown')}</dt><dd>{unknowns(item,language)}</dd></dl>
+    <dl><dt>{l('study')}</dt><dd>{t(item.focus,language)}</dd><dt>{l('apply')}</dt><dd>{t(item.application,language)}</dd><dt>{l('source')}</dt><dd><a href={item.url} target="_blank" rel="noreferrer">{item.publisher}</a> · {t(kinds[item.kind],language)} · {item.checkedAt}{viaOf(item)&&<> · <a href={viaOf(item)} target="_blank" rel="noreferrer">{fl('via')(new URL(viaOf(item)!).hostname)}</a></>}</dd><dt>{l('designer')}</dt><dd>{item.designer ?? l('unknownDesigner')}</dd><dt>{l('stillUnknown')}</dt><dd>{unknowns(item,language)}</dd></dl>
     <button type="button" className="insp-detail-brief" onClick={()=>brief(item)}>{l('createBrief')}</button>
    </div>
    <div className="insp-detail-visual">{post?<XPost key={item.id} post={post} url={item.url} locale={language} autoload/>:preview?<LinkPreview key={item.id} item={item} preview={preview} locale={language}/>:<Thumb key={item.id} item={item} locale={language}/>}

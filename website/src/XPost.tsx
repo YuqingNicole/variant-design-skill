@@ -28,7 +28,7 @@ export function XPost({post,url,locale,autoload=false}:{post:Post;url:string;loc
    if(el)setState('shown');else{box.current?.replaceChildren();setState('failed')}}catch{if(id===run.current)setState('failed')}}
  const date=formatDate(post.date,locale);
  return <figure className="x-post"><div ref={box} className="x-post-embed" hidden={state==='idle'||state==='failed'}/>
-  {state!=='shown'&&<blockquote cite={url} lang={post.lang}><p>{post.text}</p><footer><b>{post.author}</b> <span>@{post.handle} · {date}</span></footer></blockquote>}
+  {state!=='shown'&&<blockquote cite={url} lang={post.lang}>{post.text&&<p>{post.text}</p>}<footer><b>{post.author}</b> <span>@{post.handle} · {date}</span></footer></blockquote>}
   <figcaption>{state==='shown'?l('shown')
    :<><button type="button" onClick={show} disabled={state==='loading'}>{state==='loading'?l('loading'):l(post.hasMedia?'loadMedia':'load')}</button>
     <span>{l(state==='failed'?'failed':'notice')}</span>

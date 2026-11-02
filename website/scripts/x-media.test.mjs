@@ -24,7 +24,7 @@ test('stored media belongs to X post entries and streams from X', () => {
   const items = new Map(JSON.parse(source.slice(from, source.indexOf('\n];', from) + 2)).map(i => [i.id, i]));
   for (const [id, m] of Object.entries(JSON.parse(fs.readFileSync(new URL('../src/x-media.json', import.meta.url), 'utf8')))) {
     assert.ok(items.get(id)?.post, id);
-    assert.match(m.video, /^https:\/\/video\.twimg\.com\/.+\.mp4$/, id);
+    assert.match(m.video, /^https:\/\/video\.twimg\.com\/[^?]+\.mp4(\?tag=\d+)?$/, id);
     assert.match(m.poster, /^https:\/\/pbs\.twimg\.com\//, id);
     assert.ok(m.width > 0 && m.height > 0, id);
   }

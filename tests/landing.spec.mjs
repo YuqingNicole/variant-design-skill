@@ -464,7 +464,7 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.goto('/inspiration');await expect(page.locator('.insp-pills button')).toHaveText(['全部','Landing','产品界面','关键流程','Best practice']);
  expect(xRequests).toEqual([]);
  await page.getByRole('button',{name:'Best practice',exact:true}).click();
- const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(2);await expect(page.locator('.inspiration-grid')).toHaveCount(0);
+ const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(Object.keys(media).length);await expect(page.locator('.inspiration-grid')).toHaveCount(0);
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
  const sheep=cards.filter({has:page.locator('a[href="/inspiration/x-areadnemaria-444419"]')});
  const video=sheep.locator('video');await expect(video).toHaveAttribute('poster',media['x-areadnemaria-444419'].poster);
@@ -472,6 +472,8 @@ test('best practice shows each X post as its looping video, credits the author a
  expect(await video.evaluate(v=>v.muted&&v.loop&&v.playsInline)).toBe(true);
  await expect(sheep.locator('.insp-vcard-avatar')).toHaveAttribute('alt','areadne @AreadneMaria');
  await expect(sheep.locator('.insp-card-out')).toHaveAttribute('href','https://x.com/AreadneMaria/status/2114898325451444419');
+ // Videos far below the fold attach their file only as they near the screen.
+ expect(await cards.last().locator('video').evaluate(v=>v.getAttribute('src'))).toBeNull();
  const widgets=cards.filter({has:page.locator('a[href="/inspiration/paper-widgets"]')});
  await expect(widgets.locator('img.insp-vcard-media')).toHaveAttribute('src',media['paper-widgets'].poster);await expect(widgets.locator('video')).toHaveCount(0);
  await sheep.locator('.insp-vcard-open').click();await expect(page).toHaveURL(/\/inspiration\/x-areadnemaria-444419$/);
@@ -480,6 +482,9 @@ test('best practice shows each X post as its looping video, credits the author a
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
  await page.emulateMedia({reducedMotion:'reduce'});await page.reload();await page.getByRole('button',{name:'Best practice',exact:true}).click();
  await page.waitForTimeout(800);expect(await sheep.locator('video').evaluate(v=>v.paused)).toBe(true);
+ // A post found through another curator credits it beside the source.
+ await page.goto('/inspiration/x-keviduk-'+Object.keys(media).find(k=>k.startsWith('x-keviduk-')).slice(-6));
+ await expect(page.locator('.insp-detail dd a[href^="https://recent.design/i/"]')).toHaveText('经 recent.design 发现');
 });
 
 test('a reference opens as a dialog from the grid and as its own page from a direct link', async ({page})=>{
@@ -526,7 +531,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-topic')).toContainText('2026-10-29');
  await expect(cards.locator('.insp-card-open[href="/inspiration/lovable"]')).toHaveCount(0);
  await expect(cards.locator('.insp-card-out[href="https://impeccable.style/"]')).toHaveCount(1);
- await expect(page.locator('.insp-title')).toContainText('34 个精选外部参考');await expect(page.locator('.insp-counts')).toContainText('20 Landing');
+ await expect(page.locator('.insp-title')).toContainText('64 个精选外部参考');await expect(page.locator('.insp-counts')).toContainText('20 Landing');
  await page.getByRole('searchbox').fill('Vercel');
  await expect(cards).toHaveCount(1);await expect(cards.first().locator('.insp-card-open')).toHaveAttribute('href','/inspiration/v0');
  await page.getByRole('searchbox').fill('');
@@ -608,7 +613,7 @@ test('home works as a design navigation site with a switchable, sourced showcase
  await expect(page).toHaveTitle('Variant Design — 设计导航，只收核对过的');
  const inView=sel=>page.locator(sel).first().evaluate(el=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight});
  for(const sel of ['.home-claim h1','.home-show-card','.home-action-primary','.home-shelves'])expect(await inView(sel)).toBe(true);
- await expect(page.locator('.home-counts')).toHaveText('目前有 34 个参考、1 个实测技能和 5 个案例。');
+ await expect(page.locator('.home-counts')).toHaveText('目前有 64 个参考、1 个实测技能和 5 个案例。');
  await expect(page.locator('main .content-kicker')).toHaveCount(0);
  expect(await page.locator(':is(.home-hero, .home-tasks, .home-featured, .home-case, #directories) :is(a, button)').evaluateAll(els=>els.map(e=>e.innerText).join(' '))).not.toMatch(/[→↗↓]/);
  const card=page.locator('.home-show-card');

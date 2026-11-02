@@ -24,7 +24,10 @@ test('best-practice entries and other X links carry the oEmbed fields their card
     assert.ok(i.post, i.id); assert.equal(i.kind, 'social-post', i.id); assert.equal(i.source, 'link-only', i.id);
     const m = /^https:\/\/x\.com\/([A-Za-z0-9_]+)\/status\/(\d+)$/.exec(i.url); assert.ok(m, i.id);
     assert.equal(i.post.handle, m[1], i.id); assert.equal(i.post.id, m[2], i.id);
-    assert.ok(i.post.author.trim() && i.post.text.trim() && typeof i.post.hasMedia === 'boolean', i.id); assert.match(i.post.date, date, i.id);
+    // A media-only post has no text; it must then carry media and the no-linguistic-content language tag.
+    assert.ok(i.post.author.trim() && typeof i.post.text === 'string' && typeof i.post.hasMedia === 'boolean', i.id);
+    if (!i.post.text.trim()) { assert.ok(i.post.hasMedia, i.id); assert.equal(i.post.lang, 'zxx', i.id); }
+    if (i.via) assert.match(i.via, /^https:\/\/[^/]+\//, i.id); assert.match(i.post.date, date, i.id);
     assert.doesNotMatch(i.focus.zh + i.application.zh + i.name, /TODO/, i.id);
   }
 });
