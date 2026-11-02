@@ -474,7 +474,7 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.route(/platform\.twitter\.com/,r=>r.abort());await page.route(/pbs\.twimg\.com/,r=>r.fulfill({contentType:'image/png',body:pixel}));
  // The widgets video fails; the sheep video stays pending, so the suite never streams from X.
  await page.route(/video\.twimg\.com/,r=>{if(r.request().url()===media['paper-widgets'].video)return r.abort()});
- await page.goto('/inspiration');await expect(page.locator('.insp-pills button')).toHaveText(['全部','Landing','产品界面','关键流程','Best practice']);
+ await page.goto('/inspiration');await expect(page.locator('.insp-pills button')).toHaveText(['Best practice','全部','Landing','产品界面','关键流程']);
  expect(xRequests).toEqual([]);
  await page.getByRole('button',{name:'Best practice',exact:true}).click();
  const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(Object.keys(media).length);await expect(page.locator('.inspiration-grid')).toHaveCount(0);
