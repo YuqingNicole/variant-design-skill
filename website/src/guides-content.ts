@@ -2,11 +2,12 @@
 // Plain data only: the prerender imports this file without a TS loader for JSX.
 // Every claim here must trace to the skill's own docs or a dated record in docs/research/.
 import type { Localized } from './i18n/localized';
+import type { Translations } from './i18n/translations';
 import { deliver, installCommand, prompts, repository, refine } from './docs-content';
 import { inspirationItems } from './inspiration-data';
 
 export type GuideSection = { id: string; heading: Localized; body: Localized[]; list?: Localized[]; code?: Localized; link?: { href: string; label: Localized } };
-export type Guide = { slug: string; title: Localized; answer: Localized; publishedAt: string; sections: GuideSection[] };
+export type Guide = { slug: string; title: Localized; answer: Localized; publishedAt: string; sections: GuideSection[]; translations?: Translations };
 
 const records = `${repository}/blob/master/docs/research`;
 const shorthand = (rows: typeof refine, names: string[]) => names.map(name => {

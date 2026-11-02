@@ -46,6 +46,17 @@ const unlisted = new Set(['/lab']);
 const noindexTag = '<meta name="robots" content="noindex">';
 export const withNoindex = html => html.includes(noindexTag) ? html : html.replace('</head>', () => `    ${noindexTag}\n  </head>`);
 
+// RFC-005 §3.5: routes whose English is marked draft. Production leaves them out of the English pages,
+// hreflang, sitemap and llms.txt; local and preview builds keep them so reviewers can read them.
+export const draftRoutes = ({ guides = [], entries = [] }, locale = 'en') => [
+  ...guides.filter(g => g.translations?.[locale]?.status === 'draft').map(g => `/guides/${g.slug}`),
+  ...entries.filter(e => e.translations?.[locale]?.status === 'draft').map(e => `/d/${e.slug}`)];
+export function withoutDrafts(english, drafts) {
+  const kept = { ...english };
+  for (const route of drafts) delete kept[route];
+  return kept;
+}
+
 // The reference library lives in a TS module of plain JSON literals; read it without a TS loader.
 export function loadReferences() {
   const source = fs.readFileSync(path.join(here, '../src/inspiration-data.ts'), 'utf8'), start = source.indexOf('export const inspirationItems = ');
@@ -241,10 +252,13 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   const dist = path.resolve(here, '../dist'), site = (process.env.SITE_URL || defaultSite).replace(/\/$/, '');
   const { entries, problems } = loadEntries();
   if (problems.length) { console.error(problems.join('\n')); process.exit(1); }
+  const drafts = process.env.VERCEL_ENV === 'production' ? draftRoutes({ guides, entries }) : [];
+  if (drafts.length) console.log(`Draft English left out of production: ${drafts.join(', ')}`);
+  const listed = { guides: guides.filter(g => !drafts.includes(`/guides/${g.slug}`)), entries: entries.filter(e => !drafts.includes(`/d/${e.slug}`)) };
   // The untouched shell stays available as app.html: the fallback for routes without their own page.
   const shell = path.join(dist, 'app.html');
   if (!fs.existsSync(shell)) fs.copyFileSync(path.join(dist, 'index.html'), shell);
-  const template = fs.readFileSync(shell, 'utf8').replace(`    ${noindexTag}\n`, ''), pages = renderSite(entries, template, site, references, { docs, version, guides, rendered, english });
+  const template = fs.readFileSync(shell, 'utf8').replace(`    ${noindexTag}\n`, ''), pages = renderSite(entries, template, site, references, { docs, version, guides, rendered, english: withoutDrafts(english, drafts) });
   for (const [route, html] of pages) {
     const file = route === '/' ? path.join(dist, 'index.html') : path.join(dist, route.slice(1), 'index.html');
     fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, html);
@@ -256,8 +270,8 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   for (const entry of entries) fs.writeFileSync(path.join(dist, 'd', `${entry.slug}.json`), JSON.stringify(toCard(entry, site), null, 2) + '\n');
   fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap(pages.keys(), site));
   fs.writeFileSync(path.join(dist, 'feed.xml'), rss(entries, site));
-  fs.writeFileSync(path.join(dist, 'llms.txt'), llms(entries, docs, site, references, guides));
-  fs.writeFileSync(path.join(dist, 'llms-full.txt'), llmsFull(entries, docs, site, references, guides));
+  fs.writeFileSync(path.join(dist, 'llms.txt'), llms(listed.entries, docs, site, references, listed.guides));
+  fs.writeFileSync(path.join(dist, 'llms-full.txt'), llmsFull(listed.entries, docs, site, references, listed.guides));
   fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site}/sitemap.xml\n`);
   console.log(`Prerendered ${pages.size} routes (including reference details) and ${entries.length} direction cards for ${site}; sitemap.xml, feed.xml, llms.txt and robots.txt written.`);
 }

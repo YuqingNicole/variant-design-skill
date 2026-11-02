@@ -68,3 +68,13 @@ test('images must exist, match their recorded size and stay small', () => {
   const escape = real('forma'); escape.directions[0].media[0].file = '../a.jpg';
   assert.ok(check(escape).some(e => e.includes('must be a plain')));
 });
+
+test('translation status is complete or draft, never for the source language', () => {
+  const [entry] = loadEntries().entries;
+  const errors = translations => validateEntry({ ...entry, translations }).filter(e => e.startsWith('translations'));
+  assert.deepEqual(errors({ en: { status: 'draft' } }), []);
+  assert.deepEqual(errors({ en: { status: 'complete', reviewedAt: '2026-11-02' } }), []);
+  assert.equal(errors({ en: { status: 'machine' } }).length, 1);
+  assert.equal(errors({ en: { status: 'complete', reviewedAt: 'yesterday' } }).length, 1);
+  assert.equal(errors({ zh: { status: 'draft' } }).length, 1);
+});
