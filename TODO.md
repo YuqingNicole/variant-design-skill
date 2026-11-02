@@ -8,8 +8,7 @@
 
 - [ ] 【维护者】改掉 README、`README_CN.md` 和 GitHub 描述里的“受 Variant（variant.com）设计社区启发”，避免读者以为和这个商业产品有关联。同时把 GitHub 主页地址改成官网、补 topics。建议的描述：Open-source agent skill for Codex and Claude Code that turns one design brief into three comparable directions (A/B/C) inside your own project.
 - [ ] 【维护者】价格页在卖“托管生成额度”，`llms.txt` 却写着没有托管服务。二选一：把付费档标成“计划中”，或者先拿掉。
-- [ ] 核对 Impeccable（Apache-2.0）的署名义务：README 写着“powered by the Impeccable design system”，确认有没有复制它的文字、是否需要 NOTICE；把 README 开头改成和 `llms.txt` 一致的定位句。
-- [ ] 不再说“一次出三版”是独有的（Impeccable 默认也出 3 个变体）。对外说法改成“同一任务的三个完整方向和取舍”和“可撤回、不覆盖未看过的改动”。逐个检查官网、README 和 `llms.txt` 的措辞。
+- [ ] 【维护者】确认 Impeccable 署名的处理：`references/design-system/` 里 7 个文件是 Impeccable（Apache-2.0）原文的完整复制，已补 `NOTICE`、许可证全文和文件头说明。要不要改写成自己的文字、或者联系作者，由你决定。
 
 ## 2. 分发：先让人找得到
 
