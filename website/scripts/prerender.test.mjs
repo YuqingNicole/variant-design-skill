@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
-import { escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, rss, sitemap, withNoindex } from './prerender.mjs';
+import { draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, rss, sitemap, withNoindex, withoutDrafts } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 
@@ -155,3 +155,21 @@ test('the reference index links every reference page in each language', () => {
   assert.ok(!referenceIndex([{ id: 'x', name: '<b>&' }]).includes('<b>'));
 });
 
+
+test('draft English stays out of the English pages, hreflang and sitemap, and the Chinese page stays (RFC-005 §3.5)', async () => {
+  const { guides } = await importTs(new URL('../src/guides-content.ts', import.meta.url).pathname), { entries } = loadEntries();
+  const [draft, kept] = guides, marked = [{ ...draft, translations: { en: { status: 'draft' } } }, { ...kept, translations: { en: { status: 'complete', reviewedAt: '2026-11-02' } } }, ...guides.slice(2)];
+  const pulse = entries.find(e => e.slug === 'pulse'), draftEntries = entries.map(e => e === pulse ? { ...e, translations: { en: { status: 'draft' } } } : e);
+  const drafts = draftRoutes({ guides: marked, entries: draftEntries });
+  assert.deepEqual(drafts, [`/guides/${draft.slug}`, '/d/pulse']);
+  assert.deepEqual(draftRoutes({ guides, entries }), [], 'items without a status count as published');
+  const body = route => `<main><h1>${route}</h1></main>`, routes = [...guides.map(g => `/guides/${g.slug}`), '/d/pulse'];
+  const english = Object.fromEntries(routes.map(r => [r, body(r)])), rendered = Object.fromEntries(guides.map(g => [`/guides/${g.slug}`, body(g.slug)]));
+  const pages = renderSite(draftEntries, template, 'https://example.test', [], { guides: marked, rendered, english: withoutDrafts(english, drafts) });
+  assert.ok(pages.has(`/guides/${draft.slug}`) && !pages.has(`/en/guides/${draft.slug}`) && !pages.has('/en/d/pulse'));
+  assert.ok(!pages.get(`/guides/${draft.slug}`).includes('hreflang') && !pages.get('/d/pulse').includes('hreflang'));
+  assert.ok(pages.has(`/en/guides/${kept.slug}`) && pages.get(`/guides/${kept.slug}`).includes('hreflang="en"'));
+  const map = sitemap(pages.keys(), 'https://example.test');
+  assert.ok(!map.includes(`/en/guides/${draft.slug}<`) && !map.includes('/en/d/pulse<') && map.includes(`/en/guides/${kept.slug}<`));
+  assert.equal(Object.keys(english).length, routes.length, 'withoutDrafts leaves its input unchanged');
+});

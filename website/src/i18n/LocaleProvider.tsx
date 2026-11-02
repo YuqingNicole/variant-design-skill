@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import { t, type Localized } from './localized';
 import { hasLanguageUrl, localePath } from './locale-route';
+import { listsLanguage } from './translations';
 import { isLocale, sourceLocale, type Locale } from './locales';
 
 const preferenceKey = 'variant-language';
@@ -19,7 +20,7 @@ const dismissedKey = 'variant-language-notice-dismissed';
 export function LocaleNotice() {
   const { locale, route } = useContext(LocaleContext), preferred = readPreference();
   const [dismissed, setDismissed] = useState(() => { try { return sessionStorage.getItem(dismissedKey) === '1'; } catch { return false; } });
-  if (dismissed || !preferred || preferred === locale || !hasLanguageUrl(route)) return null;
+  if (dismissed || !preferred || preferred === locale || !hasLanguageUrl(route) || !listsLanguage(preferred)) return null;
   const dismiss = () => { try { sessionStorage.setItem(dismissedKey, '1'); } catch { /* lasts for this page */ } setDismissed(true); };
   return <aside className="site-language-notice" lang={preferred}><span>{t(notice.message, preferred)}</span><a href={localePath(route, preferred) + location.search + location.hash} onClick={() => rememberLocale(preferred)}>{t(notice.open, preferred)}</a><button type="button" onClick={dismiss} aria-label={t(notice.close, preferred)}>×</button></aside>;
 }

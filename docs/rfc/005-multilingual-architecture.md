@@ -1,6 +1,6 @@
 # RFC-005 · 网站多语言架构
 
-- 状态：已接受，P0 已实施（`website/src/i18n/`）；P1 逐页推进，灵感页已完成（2026-11-02：`inspiration-data.ts` 改为按语言取值，`InspirationPage.tsx` 的三元表达式和位置读取清零，中英文页面文字与 `aria-label` 前后对比一致）；首页、作品页、分类页和 `/docs` 也已完成（2026-11-02，同样做了前后对比）。P1 已完成（2026-11-02）：其余页面和组件（关于、技能、投稿、赞助、实验室、工作台、能力演示、引导演示、表现力方向页）的三元表达式和位置读取也已迁移，82 个页面状态（含逐个点击切换按钮后的状态）前后对比零差异。评审时发现 `i18n-inventory.mjs` 原来只认 `zh ?`，漏掉了 `language==='zh'?…` 这种写法（工作台、画布、导出 HTML 和赞助页共 34 处）；脚本已改为同时计入这种写法、不计语言代码之间的选择，并加了测试，这 34 处也已迁移，98 个页面状态（含画布）前后对比零差异。剩下的计数已人工核对：1 处是 `docs-content.ts` 里 `verify()` 的布尔参数；1 处是画布 `LandingCanvas.tsx` 用中英对照表翻译界面的 `t()`，属于另一种翻译方式，没有改；位置读取都是普通数组下标或标题分行，不是中英文配对；页面自管语言的 4 处在实验页和工作台，按 §3.3 保持页面内切换。先把结构定下来，再按 §5 的阶段推进。P2、P3 已实施（2026-11-02）：`website/src/i18n/locale-route.ts` 和 `LocaleProvider.tsx`，除 `/lab`、工作台、画布外的公开页面都有 `/en/...` 地址，按语言预渲染并输出 `hreflang` 和 sitemap 语言对照。英文正文由构建时的 React 渲染生成，渲染不出 `<h1>` 时构建失败；§3.5 的逐条 `translations` 状态还没有实现，现有英文按已发布处理，`/guides` 的英文待人工审阅。维护者 2026-11-02 决定：英文是第一个可独立收录的语言版本，试点页面为首页、`/docs`、`/inspiration`、作品页、分类页和 `/guides`。
+- 状态：已接受，P0 已实施（`website/src/i18n/`）；P1 逐页推进，灵感页已完成（2026-11-02：`inspiration-data.ts` 改为按语言取值，`InspirationPage.tsx` 的三元表达式和位置读取清零，中英文页面文字与 `aria-label` 前后对比一致）；首页、作品页、分类页和 `/docs` 也已完成（2026-11-02，同样做了前后对比）。P1 已完成（2026-11-02）：其余页面和组件（关于、技能、投稿、赞助、实验室、工作台、能力演示、引导演示、表现力方向页）的三元表达式和位置读取也已迁移，82 个页面状态（含逐个点击切换按钮后的状态）前后对比零差异。评审时发现 `i18n-inventory.mjs` 原来只认 `zh ?`，漏掉了 `language==='zh'?…` 这种写法（工作台、画布、导出 HTML 和赞助页共 34 处）；脚本已改为同时计入这种写法、不计语言代码之间的选择，并加了测试，这 34 处也已迁移，98 个页面状态（含画布）前后对比零差异。剩下的计数已人工核对：1 处是 `docs-content.ts` 里 `verify()` 的布尔参数；1 处是画布 `LandingCanvas.tsx` 用中英对照表翻译界面的 `t()`，属于另一种翻译方式，没有改；位置读取都是普通数组下标或标题分行，不是中英文配对；页面自管语言的 4 处在实验页和工作台，按 §3.3 保持页面内切换。先把结构定下来，再按 §5 的阶段推进。P2、P3 已实施（2026-11-02）：`website/src/i18n/locale-route.ts` 和 `LocaleProvider.tsx`，除 `/lab`、工作台、画布外的公开页面都有 `/en/...` 地址，按语言预渲染并输出 `hreflang` 和 sitemap 语言对照。英文正文由构建时的 React 渲染生成，渲染不出 `<h1>` 时构建失败；§3.5 的逐条 `translations` 状态已实现（2026-11-02）：指南（`guides-content.ts`）和方向库条目（`website/content/entries/*.json`）可以写 `translations: { en: { status: 'draft' | 'complete', reviewedAt } }`；没写状态的按已发布处理，所以现有英文不变；`/guides` 的英文仍待人工审阅，是否标成 `draft` 由维护者决定。维护者 2026-11-02 决定：英文是第一个可独立收录的语言版本，试点页面为首页、`/docs`、`/inspiration`、作品页、分类页和 `/guides`。
 - 日期：2026-11-01。
 - 关联：RFC-002（方向库路由、预渲染、方向卡）、RFC-003 §5（多语言、SEO 与 GEO 的目标和验收）、`docs/design-system.md`。
 - 范围：`website/` 的文案模型、语言状态、路由、预渲染、字体和测试。技能本身（`SKILL.md`、`skills/`、`references/`）不在范围内。
@@ -85,6 +85,7 @@ export function has(value: Localized<unknown>, locale: Locale): boolean
 
 - 每个数据条目可以写 `translations: { en: { status: 'complete' | 'draft', reviewedAt: '2026-11-01' } }`。只有 `complete` 的语言版本会被预渲染、写入 sitemap 和出现在语言切换器里。
 - 机器翻译只能标 `draft`，人工审过才能改成 `complete`；`draft` 在本地和预览环境可见，线上不可收录。
+- 实现（2026-11-02）：生产构建（`VERCEL_ENV=production`）里，`prerender.mjs` 的 `draftRoutes()` 找出草稿，不输出这些页面的英文版，中文页不再带 `hreflang`，sitemap 和 `llms.txt` 也不列出；中文页本身照常发布。浏览器里，语言切换和语言提示只在页面头部列出了对应语言版本时出现（`i18n/translations.ts` 的 `listsLanguage`），本地和预览构建一律显示。没写状态的条目按已发布处理。灵感参考的条目还没有接这个字段。
 - 界面消息（按钮、导航）用测试保证所有 `published` 语言都齐全，缺一条测试就失败。
 
 ### 3.6 第三方内容和引文

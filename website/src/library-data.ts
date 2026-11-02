@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 // Direction library entries (RFC-002), validated at build time by scripts/content.mjs.
 import { fromPair, type Localized } from './i18n/localized';
+import type { Translations } from './i18n/translations';
 type Pair = [string, string];
 type Text<S> = { id: 'A' | 'B' | 'C'; name: S; preview?: string;
   comparison: { optimizes: S; tradeoff: S; bestFor: S };
@@ -8,7 +9,7 @@ type Text<S> = { id: 'A' | 'B' | 'C'; name: S; preview?: string;
 type Stored<S> = { slug: string; title: S; summary: S; brief: S; category: string; tags: string[];
   source: 'own' | 'permission' | 'link-only'; kind?: 'verified' | 'concept'; credit: { name: string; url: string };
   directions: Text<S>[]; recommendation?: { variant: 'A' | 'B' | 'C'; reason: S };
-  evidence?: { context: string }; featured: boolean; publishedAt: string };
+  evidence?: { context: string }; featured: boolean; publishedAt: string; translations?: Translations };
 export type Direction = Text<Localized>;
 export type Entry = Stored<Localized>;
 export const repository = 'https://github.com/YuqingNicole/variant-design-skill';

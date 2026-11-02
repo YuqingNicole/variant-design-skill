@@ -54,6 +54,8 @@ export function validateEntry(entry, { root = contentRoot, repo = repoRoot, file
   if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.publishedAt ?? '')) fail('publishedAt must be YYYY-MM-DD');
   if (typeof entry.featured !== 'boolean') fail('featured must be true or false');
   if ('selected' in entry) fail('entries never record a selected direction; use recommendation');
+  if (entry.translations !== undefined) for (const [lang, t] of Object.entries(entry.translations ?? {}))
+    if (lang === 'zh' || !['complete', 'draft'].includes(t?.status) || (t.reviewedAt !== undefined && !/^\d{4}-\d{2}-\d{2}$/.test(t.reviewedAt))) fail(`translations.${lang} needs status complete or draft and an optional reviewedAt YYYY-MM-DD`);
   if (entry.source === 'own' && !['verified', 'concept'].includes(entry.kind)) fail('own entries need kind verified or concept');
   if (entry.source !== 'own' && 'kind' in entry) fail('kind applies only to own entries');
   if (entry.source === 'permission') {
