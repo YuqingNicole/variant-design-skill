@@ -2,7 +2,7 @@
 
 本文是 `website/` 的设计规范，写给改网站的人和 Agent。数值以代码为准：变量定义在 `website/src/site-system.css`，首页在 `home.css`，内容页在 `content-pages.css`，灵感参考页在 `inspiration.css`。代码和本文不一致时，先改代码或本文中错的那一方，不要各写各的。
 
-最后核对：2026-11-01，分支 `codex/inspiration-gallery`（灵感页改为图先行浏览结构，结构参考了 recent.design/websites 的公开页面）。
+最后核对：2026-11-02，分支 `codex/premium-refine`（首页按数量预算收敛字号、颜色和圆角）。
 
 ## 1. 定位和语气
 
@@ -59,19 +59,21 @@
 |---|---|---|---|
 | 首页主标题 | `.home-claim h1` | `clamp(40px, 4.6vw, 66px)` | 1.08 |
 | 内容页主标题 | `.content-hero h1` | `clamp(36px, 4.8vw, 64px)`，手机 36px | 1.18 |
-| 首页区块标题 | `.home-tasks h2` | `clamp(30px, 3.4vw, 46px)` | — |
-| 展示卡标题 | `.home-show-card h3` | 44px，手机 34px | 1.05 |
-| 引导段落 | `.home-claim > p` | 17px | 1.75 |
+| 首页区块标题 | `.home-tasks h2`、`.home-featured h2`、`.home-case-header h2`、`.library-feed-heading h2` | `clamp(30px, 3.4vw, 46px)` | — |
+| 展示卡标题 | `.home-show-card h3` | 同区块标题，手机 34px | 1.05 |
+| 引导段落 | `.home-claim > p` | 16px | 1.75 |
 | 正文 | `.content-reading p` | 15px | 1.9 |
 | 卡片说明 | `.home-show-body` | 16px | 1.7 |
-| 次要说明 | `.home-tasks li p` | 14px | 1.7 |
-| 小字 | 页脚、出处行 | 12–13px | 1.6 |
+| 次要说明、按钮、导航 | `.home-tasks li p`、`.home-actions a`、`.site-language` | 14px | 1.7 |
+| 卡片标题 | `.library-card strong` | 16px，字重 500 | 1.35 |
+| 小字 | 页脚、出处行、图注 | 13px（首页和页脚；其他页还有 12px） | 1.6 |
 
 规则：
 
 - 标题用 `--font-display`，字重 500，`font-synthesis: none`，字距 -0.01em。衬线标题不要再收紧字距，也绝不能小于 -0.04em。
 - 衬线只用于标题，正文、按钮和表单一律用无衬线。
 - 小于 12px 的字不要再加。
+- **数量预算**：一个页面在 1440 宽度下最多用 7 个字号、3 种字体（标题、正文、等宽）、5 种文字颜色、3 种圆角（胶囊算一种）。用 `scripts/style-budget.mjs` 量，见第 11 节。相差 1–2px 的字号要合并，不要并存。
 - 等宽字体只用于代码、命令和日期。不要用等宽字体做眉标、分类标签或装饰。
 
 ## 4. 布局和间距
@@ -106,7 +108,7 @@
 | `--radius-panel` 12px | 首页展示卡、详情弹层、详情大图、参考包和指令面板 |
 | `--radius-card` 8px | 缩略图卡片、来源链接卡、参考包内的分组 |
 | `--radius-control` 6px | 按钮、代码块、图片、价格卡、文本框 |
-| 4–5px | 历史值，见第 10 节第 5 条，新组件不要用 |
+| 4–5px | 历史值，见第 10 节第 5 条，新组件不要用。首页已在 2026-11-02 清掉 |
 
 规则：
 
@@ -178,7 +180,7 @@
 2. **灰绿色太多**：`content-pages.css` 和 `library.css` 里有十几个一次性的灰绿色，比如 `#65745a`、`#5d6e4f`、`#ced6c4`，应该收进第 2 节的颜色。`inspiration.css` 已经全部改用变量。
 3. **焦点环两种颜色**：导航、页脚和部分内容页用的是蓝色 `#325ecb`，应统一成品牌绿。灵感页的页面内容已经改成品牌绿，导航和页脚还是蓝色。
 4. **非首页还有眉标**：`/skills`、`/docs`、`/pricing`、`/lab`、`/about` 页面顶部仍有等宽眉标，`/docs` 的章节编号 `00.` 到 `05.` 也是同一类问题。
-5. **圆角不统一**：还有 4px 和 5px 的圆角（筛选按钮、参考卡片、输入框），应向 6px 靠拢。
+5. **圆角不统一**：首页和页头的 3–5px 圆角已改为 6px（2026-11-02）。`library.css` 里案例详情页的标签、输入框和按钮还有 3–5px，应向 6px 靠拢。
 
 ## 11. 修改流程
 
@@ -190,5 +192,5 @@
    cd tests && PLAYWRIGHT_CHANNEL=chrome npx playwright test -c landing.config.mjs
    ```
 
-3. 视觉改动要在 320 / 390 / 1440 三个宽度、中英两种语言下截图检查，再用 Impeccable 检测器检查一遍首页。
+3. 视觉改动要在 320 / 390 / 1440 三个宽度、中英两种语言下截图检查，再用 Impeccable 检测器检查一遍首页。改了字号、颜色或圆角，用 `scripts/style-budget.mjs` 在 1440 宽度下量改动前后的数量（用法见 `references/workflow/adjective-translation.md`）。
 4. 改了本文描述的数值，要在同一个 PR 里同步更新本文。

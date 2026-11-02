@@ -5,9 +5,9 @@ Each palette maps to one of the seven aesthetic directions in SKILL.md.
 
 ---
 
-## Dark / Premium
+## Dark / Atmospheric
 
-Deep backgrounds, atmospheric depth, subtle glows. Default for trading terminals, AI tools, premium apps.
+Deep backgrounds, atmospheric depth, subtle glows. Default for trading terminals, AI tools, media apps.
 
 ### Dark Pro *(Dashboard → financial/infrastructure)*
 ```
