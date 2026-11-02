@@ -50,9 +50,11 @@ const sourceLabel = (e: Entry, language: Language) => t(e.source === 'own' ? e.k
 const categoryName = (id: string, language: Language) => { const name = categories.find(c => c.id === id)?.name; return name ? t(name, language) : id; };
 
 function Card({ entry, language }: { entry: Entry; language: Language }) {
-  const cover = coverDirection(entry), image = cover.media[0];
+  // All three directions at a glance: the recommended one large, the other two beside it.
+  const cover = coverDirection(entry), trio = [cover, ...entry.directions.filter(d => d !== cover)];
   return <article className="library-card"><a href={localePath(`/d/${entry.slug}`,language)}>
-    <span className="library-card-image"><img src={mediaUrl(entry, image.file)} width={image.width} height={image.height} alt={t(image.alt,language)} loading="lazy" decoding="async"/><small>A · B · C</small></span>
+    <span className="library-card-image library-card-trio">{trio.map((d, i) => { const image = d.media[0];
+      return <span key={d.id} className="library-card-panel"><img src={mediaUrl(entry, image.file)} width={image.width} height={image.height} alt={i ? '' : t(image.alt,language)} loading="lazy" decoding="async"/><small>{d.id}</small></span>; })}</span>
     <span className="library-card-meta">{categoryName(entry.category, language)} · {sourceLabel(entry, language)}</span>
     <strong>{t(entry.title,language)}</strong><span className="library-card-summary">{t(entry.summary,language)}</span>
   </a></article>;

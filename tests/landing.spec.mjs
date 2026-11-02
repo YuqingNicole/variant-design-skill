@@ -205,7 +205,11 @@ test('direction library pages are prerendered, browsable and keep old links work
  expect(await(await request.get('/docs')).text()).toContain('"@type":"FAQPage"');
  await page.goto('/');
  const cards=page.locator('.library-grid .library-card');await expect(cards).toHaveCount(5);await expect(cards.first()).toContainText('Harbor');
- await expect.poll(()=>page.locator('.library-card img').evaluateAll(images=>images.every(img=>img.complete&&img.naturalWidth>0))).toBe(true);
+ // Each card shows all three directions, recommended first; scroll so the lazy images load, then check none is broken.
+ await expect(cards.filter({hasText:'Pulse'}).locator('.library-card-panel small')).toHaveText(['A','B','C']);
+ await expect(cards.filter({hasText:'Pulse'}).locator('img')).toHaveCount(3);
+ for(const card of await cards.all())await card.scrollIntoViewIfNeeded();
+ await expect.poll(()=>page.locator('.library-card img').evaluateAll(images=>images.length===15&&images.every(img=>img.complete&&img.naturalWidth>0))).toBe(true);
  await page.locator('.content-filters a[href="/c/data"]').click();await expect(page).toHaveURL(/\/c\/data$/);await expect(cards).toHaveCount(2);
  await cards.filter({hasText:'Pulse'}).locator('a').click();await expect(page).toHaveURL(/\/d\/pulse$/);
  await expect(page.locator('.library-tabs button').first()).toHaveAttribute('aria-pressed','true');await expect(page.locator('.library-recommendation')).toContainText('推荐 A');
