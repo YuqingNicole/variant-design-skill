@@ -8,6 +8,7 @@ import { entries, mediaUrl } from './library-data';
 import { inspirationItems, inspirationSources, inspirationTopics } from './inspiration-data';
 import { skills } from './SkillsPage';
 import './home.css';
+import { localePath } from './i18n/locale-route';
 const m={apply:{zh:'用在：',en:'Apply: '},
  openSource:{zh:'打开来源',en:'Open source'},
  tryABC:{zh:'试一下 A/B/C',en:'Try A/B/C'},
@@ -34,17 +35,17 @@ function Showcase({ shelf, language }: { shelf: Shelf; language: Language }) {
   if (shelf === 'reference') return <article className="home-show-card" data-shelf="reference">
     <h3>{reference.name}</h3><p className="home-show-body">{t(reference.focus, language)}</p><p className="home-show-body home-show-apply">{t(m.apply,language)}{t(reference.application, language)}</p>
     {facts(t({zh:[`${reference.publisher} 官网`, '仅链接', `核对于 ${reference.checkedAt}`, '设计者未知'],en:[`${reference.publisher} site`, 'Link only', `Checked ${reference.checkedAt}`, 'Designer unknown']},language))}
-    <p className="home-show-links"><a href={reference.url} target="_blank" rel="noreferrer">{t(m.openSource,language)}</a><a href={`/inspiration?topic=${topic.id}`}>{t({zh:`看「${topic.title.zh}」专题的 ${topic.items.length} 条`,en:`See all ${topic.items.length} in ${topic.title.en}`},language)}</a></p></article>;
+    <p className="home-show-links"><a href={reference.url} target="_blank" rel="noreferrer">{t(m.openSource,language)}</a><a href={localePath(`/inspiration?topic=${topic.id}`,language)}>{t({zh:`看「${topic.title.zh}」专题的 ${topic.items.length} 条`,en:`See all ${topic.items.length} in ${topic.title.en}`},language)}</a></p></article>;
   if (shelf === 'skill' && skill) return <article className="home-show-card" data-shelf="skill">
     <h3><code>{skill.name}</code></h3><p className="home-show-body">{t(fromPair(skill.summary),language)}</p>
     <code className="home-show-code">{skill.install}</code>
     {facts(t({zh:['在 Claude Code 和 Codex 中实测', `公开记录 ${skill.records.length} 份`],en:['Tried in Claude Code and Codex', `${skill.records.length} public records`]},language))}
-    <p className="home-show-links"><a href="#featured-skill">{t(m.tryABC,language)}</a><a href="/skills">{t(m.howWeTriedIt,language)}</a></p></article>;
+    <p className="home-show-links"><a href="#featured-skill">{t(m.tryABC,language)}</a><a href={localePath('/skills',language)}>{t(m.howWeTriedIt,language)}</a></p></article>;
   const cover = pulse.directions.find(d => d.id === pulse.recommendation?.variant) ?? pulse.directions[0], image = cover.media[0];
   return <article className="home-show-card" data-shelf="case">
     <img src={mediaUrl(pulse, image.file)} width={image.width} height={image.height} alt={t(image.alt,language)}/>
     {facts(t({zh:[pulse.title.zh.split('：')[0], '技能产出，已验证', pulse.recommendation ? `推荐 ${pulse.recommendation.variant}，没有替你选定` : '未推荐'],en:[pulse.title.en.split(':')[0], 'Skill output, verified', pulse.recommendation ? `Recommends ${pulse.recommendation.variant}, not chosen for you` : 'No recommendation']},language))}
-    <p className="home-show-links"><a href={`/d/${pulse.slug}`}>{t(m.seeAllThree,language)}</a><a href="#works">{t({zh:`全部 ${entries.length} 个案例`,en:`All ${entries.length} cases`},language)}</a></p></article>;
+    <p className="home-show-links"><a href={localePath(`/d/${pulse.slug}`,language)}>{t(m.seeAllThree,language)}</a><a href="#works">{t({zh:`全部 ${entries.length} 个案例`,en:`All ${entries.length} cases`},language)}</a></p></article>;
 }
 
 const shelves: { id: Shelf; label: Localized }[] = [{ id: 'reference', label: { zh: '参考', en: 'References' } }, { id: 'skill', label: { zh: '技能', en: 'Skills' } }, { id: 'case', label: { zh: '案例', en: 'Cases' } }];
@@ -67,17 +68,17 @@ export function HomeHero({ language }: { language: Language }) {
       <div className="home-claim">
         <h1>{t({zh:<>设计导航，<br/>只收核对过的。</>,en:<>A design guide,<br/>checked before it’s listed.</>},language)}</h1>
         <p>{t(m.forPeopleBuildingProducts,language)} <span className="home-counts">{counts}</span></p>
-        <div className="home-actions"><a className="home-action-primary" href="/inspiration">{t(m.browseReferences,language)}</a>{skill && <a className="home-action-secondary" href="#featured-skill">{t(m.featuredSkillVariantDesign,language)}</a>}</div>
+        <div className="home-actions"><a className="home-action-primary" href={localePath('/inspiration',language)}>{t(m.browseReferences,language)}</a>{skill && <a className="home-action-secondary" href="#featured-skill">{t(m.featuredSkillVariantDesign,language)}</a>}</div>
       </div>
     </header>
     <HomePractice language={language}/>
     <section className="site-shell home-tasks" aria-labelledby="home-tasks-title">
       <h2 id="home-tasks-title">{t(m.startWithWhatYou,language)}</h2>
-      <ul>{tasks.map(task => <li key={task.href}><a href={task.href}>{t(task.title,language)}</a><p>{t(task.body,language)}</p></li>)}</ul>
+      <ul>{tasks.map(task => <li key={task.href}><a href={localePath(task.href,language)}>{t(task.title,language)}</a><p>{t(task.body,language)}</p></li>)}</ul>
     </section>
     {skill && <section className="site-shell home-featured" id="featured-skill" aria-labelledby="home-featured-title">
       <h2 id="home-featured-title">{t(m.featuredSkill,language)}<code>{skill.name}</code></h2><p>{t(fromPair(skill.summary),language)}</p>
-      <p><code>{skill.install}</code> <a href="/docs">{t(m.installGuide,language)}</a></p>
+      <p><code>{skill.install}</code> <a href={localePath('/docs',language)}>{t(m.installGuide,language)}</a></p>
     </section>}
   </>;
 }
@@ -92,9 +93,9 @@ export function HomePractice({ language, count = 6 }: { language: Language; coun
   const l = (k: keyof typeof pm) => t(pm[k], language);
   if (!practice.length) return null;
   return <section className="site-shell home-practice" aria-labelledby="home-practice-title">
-    <div className="home-practice-head"><h2 id="home-practice-title">{l('title')}</h2><p>{l('body')}</p><a href="/inspiration?category=practice">{l('all')}</a></div>
+    <div className="home-practice-head"><h2 id="home-practice-title">{l('title')}</h2><p>{l('body')}</p><a href={localePath('/inspiration?category=practice',language)}>{l('all')}</a></div>
     <ul className="insp-videos home-practice-videos">{practice.slice(0, count).map(({ item, post, media }) => <li key={item.id} className="insp-card insp-vcard">
-      <a className="insp-vcard-open" href={`/inspiration/${item.id}`} style={{ aspectRatio: `${media.width}/${media.height}` }} aria-label={`${item.name}：${t(item.focus, language)}（${post.author} @${post.handle}）`}><XVideo media={media}/></a>
+      <a className="insp-vcard-open" href={localePath(`/inspiration/${item.id}`,language)} style={{ aspectRatio: `${media.width}/${media.height}` }} aria-label={`${item.name}：${t(item.focus, language)}（${post.author} @${post.handle}）`}><XVideo media={media}/></a>
       {media.avatar && <img className="insp-vcard-avatar" src={media.avatar} width="44" height="44" alt={`${post.author} @${post.handle}`} title={`${post.author} @${post.handle}`} referrerPolicy="no-referrer"/>}
       <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l('openOnX')}：${item.name}`}><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 11 11 5M6 5h5v5"/></svg></a></li>)}</ul>
   </section>;

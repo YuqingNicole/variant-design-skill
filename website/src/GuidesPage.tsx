@@ -4,6 +4,8 @@ import { SiteHeader, SiteFooter } from './SiteChrome';
 import { guides } from './guides-content';
 import { t, type Localized } from './i18n/localized';
 import './content-pages.css';
+import { useLocale } from './i18n/LocaleProvider';
+import { localePath } from './i18n/locale-route';
 
 const m = {
   title: { zh: '指南', en: 'Guides' },
@@ -15,27 +17,26 @@ const m = {
 } satisfies Record<string, Localized>;
 
 export function GuidesPage({ slug }: { slug?: string }) {
-  const [language, setLanguage] = useState<Language>(() => localStorage.getItem('variant-language') === 'en' ? 'en' : 'zh');
+  const language = useLocale();
   const guide = guides.find(g => g.slug === slug), known = !slug || !!guide;
   const title = guide ? t(guide.title, language) : t(known ? m.title : m.missing, language);
   useEffect(() => {
     document.title = `${title} — Variant Design`; document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
-    localStorage.setItem('variant-language', language);
   }, [title, language]);
-  return <main className="content-page"><SiteHeader language={language} onLanguage={() => setLanguage(language === 'zh' ? 'en' : 'zh')}/>
+  return <main className="content-page"><SiteHeader language={language}/>
     {guide ? <>
-      <header className="content-hero site-shell guide-hero"><p className="content-back"><a href="/guides">{t(m.title, language)}</a></p><h1>{title}</h1><p>{t(guide.answer, language)}</p><small>{t(m.updated, language)} {guide.publishedAt}</small></header>
+      <header className="content-hero site-shell guide-hero"><p className="content-back"><a href={localePath('/guides',language)}>{t(m.title, language)}</a></p><h1>{title}</h1><p>{t(guide.answer, language)}</p><small>{t(m.updated, language)} {guide.publishedAt}</small></header>
       <div className="site-shell docs-layout"><aside>{guide.sections.map(s => <a key={s.id} href={`#${s.id}`}>{t(s.heading, language)}</a>)}</aside>
         <div className="content-reading">{guide.sections.map(s => <section id={s.id} key={s.id}><h2>{t(s.heading, language)}</h2>
           {s.body.map(p => <p key={p.zh}>{t(p, language)}</p>)}
           {s.list && <ul>{s.list.map(item => <li key={item.zh}>{t(item, language)}</li>)}</ul>}
           {s.code && <pre className="guide-code"><code>{t(s.code, language)}</code></pre>}
-          {s.link && <p><a href={s.link.href}>{t(s.link.label, language)} →</a></p>}
+          {s.link && <p><a href={localePath(s.link.href,language)}>{t(s.link.label, language)} →</a></p>}
         </section>)}</div></div>
-      <section className="content-closing site-shell"><a className="content-button" href="/docs">{t(m.start, language)} ↗</a><a className="content-secondary" href="/guides">{t(m.back, language)} →</a></section>
+      <section className="content-closing site-shell"><a className="content-button" href={localePath('/docs',language)}>{t(m.start, language)} ↗</a><a className="content-secondary" href={localePath('/guides',language)}>{t(m.back, language)} →</a></section>
     </> : <>
-      <header className="content-hero site-shell"><h1>{title}</h1>{known ? <p>{t(m.intro, language)}</p> : <p><a href="/guides">{t(m.back, language)}</a></p>}</header>
-      {known && <section className="site-shell guide-list">{guides.map(g => <article key={g.slug}><h2><a href={`/guides/${g.slug}`}>{t(g.title, language)}</a></h2><p>{t(g.answer, language)}</p></article>)}</section>}
+      <header className="content-hero site-shell"><h1>{title}</h1>{known ? <p>{t(m.intro, language)}</p> : <p><a href={localePath('/guides',language)}>{t(m.back, language)}</a></p>}</header>
+      {known && <section className="site-shell guide-list">{guides.map(g => <article key={g.slug}><h2><a href={localePath(`/guides/${g.slug}`,language)}>{t(g.title, language)}</a></h2><p>{t(g.answer, language)}</p></article>)}</section>}
     </>}
     <SiteFooter language={language}/></main>;
 }

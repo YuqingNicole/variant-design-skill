@@ -52,7 +52,7 @@ AI 的回答很依赖第三方提及。
 
 - `/about`、`/pricing`、`/skills`、`/submit`、`/inspiration` 之前预渲染正文为空，现在构建时用 React 直接渲染现有组件（`website/src/ssr-pages.tsx`），不跑 JavaScript 也能读到。`/inspiration` 只输出首屏 24 条，其余详情页靠 sitemap 发现。
 - `/lab`、`/lab/forma`、`/variant-output/` 和兜底页 `app.html` 加 `noindex`，`/lab` 移出 sitemap。不存在的路径仍返回 200，但不会被收录。
-- 第二层第 2 项先写了 3 篇回答页（`/guides`）：比较方向、撤回修改、避免千篇一律。事实只来自技能文档和本目录的实测记录。目前只有中文被预渲染，英文可在页面内切换，但没有独立地址。
+- 第二层第 2 项先写了 3 篇回答页（`/guides`）：比较方向、撤回修改、避免千篇一律。事实只来自技能文档和本目录的实测记录。英文起初没有独立地址；RFC-005 P2、P3 之后（分支 `codex/i18n-p2-p3-english`），公开页面都有 `/en/...` 版本、`hreflang` 和 sitemap 语言对照，`llms.txt` 指向英文页面。
 
 ## 3. 怎么衡量
 

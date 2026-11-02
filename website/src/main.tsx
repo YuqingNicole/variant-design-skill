@@ -1,10 +1,13 @@
 import { StrictMode, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import "./site-styles";
+import { parseLocale } from "./i18n/locale-route";
+import { LocaleNotice, LocaleProvider } from "./i18n/LocaleProvider";
 // Old paths keep working: the address is rewritten in place (Vercel also redirects them with 301).
 const legacy = (path: string) => path === "/canvas" ? "/lab/canvas" : path === "/workbench" ? "/lab/workbench" : path.startsWith("/showcase/") ? "/d/" + path.split("/")[2]
   : path === "/showcase" && !new URLSearchParams(location.search).has("direction") ? "/" : null;
-let route = window.location.pathname.replace(/\/+$/, "") || "/";
+const parsed = parseLocale(window.location.pathname.replace(/\/+$/, "") || "/");
+let route = parsed.route;
 const moved = legacy(route);
 if (moved) { history.replaceState(null, "", moved + (moved.startsWith("/lab/") ? location.search : "") + location.hash); route = moved; }
 const page: Promise<ReactNode> = route === "/lab/canvas" ? import("./LandingCanvas").then(m => <m.LandingCanvas/>) : route === "/lab/workbench" ? import("./App").then(m => <m.default/>)
@@ -16,4 +19,4 @@ const page: Promise<ReactNode> = route === "/lab/canvas" ? import("./LandingCanv
   : route === "/pricing" ? import("./pricing").then(m => <m.PricingPage repositoryUrl="https://github.com/YuqingNicole/variant-design-skill"/>)
   : import("./LibraryPage").then(m => route === "/" ? <m.LibraryPage view={{kind:"feed"}}/> : route.startsWith("/c/") ? <m.LibraryPage view={{kind:"category",id:route.slice(3)}}/>
     : route.startsWith("/d/") ? <m.LibraryPage key={route} view={{kind:"entry",slug:route.slice(3)}}/> : <m.LibraryPage view={{kind:"entry",slug:""}}/>);
-page.then(node => createRoot(document.getElementById("root")!).render(<StrictMode>{node}</StrictMode>));
+page.then(node => createRoot(document.getElementById("root")!).render(<StrictMode><LocaleProvider locale={parsed.locale} route={route}><LocaleNotice/>{node}</LocaleProvider></StrictMode>));

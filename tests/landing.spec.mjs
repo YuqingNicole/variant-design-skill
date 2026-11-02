@@ -69,7 +69,7 @@ test('guided case previews real variants and hands off scoped, reversible prompt
   // The copy resolves asynchronously; wait for the clipboard instead of reading it once.
   await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toContain('只修改 C 的 hero');
   await expect(page.locator('.demo-notice')).toContainText('粘贴到项目');
-  await page.getByRole('button', { name: '切换到英文' }).click();
+  await page.locator('.site-language').click();
   await expect(page.locator('.demo-steps details').nth(1).locator('textarea')).toHaveValue(/Try a local edit of C/);
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -109,7 +109,7 @@ test('canvas homepage opens real directions and preserves the guided handoff acr
   await expect(page.locator('h1')).toContainText('三个能运行的方向');
   await page.locator('.canvas-sidebar button').first().click();
   await expect(page.frameLocator('.paper-preview iframe').locator('[data-showcase-direction]')).toHaveAttribute('data-showcase-direction','A');
-  await page.getByRole('button',{name:'切换到英文'}).click();
+  await page.locator('.site-language').click();
   await expect(page.locator('h1')).toContainText('three directions that run.');
   await expect(page.frameLocator('.paper-preview iframe').locator('html')).toHaveAttribute('lang','en');
   await page.locator('.paper-actions a').first().click();
@@ -174,11 +174,11 @@ test('expressive homepage gallery opens distinct complete directions with workin
  await expect(page.locator('.price strong')).toHaveText(['$0','$24','$49']);
  await page.locator('.pricing-faq summary').first().click();
  await expect(page.locator('.pricing-faq details').first()).toHaveAttribute('open','');
- await page.getByRole('button',{name:'切换到英文'}).click();
+ await page.locator('.site-language').click();
  await expect(page.locator('h1')).toContainText('Taste is free.');
  for(const width of [320,390,577,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
  await page.locator('.pricing-card').first().getByRole('link').click();
- await expect(page).toHaveURL(/\/docs$/);
+ await expect(page).toHaveURL(/\/en\/docs$/);
  await expect(page.locator('html')).toHaveAttribute('lang','en');
  await page.locator('.site-footer a[href="/lab"]').click();await page.locator('a[href="/lab/workbench"]').click();
  await expect(page.locator('.site-workbench')).toHaveCSS('background-color','rgb(247, 247, 242)');
@@ -215,7 +215,7 @@ test('direction library pages are prerendered, browsable and keep old links work
  expect(validateCard(card)).toEqual([]);expect(card.url).toBe('https://variant-design-skill.vercel.app/d/pulse.json');expect(card.recommendation.variant).toBe('A');
  await page.goto('/d/offscript');await expect(page.locator('.library-source span')).toHaveText('概念作品');await expect(page.locator('.library-evidence')).toContainText('不是技能的产出');await expect(page.locator('.library-evidence a')).toHaveCount(0);
  await expect(page.locator('.library-figure a')).toHaveAttribute('href','/directions?direction=A&language=zh');
- await page.getByRole('button',{name:'切换到英文'}).click();await expect(page.locator('h1')).toHaveText('offscript: one brand, three personalities');await page.getByRole('button',{name:'Switch to Chinese'}).click();await expect(page.locator('html')).toHaveAttribute('lang','zh-CN');
+ await page.locator('.site-language').click();await expect(page.locator('h1')).toHaveText('offscript: one brand, three personalities');await page.locator('.site-language').click();await expect(page.locator('html')).toHaveAttribute('lang','zh-CN');
  for(const url of ['/','/d/harbor','/c/product']){await page.goto(url);for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}}
  await page.goto('/showcase/forma');await expect(page).toHaveURL(/\/d\/forma$/);await expect(page.locator('h1')).toContainText('Forma');
  await page.goto('/showcase');await expect(page).toHaveURL(/\/$/);await expect(cards).toHaveCount(5);
@@ -273,7 +273,7 @@ test('inspiration references filter, create an original brief and recover from c
  await page.locator('.inspiration-empty').getByRole('button',{name:'清除筛选'}).click();
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');await expect(page.getByRole('searchbox')).toHaveValue('');
  await expect(page.getByRole('button',{name:'全部',exact:true})).toHaveAttribute('aria-pressed','true');
- await page.getByRole('button',{name:'切换到英文'}).click();
+ await page.locator('.site-language').click();
  await expect(page.locator('h1')).toHaveText('Inspiration');
  for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});
@@ -330,7 +330,7 @@ test('submission page states the three entry kinds, permissions and takedown pro
  await expect(page.locator('h1')).toHaveText('投稿与授权');await expect(page.locator('.submit-sources li')).toHaveCount(3);
  await expect(page.locator('[data-source="link-only"]')).toContainText('不托管对方的截图');await expect(page.getByRole('heading',{name:'撤下请求'})).toBeVisible();
  await expect(page.locator('.content-reading a[href$="/issues/new/choose"]')).toBeVisible();
- await page.getByRole('button',{name:'切换到英文'}).click();await expect(page.locator('h1')).toHaveText('Submissions & permissions');await expect(page.getByRole('heading',{name:'Takedown requests'})).toBeVisible();
+ await page.locator('.site-language').click();await expect(page.locator('h1')).toHaveText('Submissions & permissions');await expect(page.getByRole('heading',{name:'Takedown requests'})).toBeVisible();
  for(const width of [320,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
 });
 
@@ -338,7 +338,7 @@ test('sponsor page states the rules without prices and links to an inquiry templ
  await page.goto('/submit');
  await page.locator('.site-footer a[href="/sponsor"]').click();await expect(page).toHaveURL(/\/sponsor$/);await expect(page).toHaveTitle('赞助 — Variant Design');
  await expect(page.locator('h1')).toHaveText('赞助 Variant Design');await expect(page.locator('.sponsor-rules li')).toHaveCount(4);await expect(page.locator('.home-action-primary[href*="template=sponsorship.md"]')).toHaveCount(2);await page.locator('.home-action-secondary[href="#rules"]').click();await expect(page.locator('#rules')).toBeInViewport();
- await page.getByRole('button',{name:'切换到英文'}).click();await expect(page.locator('h1')).toHaveText('Sponsor Variant Design');await expect(page).toHaveTitle('Sponsor — Variant Design');
+ await page.locator('.site-language').click();await expect(page.locator('h1')).toHaveText('Sponsor Variant Design');await expect(page).toHaveTitle('Sponsor — Variant Design');
 });
 
 test('actual landing evidence names its observed font and unverified checks',async({page,browser})=>{
@@ -582,12 +582,12 @@ test('home connects reference discovery, cases and the project workflow', async 
  await expect(page).toHaveURL(/\/inspiration$/);
  await expect(page.locator('.site-nav a[href="/inspiration"]')).toHaveAttribute('aria-current','page');
  await page.goto('/');
- await page.getByRole('button',{name:'切换到英文'}).click();
+ await page.locator('.site-language').click();
  await expect(page.getByRole('heading',{name:'Start with what you need to do.'})).toBeVisible();
  for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await expect(page.locator('.site-nav a[href="/inspiration"]')).toBeVisible();
+  await expect(page.locator('.site-nav a[href="/en/inspiration"]')).toBeVisible();
  }
 });
 
@@ -621,7 +621,7 @@ test('home case switches recorded A/B/C evidence and preserves the chosen direct
  await demo.getByRole('button',{name:/C.*证据追踪/}).focus();
  await page.keyboard.press('Enter');
  await expect(demo.locator('img')).toHaveAttribute('src','/media/pulse/c.jpg');
- await page.getByRole('button',{name:'切换到英文'}).click();
+ await page.locator('.site-language').click();
  await expect(demo.getByRole('button',{name:/C.*Evidence Trace/})).toHaveAttribute('aria-pressed','true');
  await expect(demo.locator('.home-case-notes')).toContainText('Full week overview');
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
@@ -661,7 +661,7 @@ test('home works as a design navigation site with a switchable, sourced showcase
  await expect(dirs.locator('li a')).toHaveCount(9);
  await expect(dirs.getByRole('link',{name:'recent.design Skills'})).toHaveAttribute('href','https://recent.design/skills');
  await expect(dirs).toContainText('不代表我们试过或推荐');
- await page.getByRole('button',{name:'切换到英文'}).click();
+ await page.locator('.site-language').click();
  await expect(page.locator('.home-claim h1')).toHaveText('A design guide,checked before it’s listed.');
  await page.setViewportSize({width:390,height:844});
  for(const sel of ['.home-claim h1','.home-action-primary'])expect(await inView(sel)).toBe(true);
@@ -714,14 +714,66 @@ test('pages read without JavaScript, guides render in both languages, and unknow
   await page.goto('/guides/compare-design-directions');
   await expect(page.locator('h1')).toHaveText('怎么在现有项目里比较三个设计方向');
   await expect(page).toHaveTitle('怎么在现有项目里比较三个设计方向 — Variant Design');
-  await page.getByRole('button', { name: '切换到英文' }).click();
+  await page.locator('.site-language').click();
   await expect(page.locator('h1')).toHaveText('How to compare three design directions in an existing project');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await page.goto('/guides/no-such-guide');
+  await page.goto('/en/guides/no-such-guide');
   await expect(page.locator('h1')).toHaveText('Not found');
   expect(errors).toEqual([]);
   for (const route of ['/no-such-page', '/lab', '/variant-output/_compare.html']) expect(await (await request.get(route)).text(), route).toContain('name="robots" content="noindex"');
   expect(await (await request.get('/docs')).text()).not.toContain('noindex');
   expect(await (await request.get('/sitemap.xml')).text()).toContain('/guides/undo-ai-design-changes</loc>');
+});
+
+test('English has its own addresses: readable without JavaScript, linked both ways and never forced', async ({ browser, page, request }) => {
+  const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
+  for (const [route, text] of [['/en', 'A design guide'], ['/en/docs', 'Install'], ['/en/inspiration', 'Inspiration'], ['/en/d/pulse', 'Pulse: three ways to read a weekly report'], ['/en/c/landing', 'Landing pages'], ['/en/guides/undo-ai-design-changes', 'How to undo design changes made by AI'], ['/en/about', 'Variant'], ['/en/pricing', 'Local'], ['/en/submit', 'Submissions'], ['/en/sponsor', 'Sponsor'], ['/en/skills', 'skills']]) {
+    await reader.goto(route);
+    await expect(reader.locator('html'), route).toHaveAttribute('lang', 'en');
+    await expect(reader.locator('#root'), route).toContainText(text);
+    expect(await reader.locator('#root').innerText(), route).not.toMatch(/投稿与授权|开始使用|设计参考/);
+    expect(await reader.locator('link[rel=canonical]').getAttribute('href'), route).toMatch(new RegExp(`${route}$`));
+    expect(await reader.locator('link[hreflang]').count(), route).toBe(3);
+  }
+  await reader.goto('/docs');
+  await expect(reader.locator('html')).toHaveAttribute('lang', 'zh-CN');
+  expect(await reader.locator('link[hreflang=en]').getAttribute('href')).toMatch(/\/en\/docs$/);
+  await noScript.close();
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/en/d/pulse');
+  await expect(page.locator('h1')).toHaveText('Pulse: three ways to read a weekly report');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.locator('.site-nav a').filter({ hasText: 'Get started' })).toHaveAttribute('href', '/en/docs');
+  await page.locator('.library-tabs button').nth(1).click();
+  await expect(page).toHaveURL(/\/en\/d\/pulse\?direction=B$/);
+  await page.locator('.site-language').click();
+  await expect(page).toHaveURL(/\/d\/pulse\?direction=B$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
+  await expect(page.locator('.site-nav a').filter({ hasText: '开始使用' })).toHaveAttribute('href', '/docs');
+  await page.goto('/en/inspiration');
+  await page.locator('.insp-card').first().locator('a').first().click();
+  await expect(page).toHaveURL(/\/en\/inspiration\/[^/]+$/);
+  // A remembered language offers the other address but never redirects.
+  await page.goto('/docs');
+  await expect(page).toHaveURL(/\/docs$/);
+  await page.evaluate(() => localStorage.setItem('variant-language', 'en'));
+  await page.reload();
+  await expect(page).toHaveURL(/\/docs$/);
+  await expect(page.locator('.site-language-notice')).toContainText('available in English');
+  await page.locator('.site-language-notice a').click();
+  await expect(page).toHaveURL(/\/en\/docs$/);
+  await expect(page.locator('.site-language-notice')).toHaveCount(0);
+  for (const width of [320, 390, 1440]) for (const route of ['/en', '/en/docs', '/en/d/pulse', '/en/guides']) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto(route);
+    await page.waitForSelector('footer');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `${route} at ${width}`).toBe(true);
+  }
+  expect(errors).toEqual([]);
+  expect((await (await request.get('/d/pulse.json')).json()).url).toContain('/d/pulse.json');
+  const map = await (await request.get('/sitemap.xml')).text();
+  expect(map).toContain('/en/guides/undo-ai-design-changes</loc>');
+  expect(map).toContain('hreflang="x-default"');
 });
 
