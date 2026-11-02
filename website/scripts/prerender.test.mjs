@@ -80,6 +80,9 @@ test('the install guide, structured data and llms.txt are readable without JavaS
   assert.match(brief, /^# Variant Design\n\n> /);
   assert.ok(brief.includes(docs.installCommand) && brief.includes(`${site}/en/docs`) && brief.includes(`${references.length} curated`));
   for (const e of entries) assert.ok(brief.includes(`(${site}/en/d/${e.slug})`), e.slug);
+  // Shorthand quoted for agents must be commands the install guide documents.
+  const usage = brief.slice(brief.indexOf('## For agents'), brief.indexOf('## Docs')), commands = [...docs.refine, ...docs.deliver].map(([c]) => c);
+  for (const [, c] of usage.match(/Shorthand.*$/m)[0].matchAll(/`([^`]+)`/g)) assert.ok(commands.includes(c), c);
   for (const [q] of docs.faq) assert.ok(full.includes(`### ${q.zh}`) && full.includes(`### ${q.en}`), q.en);
   for (const a of docs.agents) assert.ok(full.includes(docs.verify(a.path, false)) && full.includes(docs.verify(a.path, true)), a.id);
 });

@@ -165,7 +165,15 @@ export function llms(entries, docs, site = defaultSite, references = [], guides 
 - Or, inside a project: \`npx skills add YuqingNicole/variant-design-skill -a codex\` (or \`-a claude-code\`).
 - Requires Git and Node.js 22+. Your agent supplies the model; there is no hosted service. MIT licensed.
 - Editing a direction does not select it: only an explicit \`pick B\` records the final choice. Output goes to \`variant-output/\` in your project.
-- Not yet listed in a plugin marketplace; install the complete folder from GitHub.
+- Or, as a Claude Code plugin from this repository's own marketplace: \`claude plugin marketplace add YuqingNicole/variant-design-skill\`, then \`claude plugin install variant-design@variant-design\` (checked with Claude Code 2.1.316). It is not listed in any third-party plugin directory yet.
+
+## For agents using this skill
+
+- Use it when the user wants several design directions for one task in their own code project, wants to refine or undo one direction, or wants a chosen direction integrated with a way back. For a single quick UI tweak, ordinary editing is enough.
+- Say so in a prompt: "Use the Variant Design skill to create three directions A/B/C for this page, keeping the existing brand." The installed \`SKILL.md\` routes to the right workflow; read files when a step needs them, not all at once.
+- Shorthand the user may send: \`compare\`, \`B vary subtle — hero\`, \`Mix A + B\`, \`undo B\`, \`pick B\`, \`react B\`. Editing a direction never selects it; only an explicit pick does.
+- Bundled helpers run from the installed skill, not the user's project: \`node <skill-root>/scripts/...\` with Node.js 22+. Working files go in the project's \`.variant-work/\`, which must not be committed.
+- Do not claim what did not run: no WCAG compliance, cross-browser support or quality score from inspection alone, no snapshots or preview checks when Node.js is missing, and no browser check without a browser. There is no force flag for undo or rollback. When undo refuses, use \`recover\` and reconcile into a new candidate; when rollback refuses, it names the files edited since integration, so tell the user rather than restoring them by hand.
 
 ## Docs
 

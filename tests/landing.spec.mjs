@@ -249,6 +249,8 @@ test('inspiration references filter, create an original brief and recover from c
  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:()=>Promise.reject(new Error('denied'))}}));
  await page.goto('/');
  await page.locator('.library-more a[href="/inspiration"]').click();
+ // The prerendered page answers clicks only after React replaces it; its static reference index goes away then.
+ await expect(page.locator('nav[aria-label="全部参考"]')).toHaveCount(0);
  const cards=page.locator('.inspiration-grid .insp-card');
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');
  for(const [name,count] of [['Landing',20],['产品界面',8],['关键流程',4]]){
