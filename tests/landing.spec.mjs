@@ -703,7 +703,7 @@ test('home shelf switch runs a view transition, and reduced motion switches inst
 
 test('pages read without JavaScript, guides render in both languages, and unknown paths are not indexable', async ({ browser, page, request }) => {
   const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
-  for (const [route, text] of [['/about', 'Variant'], ['/pricing', '本地版'], ['/skills', 'variant-design'], ['/submit', '投稿'], ['/inspiration', '灵感'], ['/guides', '怎么撤回 AI 对设计的修改'], ['/guides/undo-ai-design-changes', 'undo B']]) {
+  for (const [route, text] of [['/about', 'Variant'], ['/pricing', '本地版'], ['/skills', 'variant-design'], ['/submit', '投稿'], ['/inspiration', '灵感'], ['/guides', '怎么撤回 AI 对设计的修改'], ['/guides/undo-ai-design-changes', 'undo B'], ['/guides/git-or-snapshot-undo', 'git stash'], ['/guides/design-references-with-sources', '核对日期']]) {
     await reader.goto(route);
     await expect(reader.locator('h1').first(), route).toBeVisible();
     await expect(reader.locator('#root'), route).toContainText(text);
