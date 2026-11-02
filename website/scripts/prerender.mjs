@@ -50,6 +50,11 @@ export function loadReferences() {
   const from = source.indexOf('[', start);
   return JSON.parse(source.slice(from, source.indexOf('\n];', from) + 2));
 }
+// Without JavaScript the inspiration page shows only its first tab; this index links every reference page.
+export function referenceIndex(references, lang = 'zh') {
+  const en = lang === 'en', href = id => (en ? '/en' : '') + `/inspiration/${id}`;
+  return `<nav aria-label="${en ? 'All references' : '全部参考'}"><h2>${en ? `All ${references.length} references` : `全部 ${references.length} 个参考`}</h2><ul>${references.map(r => `<li><a href="${href(escape(r.id))}">${escape(r.name)}</a></li>`).join('')}</ul></nav>`;
+}
 function referenceBody(r) {
   return `<main><p><a href="/inspiration">灵感参考</a></p><h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus.zh)}</dd><dt>用在哪里</dt><dd>${escape(r.application.zh)}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}${r.via ? ` · <a href="${escape(r.via)}">经 ${escape(new URL(r.via).hostname)} 发现</a>` : ''}</dd></dl><p><a href="${escape(r.url)}">访问原站</a></p></main>`;
 }
@@ -222,6 +227,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   const { zh: rendered, en: english } = renderPages();
   for (const [route, html] of [...Object.entries(rendered), ...Object.entries(english)]) if (!html.includes('<h1')) throw new Error(`Empty static render for ${route}`);
   const version = fs.readFileSync(path.join(here, '../../VERSION'), 'utf8').trim(), references = loadReferences();
+  rendered['/inspiration'] += referenceIndex(references); english['/inspiration'] += referenceIndex(references, 'en');
   const dist = path.resolve(here, '../dist'), site = (process.env.SITE_URL || defaultSite).replace(/\/$/, '');
   const { entries, problems } = loadEntries();
   if (problems.length) { console.error(problems.join('\n')); process.exit(1); }

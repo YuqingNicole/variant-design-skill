@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
-import { escape, llms, llmsFull, loadReferences, renderSite, rss, sitemap, withNoindex } from './prerender.mjs';
+import { escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, rss, sitemap, withNoindex } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 
@@ -144,3 +144,11 @@ test('addresses and languages convert both ways', async () => {
   assert.equal(localePath('/docs', 'zh'), '/docs');
   for (const fixed of ['/lab', '/lab/forma', '/d/pulse.json', '/fonts/LICENSES.txt', 'https://example.test/a', '#works', '//example.test/a']) assert.equal(localePath(fixed, 'en'), fixed);
 });
+
+test('the reference index links every reference page in each language', () => {
+  const references = loadReferences(), zh = referenceIndex(references), en = referenceIndex(references, 'en');
+  for (const r of references) { assert.ok(zh.includes(`href="/inspiration/${r.id}"`), r.id); assert.ok(en.includes(`href="/en/inspiration/${r.id}"`), r.id); }
+  assert.equal(new Set(zh.match(/href="[^"]+"/g)).size, references.length);
+  assert.ok(!referenceIndex([{ id: 'x', name: '<b>&' }]).includes('<b>'));
+});
+
