@@ -31,7 +31,7 @@ export function GuidesPage({ slug }: { slug?: string }) {
           {s.body.map(p => <p key={p.zh}>{t(p, language)}</p>)}
           {s.list && <ul>{s.list.map(item => <li key={item.zh}>{t(item, language)}</li>)}</ul>}
           {s.code && <pre className="guide-code"><code>{t(s.code, language)}</code></pre>}
-          {s.link && <p><a href={localePath(s.link.href,language)}>{t(s.link.label, language)} →</a></p>}
+          {s.link && <p className="content-link"><a href={localePath(s.link.href,language)}>{t(s.link.label, language)} →</a></p>}
         </section>)}</div></div>
       <section className="content-closing site-shell"><a className="content-button" href={localePath('/docs',language)}>{t(m.start, language)} ↗</a><a className="content-secondary" href={localePath('/guides',language)}>{t(m.back, language)} →</a></section>
     </> : <>

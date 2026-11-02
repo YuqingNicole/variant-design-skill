@@ -21,3 +21,8 @@ a.site-language{display:inline-flex;align-items:center;justify-content:center;te
 /* Narrow screens: links get their own row, so every link (Get started last) is visible without a hidden scroll. */
 @media(max-width:650px){.site-nav{flex-wrap:wrap;height:auto;padding-block:var(--space-3) var(--space-2);row-gap:var(--space-2)}.site-nav-links{order:3;flex-basis:100%;justify-content:space-between;gap:var(--space-3)}.site-nav .site-language{margin-left:auto}}
 @media(max-width:360px){.site-nav-links{gap:var(--space-2)}}
+/* Phones: header links stay on one row but get 44px-tall touch targets and text that grows with the screen
+   (12px at 320 wide, 14px from about 400). Padding replaces the gap so the tap areas meet instead of leaving dead space. */
+@media(max-width:650px){.site-nav{padding-block:var(--space-2) 0;row-gap:0}.site-nav-links{gap:0;font-size:clamp(12px,3.5vw,14px);margin-inline:-3px}.site-nav-links a,.site-nav-links>a:first-child{display:inline-flex;align-items:center;min-height:44px;padding-inline:3px}}
+/* Phones: footer links become 44px-tall touch targets on wrapping rows. */
+@media(max-width:650px){.site-footer>div{flex-wrap:wrap;gap:0 18px}.site-footer>div a{display:inline-flex;align-items:center;min-height:44px}}

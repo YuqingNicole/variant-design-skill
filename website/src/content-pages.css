@@ -18,3 +18,8 @@
 @media(max-width:1000px){.sponsor-section{grid-template-columns:1fr;gap:28px;padding-block:56px}}
 @media(max-width:640px){.sponsor-hero{padding-block:40px 56px}.sponsor-rows li{grid-template-columns:1fr;gap:4px}}
 .changelog-date{margin-left:12px;font:12px var(--font-mono);letter-spacing:0;color:var(--site-muted)}
+/* Phones: standalone links (table of contents, back, secondary, link paragraphs) get 44px touch targets;
+   form fields use 16px text so iOS does not zoom the page when they take focus. */
+@media(max-width:650px){.docs-layout>aside{gap:0 18px;padding-block:8px}.docs-layout>aside a{display:inline-flex;align-items:center;min-height:44px;font-size:13px}
+ .content-back a,.content-link a{display:inline-flex;align-items:center;min-height:44px}.content-secondary{display:flex;align-items:center;justify-content:center;min-height:44px;margin-top:8px}
+ .content-page :is(input,select,textarea){font-size:16px}}

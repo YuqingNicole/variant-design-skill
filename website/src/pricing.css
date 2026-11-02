@@ -5,3 +5,5 @@
 .pricing-page .pricing-hero h1{max-width:none;margin-inline:0}.pricing-page .pricing-hero h1 em{font-family:inherit;color:#858981;font-style:normal;margin-left:0}.pricing-page[data-language="zh"] .pricing-hero-grid{grid-template-columns:1.4fr 1fr}
 @media(max-width:700px){.pricing-page[data-language="zh"] .pricing-hero-grid{grid-template-columns:1fr}}
 .pricing-card li svg{flex:none;color:var(--site-brand)}
+/* Phones: 44px touch target for the secondary link in the closing section. */
+@media(max-width:650px){.pricing-final .shell>div>a:not(.pricing-button){display:inline-flex;align-items:center;min-height:44px}}
