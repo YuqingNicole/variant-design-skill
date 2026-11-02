@@ -48,6 +48,12 @@ AI 的回答很依赖第三方提及。
 3. 灵感页收录的作品已注明出处，可以告知原作者；对方转发就是自然的外链。
 4. 社区：Discord 里的聊天内容搜索引擎和 AI 都读不到，对 GEO 没有直接帮助。如果开 Discord，同时开 GitHub Discussions，把问答留在能被读到的地方。
 
+### 进度（2026-11-02，分支 `codex/seo-foundations`）
+
+- `/about`、`/pricing`、`/skills`、`/submit`、`/inspiration` 之前预渲染正文为空，现在构建时用 React 直接渲染现有组件（`website/src/ssr-pages.tsx`），不跑 JavaScript 也能读到。`/inspiration` 只输出首屏 24 条，其余详情页靠 sitemap 发现。
+- `/lab`、`/lab/forma`、`/variant-output/` 和兜底页 `app.html` 加 `noindex`，`/lab` 移出 sitemap。不存在的路径仍返回 200，但不会被收录。
+- 第二层第 2 项先写了 3 篇回答页（`/guides`）：比较方向、撤回修改、避免千篇一律。事实只来自技能文档和本目录的实测记录。目前只有中文被预渲染，英文可在页面内切换，但没有独立地址。
+
 ## 3. 怎么衡量
 
 - 每两周用下面 10 个问题分别问 ChatGPT、Perplexity、Claude 和 Google（AI 模式），记录有没有提到 Variant Design、引用了哪个页面，结果按日期记在本目录：

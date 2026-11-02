@@ -690,3 +690,28 @@ test('home shelf switch runs a view transition, and reduced motion switches inst
  expect(await reduced.evaluate(()=>document.getAnimations().filter(a=>String(a.effect?.pseudoElement||'').startsWith('::view-transition')).length)).toBe(0);
  await reduced.close();
 });
+
+test('pages read without JavaScript, guides render in both languages, and unknown paths are not indexable', async ({ browser, page, request }) => {
+  const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
+  for (const [route, text] of [['/about', 'Variant'], ['/pricing', '本地版'], ['/skills', 'variant-design'], ['/submit', '投稿'], ['/inspiration', '灵感'], ['/guides', '怎么撤回 AI 对设计的修改'], ['/guides/undo-ai-design-changes', 'undo B']]) {
+    await reader.goto(route);
+    await expect(reader.locator('h1').first(), route).toBeVisible();
+    await expect(reader.locator('#root'), route).toContainText(text);
+  }
+  await noScript.close();
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/guides/compare-design-directions');
+  await expect(page.locator('h1')).toHaveText('怎么在现有项目里比较三个设计方向');
+  await expect(page).toHaveTitle('怎么在现有项目里比较三个设计方向 — Variant Design');
+  await page.getByRole('button', { name: '切换到英文' }).click();
+  await expect(page.locator('h1')).toHaveText('How to compare three design directions in an existing project');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await page.goto('/guides/no-such-guide');
+  await expect(page.locator('h1')).toHaveText('Not found');
+  expect(errors).toEqual([]);
+  for (const route of ['/no-such-page', '/lab', '/variant-output/_compare.html']) expect(await (await request.get(route)).text(), route).toContain('name="robots" content="noindex"');
+  expect(await (await request.get('/docs')).text()).not.toContain('noindex');
+  expect(await (await request.get('/sitemap.xml')).text()).toContain('/guides/undo-ai-design-changes</loc>');
+});
+

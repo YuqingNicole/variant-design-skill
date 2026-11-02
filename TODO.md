@@ -8,7 +8,7 @@
 - [ ] 改写两句口号：定价页「审美免费。连续性值得付费。」，/about 标题「你的品牌，可以如此不同。」。
 - [ ] /about 页示意图里的英文小标签改成双语。
 - [ ] GEO 第一层剩余两项（策略见 `docs/research/2026-11-02-geo-strategy.md`）：首页、`/docs`、`/inspiration` 的英文预渲染和 hreflang；GitHub 仓库的主页地址、描述和 topics（措辞先给维护者确认）。
-- [ ] GEO 第二、三层：按真实提问写回答页、公开实测页、投稿到 skill 资源合集和社区。
+- [ ] GEO 第二、三层：继续按真实提问写回答页（已有 3 篇，见 `website/src/guides-content.ts`）、公开实测页、投稿到 skill 资源合集和社区。回答页的英文要等 RFC-005 P3 才能被收录。
 
 ## X 设计样本收集箱
 

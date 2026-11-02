@@ -10,6 +10,7 @@ if (moved) { history.replaceState(null, "", moved + (moved.startsWith("/lab/") ?
 const page: Promise<ReactNode> = route === "/lab/canvas" ? import("./LandingCanvas").then(m => <m.LandingCanvas/>) : route === "/lab/workbench" ? import("./App").then(m => <m.default/>)
   : route === "/lab" ? import("./LabPage").then(m => <m.LabPage/>) : route === "/skills" ? import("./SkillsPage").then(m => <m.SkillsPage/>) : route === "/about" ? import("./PaperLanding").then(m => <m.PaperLanding/>)
   : route === "/inspiration" || route.startsWith("/inspiration/") ? import("./InspirationPage").then(m => <m.InspirationPage detail={route === "/inspiration" ? undefined : route.slice(13)}/>)
+  : route === "/guides" || route.startsWith("/guides/") ? import("./GuidesPage").then(m => <m.GuidesPage slug={route === "/guides" ? undefined : route.slice(8)}/>)
   : route === "/submit" ? import("./SubmitPage").then(m => <m.SubmitPage/>) : route === "/docs" ? import("./ContentPages").then(m => <m.ContentPages page="docs"/>)
   : route === "/directions" ? import("./ExpressiveDirections").then(m => <m.ExpressiveDirections/>) : route === "/showcase" ? import("./ShowcasePage").then(m => <m.ShowcasePage/>)
   : route === "/pricing" ? import("./pricing").then(m => <m.PricingPage repositoryUrl="https://github.com/YuqingNicole/variant-design-skill"/>)
