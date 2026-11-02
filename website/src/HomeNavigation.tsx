@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { transition } from './view-transition';
 import type { Language } from './direction-engine';
-import { t } from './i18n/localized';
+import { t, type Localized } from './i18n/localized';
+import { XVideo, mediaOf } from './XVideo';
+import type { Post } from './XPost';
 import { entries, mediaUrl } from './library-data';
 import { inspirationItems, inspirationSources, inspirationTopics } from './inspiration-data';
 import { skills } from './SkillsPage';
@@ -55,6 +57,7 @@ export function HomeHero({ language }: { language: Language }) {
         <div className="home-actions"><a className="home-action-primary" href="/inspiration">{zh ? '浏览设计参考' : 'Browse references'}</a>{skill && <a className="home-action-secondary" href="#featured-skill">{zh ? '精选技能：Variant Design' : 'Featured skill: Variant Design'}</a>}</div>
       </div>
     </header>
+    <HomePractice language={language}/>
     <section className="site-shell home-tasks" aria-labelledby="home-tasks-title">
       <h2 id="home-tasks-title">{zh ? '从你要做的事开始。' : 'Start with what you need to do.'}</h2>
       <ul>{tasks.map(t => <li key={t.href}><a href={t.href}>{t.title[ix]}</a><p>{t.body[ix]}</p></li>)}</ul>
@@ -64,6 +67,24 @@ export function HomeHero({ language }: { language: Language }) {
       <p><code>{skill.install}</code> <a href="/docs">{zh ? '安装说明' : 'Install guide'}</a></p>
     </section>}
   </>;
+}
+
+// The newest Best practice posts, playing as on the inspiration page; each opens its own detail with our notes.
+const practice = inspirationItems.flatMap(i => { const post = (i as typeof i & { post?: Post }).post, media = mediaOf(i.id); return i.category === 'practice' && post && media ? [{ item: i, post, media }] : []; })
+  .sort((a, b) => b.post.date.localeCompare(a.post.date));
+const pm = { title: { zh: '最近的 Best practice', en: 'Recent best practice' },
+  body: { zh: 'X 上公开分享的界面、动效和品牌作品，静音循环播放。点开看我们写的笔记：研究什么、用在哪里。', en: 'Interface, motion and brand work shared publicly on X, playing muted on a loop. Open one for our notes on what to study and where to use it.' },
+  all: { zh: `查看全部 ${practice.length} 个`, en: `See all ${practice.length}` }, openOnX: { zh: '在 X 上打开', en: 'Open on X' } } satisfies Record<string, Localized>;
+export function HomePractice({ language, count = 6 }: { language: Language; count?: number }) {
+  const l = (k: keyof typeof pm) => t(pm[k], language);
+  if (!practice.length) return null;
+  return <section className="site-shell home-practice" aria-labelledby="home-practice-title">
+    <div className="home-practice-head"><h2 id="home-practice-title">{l('title')}</h2><p>{l('body')}</p><a href="/inspiration?category=practice">{l('all')}</a></div>
+    <ul className="insp-videos home-practice-videos">{practice.slice(0, count).map(({ item, post, media }) => <li key={item.id} className="insp-card insp-vcard">
+      <a className="insp-vcard-open" href={`/inspiration/${item.id}`} style={{ aspectRatio: `${media.width}/${media.height}` }} aria-label={`${item.name}：${t(item.focus, language)}（${post.author} @${post.handle}）`}><XVideo media={media}/></a>
+      {media.avatar && <img className="insp-vcard-avatar" src={media.avatar} width="44" height="44" alt={`${post.author} @${post.handle}`} title={`${post.author} @${post.handle}`} referrerPolicy="no-referrer"/>}
+      <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l('openOnX')}：${item.name}`}><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 11 11 5M6 5h5v5"/></svg></a></li>)}</ul>
+  </section>;
 }
 
 const groups: { kind: string; title: Copy }[] = [{ kind: 'references', title: ['设计参考', 'Design references'] }, { kind: 'code', title: ['素材与代码', 'Assets and code'] }, { kind: 'skills', title: ['技能目录', 'Skill directories'] }];

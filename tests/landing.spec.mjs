@@ -580,6 +580,23 @@ test('home connects reference discovery, cases and the project workflow', async 
  }
 });
 
+test('home shows the newest Best practice videos and links to the full tab', async ({page})=>{
+ const media=JSON.parse(fs.readFileSync(new URL('../website/src/x-media.json',import.meta.url),'utf8'));
+ const source=fs.readFileSync(new URL('../website/src/inspiration-data.ts',import.meta.url),'utf8'),from=source.indexOf('[',source.indexOf('export const inspirationItems = '));
+ const newest=JSON.parse(source.slice(from,source.indexOf('\n];',from)+2)).filter(i=>i.category==='practice'&&media[i.id]).sort((a,b)=>b.post.date.localeCompare(a.post.date)).map(i=>`/inspiration/${i.id}`);
+ // Posters are stubbed and videos stay pending, so the suite never streams from X.
+ await page.route(/pbs\.twimg\.com/,r=>r.fulfill({contentType:'image/png',body:pixel}));await page.route(/video\.twimg\.com/,()=>{});
+ await page.goto('/');const section=page.locator('.home-practice');
+ await expect(section.getByRole('heading',{level:2})).toHaveText('最近的 Best practice');
+ await expect(section.locator('.insp-vcard-open')).toHaveCount(6);
+ expect(await section.locator('.insp-vcard-open').evaluateAll(as=>as.map(a=>a.getAttribute('href')))).toEqual(newest.slice(0,6));
+ await expect(section.locator('.insp-vcard video').first()).toHaveAttribute('poster',/pbs\.twimg\.com/);
+ for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
+ await page.setViewportSize({width:390,height:900});await expect(section.locator('.insp-vcard:visible')).toHaveCount(3);
+ await section.getByRole('link',{name:`查看全部 ${newest.length} 个`}).click();await expect(page).toHaveURL(/\/inspiration\?category=practice$/);
+ await expect(page.locator('.insp-pills button[aria-pressed=true]')).toHaveText('Best practice');await expect(page.locator('.insp-videos > li')).toHaveCount(newest.length);
+});
+
 test('home case switches recorded A/B/C evidence and preserves the chosen direction in English', async ({page})=>{
  await page.goto('/');
  const demo=page.locator('.home-case');
