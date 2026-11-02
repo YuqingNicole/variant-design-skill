@@ -4,6 +4,7 @@
 !/scripts
 !/vercel.json
 !/VERSION
+!/CHANGELOG.md
 !/api
 **/node_modules
 /website/.env
