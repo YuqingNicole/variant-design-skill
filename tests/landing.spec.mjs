@@ -792,3 +792,16 @@ test('every navigation link stays visible on narrow screens in both languages', 
   }
 });
 
+test('without JavaScript the inspiration page links every reference, and with it the grid still pages', async ({ browser, page }) => {
+  const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
+  for (const [route, prefix] of [['/inspiration', '/inspiration/'], ['/en/inspiration', '/en/inspiration/']]) {
+    await reader.goto(route);
+    const links = await reader.locator(`#root a[href^="${prefix}"]`).evaluateAll(as => [...new Set(as.map(a => a.getAttribute('href').split(/[?#]/)[0]))]);
+    expect(links.length, route).toBe(94);
+  }
+  await noScript.close();
+  await page.goto('/inspiration');
+  await expect(page.locator('#root nav[aria-label="全部参考"]')).toHaveCount(0);
+  await expect(page.locator('.insp-card').first()).toBeVisible();
+});
+
