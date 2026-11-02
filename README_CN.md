@@ -227,6 +227,7 @@ AI agent 工具的落地页 — Dark Indigo 色板，Geist 字体，saas.md 中�
 | **Dramatize**（戏剧化） | 将交互推到电影级（视差、3D 倾斜、幕布揭开） |
 | **Make interactive**（使其可交互） | 添加功能性交互：过滤、图表、拖拽、表单验证 |
 | **Polish**（精修） | 对照设计系统精修：排版、间距、交互、动效、文案 |
+| **Refine premium**（高级化） | 用克制做出高级感：收敛字号、圆角、阴影和颜色，并用 `scripts/style-budget.mjs` 量出改动前后的数量 |
 | **Critique**（批评） | 对照全部 8 个设计系统维度的系统审计 |
 | **Extract tokens**（提取 Token） | 导出设计令牌为 CSS / JSON / Tailwind 配置 |
 | **See other views**（其他视图） | 移动端 / 暗色模式 / 空状态 / 引导流程 / 悬停状态 |

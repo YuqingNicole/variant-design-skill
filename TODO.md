@@ -28,6 +28,7 @@
 ## 4. 产品
 
 - [ ] 决定要不要做“在比较页上直接选某个区域”：Impeccable 的 Live Mode、Subframe 和 Claude Design 都让用户在页面上点选。先决定做还是明确不做，再动手。
+- [ ] 给 `Refine premium` 和形容词翻译加 eval fixture：让真实 Agent 把一个页面“做得更高级”，评分检查 `style-budget.mjs` 计数下降、没有改成深色加金色（`docs/research/2026-11-02-premium-style-budget.md`）。
 - [ ] 评估把 `quality-gate.mjs` 的规则整理成公开的反模式目录（参考 Impeccable 的 `/slop` 这种做法，不复制它的文字）。
 
 ## 5. 网站维护
@@ -35,6 +36,7 @@
 - [ ] 实现 RFC-005 §3.5 的逐条翻译状态（`draft` 不进线上构建）。
 - [ ] 改写两句口号：定价页「审美免费。连续性值得付费。」，/about 标题「你的品牌，可以如此不同。」。
 - [ ] /about 页示意图里的英文小标签改成双语。
+- [ ] 用 `scripts/style-budget.mjs` 量其他页面：`/docs`（11 个字号）、`/inspiration`（9 个）、`/sponsor`（9 个），按首页的做法收敛。
 
 ## X 设计样本收集箱
 

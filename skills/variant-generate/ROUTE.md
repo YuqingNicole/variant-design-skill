@@ -16,12 +16,13 @@ Read files only at the step that names them, and only the section you need. Do n
 | Vue, Astro or Svelte output | `skills/shared/frameworks.md` |
 | Recording `.variant-context.json` | `references/workflow/project-context.md` |
 | Building the comparison and previews | `references/workflow/preview.md` |
+| The brief rests on a quality adjective (premium, 高级, cleaner, polished, techy) | `references/workflow/adjective-translation.md` |
 | Checking before presenting | `references/workflow/quality-baseline.md` |
 | Money, privacy, permissions, deletion, health, safety or AI-derived conclusions | `references/workflow/design-declaration.md`, then `references/workflow/product-integrity-gate.md` |
 
 | Later turn | Example | Read |
 |---|---|---|
-| Variation action | `A vary strong`, `B remix colors`, `Mix A + B`, `Polish C`, `Critique B`, `tokens A`, `C → mobile` | `skills/variant-generate/actions.md`, then `references/workflow/history.md` |
+| Variation action | `A vary strong`, `B remix colors`, `Mix A + B`, `Polish C`, `Refine premium B`, `Critique B`, `tokens A`, `C → mobile` | `skills/variant-generate/actions.md`, then `references/workflow/history.md` |
 | Zone edit | `B vary subtle — hero`, `zones A` | `skills/variant-generate/zones.md`, then `references/workflow/history.md` |
 | Undo, pick, recover | `undo B`, `pick B` | `references/workflow/history.md` |
 | Reopen or compare | `open B`, `compare` | `references/workflow/preview.md` |
@@ -70,11 +71,13 @@ First define a shared task contract: primary job, identical input data, necessar
 |---|---|---|
 | Minimal / Editorial | Type-driven, generous space | One strong font, minimal color |
 | Bold / Expressive | High contrast, graphic | Dominant color block |
-| Dark / Premium | Moody, atmospheric | Deep background, elevated surfaces |
+| Dark / Atmospheric | Moody, cinematic | Deep background, elevated surfaces |
 | Warm / Human | Rounded, approachable | Soft palette, organic forms |
 | Data / Technical | Dense, systematic | Grid, monospace, tight |
 | Neo-brutalist | Raw, unconventional | Bold outlines, broken grid |
 | Luxury / Silence | Maximum negative space | One image, sparse text |
+
+These are styles. "Premium" or "高级" in a brief is not one of them: translate it with `references/workflow/adjective-translation.md` before choosing.
 
 Before coding, define for each direction: starter prompt, palette (OKLCH where possible), display and body fonts (guidance and banned defaults in `references/workflow/quality-baseline.md`), layout pattern, motion strategy, the interactions that serve the task (no motion quota), and one signature detail.
 
@@ -116,7 +119,7 @@ Then the recommendation and its reason, and the next actions:
 > **Reshape** — Vary strong · Distill · Shuffle layout · Change style
 > **Tune** — Vary subtle · Remix colors · Mix (e.g. "Mix A + B")
 > **Animate** — Add motion · Dramatize · Make interactive
-> **Refine** — Polish · Critique · See other views
+> **Refine** — Polish · Refine premium · Critique · See other views
 > **Deliver** — pick B · react B · integrate B · tokens A
 
 The generated comparison shows previews before expandable direction details. Keep the full optimization, trade-off and suitable-scenario text in the manifest; rebuilding the comparison preserves it.

@@ -227,6 +227,7 @@ After seeing the initial 3 variations, iterate with:
 | **Dramatize** | Push interactions to cinematic maximum (parallax, 3D tilt, curtain reveal) |
 | **Make interactive** | Add functional patterns: filtering, charts, drag-and-drop, form validation |
 | **Polish** | Refine against design system: typography, spacing, interactions, motion, copy |
+| **Refine premium** | Make it more premium by restraint: converge type sizes, radii, shadows and colors, measured before and after with `scripts/style-budget.mjs` |
 | **Critique** | Systematic audit against all 8 design system dimensions |
 | **Extract tokens** | Export design tokens as CSS / JSON / Tailwind config |
 | **See other views** | Mobile / dark mode / empty state / onboarding / hover states |

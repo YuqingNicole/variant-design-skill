@@ -1,4 +1,4 @@
-<!-- Part of the variant-generate route (../../SKILL.md → skills/variant-generate/ROUTE.md). Read it when the user asks for a variation action such as `A vary strong`, `Mix A + B`, `Polish C`, `Critique B` or `tokens A`. -->
+<!-- Part of the variant-generate route (../../SKILL.md → skills/variant-generate/ROUTE.md). Read it when the user asks for a variation action such as `A vary strong`, `Mix A + B`, `Polish C`, `Refine premium B`, `Critique B` or `tokens A`. -->
 
 # Variation actions
 
@@ -115,6 +115,22 @@ Apply Impeccable design system refinements systematically:
 - **Motion** (`references/design-system/motion-design.md`): 100/300/500 rule, ease-out-expo for enters, exit at 75% of enter duration, staggered animations with CSS custom properties
 - **UX Writing** (`references/design-system/ux-writing.md`): specific button labels (verb + object), error formula (what → why → fix), empty states that teach the interface, link text with standalone meaning
 - **Clarify copy**: Scan all visible text — replace vague labels with specific ones, remove redundant intros, ensure every word earns its place. "Submit" → "Create account". "Error" → "Email needs to be in name@example.com format."
+
+### Refine premium
+For "make it more premium", "更高级", "more polished" or "cleaner" on an existing direction. Translate the word first with `references/workflow/adjective-translation.md`; it is restraint, not a new palette. Keep the direction's layout, fonts and accent; under a design-system lock, change nothing outside its tokens.
+
+**Process:**
+1. Measure the rendered direction with `scripts/style-budget.mjs` and save the sample to `.variant-work/`.
+2. **Converge:** map every type size, radius, shadow and text color onto the fewest token values that keep the hierarchy. Drop sizes within 2px of each other, one-off radii and decorative shadows.
+3. **Distill** lightly: remove containers, badges and dividers that do not separate content; one accent use per screen.
+4. **Craft:** line length 60–75 characters, tabular numerals for data, consistent image treatment, spacing on the token scale.
+5. **Copy:** cut hype and repeated claims; keep the specific nouns.
+6. Measure again in the same viewport and report the counts before and after with `check --before`.
+
+*Before → After example:*
+- 15 type sizes, 6 between 12 and 17px → 7 sizes on a deliberate scale
+- Radii 3/4/5/6/12px plus pills → 4px and pill
+- Gold gradient added to look expensive → not done; the accent stays and appears less often
 
 ### Critique
 Systematic audit against design system principles. Score each dimension and provide specific fixes:

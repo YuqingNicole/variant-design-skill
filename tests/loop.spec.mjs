@@ -164,6 +164,20 @@ test('reusable browser plan checks alternate focus, JS motion and non-target beh
  expect(missing.report.checks.every(c=>c.status==='unverified')).toBe(true);
 });
 
+test('style budget probe counts what renders, folds pill radii and skips hidden and code text',async({page})=>{
+ const {measure,grade}=await import('../scripts/style-budget.mjs');
+ await page.setContent(`<style>body{font:16px Georgia;color:rgb(20,20,20)}h1{font-size:48px;font-weight:600}.pill{border-radius:999px;padding:4px 12px}.card{border-radius:6px;box-shadow:0 1px 2px rgb(0 0 0/.2)}code{font-family:monospace;font-size:13px}</style>
+  <h1>Report</h1><p>Body <code>npx run</code></p><span class="pill">New</span><div class="card"><small style="color:rgb(90,90,90)">Note</small></div><p hidden style="font-size:11px">Hidden</p><p style="visibility:hidden;font-size:10px">Invisible</p>`);
+ const sample=await measure(page);
+ expect(sample.counts.sizes).toEqual({'48px':1,'16px':2,'13px':1,'13.3333px':1});
+ expect(sample.counts.sizes).not.toHaveProperty('11px');expect(sample.counts.sizes).not.toHaveProperty('10px');
+ expect(Object.keys(sample.counts.families)).toEqual(['Georgia']);
+ expect(Object.keys(sample.counts.radii).sort()).toEqual(['6px','full']);
+ expect(Object.keys(sample.counts.shadows)).toHaveLength(1);
+ expect(Object.keys(sample.counts.textColors).sort()).toEqual(['rgb(20, 20, 20)','rgb(90, 90, 90)']);
+ expect(grade(sample,{families:1,sizes:2,weights:3,textColors:5,radii:3,shadows:2}).over).toEqual(['sizes']);
+});
+
 test('comparison keeps long explanations below aligned previews and centers phone layouts',async({page})=>{
  const {buildPreview}=await import('../scripts/build-preview.mjs');
  const dir=path.join(root,'comparison-layout');fs.mkdirSync(dir,{recursive:true});

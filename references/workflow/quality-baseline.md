@@ -16,6 +16,10 @@ Strict mode fails on warnings as well as errors. Use `--json` for machine-readab
 
 For A/B/C deliveries, also run `node <skill-root>/scripts/delivery-check.mjs variant-output [--project <root>] [--json]`. It reads `.variant-context.json` and the owned files: three registered directions with distinct comparisons, a shared task contract, a recommendation without a selection, and, under a design-system lock, recorded and declared fonts and recorded colors that match the locked file. Hex colors outside the locked file are warnings to explain, not errors.
 
+## Style budget
+
+When the request is about restraint (premium, cleaner, polished), count what the rendered page uses with `node <skill-root>/scripts/style-budget.mjs` before and after the change. Budgets and the translation of these words are in `references/workflow/adjective-translation.md`.
+
 ## Visual gate
 
 Check the rendered result, not just source code:
