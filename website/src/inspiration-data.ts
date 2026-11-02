@@ -1724,6 +1724,966 @@ export const inspirationItems = [
       "text": "🌏✈️",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-visualatelier8-893561",
+    "name": "Bloom",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/visualatelier8/status/2113989522723893561",
+    "source": "link-only",
+    "focus": {
+      "zh": "柔和渐变材质的 3D 花朵在浅色底上轻轻摆动",
+      "en": "A soft gradient-material 3D flower swaying gently on a pale ground"
+    },
+    "application": {
+      "zh": "需要安静氛围的首屏装饰或品牌片段",
+      "en": "Quiet hero ornaments or brand moments"
+    },
+    "publisher": "Visual Atelier 8 (@visualatelier8)",
+    "kind": "social-post",
+    "designer": null,
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/7bqklue-bloom",
+    "post": {
+      "id": "2113989522723893561",
+      "author": "Visual Atelier 8",
+      "handle": "visualatelier8",
+      "date": "2026-10-24",
+      "lang": "en",
+      "text": "‘Bloom’ by Teknosis\n\n#cinema4d #motion #digitalart #gradient",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-yashisinghh-180619",
+    "name": "Dot simulation visuals",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/yashisinghh/status/2113540944704180619",
+    "source": "link-only",
+    "focus": {
+      "zh": "点阵组成的分叉形态，一段白光沿着分支流动",
+      "en": "A branching form drawn in dots, with a white pulse travelling along the branches"
+    },
+    "application": {
+      "zh": "AI、计算或网络类产品表现“正在处理”的视觉",
+      "en": "Showing \"processing\" for AI, compute or network products"
+    },
+    "publisher": "Yashi Singh (@yashisinghh)",
+    "kind": "social-post",
+    "designer": "Yashi Singh",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/r4nkk3e-ai-simulation-dot-visuals",
+    "post": {
+      "id": "2113540944704180619",
+      "author": "Yashi Singh",
+      "handle": "yashisinghh",
+      "date": "2026-10-23",
+      "lang": "en",
+      "text": "concept visuals for ai simulation and computing",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-jckhlry-859376",
+    "name": "Art Input shapes",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/JCKHLRY/status/2113314443358859376",
+    "source": "link-only",
+    "focus": {
+      "zh": "圆环、立方体、四棱锥共用一套流动渐变材质，彼此切换",
+      "en": "A torus, cube and pyramid share one flowing gradient material and turn into each other"
+    },
+    "application": {
+      "zh": "品牌 3D 资产：用同一种材质串起一组形状",
+      "en": "Brand 3D assets tied together by one material"
+    },
+    "publisher": "JACKⒿ (@JCKHLRY)",
+    "kind": "social-post",
+    "designer": "JACKⒿ",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/sov8eea-art-input-shape-studies",
+    "post": {
+      "id": "2113314443358859376",
+      "author": "JACKⒿ",
+      "handle": "JCKHLRY",
+      "date": "2026-10-22",
+      "lang": "en",
+      "text": "Playing around with the Art Input shapes 👁️",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-blak3shao-602888",
+    "name": "Riso rabbit hole",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/blak3shao/status/2113324127658602888",
+    "source": "link-only",
+    "focus": {
+      "zh": "孔版印刷质感的迷幻动画：网点、错版和单色蓝在几种图案间切换",
+      "en": "A psychedelic animation with risograph texture: halftone, misregistration and spot blue across several motifs"
+    },
+    "application": {
+      "zh": "音乐、活动海报或品牌片的印刷质感动画",
+      "en": "Print-textured animation for music, event posters or brand films"
+    },
+    "publisher": "Blake Shao (@blak3shao)",
+    "kind": "social-post",
+    "designer": "Blake Shao",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/fw9lnh3-x-com",
+    "post": {
+      "id": "2113324127658602888",
+      "author": "Blake Shao",
+      "handle": "blak3shao",
+      "date": "2026-10-22",
+      "lang": "en",
+      "text": "trying to emulate riso with opus5.5 led me down a rabbit hole...\n\nthe fun of animating with agents is almost never the one-shot. it’s having a skeleton you can experiment infinite textures and ideas on",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-jamesm-388873",
+    "name": "Animated icon set",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/jamesm/status/2113224126991388873",
+    "source": "link-only",
+    "focus": {
+      "zh": "一整套线性图标，每个都有自己的小动画",
+      "en": "A full set of line icons, each with its own small animation"
+    },
+    "application": {
+      "zh": "产品界面里图标的悬停或状态动效",
+      "en": "Hover or state animation for interface icons"
+    },
+    "publisher": "James McDonald (@jamesm)",
+    "kind": "social-post",
+    "designer": "James McDonald",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/3ak7kef-animated-ui-icon-set",
+    "post": {
+      "id": "2113224126991388873",
+      "author": "James McDonald",
+      "handle": "jamesm",
+      "date": "2026-10-22",
+      "lang": "en",
+      "text": "Probably a little overkill for where these will live in the new UI, but a delightful experience when it all comes together. 🌚",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-rickyretouch-841352",
+    "name": "Sphere clusters",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/rickyretouch/status/2113035998405841352",
+    "source": "link-only",
+    "focus": {
+      "zh": "一团柔软的小球在团内翻滚、换位，配色只用蓝绿",
+      "en": "A cluster of soft balls tumbling and trading places, in blues and greens only"
+    },
+    "application": {
+      "zh": "首屏或加载区域的生成式视觉",
+      "en": "Generative visuals for heroes or loading areas"
+    },
+    "publisher": "Ricky Retouch (@rickyretouch)",
+    "kind": "social-post",
+    "designer": "Ricky Retouch",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/muudyly-animated-sphere-clusters",
+    "post": {
+      "id": "2113035998405841352",
+      "author": "Ricky Retouch",
+      "handle": "rickyretouch",
+      "date": "2026-10-21",
+      "lang": "zxx",
+      "text": "",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-shedsgns-208264",
+    "name": "Platinum card layers",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/shedsgns/status/2112973721011208264",
+    "source": "link-only",
+    "focus": {
+      "zh": "把金属银行卡拆成底色、拉丝、光泽、内高光几层，再合回去",
+      "en": "A metal bank card pulled apart into base, brushed texture, sheen and inner highlight, then put back together"
+    },
+    "application": {
+      "zh": "讲清楚拟物材质是怎么叠出来的；设计系统文档",
+      "en": "Explaining how a realistic material is layered; design-system docs"
+    },
+    "publisher": "Juliette (@shedsgns)",
+    "kind": "social-post",
+    "designer": "Juliette",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/r7lof7q-platinum-card-layer-breakdown",
+    "post": {
+      "id": "2112973721011208264",
+      "author": "Juliette",
+      "handle": "shedsgns",
+      "date": "2026-10-21",
+      "lang": "en",
+      "text": "Pulled a platinum card apart to see what actually makes it feel premium: 6 layers, most of them under 10% opacity",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-poetengineer__-298550",
+    "name": "Dream words",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/poetengineer__/status/2112743091585298550",
+    "source": "link-only",
+    "focus": {
+      "zh": "线框床上的人在睡，月亮里落下日文字，铺满床和地面",
+      "en": "A wireframe sleeper in bed while Japanese characters pour from the moon over the bed and floor"
+    },
+    "application": {
+      "zh": "诗歌、文学或编辑类网站的文字动画",
+      "en": "Text animation for poetry, literature or editorial sites"
+    },
+    "publisher": "Kat ⊷ the Poet Engineer (@poetengineer__)",
+    "kind": "social-post",
+    "designer": "Kat ⊷ the Poet Engineer",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/o7veq43-dream-words-motion-loop",
+    "post": {
+      "id": "2112743091585298550",
+      "author": "Kat ⊷ the Poet Engineer",
+      "handle": "poetengineer__",
+      "date": "2026-10-21",
+      "lang": "zxx",
+      "text": "🌜",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-kraigdesigns-124137",
+    "name": "Strata micrographics",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/kraigdesigns/status/2102342319102124137",
+    "source": "link-only",
+    "focus": {
+      "zh": "安全品牌的小型版式模块：彩色条纹、等宽小字、图标和条码",
+      "en": "Small layout modules for a security brand: colour stripes, mono text, icons and barcodes"
+    },
+    "application": {
+      "zh": "技术品牌的细节层：标签、页脚、证书类元素",
+      "en": "The detail layer of a tech brand: labels, footers, certificate-like elements"
+    },
+    "publisher": "KraiG (@kraigdesigns)",
+    "kind": "social-post",
+    "designer": "KraiG",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/nzug47f-strata-brand-micrographics",
+    "post": {
+      "id": "2102342319102124137",
+      "author": "KraiG",
+      "handle": "kraigdesigns",
+      "date": "2026-09-22",
+      "lang": "en",
+      "text": "Some micrographics from recent brand work for Strata.",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-marinaanddesign-803975",
+    "name": "ElevenLabs identity",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/marinaanddesign/status/2112581175415803975",
+    "source": "link-only",
+    "focus": {
+      "zh": "“II”标志和字标用在贴纸、T 恤、名片、站台广告和活动布景上",
+      "en": "The \"II\" mark and wordmark applied to stickers, tees, cards, station posters and event banners"
+    },
+    "application": {
+      "zh": "检查一套识别在实物和环境里是否成立",
+      "en": "Checking that an identity holds up on objects and in places"
+    },
+    "publisher": "Marina Kondratenko (@marinaanddesign)",
+    "kind": "social-post",
+    "designer": "Marina Kondratenko",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/p35y20j-elevenlabs-brand-identity",
+    "post": {
+      "id": "2112581175415803975",
+      "author": "Marina Kondratenko",
+      "handle": "marinaanddesign",
+      "date": "2026-10-20",
+      "lang": "en",
+      "text": "Cooking some updates on the @ElevenLabs brand with @dariaiareshko and @victoiredouy\nSoon 👀",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-jakubantalik-087424",
+    "name": "Magnetic UI",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/Jakubantalik/status/2112572046505087424",
+    "source": "link-only",
+    "focus": {
+      "zh": "帖子说明页面用手机磁力计感知磁铁靠近并做出反应；从截帧看反应很细微",
+      "en": "Per the post, the page reads the phone's magnetometer and reacts as a magnet approaches; in the frames the reaction is subtle"
+    },
+    "application": {
+      "zh": "用设备传感器做的实验性交互",
+      "en": "Experimental interaction driven by device sensors"
+    },
+    "publisher": "Jakub Antalik (@Jakubantalik)",
+    "kind": "social-post",
+    "designer": "Jakub Antalik",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/vfgog12-magnetic-ui-web-interaction",
+    "post": {
+      "id": "2112572046505087424",
+      "author": "Jakub Antalik",
+      "handle": "Jakubantalik",
+      "date": "2026-10-20",
+      "lang": "en",
+      "text": "Made the live Libraries website react when a magnet is nearby.",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-prekesh-025951",
+    "name": "Portfolio of objects",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/prekesh/status/2109617342846025951",
+    "source": "link-only",
+    "focus": {
+      "zh": "作品集做成一墙 3D 小物件，点一个放大成作品本身",
+      "en": "A portfolio as a wall of small 3D objects; clicking one enlarges it into the work"
+    },
+    "application": {
+      "zh": "个人作品集：把项目变成可收集的物件",
+      "en": "Personal portfolios that turn projects into collectible objects"
+    },
+    "publisher": "prekesh ◡̈ (@prekesh)",
+    "kind": "social-post",
+    "designer": "prekesh ◡̈",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/cv7a3zm-prekesh-chavda-portfolio",
+    "post": {
+      "id": "2109617342846025951",
+      "author": "prekesh ◡̈",
+      "handle": "prekesh",
+      "date": "2026-10-12",
+      "lang": "en",
+      "text": "after several years... i have a new portfolio 👀",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-mschwaibold-494746",
+    "name": "Procedural grass",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/MSchwaibold/status/2112573858754494746",
+    "source": "link-only",
+    "focus": {
+      "zh": "手机上生成逼真的草地纹理，左右滑动切换不同的草",
+      "en": "Realistic procedural grass on a phone, swiping between kinds of grass"
+    },
+    "application": {
+      "zh": "生成式纹理、壁纸或背景工具",
+      "en": "Generative texture, wallpaper or background tools"
+    },
+    "publisher": "Marvin Schwaibold (@MSchwaibold)",
+    "kind": "social-post",
+    "designer": "Marvin Schwaibold",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/3v0fr0t-procedural-grass-shader",
+    "post": {
+      "id": "2112573858754494746",
+      "author": "Marvin Schwaibold",
+      "handle": "MSchwaibold",
+      "date": "2026-10-20",
+      "lang": "en",
+      "text": "Had fun teaching AI how to make grass look real using procedural shaders.",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-heysatya_-378573",
+    "name": "Step tracker",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/heysatya_/status/2109536310973378573",
+    "source": "link-only",
+    "focus": {
+      "zh": "步数从 0 滚到 19,538，弧形进度条同步填满，再弹出距离和热量",
+      "en": "Steps roll from 0 to 19,538 as an arc fills, then distance and calories pop in"
+    },
+    "application": {
+      "zh": "健康和数据类应用的数字揭示",
+      "en": "Number reveals in health and data apps"
+    },
+    "publisher": "Satya (@heysatya_)",
+    "kind": "social-post",
+    "designer": "Satya",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/6frflao-step-tracker-app-ui",
+    "post": {
+      "id": "2109536310973378573",
+      "author": "Satya",
+      "handle": "heysatya_",
+      "date": "2026-10-12",
+      "lang": "en",
+      "text": "cooking something 👀",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-dsgn_aleksei-418250",
+    "name": "Krea Agent onboarding",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/dsgn_aleksei/status/2112558512362418250",
+    "source": "link-only",
+    "focus": {
+      "zh": "新手引导弹窗分三步（欢迎、连接工具、上传素材），背后是虚化的作品墙",
+      "en": "A three-step onboarding modal (welcome, connect tools, upload assets) over a blurred wall of work"
+    },
+    "application": {
+      "zh": "创作类 AI 工具的首次使用引导",
+      "en": "First-run onboarding for creative AI tools"
+    },
+    "publisher": "Aleksei Larionov (@dsgn_aleksei)",
+    "kind": "social-post",
+    "designer": null,
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/t865vsj-krea-agent-onboarding",
+    "post": {
+      "id": "2112558512362418250",
+      "author": "Aleksei Larionov",
+      "handle": "dsgn_aleksei",
+      "date": "2026-10-20",
+      "lang": "zxx",
+      "text": "@darylginn",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-fallengrey-891751",
+    "name": "Fallengrey studio site",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/fallengrey/status/2112514564952891751",
+    "source": "link-only",
+    "focus": {
+      "zh": "作品缩略图组成旋转的圆环，再摊平成一排，项目页是情绪板",
+      "en": "Project thumbnails form a rotating ring, then flatten into a row; project pages are moodboards"
+    },
+    "application": {
+      "zh": "设计工作室官网的作品浏览",
+      "en": "Browsing work on a design studio site"
+    },
+    "publisher": "fallen ⊕ (@fallengrey)",
+    "kind": "social-post",
+    "designer": "fallen ⊕",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/3lhe3e6-fallengrey-studio-website",
+    "post": {
+      "id": "2112514564952891751",
+      "author": "fallen ⊕",
+      "handle": "fallengrey",
+      "date": "2026-10-20",
+      "lang": "en",
+      "text": "we back and better\n\nspent the last few weeks updating my design studio website and it's finally here",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-xrarchitect-541962",
+    "name": "Splat portals",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/XRarchitect/status/2112207444101541962",
+    "source": "link-only",
+    "focus": {
+      "zh": "穿过一个个传送门在不同的高斯泼溅 3D 场景之间跳转",
+      "en": "Jumping through portals between gaussian-splat 3D scenes"
+    },
+    "application": {
+      "zh": "沉浸式网页里场景之间的转场",
+      "en": "Scene transitions in immersive web pages"
+    },
+    "publisher": "Ian Curtis (@XRarchitect)",
+    "kind": "social-post",
+    "designer": "Ian Curtis",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/a75z6ja-gaussian-splat-portal-jumping",
+    "post": {
+      "id": "2112207444101541962",
+      "author": "Ian Curtis",
+      "handle": "XRarchitect",
+      "date": "2026-10-19",
+      "lang": "en",
+      "text": "Portal jumping through gaussian splat worlds with WebGPU. real time. sound on.",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-polar_sh-195565",
+    "name": "Agent-first billing guide",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/polar_sh/status/2112520117435195565",
+    "source": "link-only",
+    "focus": {
+      "zh": "产品指南首页：标志逐笔构造，下面十个主题卡片各带一个会动的线条小图",
+      "en": "A product guide's front page: the logo builds stroke by stroke above ten topic cards, each with a small animated line diagram"
+    },
+    "application": {
+      "zh": "技术产品的说明页或文档目录",
+      "en": "Explainer pages or doc indexes for technical products"
+    },
+    "publisher": "Polar (@polar_sh)",
+    "kind": "social-post",
+    "designer": null,
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/lzxaebw-agent-first-billing-landing-page",
+    "post": {
+      "id": "2112520117435195565",
+      "author": "Polar",
+      "handle": "polar_sh",
+      "date": "2026-10-20",
+      "lang": "en",
+      "text": "billing for agentic workflows ✨\n\nwe're building the most ambitious metering & billing engine for AI software.\n\na technical deepdive →",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-gabriell_lab-488501",
+    "name": "Hanging gallery",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/gabriell_lab/status/2112520073378488501",
+    "source": "link-only",
+    "focus": {
+      "zh": "一排挂在横杆上的画框，转过来露出名画和作者年份",
+      "en": "A row of frames hanging from a rail that turn to reveal a painting with its artist and year"
+    },
+    "application": {
+      "zh": "藏品、作品或卡片集的浏览方式",
+      "en": "Browsing collections, works or card sets"
+    },
+    "publisher": "Gabriel (@gabriell_lab)",
+    "kind": "social-post",
+    "designer": "Gabriel",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/0249i0p-art-gallery-flip-cards",
+    "post": {
+      "id": "2112520073378488501",
+      "author": "Gabriel",
+      "handle": "gabriell_lab",
+      "date": "2026-10-20",
+      "lang": "en",
+      "text": "Made this with Claude Opus 5.5. A gallery where every piece flips to reveal the artwork on hover.",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-oliverhamrin-965965",
+    "name": "First of Kind season 3",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/oliverhamrin/status/2112253989982965965",
+    "source": "link-only",
+    "focus": {
+      "zh": "同一节目的海报系列：手写标题固定，照片处理和图形每张不同",
+      "en": "A poster series for one show: the handwritten title stays, the photo treatment and graphics change each time"
+    },
+    "application": {
+      "zh": "系列内容的封面系统",
+      "en": "Cover systems for serial content"
+    },
+    "publisher": "Oliver (@oliverhamrin)",
+    "kind": "social-post",
+    "designer": "Oliver",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/9nil9bs-first-of-kind-s3-identity",
+    "post": {
+      "id": "2112253989982965965",
+      "author": "Oliver",
+      "handle": "oliverhamrin",
+      "date": "2026-10-19",
+      "lang": "en",
+      "text": "Me and @haris_chc had so much fun working on the visual identity for @firstofkind season 3.\n\nHere's a bunch of drafts from the exploration phase:",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-raminnasibov-596460",
+    "name": "Dachshund password meter",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/RaminNasibov/status/2111194691303596460",
+    "source": "link-only",
+    "focus": {
+      "zh": "密码越长，腊肠狗身体越长，配一句毒舌评价",
+      "en": "The longer the password, the longer the dachshund, with a cheeky line of feedback"
+    },
+    "application": {
+      "zh": "密码强度、进度这类反馈",
+      "en": "Feedback for password strength or progress"
+    },
+    "publisher": "Ramin Nasibov (@RaminNasibov)",
+    "kind": "social-post",
+    "designer": "Ramin Nasibov",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/40g4zdp-dachshund-password-strength",
+    "post": {
+      "id": "2111194691303596460",
+      "author": "Ramin Nasibov",
+      "handle": "RaminNasibov",
+      "date": "2026-10-16",
+      "lang": "zxx",
+      "text": "🌭",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-withanimationui-849625",
+    "name": "Action wheel",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/withAnimationUI/status/2110643020890849625",
+    "source": "link-only",
+    "focus": {
+      "zh": "加号展开成一圈快捷操作，带模糊淡入淡出",
+      "en": "A plus button opens a ring of quick actions with blurred fade in and out"
+    },
+    "application": {
+      "zh": "移动端或画布上的快捷操作菜单",
+      "en": "Quick-action menus on mobile or canvases"
+    },
+    "publisher": "withAnimation (@withAnimationUI)",
+    "kind": "social-post",
+    "designer": "withAnimation",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/qnirxwz-action-wheel-interaction",
+    "post": {
+      "id": "2110643020890849625",
+      "author": "withAnimation",
+      "handle": "withAnimationUI",
+      "date": "2026-10-15",
+      "lang": "en",
+      "text": "action wheel interaction ⎯⟡°",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-anaarsonist-010370",
+    "name": "Pixel skater game",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/AnaArsonist/status/2104900327812010370",
+    "source": "link-only",
+    "focus": {
+      "zh": "手绘像素风的横版滑板小游戏，跳过路障得分",
+      "en": "A hand-drawn pixel-art side-scrolling skate game, jumping barriers to score"
+    },
+    "application": {
+      "zh": "像素风插画和网页小游戏",
+      "en": "Pixel-art illustration and small web games"
+    },
+    "publisher": "ana howard (@AnaArsonist)",
+    "kind": "social-post",
+    "designer": "ana howard",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/0t0c08y-ghost-skater-pixel-game",
+    "post": {
+      "id": "2104900327812010370",
+      "author": "ana howard",
+      "handle": "AnaArsonist",
+      "date": "2026-09-29",
+      "lang": "en",
+      "text": "hand-drawn pixel art, a labour of love 💜\n\npost your high scores for a chance to get a ghost pass\n\nhttps://t.co/DRm6rnYc75 👻🛹",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-hayriyeakguller-856876",
+    "name": "Team cards on a line",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/hayriyeakguller/status/2109612639231856876",
+    "source": "link-only",
+    "focus": {
+      "zh": "团队成员卡片挂在一根线上，悬停翻面看联系方式和二维码",
+      "en": "Team cards hang from a line and flip on hover to show contact details and a QR code"
+    },
+    "application": {
+      "zh": "关于我们、团队介绍页",
+      "en": "About and team pages"
+    },
+    "publisher": "Hayriye (@hayriyeakguller)",
+    "kind": "social-post",
+    "designer": "Hayriye",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/8c5u6uo-team-profile-card-component",
+    "post": {
+      "id": "2109612639231856876",
+      "author": "Hayriye",
+      "handle": "hayriyeakguller",
+      "date": "2026-10-12",
+      "lang": "en",
+      "text": "New component!! 🎉 @framer",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-hollysem-170792",
+    "name": "Plasma add money",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/Hollysem/status/2109628383156170792",
+    "source": "link-only",
+    "focus": {
+      "zh": "充值面板顶部一叠旋转的国旗和币种标志，下面是两种入金方式",
+      "en": "An add-money sheet topped by a spinning stack of flags and coin logos above two ways to fund"
+    },
+    "application": {
+      "zh": "金融应用的入金和引导流程",
+      "en": "Funding and onboarding flows in finance apps"
+    },
+    "publisher": "Sergei Semenov (@Hollysem)",
+    "kind": "social-post",
+    "designer": "Sergei Semenov",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/pryi8k6-plasma-wallet-app-ui",
+    "post": {
+      "id": "2109628383156170792",
+      "author": "Sergei Semenov",
+      "handle": "Hollysem",
+      "date": "2026-10-12",
+      "lang": "en",
+      "text": "money money money",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-anishfn-995329",
+    "name": "Component lab",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/anishfn/status/2107893629775995329",
+    "source": "link-only",
+    "focus": {
+      "zh": "个人组件实验室：网格里点开一张票据卡片，换图案、翻到背面",
+      "en": "A personal component lab: open a ticket card from the grid, swap its artwork, turn it over"
+    },
+    "application": {
+      "zh": "个人实验室或组件索引页",
+      "en": "Personal labs or component index pages"
+    },
+    "publisher": "anish. (@anishfn)",
+    "kind": "social-post",
+    "designer": "anish.",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/1guxmyz-personal-lab-id-card",
+    "post": {
+      "id": "2107893629775995329",
+      "author": "anish.",
+      "handle": "anishfn",
+      "date": "2026-10-07",
+      "lang": "en",
+      "text": "should i open source my lab?",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-vanjek-116634",
+    "name": "Vibe selector",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/vanjek/status/2107120208964116634",
+    "source": "link-only",
+    "focus": {
+      "zh": "下拉框每个选项对应一团像素粒子，切换时粒子散开再重组",
+      "en": "A dropdown where each option has a pixel particle cloud that scatters and regroups on change"
+    },
+    "application": {
+      "zh": "给普通表单控件加一点个性",
+      "en": "Adding personality to an ordinary form control"
+    },
+    "publisher": "George (@vanjek)",
+    "kind": "social-post",
+    "designer": "George",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/maajesu-vibe-selector-microinteraction",
+    "post": {
+      "id": "2107120208964116634",
+      "author": "George",
+      "handle": "vanjek",
+      "date": "2026-10-05",
+      "lang": "en",
+      "text": "Monday shenanigans ✌🏻",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-ozzyxs1a-389677",
+    "name": "Effort slider",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/ozzyxs1a/status/2107523169649389677",
+    "source": "link-only",
+    "focus": {
+      "zh": "滑杆滑块是一个大脑，拉到最高档轨道变成闪烁的像素星空",
+      "en": "A slider whose thumb is a brain; at the top setting the track turns into twinkling pixel stars"
+    },
+    "application": {
+      "zh": "AI 产品里“思考强度”这类档位设置",
+      "en": "Setting levels such as thinking effort in AI products"
+    },
+    "publisher": "ozzy (@ozzyxs1a)",
+    "kind": "social-post",
+    "designer": "ozzy",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/x6k4i8j-effort-slider-microinteraction",
+    "post": {
+      "id": "2107523169649389677",
+      "author": "ozzy",
+      "handle": "ozzyxs1a",
+      "date": "2026-10-06",
+      "lang": "en",
+      "text": "galaxy brain effort slider",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-jh3yy-626150",
+    "name": "Effort dial",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/jh3yy/status/2107540680784626150",
+    "source": "link-only",
+    "focus": {
+      "zh": "旋钮中间的大脑随档位换材质和光晕，最高档向外放光",
+      "en": "A knob whose central brain changes material and glow by level, bursting outward at the top"
+    },
+    "application": {
+      "zh": "同上，和滑杆版可以对照着看",
+      "en": "As above; worth comparing with the slider version"
+    },
+    "publisher": "jhey ʕ•ᴥ•ʔ (@jh3yy)",
+    "kind": "social-post",
+    "designer": "jhey ʕ•ᴥ•ʔ",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/xny36la-brain-effort-dial",
+    "post": {
+      "id": "2107540680784626150",
+      "author": "jhey ʕ•ᴥ•ʔ",
+      "handle": "jh3yy",
+      "date": "2026-10-06",
+      "lang": "en",
+      "text": "/effort 🧠⚡",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-johnphamous-040275",
+    "name": "Token Pass sleeve",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/JohnPhamous/status/2112955848805040275",
+    "source": "link-only",
+    "focus": {
+      "zh": "皮质卡套里滑出几张模型卡片，后面一张写着“更多模型即将上线”",
+      "en": "Model cards slide out of a leather sleeve, with a placeholder card for more models coming"
+    },
+    "application": {
+      "zh": "展示一组可选项或会员权益的入场动画",
+      "en": "Intro animation for a set of options or member benefits"
+    },
+    "publisher": "JohnPhamous (@JohnPhamous)",
+    "kind": "social-post",
+    "designer": "JohnPhamous",
+    "checkedAt": "2026-11-02",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/poqewfx-token-pass-intro-animation",
+    "post": {
+      "id": "2112955848805040275",
+      "author": "JohnPhamous",
+      "handle": "JohnPhamous",
+      "date": "2026-10-21",
+      "lang": "en",
+      "text": "token pass intro\n\ncollab with @kindlaar",
+      "hasMedia": true
+    }
   }
 ];
 

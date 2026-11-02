@@ -531,7 +531,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-topic')).toContainText('2026-10-29');
  await expect(cards.locator('.insp-card-open[href="/inspiration/lovable"]')).toHaveCount(0);
  await expect(cards.locator('.insp-card-out[href="https://impeccable.style/"]')).toHaveCount(1);
- await expect(page.locator('.insp-title')).toContainText('64 个精选外部参考');await expect(page.locator('.insp-counts')).toContainText('20 Landing');
+ await expect(page.locator('.insp-title')).toContainText('94 个精选外部参考');await expect(page.locator('.insp-counts')).toContainText('20 Landing');
  await page.getByRole('searchbox').fill('Vercel');
  await expect(cards).toHaveCount(1);await expect(cards.first().locator('.insp-card-open')).toHaveAttribute('href','/inspiration/v0');
  await page.getByRole('searchbox').fill('');
@@ -630,7 +630,7 @@ test('home works as a design navigation site with a switchable, sourced showcase
  await expect(page).toHaveTitle('Variant Design — 设计导航，只收核对过的');
  const inView=sel=>page.locator(sel).first().evaluate(el=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight});
  for(const sel of ['.home-claim h1','.home-show-card','.home-action-primary','.home-shelves'])expect(await inView(sel)).toBe(true);
- await expect(page.locator('.home-counts')).toHaveText('目前有 64 个参考、1 个实测技能和 5 个案例。');
+ await expect(page.locator('.home-counts')).toHaveText('目前有 94 个参考、1 个实测技能和 5 个案例。');
  await expect(page.locator('main .content-kicker')).toHaveCount(0);
  expect(await page.locator(':is(.home-hero, .home-tasks, .home-featured, .home-case, #directories) :is(a, button)').evaluateAll(els=>els.map(e=>e.innerText).join(' '))).not.toMatch(/[→↗↓]/);
  const card=page.locator('.home-show-card');
