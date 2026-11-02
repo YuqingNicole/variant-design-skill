@@ -13,6 +13,6 @@ test('reads author, date, language and text from oEmbed markup without media lin
   const meta = fromOembed({ author_name: 'areadne', html }, post);
   assert.deepEqual(meta, { author: 'areadne', handle: 'AreadneMaria', date: '2026-10-27', lang: 'en', text: 'sheep & grass!', hasMedia: true });
   const entry = draftEntry(post, meta, 'Interaction', '2026-11-01');
-  assert.equal(entry.category, 'practice'); assert.equal(entry.id, 'x-areadnemaria-444419'); assert.match(entry.focus[0], /^TODO/);
+  assert.equal(entry.category, 'practice'); assert.equal(entry.id, 'x-areadnemaria-444419'); assert.match(entry.focus.zh, /^TODO/); assert.match(entry.application.en, /^TODO/);
   assert.throws(() => fromOembed({ author_name: 'x', html: '<div></div>' }, post), /Unexpected oEmbed/);
 });

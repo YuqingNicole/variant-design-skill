@@ -73,7 +73,7 @@ node evals/run.mjs --agent claude --fixture pulse       # one real, graded agent
 - **Language.**
   - Skill files, references, scripts and the README: English.
   - `README_CN.md`, PRDs and RFCs: Chinese.
-  - Website copy: both languages, with the `[zh, en]` order used in the existing data.
+  - Website copy: both languages. New copy is keyed by language, `{ zh, en }`, and read with `t()` from `website/src/i18n/` (RFC-005); data not yet migrated still uses positional `[zh, en]` pairs.
 - **The skill's own text is the product.** When you change behavior in `scripts/`, update every place that describes it in the same change: `references/workflow/preview.md`, `references/workflow/history.md`, `skills/shared/export.md`, `skills/shared/code-output.md`, the relevant `skills/*/SKILL.md`, and user-facing docs (`website/src/DocsGuide.tsx`, `README.md`, `README_CN.md`).
 - **Progressive loading.** `SKILL.md` routes to one sub-skill. Each sub-skill opens with a load map that names which file to read at which step; split files by the phase that needs them (first generation, edit, export), not only by topic. Do not add "read everything" or "always load" instructions. `node evals/run.mjs` reports the skill text each run read; check it when you change what a route loads.
 - **Rule precedence** across routes: user constraints → product task and existing design system → accessibility → style suggestions.
