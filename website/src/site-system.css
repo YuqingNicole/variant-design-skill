@@ -18,3 +18,6 @@ html:has(:is(.pricing-page,.site-workbench,.content-page)){color-scheme:light;ba
 @media(hover:hover) and (prefers-reduced-motion:no-preference){.content-page :is(p,dd,li) a{transition:text-decoration-thickness .2s,text-underline-offset .2s}.content-page :is(p,dd,li) a:hover{text-decoration-thickness:2px;text-underline-offset:.18em}}
 .site-language-notice{display:flex;align-items:center;justify-content:center;gap:var(--space-3);padding:var(--space-2) var(--space-4);font-size:13px;background:var(--site-ink);color:var(--site-paper)}.site-language-notice a{color:inherit;text-underline-offset:3px}.site-language-notice button{border:0;background:none;color:inherit;font-size:18px;line-height:1;cursor:pointer;padding:var(--space-1)}
 a.site-language{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+/* Narrow screens: links get their own row, so every link (Get started last) is visible without a hidden scroll. */
+@media(max-width:650px){.site-nav{flex-wrap:wrap;height:auto;padding-block:var(--space-3) var(--space-2);row-gap:var(--space-2)}.site-nav-links{order:3;flex-basis:100%;justify-content:space-between;gap:var(--space-3)}.site-nav .site-language{margin-left:auto}}
+@media(max-width:360px){.site-nav-links{gap:var(--space-2)}}
