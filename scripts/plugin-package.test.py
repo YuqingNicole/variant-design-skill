@@ -12,14 +12,26 @@ builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
 
 class PackageTests(unittest.TestCase):
-    def test_only_the_router_declares_a_skill(self):
-        # Codex and `npx skills` scan folders recursively. Sub-workflows with skill frontmatter
-        # would register as standalone skills whose relative paths break outside the router.
+    def test_only_the_router_is_named_skill_md(self):
+        # Codex and `npx skills` scan folders recursively, and Claude Code plugins register every
+        # skills/<name>/SKILL.md. Sub-workflows are named ROUTE.md so they never load as standalone
+        # skills whose relative paths break outside the router.
         root = Path(__file__).resolve().parent.parent
-        declared = sorted(str(p.relative_to(root)) for p in root.rglob('SKILL.md')
-                          if 'node_modules' not in p.parts and not {'.claude', '.agents', '.codex'} & set(p.parts)
-                          and p.read_text().startswith('---\nname:'))
-        self.assertEqual(declared, ['SKILL.md'])
+        named = sorted(str(p.relative_to(root)) for folder in ('skills', 'references', 'scripts', 'assets')
+                       for p in (root/folder).rglob('SKILL.md'))
+        self.assertEqual(named, [])
+        self.assertTrue((root/'SKILL.md').read_text().startswith('---\nname: variant-design\n'))
+
+    def test_claude_marketplace_lists_only_the_router(self):
+        root = Path(__file__).resolve().parent.parent
+        marketplace = json.loads((root/'.claude-plugin/marketplace.json').read_text())
+        self.assertFalse((root/'.claude-plugin/plugin.json').exists())
+        [entry] = marketplace['plugins']
+        self.assertEqual((marketplace['name'], entry['name'], entry['source'], entry['skills']), ('variant-design', 'variant-design', './', ['./']))
+        # Claude Code pins installs to this version, so a release that skips it never reaches users.
+        version = (root/'VERSION').read_text().strip()
+        self.assertEqual(entry['version'], version)
+        self.assertEqual(json.loads((root/'plugin/plugin.json').read_text())['version'], version)
 
     def test_reproducible_complete_package_runs_outside_repository(self):
         with tempfile.TemporaryDirectory(prefix='variant-plugin-') as directory:

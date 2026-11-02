@@ -94,9 +94,13 @@ function fetchLatestRelease() {
   });
 }
 
-function updateCommand() {
-  if (fs.existsSync(path.join(skillRoot, ".git"))) {
-    return `git -C ${JSON.stringify(skillRoot)} pull --ff-only`;
+function updateCommand(root = skillRoot) {
+  // Claude Code plugin installs live in <config>/plugins/cache/<marketplace>/<plugin>/<version>, without .git.
+  if (/[\\/]plugins[\\/]cache[\\/]variant-design[\\/]variant-design[\\/]/.test(root + path.sep)) {
+    return `claude plugin marketplace update variant-design && claude plugin update variant-design@variant-design`;
+  }
+  if (fs.existsSync(path.join(root, ".git"))) {
+    return `git -C ${JSON.stringify(root)} pull --ff-only`;
   }
   // Copies installed by `npx skills add` (and anything else without .git) update through the same CLI.
   return `npx skills update variant-design`;
@@ -116,6 +120,11 @@ function selfTest() {
       console.error(`check-update self-test failed: ${left} vs ${right}`);
       process.exit(1);
     }
+  }
+  const plugin = path.join(os.homedir(), ".claude/plugins/cache/variant-design/variant-design/1.1.0");
+  if (!updateCommand(plugin).startsWith("claude plugin marketplace update variant-design")) {
+    console.error("check-update self-test failed: Claude Code plugin install");
+    process.exit(1);
   }
   console.log("check-update self-test passed");
   process.exit(0);

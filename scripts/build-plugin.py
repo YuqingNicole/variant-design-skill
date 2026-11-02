@@ -34,7 +34,7 @@ def package_files(root=ROOT):
         relative = file.relative_to(root).as_posix()
         files[f'skills/variant-design/{relative}'] = file.read_bytes()
     # All paths inside the existing router remain relative to its own skill root.
-    required = ('SKILL.md', 'skills/variant-generate/SKILL.md', 'skills/shared/code-output.md',
+    required = ('SKILL.md', 'skills/variant-generate/ROUTE.md', 'skills/shared/code-output.md',
                 'references/workflow/project-context.md', 'scripts/variant-history.mjs', 'scripts/build-preview.mjs',
                 'scripts/react-preview.mjs', 'scripts/variant-integrate.mjs', 'scripts/quality-gate.mjs', 'scripts/artifact-verification.mjs',
                 'scripts/browser-verification.mjs', 'scripts/project-profile.mjs', 'scripts/design-task.mjs', 'references/workflow/project-discovery.md',

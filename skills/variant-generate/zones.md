@@ -1,4 +1,4 @@
-<!-- Part of the variant-generate route (../../SKILL.md → skills/variant-generate/SKILL.md). Read it when the user asks for a zone edit such as `B vary subtle — hero` or `zones A`. -->
+<!-- Part of the variant-generate route (../../SKILL.md → skills/variant-generate/ROUTE.md). Read it when the user asks for a zone edit such as `B vary subtle — hero` or `zones A`. -->
 
 # Zone edits
 

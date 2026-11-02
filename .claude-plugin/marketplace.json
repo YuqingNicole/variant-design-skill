@@ -1,0 +1,34 @@
+{
+  "name": "variant-design",
+  "description": "Variant Design: three comparable interface directions in your own project, with snapshots, undo and rollback.",
+  "owner": {
+    "name": "Yuqing Nicole",
+    "url": "https://github.com/YuqingNicole"
+  },
+  "plugins": [
+    {
+      "name": "variant-design",
+      "source": "./",
+      "description": "Turn one brief into three complete, comparable design directions (A/B/C) inside your project. Edit one region with snapshots and undo, then integrate the chosen direction with a rollback path. Needs Node.js 22 or later.",
+      "version": "1.1.0",
+      "author": {
+        "name": "Yuqing Nicole",
+        "url": "https://github.com/YuqingNicole"
+      },
+      "homepage": "https://variant-design-skill.vercel.app/en/docs",
+      "repository": "https://github.com/YuqingNicole/variant-design-skill",
+      "license": "MIT",
+      "keywords": [
+        "design",
+        "ui",
+        "frontend",
+        "design-system",
+        "variants"
+      ],
+      "category": "design",
+      "skills": [
+        "./"
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-<!-- Sub-workflow of the variant-design skill, reached through the route table in ../../SKILL.md. It has no skill frontmatter on purpose: agents that scan folders recursively (Codex, `npx skills`) must not register it as a standalone skill, because its paths are relative to the skill root. -->
+<!-- Sub-workflow of the variant-design skill, reached through the route table in ../../SKILL.md. It is named ROUTE.md and has no skill frontmatter on purpose: agents that scan for SKILL.md files (Codex, `npx skills`, Claude Code plugins) must not register it as a standalone skill, because its paths are relative to the skill root. -->
 
 > **variant-analyze**: Audit existing sites, extract design tokens, generate style-matched pages. Runs consistency checks and Visual Quality Audit (40-item anti-slop checklist, Quality Score XX/100). Triggers on: analyze my site, audit this, match this style, extract tokens, what's wrong with this design, migrate, add a page to my site, compare old new
 

@@ -1,4 +1,4 @@
-<!-- Sub-workflow of the variant-design skill, reached through the route table in ../../SKILL.md. It has no skill frontmatter on purpose: agents that scan folders recursively (Codex, `npx skills`) must not register it as a standalone skill, because its paths are relative to the skill root. -->
+<!-- Sub-workflow of the variant-design skill, reached through the route table in ../../SKILL.md. It is named ROUTE.md and has no skill frontmatter on purpose: agents that scan for SKILL.md files (Codex, `npx skills`, Claude Code plugins) must not register it as a standalone skill, because its paths are relative to the skill root. -->
 
 > **variant-generate**: Generate three distinct design directions from a brief, each with a distinct product trade-off; locked brand tokens stay identical. Then refine them with variation actions, zone edits, undo and export. Triggers on: design options for X, show me variations, give me UI directions, vary this design, change the style, remix colors, shuffle layout, design a dashboard/landing page/app/editorial
 

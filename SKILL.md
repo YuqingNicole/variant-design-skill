@@ -15,11 +15,11 @@ Choose one route and read its file. Each route file has a load map: read the oth
 
 | Request | Read |
 |---|---|
-| Three directions, a new page, variation actions, undo, pick, or export | `skills/variant-generate/SKILL.md` |
-| Tokens, `ds`, design-system confirmation, or page composition | `skills/variant-design-system/SKILL.md` |
-| A button, form, card, modal, navigation, or component library | `skills/variant-component/SKILL.md` |
-| Audit existing code, extract tokens, match a site, or plan migration | `skills/variant-analyze/SKILL.md` |
-| UX, accessibility, cognitive load, heuristics, research, or conversion review | `skills/variant-ux/SKILL.md` |
+| Three directions, a new page, variation actions, undo, pick, or export | `skills/variant-generate/ROUTE.md` |
+| Tokens, `ds`, design-system confirmation, or page composition | `skills/variant-design-system/ROUTE.md` |
+| A button, form, card, modal, navigation, or component library | `skills/variant-component/ROUTE.md` |
+| Audit existing code, extract tokens, match a site, or plan migration | `skills/variant-analyze/ROUTE.md` |
+| UX, accessibility, cognitive load, heuristics, research, or conversion review | `skills/variant-ux/ROUTE.md` |
 | Pitch deck or slides | `references/tasks/presentation.md` |
 | WeChat article layout | `references/tasks/wechat.md` |
 | Chinese cultural or Wu Xing brand color | `references/tasks/wuxing-colors.md` |
