@@ -4,3 +4,5 @@
 .docs-layout>*{min-width:0}.content-reading{overflow-wrap:anywhere}
 .docs-tabs{margin:20px 0 4px}.docs-layout h3{font-size:20px;margin:34px 0 10px}.docs-layout section>p>a{font-size:13px;color:#456133;text-underline-offset:4px}.docs-commands{border-bottom:1px solid #d5dccd;margin-top:14px}.docs-command{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:20px;border-top:1px solid #d5dccd;padding:14px 0}.docs-command code{font:12px/1.9 var(--font-mono);color:#33442a}.docs-command p{margin:0}
 @media(max-width:600px){.docs-command{grid-template-columns:1fr;gap:6px}}
+.guide-code{margin:18px 0;padding:16px 18px;overflow-x:auto;white-space:pre-wrap;font-size:13px;line-height:1.6;background:rgba(0,0,0,.04);border-radius:8px}.guide-list{display:grid;gap:34px;padding-block:20px 80px}.guide-list h2{margin:0 0 10px;font-size:26px}.guide-list a{color:inherit;text-underline-offset:4px}.guide-list p{margin:0;max-width:72ch}
+.guide-hero h1{font-size:clamp(34px,4.6vw,60px);line-height:1.15;text-wrap:balance}.guide-hero>p:not(.content-back){max-width:72ch}

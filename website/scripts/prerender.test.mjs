@@ -2,7 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
-import { escape, llms, llmsFull, loadReferences, renderSite, rss, sitemap } from './prerender.mjs';
+import { escape, llms, llmsFull, loadReferences, renderSite, rss, sitemap, withNoindex } from './prerender.mjs';
+import { importTs } from './ts-module.mjs';
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 
 test('every entry and category gets its own page with metadata and readable content', () => {
@@ -88,3 +89,29 @@ test('structured data cannot close its script tag', () => {
   const html = renderSite([{ ...entry, slug: 'tricky', title: ['</script><b>', 'x'] }], template, 'https://example.test').get('/d/tricky');
   assert.ok(!html.includes('</script><b>') && html.includes('\\u003c/script>\\u003cb>'));
 });
+
+test('experiments stay out of the sitemap and out of search results', () => {
+  const pages = renderSite(loadEntries().entries, template, 'https://example.test');
+  assert.ok(pages.get('/lab').includes('<meta name="robots" content="noindex">'));
+  assert.ok(!pages.get('/docs').includes('noindex'));
+  assert.ok(!sitemap(pages.keys(), 'https://example.test').includes('/lab<'));
+  const once = withNoindex(template);
+  assert.equal(withNoindex(once), once);
+});
+
+test('guides get their own pages, are listed for search and read in both languages', async () => {
+  const { guides } = await importTs(new URL('../src/guides-content.ts', import.meta.url).pathname), { entries } = loadEntries();
+  const rendered = Object.fromEntries(guides.map(g => [`/guides/${g.slug}`, `<main><h1>${g.slug}</h1></main>`]));
+  const pages = renderSite(entries, template, 'https://example.test', [], { guides, rendered });
+  const map = sitemap(pages.keys(), 'https://example.test'), docs = await importTs(new URL('../src/docs-content.ts', import.meta.url).pathname), text = llms(entries, docs, 'https://example.test', [], guides);
+  for (const g of guides) {
+    const html = pages.get(`/guides/${g.slug}`);
+    assert.ok(html.includes(`<main><h1>${g.slug}</h1></main>`) && html.includes('"@type":"Article"'), g.slug);
+    assert.ok(map.includes(`<loc>https://example.test/guides/${g.slug}</loc>`) && text.includes(`/guides/${g.slug})`));
+    const ids = g.sections.map(s => s.id);
+    assert.equal(new Set(ids).size, ids.length);
+    for (const value of [g.title, g.answer, ...g.sections.flatMap(s => [s.heading, ...s.body, ...(s.list ?? []), ...(s.code ? [s.code] : [])])]) assert.ok(value.zh && value.en, g.slug);
+    for (const s of g.sections) if (s.link && !s.link.href.startsWith('http')) assert.ok(pages.has(s.link.href) || ['/docs', '/inspiration'].includes(s.link.href) , s.link.href);
+  }
+});
+

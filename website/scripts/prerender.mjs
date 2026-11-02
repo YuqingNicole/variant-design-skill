@@ -23,8 +23,14 @@ const staticPages = {
   '/submit': ['投稿与授权 — Variant Design', 'Variant Design 方向库的收录、授权与撤下规则。'],
   '/pricing': ['价格 — Variant Design', 'Variant Design 的方案与价格。'],
   '/lab': ['实验室 — Variant Design', '工作台和画布等实验功能。'],
+  '/guides': ['指南 — Variant Design', '用 AI 做界面时常见问题的回答：怎么比较方向、怎么撤回修改、怎么避免千篇一律。'],
   '/skills': ['设计技能 — Variant Design', '只收录在一次性项目里实际跑过、并公开了记录的设计交付技能。'],
 };
+
+// Experiments stay reachable but out of search results (RFC-005 §3.3).
+const unlisted = new Set(['/lab']);
+const noindexTag = '<meta name="robots" content="noindex">';
+export const withNoindex = html => html.includes(noindexTag) ? html : html.replace('</head>', () => `    ${noindexTag}\n  </head>`);
 
 // The reference library lives in a TS module of plain JSON literals; read it without a TS loader.
 export function loadReferences() {
@@ -72,6 +78,10 @@ function entryBody(e) {
   return `<main><p><a href="/">作品</a> / <a href="/c/${e.category}">${escape(categoryNames[e.category] ?? e.category)}</a></p><h1>${escape(e.title[0])}</h1><p>${escape(e.summary[0])}</p><p>${escape(kindLabel(e))} · ${escape(e.credit.name)} · ${e.publishedAt}</p><p>任务：${escape(e.brief[0])}</p>${directions}${recommendation}</main>`;
 }
 
+function guideData(g, site) {
+  return { '@type': 'Article', headline: g.title.zh, alternativeHeadline: g.title.en, description: g.answer.zh, datePublished: g.publishedAt, inLanguage: 'zh-CN', url: `${site}/guides/${g.slug}`, author: { '@type': 'Person', name: 'Yuqing Nicole' }, about: { '@id': `${site}/#skill` } };
+}
+
 function page(template, { site, route, title, description, image, type = 'website', body = '', data }) {
   const url = site + (route === '/' ? '/' : route);
   const meta = [`<link rel="canonical" href="${escape(url)}">`, `<meta property="og:type" content="${type}">`, `<meta property="og:site_name" content="Variant Design">`,
@@ -86,10 +96,10 @@ function page(template, { site, route, title, description, image, type = 'websit
     .replace('</head>', () => `    ${meta}\n  </head>`)
     .replace('<div id="root"></div>', () => `<div id="root">${body}</div>`);
   if (!html.includes(`<title>${escape(title)}</title>`) || !html.includes(`content="${escape(description)}"`)) throw new Error(`Could not place metadata for ${route}`);
-  return html;
+  return unlisted.has(route) ? withNoindex(html) : html;
 }
 
-export function renderSite(entries, template, site = defaultSite, references = [], { docs, version = '' } = {}) {
+export function renderSite(entries, template, site = defaultSite, references = [], { docs, version = '', guides = [], rendered = {} } = {}) {
   const sorted = order(entries), pages = new Map();
   const library = 'Variant Design 方向库';
   pages.set('/', page(template, { site, route: '/', data: { '@graph': [{ '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/`, name: 'Variant Design', inLanguage: ['zh-CN', 'en'] }, skillData(site, version)] }, title: 'Variant Design — 设计导航，只收核对过的', description: '给用 AI 做产品的人：精选外部参考、实测过的设计技能和真实的 A/B/C 案例。参考写明来源、核对日期和还不知道的事，技能附实测记录，案例附产出记录。', body: `<main><h1>设计导航，只收核对过的。</h1><p>给用 AI 做产品的人：精选外部参考、实测过的设计技能和真实的 A/B/C 案例。参考写明来源、核对日期和还不知道的事，技能附实测记录，案例附产出记录。</p><nav><a href="/inspiration">浏览设计参考</a> · <a href="/skills">设计技能</a> · <a href="#works">A/B/C 案例</a> · <a href="/docs">安装与使用</a></nav><section><h2>精选技能：variant-design</h2><p>把一个任务做成 A/B/C 三个可比较的方向，支持局部修改、快照撤回和可回滚的接入。</p><a href="/d/pulse">查看 Pulse 案例与产出记录</a></section><section id="works"><h2>一个任务，三种方向。</h2>${sorted.map(card).join('')}</section></main>` }));
@@ -103,13 +113,15 @@ export function renderSite(entries, template, site = defaultSite, references = [
       image: { src: `/media/${e.slug}/${image.file}`, width: image.width, height: image.height, alt: image.alt[0] }, body: entryBody(e) }));
   }
   for (const r of references) pages.set(`/inspiration/${r.id}`, page(template, { site, route: `/inspiration/${r.id}`, title: `${r.name} — 灵感参考 — Variant Design`, description: `${r.name}：${r.focus.zh}。用在${r.application.zh}。`, body: referenceBody(r) }));
-  for (const [route, [title, description]] of Object.entries(staticPages)) pages.set(route, page(template, { site, route, title, description, ...(route === '/docs' && docs ? { body: docsBody(docs), data: docsData(docs, site) } : {}) }));
+  for (const [route, [title, description]] of Object.entries(staticPages)) pages.set(route, page(template, { site, route, title, description, body: rendered[route] ?? '', ...(route === '/docs' && docs ? { body: docsBody(docs), data: docsData(docs, site) } : {}) }));
+  for (const g of guides) pages.set(`/guides/${g.slug}`, page(template, { site, route: `/guides/${g.slug}`, type: 'article', title: `${g.title.zh} — Variant Design`, description: g.answer.zh, data: guideData(g, site), body: rendered[`/guides/${g.slug}`] ?? '' }));
   return pages;
 }
 
 // llms.txt (https://llmstxt.org): what the project is and where the answers live, in English for AI search.
-export function llms(entries, docs, site = defaultSite, references = []) {
+export function llms(entries, docs, site = defaultSite, references = [], guides = []) {
   const cases = order(entries).map(e => `- [${e.title[1]}](${site}/d/${e.slug}): ${e.summary[1]}`).join('\n');
+  const answers = guides.map(g => `- [${g.title.en}](${site}/guides/${g.slug}): ${g.answer.en}`).join('\n');
   return `# Variant Design
 
 > Variant Design is an open-source agent skill for Codex and Claude Code that turns one design brief into three distinct, comparable directions (A/B/C) inside your own project, with scoped edits, snapshot undo and an integration step you can roll back. Its website is a bilingual (Chinese/English) design navigation site: curated external references with sources and check dates, design skills that were actually run, and real A/B/C cases with their output records.
@@ -126,7 +138,7 @@ export function llms(entries, docs, site = defaultSite, references = []) {
 - [Install and get started](${site}/docs): prerequisites, install and verify, the first A/B/C run, compare/refine/undo commands, picking and integrating, FAQ.
 - [Repository and README](${repository}): source, skill files and helper scripts.
 
-## Cases
+${answers ? `## Guides\n\n${answers}\n\n` : ''}## Cases
 
 ${cases}
 
@@ -142,7 +154,7 @@ ${cases}
 `;
 }
 // The whole install guide as Markdown, English then Chinese.
-export function llmsFull(entries, docs, site = defaultSite, references = []) {
+export function llmsFull(entries, docs, site = defaultSite, references = [], guides = []) {
   const guide = lang => {
     const x = k => docs.text[k][lang], list = rows => rows.map(r => `- ${r[lang]}`).join('\n'), code = c => '```\n' + c + '\n```';
     const commands = rows => rows.map(([c, t]) => `- \`${typeof c === 'string' ? c : c[lang]}\`: ${t[lang]}`).join('\n');
@@ -153,11 +165,11 @@ export function llmsFull(entries, docs, site = defaultSite, references = []) {
       `## ${x('refine')}`, x('refineIntro'), commands(docs.refine), `## ${x('deliver')}`, commands(docs.deliver), x('integrate'), code(docs.prompts.integrate[lang]), `### ${x('handoff')}`, list(docs.handoff),
       `## ${x('more')}`, x('moreIntro'), commands(docs.otherUses), `## ${x('faq')}`, ...docs.faq.flatMap(([q, a]) => [`### ${q[lang]}`, a[lang]])].join('\n\n');
   };
-  return `${llms(entries, docs, site, references)}\n---\n\n${guide('en')}\n\n---\n\n${guide('zh')}\n`;
+  return `${llms(entries, docs, site, references, guides)}\n---\n\n${guide('en')}\n\n---\n\n${guide('zh')}\n`;
 }
 
 export function sitemap(routes, site = defaultSite) {
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...routes].map(r => `  <url><loc>${escape(site + (r === '/' ? '/' : r))}</loc></url>`).join('\n')}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...routes].filter(r => !unlisted.has(r)).map(r => `  <url><loc>${escape(site + (r === '/' ? '/' : r))}</loc></url>`).join('\n')}\n</urlset>\n`;
 }
 
 export function rss(entries, site = defaultSite) {
@@ -173,6 +185,9 @@ export function rss(entries, site = defaultSite) {
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
   const { importTs } = await import('./ts-module.mjs'), docs = await importTs(path.join(here, '../src/docs-content.ts'));
+  const { guides } = await importTs(path.join(here, '../src/guides-content.ts')), { renderPages } = await import('../.ssr/ssr-pages.js');
+  const rendered = renderPages();
+  for (const [route, html] of Object.entries(rendered)) if (!html.includes('<h1')) throw new Error(`Empty static render for ${route}`);
   const version = fs.readFileSync(path.join(here, '../../VERSION'), 'utf8').trim(), references = loadReferences();
   const dist = path.resolve(here, '../dist'), site = (process.env.SITE_URL || defaultSite).replace(/\/$/, '');
   const { entries, problems } = loadEntries();
@@ -180,17 +195,20 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   // The untouched shell stays available as app.html: the fallback for routes without their own page.
   const shell = path.join(dist, 'app.html');
   if (!fs.existsSync(shell)) fs.copyFileSync(path.join(dist, 'index.html'), shell);
-  const template = fs.readFileSync(shell, 'utf8'), pages = renderSite(entries, template, site, references, { docs, version });
+  const template = fs.readFileSync(shell, 'utf8').replace(`    ${noindexTag}\n`, ''), pages = renderSite(entries, template, site, references, { docs, version, guides, rendered });
   for (const [route, html] of pages) {
     const file = route === '/' ? path.join(dist, 'index.html') : path.join(dist, route.slice(1), 'index.html');
     fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, html);
   }
+  // The app shell answers every unknown path with 200, and previews and experiments are not landing pages.
+  const htmlIn = dir => fs.readdirSync(dir, { withFileTypes: true }).flatMap(f => f.isDirectory() ? htmlIn(path.join(dir, f.name)) : f.name.endsWith('.html') ? [path.join(dir, f.name)] : []);
+  for (const file of [shell, ...htmlIn(path.join(dist, 'variant-output')), ...htmlIn(path.join(dist, 'lab'))]) fs.writeFileSync(file, withNoindex(fs.readFileSync(file, 'utf8')));
   fs.cpSync(path.join(contentRoot, 'media'), path.join(dist, 'media'), { recursive: true });
   for (const entry of entries) fs.writeFileSync(path.join(dist, 'd', `${entry.slug}.json`), JSON.stringify(toCard(entry, site), null, 2) + '\n');
   fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap(pages.keys(), site));
   fs.writeFileSync(path.join(dist, 'feed.xml'), rss(entries, site));
-  fs.writeFileSync(path.join(dist, 'llms.txt'), llms(entries, docs, site, references));
-  fs.writeFileSync(path.join(dist, 'llms-full.txt'), llmsFull(entries, docs, site, references));
+  fs.writeFileSync(path.join(dist, 'llms.txt'), llms(entries, docs, site, references, guides));
+  fs.writeFileSync(path.join(dist, 'llms-full.txt'), llmsFull(entries, docs, site, references, guides));
   fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site}/sitemap.xml\n`);
   console.log(`Prerendered ${pages.size} routes (including reference details) and ${entries.length} direction cards for ${site}; sitemap.xml, feed.xml, llms.txt and robots.txt written.`);
 }
