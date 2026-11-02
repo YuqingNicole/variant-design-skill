@@ -21,8 +21,7 @@
 
 ## 3. 内容：选对手还没答好的问题
 
-- [ ] 回答页优先写问题 10（在自己仓库里撤回 Agent 的修改：git 和快照撤回的区别）和问题 9（带来源和核对日期的设计参考站）。这两个问题还没有人答好。已有 3 篇，见 `website/src/guides-content.ts`。
-- [ ] 【维护者】审阅 `/guides` 的英文。目前由代理撰写，已经发布在 `/en/guides/...`。
+- [ ] 【维护者】审阅 `/guides` 的英文（5 篇）。目前由代理撰写，已经发布在 `/en/guides/...`。
 - [ ] 对比页：Variant Design 和 Impeccable、Taste Skill、frontend-design 的区别（完整方向和撤回，对比元素级变体）。只用公开事实，不用对方的品牌素材；代理起草，【维护者】确认后发布。
 - [ ] `/skills` 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 `evals/run.mjs` 在一次性项目里跑 Impeccable、Taste Skill、UI UX Pro Max，公开记录后收录。发布涉及 Anthropic 技能的对比前，先由【维护者】确认条款。
 - [ ] 把 `CHANGELOG.md` 做成中英文的 `/changelog` 页面。
