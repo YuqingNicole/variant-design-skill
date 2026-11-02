@@ -1,4 +1,7 @@
+import { t, type Localized } from './i18n/localized';
 import type { DesignDirection, Language } from "./direction-engine";
+const m={exploreTheDirection:{zh:"开始探索",en:"Explore the direction"},
+ directionExportedFromVariant:{zh:"由 Variant Design 导出的方向",en:"Direction exported from Variant Design"}} satisfies Record<string,Localized>;
 
 export type WorkspaceAction = "generated" | "built" | "varied" | "remixed" | "mixed";
 
@@ -52,8 +55,8 @@ export function exportDirectionHtml(direction: DesignDirection, brief: string, l
   const thesis = escapeHtml(direction.thesis);
   const safeBrief = escapeHtml(brief);
   const [ink, paper, accent, pop] = direction.colors;
-  const cta = language === "zh" ? "开始探索" : "Explore the direction";
-  const label = language === "zh" ? "由 Variant Design 导出的方向" : "Direction exported from Variant Design";
+  const cta = t(m.exploreTheDirection,language);
+  const label = t(m.directionExportedFromVariant,language);
 
   return `<!doctype html>
 <html lang="${language === "zh" ? "zh-CN" : "en"}">

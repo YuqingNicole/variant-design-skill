@@ -8,7 +8,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const src = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../src');
 const patterns = {
-  ternaries: /\bzh\s*\?/g,                         // zh?'…':'…'
+  // zh?'…':'…' and language==='zh'?'…':'…'; a choice between language codes ('zh-CN', 'en') is not copy.
+  ternaries: /\bzh\s*\?|\b(?:language|lang|locale)\s*===?\s*['"](?:zh|en)['"]\s*\?(?!\s*['"](?:zh|en|zh-CN)['"]\s*:)/g,
   pairReads: /\[(?:ix|0|1)\]/g,                     // value[ix], value[0], value[1] on [zh, en] pairs (over-counts other arrays)
   languageState: /variant-language/g,               // pages reading the preference themselves
 };

@@ -1,3 +1,4 @@
+import { t as tl, type Localized } from './i18n/localized';
 import { useEffect, useRef, useState } from "react";
 import { BorderBeam } from "border-beam";
 import "@fontsource/libre-caslon-display/400.css";
@@ -19,6 +20,15 @@ import { landingHero } from "./landing-config";
 
 const repositoryUrl = "https://github.com/YuqingNicole/variant-design-skill";
 import { loadWorkspace, persistWorkspace, WorkspaceLifecycle, readPreference, writePreference } from "./workspace-lifecycle";
+const m={makeThisDirectionsVisual:{zh:"增强这个方向的视觉立场和辨识度，不要只是增加装饰。",en:"Make this direction's visual position stronger and more recognizable without adding decoration."},
+ redesignTheColorRoles:{zh:"重新设计配色角色，保持设计主张、内容和布局逻辑。",en:"Redesign the color roles while preserving the argument, content, and layout logic."},
+ menu:{zh:"菜单",en:"Menu"},
+ compareThisSite:{zh:"本站三版",en:"Compare this site"},
+ liveGenerationUnavailable:{zh:"在线生成暂不可用",en:"Live generation unavailable"},
+ compareThreeCompleteVersions:{zh:"先比较本站的三个完整方案，或安装技能在项目中使用。",en:"Compare three complete versions of this site, or install the skill in your project."},
+ theseAreRuleBased:{zh:"以下为规则生成的示例契约，尚未生成完整页面；它们不是上方本站三版的预览。",en:"These are rule-based example contracts, not generated pages or previews of the three site versions above."},
+ aiGeneratedDesignContracts:{zh:"AI 生成的设计契约，请先检查内容再构建页面。",en:"AI-generated design contracts. Review the content before building a page."},
+ retrySavingHistory:{zh:"重新保存历史",en:"Retry saving history"}} satisfies Record<string,Localized>;
 
 function swatchForeground(hex: string) {
   const value = hex.replace("#", "");
@@ -201,14 +211,12 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
     if (selectedIndex < 0 || !selectedDirection.html || isGenerating) return;
     const partner = directions[(selectedIndex + 1) % directions.length];
     const instruction = action === "varied"
-      ? (language === "zh" ? "增强这个方向的视觉立场和辨识度，不要只是增加装饰。" : "Make this direction's visual position stronger and more recognizable without adding decoration.")
+      ? (tl(m.makeThisDirectionsVisual,language))
       : action === "remixed"
-        ? (language === "zh" ? "重新设计配色角色，保持设计主张、内容和布局逻辑。" : "Redesign the color roles while preserving the argument, content, and layout logic.")
+        ? (tl(m.redesignTheColorRoles,language))
         : (() => {
             const { html: _html, ...partnerContract } = partner;
-            return language === "zh"
-              ? `保留当前方向的核心主张，借用这个相邻方向的布局与视觉系统：${JSON.stringify(partnerContract)}`
-              : `Keep the current direction's argument and borrow the layout and visual system from this adjacent direction: ${JSON.stringify(partnerContract)}`;
+            return tl({zh:`保留当前方向的核心主张，借用这个相邻方向的布局与视觉系统：${JSON.stringify(partnerContract)}`,en:`Keep the current direction's argument and borrow the layout and visual system from this adjacent direction: ${JSON.stringify(partnerContract)}`},language);
           })();
     const request = lifecycle.current.begin();
     setIsGenerating(true); setActiveTask("iterate"); setError(null); setStatusKey("building");
@@ -265,7 +273,7 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
         {!isVariantPreview ? <SiteHeader language={language} onLanguage={()=>{if(!isGenerating) switchLanguage()}}/> : <nav className="nav shell" aria-label={t.navLabel}>
           <a className="signature" href="#top" aria-label={t.homeLabel}><img src="/variant-mark.svg" width="32" height="32" alt=""/><span>Variant<br />Design</span></a>
           <div className="nav-index" aria-hidden="true">{t.issue}</div>
-          <details className="mobile-navigation"><summary>{language === "zh" ? "菜单" : "Menu"}</summary><div><a href="/variant-output/_compare.html">{language === "zh" ? "本站三版" : "Compare this site"}</a><a href="#palettes">{t.navPalettes}</a><a href="#directions">{t.navWork}</a><a href="#method">{t.navMethod}</a><a href="/pricing">{t.navPricing}</a><a href="#install">{t.installSkill}</a></div></details>
+          <details className="mobile-navigation"><summary>{tl(m.menu,language)}</summary><div><a href="/variant-output/_compare.html">{tl(m.compareThisSite,language)}</a><a href="#palettes">{t.navPalettes}</a><a href="#directions">{t.navWork}</a><a href="#method">{t.navMethod}</a><a href="/pricing">{t.navPricing}</a><a href="#install">{t.installSkill}</a></div></details>
           <div className="nav-links">
             <a href="#palettes">{t.navPalettes}</a><a href="#directions">{t.navWork}</a><a href="#method">{t.navMethod}</a><a href="/pricing">{t.navPricing}</a><a href={repositoryUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
             <button className="language-switch" type="button" onClick={switchLanguage} disabled={isGenerating} aria-label={t.switchLabel}>{t.switchText}</button>
@@ -285,11 +293,11 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
               <BorderBeam className="prompt-beam" size="line" colorVariant="mono" theme="dark" strength={0.9} active={activeTask === "generate" && !reducedMotion}>
                 <div className={`prompt-surface ${error ? "has-error" : ""}`}>
                   <textarea id="design-prompt" value={prompt} onChange={(event) => { setPrompt(event.target.value); if (error) setError(null); }} aria-busy={activeTask === "generate"} aria-invalid={Boolean(error)} aria-describedby={error ? "prompt-error" : undefined} rows={4} />
-                  <div className="prompt-footer"><span>{t.directionsCode}</span><button type="submit" disabled={isGenerating || !providerStatus?.configured}>{!providerStatus?.configured ? (language === "zh" ? "在线生成暂不可用" : "Live generation unavailable") : isGenerating ? t.working : statusKey === "done" ? t.regenerate : t.diverge}<span aria-hidden="true">→</span></button></div>
+                  <div className="prompt-footer"><span>{t.directionsCode}</span><button type="submit" disabled={isGenerating || !providerStatus?.configured}>{!providerStatus?.configured ? (tl(m.liveGenerationUnavailable,language)) : isGenerating ? t.working : statusKey === "done" ? t.regenerate : t.diverge}<span aria-hidden="true">→</span></button></div>
                 </div>
               </BorderBeam>
             </form>
-            <div className="workbench-status"><p id={error ? "prompt-error" : undefined} role="status" aria-live="polite" className={error ? "status-error" : ""}>{error ?? (!providerStatus?.configured ? (language === "zh" ? "先比较本站的三个完整方案，或安装技能在项目中使用。" : "Compare three complete versions of this site, or install the skill in your project.") : status)}</p><span className={providerStatus?.configured ? "provider-online" : "provider-offline"}>{providerStatus === null ? t.providerChecking : providerStatus.configured ? `${t.providerReady} / ${providerStatus.model ?? providerStatus.provider}` : t.providerOffline}</span></div>
+            <div className="workbench-status"><p id={error ? "prompt-error" : undefined} role="status" aria-live="polite" className={error ? "status-error" : ""}>{error ?? (!providerStatus?.configured ? (tl(m.compareThreeCompleteVersions,language)) : status)}</p><span className={providerStatus?.configured ? "provider-online" : "provider-offline"}>{providerStatus === null ? t.providerChecking : providerStatus.configured ? `${t.providerReady} / ${providerStatus.model ?? providerStatus.provider}` : t.providerOffline}</span></div>
           </div>
         </div>
         <div className="hero-marquee" aria-hidden="true">{t.marquee.map((item, index) => <span className="marquee-item" key={item}>{item}{index < t.marquee.length - 1 && <i>→</i>}</span>)}</div>
@@ -335,7 +343,7 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
             <div><p className="eyebrow">{t.directionEyebrow}</p><h2>{t.directionTitle[0]}<br /><em>{t.directionTitle[1]}</em></h2></div>
             <div className="heading-note"><span>{statusKey === "done" ? t.generatedFor : t.directionNote}</span><p>{statusKey === "done" ? generatedBrief : t.directionBody}</p></div>
           </header>
-          <p className="sample-disclosure">{statusKey === "ready" ? (language === "zh" ? "以下为规则生成的示例契约，尚未生成完整页面；它们不是上方本站三版的预览。" : "These are rule-based example contracts, not generated pages or previews of the three site versions above.") : (language === "zh" ? "AI 生成的设计契约，请先检查内容再构建页面。" : "AI-generated design contracts. Review the content before building a page.")}</p>
+          <p className="sample-disclosure">{statusKey === "ready" ? (tl(m.theseAreRuleBased,language)) : (tl(m.aiGeneratedDesignContracts,language))}</p>
           <div className="contact-sheet">
             {directions.map((direction, index) => <article className={`direction-card card-${index + 1} ${selectedDirectionId === direction.id ? "is-selected" : ""}`} key={`${direction.id}-${direction.name}`}>
               <div className="direction-meta"><span className="direction-id">{direction.id}</span><div><h3>{direction.name}</h3><p>{direction.layoutLabel}</p></div></div>
@@ -371,7 +379,7 @@ export default function App({ hero: suppliedHero }: { hero?: LandingHeroConfig }
             </div>
             </BorderBeam>
             <aside className="workspace-panel">
-              <section><p className="workspace-label">{t.workspaceActions}</p><div className="workspace-actions"><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.contract || Boolean(selectedDirection.html)} onClick={buildSelectedDirection}><span>01</span>{t.buildAction}<b>↗</b></button><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.html} onClick={() => pushDirection("varied")}><span>02</span>{t.varyAction}<b>↗</b></button><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.html} onClick={() => pushDirection("remixed")}><span>03</span>{t.remixAction}<b>↗</b></button><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.html} onClick={() => pushDirection("mixed")}><span>04</span>{t.mixAction}<b>↗</b></button></div><button className="workspace-export" type="button" disabled={!selectedDirection.html} onClick={exportSelectedDirection}>{t.exportAction}<span>↓</span></button>{hasUnsavedVersions && <button type="button" onClick={retrySave}>{language === "zh" ? "重新保存历史" : "Retry saving history"}</button>}<p className={`workspace-notice ${error ? "is-error" : ""}`} role="status" aria-live="polite">{error ?? workspaceNotice ?? "\u00a0"}</p></section>
+              <section><p className="workspace-label">{t.workspaceActions}</p><div className="workspace-actions"><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.contract || Boolean(selectedDirection.html)} onClick={buildSelectedDirection}><span>01</span>{t.buildAction}<b>↗</b></button><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.html} onClick={() => pushDirection("varied")}><span>02</span>{t.varyAction}<b>↗</b></button><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.html} onClick={() => pushDirection("remixed")}><span>03</span>{t.remixAction}<b>↗</b></button><button type="button" disabled={isGenerating || !providerStatus?.configured || !selectedDirection.html} onClick={() => pushDirection("mixed")}><span>04</span>{t.mixAction}<b>↗</b></button></div><button className="workspace-export" type="button" disabled={!selectedDirection.html} onClick={exportSelectedDirection}>{t.exportAction}<span>↓</span></button>{hasUnsavedVersions && <button type="button" onClick={retrySave}>{tl(m.retrySavingHistory,language)}</button>}<p className={`workspace-notice ${error ? "is-error" : ""}`} role="status" aria-live="polite">{error ?? workspaceNotice ?? "\u00a0"}</p></section>
               <section className="workspace-history"><p className="workspace-label">{t.historyTitle}</p>{workspaceHistory.length === 0 ? <p className="history-empty">{t.historyEmpty}</p> : <ol>{workspaceHistory.map((version, index) => <li key={version.id}><div><b>V{String(workspaceHistory.length - index).padStart(2, "0")}</b><span>{actionLabel(version.action, language)}</span><time dateTime={version.createdAt}>{new Intl.DateTimeFormat(language === "zh" ? "zh-CN" : "en", { hour: "2-digit", minute: "2-digit" }).format(new Date(version.createdAt))}</time></div><button type="button" onClick={() => restoreVersion(version)}>{t.restoreAction}</button></li>)}</ol>}</section>
             </aside>
           </div>

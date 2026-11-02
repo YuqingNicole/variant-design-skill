@@ -2,6 +2,7 @@ import { t, type Localized } from './i18n/localized';
 import { useEffect, useRef, useState } from "react";
 import type { Language } from "./direction-engine";
 import "./guided-demo.css";
+const msg={livePageThumbnail:{zh:"真实页面缩略预览",en:"live page thumbnail"}} satisfies Record<string,Localized>;
 const m={completeStep1First:{zh:"先完成第 1 步，以下操作针对当前项目新生成的方案。",en:"Complete step 1 first. The following action targets the newly generated project variants. "},
  copiedPasteIntoYour:{zh:"已复制，粘贴到项目的 Agent 对话中继续。",en:"Copied. Paste into your project's agent chat to continue."},
  clipboardUnavailableSelectAnd:{zh:"无法访问剪贴板，请在下方文本框中选择并复制指令。",en:"Clipboard unavailable. Select and copy the prompt below."},
@@ -63,7 +64,7 @@ function Preview({ id, language, expressive }: { id: Id; language: Language; exp
     return () => observer.disconnect();
   }, []);
   return <div className="demo-preview" ref={ref} style={{ height: 760 * scale }}>
-    <iframe src={previewUrl(id,language,expressive)} title={`${id} ${language === "zh" ? "真实页面缩略预览" : "live page thumbnail"}`} loading="lazy" tabIndex={-1} aria-hidden="true" style={{ transform: `scale(${scale})` }} />
+    <iframe src={previewUrl(id,language,expressive)} title={`${id} ${t(msg.livePageThumbnail,language)}`} loading="lazy" tabIndex={-1} aria-hidden="true" style={{ transform: `scale(${scale})` }} />
   </div>;
 }
 

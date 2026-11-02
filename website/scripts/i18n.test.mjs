@@ -45,3 +45,19 @@ test('dates, numbers and sorting come from the locale table and do not shift wit
   assert.equal(formatNumber(12480, 'en'), '12,480');
   assert.deepEqual(['item 10', 'Item 2', 'item 1'].sort(collator('en').compare), ['item 1', 'Item 2', 'item 10']);
 });
+
+test('the inventory counts every inline language choice of copy, not choices between language codes', async () => {
+  const fs = await import('node:fs'), os = await import('node:os'), path = await import('node:path');
+  const { inventory } = await import('./i18n-inventory.mjs');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'i18n-inventory-'));
+  fs.writeFileSync(path.join(dir, 'Page.tsx'), [
+    "const a = zh ? '保存' : 'Save';",
+    "const b = language === 'zh' ? '取消' : 'Cancel';",
+    'const c = language==="zh"?`共 ${n} 条`:`${n} items`;',
+    "const d = lang === 'en' ? 'Done' : '完成';",
+    "document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';",
+    "const next = language === 'zh' ? 'en' : 'zh';",
+  ].join('\n'));
+  try { assert.equal(inventory(dir).total.ternaries, 4); } finally { fs.rmSync(dir, { recursive: true }); }
+});
+
