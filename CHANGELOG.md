@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Install
+- Claude Code plugin marketplace: `claude plugin marketplace add YuqingNicole/variant-design-skill`, then `claude plugin install variant-design@variant-design`. The update check prints the plugin update commands for this install.
+- Sub-workflows are now named `skills/*/ROUTE.md` instead of `SKILL.md`, so Claude Code plugins, Codex and `npx skills` register only the router as a skill.
+
 ## 1.1.0 — 2026-10-27
 
 The skill now works inside an existing project from discovery to integration, and keeps the user's work safe at every step.

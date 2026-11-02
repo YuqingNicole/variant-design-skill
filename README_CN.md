@@ -124,11 +124,20 @@ npx skills add YuqingNicole/variant-design-skill -a claude-code -a codex
 
 除非设置 `DISABLE_TELEMETRY=1`，skills CLI 会把安装次数上报给 skills.sh。
 
+Claude Code 也可以通过本仓库的插件市场安装（已在 Claude Code 2.1.316 上验证）。在会话里输入 `/plugin marketplace add YuqingNicole/variant-design-skill`，效果和第一行相同：
+
+```bash
+claude plugin marketplace add YuqingNicole/variant-design-skill
+claude plugin install variant-design@variant-design
+```
+
+插件把完整目录作为一个技能加载，名字是 `variant-design:variant-design`。
+
 Claude Code 或其他本地 agent 同样需要完整目录；可以安装到对应技能位置，也可以克隆到工作区后让 agent 读取入口的绝对路径。Hermes/OpenClaw 的 `AGENTS.md` 应指向已安装的入口，而非粘贴入口文本。脚本需要文件访问权限和 Node.js。
 
 网页 Project 或 API 集成需要通过环境的文件检索和执行能力提供引用目录，仅粘贴提示词不能提供预览服务器和快照功能。
 
-可选更新检查最多每 24 小时运行一次，只提示可用发布，不自动更新。更新方法：Git 克隆安装运行 `git -C <安装路径> pull --ff-only`，用 `npx skills` 安装的运行 `npx skills update variant-design`。更新不影响项目里 `variant-output/` 的历史。
+可选更新检查最多每 24 小时运行一次，只提示可用发布，不自动更新。更新方法：Git 克隆安装运行 `git -C <安装路径> pull --ff-only`，用 `npx skills` 安装的运行 `npx skills update variant-design`，Claude Code 插件先运行 `claude plugin marketplace update variant-design`，再运行 `claude plugin update variant-design@variant-design`。更新不影响项目里 `variant-output/` 的历史。
 
 ## 生成 → 比较 → 选择 → 局部迭代 → 导出
 

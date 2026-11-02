@@ -22,6 +22,7 @@ Variant Design is an agent skill. It turns one brief into three comparable desig
 | `mcp/` | Local stdio MCP adapter over the same history helpers | Has its own `package.json` and tests |
 | `evals/` | Real agent runs on fixture projects, graded automatically | See `evals/README.md`. Runs cost model usage; the grader tests do not |
 | `plugin/` | Codex plugin manifest and release-readiness notes | Built by `scripts/build-plugin.py` |
+| `.claude-plugin/marketplace.json` | Claude Code plugin marketplace | Lists the repository root as one plugin whose only skill is the root `SKILL.md`. Its `version` pins installs, so bump it with `VERSION` (enforced by `plugin-package.test.py`) |
 | `docs/prd`, `docs/rfc` | Requirements and architecture, written in Chinese | GitHub Issues track status. Writing a PRD is not shipping it |
 | `docs/research/` | Dated dogfood records and competitor notes | Record evidence here; do not rewrite history |
 
@@ -94,7 +95,7 @@ node evals/run.mjs --agent claude --fixture pulse       # one real, graded agent
 - Deployments (Vercel project `variant-design-skill`): `master` is production at `https://variant-design-skill.vercel.app`; the `dev` branch is always deployed to `https://variant-design-skill-dev.vercel.app`, which sits behind Vercel Authentication (team members only, not indexed). Pull requests still target `master`. To try a change on dev before merging, merge its branch into `dev` and push; never force-push `dev`. After a release, bring `dev` back level with `master` by merging `master` into it. Every pull request also gets its own preview URL.
 - Other agent sessions may be working in this tree at the same time (for example on `mcp/`). Before committing, check `git status` and stage only the files you changed. Do not revert or reformat other people's in-progress work.
 - Never commit `.variant-work/`, `.verification/`, `.integrations/` from test projects, `website/.env`, or anything containing a user's project source.
-- `VERSION` follows semver with release-candidate tags (currently `1.1.0`). Change it only as part of a release.
+- `VERSION` follows semver with release-candidate tags (currently `1.1.0`). Change it only as part of a release, together with the versions in `plugin/plugin.json` and `.claude-plugin/marketplace.json`.
 
 ## Third-party products
 
