@@ -730,6 +730,9 @@ test('home leads with the inspiration feed, cases have their own page, and the s
  expect(raw).toContain('<title>Variant Design — 互联网上最好的设计灵感</title>');
  expect(raw).toContain('"@type":"WebSite"');expect(raw).not.toContain('"@type":"SoftwareSourceCode"');
  expect(await(await request.get('/skills')).text()).toContain('"@type":"SoftwareSourceCode"');
+ // The static /cases page keeps the site chrome, including the font license note the footer must carry.
+ const cases=await(await request.get('/cases')).text();
+ expect(cases).toContain('class="site-nav');expect(cases).toContain('href="/fonts/LICENSES.txt"');expect(cases).toContain('一个任务，三种方向。');
  await page.goto('/');
  await expect(page.locator('h1')).toHaveText('互联网上最好的设计灵感。');
  await expect(page.locator('.insp-title')).toContainText('每条都附出处和我们写的笔记');
@@ -740,6 +743,8 @@ test('home leads with the inspiration feed, cases have their own page, and the s
  await expect(page.getByRole('button',{name:'Best practice',exact:true})).toHaveAttribute('aria-pressed','true');
  for(const [group,links] of [['Variant Design 技能',['/docs','/about','/pricing','/changelog','/lab']],['资源',['/skills','/guides','/submit']]])
   for(const href of links)await expect(page.getByRole('navigation',{name:group}).locator(`a[href="${href}"]`)).toHaveCount(1);
+ await page.goto('/?utm_source=practice');
+ await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a',{hasText:'动效视频'})).not.toHaveAttribute('aria-current','page');
  await page.goto('/inspiration?topic=saas-home');
  await expect(page).toHaveURL(/:\d+\/\?topic=saas-home$/);await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(10);
  await page.goto('/cases');
