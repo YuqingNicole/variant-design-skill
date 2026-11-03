@@ -246,7 +246,7 @@ Open the preview immediately in browser.
 
 ### Step 1b — Design system from a picked direction (`pick B`)
 
-A picked direction is a page, not yet a system. After `select` succeeds (`references/workflow/history.md`), turn B into a complete design system the rest of the product can build on. Do not generate one for a direction the user has not picked, and do not confirm it for them.
+A picked direction is a page, not yet a system. After `select` succeeds (`references/workflow/history.md`), turn B into a complete design system the rest of the product can build on. Do not generate one for a direction the user has not picked, and do not confirm it for them. If a system the skill generated is already confirmed (`designSystem.file` is `variant-output/design-system.css`), the directions were built on it: skip this step and say the system stays locked. Never overwrite a confirmed file: when the target path is already `designSystem.file` or listed in `designSystem.extensions`, write the candidate to `variant-output/design-system.candidate.css` and move it into place only on `ds confirm`.
 
 1. **Collect what B actually uses.** Read B's owned files and `variants.B.tokens`: every color, font, size, weight, line height, spacing value, radius, shadow, duration and easing in the rendered page, and the components it contains (buttons, inputs, cards, tables, navigation, badges, charts) with the states it implements.
 2. **Write `variant-output/design-system.css`** with every section of Step 1: primitives, semantic colors, typography scale, spacing, radius, elevation, motion and z-index. B's values seed each section. Derive the rest from B's character: the full ramps around its colors, the type steps between its sizes, and the states B never shows (hover, active, focus, disabled, error, empty, loading). Check text and interactive contrast against `references/design-system/color-and-contrast.md` and fix failing pairs in the system rather than copying them. List each B value that the system normalizes (`17px → --text-base`) in a comment at the top of the file.
@@ -295,6 +295,7 @@ When design system is confirmed, Component Mode runs on a tighter brief:
 - All colors from `design-system.css` semantic tokens — **no new colors**
 - All spacing from `design-system.css` spacing scale — **no new values**
 - Typography from `design-system.css` type tokens
+- Under a brand-file lock, "`design-system.css`" above means the brand file (`designSystem.file`) for colors and typography, plus the files in `designSystem.extensions` for the layers they add
 - Add to component registry in `.variant-context.json`:
 
 ```json
@@ -325,7 +326,7 @@ Assembles registered components into page layouts. **3 structural variations** �
 
 **Process:**
 1. Read `.variant-context.json` to get component registry
-2. Read `design-system.css` for tokens
+2. Read `design-system.css` for tokens (under a brand-file lock: `designSystem.file` and every file in `designSystem.extensions`)
 3. For each variation, invent a different **structural arrangement**:
    - Variation A: canonical / expected layout for this page type
    - Variation B: unconventional hierarchy (e.g. sidebar-dominant, reversed stack)
