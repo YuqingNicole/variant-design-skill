@@ -71,7 +71,8 @@ export function skillReading(transcript, project, install = ['.claude', '.agents
   // Only what the agent asked for (reads and commands, not files it wrote), with skill-relative paths after `cd` into the install.
   let asked = events.flatMap(e => e.type === 'assistant' ? (e.message?.content ?? []).filter(c => c.type === 'tool_use' && !['Write', 'Edit', 'MultiEdit'].includes(c.name)).map(c => JSON.stringify(c.input)) : e.type === 'item.started' && e.item?.type === 'command_execution' ? [e.item.command] : []).join('\n');
   // Agents often alias the install (`S=.claude/skills/variant-design; cat $S/SKILL.md`).
-  for (const dir of variants(install)) asked = asked.replaceAll(dir + '/', 'skills/variant-design/');
+  // An install outside the project reads as the skill folder, so its aliases (`S=/path/to/marketplace`) expand below.
+  for (const dir of variants(install)) asked = asked.replaceAll(dir, 'skills/variant-design');
   for (const [, name, value] of asked.matchAll(/\b(\w+)=["']?([^\s"';]*skills\/variant-design)\b/g)) asked = asked.replaceAll(`\${${name}}`, value).replaceAll(`$${name}`, value);
   const files = new Set(events.some(e => e.type === 'assistant' && e.message?.content?.some(c => c.type === 'tool_use' && c.name === 'Skill')) ? ['SKILL.md'] : []);
   for (const m of asked.matchAll(/(?:skills\/variant-design\/|(?<![\w./-]))((?:SKILL\.md)|(?:skills|references)\/[\w./-]+?\.md)/g)) if (fs.existsSync(path.join(install, m[1]))) files.add(m[1]);

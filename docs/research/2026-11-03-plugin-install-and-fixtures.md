@@ -30,7 +30,16 @@ ledger 失败的原因：品牌字体和颜色都保留了，但 agent 把 `app/
 
 ## Claude Code：经插件安装跑 pulse
 
-（运行中，结果补在本节。）
+Claude Code 2.1.316，`node evals/run.mjs --agent claude --fixture pulse --install plugin`。这次运行开始时 ledger 的修复还没写入，所以用的是修复前的技能文本。
+
+| Run | 结果 | 推荐 | 读入技能文本 | 用量 |
+|---|---|---|---|---|
+| pulse · claude（插件安装） | 7/7 | A | 8,506 词（8 个文件） | $1.79，36 轮，430 s |
+
+- 第一次工具调用就是 `Skill variant-design:variant-design`，之后经 marketplace 目录读入 `skills/variant-generate/ROUTE.md` 与各参考文件。读入的文件和字数与上一轮项目级安装的 Claude 运行完全一致（8,506 词）。
+- runner 内存里还是旧版 grader（指向插件 cache），所以运行结束时判 `skill-under-test` 失败、读入 643 词。改用新 grader 重新评分后为 7/7。字数之所以少算，是因为 agent 用 `S=<marketplace 绝对路径>` 起别名，旧代码只展开以 `skills/variant-design` 结尾的别名。grader 现在先把安装目录替换成 `skills/variant-design` 再展开别名，并加了测试。
+- 跑完后 `known_marketplaces.json` 里没有 `variant-design`，`~/.claude/plugins/cache/` 下也没有 `variant-design`。
+- 重新评分一次要数分钟（delivery check 会真实构建预览），`grade.mjs` 在这里没有挂起。
 
 ## 未覆盖
 

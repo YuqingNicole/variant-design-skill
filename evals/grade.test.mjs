@@ -108,4 +108,8 @@ test('a Claude Code plugin install outside the project counts as the copy under 
   fs.mkdirSync(marketplace, { recursive: true });
   fs.writeFileSync(local, JSON.stringify({ type: 'user', message: { content: [{ type: 'text', text: `Base directory for this skill: ${marketplace}` }] } }) + '\n' + tool('Read', { file_path: `${marketplace}/skills/variant-generate/ROUTE.md` }));
   assert.deepEqual(skillCopies(local, dir, marketplace), { project: 2, other: [] });
+  fs.mkdirSync(path.join(marketplace, 'skills/variant-generate'), { recursive: true });
+  fs.writeFileSync(path.join(marketplace, 'skills/variant-generate/ROUTE.md'), 'four five');
+  fs.appendFileSync(local, '\n' + tool('Bash', { command: `S=${marketplace}; cat $S/skills/variant-generate/ROUTE.md` }));
+  assert.deepEqual(skillReading(local, dir, marketplace).files, ['skills/variant-generate/ROUTE.md']);
 });
