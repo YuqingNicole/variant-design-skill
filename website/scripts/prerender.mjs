@@ -19,7 +19,7 @@ const order = entries => [...entries].sort((a, b) => Number(b.featured) - Number
 const staticPages = {
   '/about': ['关于 Variant Design', '一份需求，在你的项目里做出三个能运行的方向：任务、数据和功能相同，取舍不同。局部修改先存快照，可以撤回，不会覆盖你没看过的改动。'],
   '/docs': ['安装与开始使用 — Variant Design', '安装技能，确认可用，然后在你的项目里走完一次：生成、比较、试改、撤回、接入。'],
-  '/inspiration': ['灵感参考 — Variant Design', '94 个外部设计参考，只附我们自己的分析和原站链接。'],
+  '/inspiration': ['灵感参考 — Variant Design', '95 个外部设计参考，只附我们自己的分析和原站链接。'],
   '/submit': ['投稿与授权 — Variant Design', 'Variant Design 方向库的收录、授权与撤下规则。'],
   '/pricing': ['价格 — Variant Design', 'Variant Design 的方案与价格。'],
   '/sponsor': ['赞助 — Variant Design', '品牌赞助 Variant Design 的方式与规则：明确标注，与编辑精选分开。'],
