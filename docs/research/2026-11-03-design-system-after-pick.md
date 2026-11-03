@@ -26,6 +26,17 @@
 - 不足：品牌里没有红色，所以错误和警告色都映射到正文色 `--color-ink`，只靠文字和图标区分（文件里写明了“never color alone”）。这是品牌本身的限制，技能没有擅自加颜色；要不要补语义色，应该由用户决定。下一步可以在报告里明确提出这个问题。
 - ledger 是 Next 项目，`react-preview.mjs --static` 因缺少 Vite、npm 访问网络失败而没成功，agent 改用 Next 静态导出生成了预览。
 
+## token 一致性检查（同日补充）
+
+`delivery-check` 新增两项：品牌锁定时读取 `designSystem.extensions`（扩展重定义品牌变量算错误）；系统确认后，间距、字号、圆角不在刻度上的值（CSS 和 JSX 样式对象都查，`clamp()`、`calc()`、`var()` 跳过）记为警告，并给出最接近的 token。
+
+在真实产出上试：用 Codex 重新生成 harbor（6/6 通过，推荐 A，28.3 万 token，219 s），再 `pick B`，然后在副本里手动把系统标成已确认（`source: "B"`）后运行检查：
+
+- 第一版把 A、C 也拿来对照 B 的系统：A 有 7 个颜色和 19 个长度不在系统里，C 有 8 个颜色，全是噪音，因为 A、C 是系统出现之前的探索。改为：系统记录了 `source` 时只检查那个方向。
+- 改后只剩一条有用的警告：B 有 19 个长度不在刻度上（例如 `13px (nearest --text-xs 12px)`），提示 `apply ds B` 会换成 token。B 的颜色没有警告，因为系统保留了 B 的原色。
+- 网站自己的 `website/variant-output/`（已确认的 `src/design-system.css`，18 个刻度 token）新旧检查都是 0 条警告：那三个方向用的是网站的 class，没有内联长度。
+- 这次 `pick B` 写入了 `designSystem: {confirmed: false}`，而 Step 1b 要求不改 `designSystem`。不会造成锁定（检查只认 `confirmed: true`），但和说明不符；Step 1b 补了“不要写草稿条目”。
+
 ## 未覆盖
 
 - 只用了 Codex，Claude Code 和 dsh 没跑这一步。

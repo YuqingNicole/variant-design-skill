@@ -101,7 +101,7 @@ node <skill-root>/scripts/quality-gate.mjs variant-output --strict
 node <skill-root>/scripts/delivery-check.mjs variant-output
 ```
 
-Scan only the current deliverables (name the files when the directory holds older output). Inspect quality-gate findings in context and fix confirmed ones. Fix every delivery-check error: missing or shared files, empty or repeated comparisons, a missing task contract or recommendation, or a changed locked font or color. A `selectedVariant` warning means a direction was selected without the user. Then review the rendered pages with `references/workflow/quality-baseline.md`: hierarchy, distinctness, responsive behavior and working interactions.
+Scan only the current deliverables (name the files when the directory holds older output). Inspect quality-gate findings in context and fix confirmed ones. Fix every delivery-check error: missing or shared files, empty or repeated comparisons, a missing task contract or recommendation, a changed locked font or color, or a design-system extension that redefines a brand variable. Under a confirmed system, colors and lengths outside its tokens are warnings: replace them with tokens or say why. A `selectedVariant` warning means a direction was selected without the user. Then review the rendered pages with `references/workflow/quality-baseline.md`: hierarchy, distinctness, responsive behavior and working interactions.
 
 When recording version-bound runtime checks, use `references/workflow/artifact-verification.md`: fill the browser plan from task expectations, and retain unverified items explicitly. For edits, compare pre-edit and post-edit observations.
 
