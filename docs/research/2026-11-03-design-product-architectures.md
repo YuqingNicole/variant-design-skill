@@ -28,11 +28,11 @@ RFC-006 的依据。只读官方公开页面（文档、价格页、博客、更
 1. **设计系统是给代理用的上下文，不只是 token。** v0 的 skill、Magic Patterns 的规则、Stitch 的 DESIGN.md、Builder 的索引都把确切的值和使用规则放在一起。
 2. **约束靠核对来执行。** v0 不用来源里查不到的东西，Claude Design 出结果前先自查，Builder 有 Strict Mode。
 3. **“从一个选定的生成方向提炼完整设计系统”没有任何公开页面写过。** 已有的提炼都从导入开始：Claude Design 从代码和设计文件，Stitch 从网址。
-4. **DTCG 用来交换，不用来工作。** 工作格式都是 CSS 变量或 Tailwind。
+4. **DTCG 用来交换，不用来工作。** 页面直接引用的格式是 CSS 变量或 Tailwind；Stitch 的 DESIGN.md 另用 YAML token 给代理读取。
 5. **多方案少见，也不成体系。** 没有哪家写明了结构化的 A/B/C 比较和明确的选定步骤。
 6. **撤销基本是线性版本历史。** 没有哪家按“一次请求”撤销，也没有哪家说明修改之前会检查用户有没有动过。
 7. **交接走 GitHub PR 和 MCP。**
-8. **免费额度按天计。** 见表格最后一列；手动编辑常常不扣点。
+8. **免费额度的计量周期不统一。** v0、Figma、Lovable、Bolt、Builder 按天计（多数还有月上限）；Magic Patterns 按月，Paper 按周，Subframe 按项目数。见表格最后一列；手动编辑常常不扣点。
 
 ## 未核实
 
