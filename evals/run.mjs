@@ -20,7 +20,7 @@ const out = path.resolve(opt('--out', path.join(os.tmpdir(), `variant-evals-${ne
 const timeoutMs = Number(opt('--timeout-min', 25)) * 60_000, jobs = Number(opt('--jobs', 3));
 const shipped = /^(SKILL\.md|VERSION|skills\/|references\/|assets\/|scripts\/(?!.*\.test\.)[^/]+\.mjs$)/;
 // Where each CLI discovers a project-level skill; `npx skills add` uses the same folders.
-const installDir = { claude: '.claude/skills/variant-design', codex: '.agents/skills/variant-design' };
+const installDir = { claude: '.claude/skills/variant-design', codex: '.agents/skills/variant-design', dsh: '.agents/skills/variant-design' };
 const viaPlugin = opt('--install', 'project') === 'plugin';
 const claudeConfig = process.env.CLAUDE_CONFIG_DIR ?? path.join(os.homedir(), '.claude');
 const pluginCache = path.join(claudeConfig, 'plugins/cache/variant-design');
@@ -63,6 +63,8 @@ function command(agent, prompt, dir) {
   if (agent === 'claude') return ['claude', ['-p', '--dangerously-skip-permissions', '--setting-sources', 'project,local', '--output-format', 'stream-json', '--verbose', prompt]];
   // --ignore-user-config, --ignore-rules and hooks off keep the runner's own Codex setup (MCP servers such as Computer Use,
   // plugin marketplaces, hooks, exec rules) out of the run; --ephemeral keeps runs out of the session history. Login still works.
+  // DeepSeek Harness: the shipped headless profile answers one task; --json writes run events.
+  if (agent === 'dsh') return ['dsh', ['headless', '--json', prompt]];
   return ['codex', ['exec', '--skip-git-repo-check', '-s', 'workspace-write', '-c', 'approval_policy="never"', '-c', 'features.hooks=false', '--ignore-user-config', '--ignore-rules', '--ephemeral', '--json', '-o', path.join(dir, '..', `${path.basename(dir)}.last.txt`), prompt]];
 }
 

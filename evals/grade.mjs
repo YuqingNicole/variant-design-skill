@@ -69,12 +69,12 @@ export function skillReading(transcript, project, install = ['.claude', '.agents
   if (!transcript || !fs.existsSync(transcript) || !install) return null;
   const events = fs.readFileSync(transcript, 'utf8').split('\n').flatMap(l => { try { return [JSON.parse(l)]; } catch { return []; } });
   // Only what the agent asked for (reads and commands, not files it wrote), with skill-relative paths after `cd` into the install.
-  let asked = events.flatMap(e => e.type === 'assistant' ? (e.message?.content ?? []).filter(c => c.type === 'tool_use' && !['Write', 'Edit', 'MultiEdit'].includes(c.name)).map(c => JSON.stringify(c.input)) : e.type === 'item.started' && e.item?.type === 'command_execution' ? [e.item.command] : []).join('\n');
+  let asked = events.flatMap(e => e.type === 'assistant' ? (e.message?.content ?? []).filter(c => c.type === 'tool_use' && !['Write', 'Edit', 'MultiEdit'].includes(c.name)).map(c => JSON.stringify(c.input)) : e.type === 'item.started' && e.item?.type === 'command_execution' ? [e.item.command] : e.type === 'tool_call' && !['write', 'edit'].includes(e.tool) ? [JSON.stringify(e.input)] : []).join('\n');
   // Agents often alias the install (`S=.claude/skills/variant-design; cat $S/SKILL.md`).
   // An install outside the project reads as the skill folder, so its aliases (`S=/path/to/marketplace`) expand below.
   for (const dir of variants(install)) asked = asked.replaceAll(dir, 'skills/variant-design');
   for (const [, name, value] of asked.matchAll(/\b(\w+)=["']?([^\s"';]*skills\/variant-design)\b/g)) asked = asked.replaceAll(`\${${name}}`, value).replaceAll(`$${name}`, value);
-  const files = new Set(events.some(e => e.type === 'assistant' && e.message?.content?.some(c => c.type === 'tool_use' && c.name === 'Skill')) ? ['SKILL.md'] : []);
+  const files = new Set(events.some(e => (e.type === 'assistant' && e.message?.content?.some(c => c.type === 'tool_use' && c.name === 'Skill')) || (e.type === 'tool_call' && e.tool === 'skill')) ? ['SKILL.md'] : []);
   for (const m of asked.matchAll(/(?:skills\/variant-design\/|(?<![\w./-]))((?:SKILL\.md)|(?:skills|references)\/[\w./-]+?\.md)/g)) if (fs.existsSync(path.join(install, m[1]))) files.add(m[1]);
   const words = [...files].reduce((sum, f) => sum + fs.readFileSync(path.join(install, f), 'utf8').split(/\s+/).filter(Boolean).length, 0);
   return { files: [...files].sort(), words };
@@ -85,7 +85,8 @@ export function usage(transcript) {
   const events = fs.readFileSync(transcript, 'utf8').split('\n').flatMap(l => { try { return [JSON.parse(l)]; } catch { return []; } });
   const result = events.findLast(e => e.type === 'result');
   if (result) return { costUsd: result.total_cost_usd, turns: result.num_turns, durationSec: Math.round((result.duration_ms ?? 0) / 1000) };
-  const tokens = events.filter(e => e.type === 'turn.completed').reduce((sum, e) => sum + (e.usage?.input_tokens ?? 0) + (e.usage?.output_tokens ?? 0), 0);
+  // Codex reports per turn; DeepSeek Harness per model step (totalTokens includes cache reads, as Codex's input_tokens does).
+  const tokens = events.reduce((sum, e) => sum + (e.type === 'turn.completed' ? (e.usage?.input_tokens ?? 0) + (e.usage?.output_tokens ?? 0) : e.type === 'status' && e.phase === 'step_end' ? e.usage?.totalTokens ?? 0 : 0), 0);
   return tokens ? { tokens } : {};
 }
 

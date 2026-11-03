@@ -7,6 +7,9 @@ export const changelogZh: Record<string, { title?: string; blocks: string[] }> =
       '安装',
       'Claude Code 插件市场：先运行 `claude plugin marketplace add YuqingNicole/variant-design-skill`，再运行 `claude plugin install variant-design@variant-design`。用这种方式安装时，更新检查会给出插件的更新命令。',
       '子流程文件从 `SKILL.md` 改名为 `skills/*/ROUTE.md`，所以 Claude Code 插件、Codex 和 `npx skills` 都只会把入口注册为技能。',
+      'DeepSeek Harness（`dsh`）会在 `~/.agents/skills/variant-design` 或项目的 `.agents/skills` 里找到技能，也就是 `npx skills add` 使用的文件夹。',
+      '品牌锁定',
+      '品牌由项目自己的文件规定时（例如 `app/globals.css`），技能直接登记这个文件，不再把副本锁定在 `variant-output/` 里。',
     ],
   },
   '1.1.0': {
