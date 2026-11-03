@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { localFile, readContext } from './variant-history.mjs';
+import { contrastIssues } from './ds-check.mjs';
 
 const ids = ['A', 'B', 'C'];
 const keys = ['optimizes', 'tradeoff', 'bestFor'];
@@ -111,6 +112,8 @@ export function checkDelivery(root = 'variant-output', { project = path.dirname(
       } catch (error) { errors.push(`Design system extension: ${error.message}`); }
     }
     const system = [dsSource ?? '', ...extensions].join('\n');
+    // The user confirmed this system, and their constraints outrank accessibility suggestions: report, do not block.
+    for (const i of contrastIssues([system])) warnings.push(`Design system pair ${i.text} on ${i.surface} is ${i.ratio}:1, below ${i.min}:1 for text; raise it with ds edit or say why it stays`);
     const scale = [...cssVars(system)].flatMap(([name, value]) => { const n = px(value), kind = /text|font/.test(name) ? 'text' : /radius/.test(name) ? 'radius' : /space|gap/.test(name) ? 'space' : null; return n != null && kind ? [{ name, px: n, kind }] : []; });
     const locked = (ds.fonts ?? []).map(f => first(f).toLowerCase());
     const dsHexes = new Set(dsSource ? hexes(system) : []);

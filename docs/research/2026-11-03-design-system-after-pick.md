@@ -50,6 +50,14 @@
 
 逐组看过，没有分错类型的 token。没有把导出文件导入 Figma 验证；Figma 只支持 DTCG 的部分类型（研究记录 `2026-11-03-design-product-architectures.md`），这一步还要人在 Figma 里试。
 
+## 对比度检查（同日补充）
+
+`scripts/ds-check.mjs` 按 token 名字配对（`text`/`ink`/`fg` 对 `bg`/`surface`/`paper`/`canvas`，`on-X` 对 `X`），按 WCAG 2 相对亮度算对比度，低于 4.5:1 报出；半透明颜色跳过，OKLCH 经 OKLab 换算。测试里的两个期望值先是估算的，跑出来不一致后手算核对（`#777` 对 `#f2f2f2` 为 4.0:1，白色对 `#e85d04` 为 3.50:1），确认代码正确、改了测试。
+
+真实输入：Codex 为 harbor 提炼的系统找到 11 组，最低是 `--color-text-muted` 在 `--color-surface-2` 上 4.62:1，全部通过；网站自己的系统找到 3 组，全部通过。局限：只认名字里带这些词的 token，网站的 `--color-muted` 不在检查范围内，所以 Step 1b 要求按这种方式命名。
+
+已确认系统的不合格组合在 `delivery-check` 里是警告不是错误：用户确认过的系统按规则优先级（用户约束高于无障碍建议）不阻断，但必须报出来。
+
 ## 未覆盖
 
 - 只用了 Codex，Claude Code 和 dsh 没跑这一步。
