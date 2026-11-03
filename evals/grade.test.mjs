@@ -74,6 +74,9 @@ test('the transcript shows which skill copy ran, and what it cost', () => {
   const codex = path.join(dir, '..', 'codex.jsonl');
   fs.writeFileSync(codex, [{ type: 'turn.completed', usage: { input_tokens: 70000, output_tokens: 6000 } }].map(e => JSON.stringify(e)).join('\n'));
   assert.deepEqual(usage(codex), { tokens: 76000 });
+  const dsh = path.join(dir, '..', 'dsh.jsonl');
+  fs.writeFileSync(dsh, [{ type: 'status', phase: 'step_end', usage: { totalTokens: 12000 } }, { type: 'status', phase: 'step_end', usage: { totalTokens: 3000 } }].map(e => JSON.stringify(e)).join('\n'));
+  assert.deepEqual(usage(dsh), { tokens: 15000 });
 });
 
 test('skill reading counts the files an agent asked for, through relative paths and aliases', () => {
@@ -87,6 +90,10 @@ test('skill reading counts the files an agent asked for, through relative paths 
   assert.deepEqual(skillCopies(transcript, dir), { project: 1, other: [] });
   fs.appendFileSync(transcript, '\n' + tool('Bash', { command: 'cd .claude/skills/variant-design && cat SKILL.md skills/variant-generate/ROUTE.md' }) + '\n' + tool('Write', { file_path: 'brief.json', content: 'see references/workflow/never-read.md' }));
   assert.deepEqual(skillReading(transcript, dir).words, 5);
+  // DeepSeek Harness events: its skill tool loads SKILL.md; reads and shell commands count, writes do not.
+  const dsh = path.join(dir, '..', path.basename(dir) + '-dsh.jsonl'), call = (tool, input) => JSON.stringify({ type: 'tool_call', tool, input });
+  fs.writeFileSync(dsh, [call('skill', { name: 'variant-design' }), call('read', { file_path: `${install}/skills/variant-generate/ROUTE.md` }), call('write', { file_path: 'x.md', content: 'references/workflow/never-read.md' })].join('\n'));
+  assert.deepEqual(skillReading(dsh, dir), { files: ['SKILL.md', 'skills/variant-generate/ROUTE.md'], words: 5 });
 });
 
 test('a Claude Code plugin install outside the project counts as the copy under test; other versions do not', () => {

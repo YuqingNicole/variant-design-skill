@@ -85,7 +85,7 @@ node evals/run.mjs --agent claude --fixture pulse       # one real, graded agent
 - Report only checks that actually ran. Never claim WCAG compliance, browser coverage, a quality score or marketplace availability from inspection alone. Static scans and HTTP 200 do not prove that a page renders correctly.
 - Behavior changes need a regression test: unit tests for helper semantics, Playwright for rendering. Test against the real helper, not a mock of it.
 - Before claiming that the skill's user experience improved, dogfood it in a real CLI and record the evidence in `docs/research/`:
-  - Start with `node evals/run.mjs`. It installs this working tree at project level in throwaway fixture projects, runs Claude Code and Codex, and grades the result. Add a fixture when a change needs a scenario the existing ones do not cover.
+  - Start with `node evals/run.mjs`. It installs this working tree at project level in throwaway fixture projects, runs Claude Code and Codex (or DeepSeek Harness with `--agent dsh`), and grades the result. Add a fixture when a change needs a scenario the existing ones do not cover.
   - A global install of the same skill can take precedence. In Claude Code 2.1.311, runs read `~/.claude/skills/variant-design` even with a project-level copy present, unless started with `--setting-sources project,local` (the eval runner does this). In manual runs, check the paths in the run's tool calls (`--output-format stream-json --verbose`); the `skill-under-test` check does this for eval runs.
   - `codex exec` runs in a sandbox that cannot bind ports. `claude -p` stays alive while a background preview server runs.
 

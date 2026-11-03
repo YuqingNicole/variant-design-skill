@@ -5,6 +5,10 @@
 ### Install
 - Claude Code plugin marketplace: `claude plugin marketplace add YuqingNicole/variant-design-skill`, then `claude plugin install variant-design@variant-design`. The update check prints the plugin update commands for this install.
 - Sub-workflows are now named `skills/*/ROUTE.md` instead of `SKILL.md`, so Claude Code plugins, Codex and `npx skills` register only the router as a skill.
+- DeepSeek Harness (`dsh`) finds the skill in `~/.agents/skills/variant-design` or a project's `.agents/skills`, the folder `npx skills add` uses.
+
+### Brand lock
+- When a project's own file sets the brand (such as `app/globals.css`), the skill registers that file in place instead of locking a copy in `variant-output/`.
 
 ## 1.1.0 — 2026-10-27
 

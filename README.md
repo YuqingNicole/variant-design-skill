@@ -133,6 +133,12 @@ claude plugin install variant-design@variant-design
 
 The plugin loads the complete directory as one skill, `variant-design:variant-design`.
 
+For DeepSeek Harness (`dsh`), clone into `~/.agents/skills/variant-design`. dsh also reads a project's `.agents/skills`, so the `npx skills add` project install above works there too. Both were checked with dsh 0.2.0-rc.2; it lists one skill, `variant-design`.
+
+```bash
+git clone https://github.com/YuqingNicole/variant-design-skill.git ~/.agents/skills/variant-design
+```
+
 For Claude Code or another local agent, install the same complete folder in that agent's skills location, or clone it into your workspace and point the agent to the absolute `SKILL.md` path. For Hermes/OpenClaw `AGENTS.md`, add a pointer to this installed entrypoint rather than pasting its text. The agent needs file access and Node.js for the bundled helpers.
 
 For web projects or API integrations, make the referenced directories available through the environment's file retrieval/execution tools as well as the entrypoint. Prompt text alone cannot provide preview servers or snapshot commands.

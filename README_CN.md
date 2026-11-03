@@ -133,6 +133,12 @@ claude plugin install variant-design@variant-design
 
 插件把完整目录作为一个技能加载，名字是 `variant-design:variant-design`。
 
+DeepSeek Harness（`dsh`）：克隆到 `~/.agents/skills/variant-design`。dsh 也读取项目里的 `.agents/skills`，所以上面的 `npx skills add` 项目级安装同样可用。两种方式都已在 dsh 0.2.0-rc.2 上验证，技能列表里只出现一个 `variant-design`。
+
+```bash
+git clone https://github.com/YuqingNicole/variant-design-skill.git ~/.agents/skills/variant-design
+```
+
 Claude Code 或其他本地 agent 同样需要完整目录；可以安装到对应技能位置，也可以克隆到工作区后让 agent 读取入口的绝对路径。Hermes/OpenClaw 的 `AGENTS.md` 应指向已安装的入口，而非粘贴入口文本。脚本需要文件访问权限和 Node.js。
 
 网页 Project 或 API 集成需要通过环境的文件检索和执行能力提供引用目录，仅粘贴提示词不能提供预览服务器和快照功能。
