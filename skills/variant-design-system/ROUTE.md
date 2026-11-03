@@ -272,10 +272,17 @@ When the user approves (says `ds confirm`, "looks good", "confirm this", "ship i
 }
 ```
 
-2. Print confirmation:
+2. Export the confirmed system as DTCG 2025.10 tokens, for Figma variables and other token tools. Pass every file of the system (under a brand-file lock: the brand file, then each extension):
+```bash
+node <skill-root>/scripts/ds-export.mjs variant-output/design-system.css --out variant-output/design-system.tokens.json
+```
+The CSS stays the source; regenerate the JSON after every `ds edit`, never edit it by hand. The command lists the tokens DTCG cannot express (`clamp()` sizes, `em` tracking, shorthands); name them in the confirmation instead of approximating them.
+
+3. Print confirmation:
 ```
 ✦ Design system confirmed — locked as visual foundation
   File:    variant-output/design-system.css
+  Tokens:  variant-output/design-system.tokens.json (DTCG · [n] tokens, [m] left out)
   Palette: [name] · [hue]° OKLCH
   Type:    [Display font] + [Body font]
 
@@ -285,9 +292,9 @@ When the user approves (says `ds confirm`, "looks good", "confirm this", "ship i
     ds edit palette    → refine colors before building
 ```
 
-3. From this point forward, **all Generate, Component, and Compose outputs** must `<link rel="stylesheet" href="design-system.css">` (or inline the tokens) — no aesthetic invention allowed outside the locked token system.
+4. From this point forward, **all Generate, Component, and Compose outputs** must `<link rel="stylesheet" href="design-system.css">` (or inline the tokens) — no aesthetic invention allowed outside the locked token system.
 
-4. For product-critical work, compile the confirmed declaration into `variant-output/design-contract.md` and run the Product Integrity Gate separately from the visual quality gate.
+5. For product-critical work, compile the confirmed declaration into `variant-output/design-contract.md` and run the Product Integrity Gate separately from the visual quality gate.
 
 ### Step 3 — Build Components (`component [name]`)
 

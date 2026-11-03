@@ -37,6 +37,19 @@
 - 网站自己的 `website/variant-output/`（已确认的 `src/design-system.css`，18 个刻度 token）新旧检查都是 0 条警告：那三个方向用的是网站的 class，没有内联长度。
 - 这次 `pick B` 写入了 `designSystem: {confirmed: false}`，而 Step 1b 要求不改 `designSystem`。不会造成锁定（检查只认 `confirmed: true`），但和说明不符；Step 1b 补了“不要写草稿条目”。
 
+## DTCG 导出（同日补充）
+
+`scripts/ds-export.mjs` 把设计系统的 CSS 变量导出为 DTCG 2025.10 JSON。格式按官方 2025.10 报告核对：颜色是 `{colorSpace, components, alpha?, hex?}`（sRGB 分量 0–1，OKLCH 的 L 为 0–1、H 为 0–360），尺寸是 `{value, unit}` 且只允许 px、rem，时长是 ms、s，阴影可以带 `inset`，引用写成 `{group.token}`，文件扩展名用 `.tokens.json`。
+
+真实输入：
+
+| 来源 | 导出 | 未导出 |
+|---|---|---|
+| Codex 为 harbor 从 B 提炼的系统 | 114 个：颜色 44、尺寸 38、数字 12、阴影 5、时长 5、字重 4、字体 3、缓动 3 | 7 个：1 个 `clamp()` 字号、4 个 `em` 字距、`--shadow-none: none`、1 个 transition 简写 |
+| 网站自己的 `website/src/design-system.css` | 38 个，`font-display` 正确导出为对 `font-serif` 的引用 | 7 个：3 个 `clamp()`、2 个 `em` 字距、2 个 border 简写 |
+
+逐组看过，没有分错类型的 token。没有把导出文件导入 Figma 验证；Figma 只支持 DTCG 的部分类型（研究记录 `2026-11-03-design-product-architectures.md`），这一步还要人在 Figma 里试。
+
 ## 未覆盖
 
 - 只用了 Codex，Claude Code 和 dsh 没跑这一步。
