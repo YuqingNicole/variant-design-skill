@@ -12,6 +12,7 @@ export const changelogZh: Record<string, { title?: string; blocks: string[] }> =
       '`pick B` 之后，技能从 B 提炼出完整的设计系统（`variant-output/design-system.css`，以及包含 B 用到的每个组件、每种状态的预览），然后等待 `ds confirm`。品牌文件已锁定时，只补品牌没规定的部分，并记入 `designSystem.extensions`。',
       '`delivery-check` 会读取这些扩展（重新定义品牌变量算错误），并对不在已确认系统刻度上的间距、字号、圆角给出警告，指出最接近的 token。从 B 提炼的系统只用来检查 B。',
       '`ds confirm` 会把系统导出为 DTCG 2025.10 设计令牌（`scripts/ds-export.mjs` → `design-system.tokens.json`），并列出 DTCG 表达不了的值，例如 `clamp()` 字号。',
+      '提炼出的系统附带 `variant-output/DESIGN.md`：写给 agent 和人的使用规则（哪个文字 token 用在哪种背景上、各级标题用哪一级字号、组件有哪些状态），段落顺序沿用 Google 的 DESIGN.md 草案。',
       '`scripts/ds-check.mjs` 检查系统自身的文字/背景色和 on-色组合是否达到 4.5:1：草稿在展示前修好，`delivery-check` 会报告已确认系统中不合格的组合。',
       '品牌锁定',
       '品牌由项目自己的文件规定时（例如 `app/globals.css`），技能直接登记这个文件，不再把副本锁定在 `variant-output/` 里。',

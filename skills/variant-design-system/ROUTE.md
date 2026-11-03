@@ -251,7 +251,8 @@ A picked direction is a page, not yet a system. After `select` succeeds (`refere
 1. **Collect what B actually uses.** Read B's owned files and `variants.B.tokens`: every color, font, size, weight, line height, spacing value, radius, shadow, duration and easing in the rendered page, and the components it contains (buttons, inputs, cards, tables, navigation, badges, charts) with the states it implements.
 2. **Write `variant-output/design-system.css`** with every section of Step 1: primitives, semantic colors, typography scale, spacing, radius, elevation, motion and z-index. B's values seed each section. Derive the rest from B's character: the full ramps around its colors, the type steps between its sizes, and the states B never shows (hover, active, focus, disabled, error, empty, loading). Check text and interactive contrast against `references/design-system/color-and-contrast.md` and fix failing pairs in the system rather than copying them. Before presenting, run `node <skill-root>/scripts/ds-check.mjs variant-output/design-system.css` (under a brand-file lock, pass the brand file first) and fix every pair it reports. It pairs tokens by name (`text`/`ink`/`fg` on `bg`/`surface`/`paper`/`canvas`, and `on-X` on `X`), so name tokens that way. List each B value that the system normalizes (`17px → --text-base`) in a comment at the top of the file.
 3. **Write `variant-output/design-system-preview.html`** as in Step 1, plus a component sheet: each component B uses, rebuilt from the system's tokens, in all of its states. Open it with the preview workflow.
-4. **Report and stop.** Print the palette, fonts and scales, the normalizations, and what the system adds beyond B. Next actions: `ds confirm` · `ds edit [section]` · `apply ds B` (prepare and apply B through history so it uses the system's tokens; one request, one undo). Leave `designSystem` unchanged until the user confirms; do not add a draft entry such as `confirmed: false`.
+4. **Write `variant-output/DESIGN.md`**, the system's rules for the agents and people who build on it. The CSS holds the values; this file says how to use them. Sections, in this order: Overview (the character B set, in two or three sentences), Colors, Typography, Layout, Elevation & Depth, Shapes, Components, Do's and Don'ts. Name tokens (`--space-4`), never repeat raw values, and keep each section to the rules a builder would otherwise get wrong: which surface each text token goes on, which type step each heading level uses, when to use each elevation, which component states exist. Under a brand-file lock, say what the brand fixes and what the extension adds. The section order follows Google's DESIGN.md draft so other tools can read it; the format is a draft there, so do not claim compatibility.
+5. **Report and stop.** Print the palette, fonts and scales, the normalizations, and what the system adds beyond B. Next actions: `ds confirm` · `ds edit [section]` · `apply ds B` (prepare and apply B through history so it uses the system's tokens; one request, one undo). Leave `designSystem` unchanged until the user confirms; do not add a draft entry such as `confirmed: false`.
 
 **When a brand file is already locked** (`designSystem.confirmed` with a project file such as `app/globals.css`): the brand stays the source of truth. Write `variant-output/design-system.css` with only the layers the brand leaves open (spacing, radius, elevation, motion, component states), referring to the brand's own variables with `var(--…)` and never redefining them. These layers are a system, not an inventory: normalize B's values to scales (a 4px or 8px spacing grid, a type ratio) as in step 2, and list the normalizations. On `ds confirm`, keep `designSystem.file` pointing at the brand file and add this file to `designSystem.extensions`.
 
@@ -276,13 +277,14 @@ When the user approves (says `ds confirm`, "looks good", "confirm this", "ship i
 ```bash
 node <skill-root>/scripts/ds-export.mjs variant-output/design-system.css --out variant-output/design-system.tokens.json
 ```
-The CSS stays the source; regenerate the JSON after every `ds edit`, never edit it by hand. The command lists the tokens DTCG cannot express (`clamp()` sizes, `em` tracking, shorthands); name them in the confirmation instead of approximating them.
+The CSS stays the source; regenerate the JSON after every `ds edit` and update `variant-output/DESIGN.md` with it, never edit the JSON by hand. The command lists the tokens DTCG cannot express (`clamp()` sizes, `em` tracking, shorthands); name them in the confirmation instead of approximating them.
 
 3. Print confirmation:
 ```
 ✦ Design system confirmed — locked as visual foundation
   File:    variant-output/design-system.css
   Tokens:  variant-output/design-system.tokens.json (DTCG · [n] tokens, [m] left out)
+  Rules:   variant-output/DESIGN.md
   Palette: [name] · [hue]° OKLCH
   Type:    [Display font] + [Body font]
 
