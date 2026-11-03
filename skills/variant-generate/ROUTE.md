@@ -24,7 +24,8 @@ Read files only at the step that names them, and only the section you need. Do n
 |---|---|---|
 | Variation action | `A vary strong`, `B remix colors`, `Mix A + B`, `Polish C`, `Refine premium B`, `Critique B`, `tokens A`, `C → mobile` | `skills/variant-generate/actions.md`, then `references/workflow/history.md` |
 | Zone edit | `B vary subtle — hero`, `zones A` | `skills/variant-generate/zones.md`, then `references/workflow/history.md` |
-| Undo, pick, recover | `undo B`, `pick B` | `references/workflow/history.md` |
+| Undo, recover | `undo B`, `recover` | `references/workflow/history.md` |
+| Pick | `pick B` | `references/workflow/history.md` (select), then `skills/variant-design-system/ROUTE.md` → Design system from a picked direction |
 | Reopen or compare | `open B`, `compare` | `references/workflow/preview.md` |
 | Export or integrate (prepare target baseline before staging) | `react B`, `export to next`, `integrate B`, `copy` | `skills/shared/export.md` |
 | Context | `show context`, `reset context` | `references/workflow/project-context.md` |
@@ -120,6 +121,6 @@ Then the recommendation and its reason, and the next actions:
 > **Tune** — Vary subtle · Remix colors · Mix (e.g. "Mix A + B")
 > **Animate** — Add motion · Dramatize · Make interactive
 > **Refine** — Polish · Refine premium · Critique · See other views
-> **Deliver** — pick B · react B · integrate B · tokens A
+> **Deliver** — pick B (then its design system) · react B · integrate B · tokens A
 
 The generated comparison shows previews before expandable direction details. Keep the full optimization, trade-off and suitable-scenario text in the manifest; rebuilding the comparison preserves it.

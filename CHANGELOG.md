@@ -7,6 +7,9 @@
 - Sub-workflows are now named `skills/*/ROUTE.md` instead of `SKILL.md`, so Claude Code plugins, Codex and `npx skills` register only the router as a skill.
 - DeepSeek Harness (`dsh`) finds the skill in `~/.agents/skills/variant-design` or a project's `.agents/skills`, the folder `npx skills add` uses.
 
+### Design system
+- After `pick B`, the skill derives a complete design system from B (`variant-output/design-system.css` and a preview with every component B uses, in all its states) and waits for `ds confirm`. With a locked brand file, it adds only the layers the brand leaves open and records them in `designSystem.extensions`.
+
 ### Brand lock
 - When a project's own file sets the brand (such as `app/globals.css`), the skill registers that file in place instead of locking a copy in `variant-output/`.
 

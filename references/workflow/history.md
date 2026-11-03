@@ -1,6 +1,6 @@
 # History: edits, undo and selection
 
-Read this before any edit to an existing direction (a variation action, a zone edit, a fix after review), and for `undo B`, `pick B` or `recover`. Editing is not selecting: apply and undo set `activeVariant`; only the user's explicit pick runs `select` and sets `selectedVariant`.
+Read this before any edit to an existing direction (a variation action, a zone edit, a fix after review), and for `undo B`, `pick B` or `recover`. After a successful `select`, derive the design system from the picked direction: `skills/variant-design-system/ROUTE.md` → Step 1b. Editing is not selecting: apply and undo set `activeVariant`; only the user's explicit pick runs `select` and sets `selectedVariant`.
 
 ## Prepare, apply, undo, select
 
