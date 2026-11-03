@@ -74,6 +74,10 @@ test('a brand lock reads its confirmed extensions, which must exist and never re
   assert.deepEqual(extend(':root{--space-4:16px;--danger:#c1121f;--ds-text:var(--ink)}\n', (s, out) => fs.appendFileSync(path.join(out, 'VariantA.css'), '.e{color:#c1121f}\n')), { errors: [], warnings: [], variants: ['A', 'B', 'C'] });
   assert.ok(has(extend(':root{--ink:#000000}\n').errors, 'variant-output/design-system.css redefines --ink'));
   assert.ok(has(run(s => { s.designSystem.extensions = ['variant-output/missing.css']; }).errors, 'variant-output/missing.css does not exist'));
+  // A confirmed system's own low-contrast pair is reported, not blocking: the user confirmed it.
+  const low = extend(':root{--color-bg:#ffffff;--color-text-muted:#999999}\n');
+  assert.deepEqual(low.errors, []);
+  assert.ok(has(low.warnings, 'Design system pair --color-text-muted on --color-bg is 2.85:1, below 4.5:1'));
 });
 
 test('lengths outside the design system scale are warnings that name the nearest token', () => {

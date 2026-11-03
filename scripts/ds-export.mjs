@@ -13,7 +13,7 @@ const srgb = (r, g, b, a = 1) => ({ colorSpace: 'srgb', components: [r, g, b].ma
 const num = s => { const m = String(s).trim().match(/^(-?\d*\.?\d+)(%?)$/); return m ? Number(m[1]) / (m[2] ? 100 : 1) : null; };
 const args = inner => inner.trim().split(/\s*\/\s*|\s*,\s*|\s+/).filter(Boolean);
 
-function color(value) {
+export function color(value) {
   const v = value.trim().toLowerCase();
   let m = v.match(/^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/);
   if (m) {
