@@ -149,7 +149,7 @@ The optional release check runs at most once per 24 hours, reports an available 
 
 - Three directions retain the same core task, data, and required functions. Each explains **what it optimizes, what it sacrifices, and when to use it**, followed by a reasoned recommendation.
 - The comparison page opens by default, with previews first and expandable direction details. React output gets three isolated mounts and direct preview URLs; project type checks must include the generated files. Native adapters handle framework-specific dependencies.
-- `B vary subtle — hero` edits B without selecting it. `pick B` explicitly chooses B. `undo B` restores B's last files and tokens while preserving A/C and the selected winner.
+- `B vary subtle — hero` edits B without selecting it. `pick B` explicitly chooses B, then derives a complete design system from it (palette and type scales, spacing, radius, elevation, motion, and every component B uses in all its states) with a preview; `ds confirm` locks it. `undo B` restores B's last files and tokens while preserving A/C and the selected winner.
 - Schema v2 stores each direction's files, tokens, version, comparison, and history separately. A durable snapshot precedes every replacement; Git alone is not a snapshot.
 - Precedence: user constraints → product task and existing design system → accessibility → style advice. Report unresolved accessibility conflicts. Brand-locked output retains fonts/tokens; free exploration may vary them. There is no animation quota.
 
@@ -247,7 +247,7 @@ In Claude Code you can use shorthand for fast iteration:
 A vary strong          → Push Variation A to maximum
 B remix colors         → 3 new palettes for Variation B
 C → mobile             → Show C as mobile viewport
-pick A                 → Select A as winner
+pick A                 → Select A as winner, then derive its complete design system
 A + B colors           → Mix A layout with B palette
 tokens A               → Extract CSS tokens from A
 compare                → Side-by-side view of all 3

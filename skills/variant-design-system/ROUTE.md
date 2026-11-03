@@ -21,6 +21,7 @@ Token foundation   Atomic pieces     Assembled layouts
 | User says | Action |
 |---|---|
 | `ds` / "create a design system" / "define tokens" / "set up tokens" | Generate design system → preview → confirm |
+| `pick B` (from a generate comparison) | Select B, then derive a complete design system from it → preview → confirm (see Step 1b) |
 | `ds confirm` | Lock the current design system and any product-critical Design Declaration for future outputs |
 | `ds edit [section]` | Edit one section of the design system (palette / type / spacing / motion) without regenerating all |
 | `ds show` | Print current design system token summary in terminal |
@@ -243,11 +244,22 @@ If user says "surprise me" or has no preferences, infer from their codebase (REA
 
 Open the preview immediately in browser.
 
+### Step 1b — Design system from a picked direction (`pick B`)
+
+A picked direction is a page, not yet a system. After `select` succeeds (`references/workflow/history.md`), turn B into a complete design system the rest of the product can build on. Do not generate one for a direction the user has not picked, and do not confirm it for them. If a system the skill generated is already confirmed (`designSystem.file` is `variant-output/design-system.css`), the directions were built on it: skip this step and say the system stays locked. Never overwrite a confirmed file: when the target path is already `designSystem.file` or listed in `designSystem.extensions`, write the candidate to `variant-output/design-system.candidate.css` and move it into place only on `ds confirm`.
+
+1. **Collect what B actually uses.** Read B's owned files and `variants.B.tokens`: every color, font, size, weight, line height, spacing value, radius, shadow, duration and easing in the rendered page, and the components it contains (buttons, inputs, cards, tables, navigation, badges, charts) with the states it implements.
+2. **Write `variant-output/design-system.css`** with every section of Step 1: primitives, semantic colors, typography scale, spacing, radius, elevation, motion and z-index. B's values seed each section. Derive the rest from B's character: the full ramps around its colors, the type steps between its sizes, and the states B never shows (hover, active, focus, disabled, error, empty, loading). Check text and interactive contrast against `references/design-system/color-and-contrast.md` and fix failing pairs in the system rather than copying them. List each B value that the system normalizes (`17px → --text-base`) in a comment at the top of the file.
+3. **Write `variant-output/design-system-preview.html`** as in Step 1, plus a component sheet: each component B uses, rebuilt from the system's tokens, in all of its states. Open it with the preview workflow.
+4. **Report and stop.** Print the palette, fonts and scales, the normalizations, and what the system adds beyond B. Next actions: `ds confirm` · `ds edit [section]` · `apply ds B` (prepare and apply B through history so it uses the system's tokens; one request, one undo). Leave `designSystem` unchanged until the user confirms.
+
+**When a brand file is already locked** (`designSystem.confirmed` with a project file such as `app/globals.css`): the brand stays the source of truth. Write `variant-output/design-system.css` with only the layers the brand leaves open (spacing, radius, elevation, motion, component states), referring to the brand's own variables with `var(--…)` and never redefining them. These layers are a system, not an inventory: normalize B's values to scales (a 4px or 8px spacing grid, a type ratio) as in step 2, and list the normalizations. On `ds confirm`, keep `designSystem.file` pointing at the brand file and add this file to `designSystem.extensions`.
+
 ### Step 2 — Confirm Design System (`ds confirm`)
 
 When the user approves (says `ds confirm`, "looks good", "confirm this", "ship it"):
 
-1. Write the confirmed status to `.variant-context.json`:
+1. Write the confirmed status to `.variant-context.json` (when the system came from a pick, also record `"source": "B"`; for a brand-file lock, see the end of Step 1b):
 ```json
 {
   "designSystem": {
@@ -283,6 +295,7 @@ When design system is confirmed, Component Mode runs on a tighter brief:
 - All colors from `design-system.css` semantic tokens — **no new colors**
 - All spacing from `design-system.css` spacing scale — **no new values**
 - Typography from `design-system.css` type tokens
+- Under a brand-file lock, "`design-system.css`" above means the brand file (`designSystem.file`) for colors and typography, plus the files in `designSystem.extensions` for the layers they add
 - Add to component registry in `.variant-context.json`:
 
 ```json
@@ -313,7 +326,7 @@ Assembles registered components into page layouts. **3 structural variations** �
 
 **Process:**
 1. Read `.variant-context.json` to get component registry
-2. Read `design-system.css` for tokens
+2. Read `design-system.css` for tokens (under a brand-file lock: `designSystem.file` and every file in `designSystem.extensions`)
 3. For each variation, invent a different **structural arrangement**:
    - Variation A: canonical / expected layout for this page type
    - Variation B: unconventional hierarchy (e.g. sidebar-dominant, reversed stack)
