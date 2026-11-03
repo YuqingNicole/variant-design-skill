@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Runs the skill from this working tree in real agent CLIs on fixture projects, then grades each run.
-// Usage: node evals/run.mjs [--agent claude,codex] [--fixture pulse,harbor,bakery,ledger] [--out <dir>] [--timeout-min 25] [--jobs 3] [--prepare-only] [--no-skill]
+// Usage: node evals/run.mjs [--agent claude,codex] [--fixture pulse,harbor,bakery,ledger] [--out <dir>] [--timeout-min 25] [--jobs 3] [--prepare-only] [--no-skill] [--install plugin]
+// --install plugin (Claude only) installs the working tree as a Claude Code plugin from a local copy of .claude-plugin/marketplace.json, in each project's local scope, instead of copying it into .claude/skills.
 // --no-skill runs the same agent on the same project without the skill and with the plain prompt in evals/blind/plain-prompt.txt (the blind-review control group).
 // Each run costs real model usage (a Claude run has cost about $2–3). Results stay outside the repository.
 import fs from 'node:fs';
@@ -20,7 +21,28 @@ const timeoutMs = Number(opt('--timeout-min', 25)) * 60_000, jobs = Number(opt('
 const shipped = /^(SKILL\.md|VERSION|skills\/|references\/|assets\/|scripts\/(?!.*\.test\.)[^/]+\.mjs$)/;
 // Where each CLI discovers a project-level skill; `npx skills add` uses the same folders.
 const installDir = { claude: '.claude/skills/variant-design', codex: '.agents/skills/variant-design' };
+const viaPlugin = opt('--install', 'project') === 'plugin';
+const claudeConfig = process.env.CLAUDE_CONFIG_DIR ?? path.join(os.homedir(), '.claude');
+const pluginCache = path.join(claudeConfig, 'plugins/cache/variant-design');
 const plain = args.includes('--no-skill') ? fs.readFileSync(path.join(here, 'blind/plain-prompt.txt'), 'utf8').trim() : null;
+
+// The working tree, including uncommitted changes, so a run tests exactly what is here.
+const tree = test => execFileSync('git', ['ls-files', '-co', '--exclude-standard'], { cwd: repo, encoding: 'utf8' }).split('\n').filter(f => test(f) && fs.existsSync(path.join(repo, f)));
+const copy = (files, root) => { for (const file of files) { const target = path.join(root, file); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.copyFileSync(path.join(repo, file), target); } };
+
+// A plugin install goes through Claude Code's own marketplace flow. It registers the marketplace in the runner's
+// Claude config and caches the plugin there, so refuse to touch an existing one and remove ours afterwards.
+function stageMarketplace() {
+  const known = path.join(claudeConfig, 'plugins/known_marketplaces.json');
+  if (fs.existsSync(known) && JSON.parse(fs.readFileSync(known, 'utf8'))['variant-design']) { console.error('A "variant-design" marketplace is already added to Claude Code. Remove it (claude plugin marketplace remove variant-design) before an --install plugin run.'); process.exit(2); }
+  const root = path.join(out, 'marketplace');
+  copy(tree(f => shipped.test(f) || /^(\.claude-plugin\/marketplace\.json|NOTICE|LICENSE|LICENSES\/)/.test(f)), root);
+  return { root };
+}
+function removePlugin(dir) {
+  try { execFileSync('claude', ['plugin', 'marketplace', 'remove', 'variant-design'], { cwd: dir, stdio: 'pipe' }); } catch (error) { console.error(`Could not remove the variant-design marketplace: ${error.stderr ?? error.message}`); }
+  fs.rmSync(pluginCache, { recursive: true, force: true });
+}
 
 function prepare(fixture, agent) {
   const dir = path.join(out, `${fixture}-${agent}`);
@@ -28,11 +50,12 @@ function prepare(fixture, agent) {
   const git = (...a) => execFileSync('git', a, { cwd: dir, stdio: 'pipe' });
   git('init', '-q'); git('add', '-A'); git('-c', 'user.name=eval', '-c', 'user.email=eval@localhost', 'commit', '-qm', 'baseline');
   if (fs.existsSync(path.join(dir, 'package-lock.json'))) execFileSync('npm', ['ci', '--prefer-offline', '--no-audit', '--no-fund', '--loglevel=error'], { cwd: dir, stdio: 'pipe' });
-  if (plain) return dir;
-  // Install the working tree, including uncommitted changes, so a run tests exactly what is here.
-  const files = execFileSync('git', ['ls-files', '-co', '--exclude-standard'], { cwd: repo, encoding: 'utf8' }).split('\n').filter(f => shipped.test(f) && fs.existsSync(path.join(repo, f)));
-  for (const file of files) { const target = path.join(dir, installDir[agent], file); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.copyFileSync(path.join(repo, file), target); }
-  return dir;
+  if (plain) return { dir };
+  if (!marketplace) { copy(tree(f => shipped.test(f)), path.join(dir, installDir[agent])); return { dir }; }
+  // Local scope writes enabledPlugins to the project's .claude/settings.local.json, which --setting-sources project,local reads.
+  for (const step of [['marketplace', 'add', marketplace.root], ['install', 'variant-design@variant-design']]) execFileSync('claude', ['plugin', ...step, '--scope', 'local'], { cwd: dir, stdio: 'pipe' });
+  // Claude Code reads a plugin from a local directory marketplace in place; a GitHub install reads the same files from the plugin cache.
+  return { dir, install: marketplace.root };
 }
 
 function command(agent, prompt, dir) {
@@ -54,21 +77,27 @@ function runAgent(agent, prompt, dir) {
 }
 
 async function one(fixture, agent) {
-  const config = loadFixture(fixture), dir = prepare(fixture, agent);
+  const config = loadFixture(fixture), { dir, install } = prepare(fixture, agent);
   if (args.includes('--prepare-only')) return { fixture, agent, dir };
   console.log(`▶ ${fixture} · ${agent}`);
   const run = await runAgent(agent, plain ?? config.prompt, dir);
   // The control group has no skill record to grade; keep what it cost.
-  const result = plain ? { fixture, agent, dir, ...run, pass: true, checks: [], usage: usage(run.transcript), recommendation: null } : { fixture, agent, dir, ...run, ...grade(dir, { fixture: config, transcript: run.transcript }) };
+  const result = plain ? { fixture, agent, dir, ...run, pass: true, checks: [], usage: usage(run.transcript), recommendation: null } : { fixture, agent, dir, ...run, ...grade(dir, { fixture: config, transcript: run.transcript, install }) };
   fs.writeFileSync(path.join(out, `${fixture}-${agent}.json`), JSON.stringify(result, null, 2));
   console.log(`${result.pass ? '✓' : '✗'} ${fixture} · ${agent} (${run.seconds}s${run.timedOut ? ', timed out' : ''})`);
   return result;
 }
 
+if (viaPlugin && (plain || agents.some(a => a !== 'claude'))) { console.error('--install plugin is a Claude Code install: use it with --agent claude and without --no-skill.'); process.exit(2); }
 fs.mkdirSync(out, { recursive: true });
+const marketplace = viaPlugin ? stageMarketplace() : null;
 const queue = fixtures.flatMap(f => agents.map(a => [f, a])), results = [];
-await Promise.all(Array.from({ length: Math.min(jobs, queue.length) }, async () => { while (queue.length) { const [f, a] = queue.shift(); results.push(await one(f, a)); } }));
-if (args.includes('--prepare-only')) { for (const r of results) console.log(r.dir); process.exit(0); }
+try {
+  await Promise.all(Array.from({ length: Math.min(jobs, queue.length) }, async () => { while (queue.length) { const [f, a] = queue.shift(); results.push(await one(f, a)); } }));
+} finally {
+  if (marketplace && !args.includes('--prepare-only')) removePlugin(out);
+}
+if (args.includes('--prepare-only')) { for (const r of results) console.log(r.dir); if (marketplace) console.log(`The plugin stays installed for these projects. Afterwards: claude plugin marketplace remove variant-design && rm -rf ${JSON.stringify(pluginCache)}`); process.exit(0); }
 
 const ids = [...new Set(results.flatMap(r => r.checks.map(c => c.id)))];
 const lines = [`| Run | ${ids.join(' | ')} | Recommends | Skill words read | Usage |`, `|---|${ids.map(() => '---').join('|')}|---|---|---|`,
