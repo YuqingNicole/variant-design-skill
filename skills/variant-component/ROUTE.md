@@ -4,6 +4,8 @@
 
 > Before generating code, load `skills/shared/code-output.md` for framework detection and `references/workflow/quality-baseline.md` for verification.
 >
+> For buttons, read the Button section of `references/ux/component-specs.md` before designing (variants, sizes, shape, label, derived states).
+>
 > Load on demand only: `references/ux/component-specs.md` when the user asks for a spec, handoff, anatomy or measurements (follow its Recording Values rules: no invented values, unknowns stay `[TBD]`; use Handoff and Build QA when the component goes to engineering or is checked against a spec); the Nested Radius section of `references/ux/design-tokens.md` when a rounded element sits inside another.
 
 ## Component Mode

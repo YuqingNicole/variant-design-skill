@@ -16,6 +16,7 @@ export const changelogZh: Record<string, { title?: string; blocks: string[] }> =
       '`scripts/ds-check.mjs` 检查系统自身的文字/背景色和 on-色组合是否达到 4.5:1：草稿在展示前修好，`delivery-check` 会报告已确认系统中不合格的组合。',
       '设计系统现在由几条针对产品的决策和落实这些决策的 token 组成，不再是填满的模板（`references/design-system/system-decisions.md`）。技能写下三到五条决策；丢掉选中方向里的生成套路（眉标、口号式标题、装饰数字、处处套卡片、默认字体）；只写产品用得到的 token，并注明每个用在哪里。预览用产品自己的画面展示系统，不再是色板网格。',
       '分层：产品代码用语义 token；复用且状态多的组件有组件 token；只有被共用时才写基础值；模式（移除确认、空状态）写进 `DESIGN.md`。`ds-check.mjs --used-by` 列出没被用到的 token；产品代码直接用基础值时 `delivery-check` 会警告；`ds-export` 把每个 token 的用途说明导出为 DTCG 的 `$description`。',
+      '按钮遵循一份规范，参照 Material 3、Apple HIG、Radix、Primer、Atlassian、Polaris 和 Geist 的公开文档制定（`references/ux/component-specs.md` → Button）：品牌是衬线体时，按钮文字也用界面无衬线字体；内边距和圆角随高度按比例取值；每个视图只有一个实心主按钮；悬停和按下状态用 `color-mix` 推导，焦点是单层 2px 的环；危险按钮在确认框之前都只是红字。预览里放真实按钮，不放一排假的悬停状态。',
       '品牌锁定',
       '品牌由项目自己的文件规定时（例如 `app/globals.css`），技能直接登记这个文件，不再把副本锁定在 `variant-output/` 里。',
     ],
