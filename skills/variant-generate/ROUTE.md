@@ -39,7 +39,7 @@ If the user points to a direction card (a library `/d/<slug>` page or its `.json
 
 ## 2. Lock or explore, then load one domain reference
 
-**Design system confirmed** (`designSystem.confirmed: true`, or a brand file the project marks as locked): read `designSystem.file` relative to the project root and use its tokens. Print `✦ DS locked: [palette] · [fonts] · variations differ in layout only`. Skip palette and font selection; the domain reference supplies layout and interaction patterns only.
+**Design system confirmed** (`designSystem.confirmed: true`, or a brand file the project marks as locked): read `designSystem.file` relative to the project root and use its tokens. Print `✦ DS locked: [palette] · [fonts] · variations differ in layout only`. Skip palette and font selection; the domain reference supplies layout and interaction patterns only. When the lock comes from a project file (such as `src/tokens.css` or `app/globals.css`), record that file in place as `designSystem.file`. Do not copy it into `variant-output/` or add tokens to it: a copy goes stale when the brand changes, and edits are checked against the registered file. Put tokens the brand leaves open, such as spacing, in the variants' own files.
 
 **No confirmed system:** identify the scenario, then pick three starter prompts and palettes from the domain reference and `references/palettes.md`.
 

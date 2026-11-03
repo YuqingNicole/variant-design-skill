@@ -88,3 +88,24 @@ test('skill reading counts the files an agent asked for, through relative paths 
   fs.appendFileSync(transcript, '\n' + tool('Bash', { command: 'cd .claude/skills/variant-design && cat SKILL.md skills/variant-generate/ROUTE.md' }) + '\n' + tool('Write', { file_path: 'brief.json', content: 'see references/workflow/never-read.md' }));
   assert.deepEqual(skillReading(transcript, dir).words, 5);
 });
+
+test('a Claude Code plugin install outside the project counts as the copy under test; other versions do not', () => {
+  const dir = run(), transcript = path.join(dir, '..', path.basename(dir) + '-plugin.jsonl');
+  const install = path.join(dir, '..', 'config/plugins/cache/variant-design/variant-design/1.1.0');
+  fs.mkdirSync(path.join(install, 'skills/variant-generate'), { recursive: true });
+  fs.writeFileSync(path.join(install, 'SKILL.md'), 'one two three');
+  fs.writeFileSync(path.join(install, 'skills/variant-generate/ROUTE.md'), 'four five');
+  const tool = (name, input) => JSON.stringify({ type: 'assistant', message: { content: [{ type: 'tool_use', name, input }] } });
+  fs.writeFileSync(transcript, [tool('Skill', { skill: 'variant-design:variant-design' }), tool('Read', { file_path: `${install}/skills/variant-generate/ROUTE.md` })].join('\n'));
+  assert.deepEqual(skillCopies(transcript, dir, install), { project: 1, other: [] });
+  assert.deepEqual(skillReading(transcript, dir, install), { files: ['SKILL.md', 'skills/variant-generate/ROUTE.md'], words: 5 });
+  assert.equal(check(grade(dir, { transcript, install }), 'skill-under-test').pass, true);
+  const stale = install.replace('1.1.0', '1.0.0');
+  fs.appendFileSync(transcript, '\n' + tool('Read', { file_path: `${stale}/SKILL.md` }) + '\n' + tool('Read', { file_path: '/Users/someone/.claude/skills/variant-design/SKILL.md' }));
+  assert.deepEqual(skillCopies(transcript, dir, install).other, ['/Users/someone/.claude/skills/variant-design', stale]);
+  // A local directory marketplace is read in place, outside any cache.
+  const marketplace = path.join(dir, '..', 'marketplace'), local = path.join(dir, '..', path.basename(dir) + '-local.jsonl');
+  fs.mkdirSync(marketplace, { recursive: true });
+  fs.writeFileSync(local, JSON.stringify({ type: 'user', message: { content: [{ type: 'text', text: `Base directory for this skill: ${marketplace}` }] } }) + '\n' + tool('Read', { file_path: `${marketplace}/skills/variant-generate/ROUTE.md` }));
+  assert.deepEqual(skillCopies(local, dir, marketplace), { project: 2, other: [] });
+});

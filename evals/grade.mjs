@@ -45,26 +45,33 @@ function ownedSources(output, context) {
   return files.map(f => path.join(output, f)).filter(f => fs.existsSync(f)).map(f => [path.relative(output, f), fs.readFileSync(f, 'utf8')]);
 }
 
+const variants = dir => [...new Set([dir, fs.realpathSync(dir)])];
+
 // Which copies of the skill the agent read. A run that read another copy did not test this tree.
-export function skillCopies(transcript, project) {
+// `install` is the copy under test when it lives outside the project, as a Claude Code plugin install does.
+export function skillCopies(transcript, project, install) {
   if (!transcript || !fs.existsSync(transcript)) return null;
   const text = fs.readFileSync(transcript, 'utf8').replace(/\\\//g, '/');
-  const roots = [...new Set([project, fs.realpathSync(project)])];
+  const roots = variants(project);
   const hits = [...text.matchAll(/(?<![^\s"'`\\=:;(])([^\s"'`\\=:;()]*)skills\/variant-design(?=[/\s"'`\\;])/g)].map(m => m[1] + 'skills/variant-design');
   // Relative paths (`cat .claude/skills/...`) resolve inside the project, where the agent runs.
   const inside = hits.filter(h => !/^[~/$]/.test(h) || roots.some(r => h.startsWith(r + '/')));
-  return { project: inside.length, other: [...new Set(hits.filter(h => !inside.includes(h)))] };
+  if (!install || roots.some(r => install.startsWith(r + '/'))) return { project: inside.length, other: [...new Set(hits.filter(h => !inside.includes(h)))] };
+  // A plugin is read from its marketplace folder (a local directory marketplace) or from <config>/plugins/cache/<marketplace>/<plugin>/<version>.
+  // Any other cached version, or any skill folder, is another copy.
+  const own = variants(install), mine = own.reduce((n, dir) => n + text.split(dir).length - 1, 0);
+  const plugin = [...text.matchAll(/[^\s"'`\\=:;()]*plugins\/cache\/variant-design\/variant-design\/[^/\s"'`\\;)]+/g)].map(m => m[0]);
+  return { project: mine, other: [...new Set([...hits, ...plugin.filter(p => !own.includes(p))])] };
 }
 
 // Which skill text the agent loaded: the progressive-disclosure cost of a run.
-export function skillReading(transcript, project) {
-  if (!transcript || !fs.existsSync(transcript)) return null;
-  const install = ['.claude', '.agents', '.codex'].map(d => path.join(project, d, 'skills/variant-design')).find(d => fs.existsSync(d));
-  if (!install) return null;
+export function skillReading(transcript, project, install = ['.claude', '.agents', '.codex'].map(d => path.join(project, d, 'skills/variant-design')).find(d => fs.existsSync(d))) {
+  if (!transcript || !fs.existsSync(transcript) || !install) return null;
   const events = fs.readFileSync(transcript, 'utf8').split('\n').flatMap(l => { try { return [JSON.parse(l)]; } catch { return []; } });
   // Only what the agent asked for (reads and commands, not files it wrote), with skill-relative paths after `cd` into the install.
   let asked = events.flatMap(e => e.type === 'assistant' ? (e.message?.content ?? []).filter(c => c.type === 'tool_use' && !['Write', 'Edit', 'MultiEdit'].includes(c.name)).map(c => JSON.stringify(c.input)) : e.type === 'item.started' && e.item?.type === 'command_execution' ? [e.item.command] : []).join('\n');
   // Agents often alias the install (`S=.claude/skills/variant-design; cat $S/SKILL.md`).
+  for (const dir of variants(install)) asked = asked.replaceAll(dir + '/', 'skills/variant-design/');
   for (const [, name, value] of asked.matchAll(/\b(\w+)=["']?([^\s"';]*skills\/variant-design)\b/g)) asked = asked.replaceAll(`\${${name}}`, value).replaceAll(`$${name}`, value);
   const files = new Set(events.some(e => e.type === 'assistant' && e.message?.content?.some(c => c.type === 'tool_use' && c.name === 'Skill')) ? ['SKILL.md'] : []);
   for (const m of asked.matchAll(/(?:skills\/variant-design\/|(?<![\w./-]))((?:SKILL\.md)|(?:skills|references)\/[\w./-]+?\.md)/g)) if (fs.existsSync(path.join(install, m[1]))) files.add(m[1]);
@@ -81,7 +88,7 @@ export function usage(transcript) {
   return tokens ? { tokens } : {};
 }
 
-export function grade(project, { fixture = {}, transcript } = {}) {
+export function grade(project, { fixture = {}, transcript, install } = {}) {
   const output = path.join(project, 'variant-output');
   let context = null;
   try { context = JSON.parse(fs.readFileSync(path.join(output, '.variant-context.json'), 'utf8')); } catch {}
@@ -103,16 +110,16 @@ export function grade(project, { fixture = {}, transcript } = {}) {
     for (const [file, source] of ownedSources(output, context)) for (const font of declaredFonts(source)) if (!locked.includes(font.toLowerCase())) problems.push(`${file} declares "${font}"`);
     add('brand-kept', problems.length === 0, problems);
   }
-  const copies = skillCopies(transcript, project);
-  if (copies) add('skill-under-test', copies.project > 0 && copies.other.length === 0, [`read the project copy ${copies.project} time(s)`, ...copies.other.map(o => `also referenced ${o}`)]);
-  return { pass: checks.every(c => c.pass), checks, usage: usage(transcript), reading: skillReading(transcript, project), recommendation: context?.recommendation?.variant ?? null };
+  const copies = skillCopies(transcript, project, install);
+  if (copies) add('skill-under-test', copies.project > 0 && copies.other.length === 0, [`read the copy under test ${copies.project} time(s)`, ...copies.other.map(o => `also referenced ${o}`)]);
+  return { pass: checks.every(c => c.pass), checks, usage: usage(transcript), reading: skillReading(transcript, project, install), recommendation: context?.recommendation?.variant ?? null };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href) {
   const args = process.argv.slice(2), opt = name => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : undefined; };
-  const project = args.find((a, i) => !a.startsWith('--') && !['--fixture', '--transcript'].includes(args[i - 1]));
-  if (!project) { console.error('Usage: node evals/grade.mjs <project> [--fixture <name>] [--transcript <file>] [--json]'); process.exit(2); }
-  const result = grade(path.resolve(project), { fixture: opt('--fixture') ? loadFixture(opt('--fixture')) : {}, transcript: opt('--transcript') });
+  const project = args.find((a, i) => !a.startsWith('--') && !['--fixture', '--transcript', '--install'].includes(args[i - 1]));
+  if (!project) { console.error('Usage: node evals/grade.mjs <project> [--fixture <name>] [--transcript <file>] [--install <skill dir outside the project>] [--json]'); process.exit(2); }
+  const result = grade(path.resolve(project), { fixture: opt('--fixture') ? loadFixture(opt('--fixture')) : {}, transcript: opt('--transcript'), install: opt('--install') && path.resolve(opt('--install')) });
   if (args.includes('--json')) console.log(JSON.stringify(result, null, 2));
   else { for (const c of result.checks) { console.log(`${c.pass ? '✓' : '✗'} ${c.id}`); for (const d of c.details) console.log(`    ${d}`); } if (result.reading) console.log(`skill text read: ${result.reading.words} words in ${result.reading.files.length} files`); }
   process.exitCode = result.pass ? 0 : 1;
