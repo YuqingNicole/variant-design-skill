@@ -55,7 +55,7 @@ test('every reference gets its own detail page with an escaped title and a link 
     const html = pages.get(`/inspiration/${r.id}`);
     assert.ok(html, r.id);
     assert.match(html, new RegExp(`<title>${escape(r.name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} — 灵感参考`));
-    assert.ok(html.includes('href="/inspiration"') && html.includes(`href="${escape(r.url)}"`), r.id);
+    assert.ok(html.includes('href="/"') && html.includes(`href="${escape(r.url)}"`), r.id);
   }
 });
 
@@ -71,7 +71,12 @@ test('the install guide, structured data and llms.txt are readable without JavaS
   const [howTo, faqPage] = data(guide)[0]['@graph'];
   assert.equal(howTo['@type'], 'HowTo');
   assert.equal(faqPage.mainEntity.length, docs.faq.length);
-  const skill = data(pages.get('/'))[0]['@graph'].find(g => g['@type'] === 'SoftwareSourceCode');
+  // The home page is the inspiration feed; the skill is described on /skills.
+  const [home] = data(pages.get('/'));
+  assert.equal(home['@type'], 'WebSite');
+  assert.ok(home.description.includes(`目前 ${references.length} 条`) && pages.get('/').includes(`目前 ${references.length} 条`));
+  const [skill] = data(pages.get('/skills'));
+  assert.equal(skill['@type'], 'SoftwareSourceCode');
   assert.equal(skill.version, '9.9.9');
   assert.match(skill.codeRepository, /^https:\/\/github\.com\//);
   for (const e of entries) assert.equal(data(pages.get(`/d/${e.slug}`))[0].url, `${site}/d/${e.slug}`);

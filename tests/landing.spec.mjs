@@ -34,8 +34,8 @@ test('integrated B keeps a mobile action, navigation, brief on language change, 
   expect(await page.locator('.hero-actions a').first().evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThan(844);
   await expect(page.locator('#generator button[type="submit"]')).toBeDisabled();
 
-  await page.locator('.site-nav a[href="/pricing"]').click();
-  await expect(page).toHaveURL(/\/pricing$/);
+  await page.locator('.site-nav a[href="/skills"]').click();
+  await expect(page).toHaveURL(/\/skills$/);
   await page.goto('/workbench');
   await page.locator('#design-prompt').fill('A landing page for the real Variant Design project');
   await page.getByRole('button', { name: '切换到英文' }).click();
@@ -170,7 +170,7 @@ test('expressive homepage gallery opens distinct complete directions with workin
  test('product pages share their visual system and pricing controls preserve language and values', async ({page})=>{
  await page.goto('/about');
  const homeFont=await page.locator('h1').evaluate(el=>getComputedStyle(el).fontFamily);
- await page.locator('.site-nav a[href="/pricing"]').click();
+ await page.locator('.site-footer a[href="/pricing"]').click();
  await expect(page.locator('h1')).toHaveCSS('font-family',homeFont);
  await expect(page.locator('.pricing-page')).toHaveCSS('background-color','rgb(247, 247, 242)');
  await expect(page.locator('.price strong')).toHaveText(['$0','$20','$41']);
@@ -203,7 +203,7 @@ test('direction library pages are prerendered, browsable and keep old links work
  const llms=await request.get('/llms.txt');expect(llms.headers()['content-type']).toContain('text/plain');expect(await llms.text()).toContain('/d/pulse)');
  expect((await request.get('/missing.txt')).status()).toBe(404);
  expect(await(await request.get('/docs')).text()).toContain('"@type":"FAQPage"');
- await page.goto('/');
+ await page.goto('/cases');
  const cards=page.locator('.library-grid .library-card');await expect(cards).toHaveCount(5);await expect(cards.first()).toContainText('Harbor');
  // Each card shows all three directions, recommended first; scroll so the lazy images load, then check none is broken.
  await expect(cards.filter({hasText:'Pulse'}).locator('.library-card-panel small')).toHaveText(['A','B','C']);
@@ -226,7 +226,7 @@ test('direction library pages are prerendered, browsable and keep old links work
  await page.locator('.site-language').click();await expect(page.locator('h1')).toHaveText('offscript: one brand, three personalities');await page.locator('.site-language').click();await expect(page.locator('html')).toHaveAttribute('lang','zh-CN');
  for(const url of ['/','/d/harbor','/c/product']){await page.goto(url);for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}}
  await page.goto('/showcase/forma');await expect(page).toHaveURL(/\/d\/forma$/);await expect(page.locator('h1')).toContainText('Forma');
- await page.goto('/showcase');await expect(page).toHaveURL(/\/$/);await expect(cards).toHaveCount(5);
+ await page.goto('/showcase');await expect(page).toHaveURL(/\/cases$/);await expect(cards).toHaveCount(5);
  await page.goto('/showcase?direction=B');await expect(page.locator('[data-showcase-direction]')).toHaveAttribute('data-showcase-direction','B');
  await page.goto('/canvas?new=1');await expect(page).toHaveURL(/\/lab\/canvas\?new=1$/);
  await page.goto('/d/missing-entry');await expect(page.locator('h1')).toHaveText('页面不存在');
@@ -255,8 +255,8 @@ test('docs recover from clipboard denial', async ({page})=>{
 
 test('inspiration references filter, create an original brief and recover from copy denial', async ({page})=>{
  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:()=>Promise.reject(new Error('denied'))}}));
- await page.goto('/');
- await page.locator('.library-more a[href="/inspiration"]').click();
+ await page.goto('/cases');
+ await page.locator('.library-more a[href="/"]').click();
  // The prerendered page answers clicks only after React replaces it; its static reference index goes away then.
  await expect(page.locator('nav[aria-label="全部参考"]')).toHaveCount(0);
  const cards=page.locator('.inspiration-grid .insp-card');
@@ -284,7 +284,7 @@ test('inspiration references filter, create an original brief and recover from c
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');await expect(page.getByRole('searchbox')).toHaveValue('');
  await expect(page.getByRole('button',{name:'全部',exact:true})).toHaveAttribute('aria-pressed','true');
  await page.locator('.site-language').click();
- await expect(page.locator('h1')).toHaveText('Inspiration');
+ await expect(page.locator('h1')).toHaveText('The best design inspiration on the internet.');
  for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
@@ -306,7 +306,7 @@ test('inspiration thumbnails map each link\'s own preview, resized from the sour
  const imageRequests=[];page.on('request',r=>{if(r.resourceType()==='image'&&!new URL(r.url()).pathname.startsWith('/variant-mark'))imageRequests.push(r.url());});
  await stubPreviews(page,['linear']);
  // A short window keeps the load-more sentinel out of reach, so the first page and the fallback button can be checked.
- await page.setViewportSize({width:1280,height:360});await page.goto('/inspiration');
+ await page.setViewportSize({width:1280,height:360});await page.goto('/');
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(30);
  await page.getByRole('button',{name:'加载更多（还有 2 个）'}).click();await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(32);
  await expect(page.locator('.inspiration-grid .insp-thumb-post')).toHaveCount(0);await expect(page.locator('.inspiration-grid div.insp-thumb')).toHaveCount(32);
@@ -330,13 +330,13 @@ test('inspiration thumbnails map each link\'s own preview, resized from the sour
 
 test('a page downloads only its own code, with every stylesheet up front', async ({page})=>{
  const scripts=[],styles=[];page.on('request',r=>{const u=new URL(r.url());if(u.pathname.startsWith('/assets/'))(r.resourceType()==='script'?scripts:r.resourceType()==='stylesheet'?styles:[]).push(u.pathname)});
- await stubPreviews(page);await page.goto('/inspiration');await expect(page.locator('.insp-title h1')).toBeVisible();
+ await stubPreviews(page);await page.goto('/');await expect(page.locator('.insp-title h1')).toBeVisible();
  expect(scripts.some(p=>/\/InspirationPage-/.test(p))).toBe(true);expect(scripts.filter(p=>/\/(App|LandingCanvas|LibraryPage|pricing|PaperLanding)-/.test(p))).toEqual([]);
  expect(styles.length).toBe(2);
 });
 
 test('submission page states the three entry kinds, permissions and takedown process in both languages', async ({page})=>{
- await page.goto('/inspiration');await page.locator('.site-footer a[href="/submit"]').click();await expect(page).toHaveURL(/\/submit$/);
+ await page.goto('/');await page.locator('.site-footer a[href="/submit"]').click();await expect(page).toHaveURL(/\/submit$/);
  await expect(page.locator('h1')).toHaveText('投稿与授权');await expect(page.locator('.submit-sources li')).toHaveCount(3);
  await expect(page.locator('[data-source="link-only"]')).toContainText('不托管对方的截图');await expect(page.getByRole('heading',{name:'撤下请求'})).toBeVisible();
  await expect(page.locator('.content-reading a[href$="/issues/new/choose"]')).toBeVisible();
@@ -444,7 +444,7 @@ test('history retains twelve entries and retry saves in-memory work without anot
 });
 
 test('reference pack keeps per-item intentions and source links in its brief', async ({page})=>{
- await page.goto('/inspiration');
+ await page.goto('/');
  const cards=page.locator('.inspiration-grid .insp-card');
  await cards.nth(0).getByRole('button',{name:'加入参考包'}).click();
  await cards.nth(1).getByRole('button',{name:'加入参考包'}).click();
@@ -482,7 +482,7 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.route(/platform\.twitter\.com/,r=>r.abort());await page.route(/pbs\.twimg\.com/,r=>r.fulfill({contentType:'image/png',body:pixel}));
  // The widgets video fails; the sheep video stays pending, so the suite never streams from X.
  await page.route(/video\.twimg\.com/,r=>{if(r.request().url()===media['paper-widgets'].video)return r.abort()});
- await page.goto('/inspiration');await expect(page.locator('.insp-pills button')).toHaveText(['Best practice','全部','Landing','产品界面','关键流程']);
+ await page.goto('/');await expect(page.locator('.insp-pills button')).toHaveText(['Best practice','全部','Landing','产品界面','关键流程']);
  expect(xRequests).toEqual([]);
  await page.getByRole('button',{name:'Best practice',exact:true}).click();
  const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(Object.keys(media).length);await expect(page.locator('.inspiration-grid')).toHaveCount(0);
@@ -509,7 +509,7 @@ test('best practice shows each X post as its looping video, credits the author a
 });
 
 test('a reference opens as a dialog from the grid and as its own page from a direct link', async ({page})=>{
- await page.goto('/about');await page.goto('/inspiration');
+ await page.goto('/about');await page.goto('/');
  const cards=page.locator('.inspiration-grid .insp-card');
  await expect(cards.locator('.insp-card-open').first()).toHaveAttribute('href','/inspiration/linear');
  await cards.first().locator('.insp-card-open').click();
@@ -520,31 +520,31 @@ test('a reference opens as a dialog from the grid and as its own page from a dir
  await page.keyboard.press('ArrowRight');await expect(page).toHaveURL(/\/inspiration\/notion$/);await expect(dialog.getByRole('heading',{name:'Notion'})).toBeVisible();
  await page.keyboard.press('ArrowLeft');await expect(page).toHaveURL(/\/inspiration\/linear$/);
  await dialog.getByRole('button',{name:'加入参考包'}).click();await expect(cards.first().locator('.insp-card-save')).toHaveAttribute('aria-pressed','true');
- await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);await expect(page).toHaveURL(/\/inspiration$/);
+ await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);await expect(page).toHaveURL(/:\d+\/$/);
  await expect(page.locator('.inspiration-pack fieldset')).toHaveCount(1);
- await expect(page).toHaveTitle('灵感参考 — Variant Design');
+ await expect(page).toHaveTitle('Variant Design — 互联网上最好的设计灵感');
  await page.goBack();await expect(page).toHaveURL(/\/about$/);
- await page.goto('/inspiration');await cards.first().locator('.insp-card-open').click();await expect(dialog).toHaveCount(1);
- await page.goBack();await expect(page).toHaveURL(/\/inspiration$/);await expect(dialog).toHaveCount(0);
+ await page.goto('/');await cards.first().locator('.insp-card-open').click();await expect(dialog).toHaveCount(1);
+ await page.goBack();await expect(page).toHaveURL(/:\d+\/$/);await expect(dialog).toHaveCount(0);
  const response=await page.goto('/inspiration/notion');
  expect(await response.text()).toContain('<title>Notion — 灵感参考 — Variant Design</title>');
  await expect(page.locator('h1')).toHaveText('Notion');await expect(page.getByRole('dialog')).toHaveCount(0);
  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/^Notion：/);
  await expect(page.getByRole('link',{name:'访问原站'})).toHaveAttribute('href','https://www.notion.com/');
- await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/\/inspiration$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');
- await page.goto('/inspiration/no-such-reference');await expect(page).toHaveURL(/\/inspiration$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');
+ await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');
+ await page.goto('/inspiration/no-such-reference');await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');
 });
 
 test('a topic narrows the library to its dated references and states what is unknown', async ({page})=>{
- await page.goto('/inspiration?topic=saas-home');
+ await page.goto('/?topic=saas-home');
  await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(10);
  await expect(page.getByRole('combobox',{name:'专题'})).toHaveValue('saas-home');
- await page.goto('/inspiration?topic=startup-home');
+ await page.goto('/?topic=startup-home');
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('11 个参考');await expect(page.locator('.inspiration-topic')).toContainText('2026-11-01');
  await expect(page.locator('.insp-card-out[href="https://attio.com/"]')).toHaveCount(1);
- await page.goto('/inspiration?topic=unknown');
+ await page.goto('/?topic=unknown');
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');
- await page.goto('/inspiration');
+ await page.goto('/');
  const cards=page.locator('.inspiration-grid .insp-card');
  const topic=page.getByRole('combobox',{name:'专题'});
  await topic.selectOption('saas-home');
@@ -552,7 +552,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-topic')).toContainText('2026-10-29');
  await expect(cards.locator('.insp-card-open[href="/inspiration/lovable"]')).toHaveCount(0);
  await expect(cards.locator('.insp-card-out[href="https://impeccable.style/"]')).toHaveCount(1);
- await expect(page.locator('.insp-title')).toContainText('94 个精选外部参考');await expect(page.locator('.insp-counts')).toContainText('20 Landing');
+ await expect(page.locator('.insp-title')).toContainText('目前 94 条');await expect(page.locator('.insp-counts')).toContainText('20 Landing');
  await page.getByRole('searchbox').fill('Vercel');
  await expect(cards).toHaveCount(1);await expect(cards.first().locator('.insp-card-open')).toHaveAttribute('href','/inspiration/v0');
  await page.getByRole('searchbox').fill('');
@@ -563,7 +563,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');
 });
 test('reference pack restores locally and reports storage failures', async ({page})=>{
- await page.goto('/inspiration');
+ await page.goto('/');
  await page.locator('.inspiration-grid .insp-card').first().getByRole('button',{name:'加入参考包'}).click();
  await page.locator('.inspiration-pack').getByLabel('参考什么',{exact:true}).fill('信息层级');
  await page.reload();
@@ -577,105 +577,10 @@ test('reference pack restores locally and reports storage failures', async ({pag
 
 test('reference pack reports failed local writes while keeping current edits', async ({page})=>{
  await page.addInitScript(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key==='variant-inspiration-pack-v1')throw new Error('storage unavailable');return original.call(this,key,value)}});
- await page.goto('/inspiration');
+ await page.goto('/');
  await page.locator('.inspiration-grid .insp-card').first().getByRole('button',{name:'加入参考包'}).click();
  await expect(page.getByRole('alert')).toContainText('无法读取或保存');
  await expect(page.locator('.inspiration-pack fieldset')).toHaveCount(1);
-});
-
-test('home connects reference discovery, cases and the project workflow', async ({page})=>{
- await page.goto('/');
- await expect(page.locator('.home-tasks li')).toHaveCount(4);
- await expect(page.locator('.site-nav a[href="/inspiration"]')).toBeVisible();
- await expect(page.locator('#works .library-card').first()).toBeVisible();
- await page.getByRole('link',{name:'浏览设计参考',exact:true}).click();
- await expect(page).toHaveURL(/\/inspiration$/);
- await expect(page.locator('.site-nav a[href="/inspiration"]')).toHaveAttribute('aria-current','page');
- await page.goto('/');
- await page.locator('.site-language').click();
- await expect(page.getByRole('heading',{name:'Start with what you need to do.'})).toBeVisible();
- for(const width of [320,390,1440]){
-  await page.setViewportSize({width,height:900});
-  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await expect(page.locator('.site-nav a[href="/en/inspiration"]')).toBeVisible();
- }
-});
-
-test('home shows the newest Best practice videos and links to the full tab', async ({page})=>{
- const media=JSON.parse(fs.readFileSync(new URL('../website/src/x-media.json',import.meta.url),'utf8'));
- const source=fs.readFileSync(new URL('../website/src/inspiration-data.ts',import.meta.url),'utf8'),from=source.indexOf('[',source.indexOf('export const inspirationItems = '));
- const newest=JSON.parse(source.slice(from,source.indexOf('\n];',from)+2)).filter(i=>i.category==='practice'&&media[i.id]).sort((a,b)=>b.post.date.localeCompare(a.post.date)).map(i=>`/inspiration/${i.id}`);
- // Posters are stubbed and videos stay pending, so the suite never streams from X.
- await page.route(/pbs\.twimg\.com/,r=>r.fulfill({contentType:'image/png',body:pixel}));await page.route(/video\.twimg\.com/,()=>{});
- await page.goto('/');const section=page.locator('.home-practice');
- await expect(section.getByRole('heading',{level:2})).toHaveText('最近的 Best practice');
- await expect(section.locator('.insp-vcard-open')).toHaveCount(6);
- expect(await section.locator('.insp-vcard-open').evaluateAll(as=>as.map(a=>a.getAttribute('href')))).toEqual(newest.slice(0,6));
- await expect(section.locator('.insp-vcard video').first()).toHaveAttribute('poster',/pbs\.twimg\.com/);
- for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
- await page.setViewportSize({width:390,height:900});await expect(section.locator('.insp-vcard:visible')).toHaveCount(3);
- await section.getByRole('link',{name:`查看全部 ${newest.length} 个`}).click();await expect(page).toHaveURL(/\/inspiration\?category=practice$/);
- await expect(page.locator('.insp-pills button[aria-pressed=true]')).toHaveText('Best practice');await expect(page.locator('.insp-videos > li')).toHaveCount(newest.length);
-});
-
-test('home case switches recorded A/B/C evidence and preserves the chosen direction in English', async ({page})=>{
- await page.goto('/');
- const demo=page.locator('.home-case');
- await expect(demo.getByRole('heading',{name:'同一个任务，试试三种解法。'})).toBeVisible();
- await expect(demo.locator('img')).toHaveAttribute('src','/media/pulse/a.jpg');
- await demo.getByRole('button',{name:/B.*计分卡/}).click();
- await expect(demo.locator('img')).toHaveAttribute('src','/media/pulse/b.jpg');
- await expect(demo.getByRole('button',{name:/B.*计分卡/})).toHaveAttribute('aria-pressed','true');
- await expect(demo.locator('.home-case-notes')).toContainText('信息密度最高');
- await expect(demo.getByRole('link',{name:'深入看这个方向'})).toHaveAttribute('href','/d/pulse?direction=B');
- await demo.getByRole('button',{name:/C.*证据追踪/}).focus();
- await page.keyboard.press('Enter');
- await expect(demo.locator('img')).toHaveAttribute('src','/media/pulse/c.jpg');
- await page.locator('.site-language').click();
- await expect(demo.getByRole('button',{name:/C.*Evidence Trace/})).toHaveAttribute('aria-pressed','true');
- await expect(demo.locator('.home-case-notes')).toContainText('Full week overview');
- for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
-});
-test('home hero actions keep readable text contrast', async ({page})=>{
- await page.goto('/');
- await expect(page.locator('.home-actions a')).toHaveCount(2);
- const ratios=await page.locator('.home-actions a').evaluateAll(links=>links.map(el=>{
-  const lum=c=>{const [r,g,b]=c.match(/\d+(\.\d+)?/g).slice(0,3).map(Number).map(v=>{v/=255;return v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4});return 0.2126*r+0.7152*g+0.0722*b};
-  let bg=el,color='rgba(0, 0, 0, 0)';while(bg&&(color=getComputedStyle(bg).backgroundColor)==='rgba(0, 0, 0, 0)')bg=bg.parentElement;
-  const [a,b]=[lum(getComputedStyle(el).color),lum(color)].sort((x,y)=>y-x);return (a+0.05)/(b+0.05)}));
- expect(ratios).toHaveLength(2);
- for(const ratio of ratios)expect(ratio).toBeGreaterThanOrEqual(4.5);
-});
-test('home works as a design navigation site with a switchable, sourced showcase', async ({page})=>{
- await page.setViewportSize({width:1440,height:900});
- await page.goto('/');
- await expect(page).toHaveTitle('Variant Design — 设计导航，只收核对过的');
- const inView=sel=>page.locator(sel).first().evaluate(el=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight});
- for(const sel of ['.home-claim h1','.home-show-card','.home-action-primary','.home-shelves'])expect(await inView(sel)).toBe(true);
- await expect(page.locator('.home-counts')).toHaveText('目前有 94 个参考、1 个实测技能和 5 个案例。');
- await expect(page.locator('main .content-kicker')).toHaveCount(0);
- expect(await page.locator(':is(.home-hero, .home-tasks, .home-featured, .home-case, #directories) :is(a, button)').evaluateAll(els=>els.map(e=>e.innerText).join(' '))).not.toMatch(/[→↗↓]/);
- const card=page.locator('.home-show-card');
- await expect(card.locator('h3')).toHaveText('Linear');
- await expect(card.locator('.home-show-facts')).toHaveText('Linear 官网 · 仅链接 · 核对于 2026-10-29 · 设计者未知');
- await expect(card.getByRole('link',{name:'打开来源'})).toHaveAttribute('href','https://linear.app/');
- await expect(card.getByRole('link',{name:'看「SaaS 首页」专题的 10 条'})).toHaveAttribute('href','/inspiration?topic=saas-home');
- await page.getByRole('button',{name:'技能',exact:true}).click();
- await expect(page.getByRole('button',{name:'技能',exact:true})).toHaveAttribute('aria-pressed','true');
- await expect(card.locator('h3')).toHaveText('variant-design');
- await expect(card.locator('.home-show-code')).toHaveText('npx skills add YuqingNicole/variant-design-skill -a claude-code -a codex');
- await page.getByRole('button',{name:'案例',exact:true}).focus();await page.keyboard.press('Enter');
- await expect(card.locator('img')).toHaveAttribute('src','/media/pulse/a.jpg');
- await expect(card.locator('.home-show-facts')).toContainText('技能产出，已验证');
- const dirs=page.locator('#directories');
- await expect(dirs.locator('li a')).toHaveCount(9);
- await expect(dirs.getByRole('link',{name:'recent.design Skills'})).toHaveAttribute('href','https://recent.design/skills');
- await expect(dirs).toContainText('不代表我们试过或推荐');
- await page.locator('.site-language').click();
- await expect(page.locator('.home-claim h1')).toHaveText('A design guide,checked before it’s listed.');
- await page.setViewportSize({width:390,height:844});
- for(const sel of ['.home-claim h1','.home-action-primary'])expect(await inView(sel)).toBe(true);
- for(const width of [320,390]){await page.setViewportSize({width,height:844});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
 });
 
 test('headings use LXGW Neo ZhiSong and visitors can switch back to the original IPA font', async ({page})=>{
@@ -695,25 +600,9 @@ test('headings use LXGW Neo ZhiSong and visitors can switch back to the original
  await expect(page.locator('h1')).toHaveCSS('font-family',/LXGW Neo ZhiSong/);
 });
 
-test('home shelf switch runs a view transition, and reduced motion switches instantly', async ({page,browser})=>{
- await page.goto('/');
- // The transition lasts about 0.3s, shorter than the gaps between polls, so record every frame instead of sampling.
- await page.evaluate(()=>{const seen=window.seenTransitions=new Set();const frame=()=>{for(const a of document.getAnimations()){const name=String(a.effect?.pseudoElement||'');if(name.startsWith('::view-transition'))seen.add(name)}requestAnimationFrame(frame)};frame()});
- await page.locator('.home-shelves button').nth(1).click();
- await expect.poll(()=>page.evaluate(()=>[...window.seenTransitions].join(' '))).toContain('home-shelf-pill');
- await expect(page.locator('.home-shelves button[aria-pressed=true] .home-shelf-pill')).toHaveCount(1);
- await expect(page.locator('.home-show-card')).toHaveAttribute('data-shelf','skill');
- const reduced=await browser.newPage({reducedMotion:'reduce'});
- await reduced.goto(page.url());
- await reduced.locator('.home-shelves button').nth(2).click();
- await expect(reduced.locator('.home-show-card')).toHaveAttribute('data-shelf','case');
- expect(await reduced.evaluate(()=>document.getAnimations().filter(a=>String(a.effect?.pseudoElement||'').startsWith('::view-transition')).length)).toBe(0);
- await reduced.close();
-});
-
 test('pages read without JavaScript, guides render in both languages, and unknown paths are not indexable', async ({ browser, page, request }) => {
   const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
-  for (const [route, text] of [['/about', 'Variant'], ['/pricing', '本地版'], ['/skills', 'variant-design'], ['/submit', '投稿'], ['/inspiration', '灵感'], ['/guides', '怎么撤回 AI 对设计的修改'], ['/guides/undo-ai-design-changes', 'undo B'], ['/guides/git-or-snapshot-undo', 'git stash'], ['/guides/design-references-with-sources', '核对日期'], ['/changelog', '更新记录']]) {
+  for (const [route, text] of [['/about', 'Variant'], ['/pricing', '本地版'], ['/skills', 'variant-design'], ['/submit', '投稿'], ['/', '互联网上最好的设计灵感'], ['/guides', '怎么撤回 AI 对设计的修改'], ['/guides/undo-ai-design-changes', 'undo B'], ['/guides/git-or-snapshot-undo', 'git stash'], ['/guides/design-references-with-sources', '核对日期'], ['/changelog', '更新记录']]) {
     await reader.goto(route);
     await expect(reader.locator('h1').first(), route).toBeVisible();
     await expect(reader.locator('#root'), route).toContainText(text);
@@ -737,7 +626,7 @@ test('pages read without JavaScript, guides render in both languages, and unknow
 
 test('English has its own addresses: readable without JavaScript, linked both ways and never forced', async ({ browser, page, request }) => {
   const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
-  for (const [route, text] of [['/en', 'A design guide'], ['/en/docs', 'Install'], ['/en/inspiration', 'Inspiration'], ['/en/d/pulse', 'Pulse: three ways to read a weekly report'], ['/en/c/landing', 'Landing pages'], ['/en/guides/undo-ai-design-changes', 'How to undo design changes made by AI'], ['/en/about', 'Variant'], ['/en/pricing', 'Local'], ['/en/submit', 'Submissions'], ['/en/sponsor', 'Sponsor'], ['/en/skills', 'skills'], ['/en/changelog', 'Changelog']]) {
+  for (const [route, text] of [['/en', 'The best design inspiration'], ['/en/docs', 'Install'], ['/en/d/pulse', 'Pulse: three ways to read a weekly report'], ['/en/c/landing', 'Landing pages'], ['/en/guides/undo-ai-design-changes', 'How to undo design changes made by AI'], ['/en/about', 'Variant'], ['/en/pricing', 'Local'], ['/en/submit', 'Submissions'], ['/en/sponsor', 'Sponsor'], ['/en/skills', 'skills'], ['/en/changelog', 'Changelog']]) {
     await reader.goto(route);
     await expect(reader.locator('html'), route).toHaveAttribute('lang', 'en');
     await expect(reader.locator('#root'), route).toContainText(text);
@@ -754,14 +643,14 @@ test('English has its own addresses: readable without JavaScript, linked both wa
   await page.goto('/en/d/pulse');
   await expect(page.locator('h1')).toHaveText('Pulse: three ways to read a weekly report');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.locator('.site-nav a').filter({ hasText: 'Get started' })).toHaveAttribute('href', '/en/docs');
+  await expect(page.locator('.site-nav a').filter({ hasText: 'Skills' })).toHaveAttribute('href', '/en/skills');
   await page.locator('.library-tabs button').nth(1).click();
   await expect(page).toHaveURL(/\/en\/d\/pulse\?direction=B$/);
   await page.locator('.site-language').click();
   await expect(page).toHaveURL(/\/d\/pulse\?direction=B$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
-  await expect(page.locator('.site-nav a').filter({ hasText: '开始使用' })).toHaveAttribute('href', '/docs');
-  await page.goto('/en/inspiration');
+  await expect(page.locator('.site-nav a').filter({ hasText: '技能' })).toHaveAttribute('href', '/skills');
+  await page.goto('/en');
   await page.locator('.insp-card').first().locator('a').first().click();
   await expect(page).toHaveURL(/\/en\/inspiration\/[^/]+$/);
   // A remembered language offers the other address but never redirects.
@@ -789,7 +678,7 @@ test('English has its own addresses: readable without JavaScript, linked both wa
 });
 
 test('every navigation link stays visible on narrow screens in both languages', async ({ page }) => {
-  for (const width of [320, 390, 600]) for (const route of ['/', '/docs', '/en', '/en/inspiration', '/pricing']) {
+  for (const width of [320, 390, 600]) for (const route of ['/', '/docs', '/en', '/en/cases', '/pricing']) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto(route);
     await expect(page.locator('.site-nav-links a').last()).toBeVisible();
@@ -804,13 +693,13 @@ test('every navigation link stays visible on narrow screens in both languages', 
 
 test('without JavaScript the inspiration page links every reference, and with it the grid still pages', async ({ browser, page }) => {
   const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
-  for (const [route, prefix] of [['/inspiration', '/inspiration/'], ['/en/inspiration', '/en/inspiration/']]) {
+  for (const [route, prefix] of [['/', '/inspiration/'], ['/en', '/en/inspiration/']]) {
     await reader.goto(route);
     const links = await reader.locator(`#root a[href^="${prefix}"]`).evaluateAll(as => [...new Set(as.map(a => a.getAttribute('href').split(/[?#]/)[0]))]);
     expect(links.length, route).toBe(94);
   }
   await noScript.close();
-  await page.goto('/inspiration');
+  await page.goto('/');
   await expect(page.locator('#root nav[aria-label="全部参考"]')).toHaveCount(0);
   await expect(page.locator('.insp-card').first()).toBeVisible();
 });
@@ -834,4 +723,28 @@ test('on phones, links and fields are big enough to tap and read', async ({ page
     expect(problems, route).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), route).toBe(true);
   }
+});
+
+test('home leads with the inspiration feed, cases have their own page, and the skill sits under resources', async ({page,request})=>{
+ const raw=await(await request.get('/')).text();
+ expect(raw).toContain('<title>Variant Design — 互联网上最好的设计灵感</title>');
+ expect(raw).toContain('"@type":"WebSite"');expect(raw).not.toContain('"@type":"SoftwareSourceCode"');
+ expect(await(await request.get('/skills')).text()).toContain('"@type":"SoftwareSourceCode"');
+ await page.goto('/');
+ await expect(page.locator('h1')).toHaveText('互联网上最好的设计灵感。');
+ await expect(page.locator('.insp-title')).toContainText('每条都附出处和我们写的笔记');
+ await expect(page.locator('.inspiration-grid .insp-card').first()).toBeInViewport();
+ await expect(page.locator('.site-nav-links a')).toHaveText(['灵感','动效视频','案例','技能','指南','投稿']);
+ await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');
+ await page.locator('.site-nav-links a',{hasText:'动效视频'}).click();
+ await expect(page.getByRole('button',{name:'Best practice',exact:true})).toHaveAttribute('aria-pressed','true');
+ for(const [group,links] of [['Variant Design 技能',['/docs','/about','/pricing','/changelog','/lab']],['资源',['/skills','/guides','/submit']]])
+  for(const href of links)await expect(page.getByRole('navigation',{name:group}).locator(`a[href="${href}"]`)).toHaveCount(1);
+ await page.goto('/inspiration?topic=saas-home');
+ await expect(page).toHaveURL(/:\d+\/\?topic=saas-home$/);await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(10);
+ await page.goto('/cases');
+ await expect(page.locator('h1')).toHaveText('一个任务，三种方向。');await expect(page.locator('.library-grid .library-card')).toHaveCount(5);
+ await expect(page.locator('.site-nav-links a',{hasText:'案例'})).toHaveAttribute('aria-current','page');
+ await page.goto('/d/pulse');await page.locator('.content-back a').first().click();await expect(page).toHaveURL(/\/cases$/);
+ for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await page.goto('/');await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
 });

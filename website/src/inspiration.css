@@ -2,9 +2,10 @@
    Thumbnails map the link itself (its published preview or the post's text); analysis cards are the fallback. */
 .inspiration-page :is(a,button,select,input,textarea,summary):focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
 .insp-head{display:grid;gap:var(--space-2);padding-block:var(--space-6) var(--space-5)}
-.insp-title{display:flex;align-items:baseline;gap:var(--space-2) var(--space-4);flex-wrap:wrap}
-.insp-title h1{font-size:clamp(30px,3vw,40px);line-height:1.15;margin:0}
-.insp-title p{margin:0;color:var(--site-muted);font-size:14px;flex:1 1 320px}
+.insp-title{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:var(--space-3) var(--space-6)}
+.insp-title h1{grid-column:1/-1;max-width:none;font-size:clamp(28px,3.4vw,46px);line-height:1.12;letter-spacing:-.01em;margin:0}
+.insp-title p{margin:0;color:var(--site-muted);font-size:16px;max-width:56ch}
+@media(max-width:650px){.insp-title{grid-template-columns:minmax(0,1fr)}}
 .insp-title a{color:var(--site-brand);font-size:13px;text-underline-offset:4px}
 .insp-counts{margin:0;font-size:13px;color:var(--site-muted);font-variant-numeric:tabular-nums}
 .inspiration-page .inspiration-disclosure{font-size:12px;color:var(--site-muted);max-width:none}

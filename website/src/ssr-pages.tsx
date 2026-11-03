@@ -21,11 +21,11 @@ import { SubmitPage } from './SubmitPage';
 
 const standalone: Record<string, ReactNode> = {
   '/about': <PaperLanding/>, '/pricing': <PricingPage repositoryUrl="https://github.com/YuqingNicole/variant-design-skill"/>,
-  '/skills': <SkillsPage/>, '/submit': <SubmitPage/>, '/sponsor': <SponsorPage/>, '/guides': <GuidesPage/>, '/changelog': <ChangelogPage/>, '/inspiration': <InspirationPage/>,
+  '/skills': <SkillsPage/>, '/submit': <SubmitPage/>, '/sponsor': <SponsorPage/>, '/guides': <GuidesPage/>, '/changelog': <ChangelogPage/>, '/': <InspirationPage/>,
   ...Object.fromEntries(guides.map(g => [`/guides/${g.slug}`, <GuidesPage slug={g.slug}/>])),
 };
 const library: Record<string, ReactNode> = {
-  '/': <LibraryPage view={{ kind: 'feed' }}/>, '/docs': <ContentPages page="docs"/>,
+  '/cases': <LibraryPage view={{ kind: 'feed' }}/>, '/docs': <ContentPages page="docs"/>,
   ...Object.fromEntries(categories.filter(c => entries.some(e => e.category === c.id)).map(c => [`/c/${c.id}`, <LibraryPage view={{ kind: 'category', id: c.id }}/>])),
   ...Object.fromEntries(entries.map(e => [`/d/${e.slug}`, <LibraryPage view={{ kind: 'entry', slug: e.slug }}/>])),
   ...Object.fromEntries(inspirationItems.map(i => [`/inspiration/${i.id}`, <InspirationPage detail={i.id}/>])),

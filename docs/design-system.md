@@ -1,12 +1,12 @@
 # Variant Design 网站设计系统
 
-本文是 `website/` 的设计规范，写给改网站的人和 Agent。数值以代码为准：变量定义在 `website/src/site-system.css`，首页在 `home.css`，内容页在 `content-pages.css`，灵感参考页在 `inspiration.css`。代码和本文不一致时，先改代码或本文中错的那一方，不要各写各的。
+本文是 `website/` 的设计规范，写给改网站的人和 Agent。数值以代码为准：变量定义在 `website/src/site-system.css`，首页就是灵感作品流，在 `inspiration.css`；内容页在 `content-pages.css`；`home.css` 只剩赞助页用的主次按钮。代码和本文不一致时，先改代码或本文中错的那一方，不要各写各的。
 
-最后核对：2026-11-02，分支 `codex/premium-refine`（首页按数量预算收敛字号、颜色和圆角）。
+最后核对：2026-11-03，分支 `codex/reposition-inspiration`（改定位：首页改为灵感作品流，见 RFC-006）。
 
 ## 1. 定位和语气
 
-网站是一个**设计导航站**：收录外部参考、实测过的设计技能和真实的 A/B/C 案例。Variant Design 技能是其中一个精选条目，不是整个网站。首页的主张是"设计导航，只收核对过的"。
+网站是一个**设计灵感站**，定位语是"互联网上最好的设计灵感"（RFC-006）。首页是图先行的作品流，每条附出处、核对日期和我们写的笔记。A/B/C 案例在 `/cases`。Variant Design 技能是"资源"里的一项，它的文档、价格和关于页在页脚的技能分组里。
 
 视觉上像一本认真排印的目录：纸色底、墨色字、一种深绿、衬线标题、细线分隔。可信比热闹重要。每个条目都要能回答三个问题：来源是谁、什么时候核对的、还有什么不知道。
 
@@ -57,13 +57,11 @@
 
 | 用途 | 选择器 | 大小 | 行高 |
 |---|---|---|---|
-| 首页主标题 | `.home-claim h1` | `clamp(40px, 4.6vw, 66px)` | 1.08 |
+| 首页定位语 | `.insp-title h1` | `clamp(28px, 3.4vw, 46px)` | 1.12 |
 | 内容页主标题 | `.content-hero h1` | `clamp(36px, 4.8vw, 64px)`，手机 36px | 1.18 |
-| 首页区块标题 | `.home-tasks h2`、`.home-featured h2`、`.home-case-header h2`、`.library-feed-heading h2` | `clamp(30px, 3.4vw, 46px)` | — |
-| 展示卡标题 | `.home-show-card h3` | 同区块标题，手机 34px | 1.05 |
-| 引导段落 | `.home-claim > p` | 16px | 1.75 |
+| 区块标题 | 内容页和案例页的 `h2` | `clamp(30px, 3.4vw, 46px)` | — |
+| 引导段落 | `.insp-title p`、`.content-hero p` | 16px | 1.75 |
 | 正文 | `.content-reading p` | 15px | 1.9 |
-| 卡片说明 | `.home-show-body` | 16px | 1.7 |
 | 次要说明、按钮、导航 | `.home-tasks li p`、`.home-actions a`、`.site-language` | 14px | 1.7 |
 | 卡片标题 | `.library-card strong` | 16px，字重 500 | 1.35 |
 | 小字 | 页脚、出处行、图注 | 13px（首页和页脚；其他页还有 12px） | 1.6 |
@@ -81,7 +79,7 @@
 - **容器**：`.site-shell` 宽度为 `min(1280px, 100% - 96px)`。800px 以下改为 `100% - 40px`，480px 以下改为 `100% - 32px`。
 - **断点**：1000px（首页首屏改单列，主张在前）、800px（导航变紧凑）、650px（导航链接换到第二行，各占满一行；极窄时仍可横向滚动）、480px（页脚竖排）。
 - **手机上的可点和可读**（650px 以下）：导航、页脚、目录和单独成行的链接，点击区域至少 44px 高（导航链接字号随屏宽 12–14px，6 个链接在 320px 宽仍排一行）；输入框、下拉和文本框用 16px 字，避免 iOS 聚焦时放大页面；正文和标签不小于 12px（示例产品界面里的缩略内容除外）。`tests/landing.spec.mjs` 的“on phones, links and fields are big enough to tap and read”检查这三条。
-- **区块**：首页各区块 `padding-block: 72px`，之间用一条 `--site-line` 顶线分隔。首屏 `padding-block: 64px 80px`。
+- **区块**：说明页（如 `/sponsor`）各区块 `padding-block: 72px`，之间用一条 `--site-line` 顶线分隔。首屏 `padding-block: 64px 80px`。
 - **间距**：区块内用 `gap`，不要逐个元素加 margin。常用值：
   - 按钮组 12px；
   - 链接组 20px；
@@ -95,7 +93,7 @@
 
 条目多、需要扫视的页面用这套结构，不用首屏大标题：
 
-1. **标题行**：衬线标题（`clamp(30px, 3vw, 40px)`）和一句灰色说明放在同一行，右端放"投稿与授权规则"链接。下面一行是各分类的数量（正文字体 13px，从数据算出），再下面是可展开的版权说明（`<details>`），收起时只占一行。
+1. **标题行**：首页的定位语是衬线标题（`clamp(28px, 3.4vw, 46px)`，1440 和 390 宽度下各占一行），下面一行是灰色说明（16px，最多 56ch），右端放"投稿与授权规则"链接。下面一行是各分类的数量（正文字体 13px，从数据算出），再下面是可展开的版权说明（`<details>`），收起时只占一行。
 2. **筛选栏**：`position: sticky; top: 0`，上下各一条细线。左边是可横向滚动的分类胶囊，右边依次是专题下拉、搜索框（⌘K / Ctrl+K 聚焦，聚焦或有内容时从 110px 展开到 200px）、排序下拉。650px 以下胶囊独占一行。
 3. **网格**：`repeat(auto-fill, minmax(216px, 1fr))`，间距 12px，卡片 16:10。1440px 下 5 列，1920px 下仍受 `.site-shell` 限宽。分析卡标题 20px。Best practice 的视频用 `columns: 3 280px`，1440px 下 3 列（2026-11-02 维护者要求内容排版略小）。
 4. **分页**：先显示 30 个（5 列的整数倍），滚动接近底部时自动加载下一批（IntersectionObserver），同时保留"加载更多（还有 N 个）"按钮作兜底。

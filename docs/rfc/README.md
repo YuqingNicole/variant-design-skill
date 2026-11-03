@@ -7,5 +7,6 @@
 | [003 · 设计参考库验证闭环](003-reference-library-validation-loops.md) | 提案，待验证 | RFC-001、002；设计参考库 PRD v0.2 工作稿 |
 | [004 · 首页：设计导航站的第一屏](004-landing-first-screen.md) | 已修订，§0 已实施 | RFC-001、002、003 |
 | [005 · 网站多语言架构](005-multilingual-architecture.md) | 已接受，P0 已实施 | RFC-002、003 §5 |
+| [006 · 改定位：以设计灵感为主](006-inspiration-first-repositioning.md) | 已接受，P1 已实施 | RFC-003、004、005 |
 
 RFC 记录设计决策与约束，PRD 记录验收要求；实现状态以对应 Issue 和验证证据为准。

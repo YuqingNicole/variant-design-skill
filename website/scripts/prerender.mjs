@@ -19,7 +19,6 @@ const order = entries => [...entries].sort((a, b) => Number(b.featured) - Number
 const staticPages = {
   '/about': ['关于 Variant Design', '一份需求，在你的项目里做出三个能运行的方向：任务、数据和功能相同，取舍不同。局部修改先存快照，可以撤回，不会覆盖你没看过的改动。'],
   '/docs': ['安装与开始使用 — Variant Design', '安装技能，确认可用，然后在你的项目里走完一次：生成、比较、试改、撤回、接入。'],
-  '/inspiration': ['灵感参考 — Variant Design', '94 个外部设计参考，只附我们自己的分析和原站链接。'],
   '/submit': ['投稿与授权 — Variant Design', 'Variant Design 方向库的收录、授权与撤下规则。'],
   '/pricing': ['价格 — Variant Design', 'Variant Design 的方案与价格。'],
   '/sponsor': ['赞助 — Variant Design', '品牌赞助 Variant Design 的方式与规则：明确标注，与编辑精选分开。'],
@@ -32,7 +31,6 @@ const staticPages = {
 const staticPagesEn = references => ({
   '/about': ['About Variant Design', 'One brief becomes three runnable directions in your own project: the same task, data and functions, different tradeoffs. Scoped edits are snapshotted first, can be undone and never overwrite changes you have not seen.'],
   '/docs': ['Install & get started — Variant Design', 'Install the skill, confirm it works, then go through one full loop in your project: generate, compare, refine, undo, integrate.'],
-  '/inspiration': ['Inspiration — Variant Design', `${references} outside design references, with only our own notes and links to the source.`],
   '/submit': ['Submissions & permissions — Variant Design', 'How the Variant Design direction library handles submissions, permissions and takedowns.'],
   '/sponsor': ['Sponsor Variant Design', 'How brands can sponsor Variant Design: clearly labeled and kept separate from editorial picks.'],
   '/pricing': ['Pricing — Variant Design', 'Variant Design plans and pricing.'],
@@ -69,7 +67,7 @@ export function referenceIndex(references, lang = 'zh') {
   return `<nav aria-label="${en ? 'All references' : '全部参考'}"><h2>${en ? `All ${references.length} references` : `全部 ${references.length} 个参考`}</h2><ul>${references.map(r => `<li><a href="${href(escape(r.id))}">${escape(r.name)}</a></li>`).join('')}</ul></nav>`;
 }
 function referenceBody(r) {
-  return `<main><p><a href="/inspiration">灵感参考</a></p><h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus.zh)}</dd><dt>用在哪里</dt><dd>${escape(r.application.zh)}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}${r.via ? ` · <a href="${escape(r.via)}">经 ${escape(new URL(r.via).hostname)} 发现</a>` : ''}</dd></dl><p><a href="${escape(r.url)}">访问原站</a></p></main>`;
+  return `<main><p><a href="/">灵感</a></p><h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus.zh)}</dd><dt>用在哪里</dt><dd>${escape(r.application.zh)}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}${r.via ? ` · <a href="${escape(r.via)}">经 ${escape(new URL(r.via).hostname)} 发现</a>` : ''}</dd></dl><p><a href="${escape(r.url)}">访问原站</a></p></main>`;
 }
 // The install guide (src/docs-content.ts) as static HTML, so /docs reads without JavaScript.
 function docsBody(d, lang = 'zh') {
@@ -139,7 +137,9 @@ export function renderSite(entries, template, site = defaultSite, references = [
   const zhPage = options => page(template, { site, translated: !!english[options.route], ...options });
   const enPage = options => { if (english[options.route]) pages.set(pathIn(options.route, 'en'), page(template, { site, lang: 'en', translated: true, body: english[options.route], ...options })); };
   const library = 'Variant Design 方向库';
-  pages.set('/', zhPage({ route: '/', data: { '@graph': [{ '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/`, name: 'Variant Design', inLanguage: ['zh-CN', 'en'] }, skillData(site, version)] }, title: 'Variant Design — 设计导航，只收核对过的', description: '给用 AI 做产品的人：精选外部参考、实测过的设计技能和真实的 A/B/C 案例。参考写明来源、核对日期和还不知道的事，技能附实测记录，案例附产出记录。', body: `<main><h1>设计导航，只收核对过的。</h1><p>给用 AI 做产品的人：精选外部参考、实测过的设计技能和真实的 A/B/C 案例。参考写明来源、核对日期和还不知道的事，技能附实测记录，案例附产出记录。</p><nav><a href="/inspiration">浏览设计参考</a> · <a href="/skills">设计技能</a> · <a href="#works">A/B/C 案例</a> · <a href="/docs">安装与使用</a></nav><section><h2>精选技能：variant-design</h2><p>把一个任务做成 A/B/C 三个可比较的方向，支持局部修改、快照撤回和可回滚的接入。</p><a href="/d/pulse">查看 Pulse 案例与产出记录</a></section><section id="works"><h2>一个任务，三种方向。</h2>${sorted.map(card).join('')}</section></main>` }));
+  const homeTitle = 'Variant Design — 互联网上最好的设计灵感', homeDescription = `精选网站、界面和动效作品，每条都附出处和我们写的笔记：研究什么、用在哪里。目前 ${references.length} 条。`;
+  pages.set('/', zhPage({ route: '/', data: { '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/`, name: 'Variant Design', description: homeDescription, inLanguage: ['zh-CN', 'en'] }, title: homeTitle, description: homeDescription, body: rendered['/'] ?? '' }));
+  pages.set('/cases', zhPage({ route: '/cases', title: `A/B/C 案例 — ${library}`, description: '同一个任务的三个方向：每个方向说明优化什么、牺牲什么、适合什么场景。技能产出和概念作品分别标注。', body: `<main><h1>一个任务，三种方向。</h1><section id="works">${sorted.map(card).join('')}</section></main>` }));
   for (const category of [...new Set(sorted.map(e => e.category))]) {
     const name = categoryNames[category] ?? category, list = sorted.filter(e => e.category === category);
     pages.set(`/c/${category}`, zhPage({ route: `/c/${category}`, title: `${name} — ${library}`, description: `${name}：${list.length} 件作品，每件包含同一个任务的三个方向。`, body: `<main><h1>${escape(name)}</h1>${list.map(card).join('')}</main>` }));
@@ -150,17 +150,19 @@ export function renderSite(entries, template, site = defaultSite, references = [
       image: { src: `/media/${e.slug}/${image.file}`, width: image.width, height: image.height, alt: image.alt[0] }, body: entryBody(e) }));
   }
   for (const r of references) pages.set(`/inspiration/${r.id}`, zhPage({ route: `/inspiration/${r.id}`, title: `${r.name} — 灵感参考 — Variant Design`, description: `${r.name}：${r.focus.zh}。用在${r.application.zh}。`, body: referenceBody(r) }));
-  for (const [route, [title, description]] of Object.entries(staticPages)) pages.set(route, zhPage({ route, title, description, body: rendered[route] ?? '', ...(route === '/docs' && docs ? { body: docsBody(docs), data: docsData(docs, site) } : {}) }));
+  for (const [route, [title, description]] of Object.entries(staticPages)) pages.set(route, zhPage({ route, title, description, body: rendered[route] ?? '', ...(route === '/docs' && docs ? { body: docsBody(docs), data: docsData(docs, site) } : {}), ...(route === '/skills' ? { data: skillData(site, version) } : {}) }));
   for (const g of guides) pages.set(`/guides/${g.slug}`, zhPage({ route: `/guides/${g.slug}`, type: 'article', title: `${g.title.zh} — Variant Design`, description: g.answer.zh, data: guideData(g, site), body: rendered[`/guides/${g.slug}`] ?? '' }));
 
   // English exists only where it rendered in full; a page without it stays Chinese-only and unlisted in hreflang.
   const enLibrary = 'Variant Design direction library', enCategories = { landing: 'Landing pages', product: 'Product UI', data: 'Data', brand: 'Brand', component: 'Components' };
-  enPage({ route: '/', title: 'Variant Design — a design guide, checked before it’s listed', description: 'For people building products with AI: curated outside references, tried design skills and real A/B/C cases, each with its source, check date and what is still unknown.', data: { '@graph': [{ '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/en`, name: 'Variant Design', inLanguage: ['zh-CN', 'en'] }, skillData(site, version, 'en')] } });
+  const enHomeDescription = `Curated websites, interfaces and motion work, each with its source and our own notes on what to study and where to use it. ${references.length} so far.`;
+  enPage({ route: '/', title: 'Variant Design — The best design inspiration on the internet', description: enHomeDescription, data: { '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/en`, name: 'Variant Design', description: enHomeDescription, inLanguage: ['zh-CN', 'en'] } });
+  enPage({ route: '/cases', title: `A/B/C cases — ${enLibrary}`, description: 'Three directions for one brief: what each optimizes, what it gives up and where it fits. Skill outputs and concept studies are labeled separately.' });
   for (const category of new Set(sorted.map(e => e.category))) { const name = enCategories[category] ?? category, count = sorted.filter(e => e.category === category).length; enPage({ route: `/c/${category}`, title: `${name} — ${enLibrary}`, description: `${name}: ${count} ${count === 1 ? 'entry' : 'entries'}, each with three directions for the same brief.` }); }
   for (const e of sorted) { const { image } = cover(e); enPage({ route: `/d/${e.slug}`, type: 'article', title: `${e.title[1]} — ${enLibrary}`, description: e.summary[1], image: { src: `/media/${e.slug}/${image.file}`, width: image.width, height: image.height, alt: image.alt[1] },
     data: { '@type': 'CreativeWork', name: e.title[1], description: e.summary[1], datePublished: e.publishedAt, url: `${site}/en/d/${e.slug}`, image: site + `/media/${e.slug}/${image.file}`, isPartOf: { '@id': `${site}/#website` } } }); }
   for (const r of references) enPage({ route: `/inspiration/${r.id}`, title: `${r.name} — Inspiration — Variant Design`, description: `${r.name}: ${r.focus.en}. Use it for ${r.application.en}.` });
-  for (const [route, [title, description]] of Object.entries(staticPagesEn(references.length))) enPage({ route, title, description, ...(route === '/docs' && docs ? { data: docsData(docs, site, 'en') } : {}) });
+  for (const [route, [title, description]] of Object.entries(staticPagesEn(references.length))) enPage({ route, title, description, ...(route === '/docs' && docs ? { data: docsData(docs, site, 'en') } : {}), ...(route === '/skills' ? { data: skillData(site, version, 'en') } : {}) });
   for (const g of guides) enPage({ route: `/guides/${g.slug}`, type: 'article', title: `${g.title.en} — Variant Design`, description: g.answer.en, data: guideData(g, site, 'en') });
   return pages;
 }
@@ -171,7 +173,7 @@ export function llms(entries, docs, site = defaultSite, references = [], guides 
   const answers = guides.map(g => `- [${g.title.en}](${site}/en/guides/${g.slug}): ${g.answer.en}`).join('\n');
   return `# Variant Design
 
-> Variant Design is an open-source agent skill for Codex and Claude Code that turns one design brief into three distinct, comparable directions (A/B/C) inside your own project, with scoped edits, snapshot undo and an integration step you can roll back. Its website is a bilingual (Chinese/English) design navigation site: curated external references with sources and check dates, design skills that were actually run, and real A/B/C cases with their output records.
+> Variant Design is a bilingual (Chinese/English) design inspiration site: curated websites, interfaces and motion work, each with its source, the date it was checked and our own notes on what to study and where to use it. It also publishes variant-design, an open-source agent skill for Codex and Claude Code that turns one design brief into three distinct, comparable directions (A/B/C) inside your own project, with scoped edits, snapshot undo and an integration step you can roll back. A/B/C cases from real skill runs are listed with their output records.
 
 - Install for Codex: \`${docs.installCommand}\`
 - Install for Claude Code: \`${docs.clone(docs.agents.find(a => a.id === 'claude').path)}\`
@@ -199,7 +201,7 @@ ${cases}
 
 ## Library
 
-- [Design references](${site}/en/inspiration): ${references.length} curated external references, each with our own notes on what to study and where to use it, the source and the date it was checked.
+- [Design inspiration](${site}/en): ${references.length} curated external references, each with our own notes on what to study and where to use it, the source and the date it was checked.
 - [Design skills](${site}/en/skills): design delivery skills that were run in a throwaway project, with public records.
 
 ## Optional
@@ -248,7 +250,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   const { zh: rendered, en: english } = renderPages();
   for (const [route, html] of [...Object.entries(rendered), ...Object.entries(english)]) if (!html.includes('<h1')) throw new Error(`Empty static render for ${route}`);
   const version = fs.readFileSync(path.join(here, '../../VERSION'), 'utf8').trim(), references = loadReferences();
-  rendered['/inspiration'] += referenceIndex(references); english['/inspiration'] += referenceIndex(references, 'en');
+  rendered['/'] += referenceIndex(references); english['/'] += referenceIndex(references, 'en');
   const dist = path.resolve(here, '../dist'), site = (process.env.SITE_URL || defaultSite).replace(/\/$/, '');
   const { entries, problems } = loadEntries();
   if (problems.length) { console.error(problems.join('\n')); process.exit(1); }
