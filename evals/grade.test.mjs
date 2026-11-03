@@ -25,10 +25,12 @@ const result = change => grade(run(change), { fixture: loadFixture('pulse') });
 const check = (r, id) => r.checks.find(c => c.id === id);
 const context = (dir, edit) => { const file = path.join(dir, 'variant-output/.variant-context.json'), c = JSON.parse(fs.readFileSync(file, 'utf8')); edit(c); fs.writeFileSync(file, JSON.stringify(c)); };
 
-test('the recorded Pulse run passes every check', () => {
+test('the recorded Pulse run passes every check but generator habits', () => {
   const r = result(() => {});
-  assert.deepEqual(r.checks.filter(c => !c.pass), []);
-  assert.deepEqual(r.checks.map(c => c.id), ['generated', 'delivery-check', 'not-selected', 'project-untouched', 'quality-gate', 'brand-kept']);
+  // Recorded in October, before the habit rules: eyebrow labels and aria-hidden 01/02 numbering.
+  assert.deepEqual(r.checks.filter(c => !c.pass).map(c => c.id), ['generator-habits']);
+  assert.ok(r.checks.find(c => c.id === 'generator-habits').details.some(d => d.startsWith('decorative-number VariantA.tsx')));
+  assert.deepEqual(r.checks.map(c => c.id), ['generated', 'delivery-check', 'not-selected', 'project-untouched', 'quality-gate', 'generator-habits', 'brand-kept']);
   assert.equal(r.recommendation, 'A');
 });
 
@@ -129,7 +131,8 @@ test('a Claude Code plugin install outside the project counts as the copy under 
 
 // The harbor-chain turns, done with the real helpers on the recorded Pulse output with its brand lock removed.
 function chain({ pick = () => {}, skipUndo = false, component = 'color: var(--color-text); padding: var(--space-4); border-radius: var(--radius-md);' } = {}) {
-  const dir = run(d => context(d, c => { c.designSystem = null; }));
+  // The October Pulse output has generator habits; strip them so the chain is graded on its own turns.
+  const dir = run(d => { context(d, c => { c.designSystem = null; }); for (const f of fs.readdirSync(path.join(d, 'variant-output')).filter(f => /^Variant[ABC]\.(css|tsx)$/.test(f))) { const p = path.join(d, 'variant-output', f); fs.writeFileSync(p, fs.readFileSync(p, 'utf8').replace(/text-transform:\s*uppercase;?/g, '').replace(/\.padStart\(2, '0'\)/g, '')); } });
   const out = path.join(dir, 'variant-output'), turns = [], take = id => turns.push({ id, snapshot: snapshot(dir) });
   const write = (file, text) => fs.writeFileSync(path.join(out, file), text);
   take('generate');

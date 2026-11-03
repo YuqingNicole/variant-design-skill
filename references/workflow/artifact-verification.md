@@ -4,6 +4,8 @@ Verification is scoped evidence, not a quality score or a promise that the whole
 
 ## Record static findings
 
+Static status is `failed` on any quality-gate error, `unverified` on any warning, and `passed` otherwise. Generator-habit findings (`review`) are taste, not evidence: they do not change the status, and they are reported with the presentation.
+
 ```sh
 node <skill-root>/scripts/artifact-verification.mjs run <output> B [config.json]
 node <skill-root>/scripts/artifact-verification.mjs status <output> <report-file>

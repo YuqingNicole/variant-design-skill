@@ -103,6 +103,26 @@ export function scanSource(source, file = "<memory>") {
 
   for (const rule of rules) addMatches(findings, source, file, rule);
 
+  // Generator habits (references/workflow/quality-baseline.md → Generator habits). Severity "review": listed for the agent
+  // to remove or justify in its report, but never fails --strict, because a brand page may use them on purpose.
+  const spaced = /letter-spacing\s*:\s*(?:0?\.(?:0[6-9]|[1-9])\d*|[1-9]\d*(?:\.\d+)?)em/i;
+  for (const match of source.matchAll(/[^{}]*\{[^{}]*\}/g)) {
+    if (!/text-transform\s*:\s*uppercase/i.test(match[0]) || !spaced.test(match[0])) continue;
+    findings.push({ severity: "review", rule: "eyebrow-label", file, line: locationFor(source, match.index),
+      message: "Uppercase letter-spaced label: a generated-page habit above headings. Keep it only if the product already uses such labels; otherwise let the heading say what the section is.",
+      excerpt: match[0].trim().replace(/\s+/g, " ").slice(0, 140) });
+  }
+  for (const match of source.matchAll(/className=["'{`][^"'`}]*\buppercase\b[^"'`}]*\btracking-(?:wide|wider|widest|\[0?\.(?:0[6-9]|[1-9]))/g))
+    findings.push({ severity: "review", rule: "eyebrow-label", file, line: locationFor(source, match.index),
+      message: "Uppercase letter-spaced label: a generated-page habit above headings. Keep it only if the product already uses such labels.", excerpt: match[0].slice(0, 140) });
+  for (const match of source.matchAll(/>\s*0[1-9]\s*<|padStart\(\s*2\s*,\s*["'`]0["'`]\s*\)/g))
+    findings.push({ severity: "review", rule: "decorative-number", file, line: locationFor(source, match.index),
+      message: "Zero-padded number (04): a decorative count. Show a count only where it answers a question, in plain form.", excerpt: match[0] });
+  // Direction names belong in the comparison page (files starting with _), not in the product UI.
+  if (!path.basename(file).startsWith("_")) for (const match of source.matchAll(/(?:>|["'`])[^<>"'`\n]{0,40}\b(?:Direction|DIRECTION)\s+[ABC]\b|(?:>|["'`])[^<>"'`\n]{0,20}方向\s*[ABC](?![A-Za-z])/g))
+    findings.push({ severity: "review", rule: "direction-label-in-ui", file, line: locationFor(source, match.index),
+      message: "A direction name inside the page: the product UI should not say which direction it is; the comparison page does.", excerpt: match[0].slice(0, 140) });
+
   // A selector's presence says nothing about its computed indicator or coverage.
   // Keep all outline removals reviewable, even with an unrelated focus rule.
   for (const match of source.matchAll(/outline\s*:\s*(?:none|0)\b/gi)) {
@@ -164,11 +184,13 @@ function selfTest() {
     <img src="cover.jpg">
     <meta name="viewport" content="width=device-width, maximum-scale=1">
     <p>Lorem ipsum</p><p>出错了，请重试</p><input onpaste="return false">
-    <style>button { outline: none; animation: pop 1s; background: #000; transition: all 200ms; }</style>`;
+    <p class="kicker">Direction B · Room to grow</p><span class="count">04</span>
+    <style>button { outline: none; animation: pop 1s; background: #000; transition: all 200ms; }
+      .kicker { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }</style>`;
 
   const goodFindings = scanSource(good);
   const badRules = new Set(scanSource(bad).map((finding) => finding.rule));
-  const expected = ["missing-img-alt", "lorem-ipsum", "generic-error-copy", "focus-outline-removed", "missing-reduced-motion", "pure-black-surface", "zoom-disabled", "transition-all", "paste-blocked"];
+  const expected = ["missing-img-alt", "lorem-ipsum", "generic-error-copy", "focus-outline-removed", "missing-reduced-motion", "pure-black-surface", "zoom-disabled", "transition-all", "paste-blocked", "eyebrow-label", "decorative-number", "direction-label-in-ui"];
 
   if (goodFindings.length || expected.some((rule) => !badRules.has(rule))) {
     console.error("quality-gate self-test failed");
@@ -202,16 +224,17 @@ const files = collectFiles(target);
 const findings = files.flatMap((file) => scanSource(fs.readFileSync(file, "utf8"), path.relative(process.cwd(), file)));
 const errors = findings.filter((finding) => finding.severity === "error").length;
 const warnings = findings.filter((finding) => finding.severity === "warning").length;
+const reviews = findings.filter((finding) => finding.severity === "review").length;
 
 if (json) {
-  console.log(JSON.stringify({ target: targetArg, files: files.length, errors, warnings, findings }, null, 2));
+  console.log(JSON.stringify({ target: targetArg, files: files.length, errors, warnings, reviews, findings }, null, 2));
 } else {
   for (const finding of findings) {
     console.log(`${finding.severity.toUpperCase()} ${finding.rule} ${finding.file}:${finding.line}`);
     console.log(`  ${finding.message}`);
     console.log(`  ${finding.excerpt}`);
   }
-  console.log(`Quality gate: ${files.length} files · ${errors} errors · ${warnings} warnings`);
+  console.log(`Quality gate: ${files.length} files · ${errors} errors · ${warnings} warnings${reviews ? ` · ${reviews} generator habits to remove or justify` : ''}`);
 }
 
 process.exit(errors > 0 || (strict && warnings > 0) ? 1 : 0);

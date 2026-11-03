@@ -32,6 +32,22 @@ Check the rendered result, not just source code:
 - motion communicates state or hierarchy and respects reduced-motion preferences;
 - realistic long, empty, and failure content does not break the layout.
 
+## Generator habits
+
+Generated interfaces converge on the same moves whatever the product. Each one below needs a reason that is about this product's task; "it looks designed" is not one. Remove the rest before presenting. `quality-gate.mjs` lists the first three as `review` findings (they never fail `--strict`, because a brand page may use them on purpose): remove each, or say in the report why it stays.
+
+- Uppercase letter-spaced eyebrow labels above headings (`eyebrow-label`).
+- Decorative numbers: zero-padded counts and step numbers (`04`, `01–03`), oversized stats that answer no question, round fake metrics (`decorative-number`).
+- A direction's name inside the product UI ("Direction B · Room to grow"); names belong in the comparison page (`direction-label-in-ui`).
+- A slogan or marketing hero on a product page. A settings, admin or tool page keeps its noun title ("Members") and the project's own description; invent no taglines ("Your people. One place.").
+- A promotional card inside a tool ("Grow your team · Good work starts with people").
+- Every block in a bordered, rounded, shadowed card; cards inside cards.
+- A palette chosen for mood rather than meaning: cream or beige paper with sage, lime, terracotta or forest green; purple-blue gradients; glass.
+- Pill-shaped buttons and inputs everywhere.
+- `system-ui`, Inter, Roboto or Arial as the only face (see Typography).
+- Three directions that share one skeleton (same header, same hero, same stat, same card grid) and differ only in palette. A light and a dark version of the same layout are one direction.
+- An outward arrow (↗) on a button that does not leave the page.
+
 ## Typography
 
 - Use a distinctive display face only when it fits the product; body type must remain readable.
