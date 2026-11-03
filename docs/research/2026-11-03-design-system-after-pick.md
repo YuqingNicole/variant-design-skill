@@ -58,8 +58,23 @@
 
 已确认系统的不合格组合在 `delivery-check` 里是警告不是错误：用户确认过的系统按规则优先级（用户约束高于无障碍建议）不阻断，但必须报出来。
 
+## 完整链路：生成 → pick B → ds confirm → apply ds B（同日补充）
+
+加了 `DESIGN.md` 规则后，用 Codex 跑完整条链路。四轮都是新的 `codex exec` 进程（`--ephemeral`），没有对话记忆，只能靠项目里的文件接上，这正是技能承诺的用法。
+
+| 轮次 | 状态 | 产物与检查 |
+|---|---|---|
+| 生成（`evals/run.mjs`） | 6/6 通过，推荐 A；59.2 万 token，198 s | 生成时 B 有一次修改（v2，“Fix TypeScript literal comparisons before delivery”），发生在 pick 之前 |
+| `pick B` | `selectedVariant: B`，`designSystem` 未改（为空），B 没有被修改 | `design-system.css`、`design-system-preview.html`、`DESIGN.md` |
+| `ds confirm` | `designSystem.confirmed: true`，`source: "B"`，记录了色板和字体 | 新增 `design-system.tokens.json` 和 `design-contract.md`（harbor 涉及权限，属于产品关键工作）；`ds-check.mjs` 通过；`delivery-check` 报 B 有长度不在刻度上，并提示 `apply ds B` |
+| `apply ds B` | B 升到 v3，`request: apply-ds-B-20261103`，`activeVariant: B`，选定不变 | `delivery-check` 的长度警告消失，只剩 `selectedVariant` 的提示（用户选过，属正常） |
+
+- `DESIGN.md` 按要求的顺序写了 8 节（Overview、Colors、Typography、Layout、Elevation & Depth、Shapes、Components、Do's and Don'ts），用 token 名而不是原始值，例如“说明文字使用 `--color-text-secondary`，搭配 `--color-bg` 或 `--color-surface`；强调面上只用 `--color-text-on-accent`”“页面标题用 `--text-4xl`，区块标题用 `--text-xl`”。语言跟随用户的中文提示。
+- 撤销：在副本上直接运行 `variant-history.mjs undo variant-output B`，B 的文件和 `apply ds B` 之前完全一致（与该轮之前的 git 提交比较无差异），选定仍是 B，长度警告重新出现。`apply ds B` 是一次请求、一次撤销。
+
 ## 未覆盖
 
 - 只用了 Codex，Claude Code 和 dsh 没跑这一步。
-- 没有测 `ds confirm` 之后的 `apply ds B`，也没有测确认后新页面是否真的只用系统 token（RFC-006 §4.3 的 `ds-check.mjs` 还没写）。
+- 确认后再生成新页面时是否只用系统 token、是否读 `DESIGN.md`，还没测。
+- 完整链路只用 Codex 跑了 harbor 一次。
 - 设计系统的好坏要人看预览；这里只检查了流程承诺、对比度修正和品牌变量没被覆盖。
