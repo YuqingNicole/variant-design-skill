@@ -108,3 +108,11 @@ test('the CLI exits non-zero on errors and passes a real recorded run', () => {
   const harbor = path.join(here, '../website/content/evidence/harbor/variant-output');
   assert.match(execFileSync(process.execPath, [path.join(here, 'delivery-check.mjs'), harbor], { encoding: 'utf8' }), /delivery check passed for A\/B\/C/);
 });
+
+test('a skill-generated system keeps primitives out of product code; a brand file is not held to it', () => {
+  const system = ':root{--p-clay-600:#944329;--color-accent:var(--p-clay-600)}\n';
+  const derived = run((s, out) => { fs.writeFileSync(path.join(out, 'design-system.css'), system); s.designSystem = { confirmed: true, file: 'variant-output/design-system.css', source: 'B' }; fs.appendFileSync(path.join(out, 'VariantB.css'), '.x{color:var(--p-clay-600);background:var(--color-accent)}\n'); });
+  assert.ok(has(derived.warnings, 'Variant B VariantB.css uses primitive tokens --p-clay-600; use the semantic token that names their role'));
+  const brand = run((s, out) => fs.appendFileSync(path.join(out, 'VariantB.css'), '.x{color:var(--p-clay-600)}\n'));
+  assert.ok(!has(brand.warnings, 'primitive tokens'));
+});

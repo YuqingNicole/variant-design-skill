@@ -54,6 +54,14 @@ function offScale(source, scale) {
   return found;
 }
 
+const systemScale = system => [...cssVars(system)].flatMap(([name, value]) => { const n = px(value), kind = /text|font/.test(name) ? 'text' : /radius/.test(name) ? 'radius' : /space|gap/.test(name) ? 'space' : null; return n != null && kind ? [{ name, px: n, kind }] : []; });
+// What a file uses that a design system does not define: hex colors and spacing, type or radius lengths.
+// Used for work built on a confirmed system after the variants (a component, a new page).
+export function systemDrift(source, system) {
+  const own = new Set(hexes(system)), scale = systemScale(system);
+  return { colors: hexes(source).filter(h => !own.has(h) && !plainColors.has(h)), lengths: scale.length ? offScale(source, scale) : [], primitives: [...new Set([...source.matchAll(/var\(\s*(--p-[\w-]+)/g)].map(m => m[1]))] };
+}
+
 export function checkDelivery(root = 'variant-output', { project = path.dirname(path.resolve(root)) } = {}) {
   const errors = [], warnings = [];
   let state;
@@ -114,7 +122,7 @@ export function checkDelivery(root = 'variant-output', { project = path.dirname(
     const system = [dsSource ?? '', ...extensions].join('\n');
     // The user confirmed this system, and their constraints outrank accessibility suggestions: report, do not block.
     for (const i of contrastIssues([system])) warnings.push(`Design system pair ${i.text} on ${i.surface} is ${i.ratio}:1, below ${i.min}:1 for text; raise it with ds edit or say why it stays`);
-    const scale = [...cssVars(system)].flatMap(([name, value]) => { const n = px(value), kind = /text|font/.test(name) ? 'text' : /radius/.test(name) ? 'radius' : /space|gap/.test(name) ? 'space' : null; return n != null && kind ? [{ name, px: n, kind }] : []; });
+    const scale = systemScale(system);
     const locked = (ds.fonts ?? []).map(f => first(f).toLowerCase());
     const dsHexes = new Set(dsSource ? hexes(system) : []);
     // A system derived from a picked direction binds that direction and later work; the other directions were explorations that predate it.
@@ -125,6 +133,9 @@ export function checkDelivery(root = 'variant-output', { project = path.dirname(
       for (const [file, source] of Object.entries(sources[id] ?? {})) {
         if (locked.length) for (const font of declaredFonts(source)) if (!locked.includes(font.toLowerCase())) errors.push(`Variant ${id} ${file} declares font "${font}", outside the locked fonts ${JSON.stringify(ds.fonts)}`);
         if (dsSource) for (const hex of hexes(source)) if (!dsHexes.has(hex) && !plainColors.has(hex)) warnings.push(`Variant ${id} ${file} uses ${hex}, which is not in ${ds.file}; use the locked tokens or explain why`);
+        // A skill-generated system keeps primitives behind its semantic tokens (system-decisions.md §4); a brand file's naming is the brand's.
+        const primitives = ds.file === 'variant-output/design-system.css' ? [...new Set([...source.matchAll(/var\(\s*(--p-[\w-]+)/g)].map(m => m[1]))] : [];
+        if (primitives.length) warnings.push(`Variant ${id} ${file} uses primitive tokens ${primitives.join(', ')}; use the semantic token that names their role`);
         const off = scale.length ? offScale(source, scale) : [];
         if (off.length) warnings.push(`Variant ${id} ${file} uses lengths outside the design system: ${off.slice(0, 6).join(', ')}${off.length > 6 ? ` and ${off.length - 6} more` : ''}; ${ds.source === id ? `\`apply ds ${id}\` replaces them with tokens` : "use the system's tokens or explain why"}`);
       }

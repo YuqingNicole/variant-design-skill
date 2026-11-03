@@ -84,8 +84,12 @@ function classify(name, raw) {
 }
 
 export function exportTokens(sources) {
-  const vars = new Map();
-  for (const source of sources) for (const [, name, value] of String(source).matchAll(/(--[\w-]+)\s*:\s*([^;}]+)/g)) vars.set(name, value.trim());
+  const vars = new Map(), notes = new Map();
+  for (const source of sources) {
+    for (const [, name, value] of String(source).matchAll(/(--[\w-]+)\s*:\s*([^;}]+)/g)) vars.set(name, value.trim());
+    // A trailing `/* use: … */` says where the token is used (references/design-system/system-decisions.md §4).
+    for (const [, name, note] of String(source).matchAll(/(--[\w-]+)\s*:[^;}]*;[ \t]*\/\*\s*use:\s*([^*]*?)\s*\*\//g)) notes.set(name, note);
+  }
   const parsed = new Map([...vars].map(([name, value]) => [name, classify(name, value)]));
   // Aliases take the type of the token they point to, following chains.
   const typeOf = (name, seen = new Set()) => {
@@ -109,7 +113,7 @@ export function exportTokens(sources) {
       value = value.map(l => ({ ...l, color: l.color.ref ? alias(l.color.ref) : l.color }));
     }
     tokens[type] ??= { $type: type };
-    tokens[type][name.slice(2)] = { $value: value };
+    tokens[type][name.slice(2)] = { $value: value, ...(notes.has(name) ? { $description: `Use: ${notes.get(name)}` } : {}) };
   }
   return { tokens, skipped };
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Runs the skill from this working tree in real agent CLIs on fixture projects, then grades each run.
-// Usage: node evals/run.mjs [--agent claude,codex] [--fixture pulse,harbor,bakery,ledger] [--out <dir>] [--timeout-min 25] [--jobs 3] [--prepare-only] [--no-skill] [--install plugin]
+// Usage: node evals/run.mjs [--agent claude,codex] [--fixture pulse,harbor,bakery,ledger,harbor-chain] [--out <dir>] [--timeout-min 25] [--jobs 3] [--prepare-only] [--no-skill] [--install plugin] [--turns generate,pick]
 // --install plugin (Claude only) installs the working tree as a Claude Code plugin from a local copy of .claude-plugin/marketplace.json, in each project's local scope, instead of copying it into .claude/skills.
 // --no-skill runs the same agent on the same project without the skill and with the plain prompt in evals/blind/plain-prompt.txt (the blind-review control group).
 // Each run costs real model usage (a Claude run has cost about $2–3). Results stay outside the repository.
@@ -9,13 +9,14 @@ import os from 'node:os';
 import path from 'node:path';
 import { execFileSync, spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { grade, loadFixture, usage } from './grade.mjs';
+import { grade, gradeChain, loadFixture, snapshot, usage } from './grade.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
 const args = process.argv.slice(2), opt = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
 const agents = opt('--agent', 'claude,codex').split(',');
-const fixtures = opt('--fixture', fs.readdirSync(path.join(here, 'fixtures')).join(',')).split(',');
+// Multi-turn fixtures cost several runs each, so they run only when named.
+const fixtures = opt('--fixture', fs.readdirSync(path.join(here, 'fixtures')).filter(f => !loadFixture(f).turns).join(',')).split(',');
 const out = path.resolve(opt('--out', path.join(os.tmpdir(), `variant-evals-${new Date().toISOString().replace(/[:.]/g, '-')}`)));
 const timeoutMs = Number(opt('--timeout-min', 25)) * 60_000, jobs = Number(opt('--jobs', 3));
 const shipped = /^(SKILL\.md|VERSION|skills\/|references\/|assets\/|scripts\/(?!.*\.test\.)[^/]+\.mjs$)/;
@@ -46,7 +47,8 @@ function removePlugin(dir) {
 
 function prepare(fixture, agent) {
   const dir = path.join(out, `${fixture}-${agent}`);
-  fs.cpSync(path.join(here, 'fixtures', fixture, 'project'), dir, { recursive: true });
+  // A multi-turn fixture can reuse another fixture's project ("project": "harbor").
+  fs.cpSync(path.join(here, 'fixtures', loadFixture(fixture).project ?? fixture, 'project'), dir, { recursive: true });
   const git = (...a) => execFileSync('git', a, { cwd: dir, stdio: 'pipe' });
   git('init', '-q'); git('add', '-A'); git('-c', 'user.name=eval', '-c', 'user.email=eval@localhost', 'commit', '-qm', 'baseline');
   if (fs.existsSync(path.join(dir, 'package-lock.json'))) execFileSync('npm', ['ci', '--prefer-offline', '--no-audit', '--no-fund', '--loglevel=error'], { cwd: dir, stdio: 'pipe' });
@@ -68,8 +70,8 @@ function command(agent, prompt, dir) {
   return ['codex', ['exec', '--skip-git-repo-check', '-s', 'workspace-write', '-c', 'approval_policy="never"', '-c', 'features.hooks=false', '--ignore-user-config', '--ignore-rules', '--ephemeral', '--json', '-o', path.join(dir, '..', `${path.basename(dir)}.last.txt`), prompt]];
 }
 
-function runAgent(agent, prompt, dir) {
-  const transcript = path.join(out, `${path.basename(dir)}.jsonl`), log = fs.openSync(transcript, 'w'), err = fs.openSync(path.join(out, `${path.basename(dir)}.err`), 'w');
+function runAgent(agent, prompt, dir, turn = '') {
+  const name = path.basename(dir) + (turn && `.${turn}`), transcript = path.join(out, `${name}.jsonl`), log = fs.openSync(transcript, 'w'), err = fs.openSync(path.join(out, `${name}.err`), 'w');
   const [bin, argv] = command(agent, prompt, dir), started = Date.now();
   return new Promise(resolve => {
     const child = spawn(bin, argv, { cwd: dir, stdio: ['ignore', log, err], detached: true });
@@ -82,11 +84,29 @@ async function one(fixture, agent) {
   const config = loadFixture(fixture), { dir, install } = prepare(fixture, agent);
   if (args.includes('--prepare-only')) return { fixture, agent, dir };
   console.log(`▶ ${fixture} · ${agent}`);
+  if (config.turns && !plain) return chain(fixture, agent, config, dir, install);
   const run = await runAgent(agent, plain ?? config.prompt, dir);
   // The control group has no skill record to grade; keep what it cost.
   const result = plain ? { fixture, agent, dir, ...run, pass: true, checks: [], usage: usage(run.transcript), recommendation: null } : { fixture, agent, dir, ...run, ...grade(dir, { fixture: config, transcript: run.transcript, install }) };
   fs.writeFileSync(path.join(out, `${fixture}-${agent}.json`), JSON.stringify(result, null, 2));
   console.log(`${result.pass ? '✓' : '✗'} ${fixture} · ${agent} (${run.seconds}s${run.timedOut ? ', timed out' : ''})`);
+  return result;
+}
+
+// One fresh agent process per turn, as a user returning to the project later would start one. A turn that fails or
+// times out does not stop the chain: the later turns are graded on whatever it left, and its own checks show the failure.
+async function chain(fixture, agent, config, dir, install) {
+  const turns = [], started = Date.now();
+  // --turns generate,pick runs a prefix of the chain, for a change that only touches its first turns.
+  const only = opt('--turns', null)?.split(',');
+  for (const turn of config.turns.filter(t => !only || only.includes(t.id))) {
+    console.log(`  ↳ ${fixture} · ${agent} · ${turn.id}`);
+    const run = await runAgent(agent, [turn.prompt, config.note].filter(Boolean).join(''), dir, turn.id);
+    turns.push({ id: turn.id, transcript: run.transcript, exit: run.exit, seconds: run.seconds, timedOut: run.timedOut, snapshot: snapshot(dir) });
+  }
+  const result = { fixture, agent, dir, seconds: Math.round((Date.now() - started) / 1000), timedOut: turns.some(t => t.timedOut), ...gradeChain(dir, { turns, install }), turns: turns.map(({ snapshot: s, ...t }) => ({ ...t, selectedVariant: s.context?.selectedVariant ?? null, designSystem: s.context?.designSystem ?? null, drift: s.drift })) };
+  fs.writeFileSync(path.join(out, `${fixture}-${agent}.json`), JSON.stringify(result, null, 2));
+  console.log(`${result.pass ? '✓' : '✗'} ${fixture} · ${agent} (${result.seconds}s${result.timedOut ? ', a turn timed out' : ''})`);
   return result;
 }
 

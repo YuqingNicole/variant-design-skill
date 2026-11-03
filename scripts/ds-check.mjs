@@ -3,7 +3,9 @@
 // on-X token on X, must reach 4.5:1 (WCAG 2 relative luminance). Run it on a draft before showing
 // it (skills/variant-design-system/ROUTE.md, Step 1b); delivery-check runs it on a confirmed system.
 // Pairs come from token names, so the check covers what the system declares, not every page.
-// Usage: node ds-check.mjs <design-system.css> [more.css ...] [--json]
+// With --used-by, it also lists tokens nothing uses: a system is sized to the product
+// (references/design-system/system-decisions.md), so a token no consumer reaches through var() is inventory.
+// Usage: node ds-check.mjs <design-system.css> [more.css ...] [--used-by <file> ...] [--json]
 import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { color } from './ds-export.mjs';
@@ -50,14 +52,27 @@ export function contrastIssues(sources, min = 4.5) {
   return issues;
 }
 
+// Tokens the system defines that no consumer reaches: used directly with var(--x), or through a used token's value.
+export function unusedTokens(sources, consumers) {
+  const defined = new Map();
+  for (const source of sources) for (const [, name, value] of String(source).matchAll(/(--[\w-]+)\s*:\s*([^;}]+)/g)) defined.set(name, (defined.get(name) ?? '') + ' ' + value);
+  const refs = text => [...String(text).matchAll(/var\(\s*(--[\w-]+)/g)].map(m => m[1]);
+  const used = new Set(), queue = consumers.flatMap(refs);
+  while (queue.length) { const name = queue.pop(); if (used.has(name)) continue; used.add(name); queue.push(...refs(defined.get(name) ?? '')); }
+  return [...defined.keys()].filter(name => !used.has(name));
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href) {
-  const files = process.argv.slice(2).filter(a => !a.startsWith('--'));
-  if (!files.length) { console.error('Usage: node ds-check.mjs <design-system.css> [more.css ...] [--json]'); process.exit(2); }
-  const issues = contrastIssues(files.map(f => fs.readFileSync(f, 'utf8')));
-  if (process.argv.includes('--json')) console.log(JSON.stringify({ issues }, null, 2));
+  const argv = process.argv.slice(2), at = argv.indexOf('--used-by');
+  const files = (at >= 0 ? argv.slice(0, at) : argv).filter(a => !a.startsWith('--')), users = at >= 0 ? argv.slice(at + 1).filter(a => !a.startsWith('--')) : null;
+  if (!files.length || (users && !users.length)) { console.error('Usage: node ds-check.mjs <design-system.css> [more.css ...] [--used-by <file> ...] [--json]'); process.exit(2); }
+  const sources = files.map(f => fs.readFileSync(f, 'utf8'));
+  const issues = contrastIssues(sources), unused = users ? unusedTokens(sources, users.map(f => fs.readFileSync(f, 'utf8'))) : [];
+  if (argv.includes('--json')) console.log(JSON.stringify({ issues, ...(users ? { unused } : {}) }, null, 2));
   else {
     for (const i of issues) console.log(`✗ ${i.text} on ${i.surface} is ${i.ratio}:1, below ${i.min}:1 for text`);
     console.log(issues.length ? `design-system contrast failed: ${issues.length} pair(s)` : 'design-system contrast passed for every text/surface and on-color pair it declares. Rendered pages are not checked here.');
+    if (users) console.log(unused.length ? `✗ ${unused.length} token(s) that ${users.join(', ')} never use: ${unused.join(', ')}. Use each in a composition or remove it.` : `every token is used by ${users.join(', ')}.`);
   }
-  process.exitCode = issues.length ? 1 : 0;
+  process.exitCode = issues.length || unused.length ? 1 : 0;
 }

@@ -14,6 +14,8 @@ export const changelogZh: Record<string, { title?: string; blocks: string[] }> =
       '`ds confirm` 会把系统导出为 DTCG 2025.10 设计令牌（`scripts/ds-export.mjs` → `design-system.tokens.json`），并列出 DTCG 表达不了的值，例如 `clamp()` 字号。',
       '提炼出的系统附带 `variant-output/DESIGN.md`：写给 agent 和人的使用规则（哪个文字 token 用在哪种背景上、各级标题用哪一级字号、组件有哪些状态），段落顺序沿用 Google 的 DESIGN.md 草案。',
       '`scripts/ds-check.mjs` 检查系统自身的文字/背景色和 on-色组合是否达到 4.5:1：草稿在展示前修好，`delivery-check` 会报告已确认系统中不合格的组合。',
+      '设计系统现在由几条针对产品的决策和落实这些决策的 token 组成，不再是填满的模板（`references/design-system/system-decisions.md`）。技能写下三到五条决策；丢掉选中方向里的生成套路（眉标、口号式标题、装饰数字、处处套卡片、默认字体）；只写产品用得到的 token，并注明每个用在哪里。预览用产品自己的画面展示系统，不再是色板网格。',
+      '分层：产品代码用语义 token；复用且状态多的组件有组件 token；只有被共用时才写基础值；模式（移除确认、空状态）写进 `DESIGN.md`。`ds-check.mjs --used-by` 列出没被用到的 token；产品代码直接用基础值时 `delivery-check` 会警告；`ds-export` 把每个 token 的用途说明导出为 DTCG 的 `$description`。',
       '品牌锁定',
       '品牌由项目自己的文件规定时（例如 `app/globals.css`），技能直接登记这个文件，不再把副本锁定在 `variant-output/` 里。',
     ],

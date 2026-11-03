@@ -13,6 +13,8 @@
 - `ds confirm` exports the system as DTCG 2025.10 tokens (`scripts/ds-export.mjs` → `design-system.tokens.json`) and lists what DTCG cannot express, such as `clamp()` sizes.
 - The derived system comes with `variant-output/DESIGN.md`: usage rules for agents and people (which text token goes on which surface, which type step each heading uses, which component states exist), in the section order of Google's DESIGN.md draft.
 - `scripts/ds-check.mjs` checks a system's own text/surface and on-color pairs for 4.5:1 contrast: drafts are fixed before they are shown, and `delivery-check` reports a confirmed system's failing pairs.
+- A design system is now a few decisions about the product plus the tokens that carry them out, not a filled-in template (`references/design-system/system-decisions.md`). The skill writes three to five decisions, drops generator habits it finds in the picked direction (eyebrow labels, slogan heroes, decorative numbers, a card around everything, default fonts), and writes only tokens the product uses, each with a note on where. The preview shows the system on the product's own screens instead of swatch grids.
+- Layers: semantic tokens for product code, component tokens for reused components with several states, primitives only when shared, and patterns (removal confirmation, empty states) in `DESIGN.md`. `ds-check.mjs --used-by` lists tokens nothing uses; `delivery-check` warns when product code uses a primitive; `ds-export` carries each token's use note into the DTCG `$description`.
 
 ### Brand lock
 - When a project's own file sets the brand (such as `app/globals.css`), the skill registers that file in place instead of locking a copy in `variant-output/`.

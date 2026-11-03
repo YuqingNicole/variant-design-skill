@@ -58,3 +58,10 @@ test('the CLI writes a .tokens.json file and reports what it left out', () => {
   assert.match(log, /2 tokens .* 1 left out/);
   assert.match(log, /--hero: clamp/);
 });
+
+test('a trailing use note becomes the DTCG $description', () => {
+  const { tokens } = exportTokens([':root{\n  --color-danger: #9b3024; /* use: remove-access button, removal errors */\n  --space-4:16px;\n  --button-danger-bg: var(--color-danger); /* use: confirm removal */\n}']);
+  assert.equal(tokens.color['color-danger'].$description, 'Use: remove-access button, removal errors');
+  assert.equal(tokens.color['button-danger-bg'].$description, 'Use: confirm removal');
+  assert.equal(tokens.dimension['space-4'].$description, undefined);
+});
