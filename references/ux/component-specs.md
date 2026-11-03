@@ -33,49 +33,76 @@ A formula records intent. When `S1` changes, the reader knows which other sizes 
 
 ## Button
 
-### States
+Cross-checked against the public button docs of Material 3, Apple HIG, Radix Themes, Primer, Atlassian, Polaris and Geist (2026-11-03). Every rule below can be checked in the CSS or the rendered preview.
 
-| State | Visual |
-|---|---|
-| Default | Resting state |
-| Hover | Background lightens/darkens ~10%, cursor: pointer |
-| Active / pressed | Background darkens further, slight scale down (scale 0.98) |
-| Focus | Focus ring (2px solid, 2px offset) |
-| Loading | Spinner replaces icon or appears left of label; disabled interaction |
-| Disabled | 40–50% opacity, cursor: not-allowed, no hover/active states |
-| Success | Brief check icon state (optional, for async actions) |
-
-### Variants
+### Variants and hierarchy
 
 | Variant | Use | Visual |
 |---|---|---|
-| Primary | Main CTA, one per section | Filled, brand color |
-| Secondary | Supporting action | Outlined or low-fill |
-| Tertiary / Ghost | Lowest emphasis | Text only or very subtle fill |
-| Destructive | Delete, remove, cancel permanent | Red fill or red text |
-| Icon only | Toolbar, compact UI | Icon with no label |
-| Icon + label | Standard | Icon left of label |
+| Primary | The one main action of a view or group | Solid fill in the accent |
+| Secondary | Supporting actions | Tonal (soft accent or neutral fill) or a light 1px outline in a neutral or translucent accent, never a near-text dark outline. The outline uses the divider token (`--color-border`), not the input border: inputs need 3:1 against the page to be found, a labelled button does not |
+| Ghost / plain | Low emphasis, toolbars, inline actions | No container until hover |
+| Danger | Delete, remove, revoke | On the page: red label on a secondary or ghost button. Solid red only on the confirm button of the confirmation dialog, next to a secondary Cancel |
 
-**Hierarchy rule:** One primary button per section/card. Secondary and tertiary can co-exist. Never two primary buttons side by side.
+- At most one solid primary per view or group. A solid primary and a solid danger never share a view.
+- In a pair, the action that completes the step is the stronger one ("Confirm role change" over "Cancel"); two equal outlined buttons leave the user to work out which one moves on.
+- Emphasis comes from the variant, not from a bigger size.
 
-### Sizing
+### Size
 
-| Size | Height | Padding H | Font size |
-|---|---|---|---|
-| SM | 32px | 12px | 14px |
-| MD | 40px | 16px | 14–15px |
-| LG | 48px | 20px | 16px |
-| XL | 56px | 24px | 16–18px |
+| Size | Height | Padding inline | Font | Icon / gap |
+|---|---|---|---|---|
+| SM | 32px | 12px | 13–14px | 16px / 6px |
+| MD (default) | 36–40px | 14–16px | 14px | 16–18px / 8px |
+| LG | 44–48px | 18–20px | 15–16px | 18–20px / 8px |
 
-### Anatomy
+Horizontal padding is 0.35–0.6 of the height. In touch-first or sparse content areas, the target is at least 44px (the button, or the button plus its surrounding gap). Minimum width 64px; loading keeps the width.
 
+### Shape
+
+The radius comes from one shape token shared with inputs and selects. Use one of two options. The first is a fixed ratio, radius ≈ 0.15–0.25 of the height (6–8px on a 36px button). The second is a full pill (`9999px`). Square corners (0) only when the direction is deliberately hard-edged. A 2–3px radius on a 32px+ button is neither and reads as unfinished.
+
+### Label
+
+UI sans (`--font-ui`), weight 500–600, 13–15px, sentence case, no letter-spacing beyond ±0.01em, no all-caps. A brand serif stays in headings and display text; button labels use the interface face even when the brand is a serif (Material keeps a plain interface face apart from the brand face). Labels are verbs that say what happens: "Remove Ravi", not "OK".
+
+### States: derive, do not pick
+
+| State | Rule |
+|---|---|
+| Hover | A state layer of the label color over the fill: `color-mix(in oklab, var(--btn-bg), var(--btn-fg) 8%)`. Ghost buttons get the same layer on a transparent base |
+| Pressed | The same layer at 12%. No `scale()`; at most a 1px downward shift |
+| Focus | `:focus-visible` only: `outline: 2px solid var(--color-focus); outline-offset: 2px` (solid buttons) or `-2px` (outlined and ghost). One ring, never a doubled border; on a solid fill, add an inset ring of the page color if the outline is hard to see. Ring contrast against the adjacent color ≥ 3:1 |
+| Disabled | Neutral, not tinted: neutral fill and muted neutral label, or the whole button at reduced opacity. Prefer not disabling: keep submit enabled and explain what is missing. If disabled, say why nearby |
+| Loading | Spinner inside the button, label says what is happening ("Sending invite…"), width and focus kept |
+| Transition | Color properties only, 80–150ms, inside `@media (prefers-reduced-motion: no-preference)` |
+
+One rule serves every variant, so no per-variant hover hex values are needed. Relative color syntax (`oklch(from var(--accent) calc(l - 0.06) c h)`) also works, with an `@supports (color: oklch(from red l c h))` fallback.
+
+```css
+.btn { --btn-bg: transparent; --btn-fg: var(--color-text); height: var(--control-height); padding-inline: var(--space-4);
+  border-radius: var(--radius-control); font: 500 var(--text-ui)/1 var(--font-ui); background: var(--btn-bg); color: var(--btn-fg); }
+.btn:hover { background: color-mix(in oklab, var(--btn-bg), var(--btn-fg) 8%); }
+.btn:active { background: color-mix(in oklab, var(--btn-bg), var(--btn-fg) 12%); }
+.btn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.btn-primary { --btn-bg: var(--color-accent); --btn-fg: var(--color-on-accent); }
+.btn-secondary { --btn-bg: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border); }
+.btn-danger-quiet { --btn-fg: var(--color-danger); }
+@media (prefers-reduced-motion: no-preference) { .btn { transition: background-color 120ms, color 120ms; } }
 ```
-[Icon] [Label]
-       ↑
-       gap: 8px between icon and label
-       padding: 8–12px top/bottom, 16–24px left/right (varies by size)
-       min-width: 64px (don't let buttons collapse to near-zero width)
-```
+
+### Showing states
+
+Show live buttons the reader can hover, press and tab to. When a static comparison is needed, force states with an attribute (`data-state="hover"`) styled like the real state, and label the row as forced. Do not make fake buttons labelled "Hover example".
+
+### Richer feedback
+
+Default to the CSS above; it adds no dependency. Use these only when the user asks or the moment clearly earns it, and always with a reduced-motion path and a text outcome for screen readers:
+- spring-like easing with `linear()`, a shine or progress fill with `@property`;
+- View Transitions for the list change a button causes (feature-detect `document.startViewTransition`);
+- SVG filters or a Canvas particle effect for a delete ("dust").
+
+Motion (motion.dev), Rive or Lottie only when the project already uses them or the user names them: each is a new dependency.
 
 ### Loading State Pattern
 

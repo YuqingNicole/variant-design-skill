@@ -59,13 +59,14 @@ If user says "surprise me" or has no preferences, infer from their codebase (REA
   --color-border-control:#8a8273; /* use: input and select borders */
   --color-text:          #23201b; /* use: names, headings, body */
   --color-text-muted:    #5f584d; /* use: emails, last active, helper text */
-  --color-accent:        #1f5f8b; /* use: invite button, focus ring */
-  --color-accent-hover:  #194e73; /* use: invite button hover */
+  --color-accent:        #1f5f8b; /* use: invite button, selected role */
   --color-on-accent:     #ffffff; /* use: invite button label */
+  --color-focus:         #1f5f8b; /* use: focus ring on every control */
   --color-danger:        #a3271b; /* use: remove-access button, removal errors */
   --color-on-danger:     #ffffff; /* use: confirm-removal label */
 
   --font-ui:   "Instrument Sans", sans-serif;   /* use: everything; one family */
+  --text-ui:         0.875rem;/* use: button and control labels */
   --text-page-title: 1.75rem; /* use: page heading */
   --text-section:    1.25rem; /* use: Members, Pending invites */
   --text-body:       1rem;    /* use: names, controls */
@@ -73,9 +74,10 @@ If user says "surprise me" or has no preferences, infer from their codebase (REA
   --weight-regular: 400;  --weight-strong: 600;
   --leading-body: 1.5;    --leading-heading: 1.2;
 
-  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px; --space-8: 32px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-3-5: 14px; --space-4: 16px; --space-6: 24px; --space-8: 32px;
+  --control-height-md: 36px;  /* use: buttons, inputs, selects */
   --row-height: 56px;          /* use: member row */
-  --radius-control: 6px;       /* use: buttons, inputs */
+  --radius-control: 7px;       /* use: buttons, inputs, selects (0.2 of 36px) */
   --radius-container: 10px;    /* use: dialogs */
   --shadow-dialog: 0 12px 32px rgb(35 32 27 / 0.18); /* use: confirmation dialog only */
   --duration-feedback: 150ms;  /* use: hover, focus, pressed */
@@ -83,13 +85,20 @@ If user says "surprise me" or has no preferences, infer from their codebase (REA
 
 /* ── Components ── only in that component's CSS; semantic tokens only ── */
 :root {
+  /* Buttons (references/ux/component-specs.md → Button): hover and pressed are a layer of the label color, 8% / 12% */
+  --button-height:            var(--control-height-md);   /* 36px; padding 14px = 0.39 of the height */
+  --button-padding-inline:    var(--space-3-5);
+  --button-radius:            var(--radius-control);      /* shared with inputs and selects */
+  --button-font:              500 var(--text-ui)/1 var(--font-ui);
   --button-primary-bg:        var(--color-accent);
-  --button-primary-bg-hover:  var(--color-accent-hover);
   --button-primary-fg:        var(--color-on-accent);
-  --button-danger-bg:         var(--color-danger);
-  --button-danger-fg:         var(--color-on-danger);
+  --button-secondary-bg:      var(--color-surface);
+  --button-secondary-border:  var(--color-border);         /* the divider, not the input border */
+  --button-danger-fg:         var(--color-danger);         /* on the page: red label, no fill */
+  --button-danger-confirm-bg: var(--color-danger);         /* confirmation dialog only */
+  --button-state-hover:       8%;
+  --button-state-pressed:     12%;
   --input-border:             var(--color-border-control);
-  --input-border-focus:       var(--color-accent);
   --input-border-error:       var(--color-danger);
 }
 

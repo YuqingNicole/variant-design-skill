@@ -40,6 +40,13 @@ Check the rendered result, not just source code:
 - Use no more than two families, a deliberate type scale, balanced headings, and body line-height around 1.5–1.7.
 - Use tabular numerals for comparable data.
 
+## Buttons
+
+- Button labels use the interface sans, weight 500–600, sentence case, even when headings use a serif.
+- One solid primary per view or group; danger on the page is a red label, solid red only in the confirmation dialog.
+- Hover and pressed are derived from the button's own colors (`color-mix`), not picked per variant; focus is one 2px `:focus-visible` outline; disabled is neutral.
+- Radius comes from the shared control token (about 0.15–0.25 of the height, or a pill). Details: the Button section of `references/ux/component-specs.md`.
+
 ## Color and surfaces
 
 - Prefer semantic tokens over scattered literals.
