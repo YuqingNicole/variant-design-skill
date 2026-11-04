@@ -157,3 +157,41 @@
 - **两项检查失败：**
   - `ds-decisions` 是误报：决策写成了编号列表，但没有写"Decisions"这个词。评分器改为接受至少两条编号。
   - `pick-is-not-an-edit` 是真问题：Codex 在 pick 这一轮发现 B 的邮箱校验有 bug，就经 `apply` 把 B 升到 v2 修好了（request `pick-B-…`，可以撤销），报告里写了"另已修复 B 的邮箱校验错误"。修的是真 bug，过程也透明，但用户只说了 `pick B`。Step 1b 已补充："`pick` 只选择、不修改；发现 B 的缺陷就在报告里列出，并给出修复用的命令。"补充后还没有复测。另外，B 的这个 bug 是 generate 那一轮留下的。
+
+## 生成方向的 AI 味（同日补充）
+
+问题：同日几次 Codex 生成的 Harbor A/B/C 用的是同一副骨架：
+- 大写眉标"DIRECTION A · The team ledger"；
+- 自编口号"Your people. One place." / "Make room for good work." / "Every person. Clear access."；
+- 右上角巨大的"04 members"；
+- 一张"Grow your team / Good work starts with people."宣传卡片。
+
+三个方向只换了配色（米白、荧光绿、深色），而原页面只有标题"Members"和一句说明。
+
+在技能说明里找到的原因：
+- 没有确认设计系统时，要求三个方向是"不同工作室的诠释"，又给了一张风格表，于是差异被做在配色上；
+- 每个方向都必须有一个"signature detail"，于是出现了装饰数字和眉标；
+- 成员页被归入 dashboard 领域，那份参考写着大号指标数字；
+- 没有规定已有页面仍然是那个页面。
+
+改动：
+- `quality-baseline.md` 新增"Generator habits"清单，生成和设计系统共用，`system-decisions.md` §2 改为引用它。
+- `quality-gate.mjs` 新增 `eyebrow-label`、`decorative-number`、`direction-label-in-ui` 三条规则，级别为 `review`：会列出来，但不影响 `--strict`，因为品牌页可能是有意这样用（我们自己的咖啡示例里就有 6 处眉标和 01–04 步骤编号）。`artifact-verification` 的静态状态不受 `review` 影响。
+- 生成说明：
+  - 已有页面保持原来的作用、名称和文案，不加口号或宣传卡片；
+  - 没有确认的系统时，先让三个方向在结构上不同，再配各自的视觉；
+  - 风格表只用于营销、编辑和品牌页；
+  - signature detail 必须服务于任务；
+  - 管理类页面用 dashboard 参考时，不加 KPI 头部。
+- 评分器新增 `generator-habits` 检查。10 月录下的 Pulse 产出也没通过：有眉标，还有 `aria-hidden` 的 01、02 编号。
+
+复测 `harbor`（单轮）：
+
+| | Codex（212 s，约 56 万 token） | Claude Code（516 s，$2.30） |
+|---|---|---|
+| 检查 | 7/7，`generator-habits` 通过 | 7/7 |
+| 标题和文案 | "Members"加项目原文，保留应用侧栏 | "Members"加项目原文，保留顶部导航 |
+| 三个方向 | A：邀请表单加表格；B：按角色分组，带角色说明；C：深色的邀请区和待接受邀请，下面是表格。A 和 C 结构接近，C 基本是 A 的深色版 | A：密集表格，邀请内嵌在表头，待接受邀请作为一行；B：按角色分组并列出各角色能做什么，邀请时的角色选项带说明；C：深色界面，邀请在前，右侧是操作记录和撤销 |
+| 遗留问题 | 主按钮带"↗"外链箭头，但其实不离开页面 | — |
+
+针对这两个遗留问题，清单补了两条："同一布局的浅色和深色版算同一个方向"，以及"不离开页面的按钮不加 ↗"。补充后还没有复测。以上都是单次运行。

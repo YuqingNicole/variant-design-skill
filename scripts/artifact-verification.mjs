@@ -52,7 +52,7 @@ export async function verifyArtifact(root, id, options = {}, runChecks) {
   try { unchanged=identity(capture(root,id,project,dependencies).fingerprint)===identity(fingerprint); } catch {}
   const report = {schemaVersion:1,id:randomUUID(),startedAt,finishedAt:new Date().toISOString(),
     fingerprint, dependencies, coverage:{mode:'declared-files',limitation:'Only owned files, registered design system, package manifests and explicitly listed dependencies are tracked. Environment changes require a new run.'},
-    static:{status:findings.some(f=>f.severity==='error')?'failed':findings.length?'unverified':'passed',tool:{name:'variant-quality-gate',version:hash(fs.readFileSync(new URL('./quality-gate.mjs',import.meta.url)))},findings},
+    static:{status:findings.some(f=>f.severity==='error')?'failed':findings.some(f=>f.severity==='warning')?'unverified':'passed',tool:{name:'variant-quality-gate',version:hash(fs.readFileSync(new URL('./quality-gate.mjs',import.meta.url)))},findings},
     checks, checkerIdentity:checkerIdentity(), plan:options.plan ?? null, changedDuringRun:!unchanged};
   const file=localFile(root,`.verification/${id}/${report.id}.json`);
   fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,JSON.stringify(report,null,2)+'\n',{flag:'wx',flush:true});

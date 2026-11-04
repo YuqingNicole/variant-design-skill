@@ -17,6 +17,7 @@ export const changelogZh: Record<string, { title?: string; blocks: string[] }> =
       '设计系统现在由几条针对产品的决策和落实这些决策的 token 组成，不再是填满的模板（`references/design-system/system-decisions.md`）。技能写下三到五条决策；丢掉选中方向里的生成套路（眉标、口号式标题、装饰数字、处处套卡片、默认字体）；只写产品用得到的 token，并注明每个用在哪里。预览用产品自己的画面展示系统，不再是色板网格。',
       '分层：产品代码用语义 token；复用且状态多的组件有组件 token；只有被共用时才写基础值；模式（移除确认、空状态）写进 `DESIGN.md`。`ds-check.mjs --used-by` 列出没被用到的 token；产品代码直接用基础值时 `delivery-check` 会警告；`ds-export` 把每个 token 的用途说明导出为 DTCG 的 `$description`。',
       '按钮遵循一份规范，参照 Material 3、Apple HIG、Radix、Primer、Atlassian、Polaris 和 Geist 的公开文档制定（`references/ux/component-specs.md` → Button）：品牌是衬线体时，按钮文字也用界面无衬线字体；内边距和圆角随高度按比例取值；每个视图只有一个实心主按钮；悬停和按下状态用 `color-mix` 推导，焦点是单层 2px 的环；危险按钮在确认框之前都只是红字。预览里放真实按钮，不放一排假的悬停状态。',
+      '生成的方向避开生成套路（`references/workflow/quality-baseline.md` → Generator habits）：已有页面保持原来的作用、标题和文案，产品页上不放口号和宣传卡片；三个方向先在结构上不同，再谈风格，只换配色不算一个方向。`quality-gate` 把眉标、补零的装饰数字、界面里的方向名列为 `review` 项，要求删掉或说明理由；它们不会让 `--strict` 失败。',
       '品牌锁定',
       '品牌由项目自己的文件规定时（例如 `app/globals.css`），技能直接登记这个文件，不再把副本锁定在 `variant-output/` 里。',
     ],

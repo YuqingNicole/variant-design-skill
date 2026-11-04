@@ -17,16 +17,9 @@ A decision that would fit any product is not one. When the brief or picked direc
 
 ## 2. Audit the source before codifying it
 
-A picked direction mixes its point with the generator's habits. Codify the point; do not turn habits into tokens. For each item below that the source uses, either drop it (list it under normalizations as `dropped:`) or keep it as an explicit decision with a reason that is about this product. "The user picked it" covers the direction's point, not each habit in it: the reason must say what the trait does for this product's task. "Continuity with B" or "keeps the mood" is not such a reason.
+A picked direction mixes its point with the generator's habits. Codify the point; do not turn habits into tokens. For each item in the Generator habits list of `references/workflow/quality-baseline.md` that the source uses, either drop it (list it under normalizations as `dropped:`) or keep it as an explicit decision with a reason that is about this product. "The user picked it" covers the direction's point, not each habit in it: the reason must say what the trait does for this product's task. "Continuity with B" or "keeps the mood" is not such a reason.
 
-- Uppercase letter-spaced eyebrow labels above headings.
-- A slogan or marketing hero on a tool page ("Good work starts with your people").
-- Oversized numbers as decoration (`04 members`), round fake metrics.
-- Every block in a bordered, rounded, shadowed card; cards inside cards.
-- A default calm palette chosen for mood rather than meaning: cream or beige paper with sage, terracotta or forest green; purple-blue gradients; glass.
-- Pill-shaped buttons and inputs everywhere.
-- `system-ui`, Inter, Roboto or Arial as the only face (see `references/workflow/quality-baseline.md` → Typography).
-- A full shadow set when the product uses borders, or the reverse.
+Also check for a full shadow set when the product uses borders, or the reverse.
 
 The audit applies to taste, not to the user's constraints: a locked brand file, a font or color the user asked for stays.
 

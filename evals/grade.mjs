@@ -35,12 +35,13 @@ function untouched(project) {
 }
 
 function quality(output) {
-  if (!fs.existsSync(output)) return { errors: 0, warnings: [] };
+  if (!fs.existsSync(output)) return { errors: [], warnings: [], habits: [] };
   let report;
   try { report = JSON.parse(execFileSync(process.execPath, [path.join(repo, 'scripts/quality-gate.mjs'), output, '--json'], { encoding: 'utf8' })); }
   catch (error) { report = JSON.parse(error.stdout); }
   const own = report.findings.filter(f => !generated.test(path.relative(output, path.resolve(f.file)).split(path.sep).join('/')));
-  return { errors: own.filter(f => f.severity === 'error').map(f => `${f.rule} ${path.basename(f.file)}:${f.line}`), warnings: own.filter(f => f.severity === 'warning').map(f => `${f.rule} ${path.basename(f.file)}:${f.line}`) };
+  const list = severity => own.filter(f => f.severity === severity).map(f => `${f.rule} ${path.basename(f.file)}:${f.line}`);
+  return { errors: list('error'), warnings: list('warning'), habits: list('review') };
 }
 
 function ownedSources(output, context) {
@@ -109,6 +110,8 @@ export function grade(project, { fixture = {}, transcript, install } = {}) {
   add('project-untouched', outside.problems.length === 0, [...outside.problems, ...outside.notes]);
   const q = quality(output);
   add('quality-gate', q.errors.length === 0, [...q.errors, ...q.warnings.map(w => `warning: ${w}`)]);
+  // Generator habits on a product page: eyebrow labels, decorative zero-padded numbers, direction names in the UI.
+  add('generator-habits', q.habits.length === 0, q.habits);
   if (fixture.locked) {
     const locked = fixture.locked.fonts.map(first), problems = [];
     if (!context?.designSystem?.confirmed) problems.push('the brand lock was not recorded as a confirmed design system');
@@ -138,7 +141,7 @@ export function snapshot(project) {
   // How far each variant sits from the confirmed system: colors and lengths it does not define.
   const drift = system ? Object.fromEntries(Object.entries(context.variants ?? {}).map(([id, v]) => [id, (v.files ?? []).map(f => `variant-output/${f}`).filter(f => files[f]).reduce((n, f) => { const d = systemDrift(read(f), system); return n + d.colors.length + d.lengths.length; }, 0)])) : null;
   const delivery = context ? checkDelivery(output, { project }) : null;
-  return { context, files, drift, delivery: delivery && { errors: delivery.errors, warnings: delivery.warnings }, quality: quality(output).errors };
+  return { context, files, drift, delivery: delivery && { errors: delivery.errors, warnings: delivery.warnings }, quality: quality(output).errors, habits: quality(output).habits };
 }
 
 const owned = (snap, id) => Object.fromEntries((snap.context?.variants?.[id]?.files ?? []).map(f => [f, snap.files[`variant-output/${f}`] ?? null]));
@@ -208,6 +211,7 @@ export function gradeChain(project, { turns, install } = {}) {
     const now = turn.snapshot, history = [i ? turns[i - 1].snapshot : start, ...turns.slice(0, i).reverse().slice(1).map(t => t.snapshot)];
     add('delivery-check', !!now.delivery && !now.delivery.errors.length, now.delivery ? [...now.delivery.errors, ...now.delivery.warnings.map(w => `warning: ${w}`)] : ['skipped']);
     if (turn.id === 'generate' || turn.id === 'component') add('quality-gate', !now.quality.length, now.quality);
+    if (turn.id === 'generate') add('generator-habits', !now.habits?.length, now.habits ?? []);
     turnChecks[turn.id]?.(now, history, add, project);
   });
   const outside = untouched(project);
