@@ -60,6 +60,8 @@ Rebuild static previews after apply or undo. If React uses an isolated bundler, 
 
 Preview rebuilds use separate ownership receipts and preserve later user edits; history apply/undo never grants ownership of adapters or selects a direction. On a preview conflict keep the conflicting files and receipt, then follow the fresh-path workflow in `references/workflow/preview.md`. File cleanup uses that receipt, not the variant's owned source list or recursive deletion.
 
+Integration handoffs use the separate immutable records in `.deliveries/` (`references/workflow/delivery-receipt.md`). Edits/undo may stale their recorded version; integration rollback retires their current verification. Preserve the receipts and referenced backups/reports. They do not replace history or authorize selection, cleanup or forced recovery.
+
 After shared imports/resources, compiler inputs or reviewed dependency-resolution facts change, rerun artifact verification; an owned file's unchanged bytes do not keep its old observations current. Integration preparation reads that closure again. This does not replace the history helper's own immediate candidate/undo baselines or change selection.
 
 Before a scoped edit, record representative non-target behavior with the browser plan in `references/workflow/artifact-verification.md`, then rerun the same assertions after applying. Byte preservation alone does not prove rendered behavior. Retain pre-edit project-check failures so delivery can distinguish identical prior diagnostics from new or changed errors.

@@ -15,4 +15,8 @@
 | [010 · 比较页区域点选与公开代码检查页](010-region-selection-and-public-checks.md) | 具体提案，待维护者分别选择 | TODO 产品项；RFC-001、003、007 |
 | [011 · 原生 Vite 预览与交付实测矩阵](011-native-vite-delivery-evaluation.md) | 执行设计草案，未验收 | PRD-003；Issue #19 |
 
+| [012 · 预览文件归属](012-preview-file-ownership.md) | 已实现，真实 Codex 58 项通过；完整验收待审 | Issue #19；PR #159 |
+| [013 · 共享依赖闭包](013-shared-dependency-closure.md) | 已实现，真实 Codex 68 项通过；完整验收待审 | Issue #18、#19；PR #160 |
+| [014 · 版本绑定交付凭证](014-version-bound-delivery-receipts.md) | 本地实现中，尚无真实 CLI 验收 | Issue #18、#19 |
+
 RFC 记录设计决策与约束，PRD 记录验收要求；实现状态以对应 Issue 和验证证据为准。

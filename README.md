@@ -161,6 +161,8 @@ React previews can use an isolated Vite package with `--vite-root` while keeping
 
 Project integration now requires a prepared source/target baseline before staging; changed source or target files are rejected before writing. See [integration](skills/shared/export.md).
 
+Integration handoffs can seal a local [delivery receipt](references/workflow/delivery-receipt.md) with the actual file inventory, revision, backup, check reports and recovery path. Inventory validity is separate from check results; missing checks remain unverified and rollback retires the historical receipt.
+
 Runtime evidence can use a reusable Playwright check plan for named brand elements, keyboard focus, exercised motion and non-target interactions. Reports track the artifact revision, registered design-system files and extensions, and any adoption binding. Other shared dependencies must be declared; changed or missing coverage requires a rerun. Missing checks remain unverified. See [verification evidence](references/workflow/artifact-verification.md).
 
 ## Usage

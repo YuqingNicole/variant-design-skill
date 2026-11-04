@@ -27,6 +27,8 @@ For a read-only scope report, run `node <skill-root>/scripts/project-dependencie
 
 Always call `status` before using a report for delivery. A raw saved JSON result does not establish current validity. File changes without version increments, dependency changes, metadata drift or apply/undo revision changes invalidate old evidence. Selection alone does not. Runtime environment changes require a fresh run even if files are unchanged; the tool cannot independently discover every environment change.
 
+For an integration handoff, explicitly include every current integration target in the verification dependencies, run fresh checks against the installed project during the callback, then follow `references/workflow/delivery-receipt.md` to seal the current inventory and references. Before reports include existing targets; absent new targets have no before hash. The read-only `fingerprintArtifact(root, id, options)` export exposes the same current fingerprint for this inventory plumbing; it never runs checks or creates a report. Receipts retain missing/failed checks and cannot turn preview-only observations into integrated-app acceptance.
+
 ## Browser/project adapters
 
 The exported asynchronous `verifyArtifact(root, id, options, runChecks)` captures the identity **before** calling the adapter. The adapter must run new checks during that callback, not import observations made earlier. It must also confirm that the preview has finished rebuilding and is serving the captured artifact; loading an old dev-server transform does not verify current source. Missing observations or runner errors remain unverified. Returned checks use these IDs:

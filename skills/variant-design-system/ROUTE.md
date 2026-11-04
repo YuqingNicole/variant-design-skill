@@ -10,6 +10,8 @@ For product-critical work, also read `references/workflow/design-declaration.md`
 
 ## Design System Mode
 
+When handing off an integrated page or confirmed-system adoption, use `skills/shared/export.md`, then `references/workflow/delivery-receipt.md` at the handoff step. Seal the actual target inventory and check references before rollback; do not treat a token preview or inventory receipt as rendered acceptance.
+
 The canonical workflow for production-quality work. Define once, generate consistently.
 
 ```

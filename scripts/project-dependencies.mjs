@@ -8,7 +8,7 @@ import { pathToFileURL } from 'node:url';
 import { cssReferences, htmlReferences, scriptReferences } from './dependency-references.mjs';
 
 const factsFile = '.variant-work/dependency-resolution.json';
-const forbidden = /^(?:\.env(?:\..*)?|\.git|node_modules|dist|build|coverage|\.verification|\.history|\.integrations|secrets?|credentials?|.*\.(?:pem|key|p12))$/i;
+const forbidden = /^(?:\.env(?:\..*)?|\.git|node_modules|dist|build|coverage|\.verification|\.history|\.integrations|\.deliveries|secrets?|credentials?|.*\.(?:pem|key|p12))$/i;
 const sha = value => createHash('sha256').update(value).digest('hex');
 const need = (test, message) => { if (!test) throw new Error(message); };
 const sort = value => Array.isArray(value) ? value.map(sort) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(key => [key, sort(value[key])])) : value;

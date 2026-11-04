@@ -36,6 +36,11 @@ function capture(root, id, project, dependencies) {
     dependencies:Object.fromEntries([...new Set([...shared, ...Object.keys(dependencyClosure.files)])].sort().map(file=>[file,hash(fs.readFileSync(localFile(projectPath,file)))])), dependencyClosure };
   return {fingerprint, sources};
 }
+export function fingerprintArtifact(root, id, options = {}) {
+  const dependencies = options.dependencies ?? [];
+  if (!Array.isArray(dependencies) || dependencies.some(file => typeof file !== 'string')) throw new Error('Dependencies must be relative project paths.');
+  return capture(root, id, options.projectRoot ?? path.dirname(path.resolve(root)), dependencies).fingerprint;
+}
 function validateCheck(check) {
   if (!check || !runtimeChecks.includes(check.id) || !['passed','failed','unverified','not-applicable'].includes(check.status) || typeof check.reason !== 'string' || !check.reason.trim()) throw new Error('Each runtime check needs a known id, status and reason.');
   if (['passed','failed'].includes(check.status) && (!check.tool?.name || !check.tool?.version || !check.evidence?.length || !check.environment || typeof check.environment !== 'object')) throw new Error('Observed checks require tool/version, environment and evidence.');

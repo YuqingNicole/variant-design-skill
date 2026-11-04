@@ -72,7 +72,7 @@ test('unsafe references never read symlinks or sensitive paths and explicit unsa
   const { project, write, collect } = setup(t); write('.env', 'DO_NOT_COPY_SECRET'); write('src/main.tsx', `import '../.env'; import './linked'; import '../../outside';`);
   fs.symlinkSync(path.join(project, '.env'), path.join(project, 'src/linked.ts'));
   const result = collect(); assert.equal(result.coverage.status, 'partial'); assert(!result.files['.env'] && !result.files['src/linked.ts']); assert(!JSON.stringify(result).includes('DO_NOT_COPY_SECRET'));
-  for (const file of ['../outside', '.env', 'src/linked.ts']) assert.throws(() => collect([file]), /Unsafe|Symlink/);
+  for (const file of ['../outside', '.env', '.deliveries/receipt.json', 'src/linked.ts']) assert.throws(() => collect([file]), /Unsafe|Symlink/);
   write('.variant-work/dependency-resolution.json', '{"schemaVersion":1,"aliases":{"@":"../outside"}}'); assert.throws(() => collect(), /Unsafe/);
 });
 test('limits are explicit and binary assets are hashed in chunks, without raw contents', t => {

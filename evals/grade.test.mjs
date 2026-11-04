@@ -9,6 +9,7 @@ import { grade, gradeChain, loadFixture, skillCopies, skillReading, snapshot, us
 import { selectVariant, prepareVariant, applyVariant, undoVariant, confirmSystem, applySystemVariant, readContext } from '../scripts/variant-history.mjs';
 import { exportTokens } from '../scripts/ds-export.mjs';
 import { gradeNativeVite } from './native-vite.mjs';
+import { gradeDeliveryReceipts, deliveryReceiptGates } from './delivery-receipts.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const evidence = path.join(here, '../website/content/evidence/pulse/variant-output');
@@ -217,4 +218,9 @@ test('premium grading never treats absent or empty browser observations as a pas
 test('a nonzero or timed-out Agent process is incomplete even with artifacts',()=>{
  const dir=run(),state=snapshot(dir),get=(exit,timedOut)=>gradeChain(dir,{turns:[{id:'generate',snapshot:state,exit,timedOut}]}).checks.find(c=>c.id==='generate:agent-completed');
  assert.equal(get(0,false).pass,true);assert.equal(get(1,false).pass,false);assert.equal(get(0,true).pass,false);
+});
+
+test('delivery receipt grading requires every unique independent host gate',()=>{
+ const good={source:'host-delivery-receipt-probe-v1',checks:deliveryReceiptGates.map(id=>({id,pass:true,details:[]}))};assert(gradeDeliveryReceipts(good).every(c=>c.pass));
+ for(const report of [null,{pass:true},{...good,source:'Agent report'},{...good,error:'probe failed'},{...good,checks:good.checks.slice(1)},{...good,checks:[...good.checks,good.checks[0]]}])assert(gradeDeliveryReceipts(report).some(c=>!c.pass));
 });

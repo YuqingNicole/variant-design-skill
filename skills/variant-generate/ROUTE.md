@@ -27,7 +27,7 @@ Read files only at the step that names them, and only the section you need. Do n
 | Undo, recover | `undo B`, `recover` | `references/workflow/history.md` |
 | Pick | `pick B` | `references/workflow/history.md` (select), then `skills/variant-design-system/ROUTE.md` → Design system from a picked direction |
 | Reopen, compare or clean previews | `open B`, `compare`, `clean previews` | `references/workflow/preview.md` |
-| Export or integrate (prepare target baseline before staging) | `react B`, `export to next`, `integrate B`, `copy` | `skills/shared/export.md` |
+| Export or integrate (prepare target baseline before staging; seal the actual integration handoff before rollback) | `react B`, `export to next`, `integrate B`, `copy` | `skills/shared/export.md`; at integration handoff, `references/workflow/delivery-receipt.md` |
 | Context | `show context`, `reset context` | `references/workflow/project-context.md` |
 
 ## 1. Context and fast path

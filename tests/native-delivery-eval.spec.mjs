@@ -7,6 +7,9 @@ import { execFileSync } from 'node:child_process';
 import { snapshot } from '../evals/grade.mjs';
 import { inspectNativeDelivery, replayNativeDelivery, gradeNativeDelivery, nativeOriginalFiles } from '../evals/native-delivery.mjs';
 import { probeSharedDependencies, gradeSharedDependencies } from '../evals/shared-dependencies.mjs';
+import { probeDeliveryReceipts, gradeDeliveryReceipts } from '../evals/delivery-receipts.mjs';
+import { createDeliveryReceipt } from '../scripts/delivery-receipt.mjs';
+import { verifyArtifact } from '../scripts/artifact-verification.mjs';
 import { prepareVariant, applyVariant, undoVariant } from '../scripts/variant-history.mjs';
 import { prepareIntegration, integrateVariant, rollbackIntegration } from '../scripts/variant-integrate.mjs';
 
@@ -109,4 +112,17 @@ test('shared dependency probes use actual browser evidence and real refusal/fres
  const report=await probeSharedDependencies(project,{out:path.join(root,'shared-probe'),browser,generated:input.generated,baseline:input.baseline});
  expect(report.checks.filter(c=>!c.pass),report.error).toEqual([]);expect(gradeSharedDependencies(report).every(c=>c.pass)).toBe(true);expect(report.actions).toHaveLength(6);expect(report.evidence.initialStatus).toBe('unverified');expect(report.originalAfter).toEqual(report.originalBefore);
  await expect(probeSharedDependencies(project,{out:path.join(root,'shared-probe'),browser,generated:delivered.generated,baseline:delivered.baseline})).rejects.toThrow(/Preserve existing/);
+});
+
+test('delivery receipts bind actual integrated app observations and survive real drift refusals and rollback', async ({browser}) => {
+ test.setTimeout(150000);const input=generatedProject('receipts'),project=fs.realpathSync(input.project);
+ write(project,'.variant-work/dependency-resolution.json',JSON.stringify({schemaVersion:1,entries:['.variant-work/native-preview.json'],aliases:{'@':'src'},configFiles:['.variant-work/native/vite.config.ts','.variant-work/native/tsconfig.json']}));
+ for(const file of ['delivery-receipt.mjs','variant-history.mjs','variant-integrate.mjs','artifact-verification.mjs','browser-verification.mjs','project-dependencies.mjs','dependency-references.mjs','preview-files.mjs'])write(project,`.agents/skills/variant-design/scripts/${file}`,fs.readFileSync(`../scripts/${file}`));
+ const delivered=recordedDelivery(input),output=path.join(project,'variant-output'),before=await verifyArtifact(output,'B',{projectRoot:project,dependencies:['src/App.tsx']}),plan='.variant-work/receipt-test-plan.json';
+ prepareIntegration(output,'B',['src/App.tsx'],path.join(project,plan),project);const integration=integrateVariant(output,'B',path.join(project,delivered.manifest.staging),project,path.join(project,plan));
+ const after=await verifyArtifact(output,'B',{projectRoot:project,dependencies:['src/App.tsx']}),receipt=createDeliveryReceipt(output,integration.id,{projectRoot:project,plan,staging:delivered.manifest.staging,beforeReport:path.relative(output,before.file),afterReport:path.relative(output,after.file)});
+ rollbackIntegration(output,integration.id,project);const manifest={...delivered.manifest,plan,integrationId:integration.id,deliveryReceipt:path.relative(output,receipt.file)};write(project,'.variant-work/native-delivery.json',JSON.stringify(manifest));
+ const report=await probeDeliveryReceipts(project,{out:path.join(root,'receipt-probe'),browser,generated:input.generated,baseline:input.baseline});
+ expect(report.checks.filter(c=>!c.pass),report.error).toEqual([]);expect(gradeDeliveryReceipts(report).every(c=>c.pass)).toBe(true);expect(report.actions).toHaveLength(3);expect(report.sealed.verificationStatus).toBe('unverified');expect(report.originalAfter).toEqual(report.originalBefore);
+ await expect(probeDeliveryReceipts(project,{out:path.join(root,'receipt-probe'),browser,generated:input.generated,baseline:input.baseline})).rejects.toThrow(/Preserve existing/);
 });
