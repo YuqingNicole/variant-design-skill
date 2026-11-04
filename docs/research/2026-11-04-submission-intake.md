@@ -27,3 +27,11 @@
 - 浏览器：双语表单、必填/错误、视频封面、复制失败保留正文、JSON 下载；真实渲染器加载授权图片与视频、可见授权标记和署名；撤下页无媒体请求；draft 英文不进入生产索引。
 - 网站完整测试、构建及现有浏览器回归；320/390/1440 截图与无横向溢出检查。
 - 不自动向第三方发送投稿，不创建虚假发布记录，不把测试当作真人投稿验收。
+
+## PR #149 review follow-up · 2026-11-04
+
+Verified all four inline CodeRabbit findings against `c4d375a` and the follow-up about base-reference IDs. The collapsed disclosure now distinguishes link references from author-permission media in both languages. New submission spacing uses the existing site tokens. The write runbook now states the exact cooperative-lock window: a non-cooperating registry edit between the last pre-rename check and rename can be lost without an error; the old backup cannot capture it. Base-reference edits are not serialized, so build-time duplicate rejection remains the publication guard. No automatic post-write backup restoration or force option was added.
+
+The rapid-arrow regression delays the real View Transition update by 100ms and dispatches five right arrows followed by two left arrows. Before the production fix the modal advanced only one entry; afterward both modal and direct-page cases reach the requested fifth/third entry and close correctly. The fix tracks the latest requested navigation synchronously while animated callbacks may lag, retaining the existing latest-transition queue. The direct-page test initially sent events before the client listener was mounted; it now waits for and focuses the client-rendered navigation button. A disclosure test initially used a wrong CSS selector, corrected to the actual `inspiration-disclosure` class. These were test failures, not passes.
+
+Validation on the reviewed implementation: website **67 tests passed**, build **239 routes**, focused browsing/submission Chrome suite **11 passed** (all seven browsing cases, including the two new rapid-arrow cases, and all four submission cases). No genuine author record, third-party message or production deployment was created. Exact-head CI and reviewer acceptance remain separate gates.

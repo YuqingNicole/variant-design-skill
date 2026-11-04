@@ -39,7 +39,7 @@ const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdra
  useFor:{zh:'参考什么',en:'Use for'},avoid:{zh:'不参考什么',en:'Avoid'},remove:{zh:'移除',en:'Remove'},packBrief:{zh:'生成参考包指令',en:'Create pack brief'},takeIt:{zh:'带进你的项目',en:'Take it into your project'},
  briefLabel:{zh:'参考设计指令',en:'Reference brief'},copyBrief:{zh:'复制指令',en:'Copy brief'},dismiss:{zh:'收起',en:'Dismiss'},copied:{zh:'已复制，粘贴到你的项目 Agent 中继续。',en:'Copied. Continue in your project agent.'},
  copyManually:{zh:'请在文本框中选择并手动复制。',en:'Select the text and copy it manually.'},submissions:{zh:'投稿与授权规则',en:'Submissions & permissions'},
- disclosure:{zh:'只放链接，缩略图就是链接自己的预览',en:'Links only; each thumbnail is the link’s own preview'},
+ disclosure:{zh:'链接参考与作者授权媒体，分别注明来源和权限',en:'Link references and author-permission media identify their sources and rights'},
  disclosureBody:{zh:'作品版权归原作者。标有「作者授权」的媒体按授权记录直接从作者地址加载，仅限本站展示；其他条目是仅链接参考。本站不在仓库里保存对方的截图或素材：网站条目显示该网站为分享链接公开的预览图、标题和描述，图片取自原站，经本站托管方 Vercel 的图片服务按显示尺寸缩小并缓存；X 帖子与网站在同一作品流中，卡片直接从 X 的服务器播放帖子视频（静音循环），详情用 X 官方嵌入，X 可能记录这次访问。没有公开预览的条目显示我们写的分析卡。登录后操作和手机体验未实测。',en:'The work belongs to its owners. Media labeled “Author permission” loads from the author’s URL for display here under its recorded permission; other entries are link-only references. This site keeps none of their screenshots or assets in its repository: a website entry shows the preview image, title and description the site publishes for shared links, taken from the site and resized and cached by our host Vercel’s image service; X posts and websites share one feed, where each X card streams the post’s video from X (muted, looping) and the detail uses X’s official embed; X may record the visit. Entries without a public preview show our own analysis card. Authenticated flows and mobile behavior not tested.'},
  refType:{zh:'参考类型',en:'Reference type'},all:{zh:'全部',en:'All'},topic:{zh:'专题',en:'Topic'},allTopics:{zh:'全部专题',en:'All topics'},search:{zh:'搜索参考',en:'Search references'},searchHint:{zh:'搜索 ⌘K',en:'Search ⌘K'},
  sort:{zh:'排序',en:'Sort'},curated:{zh:'最近收录',en:'Recently added'},original:{zh:'编辑顺序',en:'Editorial order'},recent:{zh:'最近核对',en:'Recently checked'},byName:{zh:'按名称',en:'By name'},references:{zh:'个参考',en:'references'},openOnX:{zh:'在 X 上打开',en:'Open on X'},
@@ -87,6 +87,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
  const language = useLocale(),inspirationItems=referencesFor(language),total=inspirationItems.length,count=(c:string)=>inspirationItems.filter(i=>i.category===c).length,withdrawn=withdrawnReferences.find(r=>r.id===detail);const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);const [category,setCategory]=useState(()=>{const c=new URLSearchParams(location.search).get('category');return c&&c in labels&&c!=='motion'?c:'all'});const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('q')??'');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [sort,setSort]=useState(()=>{const s=new URLSearchParams(location.search).get('sort');return s==='name'||s==='checked'||s==='curated'?s:'default'});const [visible,setVisible]=useState(()=>typeof IntersectionObserver==='undefined'?Infinity:pageSize);
  // `page` is a detail opened by its own address; `modal` is one opened from the grid over it.
  const [open,setOpen]=useState<{id:string;mode:'page'|'modal'}|null>(()=>inspirationItems.some(i=>i.id===detail)?{id:detail,mode:'page'}:null);
+ const requestedOpen=useRef(open);
  const openItem=inspirationItems.find(i=>i.id===open?.id);
  useEffect(()=>{if(withdrawn)return;document.title=t(f.docTitle,language)(openItem?.name);document.documentElement.lang=locales[language].htmlLang;document.querySelector('meta[name="description"]')?.setAttribute('content',openItem?t(f.itemDescription,language)(openItem):t(f.pageDescription,language)(total))},[language,openItem]);
  const [initialPack]=useState(loadPack);const [selection,setSelection]=useState<Record<string,Intent>>(initialPack.selection);const [storageError,setStorageError]=useState(initialPack.error);
@@ -109,16 +110,18 @@ export function InspirationPage({detail=''}:{detail?:string}){
  const remember=()=>{returnTo.current={x:scrollX,y:scrollY,opener:document.activeElement instanceof HTMLElement?document.activeElement:null}};
  useEffect(()=>{const onPop=()=>{const id=parseLocale(location.pathname).route.split('/')[2]??'';pushed.current=false;
   const valid=inspirationItems.some(i=>i.id===id);if(valid&&fromGrid.current&&!returnTo.current)remember();
-  transition(()=>{setOpen(valid?{id,mode:fromGrid.current?'modal':'page'}:null);
+  const next=valid?{id,mode:fromGrid.current?'modal' as const:'page' as const}:null;requestedOpen.current=next;
+  transition(()=>{setOpen(next);
    const params=new URLSearchParams(location.search),c=params.get('category'),s=params.get('sort');setCategory(c&&c in labels&&c!=='motion'?c:'all');setTopic(params.get('topic')??'');setQuery(params.get('q')??'');setSort(s==='name'||s==='checked'||s==='curated'?s:'default')});
  };addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
  useEffect(()=>{const url=new URL(location.href);for(const [key,value] of Object.entries({category:category==='all'?'':category,topic,q:query,sort:sort==='default'?'':sort})){if(value)url.searchParams.set(key,value);else url.searchParams.delete(key)}history.replaceState(history.state,'',url.pathname+url.search+url.hash)},[category,topic,query,sort]);
- function show(id:string,mode:'page'|'modal'){if(!open&&mode==='modal')remember();transition(()=>{
+ function show(id:string,mode:'page'|'modal'){if(!requestedOpen.current&&mode==='modal')remember();requestedOpen.current={id,mode};transition(()=>{
   if(parseLocale(location.pathname).route!==`/inspiration/${id}`){if(open)history.replaceState(null,'',localePath(`/inspiration/${id}`,language)+location.search);else{history.pushState(null,'',localePath(`/inspiration/${id}`,language)+location.search);pushed.current=true}}
   setOpen({id,mode});if(dialogRef.current)dialogRef.current.scrollTop=0;
  })}
- function close(){if(pushed.current){pushed.current=false;history.back()}else transition(()=>{history.replaceState(null,'',localePath('/',language)+location.search);setOpen(null)})}
- function step(by:number){if(!openItem)return;const list=results.some(r=>r.id===openItem.id)?results:inspirationItems;const at=list.findIndex(r=>r.id===openItem.id);show(list[(at+by+list.length)%list.length].id,open!.mode)}
+ function close(){requestedOpen.current=null;if(pushed.current){pushed.current=false;history.back()}else transition(()=>{history.replaceState(null,'',localePath('/',language)+location.search);setOpen(null)})}
+ // Track requested navigation immediately: transition callbacks may lag behind several key presses.
+ function step(by:number){const current=requestedOpen.current;if(!current)return;const list=results.some(r=>r.id===current.id)?results:inspirationItems;const at=list.findIndex(r=>r.id===current.id);if(at<0)return;show(list[(at+by+list.length)%list.length].id,current.mode)}
  useLayoutEffect(()=>{const d=dialogRef.current;if(!d)return;if(open?.mode==='modal'&&!d.open)d.showModal();if(open?.mode!=='modal'&&d.open)d.close();
   if(!open&&returnTo.current){const saved=returnTo.current;returnTo.current=null;saved.opener?.focus({preventScroll:true});scrollTo({left:saved.x,top:saved.y,behavior:'instant'});const next=afterClose.current;afterClose.current=null;next?.()}
  },[open]);
