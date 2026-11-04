@@ -11,8 +11,8 @@ Work in `/Users/nicole/orca/variant-backlog-work` on task branches. The original
 | Area | Current state | Acceptance / remaining evidence |
 |---|---|---|
 | Website positioning, PR #138 | Updated at `f1d6001`; local and GitHub loop/landing checks passed | Review findings fixed; final review, deployed preview and production merge remain separate |
-| Unified inspiration feed / interaction / appearance | Implemented, 44 local Chrome checks passed; screenshot review pending | RFC-008 P2: one chronological feed; URL filters; hover/focus/touch credits; visible-only videos; reduced motion; shared-element detail; keyboard/back/scroll; 320/390/1440 in both languages; style budget |
-| Submission and permission intake | Not started | RFC P3: media URL/file workflow, attribution, distinct usage rights, withdrawal, manual review and evaluated storage |
+| Unified inspiration feed / interaction / appearance | PR #148, local and remote checks passed; preview sampled; screenshot review pending | RFC-008 P2: one chronological feed; URL filters; hover/focus/touch credits; visible-only videos; reduced motion; shared-element detail; keyboard/back/scroll; 320/390/1440 in both languages; style budget |
+| Submission and permission intake | Implemented; 67 website tests and 48 Chrome regressions passed locally; PR/preview review pending | RFC P3: media URL/file workflow, attribution, distinct usage rights, withdrawal, manual review and evaluated storage |
 | Design system checks | Partially implemented before this task | RFC-007 P1 remaining checks and grouping decision; unit tests and real chain evidence |
 | Premium / adjective evals | Not started | Real Agent fixture and style-budget comparison; preserve task and brand |
 | Region selection / public code checker | Needs product decision | Concrete proposal and bounded implementation after scope decision |
@@ -51,7 +51,7 @@ Ego-browser space 42 inspected the actual local site. Baseline screenshots and r
 
 ## Next action
 
-Publish the verified P2 branch for review, then implement P3 submission and permission intake. Keep P1/P2 preview, reviewer and production gates explicit; later requirements remain in scope.
+P2 is published as PR #148 with CI passed. Publish and inspect the verified P3 submission intake branch, then continue with RFC-007 design-system checks. Keep P1/P2 preview, reviewer and production gates explicit; later requirements remain in scope.
 
 
 ### P1 follow-up review
@@ -93,3 +93,40 @@ The browser regressions use a self-generated 2-second, 64×40 solid-color WebM f
 The counts match in Chinese and English. Actual screenshots were inspected; the 1440 desktop grid exposes two complete rows. Local passes do not establish production CDN behavior, cross-browser coverage or final maintainer visual acceptance. No skill UX or WCAG certification is claimed, and no real Agent eval was needed or run for this website-only behavior change.
 
 Remaining gates: publish PR, verify its exact CI/preview, maintainer screenshot review and separately authorized production merge; continue with P3, then design-system checks and all later rows above. The overall backlog objective remains active.
+
+
+### P2 published checkpoint
+
+PR [#148](https://github.com/YuqingNicole/variant-design-skill/pull/148), exact head `a1d0ee0d0b94f495a80a182b293af7989e2aa9e5`: both push/PR `loop` and `landing` jobs passed; Vercel preview deployed successfully; CodeRabbit skipped this run (not an approval). Runs: `41791805557` and `41791861973`.
+
+Ego-browser inspected [the deployed preview](https://variant-design-skill-git-codex-ce9c51-nicolechen-9191s-projects.vercel.app), then selected Landing. Twelve visible reference images rendered with nonzero natural dimensions through `/_vercel/image` (Attio, Ramp, Cal.com, Rive, tldraw, Pitch, Resend, Impeccable, Linear, Notion, Raycast, Cursor). Actual screenshot and per-image results: `/Users/nicole/orca/variant-backlog-evidence/preview-landing.png` and `preview-images.json`. This is a sampled preview check, not an all-route or production acceptance claim.
+
+The task continues on `codex/submission-permissions` in the same isolated worktree, based on the verified P2 head. Next inspect `website/src/SubmitPage.tsx`, `.github/ISSUE_TEMPLATE/submission.md`, the permission schema in `website/scripts/content.mjs`, and RFC-008 §4. Existing submissions collect only work/permission text; they have no media intake fields. Evaluate repository storage, Blob and author-hosted URLs before implementing intake, review and withdrawal. No third-party submission has been sent. The original worktree is still untouched. For later browser work, reuse Ego space 42; the local preview server is live on port 4198 (exec session 50547).
+
+
+### P3 submission intake (local)
+
+Worktree/branch: `/Users/nicole/orca/variant-backlog-work`, `codex/submission-permissions`, based on P2 `a1d0ee0`. This is implementation of RFC-008 §4. Storage comparison and acceptance baseline: `docs/research/2026-11-04-submission-intake.md`; maintainer workflow: `website/SUBMISSIONS.md`.
+
+Implemented:
+
+- A bilingual local-only author form collects image/video URLs, a video poster, alt text, author credit, grantor/authority, date, display scope and withdrawal method. Authors may upload local media in GitHub’s own editor and use its URL. The page prepares readable submission text and a downloadable JSON file; it never posts an issue or persists the draft. Copy/download failures retain readable content.
+- The same validated authorized-reference registry feeds browser and prerender. Local review prepares a candidate; admission requires an evidence URL, review identity/date, media details, credit and translation status. Records cannot collide with link-only or withdrawn IDs. The genuine registry remains `[]`; no test permissions were published.
+- Authorized cards/details and reference briefs distinguish permission from link-only use and state the display-only scope. Images/video use author-provided URLs; video follows visibility, background and runtime reduced-motion behavior. Complete and draft English follow the existing production translation gate.
+- Removal replaces the current registry record with only ID, name, date and reason; current media URLs disappear from shipped records. The old address renders an unindexed no-media notice; feed and sitemap omit it. Private saved notes stay local, are labeled unavailable and are excluded from new briefs.
+- Registry writes preserve verified backups and use a cooperative lock, drift checks and a verified temporary file. Symlinks, duplicate IDs and stale writes are refused. Backups stay under ignored `.variant-work/`. Crash recovery and external media availability are not claimed as globally transactional guarantees.
+
+| Check | Result |
+|---|---|
+| `npm test --prefix website` | 67 passed, including six admission/withdrawal/SSR cases |
+| `npm run build --prefix website` | Passed, 239 prerendered routes with the empty genuine registry |
+| `cd tests && PLAYWRIGHT_CHANNEL=chrome npx playwright test -c landing.config.mjs` | 48 passed (2.7 minutes): all earlier 44 regressions plus four intake/authorized-media/removal scenarios |
+| `node website/scripts/submissions.mjs check` | 95 published link references, 0 withdrawn; no genuine authorized submission claimed |
+| `git diff --check` | Passed |
+| Actual local Ego browser | Both languages at 320/390/1440: no horizontal overflow; observed inputs ≥44px tall and ≥16px text; synthetic unsent readable draft prepared successfully |
+
+The additional SSR test compiles the actual SSR entry in an isolated copy, checks authorized media and labels in server-rendered HTML, removes draft English, and verifies that a unique revoked media URL is absent from the built artifact. Browser media tests use the self-generated 64×40 image and two-second video on reserved example hosts. They do not prove anyone’s legal authority or a real third-party submission. The test Vite server’s initial font allow-list error and a copied SSR fixture’s missing CHANGELOG dependency were corrected; the final test run has no such errors. Manual inspection replaced an early raw-JSON review display with readable sections; the final readable text remains copyable and the machine JSON remains downloadable.
+
+Screenshots and measurements: `/Users/nicole/orca/variant-backlog-evidence/submissions/{zh,en}-{320,390,1440}.png`, `layout.json`, `draft-review.png` and `local-draft.md`. The synthetic draft explicitly says not to submit; no GitHub submission, upload or third-party message was sent. The original working tree’s nine modified files and untracked ReferenceCard are preserved.
+
+Remaining gates for this phase: exact PR CI, deployed form preview, maintainer review and production merge approval. A real author submission requires the author and a human permission review; the empty registry is intentional, not evidence of real uptake. The full backlog objective remains active; RFC-007 checks are next.

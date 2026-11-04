@@ -32,7 +32,7 @@
 ## 5. 网站维护
 
 - [ ] RFC-008 P2：统一作品流、交互与审美已在 `codex/inspiration-browsing` 实现并通过 44 项本地浏览器回归；待审阅与合并。计数和截图证据见 `docs/research/2026-11-04-backlog-execution.md`。
-- [ ] RFC-008 P3：投稿时收作者授权的图片或视频。先评估存放方式（仓库、Vercel Blob 或作者自己托管），见 §4。
+- [ ] RFC-008 P3：投稿、媒体地址、人工审核登记与撤下已在 `codex/submission-permissions` 实现并完成本地验证；待审阅和合并。维护流程见 `website/SUBMISSIONS.md`。
 
 - [ ] 改写定价页口号「审美免费。连续性值得付费。」。等第 1 组价格页的决定之后再改，口号要和付费档的说法一致。
 - [ ] 用 `scripts/style-budget.mjs` 量其他页面：`/docs`（11 个字号）、`/sponsor`（9 个），以及首页在 390 宽度下（9 个），按 2026-11-02 首页的做法收敛。

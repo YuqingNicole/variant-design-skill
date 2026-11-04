@@ -163,3 +163,5 @@ div.insp-thumb.insp-thumb-media{display:block;padding:0;background:var(--site-su
 /* Give search a full row on narrow screens instead of squeezing it between two selects. */
 @media(max-width:650px){.insp-bar>.site-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.insp-pills{grid-column:1/-1}.insp-bar select{width:100%;max-width:none;min-width:0}.insp-search{grid-column:1/-1;grid-row:3;min-width:0}.insp-search input{min-width:0}}
 @media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
+
+.reference-permission{padding-top:16px;border-top:1px solid var(--site-line);margin-top:24px;font-size:14px}.reference-permission p{margin:8px 0}.reference-permission a{text-underline-offset:3px}.reference-media-unavailable{padding:24px;border:1px solid var(--site-line);color:var(--site-muted)}.insp-detail-media>.insp-thumb-media{height:auto;min-height:160px}.insp-detail-media>.insp-thumb-media>img{height:auto}

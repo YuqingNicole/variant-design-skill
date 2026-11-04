@@ -345,7 +345,7 @@ test('a page downloads only its own code, with every stylesheet up front', async
 test('submission page states the three entry kinds, permissions and takedown process in both languages', async ({page})=>{
  await page.goto('/');await page.locator('.site-footer a[href="/submit"]').click();await expect(page).toHaveURL(/\/submit$/);
  await expect(page.locator('h1')).toHaveText('投稿与授权');await expect(page.locator('.submit-sources li')).toHaveCount(3);
- await expect(page.locator('[data-source="link-only"]')).toContainText('不托管对方的截图');await expect(page.getByRole('heading',{name:'撤下请求'})).toBeVisible();
+ await expect(page.locator('[data-source="link-only"]')).toContainText('不转存对方的截图');await expect(page.getByRole('heading',{name:'撤下请求'})).toBeVisible();
  await expect(page.locator('.content-reading a[href$="/issues/new/choose"]')).toBeVisible();
  await page.locator('.site-language').click();await expect(page.locator('h1')).toHaveText('Submissions & permissions');await expect(page.getByRole('heading',{name:'Takedown requests'})).toBeVisible();
  for(const width of [320,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}

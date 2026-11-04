@@ -3,11 +3,12 @@ import xMedia from './x-media.json';
 // The video of a shared X post, streamed from video.twimg.com (address read by scripts/x-media.mjs) and played
 // muted on a loop while on screen. Nothing is hosted here; if X refuses or the file is gone, the poster stays.
 export type XMedia={video:string;poster:string;width:number;height:number;avatar:string|null;fetchedAt:string};
+export type VideoMedia=Pick<XMedia,'video'|'poster'|'width'|'height'>;
 export const mediaOf=(id:string):XMedia|undefined=>(xMedia as Record<string,XMedia>)[id];
 // video.twimg.com refuses requests carrying another site's referrer, and <video> has no per-element
 // referrerpolicy, so the document drops it before the first video loads (outbound links already use noreferrer).
 function dropReferrer(){if(document.querySelector('meta[name="referrer"]'))return;const m=document.createElement('meta');m.name='referrer';m.content='no-referrer';document.head.appendChild(m)}
-export function XVideo({media}:{media:XMedia}){const ref=useRef<HTMLVideoElement>(null);const [failed,setFailed]=useState(false);
+export function XVideo({media}:{media:VideoMedia}){const ref=useRef<HTMLVideoElement>(null);const [failed,setFailed]=useState(false);
  useEffect(()=>{const v=ref.current;if(!v)return;dropReferrer();
   if(typeof IntersectionObserver==='undefined')return;
   const motion=matchMedia('(prefers-reduced-motion: reduce)');let visible=false;

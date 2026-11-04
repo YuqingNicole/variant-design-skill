@@ -1,10 +1,9 @@
+import { SubmissionForm } from './SubmissionForm';
 import { t, type Localized } from './i18n/localized';
-import { useEffect, useState } from 'react';
-import type { Language } from './direction-engine';
+import { useEffect } from 'react';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import './content-pages.css';
 import { useLocale } from './i18n/LocaleProvider';
-import { localePath } from './i18n/locale-route';
 const m={submissionsPermissionsVariantDesign:{zh:'投稿与授权 — Variant Design',en:'Submissions & permissions — Variant Design'},
  howTheVariantDesign:{zh:'Variant Design 方向库的收录、授权与撤下规则。',en:'How the Variant Design direction library accepts, licenses and removes work.'},
  submissionsPermissions:{zh:'投稿与授权',en:'Submissions & permissions'},
@@ -18,20 +17,20 @@ const repo='https://github.com/YuqingNicole/variant-design-skill';
 // Public content policy for the direction library (RFC-002 §5). Keep in step with docs/rfc/002-direction-library.md.
 const sources:{id:string;name:Localized;rule:Localized;images:Localized}[]=[
  {id:'own',name:{zh:'自产作品',en:'Our own work'},rule:{zh:'用 Variant Design 在示例项目里实际跑出来的方向，附带产出记录作为证据。',en:'Directions actually produced with Variant Design in a sample project, with the output history as evidence.'},images:{zh:'可以托管',en:'Hosted'}},
- {id:'permission',name:{zh:'授权投稿',en:'Licensed submissions'},rule:{zh:'作者明确授权在本站展示的作品。授权记录随作品一起保存。',en:'Work whose author has granted permission to show it here. The permission is stored with the entry.'},images:{zh:'按授权范围托管',en:'Hosted within the granted scope'}},
- {id:'link-only',name:{zh:'外部参考',en:'External references'},rule:{zh:'公开作品，只有我们自己写的分析和原站链接。',en:'Public work, shown only through our own notes and a link to the source.'},images:{zh:'不托管对方的截图、商标或素材；网站有公开的分享预览图时，缩略图就用它，从原站加载；X 帖子显示帖子原文；两者都没有时显示我们写的分析卡',en:'None of their screenshots, marks or assets are hosted. When a site publishes a preview image for shared links, the thumbnail uses it, loaded from the site itself; an X post shows its text; otherwise the thumbnail is our own analysis card'}},
+ {id:'permission',name:{zh:'授权投稿',en:'Licensed submissions'},rule:{zh:'作者明确授权在本站展示的作品。授权记录随作品一起保存。',en:'Work whose author has granted permission to show it here. The permission is stored with the entry.'},images:{zh:'从作者提供的地址加载，仅限本站展示',en:'Loaded from the author’s URL for display on this site'}},
+ {id:'link-only',name:{zh:'外部参考',en:'External references'},rule:{zh:'公开作品，只有我们自己写的分析和原站链接。',en:'Public work, shown only through our own notes and a link to the source.'},images:{zh:'不转存对方的截图、商标或素材；网站显示其公开分享预览，X 卡片直接加载帖子视频，详情用官方嵌入；媒体失效时保留封面或分析卡',en:'No screenshots, marks or assets are copied into this repository. Sites use their published previews; X cards load post video and details use the official embed. Media failures retain a poster or analysis card'}},
 ];
 const permission:Localized[]=[
  {zh:'授权人姓名或团队名称，以及你有权授权这件作品的说明',en:'Your name or team, and why you hold the rights to grant permission'},
  {zh:'作品名称和原始链接',en:'The work’s title and original link'},
- {zh:'授权范围：在本站作品页、分类页和分享卡片中展示',en:'Scope: shown on this site’s entry, category pages and share cards'},
+ {zh:'授权范围：在本站作品流和详情展示；不包含下载、复用或商业使用',en:'Scope: display in the feed and detail pages; no download, reuse or commercial-use rights'},
  {zh:'署名方式：希望显示的名字和链接',en:'Credit: the name and link you want shown'},
  {zh:'授权日期。你可以随时撤回授权',en:'Date of permission. You can withdraw it at any time'},
 ];
 const steps:Localized[]=[
- {zh:'在 GitHub 开一个 Issue，选择「作品投稿」模板，填写作品信息和上面的授权内容。',en:'Open a GitHub issue with the “Submission” template, including the work and the permission details above.'},
+ {zh:'用上方表单准备投稿，或直接在 GitHub 选择「作品投稿」模板，填上媒体地址、署名和授权。',en:'Prepare a draft above, or open the “Submission” GitHub template with your media URLs, credit and permission details.'},
  {zh:'我们会审核作品是否符合收录标准：能作为一个清晰的设计方向，并且可以写出它优化什么、牺牲什么、适合什么场景。',en:'We review whether it works as a clear design direction we can describe: what it optimizes, what it trades off and where it fits.'},
- {zh:'收录后，作品和授权记录会以代码评审的方式加入仓库，修改历史公开可查。',en:'Accepted entries and their permission records are added through code review, with a public history.'},
+ {zh:'收录后，编辑笔记、授权证据和审核记录经代码评审加入登记；媒体保留在作者提供的地址，修改历史公开可查。',en:'Accepted entries, permission evidence and review records enter the registry through code review. Media stays at the supplied URL; the record has a public history.'},
 ];
 const takedown:Localized[]=[
  {zh:'如果本站展示了你的作品而你不同意，请开一个「撤下请求」Issue，写明作品链接和你的身份。',en:'If this site shows your work without your agreement, open a “Takedown request” issue with the link and who you are.'},
@@ -43,6 +42,7 @@ export function SubmitPage(){
  return <main className="content-page submit-page"><SiteHeader language={language}/>
   <header className="content-hero site-shell"><h1>{t(m.submissionsPermissions,language)}</h1><p>{t(m.theDirectionLibraryShows,language)}</p></header>
   <section className="content-reading site-shell">
+   <SubmissionForm/>
    <h2>{t(m.threeKindsOfEntries,language)}</h2>
    <ul className="submit-sources">{sources.map(s=><li key={s.id} data-source={s.id}><strong>{t(s.name,language)}</strong> — {t(s.rule,language)} <em>{t(s.images,language)}</em></li>)}</ul>
    <h2>{t(m.aPermissionIncludes,language)}</h2><ul>{permission.map((p,i)=><li key={i}>{t(p,language)}</li>)}</ul>

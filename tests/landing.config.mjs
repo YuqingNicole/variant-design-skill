@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 export default defineConfig({
   testDir: '.',
-  testMatch: ['landing.spec.mjs','inspiration-browsing.spec.mjs'],
+  testMatch: ['landing.spec.mjs','inspiration-browsing.spec.mjs','submission.spec.mjs'],
   workers: 1,
   reporter: 'list',
   use: { headless: true, baseURL: 'http://127.0.0.1:4197', channel: process.env.PLAYWRIGHT_CHANNEL || undefined },

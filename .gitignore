@@ -22,3 +22,5 @@ __pycache__/
 website/.canvas-data/
 .canvas-delivery/
 .vercel
+
+**/.variant-work/

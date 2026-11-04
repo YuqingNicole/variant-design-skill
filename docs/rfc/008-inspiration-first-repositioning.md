@@ -1,6 +1,6 @@
 # RFC-008 · 改定位：以设计灵感为主
 
-- 状态：已接受。P1（定位和信息结构）已实施（2026-11-03）。P2 已实现并通过本地回归，截图待维护者审阅；P3 待实施。
+- 状态：已接受。P1（定位和信息结构）已实施（2026-11-03）。P2 已实现并通过本地回归，截图待维护者审阅；P3 已实现并通过本地验证，待 PR/预览审核。
 - 日期：2026-11-03。
 - 关联：
   - RFC-003（参考库验证闭环）、RFC-004（首页第一屏，本文取代它的首页结构）、RFC-005（多语言地址）；
@@ -95,7 +95,7 @@
 - 截图对比：320 / 390 / 1440，中英文。
 - 计数报告。
 
-## 4. P3：投稿和授权（待实施）
+## 4. P3：投稿和授权（本地验证，待审阅）
 
 图先行需要更多真实图片。来源只有两种：
 
@@ -119,3 +119,13 @@
 - 浏览器回归使用自行生成的 64×40、2 秒纯色视频，不下载 X 视频，验证实际播放/暂停和偏好切换；图片与第三方嵌入在回归中隔离，真实来源画面通过 Ego 浏览器另行查看。
 - 原理核对：[Chrome View Transitions 指南](https://developer.chrome.com/docs/modern-web-guidance/guides/ui-behaviors/same-document-transitions) 的名称唯一要求；[Chrome dialog 滚动指南](https://developer.chrome.com/docs/modern-web-guidance/guides/ui-behaviors/prevent-page-scroll-under-modal-dialog) 的 dialog/backdrop 滚动隔离。实际本地浏览器结果见执行记录，文档本身不作为跨浏览器支持证明。
 - 本地证据和剩余 gate 见 `docs/research/2026-11-04-backlog-execution.md` 与 `2026-11-04-inspiration-budget.json`。尚未部署或宣称生产验收。
+
+
+## 7. P3 实施记录（2026-11-04）
+
+- 存放方案比较见 `docs/research/2026-11-04-submission-intake.md`。选择作者提供的 HTTPS 地址；作者也可在 GitHub 投稿编辑器上传本地图片/视频，把生成地址填回表单。本站不新增云上传、Blob 账户或媒体仓库。
+- `/submit` 双语表单准备可读投稿正文与可下载草稿；未发送状态明确。作者自己在 GitHub 粘贴、检查并提交，自动化不代发。
+- `website/src/authorized-references.json` 是经人工核对后登记的来源；当前为空，没有编造许可。`review` 只准备候选，`admit` 要求授权证据、审核者/日期、署名、媒体和翻译状态，写前备份并拒绝冲突/符号链接。
+- 卡片、详情和参考包区分作者授权与仅链接，授权只包含本站作品流及详情展示。未审英文标 draft，生产不发布对应语言的页面和索引。
+- `withdraw` 将当前登记替换为只含稳定 ID、名称、日期、原因的撤下记录。客户端和预渲染同源；详情 noindex、无媒体，不进作品流和 sitemap。旧的私人笔记保留在本地并标为不可用，不再进入参考指令。旧提交、缓存和已下载文件无法远程收回。
+- 维护者操作见 `website/SUBMISSIONS.md`；测试、截图及剩余审核门槛见执行记录。没有真实投稿者测试或生产上线的声明。
