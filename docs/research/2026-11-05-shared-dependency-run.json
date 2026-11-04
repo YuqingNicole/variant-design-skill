@@ -1,0 +1,462 @@
+{
+  "schemaVersion": 1,
+  "implementationHead": "dfc688b763404a109b6bdb657731bf383842a0a7",
+  "observedAt": "2026-11-04T17:51:34.338Z",
+  "rawDirectory": "/Users/nicole/orca/variant-backlog-evidence/shared-dependency-evals-dfc688b",
+  "result": {
+    "sha256": "5455b6053392f2df26bd836a12587e210152229d358937b25886f66600e6e7a8",
+    "pass": true,
+    "checks": 68,
+    "seconds": 402,
+    "timedOut": false,
+    "turns": [
+      {
+        "id": "generate",
+        "exit": 0,
+        "seconds": 168,
+        "timedOut": false,
+        "transcriptSha256": "b48c94ebbf6346d768c0e721a2e2d804eaa130f405f71b3add98bf7ac34b4ba7"
+      },
+      {
+        "id": "deliver",
+        "exit": 0,
+        "seconds": 96,
+        "timedOut": false,
+        "transcriptSha256": "b6a72c25652464e6527ec1d958599565741237c822f2f9b34524f29077417b4b"
+      },
+      {
+        "id": "cleanup",
+        "exit": 0,
+        "seconds": 47,
+        "timedOut": false,
+        "transcriptSha256": "59463aa011fb6563a715a4297feece48a85e38e3d057248365568ce0efef4f58"
+      }
+    ],
+    "usage": {
+      "tokens": 1317015
+    },
+    "reading": {
+      "words": 24021,
+      "files": [
+        "SKILL.md",
+        "references/domains/dashboard.md",
+        "references/workflow/design-declaration.md",
+        "references/workflow/history.md",
+        "references/workflow/project-context.md",
+        "references/workflow/project-discovery.md",
+        "skills/shared/code-output.md",
+        "skills/variant-generate/ROUTE.md",
+        "references/workflow/artifact-verification.md",
+        "references/workflow/preview.md",
+        "skills/shared/export.md"
+      ],
+      "turns": [
+        {
+          "turn": "generate",
+          "files": [
+            "SKILL.md",
+            "references/domains/dashboard.md",
+            "references/workflow/design-declaration.md",
+            "references/workflow/history.md",
+            "references/workflow/project-context.md",
+            "references/workflow/project-discovery.md",
+            "skills/shared/code-output.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 8925
+        },
+        {
+          "turn": "deliver",
+          "files": [
+            "SKILL.md",
+            "references/workflow/artifact-verification.md",
+            "references/workflow/history.md",
+            "references/workflow/preview.md",
+            "references/workflow/project-context.md",
+            "references/workflow/project-discovery.md",
+            "skills/shared/export.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 10593
+        },
+        {
+          "turn": "cleanup",
+          "files": [
+            "SKILL.md",
+            "references/workflow/preview.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 4503
+        }
+      ]
+    }
+  },
+  "implementation": {
+    "scripts/project-dependencies.mjs": "2ba0004f425d8e3e078ff21f7b7fa62c0690f829826c88a214a2d8e8e93b5e80",
+    "scripts/dependency-references.mjs": "8d5ff3778eca137519f563d3ac1a3059736f47071b448ace1c073b9217074dd9",
+    "scripts/artifact-verification.mjs": "2b4cd5cb0d87d51b32bb5233606fbca4e18ad391cbbc4a9ddc5c352da5b935ad",
+    "scripts/variant-integrate.mjs": "a9c480eda8f53d72d5a26adca39f0d85de4ee4130e69d1304b2672b1a388a29f",
+    "evals/shared-dependencies.mjs": "b4a32670114004a4e597676bfe98358361bb38b86c3bd390b44aa5b3bf7842b1",
+    "evals/run.mjs": "bdb14f63ab78663b8a91ea5d26fefdbabdb3e7e289fc746eb020f3a5d9552c6e",
+    "evals/grade.mjs": "63315d5004a79e6be0b074cfd31eaa84c209006c8fd32105877a4de652fdd5c3"
+  },
+  "phases": {
+    "baseline": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "baseline",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/shared-dependency-evals-dfc688b/native-vite-dependencies-codex.phases/baseline",
+        "manifestSha256": "8bac30424594a1b2af52cf4ddb8df19d6bb23cc694f48f44b2444d33fa613c7a",
+        "snapshotSha256": "cfd5b8e8f8f704f4b4e683491beeefa84c2737046f360ef33544b9c81473c92b",
+        "sourceDigest": "0a84fef3980230a9395105b757751fbf694f3709f7a3530524170a9e53f7be82",
+        "receiptSha256": "8bd0ae01f5234209416b1bc66480747c2f36da9563c27b42e70e9d7bef418f98"
+      },
+      "files": 107,
+      "directories": 20,
+      "state": null
+    },
+    "generate": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "generate",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/shared-dependency-evals-dfc688b/native-vite-dependencies-codex.phases/generate",
+        "manifestSha256": "f96a7e8f22441030dd6e9c270322bc3138dde76cea4df8f83b93ac377cc94c44",
+        "snapshotSha256": "ff84a0e84cf0774d23c12d8e1f67c13d97b89961496f1848934819be14c2fa35",
+        "sourceDigest": "c71129b0be0e970d94d5213c901195aeb8b563242e6fef0d5d82d7b985799b41",
+        "receiptSha256": "6d671a4bea043d47c27bdf748882abdafd292a93762c7e473acff288ed14a989"
+      },
+      "files": 167,
+      "directories": 36,
+      "state": {
+        "selectedVariant": null,
+        "activeVariant": "C",
+        "versions": {
+          "A": 2,
+          "B": 2,
+          "C": 2
+        }
+      }
+    },
+    "deliver": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "deliver",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/shared-dependency-evals-dfc688b/native-vite-dependencies-codex.phases/deliver",
+        "manifestSha256": "a76ef6641a98d3f60aa5ad668ccd539782217d2f26570b4788df5bb3f458cc36",
+        "snapshotSha256": "4c92530be6d0b350806c7e0c42c017bf8e395450460cb5446000df0aac2784b6",
+        "sourceDigest": "dbefc669465706b578f5489f68142ba61619636bb2d3481e503cb2c94fb3cd78",
+        "receiptSha256": "2919e3696bce5c29dd4cc82df6012bde2f592423a0d6d0059a9f1b49e18afe04"
+      },
+      "files": 209,
+      "directories": 42,
+      "state": {
+        "selectedVariant": null,
+        "activeVariant": "B",
+        "versions": {
+          "A": 2,
+          "B": 4,
+          "C": 2
+        }
+      }
+    },
+    "cleanup": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "cleanup",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/shared-dependency-evals-dfc688b/native-vite-dependencies-codex.phases/cleanup",
+        "manifestSha256": "4f84db57a576399b07d5eff46e31da941d55559fb384ac554390045ccac881e9",
+        "snapshotSha256": "4c92530be6d0b350806c7e0c42c017bf8e395450460cb5446000df0aac2784b6",
+        "sourceDigest": "66c10aa55a6df132f4be9fc6833458ecccb5ab4f14ce830c53aaff27733d84b8",
+        "receiptSha256": "a2f36b3d534978d3309103693e5b96bb33bee04b47eb7b970960f2e163b3cfe4"
+      },
+      "files": 203,
+      "directories": 42,
+      "state": {
+        "selectedVariant": null,
+        "activeVariant": "B",
+        "versions": {
+          "A": 2,
+          "B": 4,
+          "C": 2
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "hostPass": true,
+    "checks": [
+      {
+        "id": "closure-discovered",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "fresh-observation",
+        "pass": true,
+        "details": [
+          "Focus, motion and non-target checks are not inferred from these observations and remain unverified."
+        ]
+      },
+      {
+        "id": "drift-provider",
+        "pass": true,
+        "details": [
+          "Integration conflict: source revision, contents or constraints changed (including shared dependencies). Current files are unchanged; keep staging and prepare a new plan before reconciling."
+        ]
+      },
+      {
+        "id": "drift-data",
+        "pass": true,
+        "details": [
+          "Integration conflict: source revision, contents or constraints changed (including shared dependencies). Current files are unchanged; keep staging and prepare a new plan before reconciling."
+        ]
+      },
+      {
+        "id": "drift-css",
+        "pass": true,
+        "details": [
+          "Integration conflict: source revision, contents or constraints changed (including shared dependencies). Current files are unchanged; keep staging and prepare a new plan before reconciling."
+        ]
+      },
+      {
+        "id": "drift-asset",
+        "pass": true,
+        "details": [
+          "Integration conflict: source revision, contents or constraints changed (including shared dependencies). Current files are unchanged; keep staging and prepare a new plan before reconciling."
+        ]
+      },
+      {
+        "id": "drift-ambient",
+        "pass": true,
+        "details": [
+          "Integration conflict: source revision, contents or constraints changed (including shared dependencies). Current files are unchanged; keep staging and prepare a new plan before reconciling."
+        ]
+      },
+      {
+        "id": "drift-config",
+        "pass": true,
+        "details": [
+          "Integration conflict: source revision, contents or constraints changed (including shared dependencies). Current files are unchanged; keep staging and prepare a new plan before reconciling."
+        ]
+      },
+      {
+        "id": "fresh-apply-rollback",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "source-project-unchanged",
+        "pass": true,
+        "details": []
+      }
+    ],
+    "actions": [
+      {
+        "id": "provider",
+        "file": "src/workspace.tsx",
+        "before": "a88f2698079f4ba92eb0940609ac736a5148619976d0bc2b93df6eb4c2479113",
+        "after": "b0df7ddd979e7366a62349f30d3eb24939cc0563ef42a2d81d40c0cffc17f504",
+        "evidenceStale": true,
+        "integrationRefused": true,
+        "refusal": "Integration conflict: source revision, contents or constraints changed (including shared dependencies). Current files are unchanged; keep staging and prepare a new plan before reconciling.",
+        "targetContextBackupsAndUserChangePreserved": true
+      },
+      {
+        "id": "data",
+        "file": "src/workspaces.json",
+        "before": "789b396643af6839ed28c51a9ae6dc102f11eeb0c329c6dccb67536740133626",
+        "after": "635071f9d68efa7af81dfa0572e5445d7a51089b4f0e2ae74b4770089777e253",
+        "evidenceStale": true,
+        "integrationRefused": true,
+        "refusal": "Integration conflict: source revision, contents or constraints changed (including shared dependencies). Current files are unchanged; keep staging and prepare a new plan before reconciling.",
+        "targetContextBackupsAndUserChangePreserved": true
+      },
+      {
+        "id": "css",
+        "file": "src/global.css",
+        "before": "957a2174fc6944427f628db8b84ef3af1146998218a8ae6c0022da50563534a3",
+        "after": "90dc2ef939f50fb2bf43bc45a0cbe7e405d522cf0ab5872427221aac5778546a",
+        "evidenceStale": true,
+        "integrationRefused": true,
+        "refusal": "Integration conflict: source revision, contents or constraints changed (including shared dependencies). Current files are unchanged; keep staging and prepare a new plan before reconciling.",
+        "targetContextBackupsAndUserChangePreserved": true
+      },
+      {
+        "id": "asset",
+        "file": "src/workshop-mark.svg",
+        "before": "484f59864f0d8c07a6a7bc83fa99876908faa335476b5a6dfdb36368db2a440b",
+        "after": "6b4f6913ca2bfee328904272dae33b652cb15055080ac6bd68a34995e20bf7bb",
+        "evidenceStale": true,
+        "integrationRefused": true,
+        "refusal": "Integration conflict: source revision, contents or constraints changed (including shared dependencies). Current files are unchanged; keep staging and prepare a new plan before reconciling.",
+        "targetContextBackupsAndUserChangePreserved": true
+      },
+      {
+        "id": "ambient",
+        "file": "src/vite-env.d.ts",
+        "before": "03a0b5541d3a73147656cf928e93acf941140420468e5019f11dfe133c008125",
+        "after": "bfedd8ca70bb7f995ca27b56d143bc7d050a39021cfcc33d433c87653d54299b",
+        "evidenceStale": true,
+        "integrationRefused": true,
+        "refusal": "Integration conflict: source revision, contents or constraints changed (including shared dependencies). Current files are unchanged; keep staging and prepare a new plan before reconciling.",
+        "targetContextBackupsAndUserChangePreserved": true
+      },
+      {
+        "id": "config",
+        "file": "tsconfig.json",
+        "before": "2c4d1b6a543493b1847130e5050dc82ca18b60cdb9189c1fbfa50645a0e43072",
+        "after": "59f72c02da2530ae67959b56ceec709e5d73685ad71ee564f1a6d83cba629332",
+        "evidenceStale": true,
+        "integrationRefused": true,
+        "refusal": "Integration conflict: source revision, contents or constraints changed (including shared dependencies). Current files are unchanged; keep staging and prepare a new plan before reconciling.",
+        "targetContextBackupsAndUserChangePreserved": true
+      }
+    ],
+    "closure": {
+      "identity": "4829d13ad2aa6d14c836c1a58859de4b026f0f95b6c3cb8213864d200319dbe9",
+      "files": 29,
+      "edges": 50,
+      "coverage": {
+        "status": "within-supported-static-syntax",
+        "unknowns": [],
+        "limits": {
+          "files": 256,
+          "bytes": 67108864,
+          "textBytes": 1048576
+        },
+        "limitation": "Local static imports/URLs only. Candidate sets are conservative, not runtime resolution. Installed packages, environment, plugin-generated/dynamic dependencies and data-driven resources require separate review and fresh observations."
+      },
+      "resolver": {
+        "code": {
+          "project-dependencies.mjs": "2ba0004f425d8e3e078ff21f7b7fa62c0690f829826c88a214a2d8e8e93b5e80",
+          "dependency-references.mjs": "8d5ff3778eca137519f563d3ac1a3059736f47071b448ace1c073b9217074dd9"
+        },
+        "compiler": {
+          "name": "typescript",
+          "version": "5.9.2",
+          "sha256": "e5f1f6b3e82228a89873cc7b941b2465185e839c0692860f83e3e63e53f94c2b"
+        }
+      }
+    },
+    "evidence": {
+      "file": "/Users/nicole/orca/variant-backlog-evidence/shared-dependency-evals-dfc688b/native-vite-dependencies-codex.shared-dependencies/project/variant-output/.verification/B/6ff187d7-ba7e-4f17-b531-f3f4aa9c38dc.json",
+      "initialStatus": "unverified",
+      "fingerprintIdentity": "4829d13ad2aa6d14c836c1a58859de4b026f0f95b6c3cb8213864d200319dbe9",
+      "reportSha256": "b75b0d4dbb749b34c7e352f2a11144e1cd6f05f6a02b973305a3e87ca35da95a",
+      "observed": [
+        {
+          "id": "brand",
+          "status": "passed",
+          "tool": {
+            "name": "Chrome via native host",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "keyboard-focus",
+          "status": "unverified"
+        },
+        {
+          "id": "reduced-motion",
+          "status": "unverified"
+        },
+        {
+          "id": "scope-preservation",
+          "status": "unverified"
+        },
+        {
+          "id": "project-checks",
+          "status": "passed",
+          "tool": {
+            "name": "Native project Vite/TypeScript",
+            "version": "7.1.7"
+          }
+        }
+      ],
+      "currentStatus": "unverified"
+    },
+    "hostReportSha256": "6c9b5f7f48a13a85acada231dd8b64377a27e5b839cbe7bf3ee452a0e6cf4b59",
+    "originalPhaseBinding": "deliver archive hashes exactly equal before/after dependency host project trees",
+    "compilerMatchesExactTestPackage": true
+  },
+  "agentEvidence": [
+    {
+      "file": "variant-output/.verification/B/617daad7-a9c9-4845-a0de-939d04449a02.json",
+      "sha256": "fdfea2984625f73431db23efbee15d0496d6226d0d3b574e4b46d63465bc8859",
+      "version": 2,
+      "static": "passed",
+      "coverage": "within-supported-static-syntax",
+      "checks": [
+        {
+          "id": "brand",
+          "status": "unverified"
+        },
+        {
+          "id": "keyboard-focus",
+          "status": "unverified"
+        },
+        {
+          "id": "reduced-motion",
+          "status": "unverified"
+        },
+        {
+          "id": "scope-preservation",
+          "status": "unverified"
+        },
+        {
+          "id": "project-checks",
+          "status": "unverified"
+        }
+      ],
+      "currentStatus": "stale"
+    }
+  ],
+  "cleanup": {
+    "removedExpected": 9,
+    "preservedEdit": ".variant-work/A.tsx",
+    "preservedUnownedNote": ".variant-work/user-preview-note.txt",
+    "dependencyFactsNotPreviewOwned": true,
+    "dependencyFactsPreservedFromDelivery": true,
+    "completeOutputPreserved": true
+  },
+  "preservation": {
+    "originalFiles": 15,
+    "ownedSourceFilesUnchanged": true,
+    "originalProjectDigestBeforeAndAfter": "449dd0d3259c346bbd10ec6f1683dc9cb241458044577d1a70e2d81312a5daa3",
+    "hostCopyDigestBeforeAndAfter": "6ddc05b6774db288d8aec665b1c045e8f56d60ed992017d5b54a40d8e98957fc",
+    "originalResultUnchanged": true
+  },
+  "localValidation": {
+    "combinedNodeTestsBeforeFinalTypeRoots": 153,
+    "finalAffectedTests": 32,
+    "existingChromeCases": 24,
+    "newDependencyChromeCases": 1,
+    "docsChromeCases": 2,
+    "packageChecks": 4,
+    "testsTypecheck": true,
+    "websiteTests": true,
+    "websiteBuildRoutes": 239
+  },
+  "ci": {
+    "status": "in_progress_or_queued",
+    "runs": [
+      41879473012,
+      41879872953
+    ],
+    "latestObservation": {
+      "implementationHead": "dfc688b763404a109b6bdb657731bf383842a0a7",
+      "method": "GitHub commit check-runs API",
+      "pushLoop": "success",
+      "pushLanding": "success",
+      "pullRequestLoop": "success",
+      "pullRequestLanding": "success",
+      "documentationFollowup": "separate head, not covered"
+    }
+  },
+  "scope": {
+    "staticSharedDependencyBinding": true,
+    "fullRuntimeVerification": false,
+    "fullIssues18and19": false,
+    "productionChanged": false
+  }
+}
