@@ -26,6 +26,8 @@ test('the chronological stream includes every kind, pages and preserves shareabl
 test('details share an element transition and restore focus, history and the scrolled feed',async({page})=>{
  await page.addInitScript(()=>{window.transitions=[];const start=document.startViewTransition?.bind(document);if(start)document.startViewTransition=update=>{const r={ready:false,error:null};window.transitions.push(r);const vt=start(update);vt.ready.then(()=>r.ready=true,e=>r.error=String(e));return vt};});
  await page.goto('/?category=landing&sort=curated');
+ // The prerendered feed has default filters; wait for the requested client state before scrolling it.
+ await expect(page.getByRole('combobox',{name:'排序',exact:true})).toHaveValue('curated');
  const opener=page.locator('.insp-feed .insp-card-open').nth(12);await opener.scrollIntoViewIfNeeded();const before=await page.evaluate(()=>scrollY),href=await opener.getAttribute('href');await opener.click();
  const dialog=page.getByRole('dialog');await expect(dialog).toBeVisible();await expect(page).toHaveURL(new RegExp(href+'\\?category=landing&sort=curated$'));
  await expect.poll(()=>page.evaluate(()=>window.transitions.some(r=>r.ready))).toBe(true);
