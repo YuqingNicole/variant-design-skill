@@ -105,3 +105,5 @@ B update card — card zone     → apply new card component to the card zone in
 | `component nav` | Navigation component with responsive behavior |
 | `states [component]` | Show all 8 interactive states for a specific component |
 | `dark component` | Re-generate component set in dark mode |
+
+A newly confirmed system can coexist with a picked page still pending adoption. Build the new component on the confirmed foundation and leave A/B/C and their binding untouched. Report that distinction; do not alter old page token metadata just to clear a delivery warning.

@@ -227,3 +227,5 @@ For revision-bound delivery evidence, read `references/workflow/artifact-verific
 Before generating files for project integration, prepare a source/target baseline using `skills/shared/export.md`. Applying staging without a prepared plan is rejected.
 
 Comparison delivery uses preview-first cards, with full-page links above and expandable direction details below. Rebuild existing comparisons with the preview helper; do not hide or discard the comparison statements.
+
+Confirming a derived design system leaves the original page pending; it does not silently rewrite it. For explicit `apply ds B`, use `variant-history.mjs apply-system` after preparation, with token metadata aligned to the approved system. Ordinary variation token locks remain in force. Preserve `systemBinding` in unrelated context updates; only the confirmation/adoption/undo helpers change it. Never manually mark a page applied.

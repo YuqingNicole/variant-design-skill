@@ -4,7 +4,7 @@ import path from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { fixture } from './fixture.mjs';
-import { prepareVariant, applyVariant, undoVariant } from '../scripts/variant-history.mjs';
+import { prepareVariant, applyVariant, undoVariant, confirmSystem, applySystemVariant, readContext } from '../scripts/variant-history.mjs';
 const root=path.resolve('.generated'),candidate=path.resolve('.candidate');
 let server, base;
 test.beforeAll(async()=>{
@@ -209,4 +209,20 @@ test('comparison keeps long explanations below aligned previews and centers phon
  await page.locator('.recommendation summary').focus();await page.keyboard.press('Enter');
  await expect(page.locator('.recommendation p')).toHaveText(state.recommendation.reason);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
+test('system confirmation preserves the old page; explicit adoption and undo restore actual fonts and controls',async({page})=>{
+ const project=path.join(root,'adoption'),output=path.join(project,'variant-output'),work=path.join(project,'.variant-work');fs.rmSync(project,{recursive:true,force:true});fs.mkdirSync(output,{recursive:true});fs.mkdirSync(work);
+ const state={schemaVersion:2,selectedVariant:'B',activeVariant:null,taskContract:{primaryJob:'Inspect members',data:'shared member rows',requiredFunctions:['inspect counter']},recommendation:{variant:'B',reason:'Compact member rows'},variants:{}};
+ for(const id of ['A','B','C']){const entry=`${id}.html`;fs.writeFileSync(path.join(output,entry),`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Members ${id}</title><style>body{font-family:Georgia}</style></head><body><h1>Members ${id}</h1><button onclick="document.querySelector('output').textContent=Number(document.querySelector('output').textContent)+1">Inspect</button><output>0</output></body></html>`);state.variants[id]={entry,files:[entry],tokens:{fonts:['Georgia']},comparison:{optimizes:`${id} rows`,tradeoff:`${id} density`,bestFor:`${id} teams`},version:1,history:[],undo:[]};}
+ fs.writeFileSync(path.join(output,'.variant-context.json'),JSON.stringify(state));fs.writeFileSync(path.join(output,'design-system.css'),':root{--font-ui:Arial,sans-serif;--color-bg:#fff;--color-on-bg:#111}');
+ const original=fs.readFileSync(path.join(output,'B.html')),others=['A','C'].map(id=>fs.readFileSync(path.join(output,`${id}.html`),'utf8')),url=pathToFileURL(path.join(output,'B.html')).href;
+ await page.goto(url);await expect(page.locator('body')).toHaveCSS('font-family','Georgia');
+ confirmSystem(output,{file:'variant-output/design-system.css',fonts:['Arial'],source:'B'});
+ expect(readContext(output).variants.B.tokens.fonts).toEqual(['Georgia']);expect(readContext(output).variants.B.systemBinding.status).toBe('pending');await page.reload();await expect(page.locator('body')).toHaveCSS('font-family','Georgia');
+ const prepared=path.join(work,'B');prepareVariant(output,'B',prepared);fs.writeFileSync(path.join(prepared,'B.html'),original.toString().replace('font-family:Georgia','font-family:Arial'));
+ applySystemVariant(output,'B',prepared,{summary:'apply ds B',request:'browser-adoption',tokens:{fonts:['Arial']}});
+ await page.reload();await expect(page.locator('body')).toHaveCSS('font-family','Arial');await page.getByRole('button',{name:'Inspect',exact:true}).click();await expect(page.locator('output')).toHaveText('1');expect(readContext(output).variants.B.systemBinding.status).toBe('applied');
+ undoVariant(output,'B');await page.reload();await expect(page.locator('body')).toHaveCSS('font-family','Georgia');await page.getByRole('button',{name:'Inspect',exact:true}).click();await expect(page.locator('output')).toHaveText('1');
+ expect(fs.readFileSync(path.join(output,'B.html'))).toEqual(original);expect(readContext(output).selectedVariant).toBe('B');expect(readContext(output).variants.B.systemBinding.status).toBe('pending');expect(['A','C'].map(id=>fs.readFileSync(path.join(output,`${id}.html`),'utf8'))).toEqual(others);
 });

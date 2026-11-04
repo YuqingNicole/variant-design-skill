@@ -116,3 +116,5 @@ xclip -selection clipboard < variant-output/variant-coffee-A.html
 If no clipboard utility is available, return the exact file path instead of treating clipboard support as required.
 
 Rebuild `_compare.html` before delivery to include the preview-first cards and expandable comparison statements. Full-page links remain available above each preview.
+
+For a system derived from the picked page, confirmation and adoption are separate. If its binding is pending, explicitly report that it has not adopted the new generated system. A requested `apply ds B` must use the history helper's prepared `apply-system` operation so code, aligned tokens and binding share a snapshot and undo. Exports preserve the actual current state; they never mark a pending page applied. System identities and candidate checks cover all registered extensions.

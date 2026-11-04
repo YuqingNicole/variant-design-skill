@@ -63,3 +63,11 @@ Before a scoped edit, record representative non-target behavior with the browser
 Project integration uses the same `.variant-lock` and a separate prepared source/target baseline. See `skills/shared/export.md` before generating integration files. Candidate preparation for edits does not replace integration preparation.
 
 Rebuilding the comparison after an edit or undo retains the preview-first layout and expandable direction details; expanding details or switching viewport does not select a direction.
+
+## Confirm and apply a design system
+
+After explicit `ds confirm`, write the approved definition (file, fonts, optional source/extensions) to `.variant-work/system-confirm.json` and run `variant-history.mjs confirm-system variant-output .variant-work/system-confirm.json`. It verifies a context backup, registers the main/extension identity, and marks the picked source pending without editing its files, tokens, version, undo or selection. Do not hand-edit context to claim adoption. Existing brand files and fonts stay locked.
+
+For explicit `apply ds B`, prepare a new candidate as above, align its code and complete token record with the confirmed system, then run `variant-history.mjs apply-system variant-output B <candidate> <change.json>`. The JSON uses the usual summary/request/optional zone, with fonts exactly matching the confirmed list and colors resolving in that system. It is a constrained adoption operation, not a force flag; ordinary apply still rejects token changes. A current registered identity is required. Unsupported color records must be resolved before this operation, not approximated. Undo restores code, tokens and binding together.
+
+Candidate baselines now cover every design-system extension and any binding. A legacy baseline without extension coverage is refused explicitly; keep it for comparison and prepare a new one. System changes invalidate pending/applied bindings until the current system is explicitly approved and registered again. A pending generated source is reported as not yet adopted; it is not certified against the future font/color set. Legacy contexts without a binding retain strict checks.

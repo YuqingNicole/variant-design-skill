@@ -76,3 +76,5 @@ It starts at port 3333 and automatically tries the next available port when occu
 The comparison puts aligned previews first. Each card keeps its full-page link above the preview and its complete comparison statements in an expandable section below. Recommendation rationale is expandable; the recommended direction is labeled without selecting it. Phone previews are centered at a shared 390px viewport. Rebuild existing `_compare.html` files to update the layout.
 
 The comparison shell uses neutral light or dark surfaces, compact status labels and a segmented viewport control. Recommendation rationale and next-step guidance sit below the preview grid. These presentation controls do not mutate variant selection or the generated designs.
+
+A confirmed system's preview can show proposed fonts before the picked direction adopts them. Keep the picked page unchanged at confirmation; label it pending until explicit `apply ds B` uses `apply-system`. After apply or undo, rebuild that page's previews and report its actual binding and rendered checks. Pending does not mean the old page passed the new system's font/contrast requirements.

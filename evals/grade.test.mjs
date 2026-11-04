@@ -6,7 +6,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { grade, gradeChain, loadFixture, skillCopies, skillReading, snapshot, usage } from './grade.mjs';
-import { selectVariant, prepareVariant, applyVariant, undoVariant } from '../scripts/variant-history.mjs';
+import { selectVariant, prepareVariant, applyVariant, undoVariant, confirmSystem, applySystemVariant, readContext } from '../scripts/variant-history.mjs';
 import { exportTokens } from '../scripts/ds-export.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -142,13 +142,13 @@ function chain({ pick = () => {}, skipUndo = false, component = 'color: var(--co
   const system = `@import url('https://fonts.example/x.css');\n/* Pulse · Decisions: 1. Accent marks the action. */\n:root{\n${kept.replaceAll(';', '; /* use: chart; contrast: non-text */\n')}--color-text:#14213d; /* use: body; on: --color-bg */\n--color-bg:#ffffff; /* use: page */\n--space-2:8px;--space-4:16px;--text-sm:14px;--radius-md:8px}`;
   write('design-system.css', system); write('design-system-preview.html', '<!doctype html><title>DS</title>'); write('DESIGN.md', '# Design\n');
   pick(dir); take('pick');
-  context(dir, c => { c.designSystem = { confirmed: true, file: 'variant-output/design-system.css', source: 'B' }; });
+  confirmSystem(out, { file: 'variant-output/design-system.css', source: 'B', fonts: readContext(out).variants.B.tokens.fonts });
   write('design-system.tokens.json', JSON.stringify(exportTokens([system]).tokens)); take('confirm');
   const candidate = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'cand-')), 'B');
   prepareVariant(out, 'B', candidate);
   const css = path.join(candidate, 'VariantB.css');
   fs.writeFileSync(css, fs.readFileSync(css, 'utf8').replace(/#[0-9a-fA-F]{3,8}\b/g, 'var(--color-text)').replace(/-?\d*\.?\d+(px|rem)\b/g, 'var(--space-4)'));
-  applyVariant(out, 'B', candidate, { summary: 'apply ds B', request: 'apply-ds-B' }); take('apply');
+  applySystemVariant(out, 'B', candidate, { summary: 'apply ds B', request: 'apply-ds-B', tokens: { ...readContext(out).variants.B.tokens, colors: { text: '#14213d' } } }); take('apply');
   if (!skipUndo) undoVariant(out, 'B');
   take('undo');
   write('component-invite.html', `<!doctype html><title>Invite</title><link rel="stylesheet" href="design-system.css"><style>.dialog{${component}}</style><div class="dialog">Invite</div>`); take('component');

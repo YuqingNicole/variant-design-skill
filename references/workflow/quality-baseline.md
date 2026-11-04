@@ -123,3 +123,5 @@ Fix next: [short concrete action]
 ```
 
 Do not present a P0 result as complete.
+
+A generated system's explicitly registered pending source is reported as not adopted, with font/color differences listed as warnings rather than a claim of compliance. Once `apply-system` records adoption, those lock checks are strict again. A stale binding is an error; original brand locks and legacy contexts without a binding stay strict throughout. Confirmation never edits an existing page to make a check pass.

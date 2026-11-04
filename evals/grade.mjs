@@ -9,6 +9,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { checkDelivery, declaredFonts, systemDrift } from '../scripts/delivery-check.mjs';
 import { checkSystem } from '../scripts/ds-check.mjs';
 import { tokenMap } from '../scripts/ds-tokens.mjs';
+import { systemIdentity } from '../scripts/variant-history.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -144,7 +145,9 @@ export function snapshot(project) {
   const delivery = context ? checkDelivery(output, { project }) : null;
   const draft = path.join(output, 'design-system.css'), brand = context?.designSystem?.confirmed && context.designSystem.file !== 'variant-output/design-system.css' ? context.designSystem.file : null;
   const systemDraft = fs.existsSync(draft) ? { source: fs.readFileSync(draft, 'utf8'), ...(brand && fs.existsSync(path.join(project, brand)) ? { brandSource: read(brand) } : {}) } : null;
-  return { context, files, drift, systemDraft, delivery: delivery && { errors: delivery.errors, warnings: delivery.warnings }, quality: quality(output).errors, habits: quality(output).habits };
+  let systemDigest = null;
+  try { if (context?.designSystem?.confirmed) systemDigest = systemIdentity(context, project); } catch {}
+  return { context, files, drift, systemDraft, systemDigest, delivery: delivery && { errors: delivery.errors, warnings: delivery.warnings }, quality: quality(output).errors, habits: quality(output).habits };
 }
 
 const owned = (snap, id) => Object.fromEntries((snap.context?.variants?.[id]?.files ?? []).map(f => [f, snap.files[`variant-output/${f}`] ?? null]));
@@ -178,13 +181,18 @@ const turnChecks = {
   confirm: (now, [prev], add, project) => {
     const d = now.context?.designSystem;
     add('ds-confirmed', d?.confirmed === true && d.source === 'B' && fs.existsSync(path.join(project, d.file ?? '')), [`designSystem: ${JSON.stringify(d ?? null)}`]);
+    const binding = now.context?.variants?.B?.systemBinding;
+    add('ds-registered', !!d?.digest && d.digest === now.systemDigest && binding?.status === 'pending' && binding.digest === d.digest, [`binding: ${JSON.stringify(binding ?? null)}`]);
     let groups = 0;
     try { groups = Object.keys(JSON.parse(fs.readFileSync(path.join(project, 'variant-output/design-system.tokens.json'), 'utf8'))).filter(k => !k.startsWith('$')).length; } catch {}
     add('tokens-exported', groups > 0, groups ? [`${groups} token groups`] : ['no readable variant-output/design-system.tokens.json']);
     const edited = changed(prev, now, ['A', 'B', 'C']);
-    add('confirm-is-not-an-edit', !edited.length && now.context?.selectedVariant === 'B', edited.map(id => `${id} files changed`));
+    const metadataChanged = ['A', 'B', 'C'].filter(id => ['tokens', 'version', 'undo'].some(key => !same(now.context?.variants?.[id]?.[key], prev.context?.variants?.[id]?.[key])));
+    add('confirm-is-not-an-edit', !edited.length && !metadataChanged.length && now.context?.selectedVariant === 'B', [...edited.map(id => `${id} files changed`), ...metadataChanged.map(id => `${id} tokens/version/undo changed`)]);
   },
   apply: (now, [prev], add) => {
+    const binding = now.context?.variants?.B?.systemBinding;
+    add('system-adopted', binding?.status === 'applied' && !!now.systemDigest && binding.digest === now.systemDigest, [`binding: ${JSON.stringify(binding ?? null)}`]);
     const b = now.context?.variants?.B, before = prev.context?.variants?.B;
     add('applied', (b?.version ?? 0) > (before?.version ?? 0) && now.context?.activeVariant === 'B' && now.context?.selectedVariant === 'B', [`B v${before?.version} → v${b?.version}, active ${now.context?.activeVariant}, selected ${now.context?.selectedVariant}`]);
     const edited = changed(prev, now, ['A', 'C']), system = now.context?.designSystem?.file;
@@ -192,8 +200,8 @@ const turnChecks = {
     add('drift-reduced', now.drift?.B != null && prev.drift?.B != null && (now.drift.B === 0 || now.drift.B < prev.drift.B), [`B off-system values: ${prev.drift?.B ?? '?'} → ${now.drift?.B ?? '?'}`]);
   },
   undo: (now, [prev, beforeApply], add) => {
-    const restored = same(owned(now, 'B'), owned(beforeApply, 'B'));
-    add('undone', restored && now.context?.selectedVariant === 'B', [restored ? 'B files match the snapshot before apply ds B' : 'B files differ from the snapshot before apply ds B', `selected ${now.context?.selectedVariant}`]);
+    const restored = same(owned(now, 'B'), owned(beforeApply, 'B')) && ['tokens', 'systemBinding'].every(key => same(now.context?.variants?.B?.[key], beforeApply.context?.variants?.B?.[key]));
+    add('undone', restored && now.context?.selectedVariant === 'B', [restored ? 'B files, tokens and binding match the snapshot before apply ds B' : 'B files, tokens or binding differ from the snapshot before apply ds B', `selected ${now.context?.selectedVariant}`]);
     const edited = changed(prev, now, ['A', 'C']);
     add('undo-stays-in-B', !edited.length && same(now.context?.designSystem, prev.context?.designSystem), edited.map(id => `${id} files changed`));
   },

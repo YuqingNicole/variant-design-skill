@@ -132,18 +132,17 @@ A picked direction is a page, not yet a system. After `select` succeeds (`refere
 
 When the user approves (says `ds confirm`, "looks good", "confirm this", "ship it"):
 
-1. Write the confirmed status to `.variant-context.json` (when the system came from a pick, also record `"source": "B"`; for a brand-file lock, see the end of Step 1b):
+1. Write the approved system metadata to `.variant-work/system-confirm.json` (when it came from a pick, include `"source": "B"`; for a brand-file lock, retain its main file/fonts and add only extensions):
 ```json
 {
-  "designSystem": {
-    "confirmed": true,
-    "file": "variant-output/design-system.css",
-    "palette": "[palette name]",
-    "fonts": ["[Display]", "[Body]"],
-    "confirmedAt": "[ISO date]"
-  }
+  "file": "variant-output/design-system.css",
+  "palette": "[palette name]",
+  "fonts": ["[Display]", "[Body]"],
+  "source": "B"
 }
 ```
+
+Run `node <skill-root>/scripts/variant-history.mjs confirm-system variant-output .variant-work/system-confirm.json` (an optional final project root supports nested output). Do not directly rewrite the context to simulate confirmation. The helper verifies a context backup before recording the system identity and a pending binding on its picked source; it leaves A/B/C files, token records, versions, undo stacks and selection unchanged. Only explicit user confirmation authorizes this command. Existing brand files/fonts remain locked. For an already-approved legacy system without a digest, explicitly register that same current definition with this command before a newly requested application; never silently reinterpret its old context or claim old code already adopted it.
 
 2. Export the confirmed system as DTCG 2025.10 tokens, for Figma variables and other token tools. Pass every file of the system (under a brand-file lock: the brand file, then each extension):
 ```bash
@@ -166,9 +165,21 @@ The CSS stays the source; regenerate the JSON after every `ds edit` and update `
     ds edit palette    → refine colors before building
 ```
 
-4. From this point forward, **all Generate, Component, and Compose outputs** must `<link rel="stylesheet" href="design-system.css">` (or inline the tokens) — no aesthetic invention allowed outside the locked token system.
+4. The original picked page is pending adoption until the user requests `apply ds B`; confirmation does not retrofit or validate it. From this point forward, **all new Generate, Component, and Compose outputs** must `<link rel="stylesheet" href="design-system.css">` (or inline the tokens) — no aesthetic invention allowed outside the locked token system.
 
 5. For product-critical work, compile the confirmed declaration into `variant-output/design-contract.md` and run the Product Integrity Gate separately from the visual quality gate.
+
+### Apply the confirmed system to an existing direction (`apply ds B`)
+
+This explicitly aligns code and its token record; it is not an ordinary variation and never selects a direction. Read `references/workflow/history.md` and use its prepare flow first. Replace B's values with the confirmed semantic tokens in the new candidate. Write a change JSON under `.variant-work/` with a summary, a unique request ID for this user action, and a complete `tokens` record: `fonts` exactly matches `designSystem.fonts`, and each recorded color is a supported value or resolvable CSS variable from the system. Preserve other token metadata accurately.
+
+```bash
+node <skill-root>/scripts/variant-history.mjs prepare variant-output B .variant-work/apply-system-B
+# Edit only the prepared candidate and write .variant-work/apply-system-B.json.
+node <skill-root>/scripts/variant-history.mjs apply-system variant-output B .variant-work/apply-system-B .variant-work/apply-system-B.json
+```
+
+`apply-system` requires the current confirmed identity; it refuses unknown fonts/colors, changed system files/extensions, stale candidates and out-of-zone changes. It snapshots files, tokens and binding together. Ordinary `apply` keeps its token lock. Run delivery and rendered checks on the actual result; unsupported color records must be resolved rather than guessed. `undo B` restores the previous files, tokens and pending/absent binding while retaining selection. After undo, report that the original page is pending adoption again rather than pretending it uses the new foundation.
 
 ### Step 3 — Build Components (`component [name]`)
 

@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { localFile, readContext } from './variant-history.mjs';
+import { localFile, readContext, systemIdentity } from './variant-history.mjs';
 import { checkSystem } from './ds-check.mjs';
 import { tokenMap, references } from './ds-tokens.mjs';
 
@@ -142,13 +142,27 @@ export function checkDelivery(root = 'variant-output', { project = path.dirname(
     const scale = systemScale(system);
     const locked = (ds.fonts ?? []).map(f => first(f).toLowerCase());
     const dsHexes = new Set(dsSource ? hexes(system) : []);
-    // A system derived from a picked direction binds that direction and later work; the other directions were explorations that predate it.
-    for (const id of ds.source && present.includes(ds.source) ? [ds.source] : present) {
+    // Original brands stay strict for every direction. A generated system binds its source and explicit adoptions;
+    // a helper-registered pending source remains an acknowledged old page until the user applies the system.
+    for (const id of present.filter(id => !generated || !ds.source || id === ds.source || state.variants[id].systemBinding !== undefined)) {
       const v = state.variants[id];
+      let pending = false;
+      if (v.systemBinding !== undefined) {
+        let identity;
+        try { identity = systemIdentity(state, project); } catch (error) { errors.push(`Cannot check system identity: ${error.message}`); }
+        const binding = v.systemBinding;
+        if (!binding || !['pending', 'applied'].includes(binding.status) || !ds.digest || binding.digest !== identity || ds.digest !== identity) errors.push(`Variant ${id} system binding is stale or has an invalid system identity; explicitly confirm the current system and prepare adoption again`);
+        else if (binding.status === 'pending') {
+          pending = generated && ds.source === id;
+          warnings.push(`Variant ${id} system adoption is pending; run apply ds ${id}. Its existing files and token record are not verified against the new system yet`);
+        }
+      }
+      const tokenProblems = pending ? warnings : errors;
       const recorded = (v.tokens?.fonts ?? []).map(f => first(f).toLowerCase());
-      if (locked.length && (recorded.length !== locked.length || recorded.some(f => !locked.includes(f)))) errors.push(`Variant ${id} records fonts ${JSON.stringify(v.tokens?.fonts ?? [])}, not the locked ${JSON.stringify(ds.fonts)}`);
+      if (locked.length && (recorded.length !== locked.length || recorded.some(f => !locked.includes(f)))) tokenProblems.push(`Variant ${id} records fonts ${JSON.stringify(v.tokens?.fonts ?? [])}, not the locked ${JSON.stringify(ds.fonts)}`);
       for (const [file, source] of Object.entries(sources[id] ?? {})) {
-        if (locked.length) for (const font of declaredFonts(source)) if (!locked.includes(font.toLowerCase())) errors.push(`Variant ${id} ${file} declares font "${font}", outside the locked fonts ${JSON.stringify(ds.fonts)}`);
+        if (locked.length) for (const font of declaredFonts(source)) if (!locked.includes(font.toLowerCase())) tokenProblems.push(`Variant ${id} ${file} declares font "${font}", outside the locked fonts ${JSON.stringify(ds.fonts)}`);
+        if (ds.source && id !== ds.source && v.systemBinding === undefined) continue;
         if (dsSource) for (const hex of hexes(source)) if (!dsHexes.has(hex) && !plainColors.has(hex)) warnings.push(`Variant ${id} ${file} uses ${hex}, which is not in ${ds.file}; use the locked tokens or explain why`);
         // A skill-generated system keeps primitives behind its semantic tokens (system-decisions.md §4); a brand file's naming is the brand's.
         const { primitives, components } = productTokenIssues(source, systemSources);
@@ -158,7 +172,7 @@ export function checkDelivery(root = 'variant-output', { project = path.dirname(
         if (off.length) warnings.push(`Variant ${id} ${file} uses lengths outside the design system: ${off.slice(0, 6).join(', ')}${off.length > 6 ? ` and ${off.length - 6} more` : ''}; ${ds.source === id ? `\`apply ds ${id}\` replaces them with tokens` : "use the system's tokens or explain why"}`);
       }
       if (dsSource) for (const [name, value] of Object.entries(v.tokens?.colors ?? {})) {
-        if (typeof value === 'string' && /^#[0-9a-f]{3,8}$/i.test(value) && !dsHexes.has(value.toLowerCase())) errors.push(`Variant ${id} records color ${name} ${value}, which is not in ${ds.file}`);
+        if (typeof value === 'string' && /^#[0-9a-f]{3,8}$/i.test(value) && !dsHexes.has(value.toLowerCase())) tokenProblems.push(`Variant ${id} records color ${name} ${value}, which is not in ${ds.file}`);
       }
     }
   }

@@ -150,3 +150,7 @@ Real runner session 54084 completed. `ledger-pick` Codex passed every check (454
 Both Claude fixtures failed with the same account-level verification 403 and no generated artifact. These cannot count as quality results. No account settings or providers were changed. The original Ego space 42 is no longer present; resuming it failed and inventory confirmed its absence. A question to authorize a replacement space is pending under the browser skill's recovery rule; unrelated user spaces were not claimed. Automated tests continue independently.
 
 Next action: implement and test explicit system confirmation/adoption with shared snapshots and undo as RFC-009 specifies, then rerun the real chain. Keep the DTCG default decision, visual review, Claude verification and production approval separate from deterministic test passes; all later backlog rows remain open.
+
+### RFC-009 corrective checkpoint
+
+Confirmation/adoption/undo is now implemented in the existing history helper and documented across the skill. Helper/grader tests: 102 passed; real Chrome loop: 12 passed; package: 4 passed; website: 67 passed plus 239-route build; MCP: 2 passed. These are local checks. Corrective real Codex harbor/ledger reruns are next; the old real-chain failure is retained. P3's isolated submission-fixture follow-up is `a3929bb` and has four focused Chrome passes; exact-head CI remains a separate check.

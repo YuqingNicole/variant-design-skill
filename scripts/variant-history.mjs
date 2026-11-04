@@ -3,6 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { randomUUID, createHash } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
+import { tokenMap } from './ds-tokens.mjs';
+import { color } from './ds-export.mjs';
 
 export function localFile(root, relative) {
   if (typeof relative !== 'string' || relative.split(/[\\/]/).some(part => !part || part === '.' || part === '..')) throw new Error('Use normalized relative file paths.');
@@ -52,8 +54,8 @@ function canonical(value) {
 }
 const same = (a, b) => JSON.stringify(canonical(a)) === JSON.stringify(canonical(b));
 function constraints(state, id) {
-  const { entry, tokens, comparison } = state.variants[id];
-  return { entry, tokens, comparison, designSystem: state.designSystem ?? null, taskContract: state.taskContract ?? null };
+  const { entry, tokens, comparison, systemBinding } = state.variants[id];
+  return { entry, tokens, comparison, ...(systemBinding !== undefined ? { systemBinding } : {}), designSystem: state.designSystem ?? null, taskContract: state.taskContract ?? null };
 }
 function projectRoot(root, project) {
   const target = fs.realpathSync(project);
@@ -63,6 +65,15 @@ function projectRoot(root, project) {
 function designSystemDigest(state, project) {
   return state.designSystem?.file ? digest(fs.readFileSync(localFile(project, state.designSystem.file))) : null;
 }
+function systemFiles(state, project) {
+  const ds = state.designSystem;
+  if (!ds?.file) return {};
+  const files = [ds.file, ...(ds.extensions ?? [])];
+  if (new Set(files).size !== files.length) throw new Error('Design system needs unique main/extension files.');
+  return Object.fromEntries(files.map(file => [file, digest(fs.readFileSync(localFile(project, file)))]));
+}
+export const systemIdentity = (state, project) => digest(JSON.stringify(canonical({ files: Object.entries(systemFiles(state, project)), fonts: state.designSystem?.fonts ?? [] })));
+const metadata = variant => ({ tokens: variant.tokens, comparison: variant.comparison, ...(variant.systemBinding !== undefined ? { systemBinding: variant.systemBinding } : {}) });
 function conflict(details) {
   throw new Error(`Candidate conflict: ${details}. Current files are unchanged. Keep this candidate and its baseline; compare/reconcile your edits, then prepare a NEW candidate from current output. Do not replace the old baseline.`);
 }
@@ -89,6 +100,10 @@ function verifyBaseline(root, id, candidate, state) {
   try { ds = designSystemDigest(state, project); }
   catch (error) { if (error.code === 'ENOENT') conflict('design system file missing'); throw error; }
   if (ds !== saved.designSystemDigest) conflict('design system file content changed');
+  if (saved.designSystemFiles) {
+    if (!same(saved.designSystemFiles, systemFiles(state, project))) conflict('design system extension content changed');
+  } else if (state.designSystem?.extensions?.length) throw new Error('Legacy candidate baseline does not cover system extensions; preserve it and prepare a NEW candidate.');
+  return project;
 }
 export function prepareVariant(root, id, destination, project = path.dirname(path.resolve(root))) {
   return withLock(root, () => {
@@ -103,7 +118,7 @@ export function prepareVariant(root, id, destination, project = path.dirname(pat
     const output = fs.realpathSync(root);
     if (target === output || target.startsWith(output + path.sep)) throw new Error('Candidate must be outside variant output.');
     const baseline = { schemaVersion: 1, output, projectRoot: base, variant: id, version: state.variants[id].version,
-      constraints: constraints(state, id), designSystemDigest: designSystemDigest(state, base), files: records };
+      constraints: constraints(state, id), designSystemDigest: designSystemDigest(state, base), designSystemFiles: systemFiles(state, base), files: records };
     // Never retrofit a baseline onto an existing candidate, even an empty directory.
     fs.mkdirSync(target);
     try {
@@ -163,11 +178,35 @@ function transaction(root, state, before, after) {
     throw error;
   }
 }
-function applyUnlocked(root, id, candidate, change) {
+function alignedTokens(state, change, project) {
+  const ds = state.designSystem;
+  if (!ds?.confirmed || !ds.file) throw new Error('System application requires a confirmed system file.');
+  if (!ds.digest || ds.digest !== systemIdentity(state, project)) throw new Error('Confirmed system identity is missing or changed; use confirm-system for the explicitly approved current system before preparing a new candidate.');
+  const tokens = change.tokens;
+  if (!tokens || !Array.isArray(tokens.fonts) || !same(tokens.fonts, ds.fonts)) throw new Error('System application fonts must match the confirmed system; supply the complete aligned tokens record.');
+  const records = tokenMap([ds.file, ...(ds.extensions ?? [])].map(file => fs.readFileSync(localFile(project, file), 'utf8')));
+  const resolve = (value, seen = new Set()) => {
+    if (typeof value !== 'string') return null;
+    const ref = value.match(/^var\(\s*(--[\w-]+)\s*\)$/)?.[1];
+    if (!ref) return color(value);
+    const token = records.get(ref);
+    if (!token || token.values.length !== 1 || seen.has(ref)) return null;
+    return resolve(token.value, new Set([...seen, ref]));
+  };
+  const colors = [...records.values()].map(t => t.values.length === 1 ? resolve(t.value) : null).filter(Boolean);
+  if (tokens.colors !== undefined && (!tokens.colors || typeof tokens.colors !== 'object' || Array.isArray(tokens.colors))) throw new Error('System colors must be a named object.');
+  for (const [name, value] of Object.entries(tokens.colors ?? {})) {
+    const parsed = resolve(value);
+    if (!parsed || !colors.some(c => same(c, parsed))) throw new Error(`Color ${name} is not a resolved color of the confirmed system.`);
+  }
+  return tokens;
+}
+function applyUnlocked(root, id, candidate, change, adoptSystem = false) {
   const state = readContext(root), files = owned(state, id), variant = state.variants[id];
   if (!change.summary) throw new Error('Change summary required.');
   if (change.request !== undefined && (typeof change.request !== 'string' || !change.request)) throw new Error('Change request must be a non-empty string.');
-  verifyBaseline(root, id, candidate, state);
+  const project = verifyBaseline(root, id, candidate, state);
+  if (adoptSystem) alignedTokens(state, change, project);
   const before = {}, after = {};
   for (const file of files) {
     before[file] = fs.readFileSync(localFile(root, file)).toString('base64');
@@ -185,16 +224,17 @@ function applyUnlocked(root, id, candidate, change) {
     }
     if (!found) throw new Error('Zone not found.');
   }
-  if (state.designSystem?.confirmed && change.tokens && JSON.stringify(change.tokens) !== JSON.stringify(variant.tokens)) {
+  if (!adoptSystem && state.designSystem?.confirmed && change.tokens && JSON.stringify(change.tokens) !== JSON.stringify(variant.tokens)) {
     throw new Error('Locked design tokens cannot change during variation.');
   }
   // Recheck immediately before snapshot/commit; external editors do not honor our lock.
   const latest = readContext(root);
   verifyBaseline(root, id, candidate, latest);
   if (!same(state, latest)) conflict('context changed during apply');
-  const key = snapshot(root, id, state, before, after, { tokens: change.tokens ?? variant.tokens, comparison: change.comparison ?? variant.comparison }, change.request);
-  state.variants[id] = { ...variant, tokens: change.tokens ?? variant.tokens,
-    comparison: change.comparison ?? variant.comparison,
+  const systemBinding = adoptSystem ? { status: 'applied', digest: systemIdentity(state, project) } : variant.systemBinding;
+  const next = { ...variant, tokens: change.tokens ?? variant.tokens, comparison: change.comparison ?? variant.comparison, ...(systemBinding !== undefined ? { systemBinding } : {}) };
+  const key = snapshot(root, id, state, before, after, metadata(next), change.request);
+  state.variants[id] = { ...next,
     version: variant.version + 1, undo: [...(variant.undo ?? []), key],
     history: [...(variant.history ?? []), { action: 'apply', version: variant.version + 1, snapshot: key, summary: change.summary, zone: change.zone, ...(change.request ? { request: change.request } : {}), at: new Date().toISOString() }] };
   state.activeVariant = id;
@@ -218,7 +258,7 @@ function undoUnlocked(root, id) {
   const before = Object.fromEntries(files.map(file => [file, fs.readFileSync(localFile(root, file)).toString('base64')]));
   if (!latest.expectedAfter) throw new Error("Legacy snapshot has no edit baseline; recover into a separate directory and compare before restoring.");
   if (files.some(file => before[file] !== latest.expectedAfter[file])) throw new Error("Files changed since the saved revision; preserve your edits and reconcile before undo.");
-  if (JSON.stringify(latest.expectedMetadata) !== JSON.stringify({ tokens: variant.tokens, comparison: variant.comparison })) throw new Error("Variant metadata changed since the saved revision; reconcile before undo.");
+  if (JSON.stringify(latest.expectedMetadata) !== JSON.stringify(metadata(variant))) throw new Error("Variant metadata changed since the saved revision; reconcile before undo.");
   const recovery = snapshot(root, id, state, before);
   state.variants[id] = { ...saved.variant, version: variant.version + 1, undo: stack,
     history: [...variant.history, { action: 'undo', version: variant.version + 1, snapshot: recovery, restored: key,
@@ -257,6 +297,32 @@ function withLock(root, action) {
 }
 export { withLock as withHistoryLock };
 export const applyVariant = (root, id, candidate, change) => withLock(root, () => applyUnlocked(root, id, candidate, change));
+export const applySystemVariant = (root, id, candidate, change) => withLock(root, () => applyUnlocked(root, id, candidate, change, true));
+export const confirmSystem = (root, definition, project = path.dirname(path.resolve(root))) => withLock(root, () => {
+  const before = fs.readFileSync(localFile(root, '.variant-context.json'), 'utf8'), state = readContext(root), base = projectRoot(root, project);
+  if (!definition || typeof definition !== 'object' || Array.isArray(definition) || !definition.file || !Array.isArray(definition.fonts) || !definition.fonts.length || definition.fonts.some(f => typeof f !== 'string' || !f.trim())) throw new Error('System confirmation needs a file and non-empty fonts.');
+  if (definition.extensions !== undefined && (!Array.isArray(definition.extensions) || definition.extensions.some(f => typeof f !== 'string'))) throw new Error('System extensions must be file paths.');
+  const prior = state.designSystem, brand = prior?.confirmed && prior.file && prior.file !== 'variant-output/design-system.css';
+  if (brand && (definition.file !== prior.file || !same(definition.fonts, prior.fonts))) throw new Error('A locked brand file and its fonts cannot be replaced by system confirmation.');
+  if (definition.source) { owned(state, definition.source); if (state.selectedVariant !== definition.source) throw new Error('Pick the source direction explicitly before confirming its derived system.'); }
+  const ds = { ...definition, confirmed: true, confirmedAt: new Date().toISOString() }, next = { ...state, designSystem: ds };
+  const files = systemFiles(next, base), sources = Object.keys(files).map(f => fs.readFileSync(localFile(base, f), 'utf8'));
+  ds.digest = systemIdentity(next, base);
+  if (brand) {
+    const names = tokenMap([sources[0]]);
+    for (const source of sources.slice(1)) for (const name of tokenMap([source]).keys()) if (names.has(name)) throw new Error(`System extension redefines locked brand token ${name}.`);
+  }
+  if (ds.source) {
+    const binding = { status: 'pending', digest: systemIdentity(next, base) }, variant = state.variants[ds.source];
+    next.variants = { ...state.variants, [ds.source]: { ...variant, systemBinding: variant.systemBinding?.status === 'applied' && variant.systemBinding.digest === binding.digest ? variant.systemBinding : binding } };
+  }
+  const backup = localFile(root, `.history/system/${randomUUID()}.json`), saved = JSON.stringify({ context: before, files }, null, 2);
+  fs.mkdirSync(path.dirname(backup), { recursive: true }); fs.writeFileSync(backup, saved, { flag: 'wx', flush: true });
+  if (fs.readFileSync(backup, 'utf8') !== saved) throw new Error('System confirmation backup verification failed.');
+  if (fs.readFileSync(localFile(root, '.variant-context.json'), 'utf8') !== before || !same(files, systemFiles(next, base))) throw new Error('System or context changed before confirmation; no write performed.');
+  writeContext(root, next);
+  return next;
+});
 export const undoVariant = (root, id) => withLock(root, () => undoUnlocked(root, id));
 export const selectVariant = (root, id) => withLock(root, () => {
   const state = readContext(root); owned(state, id); state.selectedVariant = id; writeContext(root, state); return state;
@@ -266,10 +332,12 @@ if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process
   try {
     if (action === 'prepare') { if (!candidate) throw new Error('New candidate directory required.'); prepareVariant(root, id, candidate, metadata); }
     else if (action === 'apply') applyVariant(root, id, candidate, JSON.parse(fs.readFileSync(metadata, 'utf8')));
+    else if (action === 'apply-system') applySystemVariant(root, id, candidate, JSON.parse(fs.readFileSync(metadata, 'utf8')));
+    else if (action === 'confirm-system') confirmSystem(root, JSON.parse(fs.readFileSync(id, 'utf8')), candidate);
     else if (action === 'undo') undoVariant(root, id);
     else if (action === 'select') selectVariant(root, id);
     else if (action === 'recover') { if (!candidate) throw new Error('Recovery directory required.'); recoverVariant(root, id, candidate); }
-    else throw new Error('Usage: variant-history.mjs prepare <output> A|B|C <new-candidate-dir> [project-root] | apply <output> A|B|C <candidate-dir> <change.json> | undo/select <output> A|B|C | recover <output> A|B|C <new-directory>');
+    else throw new Error('Usage: variant-history.mjs prepare <output> A|B|C <new-candidate-dir> [project-root] | apply/apply-system <output> A|B|C <candidate-dir> <change.json> | confirm-system <output> <system.json> [project-root] | undo/select <output> A|B|C | recover <output> A|B|C <new-directory>');
     console.log(`${action} ${id}: saved`);
   } catch (error) { console.error(error.message); process.exitCode = 1; }
 }
