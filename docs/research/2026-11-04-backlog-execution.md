@@ -10,8 +10,8 @@ Work in `/Users/nicole/orca/variant-backlog-work` on task branches. The original
 
 | Area | Current state | Acceptance / remaining evidence |
 |---|---|---|
-| Website positioning, PR #138 | Local checks passed; merge conflicts resolved | Update PR, check CI and preview; production merge remains separate |
-| Unified inspiration feed / interaction / appearance | Not started | Repositioning RFC P2: one chronological feed; URL filters; hover/focus/touch credits; visible-only videos; reduced motion; shared-element detail; keyboard/back/scroll; 320/390/1440 in both languages; style budget |
+| Website positioning, PR #138 | Updated at `f1d6001`; local and GitHub loop/landing checks passed | Review findings fixed; final review, deployed preview and production merge remain separate |
+| Unified inspiration feed / interaction / appearance | Implemented, 44 local Chrome checks passed; screenshot review pending | RFC-008 P2: one chronological feed; URL filters; hover/focus/touch credits; visible-only videos; reduced motion; shared-element detail; keyboard/back/scroll; 320/390/1440 in both languages; style budget |
 | Submission and permission intake | Not started | RFC P3: media URL/file workflow, attribution, distinct usage rights, withdrawal, manual review and evaluated storage |
 | Design system checks | Partially implemented before this task | RFC-007 P1 remaining checks and grouping decision; unit tests and real chain evidence |
 | Premium / adjective evals | Not started | Real Agent fixture and style-budget comparison; preserve task and brand |
@@ -51,7 +51,7 @@ Ego-browser space 42 inspected the actual local site. Baseline screenshots and r
 
 ## Next action
 
-Push the resolved P1 branch to the existing PR; start P2 from that reviewed integration base. Keep later requirements in this index until independently verified.
+Publish the verified P2 branch for review, then implement P3 submission and permission intake. Keep P1/P2 preview, reviewer and production gates explicit; later requirements remain in scope.
 
 
 ### P1 follow-up review
@@ -59,3 +59,37 @@ Push the resolved P1 branch to the existing PR; start P2 from that reviewed inte
 Verified the three 2026-11-04 CodeRabbit findings against current code: Chinese `/cases` prerender/client titles differed; active Motion depended on a stale address after a category change; direct reference detail lacked a current navigation link. The header now receives the current inspiration category, detail routes belong to the inspiration section, and the Chinese case title matches its prerendered title. The existing positioning browser regression now exercises category highlighter changes, direct-detail navigation and the `/cases` title, and checks the static font explanation and IPA switch.
 
 Validation: website 61 tests passed; production build passed; the focused `home leads` Chrome regression passed (1 test, port 4199 through an ignored local config). No production merge or deployment performed.
+
+
+### P2 browsing implementation (local)
+
+Implementation commit `04aa377`; the subsequent merge of P1 follow-up `f1d6001` changed only this evidence document relative to the tested implementation. The positioning RFC was renumbered 008 because RFC-006 already describes the product architecture.
+
+Implemented: one paginated feed for all 95 records; timestamps recovered from each record's first Git source commit; URL category/topic/query/sort preservation; a retained editorial sort; image-first cards with focus/hover/touch credits and author avatars; keyboard-accessible modal and standalone details; unique shared-element names; back/forward navigation and focus/scroll recovery; lazy visible-only video playback with runtime reduced-motion and background-tab pause. The X draft generator now records an explicit collection timestamp for future entries.
+
+Failures found and addressed during verification:
+
+- Rapid independent filters could lose a choice through the shared animation helper's latest-update queue. Filters now apply immediately; detail changes retain shared-element transitions. The rapid-filter regression verifies every query parameter after reload.
+- A manual paging test could chase a button removed by automatic paging. The test now scrolls the real list boundary and checks that the actual card count grows; no production paging contract was weakened.
+- A fresh-worktree test invocation from repository root failed an older cwd-relative evidence check; final runs use the documented `tests/` directory. A concurrent multi-page language regression hit its 30-second test limit; it passed on the final documented run without increasing the timeout.
+- Mobile screenshots showed search squeezed between two selects. Search now occupies a full row, and touch credits keep known author avatars visible.
+
+| Check | Latest result |
+|---|---|
+| `npm test --prefix website` | 61 passed, including collection timestamp validation and draft generation |
+| `npm run build --prefix website` | Passed; 239 prerendered routes |
+| `cd tests && PLAYWRIGHT_CHANNEL=chrome npx playwright test -c landing.config.mjs` | 44 passed in 1.7 minutes; five new browsing regressions plus all 39 existing regressions |
+| `git diff --check` | Passed |
+| Actual local Ego browser, both languages × 320/390/1440 | Six before/after screenshots and probe samples; all after samples meet the budget |
+
+The browser regressions use a self-generated 2-second, 64×40 solid-color WebM for real playback/pause assertions and isolate external X requests. They do not prove availability of X's servers or any official embed service. Actual local screenshots use live external sources, with reduced motion and settled metadata opacity for the final comparison. All screenshots and raw probes remain outside Git at `/Users/nicole/orca/variant-backlog-evidence/`; they are not rehosted third-party media. Committed count summary: `docs/research/2026-11-04-inspiration-budget.json`.
+
+| Width | Sizes before → after | Text colors before → after | Radii before → after |
+|---|---|---|---|
+| 320 | 7 → 5 | 5 → 4 | 5 → 2 |
+| 390 | 8 → 5 | 5 → 4 | 5 → 2 |
+| 1440 | 9 → 7 | 5 → 4 | 5 → 2 |
+
+The counts match in Chinese and English. Actual screenshots were inspected; the 1440 desktop grid exposes two complete rows. Local passes do not establish production CDN behavior, cross-browser coverage or final maintainer visual acceptance. No skill UX or WCAG certification is claimed, and no real Agent eval was needed or run for this website-only behavior change.
+
+Remaining gates: publish PR, verify its exact CI/preview, maintainer screenshot review and separately authorized production merge; continue with P3, then design-system checks and all later rows above. The overall backlog objective remains active.
