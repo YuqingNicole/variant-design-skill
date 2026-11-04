@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "runs": [
+    {
+      "implementation": "5e3827a4e9d26b3419039e85f210e320b61c547a",
+      "fixture": "native-vite",
+      "agent": "codex",
+      "rawEvidence": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-5e3827a",
+      "pass": false,
+      "seconds": 404,
+      "checks": {
+        "passed": 28,
+        "total": 45,
+        "failed": [
+          "generate:delivery-check",
+          "generate:brand-kept",
+          "generate:generated",
+          "deliver:delivery-check",
+          "deliver:brand-kept",
+          "native:generate-tasks",
+          "native:generate-brand-assets",
+          "native:generate-no-overflow",
+          "native:deliver-tasks",
+          "native:deliver-brand-assets",
+          "native:deliver-no-overflow",
+          "native:deliver-build-typecheck",
+          "native:probe-tasks",
+          "native:probe-brand-assets",
+          "native:probe-no-overflow",
+          "native:original-dependencies-reused",
+          "native:delivery-replayed"
+        ]
+      },
+      "turns": [
+        {
+          "id": "generate",
+          "transcript": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-5e3827a/native-vite-codex.generate.jsonl",
+          "exit": 0,
+          "seconds": 190,
+          "timedOut": false,
+          "selectedVariant": null,
+          "designSystem": null,
+          "drift": null
+        },
+        {
+          "id": "deliver",
+          "transcript": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-5e3827a/native-vite-codex.deliver.jsonl",
+          "exit": 0,
+          "seconds": 169,
+          "timedOut": false,
+          "selectedVariant": null,
+          "designSystem": null,
+          "drift": null
+        }
+      ],
+      "reading": {
+        "words": 15888,
+        "files": [
+          "SKILL.md",
+          "references/domains/dashboard.md",
+          "references/workflow/project-discovery.md",
+          "skills/shared/code-output.md",
+          "skills/variant-generate/ROUTE.md",
+          "references/workflow/artifact-verification.md",
+          "references/workflow/history.md",
+          "skills/shared/export.md"
+        ],
+        "turns": [
+          {
+            "turn": "generate",
+            "files": [
+              "SKILL.md",
+              "references/domains/dashboard.md",
+              "references/workflow/project-discovery.md",
+              "skills/shared/code-output.md",
+              "skills/variant-generate/ROUTE.md"
+            ],
+            "words": 6302
+          },
+          {
+            "turn": "deliver",
+            "files": [
+              "SKILL.md",
+              "references/workflow/artifact-verification.md",
+              "references/workflow/history.md",
+              "references/workflow/project-discovery.md",
+              "skills/shared/code-output.md",
+              "skills/shared/export.md",
+              "skills/variant-generate/ROUTE.md"
+            ],
+            "words": 9586
+          }
+        ]
+      },
+      "usage": {
+        "tokens": 1105346
+      },
+      "installedHelpers": [
+        {
+          "file": "scripts/variant-history.mjs",
+          "installedSha256": "b5e65163748ab0ec9a6ce4cf41c00ecbeab7f1b1e110cfa68fa4d2a8b8ed13b3",
+          "sourceSha256": "b5e65163748ab0ec9a6ce4cf41c00ecbeab7f1b1e110cfa68fa4d2a8b8ed13b3"
+        },
+        {
+          "file": "scripts/variant-integrate.mjs",
+          "installedSha256": "5bdc3b952210217ff1c471599afeeb2946132cf1d428d35e87bf6c600c6a4ba1",
+          "sourceSha256": "5bdc3b952210217ff1c471599afeeb2946132cf1d428d35e87bf6c600c6a4ba1"
+        }
+      ],
+      "interpretation": [
+        "Both Agent processes exited 0 without timeout; overall acceptance failed.",
+        "Host strict single-marker locator rejected legitimate nested identical identities before task observation.",
+        "Formal artifacts/context absent from variant-output; temporary transaction copies do not satisfy editing actual registered variants.",
+        "Post-delivery preview typecheck included staging source with destination-relative imports and failed TS2307.",
+        "Original reports remain failed; corrective host/fixture validation requires a fresh separately recorded run."
+      ]
+    }
+  ],
+  "nativeAcceptance": false,
+  "remaining": [
+    "Fresh real installed-skill generate/deliver run",
+    "Actual generated source/render/staging audit",
+    "Human visual approval and full #19 scope"
+  ],
+  "correctionValidation": {
+    "at": "2026-11-04T14:05:37.486Z",
+    "chromeCases": {
+      "passed": 8,
+      "failed": 0,
+      "reportedDuration": "3.3m"
+    },
+    "graderTests": {
+      "passed": 14,
+      "failed": 0
+    },
+    "rawEvidence": "/Users/nicole/orca/variant-backlog-evidence/native-marker-correction",
+    "positiveNestedMarkers": [
+      {
+        "id": "A",
+        "width": 1440,
+        "markers": [
+          "A",
+          "A"
+        ],
+        "identity": true,
+        "task": true
+      },
+      {
+        "id": "B",
+        "width": 1440,
+        "markers": [
+          "B",
+          "B"
+        ],
+        "identity": true,
+        "task": true
+      },
+      {
+        "id": "C",
+        "width": 1440,
+        "markers": [
+          "C",
+          "C"
+        ],
+        "identity": true,
+        "task": true
+      },
+      {
+        "id": "A",
+        "width": 390,
+        "markers": [
+          "A",
+          "A"
+        ],
+        "identity": true,
+        "task": true
+      },
+      {
+        "id": "B",
+        "width": 390,
+        "markers": [
+          "B",
+          "B"
+        ],
+        "identity": true,
+        "task": true
+      },
+      {
+        "id": "C",
+        "width": 390,
+        "markers": [
+          "C",
+          "C"
+        ],
+        "identity": true,
+        "task": true
+      }
+    ],
+    "negativeConflictingMarkers": [
+      {
+        "width": 1440,
+        "markers": [
+          "B",
+          "A"
+        ],
+        "identity": false,
+        "task": true
+      },
+      {
+        "width": 390,
+        "markers": [
+          "B",
+          "A"
+        ],
+        "identity": false,
+        "task": true
+      }
+    ],
+    "sourceSha256": {
+      "evals/native-vite.mjs": "db5445e102459a28de696a168e32a73f7a200d4780dc6ef5b0aac681426789bf",
+      "evals/fixtures/native-vite/fixture.json": "136210fdceb6835cfc8093ff038fe4040af769a31de102ee09fd922cd6529453",
+      "tests/native-vite-eval.spec.mjs": "031e86f11db0900b498e1d15855d23f0311046b9da188a1b5c902e36b4c800f6",
+      "tests/native-delivery-eval.spec.mjs": "46c6e50b97f97fe9e2f94e30ea47c970d0ddb89d2cf1443fc072cb3d81d9134e"
+    }
+  }
+}

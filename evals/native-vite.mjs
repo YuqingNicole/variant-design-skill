@@ -162,7 +162,8 @@ export async function captureNativeVite(project, { out, browser, manifest, origi
         try {
           await page.goto(sample.url, { waitUntil: 'load', timeout: 15000 });
           await page.getByTestId('workspace-name').waitFor();
-          if (!original || expectedVariant) sample.identity = await page.locator(`[data-native-variant="${expectedVariant ?? id}"]`).isVisible();
+          sample.markers = await page.locator('[data-native-variant]').evaluateAll(nodes => nodes.filter(node => { const box = node.getBoundingClientRect(), style = getComputedStyle(node); return box.width > 0 && box.height > 0 && style.visibility !== 'hidden'; }).map(node => node.getAttribute('data-native-variant')));
+          if (!original || expectedVariant) sample.identity = sample.markers.length > 0 && sample.markers.every(value => value === (expectedVariant ?? id));
           await exercise(page, data); sample.task = true;
           sample.heading = await page.locator('h1').innerText();
           sample.brand = await page.evaluate(() => {

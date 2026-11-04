@@ -11,7 +11,7 @@ function adapters() {
   const spec = { schemaVersion: 1, compare: '.variant-work/native/compare.html', entries: {}, buildConfig: '.variant-work/native/vite.config.ts', typecheckConfig: '.variant-work/native/tsconfig.json', adapterFiles: [], dependencies: ['src/workspace.tsx', 'src/workspaces.json', 'src/global.css', 'src/workshop-mark.svg', 'vite.config.ts', 'tsconfig.json'] };
   for (const id of ['A', 'B', 'C']) {
     spec.entries[id] = `.variant-work/native/${id}.html`;
-    write(spec.entries[id], `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Direction ${id}</title></head><body><div id="root"></div><script type="module" src="./${id}.tsx"></script></body></html>`);
+    write(spec.entries[id], `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Direction ${id}</title></head><body><div id="root" data-native-variant="${id}"></div><script type="module" src="./${id}.tsx"></script></body></html>`);
     write(`.variant-work/native/${id}.tsx`, `import {createRoot} from 'react-dom/client';import {WorkspaceProvider} from '@/workspace';import App from '@/App';import '@/global.css';createRoot(document.getElementById('root')!).render(<WorkspaceProvider><div data-native-variant="${id}"><App/></div></WorkspaceProvider>);`);
     spec.adapterFiles.push(spec.entries[id], `.variant-work/native/${id}.tsx`);
   }
@@ -56,6 +56,7 @@ test('real native capture verifies tasks/configs/assets and nonce changes follow
   await expect(captureNativeVite(project, { browser, out: path.join(evidence, 'generate') })).rejects.toThrow(/Preserve existing/);
   await expect(captureNativeVite(project, { browser, out: path.join(project, '.variant-work/evidence') })).rejects.toThrow(/outside/);
   for (const capture of [baseline, generate, probe]) for (const sample of capture.samples) expect(sample.errors).toEqual([]);
+  expect(generate.samples.every(sample => sample.markers.length === 2 && sample.markers.every(value => value === sample.id))).toBe(true);
 });
 
 test('real browser rejects a missing provider and a comparison linking to the wrong entry', async ({ browser }) => {

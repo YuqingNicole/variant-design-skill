@@ -51,7 +51,7 @@ function recordedDelivery(input, direction = 'B') {
     return { tool, command, version, exitCode: 0, log };
   });
   const beforeChecks = check('before'), plan = '.variant-work/delivery-plan.json', staging = '.variant-work/staging';
-  prepareIntegration(output, 'B', ['src/App.tsx'], path.join(project, plan), project); write(project, `${staging}/src/App.tsx`, `export {default} from '../variant-output/Variant${direction}';\n`);
+  prepareIntegration(output, 'B', ['src/App.tsx'], path.join(project, plan), project); write(project, `${staging}/src/App.tsx`, direction === 'B' ? "export {default} from '../variant-output/VariantB';\n" : "import App from '../variant-output/VariantA';export default function Staged(){return <div data-native-variant=\"B\"><App/></div>}\n");
   const record = integrateVariant(output, 'B', path.join(project, staging), project, path.join(project, plan)), afterChecks = check('after'), rollback = rollbackIntegration(output, record.id, project);
   write(project, '.variant-work/rollback.log', JSON.stringify(rollback));
   const manifest = { schemaVersion: 1, plan, staging, integrationId: record.id, changedFiles: ['src/App.tsx'], beforeChecks, afterChecks, rollback: { completed: true, log: '.variant-work/rollback.log' } };
@@ -88,5 +88,6 @@ test('a receipt labelled B cannot pass when the actual original entry renders A'
   expect(report.checks.find(c => c.id === 'recorded-delivery').pass).toBe(true);
   expect(report.checks.find(c => c.id === 'integration-replayed').pass).toBe(false); expect(report.pass).toBe(false);
   expect(report.captures.integrated.samples.every(s => !s.identity && s.task)).toBe(true);
+  expect(report.captures.integrated.samples.every(s => s.markers.includes('B') && s.markers.includes('A'))).toBe(true);
   expect(report.checks.find(c => c.id === 'original-restored').pass).toBe(true); expect(report.originalAfter).toEqual(report.originalBefore);
 });
