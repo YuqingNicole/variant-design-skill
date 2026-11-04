@@ -46,3 +46,10 @@ Actual computed body/heading families remain Arial/Georgia, backdrop remains `rg
 The agent inspected the actual before/after 1440 screenshots and the 390 after screenshot from host artifacts. The result removes decorative shadows/pills and consolidates type/spacing; it remains a simple catalogue, not evidence that every “premium” request will improve. This is agent visual inspection, not maintainer acceptance. Default computed brand anchors are sampled; all states/pixels and downloaded-font availability are not certified. A/C retain their pre-existing off-brand shade warnings because the request explicitly allowed B only. They were not silently repaired to obtain a cleaner report.
 
 Raw artifacts: `/Users/nicole/orca/variant-backlog-evidence/premium-evals/` (transcript, measured before/after PNG/JSON and result); committed summary: `2026-11-04-premium-run.json`. Draft PR #151 exact implementation-head loop/landing and preview checks passed. Claude remains blocked at account verification and was not retried. No production merge/deployment occurred.
+
+
+## CI readiness follow-up
+
+At docs-only head `305b45d`, push run `41812544641` failed the existing inspiration scroll test with a detached DOM element; the PR run at the same head passed. The initial prerender uses default filters, and the client replaces it using URL filters. The test now waits for the requested `curated` select value before acquiring/scrolling the opener. The original transition, focus, history and scroll assertions remain.
+
+Validation: the focused real Chrome regression passed ten independent repetitions (26.7s), using the actual built site and isolated port 4215. No retry count or timeout was increased, and no product behavior changed. Exact new-head CI remains pending. This failure is independent of the recorded premium model result and is not omitted from the evidence.
