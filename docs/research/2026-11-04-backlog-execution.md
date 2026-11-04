@@ -21,7 +21,7 @@ Work in `/Users/nicole/orca/variant-backlog-work` on task branches. The original
 | Design sample collection | Ongoing backlog | Watch and annotate new unique authors; preserve source and media evidence |
 | Domain / indexing / directories / GEO | Account-dependent; preparatory work available | Domain binding, redirects, Search Console indexing evidence, permitted submissions, initial ten-query measurement |
 | Positioning / pricing / attribution | Not started | README and GitHub metadata clarity; pricing matches live availability; attribution decision; consistent copy |
-| Website style maintenance | Not started | Measured docs/sponsor/home counts, rendered review |
+| Website style maintenance | Docs/sponsor implementation and local measurements complete on codex/content-style-budget; homepage budget rechecked | 9 Chrome cases passed; detector timeout, exact CI and maintainer visual acceptance remain |
 | Artifact evidence, #18 | Partially implemented before this task | Automatic plans and complete real-delivery coverage; classify existing failures |
 | Project integration, #19 | Partially implemented before this task | Real Vite aliases/provider/global styles matrix; preview cleanup ownership; complete delivery receipt |
 | Paid definition / rights / distribution / support, #22–26 | Product and user gates pending | Updated commercial baseline, actual installation/upgrade/rollback/entitlement evidence, two independent human trial users |
@@ -51,7 +51,7 @@ Ego-browser space 42 inspected the actual local site. Baseline screenshots and r
 
 ## Next action
 
-Complete the content PR checkpoint, then continue independent distribution/core preparation and website style measurements. P1–P3 production permission, P4 grouping/Claude/visual gates, premium visual review, content human review and RFC-010 feature choices remain pending. Preserve those gates and all later requirements.
+Content PR #153 and premium readiness follow-up have exact-head loop/landing CI passed. Publish the measured style-maintenance checkpoint, then continue independent distribution/core preparation. P1–P3 production permission, P4 grouping/Claude/visual gates, premium visual review, content human review and RFC-010 feature choices remain pending. Preserve those gates and all later requirements.
 
 
 ### P1 follow-up review

@@ -35,7 +35,7 @@
 - [ ] RFC-008 P3：投稿、媒体地址、人工审核登记与撤下已在 `codex/submission-permissions` 实现并完成本地验证；待审阅和合并。维护流程见 `website/SUBMISSIONS.md`。
 
 - [ ] 改写定价页口号「审美免费。连续性值得付费。」。等第 1 组价格页的决定之后再改，口号要和付费档的说法一致。
-- [ ] 用 `scripts/style-budget.mjs` 量其他页面：`/docs`（11 个字号）、`/sponsor`（9 个），以及首页在 390 宽度下（9 个），按 2026-11-02 首页的做法收敛。
+- [ ] 文档、赞助页字号已在 `codex/content-style-budget` 收敛：1440 下各 6 种、390 下各 7 种，保留命令框等宽字体；中英文 × 320/390/1440 和首页预算复核通过，9 项相关 Chrome 回归通过。待 PR 审阅/合并、视觉验收；Impeccable 首页扫描导航超时，不能当作零问题。证据见 `docs/research/2026-11-04-content-style-budget.md`。
 
 ## X 设计样本收集箱
 

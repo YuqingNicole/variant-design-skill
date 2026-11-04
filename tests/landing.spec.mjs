@@ -1,11 +1,25 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
+import { probe, grade, defaults } from '../scripts/style-budget.mjs';
 const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
 // The homepage includes X motion now; regressions isolate its media in every scenario.
 // Individual media tests override these routes with their own playback/failure fixture.
 test.beforeEach(async({page})=>{
  await page.route(/^https:\/\/(?:pbs|video)\.twimg\.com\//,r=>r.request().resourceType()==='media'?r.abort():r.fulfill({contentType:'image/png',body:pixel}));
  await page.route(/^https:\/\/platform\.twitter\.com\//,r=>r.abort());
+});
+
+for(const route of ['/docs','/sponsor'])test(`${route} keeps a consistent type and color scale in both languages`,async({page},info)=>{
+ await page.emulateMedia({reducedMotion:'reduce'});const samples=[];
+ for(const language of ['zh','en'])for(const width of [320,390,1440]){
+  await page.setViewportSize({width,height:900});await page.goto((language==='en'?'/en':'')+route);await expect(page.locator('footer')).toBeAttached();await page.evaluate(()=>document.fonts.ready);
+  // Docs keep the third, monospace face in command textareas (the probe excludes code/pre, not textareas).
+  const sample=await page.evaluate(probe),result=grade(sample,{...defaults,families:route==='/docs'?3:2});samples.push({...sample,grade:result});
+  const screenshot=info.outputPath(`${language}-${width}.png`);await page.screenshot({path:screenshot});await info.attach(`${language}-${width}`,{path:screenshot,contentType:'image/png'});
+  expect.soft(result.over,`${language} ${width}: ${JSON.stringify(result.rows)}`).toEqual([]);
+  expect.soft(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${language} ${width} overflow`).toBe(true);
+ }
+ const report=info.outputPath('style-budget.json');fs.writeFileSync(report,JSON.stringify(samples,null,2));await info.attach('style-budget',{path:report,contentType:'application/json'});
 });
 
 test('production comparison opens three complete pages with matching brand and true desktop/mobile widths', async ({ page }) => {

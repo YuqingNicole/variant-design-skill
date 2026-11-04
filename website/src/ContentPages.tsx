@@ -14,7 +14,7 @@ const m={installGetStarted:{zh:'安装与开始使用',en:'Install & get started
  explorePlansPricing:{zh:'了解价格与计划',en:'Explore plans & pricing'}} satisfies Record<string,Localized>;
 function PageFrame({children,title,language}:{children:React.ReactNode;title:string;language:Language}){
  useEffect(()=>{document.title=`${title} — Variant Design`;document.documentElement.lang=locales[language].htmlLang;document.querySelector('meta[name="description"]')?.setAttribute('content',title)},[title,language]);
- return <main className="content-page"><SiteHeader language={language}/>{children}<SiteFooter language={language}/></main>
+ return <main className="content-page docs-page"><SiteHeader language={language}/>{children}<SiteFooter language={language}/></main>
 }
 // Docs page. The former study library and case pages became the direction library (LibraryPage).
 export function ContentPages({page}:{page:'docs'}){
