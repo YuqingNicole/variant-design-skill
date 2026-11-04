@@ -24,3 +24,5 @@ website/.canvas-data/
 .vercel
 
 **/.variant-work/
+
+/tests/.submission-site/
