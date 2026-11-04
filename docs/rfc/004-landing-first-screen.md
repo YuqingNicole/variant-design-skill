@@ -1,4 +1,4 @@
-> 2026-11-03：首页结构已被 [RFC-006](006-inspiration-first-repositioning.md) 取代。首页现在是灵感作品流，A/B/C 案例移到 `/cases`。
+> 2026-11-03：首页结构已被 [RFC-008](008-inspiration-first-repositioning.md) 取代。首页现在是灵感作品流，A/B/C 案例移到 `/cases`。
 
 # RFC-004 · 首页：设计导航站的第一屏
 

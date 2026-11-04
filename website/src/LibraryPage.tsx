@@ -39,7 +39,7 @@ const m={compareThreeDirectionsFor:{zh:'同一个任务，比较三个方向的�
  conceptStudyMadeBy:{zh:'概念作品：由我们手工制作，用于展示风格跨度，不是技能的产出。',en:'Concept study: made by hand to show stylistic range, not produced by the skill.'},
  moreEntries:{zh:'更多作品',en:'More entries'},
  variantDesignDirectionLibrary:{zh:'Variant Design 方向库',en:'Variant Design direction library'},
- variantDesignADesign:{zh:'A/B/C 案例 — Variant Design',en:'A/B/C cases — Variant Design'},
+ variantDesignADesign:{zh:'A/B/C 案例 — Variant Design 方向库',en:'A/B/C cases — Variant Design'},
  notFoundVariantDesign:{zh:'页面不存在 — Variant Design',en:'Not found — Variant Design'},
  notFound:{zh:'页面不存在',en:'Not found'},
  backToTheLibrary:{zh:'回到案例',en:'Back to the cases'}} satisfies Record<string,Localized>;

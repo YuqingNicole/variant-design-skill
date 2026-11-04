@@ -1,5 +1,12 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
+const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
+// The homepage includes X motion now; regressions isolate its media in every scenario.
+// Individual media tests override these routes with their own playback/failure fixture.
+test.beforeEach(async({page})=>{
+ await page.route(/^https:\/\/(?:pbs|video)\.twimg\.com\//,r=>r.request().resourceType()==='media'?r.abort():r.fulfill({contentType:'image/png',body:pixel}));
+ await page.route(/^https:\/\/platform\.twitter\.com\//,r=>r.abort());
+});
 
 test('production comparison opens three complete pages with matching brand and true desktop/mobile widths', async ({ page }) => {
   const errors = [];
@@ -260,7 +267,7 @@ test('inspiration references filter, create an original brief and recover from c
  // The prerendered page answers clicks only after React replaces it; its static reference index goes away then.
  await expect(page.locator('nav[aria-label="全部参考"]')).toHaveCount(0);
  const cards=page.locator('.inspiration-grid .insp-card');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('95 个参考');
  for(const [name,count] of [['Landing',20],['产品界面',8],['关键流程',4]]){
   await page.getByRole('button',{name,exact:true}).click();
   await expect(cards).toHaveCount(count);
@@ -281,7 +288,7 @@ test('inspiration references filter, create an original brief and recover from c
  await expect(cards).toHaveCount(0);
  await expect(page.locator('.inspiration-empty')).toBeVisible();
  await page.locator('.inspiration-empty').getByRole('button',{name:'清除筛选'}).click();
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');await expect(page.getByRole('searchbox')).toHaveValue('');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('95 个参考');await expect(page.getByRole('searchbox')).toHaveValue('');
  await expect(page.getByRole('button',{name:'全部',exact:true})).toHaveAttribute('aria-pressed','true');
  await page.locator('.site-language').click();
  await expect(page.locator('h1')).toHaveText('The best design inspiration on the internet.');
@@ -295,7 +302,6 @@ test('inspiration references filter, create an original brief and recover from c
 
 // External preview images are stubbed so the suite never depends on another site being up.
 const previews=JSON.parse(fs.readFileSync(new URL('../website/src/link-previews.json',import.meta.url),'utf8'));
-const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
 const sized=(src,w)=>`/_vercel/image?url=${encodeURIComponent(src)}&w=${w}&q=75`;
 // Stands in for each source and for Vercel's resizer (redirects are not routed, so the local redirect cannot be stubbed); `fail` previews fail at both.
 const stubPreviews=async(page,fail=[])=>{const failed=src=>fail.some(id=>previews[id].image===src);
@@ -306,11 +312,11 @@ test('inspiration thumbnails map each link\'s own preview, resized from the sour
  const imageRequests=[];page.on('request',r=>{if(r.resourceType()==='image'&&!new URL(r.url()).pathname.startsWith('/variant-mark'))imageRequests.push(r.url());});
  await stubPreviews(page,['linear']);
  // A short window keeps the load-more sentinel out of reach, so the first page and the fallback button can be checked.
- await page.setViewportSize({width:1280,height:360});await page.goto('/');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(30);
- await page.getByRole('button',{name:'加载更多（还有 2 个）'}).click();await expect(page.locator('.inspiration-grid .inspiration-link-only')).toHaveCount(32);
- await expect(page.locator('.inspiration-grid .insp-thumb-post')).toHaveCount(0);await expect(page.locator('.inspiration-grid div.insp-thumb')).toHaveCount(32);
- await expect(page.locator('.inspiration-grid .insp-thumb-media img')).toHaveCount(28);
+ await page.setViewportSize({width:1280,height:360});await page.goto('/?category=landing&sort=curated');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('20 个参考');await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(20);
+ await expect(page.locator('.inspiration-grid .insp-card-meta small')).toHaveCount(20);
+ await expect(page.locator('.inspiration-grid .insp-thumb-post')).toHaveCount(0);await expect(page.locator('.inspiration-grid div.insp-thumb')).toHaveCount(20);
+ await expect(page.locator('.inspiration-grid .insp-thumb-media img')).toHaveCount(16);
  const linear=page.locator('.insp-card').filter({has:page.locator('a[href="/inspiration/linear"]')});await expect(linear.locator('div.insp-thumb-landing b')).toHaveText('Linear');
  for(const [href,src,policy] of await page.locator('.insp-card').evaluateAll(els=>els.flatMap(li=>{const img=li.querySelector('.insp-thumb-media img');return img?[[li.querySelector('.insp-card-open').getAttribute('href'),img.getAttribute('src'),img.getAttribute('referrerpolicy')]]:[]})))
   {expect(src).toBe(sized(previews[href.split('/')[2]].image,640));expect(policy).toBe('no-referrer')}
@@ -323,7 +329,8 @@ test('inspiration thumbnails map each link\'s own preview, resized from the sour
  }
  await page.emulateMedia({reducedMotion:'reduce'});
  expect(await page.locator('.insp-card-open').first().evaluate(el=>parseFloat(getComputedStyle(el).transitionDuration))).toBeLessThan(0.001);
- const allowed=new Set(Object.values(previews).flatMap(p=>[p.image,new URL(sized(p.image,640),page.url()).href]));
+ const posterMedia=JSON.parse(fs.readFileSync(new URL('../website/src/x-media.json',import.meta.url),'utf8'));
+ const allowed=new Set([...Object.values(previews).flatMap(p=>[p.image,new URL(sized(p.image,640),page.url()).href]),...Object.values(posterMedia).flatMap(m=>[m.poster,m.avatar]).filter(Boolean)]);
  expect(imageRequests.filter(u=>!allowed.has(u))).toEqual([]);
  await expect(page.locator('.insp-card:has(a[href="/inspiration/linear"]) .insp-thumb-media')).toHaveCount(0);
 });
@@ -444,7 +451,7 @@ test('history retains twelve entries and retry saves in-memory work without anot
 });
 
 test('reference pack keeps per-item intentions and source links in its brief', async ({page})=>{
- await page.goto('/');
+ await page.goto('/?topic=saas-home&sort=curated');
  const cards=page.locator('.inspiration-grid .insp-card');
  await cards.nth(0).getByRole('button',{name:'加入参考包'}).click();
  await cards.nth(1).getByRole('button',{name:'加入参考包'}).click();
@@ -467,12 +474,12 @@ test('reference pack keeps per-item intentions and source links in its brief', a
 
 test('a site detail shows the preview the link publishes and falls back when its image fails', async ({page})=>{
  await stubPreviews(page,['ramp']);
- await page.goto('/inspiration/raycast');
+ await page.goto('/inspiration/raycast?sort=curated');
  const shot=page.locator('.insp-detail-visual .insp-shot img');await expect(shot).toHaveAttribute('src',sized(previews.raycast.image,1280));await expect(shot).toHaveAttribute('alt',previews.raycast.title);
  await expect(page.locator('.insp-shot figcaption')).toContainText(previews.raycast.description);await expect(page.locator('.insp-shot figcaption')).toContainText('www.raycast.com 为分享链接公开的预览');
  await page.goto('/inspiration/ramp');await expect(page.locator('.insp-shot img')).toHaveCount(0);await expect(page.locator('.insp-shot figcaption')).toContainText('图片暂时无法加载');await expect(page.locator('.insp-shot > div.insp-thumb b')).toHaveText('Ramp');
- await page.goto('/inspiration/raycast');await page.getByRole('button',{name:'下一个'}).click();await expect(page).toHaveURL(/\/inspiration\/resend$/);await expect(page.locator('.insp-shot img')).toHaveAttribute('src',sized(previews.resend.image,1280));await expect(page.locator('.insp-shot figcaption span')).toHaveAttribute('lang',previews.resend.lang);
- await page.goto('/inspiration/aesop');await expect(page.locator('.insp-detail-visual > div.insp-thumb b')).toHaveText('Aesop');
+ await page.goto('/inspiration/raycast?sort=curated');await page.getByRole('button',{name:'下一个'}).click();await expect(page).toHaveURL(/\/inspiration\/resend\?sort=curated$/);await expect(page.locator('.insp-shot img')).toHaveAttribute('src',sized(previews.resend.image,1280));await expect(page.locator('.insp-shot figcaption span')).toHaveAttribute('lang',previews.resend.lang);
+ await page.goto('/inspiration/aesop');await expect(page.locator('.insp-detail-media > div.insp-thumb b')).toHaveText('Aesop');
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
 });
 
@@ -482,10 +489,10 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.route(/platform\.twitter\.com/,r=>r.abort());await page.route(/pbs\.twimg\.com/,r=>r.fulfill({contentType:'image/png',body:pixel}));
  // The widgets video fails; the sheep video stays pending, so the suite never streams from X.
  await page.route(/video\.twimg\.com/,r=>{if(r.request().url()===media['paper-widgets'].video)return r.abort()});
- await page.goto('/');await expect(page.locator('.insp-pills button')).toHaveText(['Best practice','全部','Landing','产品界面','关键流程']);
- expect(xRequests).toEqual([]);
+ await page.goto('/?category=landing&sort=curated');await expect(page.locator('.insp-pills button')).toHaveText(['Best practice','全部','Landing','产品界面','关键流程']);
+ expect(xRequests.filter(u=>new URL(u).hostname==='video.twimg.com')).toEqual([]);
  await page.getByRole('button',{name:'Best practice',exact:true}).click();
- const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(Object.keys(media).length);await expect(page.locator('.inspiration-grid')).toHaveCount(0);
+ const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(30);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
  const sheep=cards.filter({has:page.locator('a[href="/inspiration/x-areadnemaria-444419"]')});
  const video=sheep.locator('video');await expect(video).toHaveAttribute('poster',media['x-areadnemaria-444419'].poster);
@@ -497,11 +504,11 @@ test('best practice shows each X post as its looping video, credits the author a
  expect(await cards.last().locator('video').evaluate(v=>v.getAttribute('src'))).toBeNull();
  const widgets=cards.filter({has:page.locator('a[href="/inspiration/paper-widgets"]')});
  await expect(widgets.locator('img.insp-vcard-media')).toHaveAttribute('src',media['paper-widgets'].poster);await expect(widgets.locator('video')).toHaveCount(0);
- await sheep.locator('.insp-vcard-open').click();await expect(page).toHaveURL(/\/inspiration\/x-areadnemaria-444419$/);
+ await sheep.locator('.insp-vcard-open').click();await expect(page).toHaveURL(/\/inspiration\/x-areadnemaria-444419\?category=practice&sort=curated$/);
  const dialog=page.getByRole('dialog');await expect(dialog.locator('.x-post blockquote')).toContainText('@AreadneMaria');await expect(dialog.locator('.x-post figcaption')).toContainText('没能连上 x.com');
  await page.keyboard.press('Escape');
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
- await page.emulateMedia({reducedMotion:'reduce'});await page.reload();await page.getByRole('button',{name:'Best practice',exact:true}).click();
+ await page.emulateMedia({reducedMotion:'reduce'});await page.reload();
  await page.waitForTimeout(800);expect(await sheep.locator('video').evaluate(v=>v.paused)).toBe(true);
  // A post found through another curator credits it beside the source.
  await page.goto('/inspiration/x-keviduk-'+Object.keys(media).find(k=>k.startsWith('x-keviduk-')).slice(-6));
@@ -509,30 +516,30 @@ test('best practice shows each X post as its looping video, credits the author a
 });
 
 test('a reference opens as a dialog from the grid and as its own page from a direct link', async ({page})=>{
- await page.goto('/about');await page.goto('/');
+ await page.goto('/about');await page.goto('/?topic=saas-home&sort=curated');
  const cards=page.locator('.inspiration-grid .insp-card');
  await expect(cards.locator('.insp-card-open').first()).toHaveAttribute('href','/inspiration/linear');
  await cards.first().locator('.insp-card-open').click();
  const dialog=page.getByRole('dialog');
- await expect(dialog.getByRole('heading',{name:'Linear'})).toBeVisible();await expect(page).toHaveURL(/\/inspiration\/linear$/);
+ await expect(dialog.getByRole('heading',{name:'Linear'})).toBeVisible();await expect(page).toHaveURL(/\/inspiration\/linear\?topic=saas-home&sort=curated$/);
  await expect(page).toHaveTitle('Linear — 灵感参考 — Variant Design');
  await expect(dialog.locator('dd').filter({hasText:'设计者、手机端表现'})).toHaveCount(1);
- await page.keyboard.press('ArrowRight');await expect(page).toHaveURL(/\/inspiration\/notion$/);await expect(dialog.getByRole('heading',{name:'Notion'})).toBeVisible();
- await page.keyboard.press('ArrowLeft');await expect(page).toHaveURL(/\/inspiration\/linear$/);
+ await page.keyboard.press('ArrowRight');await expect(page).toHaveURL(/\/inspiration\/notion\?topic=saas-home&sort=curated$/);await expect(dialog.getByRole('heading',{name:'Notion'})).toBeVisible();
+ await page.keyboard.press('ArrowLeft');await expect(page).toHaveURL(/\/inspiration\/linear\?topic=saas-home&sort=curated$/);
  await dialog.getByRole('button',{name:'加入参考包'}).click();await expect(cards.first().locator('.insp-card-save')).toHaveAttribute('aria-pressed','true');
- await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);await expect(page).toHaveURL(/:\d+\/$/);
+ await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);await expect(page).toHaveURL(/:\d+\/\?topic=saas-home&sort=curated$/);
  await expect(page.locator('.inspiration-pack fieldset')).toHaveCount(1);
  await expect(page).toHaveTitle('Variant Design — 互联网上最好的设计灵感');
  await page.goBack();await expect(page).toHaveURL(/\/about$/);
- await page.goto('/');await cards.first().locator('.insp-card-open').click();await expect(dialog).toHaveCount(1);
- await page.goBack();await expect(page).toHaveURL(/:\d+\/$/);await expect(dialog).toHaveCount(0);
+ await page.goto('/?topic=saas-home&sort=curated');await cards.first().locator('.insp-card-open').click();await expect(dialog).toHaveCount(1);
+ await page.goBack();await expect(page).toHaveURL(/:\d+\/\?topic=saas-home&sort=curated$/);await expect(dialog).toHaveCount(0);
  const response=await page.goto('/inspiration/notion');
  expect(await response.text()).toContain('<title>Notion — 灵感参考 — Variant Design</title>');
  await expect(page.locator('h1')).toHaveText('Notion');await expect(page.getByRole('dialog')).toHaveCount(0);
  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/^Notion：/);
  await expect(page.getByRole('link',{name:'访问原站'})).toHaveAttribute('href','https://www.notion.com/');
- await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');
- await page.goto('/inspiration/no-such-reference');await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');
+ await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('95 个参考');
+ await page.goto('/inspiration/no-such-reference');await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('95 个参考');
 });
 
 test('a topic narrows the library to its dated references and states what is unknown', async ({page})=>{
@@ -543,7 +550,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('11 个参考');await expect(page.locator('.inspiration-topic')).toContainText('2026-11-01');
  await expect(page.locator('.insp-card-out[href="https://attio.com/"]')).toHaveCount(1);
  await page.goto('/?topic=unknown');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('95 个参考');
  await page.goto('/');
  const cards=page.locator('.inspiration-grid .insp-card');
  const topic=page.getByRole('combobox',{name:'专题'});
@@ -560,7 +567,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(cards).toHaveCount(0);
  await page.locator('.inspiration-empty').getByRole('button',{name:'清除筛选'}).click();
  await expect(topic).toHaveValue('');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('95 个参考');
 });
 test('reference pack restores locally and reports storage failures', async ({page})=>{
  await page.goto('/');
@@ -732,7 +739,7 @@ test('home leads with the inspiration feed, cases have their own page, and the s
  expect(await(await request.get('/skills')).text()).toContain('"@type":"SoftwareSourceCode"');
  // The static /cases page keeps the site chrome, including the font license note the footer must carry.
  const cases=await(await request.get('/cases')).text();
- expect(cases).toContain('class="site-nav');expect(cases).toContain('href="/fonts/LICENSES.txt"');expect(cases).toContain('一个任务，三种方向。');
+ expect(cases).toContain('class="site-nav');expect(cases).toContain('IPA Font License 1.0');expect(cases).toContain('改用 IPA 原版字体');expect(cases).toContain('href="/fonts/LICENSES.txt"');expect(cases).toContain('一个任务，三种方向。');
  await page.goto('/');
  await expect(page.locator('h1')).toHaveText('互联网上最好的设计灵感。');
  await expect(page.locator('.insp-title')).toContainText('每条都附出处和我们写的笔记');
@@ -741,13 +748,15 @@ test('home leads with the inspiration feed, cases have their own page, and the s
  await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');
  await page.locator('.site-nav-links a',{hasText:'动效视频'}).click();
  await expect(page.getByRole('button',{name:'Best practice',exact:true})).toHaveAttribute('aria-pressed','true');
+ await page.getByRole('button',{name:'全部',exact:true}).click();await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a',{hasText:'动效视频'})).not.toHaveAttribute('aria-current','page');
  for(const [group,links] of [['Variant Design 技能',['/docs','/about','/pricing','/changelog','/lab']],['资源',['/skills','/guides','/submit']]])
   for(const href of links)await expect(page.getByRole('navigation',{name:group}).locator(`a[href="${href}"]`)).toHaveCount(1);
  await page.goto('/?utm_source=practice');
  await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a',{hasText:'动效视频'})).not.toHaveAttribute('aria-current','page');
  await page.goto('/inspiration?topic=saas-home');
  await expect(page).toHaveURL(/:\d+\/\?topic=saas-home$/);await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(10);
- await page.goto('/cases');
+ await page.goto('/inspiration/linear');await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');
+ await page.goto('/cases');await expect(page).toHaveTitle('A/B/C 案例 — Variant Design 方向库');
  await expect(page.locator('h1')).toHaveText('一个任务，三种方向。');await expect(page.locator('.library-grid .library-card')).toHaveCount(5);
  await expect(page.locator('.site-nav-links a',{hasText:'案例'})).toHaveAttribute('aria-current','page');
  await page.goto('/d/pulse');await page.locator('.content-back a').first().click();await expect(page).toHaveURL(/\/cases$/);

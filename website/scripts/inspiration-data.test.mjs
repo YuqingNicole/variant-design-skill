@@ -16,6 +16,7 @@ test('every external reference records provenance; unknown designers stay null',
     assert.ok(['official-site', 'product-page', 'documentation', 'social-post'].includes(i.kind), i.id);
     assert.ok(i.designer === null || i.designer.trim(), i.id);
     assert.match(i.checkedAt, date, i.id);
+    assert.ok(Number.isFinite(Date.parse(i.addedAt)), `${i.id}: first collection timestamp`);
   }
 });
 

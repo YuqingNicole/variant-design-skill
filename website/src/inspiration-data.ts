@@ -19,7 +19,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "notion",
@@ -41,7 +42,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "raycast",
@@ -63,7 +65,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "resend",
@@ -85,7 +88,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-29T18:34:10+08:00"
   },
   {
     "id": "cursor",
@@ -107,7 +111,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "v0",
@@ -129,7 +134,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "lovable",
@@ -151,7 +157,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "impeccable",
@@ -173,7 +180,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-29T18:34:10+08:00"
   },
   {
     "id": "aesop",
@@ -195,7 +203,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "teenage",
@@ -217,7 +226,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "nothing",
@@ -239,7 +249,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "instrument",
@@ -261,7 +272,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "pentagram",
@@ -283,7 +295,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "basic",
@@ -305,7 +318,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "attio",
@@ -327,7 +341,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-11-01",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-11-01T11:31:43+08:00"
   },
   {
     "id": "ramp",
@@ -349,7 +364,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-11-01",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-11-01T11:31:43+08:00"
   },
   {
     "id": "cal-com",
@@ -371,7 +387,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-11-01",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-11-01T11:31:43+08:00"
   },
   {
     "id": "rive",
@@ -393,7 +410,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-11-01",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-11-01T11:31:43+08:00"
   },
   {
     "id": "tldraw",
@@ -415,7 +433,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-11-01",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-11-01T11:31:43+08:00"
   },
   {
     "id": "pitch",
@@ -437,7 +456,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-11-01",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-11-01T11:31:43+08:00"
   },
   {
     "id": "figma",
@@ -459,7 +479,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "framer",
@@ -481,7 +502,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "wiki",
@@ -503,7 +525,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "obsidian",
@@ -525,7 +548,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "linear-features",
@@ -547,7 +571,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "asana",
@@ -569,7 +594,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "posthog",
@@ -591,7 +617,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "plausible",
@@ -613,7 +640,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "first-page",
@@ -635,7 +663,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "new-project",
@@ -657,7 +686,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "history",
@@ -679,7 +709,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "export",
@@ -701,7 +732,8 @@ export const inspirationItems = [
     "designer": null,
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
-    "mobile": "not-tested"
+    "mobile": "not-tested",
+    "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
     "id": "paper-widgets",
@@ -732,7 +764,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "I love minimalistic cards\n\nFree prompt here ↓",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-10-31T20:44:22+08:00"
   },
   {
     "id": "x-areadnemaria-444419",
@@ -763,7 +796,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "sheep grazing grass! 🐑🌱",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-01T15:33:04+08:00"
   },
   {
     "id": "x-njesenberger-449707",
@@ -795,7 +829,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Happy Halloween! 👻",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-kshvbgde-243293",
@@ -827,7 +862,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "this serif is meant to used tastefully.\n\npowered by pre-text by @_chenglou",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-theshanelevine-880404",
@@ -859,7 +895,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Brand identity for Lucky Air Balloon by @turbodesignco \n\nAn intentional and fun universe where agents help you, as the main character, build the games of your dreams.",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-evilrabbit_-563665",
@@ -891,7 +928,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Introducing Geist Serif",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-keviduk-256843",
@@ -923,7 +961,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "made a few controls that share the same DNA. \n\nswitching between them feels like one thing changing shape.",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-tobi-802567",
@@ -955,7 +994,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Look for Expo Mode. We built it with Google’s new HTML-in-Canvas API. I think we’re one of the first to use it.",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-pmalay694-122583",
@@ -987,7 +1027,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Fold Toolbar ⋆｡°✩",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-kail_designs-624593",
@@ -1019,7 +1060,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Keycap Ascii experiment",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-nickbakeddesign-846645",
@@ -1051,7 +1093,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "4th one in this series!\n\nThe Agentic Data Company by @CVestergaard_ & @matiasdrejer YC F26",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-adieldesign-146825",
@@ -1083,7 +1126,8 @@ export const inspirationItems = [
       "lang": "zxx",
       "text": "",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-mike_andreuzza-200682",
@@ -1115,7 +1159,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "They see me slidin'....",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-apostraphi-935683",
@@ -1147,7 +1192,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "infinite scroll",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-wheresryan22-846116",
@@ -1179,7 +1225,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Been building a way to make exploded views of everyday objects for Anatomy. \n\nYou could already make these before, but it took forever. Now it’s way easier to reproduce, and it’s turning out pretty cool.",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-okazz_-819528",
@@ -1211,7 +1258,8 @@ export const inspirationItems = [
       "lang": "zxx",
       "text": "",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-willking-916242",
@@ -1243,7 +1291,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Day 1 → Internet Improvement Dept",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-oiharshit-299668",
@@ -1275,7 +1324,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Loading screens",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-guillaumebth-529282",
@@ -1307,7 +1357,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Folio update 🏴 My 3D avatar now walks past my explorations. https://t.co/ZEWfhcVFt8",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-cabralorenzo-081629",
@@ -1339,7 +1390,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Crumpled Receipt Interactive Component.    \n\n https://t.co/csJz2YLBAa",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-cabralorenzo-012387",
@@ -1370,7 +1422,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Dust Delete Interactive Component https://t.co/csJz2YL3KC",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-03T20:20:18+08:00"
   },
   {
     "id": "x-spottedinprod-722437",
@@ -1402,7 +1455,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "grok bot · aggressive upselling\nby @bot",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-samdape-374388",
@@ -1434,7 +1488,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "One Year 2.0 🖍️",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-val_soonafter-171837",
@@ -1466,7 +1521,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Book a liquid call",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-kushsolitary-495682",
@@ -1498,7 +1554,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "lookaway + siri orb + apple music ripples",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-quantapar-756046",
@@ -1530,7 +1587,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "/earth-timeline 🌎",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-michaelfilipiuk-855524",
@@ -1562,7 +1620,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Cleaning up a slop sidebar",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-samstooff-279899",
@@ -1594,7 +1653,8 @@ export const inspirationItems = [
       "lang": "zxx",
       "text": "",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-benjitaylor-585048",
@@ -1626,7 +1686,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "We gave the whole team a Grok Bot that knows our brand. Now anyone can make a great deck in seconds, and I don't have to worry if someone is using the wrong font.",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-aleksksaa-344552",
@@ -1658,7 +1719,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "buttons with feelings ˙ᵕ˙",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-buildwithsid-388249",
@@ -1690,7 +1752,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "black hole.mp4",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-24qwapp-741468",
@@ -1722,7 +1785,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "🚧 wip core pack",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-notjignes-942538",
@@ -1754,7 +1818,8 @@ export const inspirationItems = [
       "lang": "zxx",
       "text": "🌏✈️",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T11:41:08+08:00"
   },
   {
     "id": "x-visualatelier8-893561",
@@ -1786,7 +1851,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "‘Bloom’ by Teknosis\n\n#cinema4d #motion #digitalart #gradient",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-yashisinghh-180619",
@@ -1818,7 +1884,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "concept visuals for ai simulation and computing",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-jckhlry-859376",
@@ -1850,7 +1917,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Playing around with the Art Input shapes 👁️",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-blak3shao-602888",
@@ -1882,7 +1950,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "trying to emulate riso with opus5.5 led me down a rabbit hole...\n\nthe fun of animating with agents is almost never the one-shot. it’s having a skeleton you can experiment infinite textures and ideas on",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-jamesm-388873",
@@ -1914,7 +1983,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Probably a little overkill for where these will live in the new UI, but a delightful experience when it all comes together. 🌚",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-rickyretouch-841352",
@@ -1946,7 +2016,8 @@ export const inspirationItems = [
       "lang": "zxx",
       "text": "",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-shedsgns-208264",
@@ -1978,7 +2049,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Pulled a platinum card apart to see what actually makes it feel premium: 6 layers, most of them under 10% opacity",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-poetengineer__-298550",
@@ -2010,7 +2082,8 @@ export const inspirationItems = [
       "lang": "zxx",
       "text": "🌜",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-kraigdesigns-124137",
@@ -2042,7 +2115,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Some micrographics from recent brand work for Strata.",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-marinaanddesign-803975",
@@ -2074,7 +2148,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Cooking some updates on the @ElevenLabs brand with @dariaiareshko and @victoiredouy\nSoon 👀",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-jakubantalik-087424",
@@ -2106,7 +2181,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Made the live Libraries website react when a magnet is nearby.",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-prekesh-025951",
@@ -2138,7 +2214,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "after several years... i have a new portfolio 👀",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-mschwaibold-494746",
@@ -2170,7 +2247,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Had fun teaching AI how to make grass look real using procedural shaders.",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-heysatya_-378573",
@@ -2202,7 +2280,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "cooking something 👀",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-dsgn_aleksei-418250",
@@ -2234,7 +2313,8 @@ export const inspirationItems = [
       "lang": "zxx",
       "text": "@darylginn",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-fallengrey-891751",
@@ -2266,7 +2346,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "we back and better\n\nspent the last few weeks updating my design studio website and it's finally here",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-xrarchitect-541962",
@@ -2298,7 +2379,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Portal jumping through gaussian splat worlds with WebGPU. real time. sound on.",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-polar_sh-195565",
@@ -2330,7 +2412,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "billing for agentic workflows ✨\n\nwe're building the most ambitious metering & billing engine for AI software.\n\na technical deepdive →",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-gabriell_lab-488501",
@@ -2362,7 +2445,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Made this with Claude Opus 5.5. A gallery where every piece flips to reveal the artwork on hover.",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-oliverhamrin-965965",
@@ -2394,7 +2478,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Me and @haris_chc had so much fun working on the visual identity for @firstofkind season 3.\n\nHere's a bunch of drafts from the exploration phase:",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-raminnasibov-596460",
@@ -2426,7 +2511,8 @@ export const inspirationItems = [
       "lang": "zxx",
       "text": "🌭",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-withanimationui-849625",
@@ -2458,7 +2544,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "action wheel interaction ⎯⟡°",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-anaarsonist-010370",
@@ -2490,7 +2577,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "hand-drawn pixel art, a labour of love 💜\n\npost your high scores for a chance to get a ghost pass\n\nhttps://t.co/DRm6rnYc75 👻🛹",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-hayriyeakguller-856876",
@@ -2522,7 +2610,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "New component!! 🎉 @framer",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-hollysem-170792",
@@ -2554,7 +2643,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "money money money",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-anishfn-995329",
@@ -2586,7 +2676,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "should i open source my lab?",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-vanjek-116634",
@@ -2618,7 +2709,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "Monday shenanigans ✌🏻",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-ozzyxs1a-389677",
@@ -2650,7 +2742,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "galaxy brain effort slider",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-jh3yy-626150",
@@ -2682,7 +2775,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "/effort 🧠⚡",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   },
   {
     "id": "x-johnphamous-040275",
@@ -2714,7 +2808,8 @@ export const inspirationItems = [
       "lang": "en",
       "text": "token pass intro\n\ncollab with @kindlaar",
       "hasMedia": true
-    }
+    },
+    "addedAt": "2026-11-02T12:30:25+08:00"
   }
 ];
 

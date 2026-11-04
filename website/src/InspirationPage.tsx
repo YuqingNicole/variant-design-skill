@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { transition } from './view-transition';
 import { XPost, type Post } from './XPost';
@@ -38,9 +38,9 @@ const m={linkOnly:{zh:'仅链接',en:'Link only'},title:{zh:'互联网上最好�
  briefLabel:{zh:'参考设计指令',en:'Reference brief'},copyBrief:{zh:'复制指令',en:'Copy brief'},dismiss:{zh:'收起',en:'Dismiss'},copied:{zh:'已复制，粘贴到你的项目 Agent 中继续。',en:'Copied. Continue in your project agent.'},
  copyManually:{zh:'请在文本框中选择并手动复制。',en:'Select the text and copy it manually.'},submissions:{zh:'投稿与授权规则',en:'Submissions & permissions'},
  disclosure:{zh:'只放链接，缩略图就是链接自己的预览',en:'Links only; each thumbnail is the link’s own preview'},
- disclosureBody:{zh:'这些是外部参考，作品版权归原作者。本站不在仓库里保存对方的截图或素材：网站条目显示该网站为分享链接公开的预览图、标题和描述，图片取自原站，经本站托管方 Vercel 的图片服务按显示尺寸缩小并缓存；X 帖子放在 Best practice 里，卡片直接从 X 的服务器播放帖子视频（静音循环），详情用 X 官方嵌入，X 可能记录这次访问。没有公开预览的条目显示我们写的分析卡。登录后操作和手机体验未实测。',en:'These are external references, and the work belongs to its owners. This site keeps none of their screenshots or assets in its repository: a website entry shows the preview image, title and description the site publishes for shared links, taken from the site and resized and cached by our host Vercel’s image service; X posts sit under Best practice, where each card streams the post’s video from X (muted, looping) and the detail uses X’s official embed; X may record the visit. Entries without a public preview show our own analysis card. Authenticated flows and mobile behavior not tested.'},
+ disclosureBody:{zh:'这些是外部参考，作品版权归原作者。本站不在仓库里保存对方的截图或素材：网站条目显示该网站为分享链接公开的预览图、标题和描述，图片取自原站，经本站托管方 Vercel 的图片服务按显示尺寸缩小并缓存；X 帖子与网站在同一作品流中，卡片直接从 X 的服务器播放帖子视频（静音循环），详情用 X 官方嵌入，X 可能记录这次访问。没有公开预览的条目显示我们写的分析卡。登录后操作和手机体验未实测。',en:'These are external references, and the work belongs to its owners. This site keeps none of their screenshots or assets in its repository: a website entry shows the preview image, title and description the site publishes for shared links, taken from the site and resized and cached by our host Vercel’s image service; X posts and websites share one feed, where each X card streams the post’s video from X (muted, looping) and the detail uses X’s official embed; X may record the visit. Entries without a public preview show our own analysis card. Authenticated flows and mobile behavior not tested.'},
  refType:{zh:'参考类型',en:'Reference type'},all:{zh:'全部',en:'All'},topic:{zh:'专题',en:'Topic'},allTopics:{zh:'全部专题',en:'All topics'},search:{zh:'搜索参考',en:'Search references'},searchHint:{zh:'搜索 ⌘K',en:'Search ⌘K'},
- sort:{zh:'排序',en:'Sort'},curated:{zh:'推荐顺序',en:'Curated'},recent:{zh:'最近核对',en:'Recently checked'},byName:{zh:'按名称',en:'By name'},references:{zh:'个参考',en:'references'},openOnX:{zh:'在 X 上打开',en:'Open on X'},
+ sort:{zh:'排序',en:'Sort'},curated:{zh:'最近收录',en:'Recently added'},original:{zh:'编辑顺序',en:'Editorial order'},recent:{zh:'最近核对',en:'Recently checked'},byName:{zh:'按名称',en:'By name'},references:{zh:'个参考',en:'references'},openOnX:{zh:'在 X 上打开',en:'Open on X'},
  openSource:{zh:'打开来源',en:'Open source'},noMatches:{zh:'没有匹配结果。试试其他关键词或分类。',en:'No matches. Try another query or category.'},clear:{zh:'清除筛选',en:'Clear filters'},
  explore:{zh:'继续找素材与代码',en:'Keep exploring references and code'},exploreNote:{zh:'素材和代码是否可复用，需查看具体条目的许可。以下是来源入口，不表示本站拥有其作品。',en:'Check each item’s license before reusing assets or code. These are source directories, not work owned by this site.'},
  closing:{zh:'看过之后，做出自己的版本。',en:'Make your own version.'},install:{zh:'安装并开始',en:'Install & start'},studies:{zh:'查看我们的 A/B/C 案例',en:'See our A/B/C cases'},
@@ -62,9 +62,8 @@ const f={
  loadMore:{zh:(n:number)=>`加载更多（还有 ${n} 个）`,en:(n:number)=>`Load more (${n} left)`}};
 const rights=(locale:Locale)=><em className="inspiration-link-only">{t(m.linkOnly,locale)}</em>;
 function Thumb({item,locale}:{item:Item;locale:Locale}){const preview=previewOf(item);const post=postOf(item);const [tries,setTries]=useState(0);
- const chip=<small className="insp-thumb-chip"><b>{item.name}</b> {t(labels[item.category],locale)} · {item.tag} {rights(locale)}</small>;
- if(post)return <div className="insp-thumb insp-thumb-post" aria-hidden="true"><small className="insp-thumb-tag">{post.author} @{post.handle} · {post.date}</small><b lang={post.lang}>{post.text}</b>{chip}</div>;
- if(preview&&tries<2)return <div className="insp-thumb insp-thumb-media" aria-hidden="true"><img src={tries?preview.image:sized(preview.image,640)} alt="" loading="lazy" referrerPolicy="no-referrer" onError={()=>setTries(t=>t+1)}/>{chip}</div>;
+ if(post)return <div className="insp-thumb insp-thumb-post" aria-hidden="true"><small className="insp-thumb-tag">{post.author} @{post.handle} · {post.date}</small><b lang={post.lang}>{post.text}</b></div>;
+ if(preview&&tries<2)return <div className="insp-thumb insp-thumb-media" aria-hidden="true"><img src={tries?preview.image:sized(preview.image,640)} alt="" loading="lazy" referrerPolicy="no-referrer" onError={()=>setTries(t=>t+1)}/></div>;
  return <AnalysisCard item={item} locale={locale}/>}
 function AnalysisCard({item,locale}:{item:Item;locale:Locale}){const v=variantOf(item.id);return <div className={`insp-thumb insp-thumb-${item.category} insp-tint-${v%2}`} aria-hidden="true"><small className="insp-thumb-tag">{t(labels[item.category],locale)} · {item.tag} {rights(locale)}</small><b>{item.name}</b><span>{t(item.focus,locale)}</span><div className={`insp-sketch insp-sk-${item.category}-${v}`}>{Array.from({length:(sketches[item.category]??[4,4,4])[v]},(_,i)=><i key={i}/>)}</div></div>}
 function LinkPreview({item,preview,locale}:{item:Item;preview:Preview;locale:Locale}){const [tries,setTries]=useState(0);const failed=tries>1;const host=new URL(item.url).hostname;
@@ -81,7 +80,7 @@ const unknowns=(item:Item,locale:Locale)=>[...(item.designer?[]:[m.unknownDesign
 const packKey='variant-inspiration-pack-v1';
 function loadPack():{selection:Record<string,Intent>;error:boolean}{try{const raw=localStorage.getItem(packKey);if(!raw)return {selection:{},error:false};const parsed:unknown=JSON.parse(raw);if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error();const selection:Record<string,Intent>={};for(const [id,value] of Object.entries(parsed)){if(!inspirationItems.some(item=>item.id===id)||!value||typeof value!=='object'||typeof value.use!=='string'||typeof value.avoid!=='string')throw new Error();selection[id]={use:value.use,avoid:value.avoid}}return {selection,error:false}}catch{return {selection:{},error:true}}}
 export function InspirationPage({detail=''}:{detail?:string}){
- const language = useLocale();const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);const [category,setCategory]=useState(()=>{const c=new URLSearchParams(location.search).get('category');return c&&c in labels&&c!=='motion'?c:'all'});const [query,setQuery]=useState('');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [sort,setSort]=useState('default');const [visible,setVisible]=useState(()=>typeof IntersectionObserver==='undefined'?Infinity:pageSize);
+ const language = useLocale();const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);const [category,setCategory]=useState(()=>{const c=new URLSearchParams(location.search).get('category');return c&&c in labels&&c!=='motion'?c:'all'});const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('q')??'');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [sort,setSort]=useState(()=>{const s=new URLSearchParams(location.search).get('sort');return s==='name'||s==='checked'||s==='curated'?s:'default'});const [visible,setVisible]=useState(()=>typeof IntersectionObserver==='undefined'?Infinity:pageSize);
  // `page` is a detail opened by its own address; `modal` is one opened from the grid over it.
  const [open,setOpen]=useState<{id:string;mode:'page'|'modal'}|null>(()=>inspirationItems.some(i=>i.id===detail)?{id:detail,mode:'page'}:null);
  const openItem=inspirationItems.find(i=>i.id===open?.id);
@@ -94,31 +93,43 @@ export function InspirationPage({detail=''}:{detail?:string}){
  function createPack(){setNotice('');setPrompt(fl('packHead').concat(selected.map(item=>fl('packItem')(item,selection[item.id],unknowns(item,language)))).join('\n'))}
  const briefRef=useRef<HTMLElement>(null);
  useEffect(()=>{if(prompt){briefRef.current?.focus({preventScroll:true});briefRef.current?.scrollIntoView({block:'center',behavior:'instant'});}},[prompt]);
- // X posts live only in their own tab, where each plays through X's embed; the grid holds the website references.
- const matches=inspirationItems.filter(r=>(category==='all'?!postOf(r):r.category===category)&&(!activeTopic||activeTopic.items.includes(r.id))&&[r.name,r.tag,r.publisher,...Object.values(r.focus),...Object.values(r.application)].join(' ').toLowerCase().includes(query.trim().toLowerCase()));
- const results=sort==='checked'?[...matches].sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt)):sort==='name'?[...matches].sort((a,b)=>a.name.localeCompare(b.name)):matches;
+ // One stream, sorted by the commit that first collected each reference, not its later review date.
+ const matches=inspirationItems.filter(r=>(category==='all'||r.category===category)&&(!activeTopic||activeTopic.items.includes(r.id))&&[r.name,r.tag,r.publisher,...Object.values(r.focus),...Object.values(r.application)].join(' ').toLowerCase().includes(query.trim().toLowerCase()));
+ const results=sort==='checked'?[...matches].sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt)):sort==='name'?[...matches].sort((a,b)=>a.name.localeCompare(b.name)):sort==='curated'?matches:[...matches].sort((a,b)=>Date.parse(b.addedAt)-Date.parse(a.addedAt));
  const shown=results.slice(0,visible);
  function useReference(item:Item){setNotice('');setPrompt(fl('useReference')(item))}
  async function copy(){try{await navigator.clipboard.writeText(prompt);setNotice(l('copied'))}catch{setNotice(l('copyManually'))}}
  useEffect(()=>{if(detail&&!inspirationItems.some(i=>i.id===detail))history.replaceState(null,'',localePath('/',language)+location.search)},[detail]);
- useEffect(()=>{const onPop=()=>{const id=parseLocale(location.pathname).route.split('/')[2]??'';pushed.current=false;setOpen(current=>inspirationItems.some(i=>i.id===id)?{id,mode:current?.mode??'page'}:null)};addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
- // A dialog opened from the grid pushes one history entry, so closing it goes back instead of stacking another list entry.
- const pushed=useRef(false);
- function show(id:string,mode:'page'|'modal'){if(parseLocale(location.pathname).route!==`/inspiration/${id}`){if(open)history.replaceState(null,'',localePath(`/inspiration/${id}`,language)+location.search);else{history.pushState(null,'',localePath(`/inspiration/${id}`,language)+location.search);pushed.current=true}}setOpen({id,mode})}
- function close(){if(pushed.current){pushed.current=false;history.back()}else history.replaceState(null,'',localePath('/',language)+location.search);setOpen(null)}
+ const pushed=useRef(false),returnTo=useRef<{x:number;y:number;opener:HTMLElement|null}|null>(null),afterClose=useRef<(()=>void)|null>(null);
+ const fromGrid=useRef(!detail),dialogRef=useRef<HTMLDialogElement>(null);
+ const remember=()=>{returnTo.current={x:scrollX,y:scrollY,opener:document.activeElement instanceof HTMLElement?document.activeElement:null}};
+ useEffect(()=>{const onPop=()=>{const id=parseLocale(location.pathname).route.split('/')[2]??'';pushed.current=false;
+  const valid=inspirationItems.some(i=>i.id===id);if(valid&&fromGrid.current&&!returnTo.current)remember();
+  transition(()=>{setOpen(valid?{id,mode:fromGrid.current?'modal':'page'}:null);
+   const params=new URLSearchParams(location.search),c=params.get('category'),s=params.get('sort');setCategory(c&&c in labels&&c!=='motion'?c:'all');setTopic(params.get('topic')??'');setQuery(params.get('q')??'');setSort(s==='name'||s==='checked'||s==='curated'?s:'default')});
+ };addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
+ useEffect(()=>{const url=new URL(location.href);for(const [key,value] of Object.entries({category:category==='all'?'':category,topic,q:query,sort:sort==='default'?'':sort})){if(value)url.searchParams.set(key,value);else url.searchParams.delete(key)}history.replaceState(history.state,'',url.pathname+url.search+url.hash)},[category,topic,query,sort]);
+ function show(id:string,mode:'page'|'modal'){if(!open&&mode==='modal')remember();transition(()=>{
+  if(parseLocale(location.pathname).route!==`/inspiration/${id}`){if(open)history.replaceState(null,'',localePath(`/inspiration/${id}`,language)+location.search);else{history.pushState(null,'',localePath(`/inspiration/${id}`,language)+location.search);pushed.current=true}}
+  setOpen({id,mode});if(dialogRef.current)dialogRef.current.scrollTop=0;
+ })}
+ function close(){if(pushed.current){pushed.current=false;history.back()}else transition(()=>{history.replaceState(null,'',localePath('/',language)+location.search);setOpen(null)})}
  function step(by:number){if(!openItem)return;const list=results.some(r=>r.id===openItem.id)?results:inspirationItems;const at=list.findIndex(r=>r.id===openItem.id);show(list[(at+by+list.length)%list.length].id,open!.mode)}
- const dialogRef=useRef<HTMLDialogElement>(null);
- useEffect(()=>{const d=dialogRef.current;if(!d)return;if(open?.mode==='modal'&&!d.open)d.showModal();if(open?.mode!=='modal'&&d.open)d.close()},[open]);
+ useLayoutEffect(()=>{const d=dialogRef.current;if(!d)return;if(open?.mode==='modal'&&!d.open)d.showModal();if(open?.mode!=='modal'&&d.open)d.close();
+  if(!open&&returnTo.current){const saved=returnTo.current;returnTo.current=null;saved.opener?.focus({preventScroll:true});scrollTo({left:saved.x,top:saved.y,behavior:'instant'});const next=afterClose.current;afterClose.current=null;next?.()}
+ },[open]);
+ useEffect(()=>{if(open?.mode!=='page')return;const onKey=(e:KeyboardEvent)=>{if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.altKey||e.target instanceof HTMLElement&&e.target.closest('input,textarea,select,[contenteditable="true"]'))return;if(e.key==='Escape'){e.preventDefault();close()}else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();step(e.key==='ArrowLeft'?-1:1)}};addEventListener('keydown',onKey);return()=>removeEventListener('keydown',onKey)},[open,results]);
  const searchRef=useRef<HTMLInputElement>(null);
  useEffect(()=>{const onKey=(e:KeyboardEvent)=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();searchRef.current?.focus()}};addEventListener('keydown',onKey);return()=>removeEventListener('keydown',onKey)},[]);
  const sentinel=useRef<HTMLDivElement>(null);
  useEffect(()=>{const el=sentinel.current;if(!el||typeof IntersectionObserver==='undefined')return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting)setVisible(v=>v+pageSize)},{rootMargin:'400px'});io.observe(el);return()=>io.disconnect()},[results.length,visible]);
- const filter=(update:()=>void)=>transition(()=>{update();setVisible(pageSize)});
- function brief(item:Item){if(open?.mode==='modal')dialogRef.current?.close();useReference(item)}
+ // Independent filter changes must apply immediately; the shared animation queue keeps only its latest update.
+ const filter=(update:()=>void)=>{update();setVisible(pageSize)};
+ function brief(item:Item){if(open?.mode==='modal'){afterClose.current=()=>useReference(item);close()}else useReference(item)}
  const detailView=(item:Item,asPage:boolean)=>{const H=asPage?'h1':'h2';const post=postOf(item);const preview=previewOf(item);
   return <article className="insp-detail" aria-labelledby={`detail-${item.id}`}>
    <div className="insp-detail-notes">
-    <nav className="insp-detail-tools" aria-label={l('refNav')}>{asPage?<a href={localePath('/',language)} onClick={e=>{e.preventDefault();close()}}><Icon d={icons.prev}/>{l('allRefs')}</a>:<button type="button" onClick={()=>{dialogRef.current?.close()}} aria-label={l('close')}><Icon d={icons.close}/></button>}
+    <nav className="insp-detail-tools" aria-label={l('refNav')}>{asPage?<a href={localePath('/',language)} onClick={e=>{e.preventDefault();close()}}><Icon d={icons.prev}/>{l('allRefs')}</a>:<button type="button" onClick={close} aria-label={l('close')}><Icon d={icons.close}/></button>}
      <button type="button" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])}><Icon d={icons.save}/>{l(selection[item.id]?'removePack':'addPack')}</button>
      <span><button type="button" onClick={()=>step(-1)} aria-label={l('prev')}><Icon d={icons.prev}/></button><button type="button" onClick={()=>step(1)} aria-label={l('next')}><Icon d={icons.next}/></button></span></nav>
     <p className="insp-detail-label">{t(labels[item.category],language)} · {item.tag} {rights(language)}</p>
@@ -126,7 +137,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
     <dl><dt>{l('study')}</dt><dd>{t(item.focus,language)}</dd><dt>{l('apply')}</dt><dd>{t(item.application,language)}</dd><dt>{l('source')}</dt><dd><a href={item.url} target="_blank" rel="noreferrer">{item.publisher}</a> · {t(kinds[item.kind],language)} · {item.checkedAt}{viaOf(item)&&<> · <a href={viaOf(item)} target="_blank" rel="noreferrer">{fl('via')(new URL(viaOf(item)!).hostname)}</a></>}</dd><dt>{l('designer')}</dt><dd>{item.designer ?? l('unknownDesigner')}</dd><dt>{l('stillUnknown')}</dt><dd>{unknowns(item,language)}</dd></dl>
     <button type="button" className="insp-detail-brief" onClick={()=>brief(item)}>{l('createBrief')}</button>
    </div>
-   <div className="insp-detail-visual">{post?<XPost key={item.id} post={post} url={item.url} locale={language} autoload/>:preview?<LinkPreview key={item.id} item={item} preview={preview} locale={language}/>:<Thumb key={item.id} item={item} locale={language}/>}
+   <div className="insp-detail-visual"><div className="insp-detail-media" style={{viewTransitionName:`ref-${item.id}`}}>{post?<XPost key={item.id} post={post} url={item.url} locale={language} autoload/>:preview?<LinkPreview key={item.id} item={item} preview={preview} locale={language}/>:<Thumb key={item.id} item={item} locale={language}/>}</div>
     <a className="content-button insp-visit" href={item.url} target="_blank" rel="noreferrer">{l('visit')}<Icon d={icons.out}/></a></div>
   </article>};
  const tail=<>
@@ -134,7 +145,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
   {selected.length>0&&<section className="inspiration-pack" aria-labelledby="pack-title"><h2 id="pack-title">{l('pack')} ({selected.length})</h2><p>{l('packNote')}</p>{selected.map(item=><fieldset key={item.id}><legend>{item.name}</legend><label>{l('useFor')}<textarea aria-label={l('useFor')} value={selection[item.id].use} onChange={e=>updateIntent(item.id,'use',e.target.value)}/></label><label>{l('avoid')}<textarea aria-label={l('avoid')} value={selection[item.id].avoid} onChange={e=>updateIntent(item.id,'avoid',e.target.value)}/></label><button type="button" onClick={()=>toggleSelection(item.id)}>{l('remove')}</button></fieldset>)}<button className="content-button" onClick={createPack}>{l('packBrief')}</button></section>}
   {prompt&&<section ref={briefRef} tabIndex={-1} className="inspiration-brief" aria-labelledby="reference-brief-title"><h2 id="reference-brief-title">{l('takeIt')}</h2><textarea aria-label={l('briefLabel')} readOnly value={prompt} rows={6}/><button className="content-button" onClick={copy}>{l('copyBrief')}</button><button className="inspiration-dismiss" onClick={()=>{setPrompt('');setNotice('')}}>{l('dismiss')}</button><p role="status">{notice}</p></section>}
  </>;
- const header=<SiteHeader language={language} page="inspiration"/>;
+ const header=<SiteHeader language={language} page="inspiration" inspirationCategory={category}/>;
  if(open?.mode==='page'&&openItem)return <main className="content-page inspiration-page">{header}<div className="site-shell insp-page-detail">{detailView(openItem,true)}{tail}</div><SiteFooter language={language}/></main>;
  return <main className="content-page inspiration-page">{header}
   <header className="site-shell insp-head">
@@ -146,27 +157,24 @@ export function InspirationPage({detail=''}:{detail?:string}){
    <div className="insp-pills" role="group" aria-label={l('refType')}>{[['practice',t(labels.practice,language)],['all',l('all')],...(['landing','product','flow'] as const).map(c=>[c,t(labels[c],language)])].map(([id,label])=><button key={id} aria-pressed={category===id} onClick={()=>filter(()=>setCategory(id))}>{label}</button>)}</div>
    <select aria-label={l('topic')} value={topic} onChange={e=>{const v=e.target.value;filter(()=>setTopic(v))}}><option value="">{l('allTopics')}</option>{inspirationTopics.map(tp=><option key={tp.id} value={tp.id}>{t(tp.title,language)} · {tp.items.length}</option>)}</select>
    <label className="insp-search"><Icon d={icons.search}/><span className="insp-visually-hidden">{l('search')}</span><input ref={searchRef} type="search" value={query} onChange={e=>{setQuery(e.target.value);setVisible(pageSize)}} placeholder={l('searchHint')}/></label>
-   <select aria-label={l('sort')} value={sort} onChange={e=>{const v=e.target.value;filter(()=>setSort(v))}}><option value="default">{l('curated')}</option><option value="checked">{l('recent')}</option><option value="name">{l('byName')}</option></select>
+   <select aria-label={l('sort')} value={sort} onChange={e=>{const v=e.target.value;filter(()=>setSort(v))}}><option value="default">{l('curated')}</option><option value="curated">{l('original')}</option><option value="checked">{l('recent')}</option><option value="name">{l('byName')}</option></select>
   </div></div>
   <section className="site-shell insp-body">
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
-   {category==='practice'?<ul className="insp-videos">{results.map(item=>{const media=mediaOf(item.id),post=postOf(item)!;return <li key={item.id} className="insp-card insp-vcard">
-    {media?<><a className="insp-vcard-open" href={localePath(`/inspiration/${item.id}`,language)} style={{aspectRatio:`${media.width}/${media.height}`}} aria-label={`${item.name}：${t(item.focus,language)}（${post.author} @${post.handle}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();show(item.id,'modal')}}><XVideo media={media}/></a>
-     {media.avatar&&<img className="insp-vcard-avatar" src={media.avatar} width="44" height="44" alt={`${post.author} @${post.handle}`} title={`${post.author} @${post.handle}`} referrerPolicy="no-referrer"/>}</>
-     :<XPost post={post} url={item.url} locale={language} autoload/>}
+   <ul className={`inspiration-grid insp-feed${category==='practice'?' insp-videos':''}`}>{shown.map(item=>{const media=mediaOf(item.id),post=postOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
+    <a className={`insp-card-open${media?' insp-vcard-open':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(labels[item.category],language)} · ${l('linkOnly')}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
+     {media?<XVideo media={media}/>:<Thumb item={item} locale={language}/>}
+     <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={media.avatar} width="28" height="28" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer"/>}<span><b>{item.name}</b><small>{post?`@${post.handle}`:new URL(item.url).hostname} · {l('linkOnly')}</small></span></span>
+    </a>
     <button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${l(selection[item.id]?'removePack':'addPack')}：${item.name}`}><Icon d={icons.save}/></button>
-    <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l('openOnX')}：${item.name}`}><Icon d={icons.out}/></a></li>})}</ul>:<>
-   <ul className="inspiration-grid">{shown.map(item=><li key={item.id} className="insp-card" style={{viewTransitionName:`ref-${item.id}`}}>
-    <a className="insp-card-open" href={localePath(`/inspiration/${item.id}`,language)} aria-label={`${item.name}：${t(item.focus,language)}（${t(labels[item.category],language)} · ${l('linkOnly')}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();show(item.id,'modal')}}><Thumb item={item} locale={language}/></a>
-    <button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${l(selection[item.id]?'removePack':'addPack')}：${item.name}`}><Icon d={icons.save}/></button>
-    <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l('openSource')}：${item.name}`}><Icon d={icons.out}/></a>
-   </li>)}</ul>
-   {visible<results.length&&<div ref={sentinel} className="insp-more"><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}</>}
+    <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l(post?'openOnX':'openSource')}：${item.name}`}><Icon d={icons.out}/></a>
+   </li>})}</ul>
+   {visible<results.length&&<div ref={sentinel} className="insp-more"><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}
    {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setCategory('all');setTopic('');setQuery('')})}>{l('clear')}</button></p>}
    {tail}
    <section className="inspiration-sources"><h2>{l('explore')}</h2><p>{l('exploreNote')}</p><div>{sources.map(s=><a key={s.name} href={s.url} target="_blank" rel="noreferrer"><strong>{s.name}</strong><span>{t(s.type,language)}</span></a>)}</div></section><section className="content-closing"><h2>{l('closing')}</h2><a className="content-button" href={localePath('/docs',language)}>{l('install')}</a><a className="content-secondary" href={localePath('/cases',language)}>{l('studies')}</a><p className="inspiration-count">{l('checked')}</p></section>
   </section>
-  <dialog ref={dialogRef} className="insp-dialog" aria-label={openItem?.name} onClose={()=>{if(open?.mode==='modal')close()}} onKeyDown={e=>{if(e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLInputElement)return;if(e.key==='ArrowLeft')step(-1);if(e.key==='ArrowRight')step(1)}} onClick={e=>{if(e.target===e.currentTarget)dialogRef.current?.close()}}>{open?.mode==='modal'&&openItem&&detailView(openItem,false)}</dialog>
+  <dialog ref={dialogRef} className="insp-dialog" aria-label={openItem?.name} onCancel={e=>{e.preventDefault();close()}} onKeyDown={e=>{if(e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLInputElement||e.target instanceof HTMLSelectElement)return;if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}if(e.key==='ArrowRight'){e.preventDefault();step(1)}}} onClick={e=>{if(e.target===e.currentTarget)close()}}>{open?.mode==='modal'&&openItem&&detailView(openItem,false)}</dialog>
   <SiteFooter language={language}/></main>
 }

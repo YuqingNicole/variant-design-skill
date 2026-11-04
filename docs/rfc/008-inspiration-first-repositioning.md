@@ -1,6 +1,6 @@
-# RFC-006 · 改定位：以设计灵感为主
+# RFC-008 · 改定位：以设计灵感为主
 
-- 状态：已接受。P1（定位和信息结构）已实施（2026-11-03）。P2 和 P3 待实施。
+- 状态：已接受。P1（定位和信息结构）已实施（2026-11-03）。P2 已实现并通过本地回归，截图待维护者审阅；P3 待实施。
 - 日期：2026-11-03。
 - 关联：
   - RFC-003（参考库验证闭环）、RFC-004（首页第一屏，本文取代它的首页结构）、RFC-005（多语言地址）；
@@ -68,7 +68,7 @@
 - 首页标题和描述改为新定位，结构化数据只有 `WebSite`。
 - `llms.txt` 的开头改为"设计灵感站，同时发布 variant-design 技能"。
 
-## 3. P2：交互和审美（待实施）
+## 3. P2：交互和审美（本地验证通过，待截图审阅）
 
 "上升一大截"按 `adjective-translation.md` 拆成可以检查的项，每项都要有改动前后的证据。
 
@@ -109,3 +109,13 @@
 - 不截取未经授权的网站截图，也不下载 recent.design 的素材。
 - 不复制 recent.design 的页面结构细节，包括卡片样式和文案。
 - 不改技能本身的行为。
+
+
+## 6. P2 实施记录（2026-11-04）
+
+- 文档编号从 006 调整为 008，避免与已合并的产品架构 RFC-006 冲突。
+- 历史 `addedAt` 来自条目首次出现的 Git 提交时间，不把观察日期或 X 发帖日期冒充收录时间。
+- 分类、专题、搜索、排序和已有追踪参数保存在 URL；默认按收录时间，另保留编辑顺序、核对时间和名称排序。
+- 浏览器回归使用自行生成的 64×40、2 秒纯色视频，不下载 X 视频，验证实际播放/暂停和偏好切换；图片与第三方嵌入在回归中隔离，真实来源画面通过 Ego 浏览器另行查看。
+- 原理核对：[Chrome View Transitions 指南](https://developer.chrome.com/docs/modern-web-guidance/guides/ui-behaviors/same-document-transitions) 的名称唯一要求；[Chrome dialog 滚动指南](https://developer.chrome.com/docs/modern-web-guidance/guides/ui-behaviors/prevent-page-scroll-under-modal-dialog) 的 dialog/backdrop 滚动隔离。实际本地浏览器结果见执行记录，文档本身不作为跨浏览器支持证明。
+- 本地证据和剩余 gate 见 `docs/research/2026-11-04-backlog-execution.md` 与 `2026-11-04-inspiration-budget.json`。尚未部署或宣称生产验收。

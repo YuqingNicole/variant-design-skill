@@ -9,13 +9,14 @@ export const mediaOf=(id:string):XMedia|undefined=>(xMedia as Record<string,XMed
 function dropReferrer(){if(document.querySelector('meta[name="referrer"]'))return;const m=document.createElement('meta');m.name='referrer';m.content='no-referrer';document.head.appendChild(m)}
 export function XVideo({media}:{media:XMedia}){const ref=useRef<HTMLVideoElement>(null);const [failed,setFailed]=useState(false);
  useEffect(()=>{const v=ref.current;if(!v)return;dropReferrer();
-  // Without IntersectionObserver the poster stays and no file attaches.
   if(typeof IntersectionObserver==='undefined')return;
-  // The file attaches only as the card nears the screen, so a long tab does not open every video at once.
-  let visible=false;const play=()=>{if(visible&&v.getAttribute('src'))v.play().catch(()=>{});else v.pause()};
-  const near=new IntersectionObserver(([e])=>{if(e.isIntersecting){v.src=media.video;near.disconnect();play()}},{rootMargin:'600px 0px'});near.observe(v);
-  // Reduced motion keeps the poster; otherwise play only while at least a quarter of the card is visible.
-  const io=matchMedia('(prefers-reduced-motion: reduce)').matches?null:new IntersectionObserver(([e])=>{visible=e.isIntersecting;play()},{threshold:.25});io?.observe(v);
-  return()=>{near.disconnect();io?.disconnect();v.pause();v.removeAttribute('src');v.load()}},[media.video]);
+  const motion=matchMedia('(prefers-reduced-motion: reduce)');let visible=false;
+  const play=()=>{if(visible&&!motion.matches&&!document.hidden&&v.getAttribute('src'))v.play().catch(()=>{});else v.pause()};
+  const attach=()=>{if(!motion.matches&&!v.getAttribute('src'))v.src=media.video;play()};
+  const near=new IntersectionObserver(([e])=>{if(e.isIntersecting&&!motion.matches)attach()},{rootMargin:'600px 0px'});near.observe(v);
+  const io=new IntersectionObserver(([e])=>{visible=e.isIntersecting&&e.intersectionRatio>=.25;if(visible)attach();else play()},{threshold:[0,.25]});io.observe(v);
+  const preference=()=>{if(motion.matches){v.pause();v.removeAttribute('src');v.load()}else{near.unobserve(v);near.observe(v);if(visible)attach()}};
+  motion.addEventListener('change',preference);document.addEventListener('visibilitychange',play);
+  return()=>{near.disconnect();io.disconnect();motion.removeEventListener('change',preference);document.removeEventListener('visibilitychange',play);v.pause();v.removeAttribute('src');v.load()}},[media.video]);
  return failed?<img className="insp-vcard-media" src={media.poster} width={media.width} height={media.height} alt="" referrerPolicy="no-referrer"/>
   :<video ref={ref} className="insp-vcard-media" poster={media.poster} width={media.width} height={media.height} muted loop playsInline preload="metadata" onError={()=>setFailed(true)}/>}
