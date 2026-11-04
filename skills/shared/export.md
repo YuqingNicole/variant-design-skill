@@ -25,7 +25,7 @@ When the user says "export to [framework]" or `react [A/B/C]`, transform the cho
 
 ## Integrate into the project
 
-Before generating integration files, list the intended project-relative targets in `.variant-work/targets.json` (a JSON array, for example `["src/App.tsx", "src/variant.css"]`). Prepare a new plan to capture the current source revision, owned-file hashes, brand constraints and target hashes. Then write every final project file into staging with matching paths, such as `.variant-work/integrate-B/src/App.tsx`. Use the bundled helper:
+Before generating integration files, list the intended project-relative targets in `.variant-work/targets.json` (a JSON array, for example `["src/App.tsx", "src/variant.css"]`). Prepare a new plan to capture the current source revision, owned-file hashes, brand constraints, every registered system extension, any adoption binding and target hashes. Then write every final project file into staging with matching paths, such as `.variant-work/integrate-B/src/App.tsx`. Use the bundled helper:
 
 ```bash
 node <skill-root>/scripts/variant-integrate.mjs prepare variant-output B .variant-work/targets.json .variant-work/integration-plan.json
@@ -35,7 +35,7 @@ node <skill-root>/scripts/variant-integrate.mjs rollback variant-output <integra
 node <skill-root>/scripts/variant-integrate.mjs list variant-output
 ```
 
-`apply` requires the prepared plan; source or target changes and added/removed staging targets refuse before any project writes. Existing plan files cannot be overwritten by `prepare`. Keep conflicted staging and the old plan, prepare a new plan, and reconcile explicitly. Selection changes alone are not conflicts. Both commands accept an optional final project root for nested output.
+`apply` requires the prepared plan; source or target changes and added/removed staging targets refuse before any project writes. Existing plan files cannot be overwritten by `prepare`. Keep conflicted staging and the old plan, prepare a new plan, and reconcile explicitly. Plans written before extension/binding coverage are not upgraded in place: keep the old plan and prepare a new one. Selection changes alone are not conflicts. Both commands accept an optional final project root for nested output.
 
 `apply` saves the prior bytes of every target in `variant-output/.integrations/<id>.json` before writing, refuses targets inside `variant-output/`, `.git/`, `node_modules/` or `.variant-work/`, and records each file as created, overwritten or unchanged. `rollback` restores those files and deletes created ones, but refuses without writing anything if the user edited an integrated file afterwards. In the delivery summary, give the changed files, the checks that actually ran, the preview URL, and the exact rollback command.
 

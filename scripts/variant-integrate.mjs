@@ -35,9 +35,13 @@ function recordFile(output, id) {
 function sourceIdentity(output, variant, project) {
   const state=readContext(output),source=state.variants?.[variant];
   if (!['A','B','C'].includes(variant) || !source?.files?.length) throw new Error('Register variant A/B/C first.');
+  const extensions=state.designSystem?.extensions;
+  if (extensions!==undefined && (!Array.isArray(extensions) || extensions.some(file=>typeof file!=='string' || !file.trim()))) throw new Error('System extensions must be relative file paths.');
   return {version:source.version,entry:source.entry,tokens:source.tokens,comparison:source.comparison,
+    ...(source.systemBinding!==undefined ? {systemBinding:source.systemBinding} : {}),
     taskContract:state.taskContract,designSystem:state.designSystem,
     designSystemHash:state.designSystem?.file?digest(fs.readFileSync(localFile(project,state.designSystem.file))):null,
+    ...(extensions!==undefined ? {designSystemExtensionHashes:Object.fromEntries(extensions.map(file=>[file,digest(fs.readFileSync(localFile(project,file)))]))} : {}),
     files:Object.fromEntries([...source.files].sort().map(file=>[file,digest(fs.readFileSync(localFile(output,file)))]))};
 }
 function targetPath(base,outRelative,file) {

@@ -86,3 +86,28 @@ test('integration shares the history lock and rejects plans outside the working 
  fs.rmdirSync(path.join(output,'.variant-lock'));
  integrateVariant(output,'B',staging,project,planFile);
 });
+
+test('integration rejects registered extension or adoption drift without writing targets or a backup',t=>{
+ for(const change of ['extension','binding']){
+  const {project,output,staging}=setup(t),context=path.join(output,'.variant-context.json'),state=readContext(output),extension=path.join(project,'extension.css');
+  fs.writeFileSync(extension,':root{--color-text:#111}');state.designSystem.extensions=['extension.css'];state.variants.B.systemBinding={status:'pending',digest:'approved-system'};fs.writeFileSync(context,JSON.stringify(state));
+  const planFile=path.join(project,'.variant-work','system-plan.json');prepareIntegration(output,'B',['index.html','src/Hero.tsx','src/App.tsx'],planFile);
+  if(change==='extension')fs.appendFileSync(extension,'\n/* edited after planning */');else{state.variants.B.systemBinding.status='applied';fs.writeFileSync(context,JSON.stringify(state));}
+  assert.throws(()=>integrateVariant(output,'B',staging,project,planFile),/Integration conflict/);assert.equal(read(project,'index.html'),'<h1>Original</h1>');assert.equal(fs.existsSync(path.join(project,'src/Hero.tsx')),false);assert.deepEqual(listIntegrations(output),[]);assert.ok(fs.existsSync(path.join(staging,'index.html')));
+ }
+});
+
+test('integration records extension hashes and binding while selection changes and safe rollback remain independent',t=>{
+ const {project,output,staging}=setup(t),context=path.join(output,'.variant-context.json'),state=readContext(output),extension=path.join(project,'extension.css');fs.writeFileSync(extension,':root{--color-text:#111}');state.designSystem.extensions=['extension.css'];state.variants.B.systemBinding={status:'applied',digest:'approved-system'};fs.writeFileSync(context,JSON.stringify(state));
+ const planFile=path.join(project,'.variant-work','system-plan.json');prepareIntegration(output,'B',['index.html','src/Hero.tsx','src/App.tsx'],planFile);state.selectedVariant='C';state.activeVariant='A';fs.writeFileSync(context,JSON.stringify(state));
+ const record=integrateVariant(output,'B',staging,project,planFile);assert.ok(record.source.designSystemExtensionHashes['extension.css']);assert.equal(record.source.systemBinding.status,'applied');assert.equal(readContext(output).selectedVariant,'C');
+ fs.appendFileSync(extension,'\n/* user edited shared tokens after integration */');const bytes=fs.readFileSync(extension);rollbackIntegration(output,record.id);assert.equal(read(project,'index.html'),'<h1>Original</h1>');assert.deepEqual(fs.readFileSync(extension),bytes);assert.equal(readContext(output).selectedVariant,'C');
+});
+
+test('integration refuses old missing extension coverage and unsafe registered extensions',t=>{
+ const {project,output,staging}=setup(t),context=path.join(output,'.variant-context.json'),state=readContext(output),extension=path.join(project,'extension.css');fs.writeFileSync(extension,':root{--color-text:#111}');state.designSystem.extensions=['extension.css'];fs.writeFileSync(context,JSON.stringify(state));
+ const planFile=path.join(project,'.variant-work','system-plan.json'),plan=prepareIntegration(output,'B',['index.html','src/Hero.tsx','src/App.tsx'],planFile);delete plan.source.designSystemExtensionHashes;const legacy=path.join(project,'.variant-work','legacy-plan.json');fs.writeFileSync(legacy,JSON.stringify(plan),{flag:'wx'});assert.throws(()=>integrateVariant(output,'B',staging,project,legacy),/Integration conflict/);
+ fs.renameSync(extension,path.join(project,'real-extension.css'));fs.symlinkSync(path.join(project,'real-extension.css'),extension);assert.throws(()=>integrateVariant(output,'B',staging,project,planFile),/symbolic|symlink/i);
+ for(const extensions of [null,'extension.css',[''],['../outside.css']]){state.designSystem.extensions=extensions;fs.writeFileSync(context,JSON.stringify(state));const next=path.join(project,'.variant-work','unsafe-plan.json');assert.throws(()=>prepareIntegration(output,'B',['index.html'],next),/relative/);assert.equal(fs.existsSync(next),false)}
+ assert.equal(read(project,'index.html'),'<h1>Original</h1>');assert.deepEqual(listIntegrations(output),[]);
+});
