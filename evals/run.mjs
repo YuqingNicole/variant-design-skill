@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { grade, gradeChain, loadFixture, snapshot, usage } from './grade.mjs';
 import { capturePremium, premiumUndo } from './premium.mjs';
 import { captureNativeVite, probeNativeDependencies } from './native-vite.mjs';
+import { replayNativeDelivery } from './native-delivery.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -128,6 +129,10 @@ async function chain(fixture, agent, config, dir, install) {
     if (config.nativeVite) {
       measurements.native[turn.id] = await native(turn.id);
       if (turn.id === 'generate') measurements.native.probe = await native('probe', true);
+      if (turn.id === 'deliver') {
+        try { measurements.native.delivery = await replayNativeDelivery(dir, { out: path.join(out, `${fixture}-${agent}.native`, 'replay'), generated: turns.find(t => t.id === 'generate')?.snapshot, baseline: measurements.native.baseline, manifest: config.nativeVite.manifest, delivery: config.nativeVite.delivery }); }
+        catch (error) { measurements.native.delivery = { error: error.stack }; }
+      }
     }
   }
   if (config.styleBudget) { measurements.after = await capture('after'); measurements.undo = premiumUndo(dir, initial, path.join(out, `${fixture}-${agent}.browser`), config.styleBudget.variant); }

@@ -30,6 +30,7 @@ test('native grading fails closed for missing, empty, duplicated and Agent-autho
     const result = gradeNativeVite({ baseline: report, generate: report, deliver: report, probe: report });
     assert.equal(result.pass, false); assert.equal(check(result, 'generate-observed').pass, false); assert.equal(check(result, 'delivery-replayed').pass, false);
   }
+  for (const delivery of [{ pass: true }, { source: 'host native delivery replay', checks: [] }, { source: 'host native delivery replay', checks: [null] }]) assert.equal(check(gradeNativeVite({ delivery }), 'delivery-replayed').pass, false);
   const dir = run(), fixture = loadFixture('native-vite');
   assert.equal(check(grade(dir, { fixture }), 'native:generate-observed').pass, false);
   assert.equal(check(gradeChain(dir, { fixture, turns: [{ id: 'generate', snapshot: snapshot(dir) }] }), 'native:generate-observed').pass, false);

@@ -6,6 +6,7 @@ import { createRequire } from 'node:module';
 import { createHash, randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { localFile } from '../scripts/variant-history.mjs';
+import { gradeNativeDelivery, nativeOriginalFiles } from './native-delivery.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url)), worker = path.join(here, 'native-vite-worker.mjs');
 const ids = ['A', 'B', 'C'], widths = [1440, 390];
@@ -127,12 +128,14 @@ function observePage(page, base) {
   return { errors, failedRequests, warnings };
 }
 
-export async function captureNativeVite(project, { out, browser, manifest, original = false, data, cssMarker } = {}) {
+export async function captureNativeVite(project, { out, browser, manifest, original = false, data, cssMarker, variants = ids, expectedVariant } = {}) {
   project = fs.realpathSync(project); outputDir(project, out);
+  need(Array.isArray(variants) && variants.length && new Set(variants).size === variants.length && variants.every(id => ids.includes(id)), 'List unique A/B/C preview variants');
+  need(expectedVariant === undefined || ids.includes(expectedVariant), 'Expected integrated identity must be A/B/C');
   const spec = original ? null : nativeManifest(project, manifest), own = !browser;
-  const context = spec && fs.existsSync(localFile(project, 'variant-output/.variant-context.json')) ? json(localFile(project, 'variant-output/.variant-context.json')) : null;
+  const context = fs.existsSync(localFile(project, 'variant-output/.variant-context.json')) ? json(localFile(project, 'variant-output/.variant-context.json')) : null;
   const owned = context ? Object.values(context.variants ?? {}).flatMap(v => (v.files ?? []).map(file => `variant-output/${file}`)) : [];
-  const inputs = ['vite.config.ts', 'tsconfig.json', 'package-lock.json', 'src/workspace.tsx', 'src/workspaces.json', 'src/global.css', 'src/workshop-mark.svg', 'src/main.tsx', 'src/App.tsx', 'variant-preview.html', ...(spec ? [manifest ?? '.variant-work/native-preview.json', ...spec.adapterFiles, ...spec.dependencies, ...owned, ...(context ? ['variant-output/.variant-context.json'] : [])] : [])];
+  const inputs = [...nativeOriginalFiles, ...owned, ...(context ? ['variant-output/.variant-context.json'] : []), ...(spec ? [manifest ?? '.variant-work/native-preview.json', ...spec.adapterFiles, ...spec.dependencies] : [])];
   const fingerprint = Object.fromEntries([...new Set(inputs)].sort().map(file => [file, hash(existing(project, file))]));
   data ??= json(path.join(here, 'fixtures/native-vite/project/src/workspaces.json'));
   const checks = {}, samples = [], compare = [];
@@ -152,15 +155,16 @@ export async function captureNativeVite(project, { out, browser, manifest, origi
     if (!browser) { const { chromium } = createRequire(path.join(here, '../tests/package.json'))('playwright'); browser = await chromium.launch(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {}); }
     server = await viteProcess(project, 'vite.config.ts');
     for (const width of widths) {
-      for (const id of original ? ['original'] : ids) {
+      for (const id of original ? ['original'] : variants) {
         const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce' }), { errors, failedRequests, warnings } = observePage(page, server.url);
         page.setDefaultTimeout(5000);
         const sample = { id, width, url: new URL(original ? 'index.html' : spec.entries[id], server.url).href, task: false, identity: original, errors, failedRequests, warnings };
         try {
           await page.goto(sample.url, { waitUntil: 'load', timeout: 15000 });
           await page.getByTestId('workspace-name').waitFor();
-          if (!original) sample.identity = await page.locator(`[data-native-variant="${id}"]`).isVisible();
+          if (!original || expectedVariant) sample.identity = await page.locator(`[data-native-variant="${expectedVariant ?? id}"]`).isVisible();
           await exercise(page, data); sample.task = true;
+          sample.heading = await page.locator('h1').innerText();
           sample.brand = await page.evaluate(() => {
             const body = getComputedStyle(document.body), heading = document.querySelector('h1'), logo = document.querySelector('img[alt="Workshop mark"]');
             const first = text => text.split(',')[0].trim().replace(/^["']|["']$/g, '');
@@ -226,7 +230,7 @@ export async function probeNativeDependencies(project, { out, browser, manifest 
   return result;
 }
 
-// Missing observations fail closed, including native delivery until the independent replay exists.
+// Missing observations fail closed, including native delivery's independent replay.
 export function gradeNativeVite(evidence) {
   const checks = [], add = (id, pass, details = []) => checks.push({ id, pass: Boolean(pass), details });
   const reports = ['baseline', 'generate', 'deliver', 'probe'];
@@ -246,6 +250,6 @@ export function gradeNativeVite(evidence) {
     if (phase !== 'baseline') add(`${phase}-comparison`, Array.isArray(report.compare) && report.compare.length === widths.length && widths.every(width => report.compare.some(s => s.width === width && s.links && s.overflow === false && Array.isArray(s.errors) && !s.errors.length && Array.isArray(s.failedRequests) && !s.failedRequests.length)), []);
     if (phase === 'probe') add('original-dependencies-reused', report.sourceProjectUnchanged && report.nonce && report.cssMarker && report.samples.every(s => s.brand?.marker === report.cssMarker), []);
   }
-  add('delivery-replayed', evidence?.delivery?.pass === true, evidence?.delivery?.details ?? ['Independent integration/history/rollback replay not yet observed']);
+  const delivery = gradeNativeDelivery(evidence?.delivery); add('delivery-replayed', delivery.pass, delivery.details);
   return { pass: checks.every(check => check.pass), checks };
 }
