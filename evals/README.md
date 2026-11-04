@@ -56,6 +56,7 @@ The checks are deterministic and cover promises, not taste. Whether the three di
 | `premium` | Existing self-authored light-brand HTML catalogue | One B refinement: real before/after style budgets, unchanged brand/task/A/C/selection, one undo |
 | `ledger-pick` | The brand-locked `ledger` project, two turns | Generation and pick preserve brand naming and validate only generated extension layers |
 | `harbor-chain` | The `harbor` project, six turns | The loop after generation: pick, design system, apply, undo, and new work on the confirmed system. See below |
+| `native-vite` | Workshop Ledger: original alias/define, provider, role-aware business hook, global CSS and local asset | Prepared two-turn fixture; baseline browser checks pass, but native host capture/grading is not wired yet. Do not count it as native delivery acceptance. |
 
 A fixture is a `project/` folder and a `fixture.json` with `description`, `prompt` and optional `locked: {file, fonts}`. Keep fixtures small and written by us.
 

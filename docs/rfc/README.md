@@ -13,5 +13,6 @@
 | [008 · 改定位：以设计灵感为主](008-inspiration-first-repositioning.md) | 已接受，P1–P3 已实施，本地验证通过；待审阅/合并 | RFC-003、004、005 |
 | [009 · 确认设计系统与应用到已有方向的边界](009-design-system-adoption.md) | 已实现，Codex 真实链通过；Claude/视觉待验 | RFC-006、007；PR #150 |
 | [010 · 比较页区域点选与公开代码检查页](010-region-selection-and-public-checks.md) | 具体提案，待维护者分别选择 | TODO 产品项；RFC-001、003、007 |
+| [011 · 原生 Vite 预览与交付实测矩阵](011-native-vite-delivery-evaluation.md) | 执行设计草案，未验收 | PRD-003；Issue #19 |
 
 RFC 记录设计决策与约束，PRD 记录验收要求；实现状态以对应 Issue 和验证证据为准。
