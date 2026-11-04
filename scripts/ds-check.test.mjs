@@ -45,6 +45,7 @@ test('unused tokens: reached directly or through a used token, otherwise listed'
   const system = ':root{--p-green-600:#395a3b;--p-green-200:#cbd7bf;--color-accent:var(--p-green-600);--space-4:16px;--z-toast:500}';
   assert.deepEqual(unusedTokens([system], ['.btn{background:var(--color-accent);padding:var( --space-4)}']), ['--p-green-200', '--z-toast']);
   assert.deepEqual(unusedTokens([system], []), ['--p-green-600', '--p-green-200', '--color-accent', '--space-4', '--z-toast']);
+  assert.deepEqual(unusedTokens([{ source: ':root{--brand-color:#111;--brand-unused:8px}', origin: 'brand' }, ':root{--space-4:16px;--button-fg:var(--brand-color)}'], ['a{color:var(--button-fg)}']), ['--space-4']);
 });
 
 test('the CLI fails on unused tokens only when asked to check them', () => {

@@ -29,3 +29,9 @@ Pending: final helper/package/website checks; complete six-turn harbor-chain on 
 ### Deterministic checkpoint
 
 Final pre-eval helper and grader invocation (`node --test scripts/*.test.mjs evals/grade.test.mjs`): **91 passed**. Packaging (`python3 scripts/plugin-package.test.py`): **4 passed**. Website tests after adding the Chinese changelog block: **67 passed**. Production build: **239 prerendered routes**, completed locally; this is not a production deployment. The later threshold test verifies that a rounded display of 4.50 cannot pass a measured value below 4.5; malformed color channels stay unsupported instead of becoming zero through JavaScript coercion. The new ledger chain also checks the expected brand file/fonts each turn and reports the skill files/word counts read across fresh CLI processes.
+
+### Real CLI attempt and follow-up
+
+The runner started `harbor-chain,ledger-pick` for Codex and Claude from implementation commit `74aa122` at `/Users/nicole/orca/variant-backlog-evidence/ds-evals` (live exec session 54084). Claude's six harbor turns all returned the same account-level HTTP 403 authentication/verification failure, with zero reported model cost and no generated artifact. This is an external prerequisite failure, not a model-quality or implementation pass. Codex's actual processes are still running; no restart was made after initial model-list timeouts because the same process later progressed.
+
+A follow-up to the unused-token check excludes original brand tokens from the remove-or-use list while retaining reachability through them. Brand files are locked and cannot be trimmed to a single preview's inventory. The new brand regression and all ten ds-check tests passed. This follow-up was made after the real runner had copied `74aa122`; the current run does not prove this later delta, which has its own direct helper regression. Do not label the entire current tree as real-CLI verified from the older install.

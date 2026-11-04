@@ -86,11 +86,11 @@ export const contrastIssues = (sources, min = 4.5) => checkSystem(sources, min).
 
 // Tokens the system defines that no consumer reaches: used directly with var(--x), or through a used token's value.
 export function unusedTokens(sources, consumers) {
-  const defined = new Map([...tokenMap(sources)].map(([name, token]) => [name, token.values.join(' ')]));
+  const tokens = tokenMap(sources), defined = new Map([...tokens].map(([name, token]) => [name, token.values.join(' ')]));
   const refs = text => [...String(text).matchAll(/var\(\s*(--[\w-]+)/g)].map(m => m[1]);
   const used = new Set(), queue = consumers.flatMap(refs);
   while (queue.length) { const name = queue.pop(); if (used.has(name)) continue; used.add(name); queue.push(...refs(defined.get(name) ?? '')); }
-  return [...defined.keys()].filter(name => !used.has(name));
+  return [...defined.keys()].filter(name => tokens.get(name).origin !== 'brand' && !used.has(name));
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href) {
@@ -108,7 +108,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process
     if (!files.length && !brands.length || useRequested && !users.length) throw new Error('Supply system files and at least one consumer after --used-by');
     const sources = [...brands.map(f => ({ source: fs.readFileSync(f, 'utf8'), origin: 'brand' })), ...files.map(f => fs.readFileSync(f, 'utf8'))];
     const report = checkSystem(sources), { issues, unverified, layers, checked } = report;
-    const unused = useRequested ? unusedTokens(sources.map(s => typeof s === 'string' ? s : s.source), users.map(f => fs.readFileSync(f, 'utf8'))) : [];
+    const unused = useRequested ? unusedTokens(sources, users.map(f => fs.readFileSync(f, 'utf8'))) : [];
     if (json) console.log(JSON.stringify({ ...report, ...(useRequested ? { unused } : {}) }, null, 2));
   else {
     for (const i of issues) console.log(`✗ ${i.text} on ${i.surface} is ${i.ratio}:1, below ${i.min}:1 for text`);
