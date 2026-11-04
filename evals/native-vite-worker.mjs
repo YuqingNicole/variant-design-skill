@@ -12,13 +12,15 @@ try {
   if (mode === 'serve') {
     // Vite treats configured port 0 as its default port. Node's HTTP listener owns a real
     // ephemeral loopback port; Vite's documented middleware API retains the project config.
-    server = await vite.createServer({ root: project, configFile: config, clearScreen: false, server: { middlewareMode: true, hmr: false, open: false } });
-    http = createServer(server.middlewares);
+    http = createServer();
+    await new Promise((resolve, reject) => { http.once('error', reject); http.listen(0, '127.0.0.1', resolve); });
+    const port = http.address().port;
+    server = await vite.createServer({ root: project, configFile: config, clearScreen: false, server: { middlewareMode: true, watch: null, hmr: { server: http, host: '127.0.0.1', port, clientPort: port }, open: false } });
+    http.on('request', server.middlewares);
     let stopping = false;
     const stop = async () => { if (stopping) return; stopping = true; http.closeAllConnections(); await Promise.all([new Promise(resolve => http.close(resolve)), server.close()]); process.exit(0); };
     process.on('SIGTERM', stop); process.on('disconnect', stop);
-    await new Promise((resolve, reject) => { http.once('error', reject); http.listen(0, '127.0.0.1', resolve); });
-    process.send({ url: `http://127.0.0.1:${http.address().port}/`, version });
+    process.send({ url: `http://127.0.0.1:${port}/`, version, transport: 'owned HTTP/WebSocket port; file watching disabled' });
   } else if (mode === 'build') {
     await vite.build({ root: project, configFile: config, clearScreen: false, build: { outDir: destination, emptyOutDir: false } });
     process.send({ version });

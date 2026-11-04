@@ -95,8 +95,8 @@ async function exercise(page, data) {
   };
   const total = async cents => { await page.waitForFunction(value => document.querySelector('[data-testid="open-total"]')?.textContent === value, amount(cents)); };
   await name(data.north.name); await records(data.north.invoices); await total(204000);
-  need((await page.getByTestId('workspace-role').innerText()).includes('Owner'), 'North workspace must be owner');
-  const search = page.getByRole('textbox', { name: 'Search invoices', exact: true }), status = page.getByRole('combobox', { name: 'Status', exact: true });
+  need((await page.getByTestId('workspace-role').innerText()).toLowerCase().includes('owner'), 'North workspace must be owner');
+  const search = page.getByLabel('Search invoices', { exact: true }), status = page.getByRole('combobox', { name: 'Status', exact: true });
   // Reach the real search control with keyboard navigation, rather than focus() alone.
   for (let i = 0; i < 15 && !await search.evaluate(e => e === document.activeElement); i++) await page.keyboard.press('Tab');
   need(await search.evaluate(e => e === document.activeElement), 'Search is not reachable by Tab');
@@ -105,27 +105,33 @@ async function exercise(page, data) {
   await status.selectOption('paid'); await count(0); need(await page.getByTestId('empty-state').isVisible(), 'Combined filters need a visible empty state');
   await status.selectOption('all'); await search.fill(''); await records(data.north.invoices);
   await page.getByRole('button', { name: 'Mark N-104 paid', exact: true }).click();
-  await total(84000); need((await row('N-104').getByTestId('invoice-status').innerText()).trim() === 'Paid', 'Owner payment state did not update');
+  await total(84000); need((await row('N-104').getByTestId('invoice-status').innerText()).trim().toLowerCase() === 'paid', 'Owner payment state did not update');
   const picker = page.getByRole('combobox', { name: 'Workspace', exact: true });
   await picker.selectOption('south'); await name(data.south.name); await records(data.south.invoices); await total(140000);
-  need((await page.getByTestId('workspace-role').innerText()).includes('Read only'), 'South workspace must be read only');
+  need((await page.getByTestId('workspace-role').innerText()).toLowerCase().includes('read only'), 'South workspace must be read only');
   for (const item of data.south.invoices.filter(i => i.status === 'open')) {
     const action = page.getByRole('button', { name: `Mark ${item.id} paid`, exact: true });
     need(await action.count() === 0 || await action.isDisabled(), 'Viewer must not have an enabled payment action');
   }
   await picker.selectOption('north'); await name(data.north.name); await total(84000);
-  need((await row('N-104').getByTestId('invoice-status').innerText()).trim() === 'Paid', 'Workspace return lost payment state');
+  need((await row('N-104').getByTestId('invoice-status').innerText()).trim().toLowerCase() === 'paid', 'Workspace return lost payment state');
   need(await workspace.isVisible(), 'Workspace name must remain visible');
+  return { searchType: await search.getAttribute('type') ?? 'text' };
 }
 
 function observePage(page, base) {
-  const errors = [], failedRequests = [], warnings = [], implicitIcon = url => url === new URL('favicon.ico', base).href;
+  const errors = [], failedRequests = [], warnings = [], webSockets = [], implicitIcon = url => url === new URL('favicon.ico', base).href;
   page.on('pageerror', error => errors.push(error.message));
   // Keep the optional implicit favicon warning visible without hiding application resource errors.
   page.on('console', message => { if (message.type() === 'error') (implicitIcon(message.location().url) ? warnings : errors).push(`${message.text()} ${message.location().url}`); });
   page.on('response', response => { if (response.status() >= 400) (response.status() === 404 && implicitIcon(response.url()) ? warnings : errors).push(`HTTP ${response.status()}: ${response.url()}`); });
   page.on('requestfailed', request => failedRequests.push(`${request.url()}: ${request.failure()?.errorText}`));
-  return { errors, failedRequests, warnings };
+  page.on('websocket', socket => {
+    const url = new URL(socket.url()); url.search = '';
+    const observation = { url: url.href, connected: false }; webSockets.push(observation);
+    socket.on('framereceived', frame => { try { if (JSON.parse(String(frame.payload)).type === 'connected') observation.connected = true; } catch {} });
+  });
+  return { errors, failedRequests, warnings, webSockets };
 }
 
 export async function captureNativeVite(project, { out, browser, manifest, original = false, data, cssMarker, variants = ids, expectedVariant } = {}) {
@@ -156,15 +162,15 @@ export async function captureNativeVite(project, { out, browser, manifest, origi
     server = await viteProcess(project, 'vite.config.ts');
     for (const width of widths) {
       for (const id of original ? ['original'] : variants) {
-        const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce' }), { errors, failedRequests, warnings } = observePage(page, server.url);
+        const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce' }), { errors, failedRequests, warnings, webSockets } = observePage(page, server.url);
         page.setDefaultTimeout(5000);
-        const sample = { id, width, url: new URL(original ? 'index.html' : spec.entries[id], server.url).href, task: false, identity: original, errors, failedRequests, warnings };
+        const sample = { id, width, url: new URL(original ? 'index.html' : spec.entries[id], server.url).href, task: false, identity: original, errors, failedRequests, warnings, webSockets };
         try {
           await page.goto(sample.url, { waitUntil: 'load', timeout: 15000 });
           await page.getByTestId('workspace-name').waitFor();
           sample.markers = await page.locator('[data-native-variant]').evaluateAll(nodes => nodes.filter(node => { const box = node.getBoundingClientRect(), style = getComputedStyle(node); return box.width > 0 && box.height > 0 && style.visibility !== 'hidden'; }).map(node => node.getAttribute('data-native-variant')));
           if (!original || expectedVariant) sample.identity = sample.markers.length > 0 && sample.markers.every(value => value === (expectedVariant ?? id));
-          await exercise(page, data); sample.task = true;
+          sample.controls = await exercise(page, data); sample.task = true;
           sample.heading = await page.locator('h1').innerText();
           sample.brand = await page.evaluate(() => {
             const body = getComputedStyle(document.body), heading = document.querySelector('h1'), logo = document.querySelector('img[alt="Workshop mark"]');
@@ -198,7 +204,7 @@ export async function captureNativeVite(project, { out, browser, manifest, origi
       }
     }
     const changed = Object.keys(fingerprint).filter(file => hash(existing(project, file)) !== fingerprint[file]);
-    const report = { source: 'host Playwright / original project Vite', environment: { browser: browser.version(), vite: server.version, node: process.version }, fingerprint, changed, checks, samples, compare };
+    const report = { source: 'host Playwright / original project Vite', environment: { browser: browser.version(), vite: server.version, transport: server.transport, node: process.version }, fingerprint, changed, checks, samples, compare };
     fs.writeFileSync(path.join(out, 'report.json'), JSON.stringify(report, null, 2) + '\n', { flag: 'wx' });
     return report;
   } finally {

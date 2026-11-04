@@ -25,7 +25,7 @@ function generatedProject(name) {
   const spec = { schemaVersion: 1, compare: '.variant-work/native/compare.html', entries: {}, buildConfig: '.variant-work/native/vite.config.ts', typecheckConfig: '.variant-work/native/tsconfig.json', adapterFiles: [], dependencies: ['src/workspace.tsx', 'src/workspaces.json', 'src/global.css', 'src/workshop-mark.svg', 'vite.config.ts', 'tsconfig.json'] };
   for (const id of ['A', 'B', 'C']) {
     const entry = `Variant${id}.tsx`; context.variants[id] = { entry, files: [entry], version: 1, tokens: { fonts: ['Arial', 'Georgia'] }, history: [], undo: [] };
-    write(project, `variant-output/${entry}`, fs.readFileSync(path.join(base, 'src/App.tsx'), 'utf8').replace('<main className="desk">', `<main className="desk" data-native-variant="${id}">`));
+    write(project, `variant-output/${entry}`, fs.readFileSync(path.join(base, 'src/App.tsx'), 'utf8').replace('<main className="desk">', `<main className="desk" data-native-variant="${id}">`).replace('<input aria-label="Search invoices"', '<input type="search" aria-label="Search invoices"').replace("'Owner':'Read only'", "'OWNER':'READ ONLY'").replace("'Paid':'Open'", "'PAID':'OPEN'"));
     spec.entries[id] = `.variant-work/native/${id}.html`;
     write(project, spec.entries[id], `<!doctype html><html lang="en"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Direction ${id}</title><body><div id="root"></div><script type="module" src="./${id}.tsx"></script></body></html>`);
     write(project, `.variant-work/native/${id}.tsx`, `import {createRoot} from 'react-dom/client';import {WorkspaceProvider} from '@/workspace';import App from '../../variant-output/${entry.slice(0, -4)}';import '@/global.css';createRoot(document.getElementById('root')!).render(<WorkspaceProvider><App/></WorkspaceProvider>);`);
@@ -79,6 +79,8 @@ test('real history, browser integration and rollback replay preserve the origina
   expect(report.originalAfter).toEqual(report.originalBefore);
   expect(report.captures.draft.samples.every(s => s.heading.endsWith('— Draft'))).toBe(true);
   expect(report.captures.integrated.samples.every(s => s.identity && s.task)).toBe(true);
+  expect(report.captures.integrated.samples.every(s => s.controls.searchType === 'search')).toBe(true);
+  for (const capture of Object.values(report.captures)) for (const sample of capture.samples) expect(sample.webSockets.some(socket => socket.connected && new URL(socket.url).port === new URL(sample.url).port)).toBe(true);
   await expect(replayNativeDelivery(input.project, { generated: input.generated, baseline: input.baseline, browser, out: path.join(root, 'positive-replay') })).rejects.toThrow(/Preserve existing/);
 });
 

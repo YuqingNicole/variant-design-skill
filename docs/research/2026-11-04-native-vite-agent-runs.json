@@ -114,13 +114,133 @@
         "Post-delivery preview typecheck included staging source with destination-relative imports and failed TS2307.",
         "Original reports remain failed; corrective host/fixture validation requires a fresh separately recorded run."
       ]
+    },
+    {
+      "implementation": "98756c4b1fa80a56460b4992b90529d5f5f3404c",
+      "fixture": "native-vite",
+      "agent": "codex",
+      "rawEvidence": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-98756c4",
+      "pass": false,
+      "seconds": 464,
+      "checks": {
+        "passed": 34,
+        "total": 45,
+        "failed": [
+          "native:generate-tasks",
+          "native:generate-brand-assets",
+          "native:generate-no-overflow",
+          "native:deliver-tasks",
+          "native:deliver-brand-assets",
+          "native:deliver-no-overflow",
+          "native:probe-tasks",
+          "native:probe-brand-assets",
+          "native:probe-no-overflow",
+          "native:original-dependencies-reused",
+          "native:delivery-replayed"
+        ]
+      },
+      "turns": [
+        {
+          "id": "generate",
+          "transcript": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-98756c4/native-vite-codex.generate.jsonl",
+          "exit": 0,
+          "seconds": 146,
+          "timedOut": false,
+          "selectedVariant": null,
+          "designSystem": {
+            "confirmed": true,
+            "file": "src/global.css",
+            "fonts": [
+              "Georgia",
+              "Arial"
+            ]
+          },
+          "drift": {
+            "A": 0,
+            "B": 0,
+            "C": 0
+          }
+        },
+        {
+          "id": "deliver",
+          "transcript": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-98756c4/native-vite-codex.deliver.jsonl",
+          "exit": 0,
+          "seconds": 99,
+          "timedOut": false,
+          "selectedVariant": null,
+          "designSystem": {
+            "confirmed": true,
+            "file": "src/global.css",
+            "fonts": [
+              "Georgia",
+              "Arial"
+            ]
+          },
+          "drift": {
+            "A": 0,
+            "B": 0,
+            "C": 0
+          }
+        }
+      ],
+      "reading": {
+        "words": 16700,
+        "files": [
+          "SKILL.md",
+          "references/domains/dashboard.md",
+          "references/workflow/project-discovery.md",
+          "skills/shared/code-output.md",
+          "skills/variant-generate/ROUTE.md",
+          "references/workflow/history.md",
+          "references/workflow/preview.md",
+          "references/workflow/project-context.md",
+          "skills/shared/export.md"
+        ],
+        "turns": [
+          {
+            "turn": "generate",
+            "files": [
+              "SKILL.md",
+              "references/domains/dashboard.md",
+              "references/workflow/project-discovery.md",
+              "skills/shared/code-output.md",
+              "skills/variant-generate/ROUTE.md"
+            ],
+            "words": 6302
+          },
+          {
+            "turn": "deliver",
+            "files": [
+              "SKILL.md",
+              "references/workflow/history.md",
+              "references/workflow/preview.md",
+              "references/workflow/project-context.md",
+              "references/workflow/project-discovery.md",
+              "skills/shared/code-output.md",
+              "skills/shared/export.md",
+              "skills/variant-generate/ROUTE.md"
+            ],
+            "words": 10398
+          }
+        ]
+      },
+      "usage": {
+        "tokens": 624111
+      },
+      "interpretation": [
+        "Formal output, ownership, actual history/integration receipts and source preservation passed.",
+        "Overall original report remains failed: the host required textbox and did not accept a valid type=search searchbox.",
+        "Corrected-host audit below independently observes the exact preserved source versions; the original report is not rewritten."
+      ]
     }
   ],
   "nativeAcceptance": false,
   "remaining": [
-    "Fresh real installed-skill generate/deliver run",
-    "Actual generated source/render/staging audit",
-    "Human visual approval and full #19 scope"
+    "Exact corrected-head CI",
+    "Maintainer visual approval",
+    "Claude account verification gap retained",
+    "Complete shared-import discovery, first-class phase archives/receipts and safe preview cleanup ownership",
+    "Full #19 and other backlog points"
   ],
   "correctionValidation": {
     "at": "2026-11-04T14:05:37.486Z",
@@ -222,5 +342,435 @@
       "tests/native-vite-eval.spec.mjs": "031e86f11db0900b498e1d15855d23f0311046b9da188a1b5c902e36b4c800f6",
       "tests/native-delivery-eval.spec.mjs": "46c6e50b97f97fe9e2f94e30ea47c970d0ddb89d2cf1443fc072cb3d81d9134e"
     }
+  },
+  "correctedHostAudit": {
+    "kind": "Corrected-host audit of preserved real Agent output; no additional Agent call",
+    "sourceImplementation": "98756c4b1fa80a56460b4992b90529d5f5f3404c",
+    "rawEvidence": "/Users/nicole/orca/variant-backlog-evidence/native-agent-audit-98756c4-rolefix",
+    "pass": true,
+    "passed": 45,
+    "total": 45,
+    "hostSeconds": 87,
+    "additionalAgentCalls": 0,
+    "originalReportUnchanged": true,
+    "versionProof": {
+      "source": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-98756c4/native-vite-codex",
+      "archive": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-98756c4/native-vite-codex.native/probe/project",
+      "restoredOnlyInNewCopy": [
+        "src/workspace.tsx",
+        "src/workspaces.json",
+        "src/global.css"
+      ],
+      "generationFingerprint": {
+        ".gitignore": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+        ".variant-work/A.html": "6f1319f3c1882592ba29bc73071af04b50de8714c58477e0cf137f157a3d20a2",
+        ".variant-work/A.tsx": "64936571196157d203c7a9283242d512a0a390a16b99505381b4f922168e66ad",
+        ".variant-work/B.html": "c12804cd83d42df584ccdc9c3602fa72c5eba313df707a23e2cfa0a2c896a643",
+        ".variant-work/B.tsx": "af9a3d3a208942788e5ff63258986d2bec3ca877d196abaab878ea2f519fe597",
+        ".variant-work/C.html": "1c3c00c3b371cbdc07d50f68329d5630b97dbeed83f6c65ec59e0066e0e3be09",
+        ".variant-work/C.tsx": "e8f0dd2b32ac5a5b9b55cc1449587117a748ec61f452fbfd9201d481f32dce7c",
+        ".variant-work/compare.html": "f80fdee654bb65f8a9aaafbe369a4051e94315dc8a23dee183afcb6605a41c3c",
+        ".variant-work/native-preview.json": "53e659d3489dda0d3e921de43bd00242cb773db030c31b190241d31b0dd981d1",
+        ".variant-work/tsconfig.json": "399c61272af79ad201513cbaa87a3d0967e554e627964f8d6431ddc23a9274c8",
+        ".variant-work/vite.config.ts": "97a35d22f58e6015fac3f136f4d81c615273acd53e570a12eb6c759168dd0419",
+        "README.md": "34ed7ce35b7a59435ed58cad1789e4afdd9c63c15d2d475efb1e1cd1d82017fa",
+        "index.html": "e3e3a005fda725f4ff43318fd9ca462ffdd02d44b634e5d385c6f943b4859c1c",
+        "package-lock.json": "b7e255cedc4e87c30e511c00c58630284552185e1e2ae74c5b0452b4e86e9eee",
+        "package.json": "bbb5f377c66b66d3166819c85afc143510aa844dab1b8df36ef2afb57e5046b6",
+        "src/App.tsx": "bacf448b6fdd2197daab74d59a1f1bd483890969539581bf634e5c9c33883418",
+        "src/global.css": "957a2174fc6944427f628db8b84ef3af1146998218a8ae6c0022da50563534a3",
+        "src/main.tsx": "47b1b11f3bc5e2d8cb98868d7b89feb3dd164702335a2ea2711fd265ad6c7a7d",
+        "src/vite-env.d.ts": "03a0b5541d3a73147656cf928e93acf941140420468e5019f11dfe133c008125",
+        "src/workshop-mark.svg": "484f59864f0d8c07a6a7bc83fa99876908faa335476b5a6dfdb36368db2a440b",
+        "src/workspace.tsx": "a88f2698079f4ba92eb0940609ac736a5148619976d0bc2b93df6eb4c2479113",
+        "src/workspaces.json": "789b396643af6839ed28c51a9ae6dc102f11eeb0c329c6dccb67536740133626",
+        "tsconfig.json": "2c4d1b6a543493b1847130e5050dc82ca18b60cdb9189c1fbfa50645a0e43072",
+        "variant-output/.variant-context.json": "ad4850e0fd8fa0c50132ba9988dd33f7872e1006f379a630806f1e923b1f402c",
+        "variant-output/VariantA.css": "75e5cb4742a341d3318ab82ef9e1d116bb646a3afdbd505bcb9b90fb7d0b4deb",
+        "variant-output/VariantA.tsx": "810fbd24aba6621d5a4659ae887adc736b3ea34bff6489fb6773f062976404e8",
+        "variant-output/VariantB.css": "7fc4e6a8e01d807551ecdc759f1d3b5e1f95b648664301147bd13e24e224f33c",
+        "variant-output/VariantB.tsx": "3f43d82614670c07f26721e14d8a569f656ea176b07cd0307e9f8b64ae587c8c",
+        "variant-output/VariantC.css": "7aa9daef39714e8f58576680d080a5edbba511309736bec5e66818e7a0c64e60",
+        "variant-output/VariantC.tsx": "b1b55c7be145cf5b4eaef7e95c43aac732e75be4b96e438b1104387ab5872fb3",
+        "variant-preview.html": "caca50b3e1d81ecd9b3315a125b9e75f8eaa6f933cf20362dbf5ce97d8cec3ff",
+        "vite.config.ts": "3675fd2dd48062e36308f1ee4350d4623cd647a4bb3ace1a50030cd2a54d96af"
+      },
+      "deliveryFingerprint": {
+        ".gitignore": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+        ".variant-work/A.html": "6f1319f3c1882592ba29bc73071af04b50de8714c58477e0cf137f157a3d20a2",
+        ".variant-work/A.tsx": "64936571196157d203c7a9283242d512a0a390a16b99505381b4f922168e66ad",
+        ".variant-work/B.html": "c12804cd83d42df584ccdc9c3602fa72c5eba313df707a23e2cfa0a2c896a643",
+        ".variant-work/B.tsx": "af9a3d3a208942788e5ff63258986d2bec3ca877d196abaab878ea2f519fe597",
+        ".variant-work/C.html": "1c3c00c3b371cbdc07d50f68329d5630b97dbeed83f6c65ec59e0066e0e3be09",
+        ".variant-work/C.tsx": "e8f0dd2b32ac5a5b9b55cc1449587117a748ec61f452fbfd9201d481f32dce7c",
+        ".variant-work/compare.html": "f80fdee654bb65f8a9aaafbe369a4051e94315dc8a23dee183afcb6605a41c3c",
+        ".variant-work/native-preview.json": "33e319e773af27eb738dbf86e2b12870f8d213325d3191ecf7ffcda9f8227348",
+        ".variant-work/tsconfig.json": "c0aac9c0b82303e4022d5e765c2f5d415d03ed39d6f5708dad5f448aa068692c",
+        ".variant-work/vite.config.ts": "97a35d22f58e6015fac3f136f4d81c615273acd53e570a12eb6c759168dd0419",
+        "README.md": "34ed7ce35b7a59435ed58cad1789e4afdd9c63c15d2d475efb1e1cd1d82017fa",
+        "index.html": "e3e3a005fda725f4ff43318fd9ca462ffdd02d44b634e5d385c6f943b4859c1c",
+        "package-lock.json": "b7e255cedc4e87c30e511c00c58630284552185e1e2ae74c5b0452b4e86e9eee",
+        "package.json": "bbb5f377c66b66d3166819c85afc143510aa844dab1b8df36ef2afb57e5046b6",
+        "src/App.tsx": "bacf448b6fdd2197daab74d59a1f1bd483890969539581bf634e5c9c33883418",
+        "src/global.css": "957a2174fc6944427f628db8b84ef3af1146998218a8ae6c0022da50563534a3",
+        "src/main.tsx": "47b1b11f3bc5e2d8cb98868d7b89feb3dd164702335a2ea2711fd265ad6c7a7d",
+        "src/vite-env.d.ts": "03a0b5541d3a73147656cf928e93acf941140420468e5019f11dfe133c008125",
+        "src/workshop-mark.svg": "484f59864f0d8c07a6a7bc83fa99876908faa335476b5a6dfdb36368db2a440b",
+        "src/workspace.tsx": "a88f2698079f4ba92eb0940609ac736a5148619976d0bc2b93df6eb4c2479113",
+        "src/workspaces.json": "789b396643af6839ed28c51a9ae6dc102f11eeb0c329c6dccb67536740133626",
+        "tsconfig.json": "2c4d1b6a543493b1847130e5050dc82ca18b60cdb9189c1fbfa50645a0e43072",
+        "variant-output/.variant-context.json": "042a2331573ddc7eb6a3cfd846ab508fd4c823da1c73b931dc4884812ac18d90",
+        "variant-output/VariantA.css": "75e5cb4742a341d3318ab82ef9e1d116bb646a3afdbd505bcb9b90fb7d0b4deb",
+        "variant-output/VariantA.tsx": "810fbd24aba6621d5a4659ae887adc736b3ea34bff6489fb6773f062976404e8",
+        "variant-output/VariantB.css": "7fc4e6a8e01d807551ecdc759f1d3b5e1f95b648664301147bd13e24e224f33c",
+        "variant-output/VariantB.tsx": "3f43d82614670c07f26721e14d8a569f656ea176b07cd0307e9f8b64ae587c8c",
+        "variant-output/VariantC.css": "7aa9daef39714e8f58576680d080a5edbba511309736bec5e66818e7a0c64e60",
+        "variant-output/VariantC.tsx": "b1b55c7be145cf5b4eaef7e95c43aac732e75be4b96e438b1104387ab5872fb3",
+        "variant-preview.html": "caca50b3e1d81ecd9b3315a125b9e75f8eaa6f933cf20362dbf5ce97d8cec3ff",
+        "vite.config.ts": "3675fd2dd48062e36308f1ee4350d4623cd647a4bb3ace1a50030cd2a54d96af"
+      },
+      "originalResultSha256": "ab7087d40ca7448d58931e901c9973840bcd4f0482cf76a51549e1c97823f532",
+      "transcripts": {
+        "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-98756c4/native-vite-codex.generate.jsonl": "0f63602f77e19e0b02141fc82c8c42018f87a5d34a91ea632317df277717704d",
+        "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-98756c4/native-vite-codex.deliver.jsonl": "bc59c5f02ea4537c08770a87b1d98cd56fa34917b020b4a64e57bfe6001d00b3"
+      },
+      "hostSha256": {
+        "evals/native-vite.mjs": "5277d363b69a40007738318c58112544b5a0a947d83298dfac955b332ca2507f",
+        "evals/native-vite-worker.mjs": "862cc53cf7ffa0b2aec67ae745594887a5904d7fca98106f9018902258c5d3cd",
+        "evals/native-delivery.mjs": "f1cca5c69831e59d844b2bdb97d478e826564410d996e92ccd4c74e028c2f2b5",
+        "evals/grade.mjs": "704780a767c6f0fd3f33c2963f831b9bc30cfe775f2fda925f9532a3d59bf271"
+      }
+    },
+    "helperIdentity": {
+      "at": "2026-11-04T14:31:23.150Z",
+      "pass": true,
+      "records": [
+        {
+          "file": "variant-history.mjs",
+          "hostSha256": "b5e65163748ab0ec9a6ce4cf41c00ecbeab7f1b1e110cfa68fa4d2a8b8ed13b3",
+          "installedSha256": "b5e65163748ab0ec9a6ce4cf41c00ecbeab7f1b1e110cfa68fa4d2a8b8ed13b3"
+        },
+        {
+          "file": "variant-integrate.mjs",
+          "hostSha256": "5bdc3b952210217ff1c471599afeeb2946132cf1d428d35e87bf6c600c6a4ba1",
+          "installedSha256": "5bdc3b952210217ff1c471599afeeb2946132cf1d428d35e87bf6c600c6a4ba1"
+        }
+      ]
+    },
+    "checks": [
+      {
+        "id": "generate:agent-completed",
+        "pass": true,
+        "details": [
+          "exit 0; timed out: false"
+        ]
+      },
+      {
+        "id": "generate:delivery-check",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate:brand-kept",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate:quality-gate",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate:generator-habits",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate:generated",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate:not-selected",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "deliver:agent-completed",
+        "pass": true,
+        "details": [
+          "exit 0; timed out: false"
+        ]
+      },
+      {
+        "id": "deliver:delivery-check",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "deliver:brand-kept",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:baseline-observed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:baseline-tasks",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:baseline-brand-assets",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:baseline-no-overflow",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:baseline-build-typecheck",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:baseline-build-coverage",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:baseline-fresh",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:generate-observed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:generate-tasks",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:generate-brand-assets",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:generate-no-overflow",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:generate-build-typecheck",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:generate-build-coverage",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:generate-fresh",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:generate-comparison",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:deliver-observed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:deliver-tasks",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:deliver-brand-assets",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:deliver-no-overflow",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:deliver-build-typecheck",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:deliver-build-coverage",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:deliver-fresh",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:deliver-comparison",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:probe-observed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:probe-tasks",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:probe-brand-assets",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:probe-no-overflow",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:probe-build-typecheck",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:probe-build-coverage",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:probe-fresh",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:probe-comparison",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:original-dependencies-reused",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "native:delivery-replayed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "project-untouched",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "skill-under-test",
+        "pass": true,
+        "details": [
+          "generate: read the copy under test 22 time(s)",
+          "deliver: read the copy under test 32 time(s)"
+        ]
+      }
+    ],
+    "replayChecks": [
+      {
+        "id": "recorded-delivery",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "source-identity",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "undo-drift-refused",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "history-replayed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "stale-integration-refused",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "rollback-drift-refused",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "integration-replayed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "original-restored",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "source-project-unchanged",
+        "pass": true,
+        "details": []
+      }
+    ],
+    "sourceProjectUnchanged": true,
+    "generatingProbeRestoreScope": [
+      "src/workspace.tsx",
+      "src/workspaces.json",
+      "src/global.css"
+    ],
+    "auditScript": "/Users/nicole/orca/variant-backlog-evidence/native-agent-audit-98756c4-rolefix/audit-source.mjs",
+    "auditScriptSha256": "7364126eb634ad28cf81e4a3c928aa7ee33ba35a208d558204e7a91d2d00a987",
+    "screenshotsInspected": [
+      "generate/A-1440.png",
+      "generate/B-1440.png",
+      "generate/C-1440.png",
+      "replay/integrated/original-390.png"
+    ],
+    "sourceReview": "A/B/C use original useDesk/money/data/SVG and separate owned TSX/CSS. Retained staging imports the actual VariantB; original provider remains in main.tsx. B version 1→apply 2→undo 3; A/C version 1; selectedVariant null."
+  },
+  "nativeMechanicalAcceptance": true,
+  "acceptanceScope": "One self-authored Vite case is mechanically verified. Full RFC/issue acceptance still requires human visual approval and remaining scope; original CLI failures remain recorded.",
+  "latestHostValidation": {
+    "chromeCases": {
+      "passed": 8,
+      "failed": 0,
+      "reportedDuration": "5.0m"
+    },
+    "graderTests": {
+      "passed": 14,
+      "failed": 0
+    },
+    "packageChecks": {
+      "passed": 4,
+      "failed": 0
+    },
+    "rawEvidence": "/Users/nicole/orca/variant-backlog-evidence/native-transport-final/",
+    "focus": "Text and search input accessibility labels, uppercase role/payment presentation, actual own-port WebSocket connected frames, nested/conflicting identities and all native delivery guards"
   }
 }

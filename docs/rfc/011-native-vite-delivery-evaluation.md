@@ -2,7 +2,7 @@
 
 状态：执行设计草案，未验收。范围来自 #19 / PRD-003 的既有首期要求；本文不新增框架支持承诺，也不替代真实运行记录。
 
-执行进展：已接入宿主原生预览、真实类型检查/构建覆盖、独立副本依赖探针，以及接入/历史/回滚重放。手写回归与真实 Agent 两轮运行分别验收；缺少这些证据时，整体评分明确失败。准备与预览记录见 `docs/research/2026-11-04-native-vite-matrix.md`，重放记录见 `docs/research/2026-11-04-native-vite-delivery-replay.md`。
+执行进展：已接入宿主原生预览、真实类型检查/构建覆盖、独立副本依赖探针，以及接入/历史/回滚重放。真实 Codex 两轮产物经版本绑定的纠正宿主复测通过 45/45；两份原始失败报告保留，维护者视觉验收与完整 #19 仍开放。准备与预览记录见 `docs/research/2026-11-04-native-vite-matrix.md`，重放及复测方法见 `docs/research/2026-11-04-native-vite-delivery-replay.md`。
 
 ## 问题与目标
 
@@ -13,7 +13,7 @@
 ## 现状与版本依据
 
 - `react-preview.mjs` / `static-preview.mjs`：覆盖可移植组件；需要原生功能时由 Agent 建立隔离入口，见 `references/workflow/preview.md`。
-- `evals/run.mjs`：安装当前工作树、记录真实 CLI 与每轮快照；`grade.mjs` 当前缺少原生 Vite 运行观察。
+- `evals/run.mjs`：安装当前工作树、记录真实 CLI 与每轮快照；现已接入原生 Vite 宿主运行观察、依赖探针与独立交付重放。
 - `project-profile.mjs`：有界词法依赖发现；alias 和语义关系仍需要 Agent 审查，不能宣称完整依赖图。
 - 复用现有 harbor fixture 的精确依赖版本：React 19.1.1、Vite 7.1.7、Rollup 4.65.1。运行时 helper 不增加依赖。
 - 2026-11-04 阅读了 Vite 官方 v7.1.7 的 [alias/root 配置](https://github.com/vitejs/vite/blob/v7.1.7/docs/config/shared-options.md)、[构建与多入口](https://github.com/vitejs/vite/blob/v7.1.7/docs/guide/build.md)、[JS API](https://github.com/vitejs/vite/blob/v7.1.7/docs/guide/api-javascript.md)。当前官网已描述 Rolldown；本 fixture 按锁定的 Vite 7 使用 Rollup 配置。dev 与 build 分进程运行，避免共享 NODE_ENV 的干扰。
