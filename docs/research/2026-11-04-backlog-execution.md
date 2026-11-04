@@ -52,3 +52,10 @@ Ego-browser space 42 inspected the actual local site. Baseline screenshots and r
 ## Next action
 
 Push the resolved P1 branch to the existing PR; start P2 from that reviewed integration base. Keep later requirements in this index until independently verified.
+
+
+### P1 follow-up review
+
+Verified the three 2026-11-04 CodeRabbit findings against current code: Chinese `/cases` prerender/client titles differed; active Motion depended on a stale address after a category change; direct reference detail lacked a current navigation link. The header now receives the current inspiration category, detail routes belong to the inspiration section, and the Chinese case title matches its prerendered title. The existing positioning browser regression now exercises category highlighter changes, direct-detail navigation and the `/cases` title, and checks the static font explanation and IPA switch.
+
+Validation: website 61 tests passed; production build passed; the focused `home leads` Chrome regression passed (1 test, port 4199 through an ignored local config). No production merge or deployment performed.
