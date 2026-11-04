@@ -732,7 +732,7 @@ test('home leads with the inspiration feed, cases have their own page, and the s
  expect(await(await request.get('/skills')).text()).toContain('"@type":"SoftwareSourceCode"');
  // The static /cases page keeps the site chrome, including the font license note the footer must carry.
  const cases=await(await request.get('/cases')).text();
- expect(cases).toContain('class="site-nav');expect(cases).toContain('href="/fonts/LICENSES.txt"');expect(cases).toContain('一个任务，三种方向。');
+ expect(cases).toContain('class="site-nav');expect(cases).toContain('IPA Font License 1.0');expect(cases).toContain('改用 IPA 原版字体');expect(cases).toContain('href="/fonts/LICENSES.txt"');expect(cases).toContain('一个任务，三种方向。');
  await page.goto('/');
  await expect(page.locator('h1')).toHaveText('互联网上最好的设计灵感。');
  await expect(page.locator('.insp-title')).toContainText('每条都附出处和我们写的笔记');
@@ -741,13 +741,15 @@ test('home leads with the inspiration feed, cases have their own page, and the s
  await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');
  await page.locator('.site-nav-links a',{hasText:'动效视频'}).click();
  await expect(page.getByRole('button',{name:'Best practice',exact:true})).toHaveAttribute('aria-pressed','true');
+ await page.getByRole('button',{name:'全部',exact:true}).click();await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a',{hasText:'动效视频'})).not.toHaveAttribute('aria-current','page');
  for(const [group,links] of [['Variant Design 技能',['/docs','/about','/pricing','/changelog','/lab']],['资源',['/skills','/guides','/submit']]])
   for(const href of links)await expect(page.getByRole('navigation',{name:group}).locator(`a[href="${href}"]`)).toHaveCount(1);
  await page.goto('/?utm_source=practice');
  await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a',{hasText:'动效视频'})).not.toHaveAttribute('aria-current','page');
  await page.goto('/inspiration?topic=saas-home');
  await expect(page).toHaveURL(/:\d+\/\?topic=saas-home$/);await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(10);
- await page.goto('/cases');
+ await page.goto('/inspiration/linear');await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');
+ await page.goto('/cases');await expect(page).toHaveTitle('A/B/C 案例 — Variant Design 方向库');
  await expect(page.locator('h1')).toHaveText('一个任务，三种方向。');await expect(page.locator('.library-grid .library-card')).toHaveCount(5);
  await expect(page.locator('.site-nav-links a',{hasText:'案例'})).toHaveAttribute('aria-current','page');
  await page.goto('/d/pulse');await page.locator('.content-back a').first().click();await expect(page).toHaveURL(/\/cases$/);

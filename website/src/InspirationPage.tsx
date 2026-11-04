@@ -134,7 +134,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
   {selected.length>0&&<section className="inspiration-pack" aria-labelledby="pack-title"><h2 id="pack-title">{l('pack')} ({selected.length})</h2><p>{l('packNote')}</p>{selected.map(item=><fieldset key={item.id}><legend>{item.name}</legend><label>{l('useFor')}<textarea aria-label={l('useFor')} value={selection[item.id].use} onChange={e=>updateIntent(item.id,'use',e.target.value)}/></label><label>{l('avoid')}<textarea aria-label={l('avoid')} value={selection[item.id].avoid} onChange={e=>updateIntent(item.id,'avoid',e.target.value)}/></label><button type="button" onClick={()=>toggleSelection(item.id)}>{l('remove')}</button></fieldset>)}<button className="content-button" onClick={createPack}>{l('packBrief')}</button></section>}
   {prompt&&<section ref={briefRef} tabIndex={-1} className="inspiration-brief" aria-labelledby="reference-brief-title"><h2 id="reference-brief-title">{l('takeIt')}</h2><textarea aria-label={l('briefLabel')} readOnly value={prompt} rows={6}/><button className="content-button" onClick={copy}>{l('copyBrief')}</button><button className="inspiration-dismiss" onClick={()=>{setPrompt('');setNotice('')}}>{l('dismiss')}</button><p role="status">{notice}</p></section>}
  </>;
- const header=<SiteHeader language={language} page="inspiration"/>;
+ const header=<SiteHeader language={language} page="inspiration" inspirationCategory={category}/>;
  if(open?.mode==='page'&&openItem)return <main className="content-page inspiration-page">{header}<div className="site-shell insp-page-detail">{detailView(openItem,true)}{tail}</div><SiteFooter language={language}/></main>;
  return <main className="content-page inspiration-page">{header}
   <header className="site-shell insp-head">
