@@ -1,0 +1,120 @@
+{
+  "environment": "real Codex CLI in throwaway project-level installed copies",
+  "runs": [
+    {
+      "fixture": "harbor-chain",
+      "agent": "codex",
+      "implementation": "eacfee0d4ec54721366f9317d7ee075c540499c9",
+      "pass": true,
+      "checks": 34,
+      "seconds": 843,
+      "skillWordsRead": 58503,
+      "turns": [
+        {
+          "id": "generate",
+          "exit": 0,
+          "timedOut": false,
+          "selectedVariant": null,
+          "drift": null
+        },
+        {
+          "id": "pick",
+          "exit": 0,
+          "timedOut": false,
+          "selectedVariant": "B",
+          "drift": null
+        },
+        {
+          "id": "confirm",
+          "exit": 0,
+          "timedOut": false,
+          "selectedVariant": "B",
+          "drift": {
+            "A": 9,
+            "B": 4,
+            "C": 11
+          }
+        },
+        {
+          "id": "apply",
+          "exit": 0,
+          "timedOut": false,
+          "selectedVariant": "B",
+          "drift": {
+            "A": 9,
+            "B": 0,
+            "C": 11
+          }
+        },
+        {
+          "id": "undo",
+          "exit": 0,
+          "timedOut": false,
+          "selectedVariant": "B",
+          "drift": {
+            "A": 9,
+            "B": 4,
+            "C": 11
+          }
+        },
+        {
+          "id": "component",
+          "exit": 0,
+          "timedOut": false,
+          "selectedVariant": "B",
+          "drift": {
+            "A": 9,
+            "B": 4,
+            "C": 11
+          }
+        }
+      ]
+    },
+    {
+      "fixture": "ledger-pick",
+      "agent": "codex",
+      "implementation": "eacfee0d4ec54721366f9317d7ee075c540499c9",
+      "pass": true,
+      "checks": 18,
+      "seconds": 444,
+      "skillWordsRead": 28273,
+      "turns": [
+        {
+          "id": "generate",
+          "exit": 0,
+          "timedOut": false,
+          "selectedVariant": null,
+          "drift": {
+            "A": 0,
+            "B": 2,
+            "C": 1
+          }
+        },
+        {
+          "id": "pick",
+          "exit": 0,
+          "timedOut": false,
+          "selectedVariant": "B",
+          "drift": {
+            "A": 0,
+            "B": 2,
+            "C": 1
+          }
+        }
+      ]
+    }
+  ],
+  "contrastAudit": {
+    "checked": 7,
+    "failed": 0,
+    "unverified": 0,
+    "layerErrors": 0
+  },
+  "notProven": [
+    "Claude account blocked by verification 403",
+    "Maintainer visual acceptance",
+    "Downloaded font rendering",
+    "Production deployment"
+  ],
+  "rawArtifacts": "/Users/nicole/orca/variant-backlog-evidence/ds-adoption-evals"
+}
