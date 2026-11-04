@@ -12,11 +12,11 @@ Work in `/Users/nicole/orca/variant-backlog-work` on task branches. The original
 |---|---|---|
 | Website positioning, PR #138 | Updated at `f1d6001`; local and GitHub loop/landing checks passed | Review findings fixed; final review, deployed preview and production merge remain separate |
 | Unified inspiration feed / interaction / appearance | PR #148, local and remote checks passed; preview sampled; screenshot review pending | RFC-008 P2: one chronological feed; URL filters; hover/focus/touch credits; visible-only videos; reduced motion; shared-element detail; keyboard/back/scroll; 320/390/1440 in both languages; style budget |
-| Submission and permission intake | PR #149 updated at 508d884; review fixes and focused 11 Chrome tests passed; exact loop/landing CI passed | RFC P3: media URL/file workflow, attribution, distinct usage rights, withdrawal, manual review and evaluated storage |
+| Submission and permission intake | PR #149 updated at a3929bb; exact loop/landing CI passed; APPROVED | Preview/maintainer acceptance and production permission remain separate; genuine registry stays empty |
 | Design system checks | Draft PR #150; exact CI passed; corrective Codex Harbor 34/34 and Ledger 18/18 passed; Claude account 403 | RFC-009 adoption fix, full chain rerun, Claude/account and screenshot gates; grouping default still pending |
 | Premium / adjective evals | PR #151; real Codex 18/18 passed, exact implementation CI passed | Maintainer screenshot review and merge; one controlled case is not universal taste evidence |
-| Region selection / public code checker | Needs product decision | Concrete proposal and bounded implementation after scope decision |
-| English guides and comparison page | Needs review | Five English guides reviewed, comparison facts rechecked and destination chosen |
+| Region selection / public code checker | Draft PR #152, RFC-010; two product decisions pending | Concrete scopes prepared; neither feature accepted or implemented |
+| English guides and comparison page | Agent audit and local checks complete on codex/content-review | Three revised English guides remain draft; five-guide human review, comparison terms and destination remain pending |
 | Other skill entries | Not started | Actual permitted runs, public evidence, entry content and review |
 | Design sample collection | Ongoing backlog | Watch and annotate new unique authors; preserve source and media evidence |
 | Domain / indexing / directories / GEO | Account-dependent; preparatory work available | Domain binding, redirects, Search Console indexing evidence, permitted submissions, initial ten-query measurement |
@@ -51,7 +51,7 @@ Ego-browser space 42 inspected the actual local site. Baseline screenshots and r
 
 ## Next action
 
-P2 is published as PR #148 with CI passed. Publish and inspect the verified P3 submission intake branch, then continue with RFC-007 design-system checks. Keep P1/P2 preview, reviewer and production gates explicit; later requirements remain in scope.
+Complete the content PR checkpoint, then continue independent distribution/core preparation and website style measurements. P1–P3 production permission, P4 grouping/Claude/visual gates, premium visual review, content human review and RFC-010 feature choices remain pending. Preserve those gates and all later requirements.
 
 
 ### P1 follow-up review
@@ -173,3 +173,9 @@ The next safe scope is the two unresolved feature decisions (visual region selec
 ### Feature decision proposal
 
 RFC-010 makes the region-picker and public-checker choices concrete: read-only selection of declared editable zones (HTML/Vite first, no auto selection/write), and a local-only `/checks` page using a shared Node-free scanner core. Existing comparison/scanner call paths and primary messaging/origin standards were inspected. Neither feature is implemented or chosen yet; the two decisions can be accepted independently. The full backlog remains active.
+
+### Content audit checkpoint
+
+All five guides received an agent fact/language audit. Git restore/stash/revert scope, legacy snapshot baseline and per-record media permission claims were corrected. Three revised English guides are draft; two unchanged legacy guides retain their old status without an invented approval. Actual production-mode SSR and Chrome expose the previously missing client gate and verify its fix. Website tests: 67 passed; preview build: 239 routes; production build: 236 routes; focused Chrome: 7 passed; actual production artifact route/index/hreflang/sitemap/llms assertions passed. Evidence: `2026-11-04-content-review.md`. Comparison primary documents and source license files were rechecked; its publication location, terms and English remain human gates. No production publication occurred.
+
+Remote status audit found a current-head PR #151 push run with one existing inspiration scroll regression failing on a detached prerendered element, while the PR run at the same head passed. This remains a real failed check; a semantic client-readiness wait is being validated in that branch before publication. It is unrelated to premium model scoring and is not hidden by the successful duplicate run.

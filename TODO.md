@@ -19,8 +19,8 @@
 
 ## 3. 内容：选对手还没答好的问题
 
-- [ ] 【维护者】审阅 `/guides` 的英文（5 篇）。目前由代理撰写，已经发布在 `/en/guides/...`。没审完前想先下线，就在 `guides-content.ts` 里给那篇加 `translations: { en: { status: 'draft' } }`；审完改成 `complete` 并写 `reviewedAt`。
-- [ ] 【维护者】确认对比页草稿 `docs/drafts/compare-page.md`（Impeccable、Taste Skill、frontend-design，事实已于 2026-11-02 按对方公开页面核对），决定放在 `/compare` 还是 `/guides`，确认后由代理做成页面。
+- [ ] 【维护者】审阅 `/guides` 的英文（5 篇）。2026-11-04 代理已做事实和语言初审：修正 Git、旧快照和授权说明，改写的 3 篇英文标为 `draft`，生产模式的列表与直达页面也遵守该状态；2 篇未改的旧英文保留原状态。均不算人工审定，审完改成 `complete` 并写 `reviewedAt`。审阅包见 `docs/research/2026-11-04-content-review.md`。
+- [ ] 【维护者】确认对比页草稿 `docs/drafts/compare-page.md`（Impeccable、Taste Skill、frontend-design，2026-11-04 已重新核对公开文档和源码许可证；不算实际运行），决定放在 `/compare` 还是 `/guides`，确认后由代理做成页面。涉及 Anthropic 的发布条款仍待确认。
 - [ ] `/skills` 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 `evals/run.mjs` 在一次性项目里跑 Impeccable、Taste Skill、UI UX Pro Max，公开记录后收录。发布涉及 Anthropic 技能的对比前，先由【维护者】确认条款。
 
 ## 4. 产品

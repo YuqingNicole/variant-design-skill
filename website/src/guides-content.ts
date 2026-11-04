@@ -4,7 +4,6 @@
 import type { Localized } from './i18n/localized';
 import type { Translations } from './i18n/translations';
 import { deliver, installCommand, prompts, repository, refine } from './docs-content';
-import { inspirationItems } from './inspiration-data';
 
 export type GuideSection = { id: string; heading: Localized; body: Localized[]; list?: Localized[]; code?: Localized; link?: { href: string; label: Localized } };
 export type Guide = { slug: string; title: Localized; answer: Localized; publishedAt: string; sections: GuideSection[]; translations?: Translations };
@@ -16,9 +15,6 @@ const shorthand = (rows: typeof refine, names: string[]) => names.map(name => {
   return { zh: `${name}：${row[1].zh}`, en: `${name}: ${row[1].en}` };
 });
 const same = (value: string): Localized => ({ zh: value, en: value });
-// Counted from the data so the reference guide cannot drift from /inspiration.
-const checked = inspirationItems.map(i => i.checkedAt).sort();
-const references = { total: inspirationItems.length, posts: inspirationItems.filter(i => i.kind === 'social-post').length, first: checked[0], last: checked.at(-1) };
 
 export const guides: Guide[] = [
   {
@@ -49,6 +45,7 @@ export const guides: Guide[] = [
   },
   {
     slug: 'undo-ai-design-changes',
+    translations: { en: { status: 'draft' } },
     publishedAt: '2026-11-02',
     title: { zh: '怎么撤回 AI 对设计的修改', en: 'How to undo design changes made by AI' },
     answer: {
@@ -73,7 +70,7 @@ export const guides: Guide[] = [
         list: [
           { zh: '外部编辑器不遵守技能的操作锁。提交过程中不要同时编辑这些文件。', en: 'External editors do not honor the skill’s operation lock. Avoid editing these files while a change is being committed.' },
           { zh: '多个文件的替换不是全局原子操作。进程中断后，可能需要手动检查。', en: 'Replacing several files is not globally atomic. After an interrupted process, you may need to check by hand.' },
-          { zh: '1.1 之前的快照没有记录修改后的基准，自动撤回会拒绝，要用 recover 处理。', en: 'Snapshots from before 1.1 lack the post-edit baseline, so automatic undo refuses them. Use recover instead.' },
+          { zh: '旧快照如果没有记录修改后的基准，自动撤回会拒绝，要用 recover 取出后对比。', en: 'Automatic undo refuses a legacy snapshot that lacks the post-edit baseline. Extract it with recover and compare it with your files.' },
         ],
         link: { href: `${records}/2026-10-27-integration-baseline.md`, label: { zh: '查看接入实测记录', en: 'Read the integration record' } } },
     ],
@@ -109,24 +106,25 @@ export const guides: Guide[] = [
   },
   {
     slug: 'git-or-snapshot-undo',
+    translations: { en: { status: 'draft' } },
     publishedAt: '2026-11-02',
     title: { zh: 'Agent 改了仓库里的设计，用 git 撤回还是用快照撤回', en: 'Undoing an agent’s design edits in your repository: git or snapshots' },
     answer: {
-      zh: '两者都要用，分工不同。git 管整个仓库的提交，但不知道哪处改动来自哪次请求，git restore 还会直接丢掉未提交的改动，包括你自己的。Variant Design 的快照只管它生成的方向：undo B 撤回 B 的上一次请求，接入后用 rollback 恢复原文件；文件在那之后被改过，它会拒绝执行。所以让 Agent 动手前先提交你自己的改动，探索阶段用 undo，接入并提交之后再用 git 记录。',
-      en: 'Use both; they do different jobs. Git tracks commits across the whole repository, but it does not know which change came from which request, and git restore discards uncommitted work, including yours. Variant Design snapshots cover only the directions it builds: undo B reverts B’s last request, and rollback restores the files an integration replaced. Both refuse if those files changed afterwards. So commit your own work before the agent starts, use undo while exploring, and let git record the result once it is integrated and committed.',
+      zh: '两者配合使用。git 记录仓库历史；Variant Design 的 undo B 按请求撤回 B，rollback 撤回一次接入，发现文件后来又被编辑就拒绝执行。让 Agent 动手前先检查并保存自己的工作；探索时用 undo，确认接入结果后再提交。使用 git restore 前要看清恢复来源和目标，它可能覆盖尚未保存的编辑。',
+      en: 'Use both. Git records repository history; Variant Design’s undo B reverts B by request, and rollback reverses an integration. Both refuse when files were edited afterwards. Inspect and save your work before the agent starts, use undo while exploring, and commit the integration once reviewed. Before using git restore, check its source and destination: it can overwrite edits you have not saved.',
     },
     sections: [
       { id: 'differences', heading: { zh: '两者的区别', en: 'How they differ' },
         body: [],
         list: [
-          { zh: '范围：git 作用于整个仓库；undo B 只动 B 自己的文件和 tokens，A/C 和最终选择不变。', en: 'Scope: git acts on the whole repository; undo B touches only B’s own files and tokens, and A/C and the final selection stay unchanged.' },
-          { zh: '单位：git 以提交为单位；undo 以一次请求为单位，一个请求分几步改完，也会一起撤回。', en: 'Unit: git works in commits; undo works per request, so a request that took several steps is reverted together.' },
-          { zh: '未提交的改动：git restore 会直接丢弃，git 自己也找不回来；undo 和 rollback 发现文件在修改后又被编辑过，就拒绝执行，不覆盖。', en: 'Uncommitted work: git restore discards it, and git cannot bring it back; undo and rollback refuse when a file was edited after the change, rather than overwrite it.' },
+          { zh: '范围：git 可以记录整个仓库，也能按路径操作；undo B 只动 B 自己的文件和 tokens，A/C 和最终选择不变。', en: 'Scope: git can record a whole repository or operate on chosen paths; undo B touches only B’s own files and tokens, leaving A/C and the final selection unchanged.' },
+          { zh: '单位：git revert 针对提交，git restore 针对路径；undo 针对一次请求，一个请求分几步改完，也会一起撤回。', en: 'Unit: git revert targets commits and git restore targets paths; undo reverts one request, including its separate steps.' },
+          { zh: '恢复来源：默认 git restore 从暂存区恢复工作文件；--staged 改动暂存区，默认来源是 HEAD。它们不会根据 Agent 请求区分编辑。', en: 'Restore source: by default git restore copies the index into working files. With --staged it changes the index, using HEAD by default. Neither distinguishes agent requests.' },
           { zh: '记录位置：git 在 .git/；快照在 variant-output/ 的历史里，接入前的备份在 variant-output/.integrations/。', en: 'Where records live: git in .git/; snapshots in the variant-output/ history, and pre-integration backups in variant-output/.integrations/.' },
         ] },
       { id: 'before', heading: { zh: '1. Agent 动手前：先提交自己的改动', en: '1. Before the agent starts: commit your own work' },
-        body: [{ zh: '先看工作区有没有没提交的改动。把要保留的提交掉，或者用 git stash 暂存。这样之后无论用哪种方式撤回，都不会牵连到你自己的工作。技能的工作文件放在 .variant-work/，里面有项目源码的副本，不要提交它。', en: 'Check for uncommitted changes first. Commit what you want to keep, or set it aside with git stash. Whichever undo you use later, your own work stays out of it. The skill keeps its working files in .variant-work/, which holds copies of project source; do not commit it.' }],
-        code: same('git status --short\ngit stash push -m "before design exploration"') },
+        body: [{ zh: '先检查改动，再提交需要保留的文件，或确认 stash 的范围。下面的 -u 会包含未跟踪的新文件，但不包含被忽略的文件；需要的忽略文件另行备份。stash 会从工作区移走保存的改动，恢复时可能有冲突。技能的 .variant-work/ 含项目源码副本，不要提交，也不要用 -a 不加区分地收进仓库对象。', en: 'Inspect changes, then commit the files you need or check the stash scope. Below, -u includes untracked files but excludes ignored files; back those up separately when needed. Stash removes saved changes from the working tree, and restoring may conflict. The skill’s .variant-work/ holds source copies: do not commit it or indiscriminately include it with -a.' }],
+        code: same('git status --short\ngit stash push -u -m "before design exploration"') },
       { id: 'explore', heading: { zh: '2. 探索阶段：用 undo', en: '2. While exploring: use undo' },
         body: [{ zh: '三个方向都在 variant-output/ 里，还没进入你的源码。这时改坏了一版，发 undo B 就行，不用回退整个仓库，其他两版的修改也保得住。', en: 'All three directions live in variant-output/ and have not touched your source yet. If an edit to one goes wrong, send undo B. You do not have to roll back the repository, and the edits to the other two survive.' }],
         code: same('undo B'),
@@ -134,39 +132,40 @@ export const guides: Guide[] = [
       { id: 'integrate', heading: { zh: '3. 接入之后：先 rollback，再交给 git', en: '3. After integrating: rollback first, then git' },
         body: [
           { zh: '接入会改你的源码。技能先备份每个目标文件，再写入。只要这些文件之后没被改过，rollback 就能恢复原样，提交与否不影响这个判断。', en: 'Integration changes your source. The skill backs up every target file before writing. As long as those files have not been edited since, rollback restores them, whether or not you committed in between.' },
-          { zh: '确认要保留之后，像平常一样提交。之后若想撤销一次已经提交、又在上面继续开发过的接入，用 git revert 留下一条清楚的记录，比 rollback 更合适。', en: 'Once you decide to keep it, commit as usual. To undo an integration that is committed and already built upon, git revert leaves a clearer record than rollback.' },
+          { zh: '确认要保留之后，像平常一样提交。撤销已提交的接入时，可以检查 git revert：它新增一个反向提交，可能需要处理冲突；应先确认目标提交只包含你要撤销的内容。', en: 'Commit after review. For a committed integration, consider git revert: it records a new reversing commit and may need conflict resolution. First check that the target commit contains only what you intend to reverse.' },
         ],
         code: same('node <skill-root>/scripts/variant-integrate.mjs list variant-output\nnode <skill-root>/scripts/variant-integrate.mjs rollback variant-output <integration-id>') },
-      { id: 'limits', heading: { zh: '两者都做不到的', en: 'What neither can do' },
+      { id: 'limits', heading: { zh: '保存与恢复的边界', en: 'Limits of saving and recovery' },
         body: [],
         list: [
-          { zh: '找回从未提交、又被其他工具覆盖的改动。', en: 'Recover work that was never committed and was overwritten by another tool.' },
-          { zh: '撤回 Agent 在技能流程之外直接改的文件。这部分只能靠 git。', en: 'Undo files the agent changed outside the skill’s workflow. Only git covers those.' },
+          { zh: '从未进入 Git 对象、快照或其他备份的内容，覆盖后不能指望这些记录找回。', en: 'These records cannot be relied on to recover overwritten content they never captured.' },
+          { zh: '技能快照不覆盖 Agent 在流程之外直接改的文件；这部分需要版本控制、编辑器历史或其他备份。', en: 'Skill snapshots do not cover files changed outside their workflow; use version control, editor history or another backup for those.' },
           { zh: '在提交过程中挡住外部编辑器的写入。技能的锁只对它自己的操作有效。', en: 'Block an external editor from writing during a commit. The skill’s lock only coordinates its own operations.' },
         ],
-        link: { href: `${records}/2026-10-27-integration-baseline.md`, label: { zh: '查看接入实测记录', en: 'Read the integration record' } } },
+        link: { href: 'https://git-scm.com/docs/git-restore', label: { zh: '查看 Git 官方 restore 文档', en: 'Read the official git restore documentation' } } },
     ],
   },
   {
     slug: 'design-references-with-sources',
+    translations: { en: { status: 'draft' } },
     publishedAt: '2026-11-02',
     title: { zh: '哪里能找到标注了来源和核对日期的设计参考', en: 'Where to find design references with sources and check dates' },
     answer: {
-      zh: `Variant Design 的设计参考页收录了 ${references.total} 个参考，每条都写明出处、类型、设计者（已知时）和核对日期，核对时间在 ${references.first} 到 ${references.last} 之间。所有条目都只放链接：我们没有取得这些作品的授权，复用前要自己核对原作的条款。手机版布局都还没测过。`,
-      en: `The Variant Design references page lists ${references.total} references. Each names its source, its kind, the designer when known, and the date it was checked, between ${references.first} and ${references.last}. Every entry is a link only: we hold no license to these works, so check the original terms before reusing anything. None of the mobile layouts have been tested yet.`,
+      zh: 'Variant Design 的设计参考页记录出处、类型、设计者（已知时）、核对日期和手机版测试状态。链接参考不代表我们取得作品授权；作者授权展示的媒体会单独标明授权记录和范围。本站展示许可不等于允许你下载或复用，使用前仍要核对原作条款或另行取得许可。',
+      en: 'Variant Design’s reference pages record the source, kind, designer when known, check date and mobile testing status. A link reference does not mean we hold a license to the work. Media displayed with author permission has a separate record and scope. Permission for display here does not grant you download or reuse rights; check the original terms or obtain permission before using it.',
     },
     sections: [
       { id: 'fields', heading: { zh: '每条参考记录什么', en: 'What each reference records' },
         body: [],
         list: [
           { zh: '出处：发布者，以及它是官网、产品页、文档还是社交媒体帖子。', en: 'Source: the publisher, and whether it is an official site, a product page, documentation or a social post.' },
-          { zh: `核对日期：我们最后一次打开原页面的日期。${references.posts} 条是公开的 X 帖子，其余来自官网和文档。`, en: `Check date: the last time we opened the original page. ${references.posts} are public X posts; the rest come from official sites and documentation.` },
+          { zh: '核对日期：链接参考记录打开原页面的日期；作者授权条目记录人工审核日期。来源可能是官网、文档、公开帖子或作者投稿。', en: 'Check date: when a link reference’s original page was opened, or an author submission was manually reviewed. Sources include official sites, documentation, public posts and author submissions.' },
           { zh: '研究什么、用在哪里：每条都写了值得学的结构，以及适合解决的问题。', en: 'What to study and where to use it: each entry names the structure worth learning and the problem it suits.' },
           { zh: '还不知道的：设计者不明、手机版没测、复用权限未知，都会直接写出来。', en: 'What is still unknown: an unnamed designer, an untested mobile layout and unknown reuse rights are stated, not hidden.' },
         ],
         link: { href: '/', label: { zh: '浏览设计参考', en: 'Explore references' } } },
       { id: 'dates', heading: { zh: '为什么要看核对日期', en: 'Why the check date matters' },
-        body: [{ zh: '网页会改版，帖子会删除。核对日期说明这条记录在哪一天还是准的。日期越早，越要先打开原页面再用。', en: 'Sites get redesigned and posts get deleted. The check date says when the record was last accurate. The older it is, the more important it is to open the original before relying on it.' }] },
+        body: [{ zh: '网页会改版，帖子会删除。核对日期只是最近一次查看或审核的记录，不证明今天的内容、手机版表现或复用权限仍然有效。使用前打开原页面，再核对与你有关的信息。', en: 'Sites change and posts disappear. The check date records a viewing or review; it does not prove that today’s content, mobile behavior or reuse permission is current. Open the original and recheck the details you need.' }] },
       { id: 'agent', heading: { zh: '把参考交给 Agent', en: 'Hand a reference to your agent' },
         body: [{ zh: '在参考页可以复制一段说明，里面带出处、核对日期、要借鉴和要避免的东西，以及未知项。Variant Design 技能会把参考记进任务：用途（灵感、代码或素材）、核对状态，代码和素材还要写明许可证状态。没有核实过的就记为未核实，不会被当成已确认。', en: 'From the references page you can copy a note with the source, check date, what to borrow, what to avoid and what is unknown. The Variant Design skill records each reference in the task: its use (inspiration, code or asset) and review status, plus license status for code and assets. Anything not checked is recorded as unverified, not as confirmed.' }],
         code: same('{"title":"Reference title","url":"https://example.com/pricing","usage":"inspiration",\n "borrow":"Compare feature differences beside each plan","directions":["A"],\n "review":{"status":"unverified"}}') },
