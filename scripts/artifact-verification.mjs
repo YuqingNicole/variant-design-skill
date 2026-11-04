@@ -21,10 +21,14 @@ function capture(root, id, project, dependencies) {
   const output = fs.realpathSync(root), projectPath = fs.realpathSync(project);
   if (!output.startsWith(projectPath + path.sep)) throw new Error('Project must contain output.');
   const sources = Object.fromEntries(variant.files.map(file => [file, fs.readFileSync(localFile(root,file))]));
-  const shared = [...new Set([...dependencies, ...(state.designSystem?.file ? [state.designSystem.file] : []), ...['package.json','package-lock.json','pnpm-lock.yaml','yarn.lock'].filter(file=>fs.existsSync(localFile(projectPath,file)))])].sort();
+  const extensions=state.designSystem?.extensions;
+  if (extensions!==undefined && (!Array.isArray(extensions) || extensions.some(file=>typeof file!=='string' || !file.trim()))) throw new Error('System extensions must be relative file paths.');
+  const systemFiles=[...(state.designSystem?.file ? [state.designSystem.file] : []), ...(extensions??[])];
+  const shared = [...new Set([...dependencies, ...systemFiles, ...['package.json','package-lock.json','pnpm-lock.yaml','yarn.lock'].filter(file=>fs.existsSync(localFile(projectPath,file)))])].sort();
   const fingerprint = { output, project:projectPath, id, version:variant.version,
     entry:variant.entry, tokens:variant.tokens, comparison:variant.comparison,
     taskContract:state.taskContract, designSystem:state.designSystem,
+    ...(variant.systemBinding ? {systemBinding:variant.systemBinding} : {}),
     files:Object.fromEntries(Object.entries(sources).map(([file,bytes])=>[file,hash(bytes)])),
     dependencies:Object.fromEntries(shared.map(file=>[file,hash(fs.readFileSync(localFile(projectPath,file)))])) };
   return {fingerprint, sources};
@@ -51,7 +55,7 @@ export async function verifyArtifact(root, id, options = {}, runChecks) {
   let unchanged=false;
   try { unchanged=identity(capture(root,id,project,dependencies).fingerprint)===identity(fingerprint); } catch {}
   const report = {schemaVersion:1,id:randomUUID(),startedAt,finishedAt:new Date().toISOString(),
-    fingerprint, dependencies, coverage:{mode:'declared-files',limitation:'Only owned files, registered design system, package manifests and explicitly listed dependencies are tracked. Environment changes require a new run.'},
+    fingerprint, dependencies, coverage:{mode:'declared-files',limitation:'Only owned files, registered system and extension files, package manifests and explicitly listed dependencies are tracked. Environment changes require a new run.'},
     static:{status:findings.some(f=>f.severity==='error')?'failed':findings.some(f=>f.severity==='warning')?'unverified':'passed',tool:{name:'variant-quality-gate',version:hash(fs.readFileSync(new URL('./quality-gate.mjs',import.meta.url)))},findings},
     checks, checkerIdentity:checkerIdentity(), plan:options.plan ?? null, changedDuringRun:!unchanged};
   const file=localFile(root,`.verification/${id}/${report.id}.json`);

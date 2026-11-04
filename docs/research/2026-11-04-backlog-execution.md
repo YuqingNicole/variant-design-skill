@@ -20,9 +20,9 @@ Work in `/Users/nicole/orca/variant-backlog-work` on task branches. The original
 | Other skill entries | Not started | Actual permitted runs, public evidence, entry content and review |
 | Design sample collection | Ongoing backlog | Watch and annotate new unique authors; preserve source and media evidence |
 | Domain / indexing / directories / GEO | Account-dependent; preparatory work available | Domain binding, redirects, Search Console indexing evidence, permitted submissions, initial ten-query measurement |
-| Positioning / pricing / attribution | Concrete draft on codex/positioning-honesty; public metadata untouched | Maintainer pricing direction, metadata permission and attribution choice; exact CI and production gates |
+| Positioning / pricing / attribution | Draft PR #155 at 47b8b77; exact loop/landing CI passed; public metadata untouched | Maintainer pricing direction, metadata permission and attribution choice; production gate |
 | Website style maintenance | Draft PR #154; exact loop/landing CI passed; docs/sponsor/home budget checked | 9 local Chrome cases passed; detector timeout and maintainer visual acceptance remain |
-| Artifact evidence, #18 | Partially implemented before this task | Automatic plans and complete real-delivery coverage; classify existing failures |
+| Artifact evidence, #18 | Registered extension/binding freshness fix implemented locally; 107 helper/grader + 14 Chrome passed | Installed CLI follow-up, automatic plans and complete real-delivery coverage; prior failure classification remains |
 | Project integration, #19 | Partially implemented before this task | Real Vite aliases/provider/global styles matrix; preview cleanup ownership; complete delivery receipt |
 | Paid definition / rights / distribution / support, #22–26 | Product and user gates pending | Updated commercial baseline, actual installation/upgrade/rollback/entitlement evidence, two independent human trial users |
 | Hosted AI and cost protection, #39–40 | Needs explicit budget/account decision | Confirm exposure policy and cap; real configured production generation and enforced cost protection if approved |

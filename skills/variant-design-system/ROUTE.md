@@ -290,3 +290,6 @@ Print a one-line reminder on every generation:
 ```
 ✦ DS locked: Amber Warm · DM Sans + Newsreader · variations differ in layout only
 ```
+
+
+Artifact evidence automatically fingerprints the registered main system, extensions and variant binding. After editing those, rerun observations; a prior report cannot certify the changed preview. Other shared dependencies remain explicitly declared.

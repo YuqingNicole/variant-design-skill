@@ -13,7 +13,7 @@ node <skill-root>/scripts/artifact-verification.mjs status <output> <report-file
 
 Configuration may name `projectRoot` (default: output parent) and `dependencies` (explicit relative project file paths). List imported shared source, global CSS, routing/provider configuration and relevant build configuration. The registered design system and existing package/lock manifests are tracked automatically. Dependency discovery is not automatic: unlisted imports and external resources remain outside coverage.
 
-`run` captures owned-file contents, version, entry, tokens, comparison, task/brand constraints and dependency digests before checking, and checks identity again afterward. It writes an immutable report under `.verification/<variant>/`. No browser or typechecker is run by this CLI command, so its runtime checks are **unverified**, not passed. Exit codes: 0 = recorded checks passed within their scope; 2 = failed, stale or unverified; 1 = invalid operation. Keep reports local; diagnostics can contain source excerpts.
+`run` captures owned-file contents, version, entry, tokens, comparison, task/brand constraints, any system binding, and dependency digests before checking, and checks identity again afterward. It writes an immutable report under `.verification/<variant>/`. No browser or typechecker is run by this CLI command, so its runtime checks are **unverified**, not passed. Exit codes: 0 = recorded checks passed within their scope; 2 = failed, stale or unverified; 1 = invalid operation. Keep reports local; diagnostics can contain source excerpts.
 
 Always call `status` before using a report for delivery. A raw saved JSON result does not establish current validity. File changes without version increments, dependency changes, metadata drift or apply/undo revision changes invalidate old evidence. Selection alone does not. Runtime environment changes require a fresh run even if files are unchanged; the tool cannot independently discover every environment change.
 
@@ -28,6 +28,8 @@ The exported asynchronous `verifyArtifact(root, id, options, runChecks)` capture
 - `project-checks`: project typecheck/build commands with pre-existing failures distinguished from new failures.
 
 Each check requires `id`, `status` (`passed`, `failed`, `unverified`, `not-applicable`) and a concrete `reason`. Observed passed/failed checks also require `tool.name`, `tool.version`, `environment` and `evidence` entries identifying observations or logs. Unknown/not-applicable checks must explain why. This is a trusted adapter interface, not cryptographic attestation of arbitrary claims.
+
+Registered `designSystem.file` and every `designSystem.extensions` file are fingerprinted automatically, using the same root/path/symlink guards as explicit dependencies. Editing, deleting or reordering an extension, or changing the variant binding, makes prior evidence stale; edits during observation cannot produce current evidence. Legacy reports lacking this coverage must be rerun. Other shared imports still need explicit dependency paths.
 
 A report's aggregate status describes only the recorded checks and declared dependency coverage. All not-applicable claims must be justified; they are not a shortcut to asserting the product is production-ready. Never claim every element was checked when the adapter measured one heading. Missing browser tools or unknown expected styles must produce unverified checks.
 

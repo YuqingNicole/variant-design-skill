@@ -29,6 +29,35 @@ test('mutations during verification never get fresh evidence',async t=>{
  const {root}=setup(t);const result=await verifyArtifact(root,'B',{},async()=>{fs.appendFileSync(path.join(root,'VariantB.tsx'),'\n// late edit');return observations();});
  assert.equal(result.status,'stale');assert.equal(result.report.changedDuringRun,true);
 });
+
+test('registered system extensions invalidate evidence without caller-supplied dependencies',async t=>{
+ for(const kind of ['edit','delete','reorder','binding']){
+  const {root,project}=setup(t),context=path.join(root,'.variant-context.json'),state=JSON.parse(fs.readFileSync(context));
+  for(const name of ['brand.css','extension.css','second.css'])fs.writeFileSync(path.join(project,name),':root{--color-text:#111}');
+  state.designSystem.file='brand.css';state.designSystem.extensions=['extension.css','second.css'];state.variants.B.systemBinding={status:'pending',digest:'approved-definition'};fs.writeFileSync(context,JSON.stringify(state));
+  const result=await verifyArtifact(root,'B',{},observations);assert.equal(result.status,'passed');
+  assert.deepEqual(result.report.dependencies,[]);assert.ok(result.report.fingerprint.dependencies['extension.css']);assert.ok(result.report.fingerprint.dependencies['second.css']);assert.equal(result.report.fingerprint.systemBinding.status,'pending');
+  if(kind==='edit')fs.appendFileSync(path.join(project,'extension.css'),'\n:root{--color-text:#222}');
+  if(kind==='delete')fs.unlinkSync(path.join(project,'extension.css'));
+  if(kind==='reorder'){state.designSystem.extensions.reverse();fs.writeFileSync(context,JSON.stringify(state));}
+  if(kind==='binding'){state.variants.B.systemBinding.status='applied';fs.writeFileSync(context,JSON.stringify(state));}
+  assert.equal(inspectVerification(root,result.file).status,'stale',kind);
+ }
+});
+
+test('extension edits during observation are stale and symlinked extensions cannot produce a report',async t=>{
+ const {root,project}=setup(t),context=path.join(root,'.variant-context.json'),state=JSON.parse(fs.readFileSync(context));
+ const extension=path.join(project,'extension.css');fs.writeFileSync(extension,':root{--color-text:#111}');state.designSystem.extensions=['extension.css'];fs.writeFileSync(context,JSON.stringify(state));
+ const result=await verifyArtifact(root,'B',{},async()=>{fs.appendFileSync(extension,'\n/* changed during observation */');return observations()});assert.equal(result.status,'stale');assert.equal(result.report.changedDuringRun,true);
+ fs.renameSync(extension,path.join(project,'real-extension.css'));fs.symlinkSync(path.join(project,'real-extension.css'),extension);const before=fs.readdirSync(path.dirname(result.file));
+ await assert.rejects(()=>verifyArtifact(root,'B',{},observations),/symbolic|symlink/i);assert.deepEqual(fs.readdirSync(path.dirname(result.file)),before);
+});
+
+test('missing extension coverage stays stale and malformed extension paths are refused',async t=>{
+ const {root,project}=setup(t),context=path.join(root,'.variant-context.json'),state=JSON.parse(fs.readFileSync(context));fs.writeFileSync(path.join(project,'extension.css'),':root{--color-text:#111}');state.designSystem.extensions=['extension.css'];fs.writeFileSync(context,JSON.stringify(state));
+ const result=await verifyArtifact(root,'B',{},observations),legacy=structuredClone(result.report);delete legacy.fingerprint.dependencies['extension.css'];const file=path.join(path.dirname(result.file),'missing-extension-coverage.json');fs.writeFileSync(file,JSON.stringify(legacy),{flag:'wx'});assert.equal(inspectVerification(root,file).status,'stale');
+ for(const extensions of [null,'extension.css',{},[''],['../outside.css']]){state.designSystem.extensions=extensions;fs.writeFileSync(context,JSON.stringify(state));await assert.rejects(()=>verifyArtifact(root,'B',{},observations),/relative/)}
+});
 test('missing tools, failed checks and invalid attestations stay explicit',async t=>{
  const {root}=setup(t);const missing=await verifyArtifact(root,'B',{},()=>{throw new Error('Browser unavailable');});assert.equal(missing.status,'unverified');assert.match(missing.report.checks[0].reason,/Browser unavailable/);
  const failed=await verifyArtifact(root,'B',{},()=>observations().map(c=>c.id==='brand'?{...c,status:'failed',reason:'Arial differs from Georgia'}:c));assert.equal(failed.status,'failed');

@@ -18,6 +18,19 @@ test.beforeAll(async()=>{
 test.beforeEach(async({context})=>{await context.routeWebSocket(/./,()=>{});});
 const open=(page,url,ready)=>expect(async()=>{await page.goto(url);await ready();}).toPass({timeout:20000});
 test.afterAll(()=>{server?.kill();fs.rmSync(candidate,{recursive:true,force:true});});
+test('a shared system extension changes the rendered page and invalidates its existing evidence',async({page,browser})=>{
+ const {verifyInBrowser,verificationPlan}=await import('../scripts/browser-verification.mjs'),{inspectVerification}=await import('../scripts/artifact-verification.mjs');
+ const project=path.join(root,'system-evidence'),output=path.join(project,'output');fs.mkdirSync(output,{recursive:true});
+ const file=path.join(output,'B.html'),extension=path.join(project,'extension.css');
+ fs.writeFileSync(path.join(project,'brand.css'),':root{--font-ui:Georgia}');fs.writeFileSync(extension,':root{--color-text:rgb(17,17,17)}');
+ fs.writeFileSync(file,'<!doctype html><html><head><meta charset="utf-8"><title>System evidence</title><link rel="stylesheet" href="../brand.css"><link rel="stylesheet" href="../extension.css"><style>body{font-family:var(--font-ui);color:var(--color-text)}</style></head><body><h1>Direction B</h1><button onclick="this.textContent=\'Inspected\'">Inspect</button></body></html>');
+ fs.writeFileSync(path.join(output,'.variant-context.json'),JSON.stringify({schemaVersion:2,designSystem:{confirmed:true,file:'brand.css',extensions:['extension.css'],fonts:['Georgia']},variants:{B:{entry:'B.html',files:['B.html'],version:1,tokens:{fonts:['Georgia']}}}}));
+ const plan={...verificationPlan(pathToFileURL(file).href),brand:[{selector:'h1',property:'font-family',expected:'Georgia'},{selector:'h1',property:'color',expected:'rgb(17, 17, 17)'}]};
+ const good=await verifyInBrowser(output,'B',{plan},{page,version:browser.version(),ready:async()=>expect(page.locator('h1')).toHaveText('Direction B')});
+ expect(good.report.checks.find(c=>c.id==='brand').status).toBe('passed');expect(good.status).toBe('unverified');expect(good.report.fingerprint.dependencies['extension.css']).toBeTruthy();
+ const owned=fs.readFileSync(file);fs.writeFileSync(extension,':root{--color-text:rgb(80,80,80)}');expect(inspectVerification(output,good.file).status).toBe('stale');
+ await page.reload();await expect(page.locator('h1')).toHaveCSS('color','rgb(80, 80, 80)');await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Inspected');expect(fs.readFileSync(file)).toEqual(owned);
+});
 test('React A/B/C render with working controls, locked font, comparison and keyboard focus',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));page.on('console',msg=>{if(msg.type()==='error')errors.push(`${msg.text()} ${msg.location().url}`);});
   for(const id of ['A','B','C']){

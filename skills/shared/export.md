@@ -47,7 +47,7 @@ Run the target project's production build after integrating the named export. Wi
 
 Include the design-system check's coverage and unverified pairs in the delivery record. `ds-check.mjs` checks explicitly named or annotated pairs and component aliases; pass brand files with `--brand`. Confirmed contrast issues are delivery warnings, while generated component-layer violations are errors. Exporting DTCG with `ds-export.mjs` preserves aliases and use notes; keep the existing type grouping unless the user chooses `--group-by layer`, and list skipped or conditional values. None of these static checks proves rendered contrast.
 
-Before claiming verified delivery, record and recheck version-bound evidence following `references/workflow/artifact-verification.md`. Missing runtime checks remain unverified; static readiness cannot substitute for them.
+Before claiming verified delivery, record and recheck version-bound evidence following `references/workflow/artifact-verification.md`. Registered system/extension files and any binding are tracked automatically; declare other shared dependencies explicitly. Missing runtime checks remain unverified; static readiness cannot substitute for them.
 
 The skill's own regression suite checks these mechanics with fixture projects in a real browser:
 
