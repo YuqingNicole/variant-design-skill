@@ -12,8 +12,8 @@ Work in `/Users/nicole/orca/variant-backlog-work` on task branches. The original
 |---|---|---|
 | Website positioning, PR #138 | Updated at `f1d6001`; local and GitHub loop/landing checks passed | Review findings fixed; final review, deployed preview and production merge remain separate |
 | Unified inspiration feed / interaction / appearance | PR #148, local and remote checks passed; preview sampled; screenshot review pending | RFC-008 P2: one chronological feed; URL filters; hover/focus/touch credits; visible-only videos; reduced motion; shared-element detail; keyboard/back/scroll; 320/390/1440 in both languages; style budget |
-| Submission and permission intake | Implemented; 67 website tests and 48 Chrome regressions passed locally; PR/preview review pending | RFC P3: media URL/file workflow, attribution, distinct usage rights, withdrawal, manual review and evaluated storage |
-| Design system checks | Partially implemented before this task | RFC-007 P1 remaining checks and grouping decision; unit tests and real chain evidence |
+| Submission and permission intake | PR #149 updated at 508d884; review fixes and focused 11 Chrome tests passed; exact loop/landing CI passed | RFC P3: media URL/file workflow, attribution, distinct usage rights, withdrawal, manual review and evaluated storage |
+| Design system checks | Draft PR #150; exact CI passed; real Ledger Codex passed, Harbor exposed an adoption/metadata failure; Claude account 403 | RFC-009 adoption fix, full chain rerun, Claude/account and screenshot gates; grouping default still pending |
 | Premium / adjective evals | Not started | Real Agent fixture and style-budget comparison; preserve task and brand |
 | Region selection / public code checker | Needs product decision | Concrete proposal and bounded implementation after scope decision |
 | English guides and comparison page | Needs review | Five English guides reviewed, comparison facts rechecked and destination chosen |
@@ -139,3 +139,14 @@ Before publication, the registry validator was tightened to reject extra nested 
 PR #149 head `c4d375a`: both push/PR loop and landing CI jobs passed; the actual deployed `/submit` preview was inspected at 390px with no overflow. CodeRabbit completed and requested changes: shared-write boundary documentation, submission spacing tokens, the collapsed media disclosure and rapid arrow navigation. These findings are being verified and addressed on the P3 branch; a green CI alone is not reviewer approval. No production merge occurred.
 
 RFC-007 P1 work is on `codex/design-system-validation`; negative baseline, contracts and current gates are recorded in `2026-11-04-design-system-validation.md`. The grouping-default question remains open; the existing default is preserved while an explicit layer format is available for review. Next: final deterministic gates, actual harbor-chain/ledger-pick runs, fix valid P3 review findings and retain the full backlog scope.
+
+
+### P4 real CLI result and next corrective loop
+
+Draft PR [#150](https://github.com/YuqingNicole/variant-design-skill/pull/150), head `99ce595`: both loop and landing CI jobs and Vercel preview checks passed. P3 review fix head `508d884` also has both loop/landing CI jobs passed; its four inline threads are resolved, but reviewDecision still says CHANGES_REQUESTED. No review was dismissed and no production merge occurred.
+
+Real runner session 54084 completed. `ledger-pick` Codex passed every check (454s, 18,179 words read across two fresh processes). Harbor Codex measured nine declared contrast pairs with zero failing/unverified pairs and zero layer errors, but the overall chain failed four delivery checks after confirmation: old variant font metadata differs from the new confirmed system. Ordinary apply cannot update locked token metadata, and undo restores the old metadata. This is an actual product workflow contradiction, not a reason to remove the grader. Corrective contract and acceptance matrix: RFC-009. The overall design-system phase stays incomplete.
+
+Both Claude fixtures failed with the same account-level verification 403 and no generated artifact. These cannot count as quality results. No account settings or providers were changed. The original Ego space 42 is no longer present; resuming it failed and inventory confirmed its absence. A question to authorize a replacement space is pending under the browser skill's recovery rule; unrelated user spaces were not claimed. Automated tests continue independently.
+
+Next action: implement and test explicit system confirmation/adoption with shared snapshots and undo as RFC-009 specifies, then rerun the real chain. Keep the DTCG default decision, visual review, Claude verification and production approval separate from deterministic test passes; all later backlog rows remain open.
