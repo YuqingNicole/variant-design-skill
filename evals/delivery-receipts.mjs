@@ -7,7 +7,7 @@ import { prepareIntegration, integrateVariant, rollbackIntegration } from '../sc
 import { verifyArtifact } from '../scripts/artifact-verification.mjs';
 import { createDeliveryReceipt, inspectDeliveryReceipt } from '../scripts/delivery-receipt.mjs';
 import { inspectNativeDelivery } from './native-delivery.mjs';
-import { captureNativeVite, gradeNativeVite } from './native-vite.mjs';
+import { captureNativeVite, gradeNativeVite, nativeObservationChecks } from './native-vite.mjs';
 
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const need = (test, message) => { if (!test) throw new Error(message); };
@@ -59,10 +59,7 @@ export async function probeDeliveryReceipts(project, { out, browser, generated, 
     const copiedOutput = localFile(copy, 'variant-output'), state = read(copy, 'variant-output/.variant-context.json'), beforeTarget = read(copy, 'src/App.tsx'), stage = actual.manifest.staging, plan = `.variant-work/receipt-host-${randomUUID()}.json`;
     const observe = async phase => verifyArtifact(copiedOutput, 'B', { projectRoot: copy, dependencies: ['src/App.tsx'] }, async () => {
       const capture = await captureNativeVite(copy, { out: path.join(out, phase), browser, original: true, ...(phase === 'after' ? { expectedVariant: 'B' } : {}) }); observations[phase] = capture;
-      const graded = gradeNativeVite({ baseline: capture }).checks.filter(c => c.id.startsWith('baseline-'));
-      const check = id => graded.find(c => c.id === id)?.pass === true;
-      return [{ id: 'brand', status: check('baseline-brand-assets') ? 'passed' : 'failed', reason: 'Actual integrated/original application fonts and decoded asset observed at desktop/mobile', tool: { name: 'Chrome via native receipt host', version: capture.environment.browser }, environment: capture.environment, evidence: [`${phase}/report.json`] },
-        { id: 'project-checks', status: ['baseline-build-typecheck', 'baseline-build-coverage', 'baseline-fresh'].every(check) ? 'passed' : 'failed', reason: 'Original project typecheck/build executed in this callback', tool: { name: 'Native Vite/TypeScript', version: capture.environment.vite }, environment: capture.environment, evidence: [`${phase}/report.json`] }];
+      return nativeObservationChecks(capture, { original: true, evidence: `${phase}/report.json` });
     });
     const before = await observe('before'); prepareIntegration(copiedOutput, 'B', ['src/App.tsx'], localFile(copy, plan), copy);
     const integration = integrateVariant(copiedOutput, 'B', localFile(copy, stage), copy, localFile(copy, plan));

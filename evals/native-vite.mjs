@@ -104,8 +104,18 @@ async function exercise(page, data) {
   await search.fill('Canopy'); await count(1); need(await row('N-104').isVisible(), 'Search did not find Canopy');
   await status.selectOption('paid'); await count(0); need(await page.getByTestId('empty-state').isVisible(), 'Combined filters need a visible empty state');
   await status.selectOption('all'); await search.fill(''); await records(data.north.invoices);
-  await page.getByRole('button', { name: 'Mark N-104 paid', exact: true }).click();
-  await total(84000); need((await row('N-104').getByTestId('invoice-status').innerText()).trim().toLowerCase() === 'paid', 'Owner payment state did not update');
+  const paymentDialogs = [];
+  const acknowledge = async dialog => {
+    const item = { type: dialog.type(), message: dialog.message(), accepted: false }; paymentDialogs.push(item);
+    if (paymentDialogs.length <= 3 && ['confirm', 'alert'].includes(item.type)) { await dialog.accept(); item.accepted = true; }
+    else await dialog.dismiss();
+  };
+  page.on('dialog', acknowledge);
+  try {
+    await page.getByRole('button', { name: 'Mark N-104 paid', exact: true }).click();
+    await total(84000); need((await row('N-104').getByTestId('invoice-status').innerText()).trim().toLowerCase() === 'paid', 'Owner payment state did not update');
+    need(paymentDialogs.every(dialog => dialog.accepted), 'Unsupported or excessive dialog during the local payment task');
+  } finally { page.off('dialog', acknowledge); }
   const picker = page.getByRole('combobox', { name: 'Workspace', exact: true });
   await picker.selectOption('south'); await name(data.south.name); await records(data.south.invoices); await total(140000);
   need((await page.getByTestId('workspace-role').innerText()).toLowerCase().includes('read only'), 'South workspace must be read only');
@@ -116,7 +126,7 @@ async function exercise(page, data) {
   await picker.selectOption('north'); await name(data.north.name); await total(84000);
   need((await row('N-104').getByTestId('invoice-status').innerText()).trim().toLowerCase() === 'paid', 'Workspace return lost payment state');
   need(await workspace.isVisible(), 'Workspace name must remain visible');
-  return { searchType: await search.getAttribute('type') ?? 'text' };
+  return { searchType: await search.getAttribute('type') ?? 'text', paymentDialogs };
 }
 
 function observePage(page, base) {
@@ -259,4 +269,18 @@ export function gradeNativeVite(evidence) {
   }
   const delivery = gradeNativeDelivery(evidence?.delivery); add('delivery-replayed', delivery.pass, delivery.details);
   return { pass: checks.every(check => check.pass), checks };
+}
+
+// A scenario stopping before measurement leaves that check unverified, not a measured failure.
+export function nativeObservationChecks(capture, { original = false, evidence = 'report.json' } = {}) {
+  const phase = original ? 'baseline' : 'generate', expected = original ? 2 : 6;
+  const graded = gradeNativeVite({ [phase]: capture }).checks;
+  const passed = id => graded.find(check => check.id === `${phase}-${id}`)?.pass === true;
+  const brandObserved = capture?.samples?.length === expected && capture.samples.every(sample => sample.brand && typeof sample.brand.bodyFont === 'string' && Object.hasOwn(sample.brand, 'logo') && typeof sample.brand.originalLogo === 'string') && capture.environment?.browser;
+  const keys = ['originalTypecheck', 'originalBuild', ...(original ? [] : ['previewTypecheck', 'previewBuild'])];
+  const projectObserved = keys.every(key => Number.isInteger(capture?.checks?.[key]?.exit) && capture.checks[key].timedOut === false && capture.checks[key].version) && capture?.environment?.vite;
+  return [
+    { id: 'brand', status: !brandObserved ? 'unverified' : passed('brand-assets') ? 'passed' : 'failed', reason: brandObserved ? 'Actual computed brand and decoded original asset observed at desktop/mobile' : 'The scenario did not complete brand/asset measurements at every required viewport.', tool: { name: 'Chrome via native host', version: capture?.environment?.browser }, environment: capture?.environment, evidence: [evidence] },
+    { id: 'project-checks', status: !projectObserved ? 'unverified' : ['build-typecheck', 'build-coverage', 'fresh'].every(passed) ? 'passed' : 'failed', reason: projectObserved ? 'Actual project typecheck/build commands and output coverage observed inside this callback' : 'Project command results/tools are incomplete or timed out.', tool: { name: 'Native Vite/TypeScript', version: capture?.environment?.vite }, environment: capture?.environment, evidence: [evidence] }
+  ];
 }

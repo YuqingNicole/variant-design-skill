@@ -105,3 +105,10 @@ test('actual checks reject native configs which omit generated typechecking and 
   expect(report.checks.previewBuild.outputs).toBe(false);
   expect(gradeNativeVite({ generate: report }).checks.find(c => c.id === 'generate-build-coverage').pass).toBe(false);
 });
+
+
+test('native tasks explicitly confirm local payment and retain all provider/role assertions',async({browser})=>{
+ test.setTimeout(120000);adapters();const file=path.join(project,'src/App.tsx'),before=fs.readFileSync(file,'utf8');expect(before).toContain('onClick={()=>d.markPaid(i.id)}');
+ try{write('src/App.tsx',before.replace('onClick={()=>d.markPaid(i.id)}',"onClick={()=>{if(window.confirm('Record local payment?')){d.markPaid(i.id);window.alert('Payment recorded')}}}"));const capture=await captureNativeVite(project,{browser,out:path.join(evidence,'confirmed-payment')});
+ expect(gradeNativeVite({generate:capture}).checks.filter(c=>c.id.startsWith('generate-')&&!c.pass)).toEqual([]);expect(capture.samples).toHaveLength(6);for(const sample of capture.samples){expect(sample.controls.paymentDialogs.map(d=>d.type)).toEqual(['confirm','alert']);expect(sample.controls.paymentDialogs.every(d=>d.accepted)).toBe(true);}}finally{write('src/App.tsx',before);}
+});

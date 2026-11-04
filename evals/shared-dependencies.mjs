@@ -7,7 +7,7 @@ import { localFile, readContext } from '../scripts/variant-history.mjs';
 import { prepareIntegration, integrateVariant, rollbackIntegration, listIntegrations } from '../scripts/variant-integrate.mjs';
 import { verifyArtifact, inspectVerification } from '../scripts/artifact-verification.mjs';
 import { collectProjectDependencies } from '../scripts/project-dependencies.mjs';
-import { captureNativeVite, gradeNativeVite, nativeManifest } from './native-vite.mjs';
+import { captureNativeVite, nativeManifest, nativeObservationChecks } from './native-vite.mjs';
 import { inspectNativeDelivery } from './native-delivery.mjs';
 
 const hash = value => createHash('sha256').update(value).digest('hex');
@@ -56,10 +56,7 @@ export async function probeSharedDependencies(project, { out, browser, generated
     add('closure-discovered', closure.coverage.status === 'within-supported-static-syntax' && Boolean(closure.resolution.factsFile) && expected.every(file => closure.files[file]), [...closure.coverage.unknowns.map(item => `${item.code}: ${item.file}`), ...expected.filter(file => !closure.files[file]).map(file => `not tracked: ${file}`)]);
     evidence = await verifyArtifact(output, 'B', { projectRoot: copy }, async () => {
       observation = await captureNativeVite(copy, { out: path.join(out, 'observation'), browser, manifest });
-      const observed = gradeNativeVite({ generate: observation }).checks, brand = observed.find(check => check.id === 'generate-brand-assets')?.pass;
-      const checked = ['generate-build-typecheck', 'generate-build-coverage'].every(id => observed.find(check => check.id === id)?.pass);
-      return [{ id: 'brand', status: brand ? 'passed' : 'failed', reason: 'Actual native A/B/C computed brand/assets at desktop/mobile within this fixture', tool: { name: 'Chrome via native host', version: observation.environment.browser }, environment: observation.environment, evidence: ['observation/report.json'] },
-        { id: 'project-checks', status: checked ? 'passed' : 'failed', reason: 'Actual original/preview typecheck and builds in the host copy; see native report', tool: { name: 'Native project Vite/TypeScript', version: observation.environment.vite }, environment: observation.environment, evidence: ['observation/report.json'] }];
+      return nativeObservationChecks(observation, { evidence: 'observation/report.json' });
     });
     add('fresh-observation', evidence.status === 'unverified' && !evidence.report.changedDuringRun && evidence.report.coverage.status === 'within-supported-static-syntax' && observation.samples.length === 6 && observation.samples.every(sample => sample.task && sample.identity && !sample.errors.length && !sample.failedRequests.length) && evidence.report.checks.filter(check => ['brand', 'project-checks'].includes(check.id)).every(check => check.status === 'passed'), ['Focus, motion and non-target checks are not inferred from these observations and remain unverified.']);
     const stage = localFile(copy, `${inspected.manifest.staging}/host-dependency-${randomUUID()}`), staged = read(copy, `${inspected.manifest.staging}/src/App.tsx`);

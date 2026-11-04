@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { grade, gradeChain, loadFixture, skillCopies, skillReading, snapshot, usage } from './grade.mjs';
 import { selectVariant, prepareVariant, applyVariant, undoVariant, confirmSystem, applySystemVariant, readContext } from '../scripts/variant-history.mjs';
 import { exportTokens } from '../scripts/ds-export.mjs';
-import { gradeNativeVite } from './native-vite.mjs';
+import { gradeNativeVite, nativeObservationChecks } from './native-vite.mjs';
 import { gradeDeliveryReceipts, deliveryReceiptGates } from './delivery-receipts.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -223,4 +223,10 @@ test('a nonzero or timed-out Agent process is incomplete even with artifacts',()
 test('delivery receipt grading requires every unique independent host gate',()=>{
  const good={source:'host-delivery-receipt-probe-v1',checks:deliveryReceiptGates.map(id=>({id,pass:true,details:[]}))};assert(gradeDeliveryReceipts(good).every(c=>c.pass));
  for(const report of [null,{pass:true},{...good,source:'Agent report'},{...good,error:'probe failed'},{...good,checks:good.checks.slice(1)},{...good,checks:[...good.checks,good.checks[0]]}])assert(gradeDeliveryReceipts(report).some(c=>!c.pass));
+});
+
+
+test('missing native measurements remain unverified rather than observed brand/project failures',()=>{
+ for(const capture of [undefined,{samples:[],checks:{}},{source:'host Playwright / original project Vite',samples:Array(6).fill({id:'A',width:1440,errors:['scenario stopped']}),environment:{browser:'real version',vite:'real version'},checks:{}}])assert(nativeObservationChecks(capture).every(c=>c.status==='unverified'));
+ const measured={source:'host Playwright / original project Vite',samples:[1440,390].map(width=>({id:'original',width,brand:{bodyFont:'Arial',headingFont:'Georgia',background:'rgb(247, 250, 252)',logo:null,originalLogo:'local asset'},errors:[],failedRequests:[]})),environment:{browser:'fixture contract',vite:'fixture contract'},checks:{}};assert.equal(nativeObservationChecks(measured,{original:true})[0].status,'failed');
 });

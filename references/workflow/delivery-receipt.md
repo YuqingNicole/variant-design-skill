@@ -25,6 +25,8 @@ node <skill-root>/scripts/delivery-receipt.mjs status variant-output <printed-re
 
 `projectRoot` is optional for nested output. Omit unavailable reports or preview receipts instead of inventing them. A missing after report leaves verification unverified; a missing before report leaves prior-error classification unverified. Observed failures remain failed. Preview conflicts retain their inventory and cap verification at unverified. Give the user the receipt path, actual preview URL/run instructions, remaining checks and the returned recovery argv (run from its `cwd`). No command in a configuration or receipt is executed by this helper.
 
+Report paths in this receipt config are output-relative (`.verification/B/…`). The separate `artifact-verification.mjs status` command takes the printed absolute report file, or a cwd-relative path such as `variant-output/.verification/B/…`; do not pass a config's output-relative path as a cwd-relative CLI filename.
+
 ## Read the result
 
 - `inventoryStatus: current` means the recorded project, version, plan, exact staging/target sets and bytes, dependencies, reports, preview ownership and checker implementations still match. It is separate from `verificationStatus`.
