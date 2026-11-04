@@ -1,6 +1,6 @@
 # RFC-007 · 设计系统分层：决策、基础值、语义、组件与模式
 
-- 状态：提案，待维护者确认。按 §7 的建议先实现了 P0，并实现了 P1 的一部分：`ds-export` 导出用途说明、`delivery-check` 对直接引用基础值发出警告、评分器新增检查。§4 里 `ds-check` 的“未检查”清单和“组件层只引用语义层”这条检查还没做；DTCG 的分组方式未定。试跑记录见 `docs/research/2026-11-03-design-system-after-pick.md`。
+- 状态：P0/P1 已实现；修复后的 Codex 完整 harbor-chain 与 ledger-pick 通过。Claude 账号验证、维护者截图验收和 §7 的未决选择仍待完成；默认 DTCG 按类型分组，按层导出已作为选项提供。证据见 `docs/research/2026-11-04-design-system-validation.md`。
 - 日期：2026-11-03。
 - 依据：
   - `docs/research/2026-11-03-design-system-layering.md`：Material 3、Polaris、Atlassian、Radix、shadcn/ui、Carbon、Figma Variables、DTCG 2025.10 的公开文档；
