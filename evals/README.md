@@ -7,6 +7,8 @@ node evals/run.mjs                                   # every fixture × claude a
 node evals/run.mjs --agent dsh --fixture pulse       # DeepSeek Harness
 node evals/run.mjs --agent claude --fixture pulse    # one run
 node evals/run.mjs --agent claude --fixture pulse --install plugin   # install through the Claude Code plugin marketplace
+node evals/run.mjs --agent codex --fixture harbor-chain   # the multi-turn chain: six fresh processes in a row
+node evals/run.mjs --agent codex --fixture harbor-chain --turns generate,pick   # only the turns named
 node evals/run.mjs --prepare-only --out /tmp/evals   # set up projects without running an agent
 node evals/grade.mjs <project> --fixture pulse --transcript <run>.jsonl   # grade an existing project
 node --test evals/grade.test.mjs                     # grader tests; no agent, no cost
@@ -50,8 +52,26 @@ The checks are deterministic and cover promises, not taste. Whether the three di
 | `harbor` | Vite + React members and permissions page | Exploration without brand constraints; destructive actions |
 | `bakery` | Plain HTML and CSS bakery page, in Chinese | Output without a framework or build step |
 | `ledger` | Next.js App Router pricing page with a shared plans module and a client context provider | A framework without Vite: the preview needs a native adapter route; brand lock from `app/globals.css` |
+| `harbor-chain` | The `harbor` project, six turns | The loop after generation: pick, design system, apply, undo, and new work on the confirmed system. See below |
 
 A fixture is a `project/` folder and a `fixture.json` with `description`, `prompt` and optional `locked: {file, fonts}`. Keep fixtures small and written by us.
+
+### Multi-turn fixtures
+
+A fixture with `turns` (and optionally `project`, the name of the fixture whose project it reuses, and `note`, appended to every prompt) runs one fresh agent process per turn in the same project, the way a user comes back to it later. Nothing carries over between turns except the files, so a turn passes only when the skill's state in the project is enough to continue. They run only when named with `--fixture`, because each costs several runs: a Claude Code chain costs about six times one run.
+
+After each turn the runner records a snapshot (the context, a hash of every file under `variant-output/`, delivery-check, and how far each variant is from a confirmed design system), and each turn is graded against the snapshots before it. A failed turn does not stop the chain; later turns are graded on what it left. Every turn reports `<turn>:delivery-check`; `generate` and `component` also report `<turn>:quality-gate`. `project-untouched` and `skill-under-test` (over every turn's transcript) are checked once at the end.
+
+| Turn | Prompt | Fails when |
+|---|---|---|
+| `generate` | the `harbor` prompt | `generated`: no context; `not-selected`: a direction was selected |
+| `pick` | `pick B` | `picked`: `selectedVariant` is not B; `pick-is-not-an-edit`: a variant's files or B's version changed; `ds-drafted`: `design-system.css`, `design-system-preview.html` or `DESIGN.md` is missing from `variant-output/`; `ds-waits-for-user`: `designSystem` changed before `ds confirm`; `ds-contrast`: `ds-check.mjs` finds a pair below 4.5:1; `ds-decisions`: `design-system.css` does not open with a comment naming its decisions; `ds-use-notes`: a `--color-*` token has no trailing `/* use: … */` note |
+| `confirm` | `ds confirm` | `ds-confirmed`: not confirmed, `source` is not B, or the file is missing; `tokens-exported`: no readable `design-system.tokens.json`; `confirm-is-not-an-edit`: a variant's files changed or the selection moved |
+| `apply` | `apply ds B` | `applied`: B's version did not rise, or B is not active and selected; `apply-stays-in-B`: A, C or the design system changed; `drift-reduced`: B uses as many colors and lengths outside the system as before (zero passes) |
+| `undo` | `undo B` | `undone`: B's files differ from the snapshot before `apply ds B`, or B is no longer selected; `undo-stays-in-B`: A, C or the design system changed |
+| `component` | an invite-member dialog on the confirmed system | `component-built`: no new HTML, CSS or component file in `variant-output/`; `component-on-system`: a new file uses a hex color or a spacing, type or radius length the system does not define, or references a primitive (`--p-*`); `component-leaves-variants`: a variant, the design system or the selection changed |
+
+`drift-reduced` and `component-on-system` use `systemDrift` from `scripts/delivery-check.mjs`: hex colors and `padding`, `margin`, `gap`, `font-size` and `border-radius` lengths, not every value a page uses.
 
 ## Blind review
 

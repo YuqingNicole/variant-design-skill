@@ -552,7 +552,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-topic')).toContainText('2026-10-29');
  await expect(cards.locator('.insp-card-open[href="/inspiration/lovable"]')).toHaveCount(0);
  await expect(cards.locator('.insp-card-out[href="https://impeccable.style/"]')).toHaveCount(1);
- await expect(page.locator('.insp-title')).toContainText('目前 94 条');await expect(page.locator('.insp-counts')).toContainText('20 Landing');
+ await expect(page.locator('.insp-title')).toContainText('目前 95 条');await expect(page.locator('.insp-counts')).toContainText('20 Landing');
  await page.getByRole('searchbox').fill('Vercel');
  await expect(cards).toHaveCount(1);await expect(cards.first().locator('.insp-card-open')).toHaveAttribute('href','/inspiration/v0');
  await page.getByRole('searchbox').fill('');
@@ -696,7 +696,7 @@ test('without JavaScript the inspiration page links every reference, and with it
   for (const [route, prefix] of [['/', '/inspiration/'], ['/en', '/en/inspiration/']]) {
     await reader.goto(route);
     const links = await reader.locator(`#root a[href^="${prefix}"]`).evaluateAll(as => [...new Set(as.map(a => a.getAttribute('href').split(/[?#]/)[0]))]);
-    expect(links.length, route).toBe(94);
+    expect(links.length, route).toBe(95);
   }
   await noScript.close();
   await page.goto('/');

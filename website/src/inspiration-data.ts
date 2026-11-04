@@ -1342,6 +1342,37 @@ export const inspirationItems = [
     }
   },
   {
+    "id": "x-cabralorenzo-012387",
+    "name": "Dust delete",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/cabralorenzo/status/2117331669376012387",
+    "source": "link-only",
+    "focus": {
+      "zh": "点插画卡片角上的垃圾桶，画面碎成彩色颗粒被吸走，下一张随即补上",
+      "en": "Tap the bin on an illustration card and it breaks into colored dust that is swept away, then the next card takes its place"
+    },
+    "application": {
+      "zh": "删除图片、卡片或草稿时，让删除过程看得见，又不打断浏览",
+      "en": "Deleting images, cards or drafts so the removal is visible without breaking the flow"
+    },
+    "publisher": "Lorenzo Cabra (@cabralorenzo)",
+    "kind": "social-post",
+    "designer": "Lorenzo Cabra",
+    "checkedAt": "2026-11-03",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2117331669376012387",
+      "author": "Lorenzo Cabra",
+      "handle": "cabralorenzo",
+      "date": "2026-11-02",
+      "lang": "en",
+      "text": "Dust Delete Interactive Component https://t.co/csJz2YL3KC",
+      "hasMedia": true
+    }
+  },
+  {
     "id": "x-spottedinprod-722437",
     "name": "Grok Bot upsell sheet",
     "category": "practice",

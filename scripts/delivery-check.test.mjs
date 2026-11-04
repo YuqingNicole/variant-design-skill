@@ -69,6 +69,34 @@ test('a locked design system keeps its fonts and colors', () => {
   assert.deepEqual(run(s => { delete s.designSystem; s.variants.B.tokens.fonts = ['Newsreader']; }).errors, []);
 });
 
+test('a brand lock reads its confirmed extensions, which must exist and never redefine the brand', () => {
+  const extend = (css, more = () => {}) => run((s, out) => { fs.writeFileSync(path.join(out, 'design-system.css'), css); s.designSystem.extensions = ['variant-output/design-system.css']; more(s, out); });
+  assert.deepEqual(extend(':root{--space-4:16px;--danger:#c1121f;--ds-text:var(--ink)}\n', (s, out) => fs.appendFileSync(path.join(out, 'VariantA.css'), '.e{color:#c1121f}\n')), { errors: [], warnings: [], variants: ['A', 'B', 'C'] });
+  assert.ok(has(extend(':root{--ink:#000000}\n').errors, 'variant-output/design-system.css redefines --ink'));
+  assert.ok(has(run(s => { s.designSystem.extensions = ['variant-output/missing.css']; }).errors, 'variant-output/missing.css does not exist'));
+  // A confirmed system's own low-contrast pair is reported, not blocking: the user confirmed it.
+  const low = extend(':root{--color-bg:#ffffff;--color-text-muted:#999999}\n');
+  assert.deepEqual(low.errors, []);
+  assert.ok(has(low.warnings, 'Design system pair --color-text-muted on --color-bg is 2.85:1, below 4.5:1'));
+});
+
+test('lengths outside the design system scale are warnings that name the nearest token', () => {
+  const scale = ':root{--space-2:8px;--space-4:1rem;--text-sm:14px;--text-base:16px;--radius-md:8px}\n';
+  const check = css => run((s, out) => { fs.writeFileSync(path.join(out, 'design-system.css'), scale); s.designSystem.extensions = ['variant-output/design-system.css']; fs.appendFileSync(path.join(out, 'VariantB.css'), css); });
+  assert.deepEqual(check('.b{padding:16px 8px;margin:0;gap:var(--space-2);font-size:clamp(1rem,2vw,2rem);border-radius:50%}\n'), { errors: [], warnings: [], variants: ['A', 'B', 'C'] });
+  const off = check('.b{font-size:13px;padding:18px;border-radius:7px}\n');
+  assert.deepEqual(off.errors, []);
+  assert.ok(has(off.warnings, 'VariantB.css uses lengths outside the design system: 13px (nearest --text-sm 14px), 18px (nearest --space-4 16px), 7px (nearest --radius-md 8px)'));
+  const jsx = run((s, out) => { fs.writeFileSync(path.join(out, 'design-system.css'), scale); s.designSystem.extensions = ['variant-output/design-system.css']; fs.appendFileSync(path.join(out, 'VariantC.tsx'), 'export const X = () => <p style={{ fontSize: 13, padding: 8 }} />;\n'); });
+  assert.ok(has(jsx.warnings, 'VariantC.tsx uses lengths outside the design system: 13px (nearest --text-sm 14px)'));
+  // A system derived from B binds B; A and C were explorations that predate it.
+  const derived = run((s, out) => { fs.writeFileSync(path.join(out, 'design-system.css'), scale); s.designSystem.extensions = ['variant-output/design-system.css']; s.designSystem.source = 'B'; for (const id of ['A', 'B']) fs.appendFileSync(path.join(out, `Variant${id}.css`), '.x{padding:18px;color:#123456}\n'); });
+  assert.ok(has(derived.warnings, 'Variant B VariantB.css uses lengths outside the design system: 18px (nearest --space-4 16px); `apply ds B` replaces them with tokens'));
+  assert.ok(!has(derived.warnings, 'Variant A'));
+  // Without spacing or type tokens there is no scale to hold lengths to.
+  assert.deepEqual(run((s, out) => fs.appendFileSync(path.join(out, 'VariantB.css'), '.b{padding:18px}\n')).warnings, []);
+});
+
 test('fonts are read from declarations, custom properties and inline styles', () => {
   assert.deepEqual(declaredFonts(`a{font-family:'Newsreader',Georgia,serif} :root{--font-body: "Figtree", sans-serif; --font-size: 14px; --font-weight: bold}
     b{font-family:var(--font-body)} c{font-family:system-ui} <p style={{ fontFamily: 'IBM Plex Mono, monospace' }}/>`), ['Newsreader', 'Figtree', 'IBM Plex Mono']);
@@ -79,4 +107,12 @@ test('the CLI exits non-zero on errors and passes a real recorded run', () => {
   assert.throws(() => execFileSync(process.execPath, [path.join(here, 'delivery-check.mjs'), broken], { stdio: 'pipe' }), e => e.status === 1 && String(e.stdout).includes('delivery check failed'));
   const harbor = path.join(here, '../website/content/evidence/harbor/variant-output');
   assert.match(execFileSync(process.execPath, [path.join(here, 'delivery-check.mjs'), harbor], { encoding: 'utf8' }), /delivery check passed for A\/B\/C/);
+});
+
+test('a skill-generated system keeps primitives out of product code; a brand file is not held to it', () => {
+  const system = ':root{--p-clay-600:#944329;--color-accent:var(--p-clay-600)}\n';
+  const derived = run((s, out) => { fs.writeFileSync(path.join(out, 'design-system.css'), system); s.designSystem = { confirmed: true, file: 'variant-output/design-system.css', source: 'B' }; fs.appendFileSync(path.join(out, 'VariantB.css'), '.x{color:var(--p-clay-600);background:var(--color-accent)}\n'); });
+  assert.ok(has(derived.warnings, 'Variant B VariantB.css uses primitive tokens --p-clay-600; use the semantic token that names their role'));
+  const brand = run((s, out) => fs.appendFileSync(path.join(out, 'VariantB.css'), '.x{color:var(--p-clay-600)}\n'));
+  assert.ok(!has(brand.warnings, 'primitive tokens'));
 });

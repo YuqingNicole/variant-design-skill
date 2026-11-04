@@ -45,7 +45,7 @@ Three variations from a single prompt — each feels like a different studio:
 1. **Detects your scenario** — dashboard, SaaS landing page, editorial, e-commerce, mobile app, creative tool, education, portfolio, food & beverage, fashion & lifestyle
 2. **Loads design system references** — typography, color theory (OKLCH), spatial design, motion, micro-interactions, interaction, responsive, UX writing
 3. **Generates 3 distinct variations** — each expresses a distinct product trade-off with working task controls; visual tokens stay fixed under a brand lock
-4. **Runs mechanical and visual quality gates** — scans generated code, checks that the three recorded directions are distinct, recommended but not selected and inside any brand lock (`scripts/delivery-check.mjs`), then checks the rendered result for generic AI aesthetic fingerprints
+4. **Runs mechanical and visual quality gates** — scans generated code, checks that the three recorded directions are distinct, recommended but not selected and inside any brand lock or confirmed design system, including its spacing and type scale (`scripts/delivery-check.mjs`), then checks the rendered result for generic AI aesthetic fingerprints
 5. **Ships working code** — Context-aware output: auto-detects React projects and generates `.tsx` components; generates zero-dependency interactive HTML otherwise. Real content, no lorem ipsum
 6. **Offers variation actions** — push further, polish, critique, swap styles, remix colors, shuffle layouts, add motion, dramatize, make interactive
 
@@ -149,7 +149,7 @@ The optional release check runs at most once per 24 hours, reports an available 
 
 - Three directions retain the same core task, data, and required functions. Each explains **what it optimizes, what it sacrifices, and when to use it**, followed by a reasoned recommendation.
 - The comparison page opens by default, with previews first and expandable direction details. React output gets three isolated mounts and direct preview URLs; project type checks must include the generated files. Native adapters handle framework-specific dependencies.
-- `B vary subtle — hero` edits B without selecting it. `pick B` explicitly chooses B, then derives a complete design system from it (palette and type scales, spacing, radius, elevation, motion, and every component B uses in all its states) with a preview; `ds confirm` locks it. `undo B` restores B's last files and tokens while preserving A/C and the selected winner.
+- `B vary subtle — hero` edits B without selecting it. `pick B` explicitly chooses B, then derives a complete design system from it (palette and type scales, spacing, radius, elevation, motion, and every component B uses in all its states) with a preview and usage rules in `DESIGN.md`; `ds confirm` locks it and exports it as DTCG design tokens (`design-system.tokens.json`) for Figma variables and other token tools. `undo B` restores B's last files and tokens while preserving A/C and the selected winner.
 - Schema v2 stores each direction's files, tokens, version, comparison, and history separately. A durable snapshot precedes every replacement; Git alone is not a snapshot.
 - Precedence: user constraints → product task and existing design system → accessibility → style advice. Report unresolved accessibility conflicts. Brand-locked output retains fonts/tokens; free exploration may vary them. There is no animation quota.
 

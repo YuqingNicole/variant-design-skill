@@ -8,5 +8,7 @@
 | [004 · 首页：设计导航站的第一屏](004-landing-first-screen.md) | 已修订，§0 已实施 | RFC-001、002、003 |
 | [005 · 网站多语言架构](005-multilingual-architecture.md) | 已接受，P0 已实施 | RFC-002、003 §5 |
 | [006 · 改定位：以设计灵感为主](006-inspiration-first-repositioning.md) | 已接受，P1 已实施 | RFC-003、004、005 |
+| [006 · 产品架构：开源技能、托管生成与设计系统](006-product-architecture.md) | 提案，待确认；§4.1 已实现（#137），付费点未定 | PRD-000、004、005；RFC-001、002 |
+| [007 · 设计系统分层：决策、基础值、语义、组件与模式](007-design-system-layers.md) | 提案，待确认；P0 已实现，P1 部分实现 | RFC-006 §4.1 |
 
 RFC 记录设计决策与约束，PRD 记录验收要求；实现状态以对应 Issue 和验证证据为准。

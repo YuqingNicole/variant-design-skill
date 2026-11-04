@@ -14,7 +14,7 @@ The scanner checks common accessibility, resilience, copy, and AI-slop indicator
 
 Strict mode fails on warnings as well as errors. Use `--json` for machine-readable output and `--self-test` to validate the scanner itself.
 
-For A/B/C deliveries, also run `node <skill-root>/scripts/delivery-check.mjs variant-output [--project <root>] [--json]`. It reads `.variant-context.json` and the owned files: three registered directions with distinct comparisons, a shared task contract, a recommendation without a selection, and, under a design-system lock, recorded and declared fonts and recorded colors that match the locked file. Hex colors outside the locked file are warnings to explain, not errors.
+For A/B/C deliveries, also run `node <skill-root>/scripts/delivery-check.mjs variant-output [--project <root>] [--json]`. It reads `.variant-context.json` and the owned files: three registered directions with distinct comparisons, a shared task contract, a recommendation without a selection, and, under a design-system lock, recorded and declared fonts and recorded colors that match the locked file. Under a brand-file lock it also reads `designSystem.extensions`: an extension that redefines a brand variable is an error. Hex colors outside the system, and spacing, font-size or radius values off its scale (CSS or JSX style objects; `clamp()`/`calc()` and `var()` are skipped), are warnings that name the nearest token: explain them or replace them, not errors. A confirmed system's own text/surface pairs below 4.5:1 (`scripts/ds-check.mjs`) are warnings too. Under a system the skill generated (`variant-output/design-system.css`), a direct reference to a primitive (`--p-*`) is a warning: product code uses semantic tokens. When the system records `source` (it was derived from a picked direction), only that direction is held to it; the other directions predate the system.
 
 ## Style budget
 
@@ -32,6 +32,22 @@ Check the rendered result, not just source code:
 - motion communicates state or hierarchy and respects reduced-motion preferences;
 - realistic long, empty, and failure content does not break the layout.
 
+## Generator habits
+
+Generated interfaces converge on the same moves whatever the product. Each one below needs a reason that is about this product's task; "it looks designed" is not one. Remove the rest before presenting. `quality-gate.mjs` lists the first three as `review` findings (they never fail `--strict`, because a brand page may use them on purpose): remove each, or say in the report why it stays.
+
+- Uppercase letter-spaced eyebrow labels above headings (`eyebrow-label`).
+- Decorative numbers: zero-padded counts and step numbers (`04`, `01–03`), oversized stats that answer no question, round fake metrics (`decorative-number`).
+- A direction's name inside the product UI ("Direction B · Room to grow"); names belong in the comparison page (`direction-label-in-ui`).
+- A slogan or marketing hero on a product page. A settings, admin or tool page keeps its noun title ("Members") and the project's own description; invent no taglines ("Your people. One place.").
+- A promotional card inside a tool ("Grow your team · Good work starts with people").
+- Every block in a bordered, rounded, shadowed card; cards inside cards.
+- A palette chosen for mood rather than meaning: cream or beige paper with sage, lime, terracotta or forest green; purple-blue gradients; glass.
+- Pill-shaped buttons and inputs everywhere.
+- `system-ui`, Inter, Roboto or Arial as the only face (see Typography).
+- Three directions that share one skeleton (same header, same hero, same stat, same card grid) and differ only in palette. A light and a dark version of the same layout are one direction.
+- An outward arrow (↗) on a button that does not leave the page.
+
 ## Typography
 
 - Use a distinctive display face only when it fits the product; body type must remain readable.
@@ -39,6 +55,13 @@ Check the rendered result, not just source code:
 - Suitable alternatives include Instrument Sans, Plus Jakarta Sans, Outfit, Onest, Figtree, Urbanist, Fraunces, Newsreader, and Lora.
 - Use no more than two families, a deliberate type scale, balanced headings, and body line-height around 1.5–1.7.
 - Use tabular numerals for comparable data.
+
+## Buttons
+
+- Button labels use the interface sans, weight 500–600, sentence case, even when headings use a serif.
+- One solid primary per view or group; danger on the page is a red label, solid red only in the confirmation dialog.
+- Hover and pressed are derived from the button's own colors (`color-mix`), not picked per variant; focus is one 2px `:focus-visible` outline; disabled is neutral.
+- Radius comes from the shared control token (about 0.15–0.25 of the height, or a pill). Details: the Button section of `references/ux/component-specs.md`.
 
 ## Color and surfaces
 

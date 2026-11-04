@@ -34,17 +34,19 @@ Read files only at the step that names them, and only the section you need. Do n
 
 Read `variant-output/.variant-context.json` when it exists and apply its known values as soft constraints; the current request overrides them. In an existing project, run the discovery in `references/workflow/project-discovery.md` before generating.
 
+**An existing page keeps its job.** When the project already has the page (a members screen, a billing page, a dashboard), every direction is still that page inside that product: its noun title, the project's own description and copy, the app's navigation around it. Directions change how the page does its job, not what kind of page it is: no marketing hero, tagline or promotional card on a product page.
+
 Use the fast path when the brief or repository already reveals the product, audience, tone and constraints: state consequential assumptions in one line and generate. Ask at most two questions, only when the answers would materially change the result. An explicit request to build or generate needs no separate confirmation turn. If the user says "surprise me", choose three maximally different directions and proceed.
 
 If the user points to a direction card (a library `/d/<slug>` page or its `.json`), follow `references/sources/direction-cards.md` and add the card to the task brief before generating.
 
 ## 2. Lock or explore, then load one domain reference
 
-**Design system confirmed** (`designSystem.confirmed: true`, or a brand file the project marks as locked): read `designSystem.file` relative to the project root and use its tokens. Print `✦ DS locked: [palette] · [fonts] · variations differ in layout only`. Skip palette and font selection; the domain reference supplies layout and interaction patterns only. When the lock comes from a project file (such as `src/tokens.css` or `app/globals.css`), record that file in place as `designSystem.file`. Do not copy it into `variant-output/` or add tokens to it: a copy goes stale when the brand changes, and edits are checked against the registered file. Read the files in `designSystem.extensions` too: they hold the confirmed layers the brand leaves open (spacing, radius, elevation, motion, component states). Put only tokens neither file defines in the variants' own files.
+**Design system confirmed** (`designSystem.confirmed: true`, or a brand file the project marks as locked): read `designSystem.file` relative to the project root and use its tokens. Print `✦ DS locked: [palette] · [fonts] · variations differ in layout only`. Skip palette and font selection; the domain reference supplies layout and interaction patterns only. When the lock comes from a project file (such as `src/tokens.css` or `app/globals.css`), record that file in place as `designSystem.file`. Do not copy it into `variant-output/` or add tokens to it: a copy goes stale when the brand changes, and edits are checked against the registered file. When `variant-output/DESIGN.md` exists, read it before building on the system; it says which tokens go where. Read the files in `designSystem.extensions` too: they hold the confirmed layers the brand leaves open (spacing, radius, elevation, motion, component states). Put only tokens neither file defines in the variants' own files.
 
 **No confirmed system:** identify the scenario, then pick three starter prompts and palettes from the domain reference and `references/palettes.md`.
 
-Load the one domain reference that best matches the request:
+Load the one domain reference that best matches the request. A settings or management page inside an app (members, billing, preferences) uses the dashboard reference for layout patterns only: no KPI header or large metric numbers unless the page's job is monitoring.
 
 | Domain | Reference |
 |---|---|
@@ -66,7 +68,7 @@ Read a design-system reference only when a direction depends on it, and only the
 First define a shared task contract: primary job, identical input data, necessary functions and success criteria. Give each direction a distinct optimization, an explicit cost and a suitable scenario. For a dashboard: A prioritizes anomaly detection, B comparison across objects, C evidence tracing. All three support the same core task and functions. Differences must be visible in layout and interaction, not only described.
 
 - **Design system confirmed:** each direction is a different structural arrangement: grid and layout, information hierarchy, density and rhythm (DS spacing tokens only), and which components lead. Colors, fonts and components do not change between A, B and C.
-- **No confirmed system:** each direction is a different studio's interpretation; never two in the same aesthetic.
+- **No confirmed system:** start from structure, as above: each direction arranges the task differently (for a members page: a dense table with inline role edits; members grouped under role descriptions; invitations and pending changes first, with an audit trail). Then give each a visual language that serves its trade-off, so no two share an aesthetic. A palette swap on one skeleton is not three directions. On marketing, editorial and brand surfaces, style may lead; the table below is for those.
 
 | Direction | Feel | Signature |
 |---|---|---|
@@ -78,9 +80,9 @@ First define a shared task contract: primary job, identical input data, necessar
 | Neo-brutalist | Raw, unconventional | Bold outlines, broken grid |
 | Luxury / Silence | Maximum negative space | One image, sparse text |
 
-These are styles. "Premium" or "高级" in a brief is not one of them: translate it with `references/workflow/adjective-translation.md` before choosing.
+These are styles for marketing, editorial and brand surfaces; on product UI they follow the structure. "Premium" or "高级" in a brief is not one of them: translate it with `references/workflow/adjective-translation.md` before choosing.
 
-Before coding, define for each direction: starter prompt, palette (OKLCH where possible), display and body fonts (guidance and banned defaults in `references/workflow/quality-baseline.md`), layout pattern, motion strategy, the interactions that serve the task (no motion quota), and one signature detail.
+Before coding, define for each direction: starter prompt, palette (OKLCH where possible), display and body fonts (guidance and banned defaults in `references/workflow/quality-baseline.md`), layout pattern, motion strategy, the interactions that serve the task (no motion quota), and one signature detail that serves the task (a consequence line beside a role change, an inline undo), not a decoration. Check each direction against the Generator habits list in `references/workflow/quality-baseline.md` before coding.
 
 ## 4. Implement and record
 
@@ -101,7 +103,7 @@ node <skill-root>/scripts/quality-gate.mjs variant-output --strict
 node <skill-root>/scripts/delivery-check.mjs variant-output
 ```
 
-Scan only the current deliverables (name the files when the directory holds older output). Inspect quality-gate findings in context and fix confirmed ones. Fix every delivery-check error: missing or shared files, empty or repeated comparisons, a missing task contract or recommendation, or a changed locked font or color. A `selectedVariant` warning means a direction was selected without the user. Then review the rendered pages with `references/workflow/quality-baseline.md`: hierarchy, distinctness, responsive behavior and working interactions.
+Scan only the current deliverables (name the files when the directory holds older output). Inspect quality-gate findings in context and fix confirmed ones. For each `review` finding (a generator habit), remove it or say in the presentation why this product needs it. Fix every delivery-check error: missing or shared files, empty or repeated comparisons, a missing task contract or recommendation, a changed locked font or color, or a design-system extension that redefines a brand variable. Under a confirmed system, colors and lengths outside its tokens, and direct references to its primitives (`--p-*`), are warnings: replace them with semantic tokens or say why. A `selectedVariant` warning means a direction was selected without the user. Then review the rendered pages with `references/workflow/quality-baseline.md`: hierarchy, distinctness, responsive behavior and working interactions.
 
 When recording version-bound runtime checks, use `references/workflow/artifact-verification.md`: fill the browser plan from task expectations, and retain unverified items explicitly. For edits, compare pre-edit and post-edit observations.
 
