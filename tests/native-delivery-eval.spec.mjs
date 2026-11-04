@@ -74,7 +74,10 @@ test('inspection rejects missing/forged receipts, unrestored files, mismatched s
 
 test('real history, browser integration and rollback replay preserve the original project and refuse later edits', async ({ browser }) => {
   test.setTimeout(180000); const input = recordedDelivery(generatedProject('positive'));
-  const report = await replayNativeDelivery(input.project, { generated: input.generated, baseline: input.baseline, browser, out: path.join(root, 'positive-replay') });
+  const alias = path.join(root, 'evidence-alias'); fs.symlinkSync(root, alias, process.platform === 'win32' ? 'junction' : 'dir');
+  const destination = path.join(alias, 'positive-replay');
+  const report = await replayNativeDelivery(input.project, { generated: input.generated, baseline: input.baseline, browser, out: destination });
+  expect(report.copy).toBe(fs.realpathSync(path.join(destination, 'project')));
   expect(report.checks.filter(c => !c.pass), report.error).toEqual([]); expect(gradeNativeDelivery(report).pass).toBe(true);
   expect(report.originalAfter).toEqual(report.originalBefore);
   expect(report.captures.draft.samples.every(s => s.heading.endsWith('— Draft'))).toBe(true);

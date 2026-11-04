@@ -58,6 +58,8 @@ The helper rechecks before snapshot/commit, but an external editor can still wri
 
 Rebuild static previews after apply or undo. If React uses an isolated bundler, retain the same original project root and `--vite-root` argument described in `references/workflow/preview.md`.
 
+Preview rebuilds use separate ownership receipts and preserve later user edits; history apply/undo never grants ownership of adapters or selects a direction. On a preview conflict keep the conflicting files and receipt, then follow the fresh-path workflow in `references/workflow/preview.md`. File cleanup uses that receipt, not the variant's owned source list or recursive deletion.
+
 Before a scoped edit, record representative non-target behavior with the browser plan in `references/workflow/artifact-verification.md`, then rerun the same assertions after applying. Byte preservation alone does not prove rendered behavior. Retain pre-edit project-check failures so delivery can distinguish identical prior diagnostics from new or changed errors.
 
 Project integration uses the same `.variant-lock` and a separate prepared source/target baseline. See `skills/shared/export.md` before generating integration files. Candidate preparation for edits does not replace integration preparation.

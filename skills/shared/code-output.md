@@ -97,6 +97,8 @@ Write to `./variant-output/` in the target project, never into its source folder
 
 - HTML: `variant-[scenario]-A.html`, `-B.html`, `-C.html` (for example `variant-dashboard-A.html`).
 - React: Write default-exported `VariantA.tsx`, `VariantB.tsx`, and `VariantC.tsx` into `variant-output/`. Mount them automatically using `references/workflow/preview.md`; the comparison view and three direct URLs are part of delivery. Starting the original project's server alone is insufficient. Keep production routes untouched. Use a native isolated route adapter when framework-specific imports/providers require it, and remove only files created by this task during cleanup.
+
+Before writing native adapters, prepare their absent paths with `preview-files.mjs`, then seal ownership once; bundled comparisons/static builds return receipts automatically. Follow the preview reference at this phase for guarded rebuilds and explicit cleanup. Unowned legacy files and later user edits stay intact; do not re-adopt or recursively remove them.
 - Data shared by all three directions: one file under `variant-output/shared/`.
 - Working files (candidates, change files, probes, screenshots): `.variant-work/` in the project root. It contains project source; do not commit it.
 

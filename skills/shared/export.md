@@ -39,6 +39,8 @@ node <skill-root>/scripts/variant-integrate.mjs list variant-output
 
 `apply` saves the prior bytes of every target in `variant-output/.integrations/<id>.json` before writing, refuses targets inside `variant-output/`, `.git/`, `node_modules/` or `.variant-work/`, and records each file as created, overwritten or unchanged. `rollback` restores those files and deletes created ones, but refuses without writing anything if the user edited an integrated file afterwards. In the delivery summary, give the changed files, the checks that actually ran, the preview URL, and the exact rollback command.
 
+Include current comparison/static/native preview ownership receipts and their project roots with the handoff. Cleanup is separate from integration rollback: stop only this preview's managed process, then use `preview-files.mjs cleanup` as described in `references/workflow/preview.md`. Preserve changed adapters and all unlisted files; never delete variant source, staging, checks or backups as a cleanup shortcut.
+
 Preparation, apply and rollback share the history helper lock. External editors do not honor it; avoid simultaneous editing during commit. Ordinary write failures restore completed writes when they still match this integration; conflicting later edits preserve the backup for manual recovery. Multi-file process interruption is not globally atomic.
 
 Run the target project's production build after integrating the named export. With Vite multiple HTML entries, register the comparison and A/B/C entries in `build.rollupOptions.input`; a working dev URL does not mean the preview survives a production build. Open the built application and every preview route and verify real controls, not just HTTP 200 (an SPA fallback can return the wrong page with 200).

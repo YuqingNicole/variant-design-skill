@@ -26,7 +26,7 @@ Read files only at the step that names them, and only the section you need. Do n
 | Zone edit | `B vary subtle — hero`, `zones A` | `skills/variant-generate/zones.md`, then `references/workflow/history.md` |
 | Undo, recover | `undo B`, `recover` | `references/workflow/history.md` |
 | Pick | `pick B` | `references/workflow/history.md` (select), then `skills/variant-design-system/ROUTE.md` → Design system from a picked direction |
-| Reopen or compare | `open B`, `compare` | `references/workflow/preview.md` |
+| Reopen, compare or clean previews | `open B`, `compare`, `clean previews` | `references/workflow/preview.md` |
 | Export or integrate (prepare target baseline before staging) | `react B`, `export to next`, `integrate B`, `copy` | `skills/shared/export.md` |
 | Context | `show context`, `reset context` | `references/workflow/project-context.md` |
 
@@ -95,6 +95,8 @@ Register A, B and C in `.variant-context.json` following `references/workflow/pr
 ## 5. Preview
 
 Build and open the comparison page with A/B/C direct links and the recommendation, following `references/workflow/preview.md`. Show the actual URL or `file://` path. For portable React without Vite, use the isolated `--vite-root` path in that reference; native framework features still need their adapter.
+
+Use the preview reference's ownership protocol before creating native adapters; preserve the receipts returned by native or bundled helpers. Rebuild only from an unchanged ownership baseline. On explicit cleanup, stop the owned process and use receipts to preserve user-edited adapters and original files.
 
 ## 6. Check
 

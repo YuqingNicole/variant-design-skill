@@ -94,6 +94,8 @@ export async function replayNativeDelivery(project, { out, browser, generated, b
   project = fs.realpathSync(project);
   need(out && path.relative(project, path.resolve(out)).startsWith('..' + path.sep), 'Replay evidence must stay outside the Agent project');
   fs.mkdirSync(out, { recursive: true }); need(path.relative(project, fs.realpathSync(out)).startsWith('..' + path.sep), 'Replay evidence must stay outside the Agent project'); need(!fs.readdirSync(out).length, 'Preserve existing delivery evidence');
+  // The helper canonicalizes project roots; keep plan paths on the same side of /var aliases too.
+  out = fs.realpathSync(out);
   const startedAt = new Date().toISOString();
   const beforeTree = tree(project), checks = [], actions = [], captures = {};
   const add = (id, pass, details = []) => checks.push({ id, pass: Boolean(pass), details });

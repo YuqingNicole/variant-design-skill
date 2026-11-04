@@ -3,11 +3,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
+import { randomUUID } from 'node:crypto';
 import { fixture } from './fixture.mjs';
 import { prepareVariant, applyVariant, undoVariant, confirmSystem, applySystemVariant, readContext } from '../scripts/variant-history.mjs';
-const root=path.resolve('.generated'),candidate=path.resolve('.candidate');
+import { cleanupPreview } from '../scripts/preview-files.mjs';
+// Fresh ownership per run; retain generated source for the following typecheck step.
+const runId=randomUUID(),root=path.resolve('.generated',runId),candidate=path.resolve('.candidate',runId);
 let server, base;
 test.beforeAll(async()=>{
+  fs.mkdirSync(path.dirname(candidate),{recursive:true});
   fixture(root);
   server=spawn(process.execPath,['../scripts/react-preview.mjs',process.cwd(),root],{stdio:['ignore','pipe','pipe']});
   base=await new Promise((resolve,reject)=>{let output='';const timeout=setTimeout(()=>reject(new Error(output)),20000);server.stdout.on('data',b=>{output+=b;const match=output.match(/Comparison: (http:\/\/[^\s]+)\/\_compare.html/);if(match){clearTimeout(timeout);resolve(match[1]);}});server.stderr.on('data',b=>output+=b);server.on('exit',code=>{clearTimeout(timeout);reject(new Error(`Preview exited ${code}: ${output}`));});});
@@ -248,4 +252,21 @@ test('system confirmation preserves the old page; explicit adoption and undo res
  await page.reload();await expect(page.locator('body')).toHaveCSS('font-family','Arial');await page.getByRole('button',{name:'Inspect',exact:true}).click();await expect(page.locator('output')).toHaveText('1');expect(readContext(output).variants.B.systemBinding.status).toBe('applied');
  undoVariant(output,'B');await page.reload();await expect(page.locator('body')).toHaveCSS('font-family','Georgia');await page.getByRole('button',{name:'Inspect',exact:true}).click();await expect(page.locator('output')).toHaveText('1');
  expect(fs.readFileSync(path.join(output,'B.html'))).toEqual(original);expect(readContext(output).selectedVariant).toBe('B');expect(readContext(output).variants.B.systemBinding.status).toBe('pending');expect(['A','C'].map(id=>fs.readFileSync(path.join(output,`${id}.html`),'utf8'))).toEqual(others);
+});
+
+test('static rebuild and cleanup preserve user files while all three real previews remain interactive',async({page})=>{
+ const work=fs.mkdtempSync(path.resolve('.owned-preview-')),output=path.join(work,'variant-output');
+ try{
+  fixture(output);const context=fs.readFileSync(path.join(output,'.variant-context.json')),original=fs.readFileSync(path.join(output,'VariantB.tsx'));
+  const build=()=>spawnSync(process.execPath,['../scripts/react-preview.mjs',process.cwd(),output,'--static'],{encoding:'utf8',timeout:30000});
+  const receipt=(run,label)=>JSON.parse(run.stdout.split('\n').find(line=>line.startsWith(`${label}: `)).slice(label.length+2));
+  const first=build();expect(first.status,first.stderr).toBe(0);
+  const second=build();expect(second.status,second.stderr).toBe(0);const owned=receipt(second,'Static ownership');
+  for(const id of ['A','B','C']){await page.goto(pathToFileURL(path.join(output,`_static/_preview/${id}.html`)).href);await expect(page.getByRole('heading')).toHaveText(`Direction ${id}`);await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Inspect 1');}
+  const edited=path.join(output,'_static/_preview/A.html'),unknown=path.join(output,'_static/user-notes.html');fs.appendFileSync(edited,'\n<!-- user edit -->');fs.writeFileSync(unknown,'user notes');const editedBytes=fs.readFileSync(edited),bBytes=fs.readFileSync(path.join(output,'_static/_preview/B.html'));
+  const failed=build();expect(failed.status).toBe(1);expect(failed.stderr).toContain('Preview conflict');expect(fs.readFileSync(edited)).toEqual(editedBytes);expect(fs.readFileSync(path.join(output,'_static/_preview/B.html'))).toEqual(bBytes);
+  const cleaned=cleanupPreview(owned.project,owned.receipt);expect(cleaned.conflicts).toEqual([path.relative(owned.project,edited).split(path.sep).join('/')]);expect(cleaned.removed).toHaveLength(3);expect(fs.readFileSync(edited)).toEqual(editedBytes);expect(fs.readFileSync(unknown,'utf8')).toBe('user notes');
+  const comparison=receipt(failed,'Comparison ownership');expect(cleanupPreview(comparison.project,comparison.receipt).removed).toHaveLength(7);
+  expect(fs.readFileSync(path.join(output,'.variant-context.json'))).toEqual(context);expect(fs.readFileSync(path.join(output,'VariantB.tsx'))).toEqual(original);
+ }finally{fs.rmSync(work,{recursive:true,force:true});}
 });

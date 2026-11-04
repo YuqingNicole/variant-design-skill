@@ -12,7 +12,8 @@ import { tokenMap } from '../scripts/ds-tokens.mjs';
 import { systemIdentity } from '../scripts/variant-history.mjs';
 import { gradePremium } from './premium.mjs';
 import { gradeNativeVite } from './native-vite.mjs';
-import { gradePhaseArchives } from './phase-archive.mjs';
+import { gradePreviewCleanup } from './preview-cleanup.mjs';
+import { gradePhaseArchives, verifyPhaseArchive } from './phase-archive.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -261,6 +262,13 @@ export function gradeChain(project, { turns, install, fixture = {}, initial, mea
   }
   if (fixture.nativeVite) for (const check of gradeNativeVite(measurements?.native).checks) checks.push({ ...check, id: `native:${check.id}` });
   if (fixture.nativeVite) for (const check of gradePhaseArchives(measurements?.native?.archives, measurements?.native)) checks.push({ ...check, id: `native:${check.id}` });
+  if (fixture.previewOwnership) for (const check of gradePreviewCleanup(measurements?.previewCleanup)) checks.push({ ...check, id: `cleanup:${check.id}` });
+  if (fixture.previewOwnership) {
+    let details = [];
+    try { if (verifyPhaseArchive(measurements?.native?.archives?.cleanup).manifest.phase !== 'cleanup') throw new Error('Archive belongs to another phase'); }
+    catch (error) { details = [error.message]; }
+    checks.push({ id: 'cleanup:archive', pass: !details.length, details });
+  }
   const allowedTracked = fixture.styleBudget ? new Set(['variant-output/.variant-context.json', ...(start.context?.variants?.B?.files ?? []).map(f => `variant-output/${f}`)]) : new Set();
   const outside = untouched(project, allowedTracked);
   checks.push({ id: 'project-untouched', pass: !outside.problems.length, details: [...outside.problems, ...outside.notes] });
