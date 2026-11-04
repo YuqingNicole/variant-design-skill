@@ -56,7 +56,7 @@ The checks are deterministic and cover promises, not taste. Whether the three di
 | `premium` | Existing self-authored light-brand HTML catalogue | One B refinement: real before/after style budgets, unchanged brand/task/A/C/selection, one undo |
 | `ledger-pick` | The brand-locked `ledger` project, two turns | Generation and pick preserve brand naming and validate only generated extension layers |
 | `harbor-chain` | The `harbor` project, six turns | The loop after generation: pick, design system, apply, undo, and new work on the confirmed system. See below |
-| `native-vite` | Workshop Ledger: original alias/define, provider, role-aware business hook, global CSS and local asset | Prepared two-turn fixture; baseline browser checks pass, but native host capture/grading is not wired yet. Do not count it as native delivery acceptance. |
+| `native-vite` | Workshop Ledger: original alias/define, provider, role-aware business hook, global CSS and local asset | Two-turn fixture with host preview/configuration/dependency checks. Independent delivery/history/integration replay is unfinished; its explicit gate fails until that evidence exists. No real Agent run yet. |
 
 A fixture is a `project/` folder and a `fixture.json` with `description`, `prompt` and optional `locked: {file, fonts}`. Keep fixtures small and written by us.
 
@@ -96,3 +96,21 @@ Draft system checks use the CSS captured at that turn, not the final CSS left af
 `premium` starts with existing A/B/C artifacts and a brand file. Before the single refinement turn, the host records an initial snapshot and measures the real page at 1440×900 and 390×844, then places the genuine before-count samples under the project's `.variant-work/`. After the Agent finishes, host Playwright independently measures the result, saves screenshots/raw samples beside the run, exercises all six records/search/combined filters/save/unsave/saved-only controls, and verifies one actual undo in a disposable copy. It never grades the Agent's own claimed samples. Use a fresh output directory; existing browser evidence is refused. Chrome/Playwright failure is not a budget pass.
 
 The grader requires final default budgets, a lower combined sizes/text-colors/radii inventory at both widths, readable heading/body hierarchy and no overflow. Computed body/heading families, page backdrop and primary-action fill must retain the initial brand; this samples explicit brand anchors, not every pixel or all CSS semantics. A/C and the original brand remain unchanged, selectedVariant stays unchanged, and the recorded B refinement is reversible in one undo. A real premium run must read the adjective translation and action references. Nonzero/timed-out Agent processes are reported as incomplete, even if partial output exists. Counts and fixture passes do not prove aesthetic quality; review the screenshots.
+
+### Native Vite evaluation in progress
+
+`native-vite.mjs` measures this self-authored fixture through its own installed Vite and TypeScript. The runner independently records the original baseline, each turn's previews, and a dependency probe in a disposable copy. The probe changes the original JSON labels, provider-derived labels and a global CSS marker; copying a provider while importing the original JSON still fails. It leaves the Agent's project unchanged. This is a bounded task contract, not a generic evaluator for arbitrary apps.
+
+The host checks A/B/C at 1440 and 390 widths: identity, all original records/currency/roles, keyboard access, search and combined empty-state recovery, owner payment state, viewer restrictions, state across workspace changes, computed brand anchors, the actual local SVG, overflow, comparison links and runtime/resource errors. A missing implicit `/favicon.ico` is recorded separately as an optional browser warning; other resource failures remain errors. SVGs may be transformed to data URLs, so the rendered logo is compared with the original asset's actual Vite import rather than a hardcoded URL spelling. HTTP 200 alone does not prove an image decoded.
+
+Typecheck runs list their actual covered files; omitting generated components fails even if `tsc` exits zero. Both original and isolated builds must emit their expected HTML entries. Dev and build run in separate child processes to isolate Vite/plugin environment changes. A Node HTTP listener owns an ephemeral loopback port around Vite's middleware API; only that child handle is stopped, with its exit log preserved. No Agent-supplied shell command string is executed by the host. Configurations remain executable project code, as with an ordinary Vite build; this is not a sandbox for untrusted plugins.
+
+Manifest paths must be project relative, exist and contain no symlinks; isolated adapters/configurations stay under `.variant-work/`. Raw reports bind source/manifest/adapter hashes, actual tool versions, command arguments and exit codes, screenshots, URLs, errors and shutdown evidence. Evidence directories must be fresh and outside the Agent project. Missing or partial browser evidence fails in both chain grading and the standalone grader.
+
+Run the real-browser regression without a model call:
+
+```sh
+cd tests && PLAYWRIGHT_CHANNEL=chrome npx playwright test native-vite-eval.spec.mjs
+```
+
+**Do not count this fixture as complete native delivery acceptance or spend an Agent run expecting an overall pass yet.** `delivery-replayed` deliberately remains false until independent history/integration/rollback replay is implemented and observed; a manifest claiming success does not satisfy it. RFC-011 also requires at least one real installed-skill Agent run and separate visual review. This phase adds evaluation coverage, not new universal framework support or automatic preview cleanup.

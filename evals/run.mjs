@@ -11,6 +11,7 @@ import { execFileSync, spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { grade, gradeChain, loadFixture, snapshot, usage } from './grade.mjs';
 import { capturePremium, premiumUndo } from './premium.mjs';
+import { captureNativeVite, probeNativeDependencies } from './native-vite.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -98,6 +99,15 @@ async function one(fixture, agent) {
 // times out does not stop the chain: the later turns are graded on whatever it left, and its own checks show the failure.
 async function chain(fixture, agent, config, dir, install) {
   const turns = [], started = Date.now(), initial = snapshot(dir), measurements = {};
+  const native = async (phase, probe = false) => {
+    const destination = path.join(out, `${fixture}-${agent}.native`, phase);
+    let result;
+    try { result = await (probe ? probeNativeDependencies : captureNativeVite)(dir, { out: destination, manifest: config.nativeVite.manifest, original: phase === 'baseline' }); }
+    catch (error) { result = { error: error.stack }; }
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    fs.writeFileSync(destination + '.json', JSON.stringify(result, null, 2) + '\n', { flag: 'wx' });
+    return result;
+  };
   const capture = async phase => {
     try { return await capturePremium(dir, { ...config.styleBudget, out: path.join(out, `${fixture}-${agent}.browser`, phase) }); }
     catch (error) { return { error: error.message }; }
@@ -108,15 +118,20 @@ async function chain(fixture, agent, config, dir, install) {
     const work = path.join(dir, '.variant-work'); fs.mkdirSync(work, { recursive: true });
     for (const sample of measurements.before.samples ?? []) fs.writeFileSync(path.join(work, `style-before-${sample.viewport.width}.json`), JSON.stringify(sample.probe, null, 2));
   }
+  if (config.nativeVite) measurements.native = { baseline: await native('baseline') };
   // --turns generate,pick runs a prefix of the chain, for a change that only touches its first turns.
   const only = opt('--turns', null)?.split(',');
   for (const turn of config.turns.filter(t => !only || only.includes(t.id))) {
     console.log(`  ↳ ${fixture} · ${agent} · ${turn.id}`);
     const run = await runAgent(agent, [turn.prompt, config.note].filter(Boolean).join(''), dir, turn.id);
     turns.push({ id: turn.id, transcript: run.transcript, exit: run.exit, seconds: run.seconds, timedOut: run.timedOut, snapshot: snapshot(dir) });
+    if (config.nativeVite) {
+      measurements.native[turn.id] = await native(turn.id);
+      if (turn.id === 'generate') measurements.native.probe = await native('probe', true);
+    }
   }
   if (config.styleBudget) { measurements.after = await capture('after'); measurements.undo = premiumUndo(dir, initial, path.join(out, `${fixture}-${agent}.browser`), config.styleBudget.variant); }
-  const result = { fixture, agent, dir, seconds: Math.round((Date.now() - started) / 1000), timedOut: turns.some(t => t.timedOut), ...gradeChain(dir, { turns, install, fixture: config, initial, measurements }), ...(config.styleBudget ? { measurements } : {}), turns: turns.map(({ snapshot: s, ...t }) => ({ ...t, selectedVariant: s.context?.selectedVariant ?? null, designSystem: s.context?.designSystem ?? null, drift: s.drift })) };
+  const result = { fixture, agent, dir, seconds: Math.round((Date.now() - started) / 1000), timedOut: turns.some(t => t.timedOut), ...gradeChain(dir, { turns, install, fixture: config, initial, measurements }), ...(config.styleBudget || config.nativeVite ? { measurements } : {}), turns: turns.map(({ snapshot: s, ...t }) => ({ ...t, selectedVariant: s.context?.selectedVariant ?? null, designSystem: s.context?.designSystem ?? null, drift: s.drift })) };
   fs.writeFileSync(path.join(out, `${fixture}-${agent}.json`), JSON.stringify(result, null, 2));
   console.log(`${result.pass ? '✓' : '✗'} ${fixture} · ${agent} (${result.seconds}s${result.timedOut ? ', a turn timed out' : ''})`);
   return result;

@@ -20,13 +20,13 @@ const open=(page,url,ready)=>expect(async()=>{await page.goto(url);await ready()
 test.afterAll(()=>{server?.kill();fs.rmSync(candidate,{recursive:true,force:true});});
 test('a system extension edit blocks integration while the original page remains usable',async({page})=>{
  const {prepareIntegration,integrateVariant,listIntegrations}=await import('../scripts/variant-integrate.mjs');
- const project=path.join(root,'integration-system'),output=path.join(project,'variant-output'),stage=path.join(project,'.variant-work','stage');fs.mkdirSync(output,{recursive:true});fs.mkdirSync(stage,{recursive:true});
+ const project=fs.mkdtempSync(path.join(root,'integration-system-')),output=path.join(project,'variant-output'),stage=path.join(project,'.variant-work','stage');fs.mkdirSync(output,{recursive:true});fs.mkdirSync(stage,{recursive:true});
  const original='<!doctype html><html><body><h1>Original project</h1><button onclick="this.textContent=\'Working\'">Inspect</button></body></html>',replacement=original.replace('Original project','Direction B'),target=path.join(project,'index.html');
  fs.writeFileSync(target,original);fs.writeFileSync(path.join(output,'B.html'),replacement);fs.writeFileSync(path.join(stage,'index.html'),replacement);fs.writeFileSync(path.join(project,'extension.css'),':root{--space-row:16px}');
  fs.writeFileSync(path.join(output,'.variant-context.json'),JSON.stringify({schemaVersion:2,selectedVariant:null,designSystem:{confirmed:true,extensions:['extension.css'],fonts:['Georgia']},variants:{B:{entry:'B.html',files:['B.html'],tokens:{fonts:['Georgia']},version:1}}}));
  const plan=path.join(project,'.variant-work','plan.json');prepareIntegration(output,'B',['index.html'],plan);fs.appendFileSync(path.join(project,'extension.css'),'\n/* user changed shared design tokens */');
  expect(()=>integrateVariant(output,'B',stage,project,plan)).toThrow(/Integration conflict/);expect(fs.readFileSync(target,'utf8')).toBe(original);expect(listIntegrations(output)).toEqual([]);expect(readContext(output).selectedVariant).toBe(null);
- await page.goto(pathToFileURL(target).href);await expect(page.locator('h1')).toHaveText('Original project');await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Working');
+ await page.goto(pathToFileURL(target).href);await expect(page.locator('h1')).toHaveText('Original project');await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Working');fs.rmSync(project,{recursive:true,force:true});
 });
 test('a shared system extension changes the rendered page and invalidates its existing evidence',async({page,browser})=>{
  const {verifyInBrowser,verificationPlan}=await import('../scripts/browser-verification.mjs'),{inspectVerification}=await import('../scripts/artifact-verification.mjs');

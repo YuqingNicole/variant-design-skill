@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { grade, gradeChain, loadFixture, skillCopies, skillReading, snapshot, usage } from './grade.mjs';
 import { selectVariant, prepareVariant, applyVariant, undoVariant, confirmSystem, applySystemVariant, readContext } from '../scripts/variant-history.mjs';
 import { exportTokens } from '../scripts/ds-export.mjs';
+import { gradeNativeVite } from './native-vite.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const evidence = path.join(here, '../website/content/evidence/pulse/variant-output');
@@ -23,6 +24,16 @@ function run(change = () => {}) {
 }
 const result = change => grade(run(change), { fixture: loadFixture('pulse') });
 const check = (r, id) => r.checks.find(c => c.id === id);
+
+test('native grading fails closed for missing, empty, duplicated and Agent-authored observations', () => {
+  for (const report of [undefined, { error: 'Vite unavailable' }, { samples: [] }, { source: 'Agent report', samples: [{ id: 'A', width: 1440 }] }, { source: 'host Playwright / original project Vite', samples: Array(6).fill({ id: 'A', width: 1440 }) }]) {
+    const result = gradeNativeVite({ baseline: report, generate: report, deliver: report, probe: report });
+    assert.equal(result.pass, false); assert.equal(check(result, 'generate-observed').pass, false); assert.equal(check(result, 'delivery-replayed').pass, false);
+  }
+  const dir = run(), fixture = loadFixture('native-vite');
+  assert.equal(check(grade(dir, { fixture }), 'native:generate-observed').pass, false);
+  assert.equal(check(gradeChain(dir, { fixture, turns: [{ id: 'generate', snapshot: snapshot(dir) }] }), 'native:generate-observed').pass, false);
+});
 const context = (dir, edit) => { const file = path.join(dir, 'variant-output/.variant-context.json'), c = JSON.parse(fs.readFileSync(file, 'utf8')); edit(c); fs.writeFileSync(file, JSON.stringify(c)); };
 
 test('the recorded Pulse run passes every check but generator habits', () => {

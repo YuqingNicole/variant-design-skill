@@ -11,6 +11,7 @@ import { checkSystem } from '../scripts/ds-check.mjs';
 import { tokenMap } from '../scripts/ds-tokens.mjs';
 import { systemIdentity } from '../scripts/variant-history.mjs';
 import { gradePremium } from './premium.mjs';
+import { gradeNativeVite } from './native-vite.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -125,6 +126,7 @@ export function grade(project, { fixture = {}, transcript, install } = {}) {
   }
   const copies = skillCopies(transcript, project, install);
   if (copies) add('skill-under-test', copies.project > 0 && copies.other.length === 0, [`read the copy under test ${copies.project} time(s)`, ...copies.other.map(o => `also referenced ${o}`)]);
+  if (fixture.nativeVite) for (const check of gradeNativeVite().checks) checks.push({ ...check, id: `native:${check.id}` });
   return { pass: checks.every(c => c.pass), checks, usage: usage(transcript), reading: skillReading(transcript, project, install), recommendation: context?.recommendation?.variant ?? null };
 }
 
@@ -255,6 +257,7 @@ export function gradeChain(project, { turns, install, fixture = {}, initial, mea
     for (const c of measured.checks) checks.push({ ...c, id: `premium:${c.id}` });
     checks.push({ id: 'premium:one-undo', pass: measurements?.undo?.pass === true, details: measurements?.undo?.details ?? ['No host undo check'] });
   }
+  if (fixture.nativeVite) for (const check of gradeNativeVite(measurements?.native).checks) checks.push({ ...check, id: `native:${check.id}` });
   const allowedTracked = fixture.styleBudget ? new Set(['variant-output/.variant-context.json', ...(start.context?.variants?.B?.files ?? []).map(f => `variant-output/${f}`)]) : new Set();
   const outside = untouched(project, allowedTracked);
   checks.push({ id: 'project-untouched', pass: !outside.problems.length, details: [...outside.problems, ...outside.notes] });
