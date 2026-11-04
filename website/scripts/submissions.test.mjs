@@ -15,7 +15,7 @@ test('image/video intake requires authorship, display consent and safe media URL
  for(const kind of ['image','video'])assert.equal(candidate(kind).media.kind,kind);
  for(const change of [d=>d.permission.display=false,d=>d.permission.download=true,d=>d.permission.date='2026-02-30',d=>d.credit.url='javascript:alert(1)',d=>d.media.url='https://name:password@media.example/x',d=>{d.media.kind='video';delete d.media.poster}]){const d=draft();change(d);assert.throws(()=>model.parseSubmission(d),/Invalid submission/)}
  for(const change of [e=>delete e.permissionRecord,e=>delete e.review,e=>e.media.width=0,e=>delete e.translations,e=>delete e.translations.en.reviewedAt]){const e=editorial();change(e);assert.throws(()=>model.reviewSubmission(draft(),e),/Invalid reference registry/)}
- const e=editorial();e.privateNotes='must not ship';const r=model.reviewSubmission(draft(),e);assert.equal('privateNotes' in r,false);assert.throws(()=>model.parseRegistry([{...r,privateNotes:'bad'}]),/unknown published/);
+ const e=editorial();e.privateNotes='must not ship';const r=model.reviewSubmission(draft(),e);assert.equal('privateNotes' in r,false);assert.throws(()=>model.parseRegistry([{...r,privateNotes:'bad'}]),/unknown published/);assert.throws(()=>model.parseRegistry([{...r,review:{...r.review,privateNote:'must not ship'}}]),/review/);assert.throws(()=>model.parseRegistry([{...r,media:{...r.media,poster:'private unused field'}}]),/poster/);
  const input=draft();input.notes='```\n<script>alert(1)</script>\n```';assert.ok(model.submissionMarkdown(input).includes('\\`\\`\\`'));assert.doesNotMatch(model.submissionMarkdown(input),/\n```/);
 });
 

@@ -130,3 +130,5 @@ The additional SSR test compiles the actual SSR entry in an isolated copy, check
 Screenshots and measurements: `/Users/nicole/orca/variant-backlog-evidence/submissions/{zh,en}-{320,390,1440}.png`, `layout.json`, `draft-review.png` and `local-draft.md`. The synthetic draft explicitly says not to submit; no GitHub submission, upload or third-party message was sent. The original working tree’s nine modified files and untracked ReferenceCard are preserved.
 
 Remaining gates for this phase: exact PR CI, deployed form preview, maintainer review and production merge approval. A real author submission requires the author and a human permission review; the empty registry is intentional, not evidence of real uptake. The full backlog objective remains active; RFC-007 checks are next.
+
+Before publication, the registry validator was tightened to reject extra nested review/translation/media fields and an unused image-poster field, so editorial-only metadata cannot accidentally enter the public record. Regression tests cover the refusal; all 67 website tests and the build passed again. This adds no genuine submission or production write.
