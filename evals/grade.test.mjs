@@ -34,6 +34,7 @@ test('native grading fails closed for missing, empty, duplicated and Agent-autho
   const dir = run(), fixture = loadFixture('native-vite');
   assert.equal(check(grade(dir, { fixture }), 'native:generate-observed').pass, false);
   assert.equal(check(gradeChain(dir, { fixture, turns: [{ id: 'generate', snapshot: snapshot(dir) }] }), 'native:generate-observed').pass, false);
+  for (const c of gradeChain(dir, { fixture, turns: [] }).checks.filter(c => c.id.startsWith('native:archive:'))) assert.equal(c.pass, false);
 });
 const context = (dir, edit) => { const file = path.join(dir, 'variant-output/.variant-context.json'), c = JSON.parse(fs.readFileSync(file, 'utf8')); edit(c); fs.writeFileSync(file, JSON.stringify(c)); };
 

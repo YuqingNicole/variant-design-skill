@@ -13,6 +13,7 @@ import { grade, gradeChain, loadFixture, snapshot, usage } from './grade.mjs';
 import { capturePremium, premiumUndo } from './premium.mjs';
 import { captureNativeVite, probeNativeDependencies } from './native-vite.mjs';
 import { replayNativeDelivery } from './native-delivery.mjs';
+import { createPhaseArchive } from './phase-archive.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -100,6 +101,11 @@ async function one(fixture, agent) {
 // times out does not stop the chain: the later turns are graded on whatever it left, and its own checks show the failure.
 async function chain(fixture, agent, config, dir, install) {
   const turns = [], started = Date.now(), initial = snapshot(dir), measurements = {};
+  const archive = (phase, state) => {
+    const directory = path.join(out, `${fixture}-${agent}.phases`, phase);
+    try { return createPhaseArchive(dir, { directory, phase, snapshot: state }); }
+    catch (error) { return { phase, directory, error: error.stack }; }
+  };
   const native = async (phase, probe = false) => {
     const destination = path.join(out, `${fixture}-${agent}.native`, phase);
     let result;
@@ -119,7 +125,10 @@ async function chain(fixture, agent, config, dir, install) {
     const work = path.join(dir, '.variant-work'); fs.mkdirSync(work, { recursive: true });
     for (const sample of measurements.before.samples ?? []) fs.writeFileSync(path.join(work, `style-before-${sample.viewport.width}.json`), JSON.stringify(sample.probe, null, 2));
   }
-  if (config.nativeVite) measurements.native = { baseline: await native('baseline') };
+  if (config.nativeVite) {
+    measurements.native = { archives: { baseline: archive('baseline', initial) } };
+    measurements.native.baseline = await native('baseline');
+  }
   // --turns generate,pick runs a prefix of the chain, for a change that only touches its first turns.
   const only = opt('--turns', null)?.split(',');
   for (const turn of config.turns.filter(t => !only || only.includes(t.id))) {
@@ -127,6 +136,8 @@ async function chain(fixture, agent, config, dir, install) {
     const run = await runAgent(agent, [turn.prompt, config.note].filter(Boolean).join(''), dir, turn.id);
     turns.push({ id: turn.id, transcript: run.transcript, exit: run.exit, seconds: run.seconds, timedOut: run.timedOut, snapshot: snapshot(dir) });
     if (config.nativeVite) {
+      const saved = archive(turn.id, turns.at(-1).snapshot);
+      measurements.native.archives[turn.id] = saved; turns.at(-1).archive = saved;
       measurements.native[turn.id] = await native(turn.id);
       if (turn.id === 'generate') measurements.native.probe = await native('probe', true);
       if (turn.id === 'deliver') {
