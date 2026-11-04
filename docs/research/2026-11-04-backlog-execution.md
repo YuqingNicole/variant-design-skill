@@ -168,3 +168,8 @@ Premium evaluation preparation proceeds separately in `/Users/nicole/orca/varian
 Installed head `0e03d16`: actual Codex premium refinement passed 18/18 checks (156s). Both 1440/390 samples changed sizes 11→4, weights 6→2, text colors 12→3, radii 9→1, shadows 3→0, preserving two families, the light/blue brand, all catalogue behavior, A/C, final selection and one real undo. Actual generated source and exported screenshots were inspected; no fake after-sample or API override was used. Exact implementation-head loop/landing CI passed. Research and aggregate JSON are committed under `2026-11-04-premium-*`. User/maintainer visual acceptance and merge remain separate; no global taste claim.
 
 The next safe scope is the two unresolved feature decisions (visual region selection and a public code-check page). A separate `codex/product-feature-decisions` worktree is preparing a concrete proposal; no feature choice or production action is assumed. All later content/distribution/core/commercial rows remain open.
+
+
+### Feature decision proposal
+
+RFC-010 makes the region-picker and public-checker choices concrete: read-only selection of declared editable zones (HTML/Vite first, no auto selection/write), and a local-only `/checks` page using a shared Node-free scanner core. Existing comparison/scanner call paths and primary messaging/origin standards were inspected. Neither feature is implemented or chosen yet; the two decisions can be accepted independently. The full backlog remains active.
