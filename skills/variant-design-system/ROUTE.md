@@ -292,4 +292,4 @@ Print a one-line reminder on every generation:
 ```
 
 
-Artifact evidence automatically fingerprints the registered main system, extensions and variant binding. After editing those, rerun observations; a prior report cannot certify the changed preview. Other shared dependencies remain explicitly declared. Integration preparation also binds the registered extensions and variant adoption state; stale or missing coverage requires a new plan.
+Artifact evidence automatically fingerprints the registered main system, extensions, variant binding and supported transitive local dependencies. After editing those, rerun observations; a prior report cannot certify the changed preview. Use the evidence reference to record actual wrapper/alias/config facts and additional dynamic roots. Integration preparation binds the same closure and adoption state; changed source/config/facts or legacy missing coverage requires a new plan. Partial dependency coverage remains explicit.

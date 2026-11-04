@@ -5,6 +5,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 import { readContext, localFile } from './variant-history.mjs';
 import { scanSource } from './quality-gate.mjs';
+import { collectProjectDependencies } from './project-dependencies.mjs';
 
 const runtimeChecks = ['brand', 'keyboard-focus', 'reduced-motion', 'scope-preservation', 'project-checks'];
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -14,7 +15,7 @@ function sorted(value) {
   return value;
 }
 const identity = value => hash(JSON.stringify(sorted(value)));
-const checkerIdentity = () => Object.fromEntries(['artifact-verification.mjs','browser-verification.mjs'].map(file=>[file,hash(fs.readFileSync(new URL(file,import.meta.url)))]));
+const checkerIdentity = () => Object.fromEntries(['artifact-verification.mjs','browser-verification.mjs','project-dependencies.mjs','dependency-references.mjs'].map(file=>[file,hash(fs.readFileSync(new URL(file,import.meta.url)))]));
 function capture(root, id, project, dependencies) {
   const state = readContext(root), variant = state.variants?.[id];
   if (!['A','B','C'].includes(id) || !variant?.files?.length || !variant.files.includes(variant.entry)) throw new Error('Invalid registered variant.');
@@ -25,12 +26,14 @@ function capture(root, id, project, dependencies) {
   if (extensions!==undefined && (!Array.isArray(extensions) || extensions.some(file=>typeof file!=='string' || !file.trim()))) throw new Error('System extensions must be relative file paths.');
   const systemFiles=[...(state.designSystem?.file ? [state.designSystem.file] : []), ...(extensions??[])];
   const shared = [...new Set([...dependencies, ...systemFiles, ...['package.json','package-lock.json','pnpm-lock.yaml','yarn.lock'].filter(file=>fs.existsSync(localFile(projectPath,file)))])].sort();
+  const prefix = path.relative(projectPath, output).split(path.sep).join('/');
+  const dependencyClosure = collectProjectDependencies(projectPath, [...new Set([...variant.files.map(file => `${prefix}/${file}`), ...shared])]);
   const fingerprint = { output, project:projectPath, id, version:variant.version,
     entry:variant.entry, tokens:variant.tokens, comparison:variant.comparison,
     taskContract:state.taskContract, designSystem:state.designSystem,
     ...(variant.systemBinding ? {systemBinding:variant.systemBinding} : {}),
     files:Object.fromEntries(Object.entries(sources).map(([file,bytes])=>[file,hash(bytes)])),
-    dependencies:Object.fromEntries(shared.map(file=>[file,hash(fs.readFileSync(localFile(projectPath,file)))])) };
+    dependencies:Object.fromEntries([...new Set([...shared, ...Object.keys(dependencyClosure.files)])].sort().map(file=>[file,hash(fs.readFileSync(localFile(projectPath,file)))])), dependencyClosure };
   return {fingerprint, sources};
 }
 function validateCheck(check) {
@@ -55,7 +58,7 @@ export async function verifyArtifact(root, id, options = {}, runChecks) {
   let unchanged=false;
   try { unchanged=identity(capture(root,id,project,dependencies).fingerprint)===identity(fingerprint); } catch {}
   const report = {schemaVersion:1,id:randomUUID(),startedAt,finishedAt:new Date().toISOString(),
-    fingerprint, dependencies, coverage:{mode:'declared-files',limitation:'Only owned files, registered system and extension files, package manifests and explicitly listed dependencies are tracked. Environment changes require a new run.'},
+    fingerprint, dependencies, coverage:{mode:'static-closure-and-declared-files',...fingerprint.dependencyClosure.coverage},
     static:{status:findings.some(f=>f.severity==='error')?'failed':findings.some(f=>f.severity==='warning')?'unverified':'passed',tool:{name:'variant-quality-gate',version:hash(fs.readFileSync(new URL('./quality-gate.mjs',import.meta.url)))},findings},
     checks, checkerIdentity:checkerIdentity(), plan:options.plan ?? null, changedDuringRun:!unchanged};
   const file=localFile(root,`.verification/${id}/${report.id}.json`);
@@ -73,8 +76,9 @@ export function inspectVerification(root, file) {
   if(report.changedDuringRun)current=false;
   if(report.static?.tool?.version!==hash(fs.readFileSync(new URL('./quality-gate.mjs',import.meta.url)))){current=false;reason='Static checker implementation changed; run verification again.';}
   if(report.checkerIdentity && identity(report.checkerIdentity)!==identity(checkerIdentity())){current=false;reason='Verification implementation changed; run verification again.';}
-  const status=!current?'stale':report.static.status==='failed'||report.checks.some(c=>c.status==='failed')?'failed':report.static.status!=='passed'||report.checks.some(c=>c.status==='unverified')?'unverified':'passed';
-  return {status,reason:current?'Result applies only to the recorded checks and environment.':reason,report};
+  const partial = report.fingerprint.dependencyClosure?.coverage.status !== 'within-supported-static-syntax';
+  const status=!current?'stale':report.static.status==='failed'||report.checks.some(c=>c.status==='failed')?'failed':partial||report.static.status!=='passed'||report.checks.some(c=>c.status==='unverified')?'unverified':'passed';
+  return {status,reason:current ? partial ? 'Recorded observations retained; dependency coverage has unresolved items. Review coverage and rerun after resolving them.' : 'Result applies only to the recorded checks, dependency scope and environment.' : reason,report};
 }
 
 // Compare actual observations, never re-label an earlier failure as a passing result.

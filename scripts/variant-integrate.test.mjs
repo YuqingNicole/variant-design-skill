@@ -3,14 +3,17 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import { fixture } from '../tests/fixture.mjs';
 import { readContext } from './variant-history.mjs';
 import { prepareIntegration, integrateVariant, rollbackIntegration, listIntegrations } from './variant-integrate.mjs';
+const compiler=path.dirname(createRequire(new URL('../tests/package.json',import.meta.url)).resolve('typescript/package.json'));
 function setup(t) {
   const project = fs.mkdtempSync(path.join(os.tmpdir(), 'variant-integrate-'));
   t.after(()=>fs.rmSync(project,{recursive:true,force:true}));
   const output=path.join(project,'variant-output'), staging=path.join(project,'.variant-work','integrate-B');
   fixture(output);fs.mkdirSync(path.join(project,'src'));
+  fs.mkdirSync(path.join(project,'node_modules'));fs.symlinkSync(compiler,path.join(project,'node_modules/typescript'),process.platform==='win32'?'junction':'dir');fs.writeFileSync(path.join(project,'package.json'),'{"dependencies":{"react":"19.1.1"}}');
   fs.writeFileSync(path.join(project,'index.html'),'<h1>Original</h1>');fs.writeFileSync(path.join(project,'src','App.tsx'),'export const App=()=>null;');
   fs.mkdirSync(path.join(staging,'src'),{recursive:true});
   fs.writeFileSync(path.join(staging,'index.html'),'<h1>Direction B</h1>');fs.writeFileSync(path.join(staging,'src','Hero.tsx'),'export const Hero=()=>null;');
@@ -30,6 +33,23 @@ test('integration backs up first, records each action, keeps selection, and roll
   assert.equal(read(project,'index.html'),'<h1>Original</h1>');assert.equal(fs.existsSync(path.join(project,'src','Hero.tsx')),false);
   assert.equal(read(project,'src/App.tsx'),'export const App=()=>null;');
   assert.throws(()=>rollbackIntegration(output,record.id),/already rolled back/);
+});
+
+test('automatically discovered shared dependency drift refuses integration before target/backup writes',t=>{
+ for(const kind of ['provider','data','css','asset','ambient','alias','resolution']){
+  const {project,output,staging}=setup(t),write=(file,text)=>{const full=path.join(project,file);fs.mkdirSync(path.dirname(full),{recursive:true});fs.writeFileSync(full,text)};
+  write('tsconfig.json','{"compilerOptions":{"baseUrl":".","paths":{"@/*":["src/*"]}},"include":["src"]}');write('src/provider.ts',`import data from './data.json';import './global.css';import mark from './mark.svg';export const shared={data,mark};`);write('src/data.json','{"x":1}');write('src/global.css','body{color:blue}');write('src/mark.svg','<svg/>');write('src/env.d.ts','declare const flag: string;');
+  fs.appendFileSync(path.join(output,'VariantB.tsx'),`\nimport {shared} from '@/provider';console.log(shared);`);
+  const plan=path.join(project,'.variant-work',`shared-${kind}.json`),prepared=prepareIntegration(output,'B',['index.html','src/Hero.tsx','src/App.tsx'],plan,project),context=read(output,'.variant-context.json');assert(prepared.source.dependencyClosure.files['src/provider.ts']);
+  const changes={provider:['src/provider.ts','export const shared=2;'],data:['src/data.json','{"x":2}'],css:['src/global.css','body{color:red}'],asset:['src/mark.svg','<svg><path/></svg>'],ambient:['src/env.d.ts','declare const flag: number;'],alias:['tsconfig.json','{"compilerOptions":{"paths":{"@/*":["different/*"]}},"include":["src"]}'],resolution:['.variant-work/dependency-resolution.json','{"schemaVersion":1,"entries":["src/provider.ts"]}']};write(...changes[kind]);
+  assert.throws(()=>integrateVariant(output,'B',staging,project,plan),/shared dependencies/);assert.equal(read(project,'index.html'),'<h1>Original</h1>');assert.equal(read(output,'.variant-context.json'),context);assert.deepEqual(listIntegrations(output),[]);assert(fs.existsSync(path.join(staging,'index.html')));
+ }
+});
+test('fresh shared-dependency plans integrate and roll back while old missing-closure plans refuse',t=>{
+ const {project,output,staging}=setup(t),plan=path.join(project,'.variant-work','closure.json');
+ const prepared=prepareIntegration(output,'B',['index.html','src/Hero.tsx','src/App.tsx'],plan,project);assert.equal(prepared.source.dependencyClosure.coverage.status,'within-supported-static-syntax');
+ const legacy=path.join(project,'.variant-work','legacy.json'),saved=structuredClone(prepared);delete saved.source.dependencyClosure;fs.writeFileSync(legacy,JSON.stringify(saved));assert.throws(()=>integrateVariant(output,'B',staging,project,legacy),/Integration conflict/);
+ const before=read(output,'.variant-context.json'),record=integrateVariant(output,'B',staging,project,plan);assert(record.source.dependencyClosure.files['variant-output/VariantB.tsx']);rollbackIntegration(output,record.id,project);assert.equal(read(project,'index.html'),'<h1>Original</h1>');assert.equal(read(output,'.variant-context.json'),before);
 });
 test('rollback refuses without writing when the user edited an integrated file afterwards',t=>{
   const {project,output,staging,planFile}=setup(t);

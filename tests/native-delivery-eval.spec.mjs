@@ -6,6 +6,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { snapshot } from '../evals/grade.mjs';
 import { inspectNativeDelivery, replayNativeDelivery, gradeNativeDelivery, nativeOriginalFiles } from '../evals/native-delivery.mjs';
+import { probeSharedDependencies, gradeSharedDependencies } from '../evals/shared-dependencies.mjs';
 import { prepareVariant, applyVariant, undoVariant } from '../scripts/variant-history.mjs';
 import { prepareIntegration, integrateVariant, rollbackIntegration } from '../scripts/variant-integrate.mjs';
 
@@ -95,4 +96,17 @@ test('a receipt labelled B cannot pass when the actual original entry renders A'
   expect(report.captures.integrated.samples.every(s => !s.identity && s.task)).toBe(true);
   expect(report.captures.integrated.samples.every(s => s.markers.includes('B') && s.markers.includes('A'))).toBe(true);
   expect(report.checks.find(c => c.id === 'original-restored').pass).toBe(true); expect(report.originalAfter).toEqual(report.originalBefore);
+});
+
+
+test('shared dependency probes use actual browser evidence and real refusal/fresh integration helpers',async({browser})=>{
+ test.setTimeout(180000);for(const value of [undefined,{pass:true},{source:'host-shared-dependency-probe-v1',checks:[]}])expect(gradeSharedDependencies(value).every(c=>!c.pass)).toBe(true);
+ const input=generatedProject('shared-dependencies'),project=input.project;
+ const manifest=JSON.parse(fs.readFileSync(path.join(project,'.variant-work/native-preview.json')));
+ write(project,'.variant-work/dependency-resolution.json',JSON.stringify({schemaVersion:1,entries:[...manifest.adapterFiles,'.variant-work/native-preview.json'],configFiles:[manifest.buildConfig,manifest.typecheckConfig],aliases:{'@':'src'}}));
+ for(const file of ['variant-history.mjs','variant-integrate.mjs','artifact-verification.mjs','browser-verification.mjs','project-dependencies.mjs','dependency-references.mjs'])write(project,`.agents/skills/variant-design/scripts/${file}`,fs.readFileSync(`../scripts/${file}`));
+ const delivered=recordedDelivery(input);
+ const report=await probeSharedDependencies(project,{out:path.join(root,'shared-probe'),browser,generated:input.generated,baseline:input.baseline});
+ expect(report.checks.filter(c=>!c.pass),report.error).toEqual([]);expect(gradeSharedDependencies(report).every(c=>c.pass)).toBe(true);expect(report.actions).toHaveLength(6);expect(report.evidence.initialStatus).toBe('unverified');expect(report.originalAfter).toEqual(report.originalBefore);
+ await expect(probeSharedDependencies(project,{out:path.join(root,'shared-probe'),browser,generated:delivered.generated,baseline:delivered.baseline})).rejects.toThrow(/Preserve existing/);
 });

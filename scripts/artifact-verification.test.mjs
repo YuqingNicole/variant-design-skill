@@ -3,10 +3,12 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import {createRequire} from 'node:module';
 import {fixture} from '../tests/fixture.mjs';
 import {verifyArtifact,inspectVerification} from './artifact-verification.mjs';
 const ids=['brand','keyboard-focus','reduced-motion','scope-preservation','project-checks'];
-function setup(t){const project=fs.mkdtempSync(path.join(os.tmpdir(),'variant-evidence-'));t.after(()=>fs.rmSync(project,{recursive:true,force:true}));const root=path.join(project,'output');fixture(root);return {root,project};}
+const compiler=path.dirname(createRequire(new URL('../tests/package.json',import.meta.url)).resolve('typescript/package.json'));
+function setup(t){const project=fs.mkdtempSync(path.join(os.tmpdir(),'variant-evidence-'));t.after(()=>fs.rmSync(project,{recursive:true,force:true}));const root=path.join(project,'output');fixture(root);fs.mkdirSync(path.join(project,'node_modules'));fs.symlinkSync(compiler,path.join(project,'node_modules/typescript'),process.platform==='win32'?'junction':'dir');fs.writeFileSync(path.join(project,'package.json'),'{"dependencies":{"react":"19.1.1"}}');return {root,project};}
 const observations=()=>ids.map(id=>({id,status:'passed',reason:'Controlled adapter observation',tool:{name:'test-adapter',version:'1'},environment:{fixture:true},evidence:['Explicit test result']}));
 test('static-only evidence never implies runtime verification',async t=>{
  const {root}=setup(t);const result=await verifyArtifact(root,'B');assert.equal(result.status,'unverified');assert.equal(result.report.checks.filter(c=>c.status==='unverified').length,5);
@@ -14,7 +16,7 @@ test('static-only evidence never implies runtime verification',async t=>{
 });
 test('file, declared dependency, package and constraint drift stale evidence; selection does not',async t=>{
  for(const kind of ['file','dependency','package','constraint','revision']){
-  const {root,project}=setup(t);fs.writeFileSync(path.join(project,'shared.css'),'body{}');fs.writeFileSync(path.join(project,'package.json'),'{}');
+  const {root,project}=setup(t);fs.writeFileSync(path.join(project,'shared.css'),'body{}');
   const result=await verifyArtifact(root,'B',{dependencies:['shared.css']},observations);assert.equal(result.status,'passed');
   const context=path.join(root,'.variant-context.json'),state=JSON.parse(fs.readFileSync(context));state.selectedVariant='C';fs.writeFileSync(context,JSON.stringify(state));assert.equal(inspectVerification(root,result.file).status,'passed');
   if(kind==='file')fs.appendFileSync(path.join(root,'VariantB.tsx'),'\n// edited');
@@ -76,4 +78,28 @@ test('failure comparison separates observed-before diagnostics from new or chang
  assert.equal(compareVerificationReports(before.report,changed.report).failures[0].classification,'new-or-changed');
  assert.equal(changed.status,'failed');
  assert.throws(()=>compareVerificationReports(before.report,{...changed.report,fingerprint:{...changed.report.fingerprint,id:'A'}}),/same project/);
+});
+
+test('transitive provider/data/CSS/assets and compiler inputs stale evidence without manually listing them',async t=>{
+ for(const kind of ['provider','data','css','asset','ambient','alias']){
+  const {root,project}=setup(t),write=(file,text)=>{const full=path.join(project,file);fs.mkdirSync(path.dirname(full),{recursive:true});fs.writeFileSync(full,text)};
+  write('tsconfig.json','{"compilerOptions":{"baseUrl":".","paths":{"@/*":["src/*"]}},"include":["src"]}');
+  write('src/provider.ts',`import data from './data.json';import './provider.css';import logo from './mark.svg';export const shared={data,logo};`);write('src/data.json','{"x":1}');write('src/provider.css','body{color:blue}');write('src/mark.svg','<svg/>');write('src/env.d.ts','declare const flag: string;');
+  fs.appendFileSync(path.join(root,'VariantB.tsx'),`\nimport {shared} from '@/provider'; console.log(shared);`);
+  const result=await verifyArtifact(root,'B',{},observations);assert.equal(result.status,'passed',kind);assert.deepEqual(result.report.dependencies,[]);
+  for(const file of ['src/provider.ts','src/data.json','src/provider.css','src/mark.svg','src/env.d.ts'])assert(result.report.fingerprint.dependencies[file],file);
+  const mutations={provider:['src/provider.ts',`export const shared=2;`],data:['src/data.json','{"x":2}'],css:['src/provider.css','body{color:red}'],asset:['src/mark.svg','<svg><path/></svg>'],ambient:['src/env.d.ts','declare const flag: number;'],alias:['tsconfig.json','{"compilerOptions":{"baseUrl":".","paths":{"@/*":["other/*"]}},"include":["src"]}']};
+  write(...mutations[kind]);assert.equal(inspectVerification(root,result.file).status,'stale',kind);
+ }
+});
+test('shared changes during observation are stale, while unresolved imports preserve observations as unverified',async t=>{
+ const {root,project}=setup(t),data=path.join(project,'shared.json');fs.writeFileSync(data,'{"x":1}');fs.appendFileSync(path.join(root,'VariantB.tsx'),`\nimport shared from '../shared.json';console.log(shared);`);
+ const result=await verifyArtifact(root,'B',{},()=>{fs.writeFileSync(data,'{"x":2}');return observations()});assert.equal(result.status,'stale');assert(result.report.changedDuringRun);
+ fs.appendFileSync(path.join(root,'VariantB.tsx'),`\nimport './not-yet-created';`);
+ const partial=await verifyArtifact(root,'B',{},observations);assert.equal(partial.status,'unverified');assert(partial.report.checks.every(c=>c.status==='passed'));assert(partial.report.coverage.unknowns.some(c=>c.code==='unresolved-local-reference'));
+ fs.writeFileSync(path.join(root,'not-yet-created.ts'),'export {};');assert.equal(inspectVerification(root,partial.file).status,'stale');
+});
+test('reports without closure identity stay stale and are never retrofitted',async t=>{
+ const {root}=setup(t),result=await verifyArtifact(root,'B',{},observations),legacy=structuredClone(result.report);delete legacy.fingerprint.dependencyClosure;
+ const file=path.join(path.dirname(result.file),'legacy-closure.json'),text=JSON.stringify(legacy);fs.writeFileSync(file,text);assert.equal(inspectVerification(root,file).status,'stale');assert.equal(fs.readFileSync(file,'utf8'),text);
 });

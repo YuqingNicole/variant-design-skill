@@ -1,0 +1,33 @@
+{
+  "description": "Real native generation/delivery/cleanup with reviewed dependency roots and independent transitive drift probes.",
+  "locked": {
+    "file": "src/global.css",
+    "fonts": [
+      "Arial",
+      "Georgia"
+    ]
+  },
+  "nativeVite": {
+    "manifest": ".variant-work/native-preview.json",
+    "delivery": ".variant-work/native-delivery.json",
+    "protectedPreview": "variant-preview.html"
+  },
+  "note": "（无人值守本地验证：不要启动常驻服务器、不要发布或更换依赖。当前沙箱若不能绑定端口，保留原生 Vite 适配入口和明确命令，宿主会启动项目原配置独立打开。不要伪造浏览器结果。原业务控件的 accessible label 与 data-testid 是验证契约，保留它们。所有新增适配文件放在 .variant-work/；已有 variant-preview.html 不可覆盖。） 正式三版源码及 .variant-context.json 按技能约定放在 variant-output/；.variant-work/ 只放预览适配器、清单、日志和暂存。每版的可编辑文件完整登记到各自 files，不与其他版共有；原项目 provider/data 保持引用。",
+  "turns": [
+    {
+      "id": "generate",
+      "prompt": "使用完整 Variant Design 技能，重新设计当前 Workshop Ledger 账单界面，生成保留核心任务、数据与业务功能的 A/B/C 三个方向，说明取舍，但不要替我选定。保持 src/global.css 的品牌；复用原 WorkspaceProvider、useDesk 和 money，不复制 provider 或硬编码数据。保留工作室切换、搜索、状态筛选、空结果恢复，以及 owner 能标记已付、viewer 只读的行为和本地 logo。检查并保留原项目 Vite alias、define、全局 CSS 和 provider；使用原生隔离入口。另输出 .variant-work/native-preview.json：schemaVersion=1，compare 是比较页的项目相对 HTML 路径，entries 是 A/B/C 各自独立 HTML 路径，buildConfig 和 typecheckConfig 是可实际运行的隔离配置路径，adapterFiles 列全部新增适配文件，dependencies 列原项目依赖路径。路径都在项目内；每个预览根有 data-native-variant=A/B/C 对应标记。构建配置复用原 Vite 配置并保留原应用，类型检查覆盖 src、生成组件和适配入口。 dependencies 至少包含 src/workspace.tsx、src/workspaces.json、src/global.css、src/workshop-mark.svg、vite.config.ts、tsconfig.json 这些具体文件；adapterFiles 包含 compare、三版 HTML、隔离配置和各入口适配源码。 在创建任何原生适配文件之前，按 preview.md 使用真实 preview-files.mjs prepare 登记全部尚不存在的适配路径（含 native-preview.json）；写好后 seal 一次。清单添加稳定的 ownershipGroup 字段，指向该组名；返回真实收据路径，收据路径不要写入其自身所拥有的清单。不要事后收养文件。 依照 artifact-verification.md，在类型检查和交付前记录 .variant-work/dependency-resolution.json，schemaVersion=1；entries 登记全部实际原生 adapterFiles 以及 native-preview.json，configFiles 登记实际隔离 buildConfig/typecheckConfig，aliases 只记录从原项目核对的字面映射。该事实文件不是待清理适配器，不放进预览归属组。使用真实 project-dependencies.mjs 查看 B 的闭包和未知项，不要用手列原文件路径代替传递发现。"
+    },
+    {
+      "id": "deliver",
+      "prompt": "继续使用完整技能。先记录当前三版的文件状态，使用真实 history prepare/apply 在 B 主标题末尾临时加上‘— Draft’，随后执行 undo B 恢复；A/C 不变。再用真实 integration prepare/apply 把 B 临时接入 src/App.tsx，保留原 main.tsx 的 provider 和原配置，执行原 typecheck/build；完成后用 rollback 恢复原入口。此本地临时接入与回滚已明确授权，不需要等待发布许可，不要选定 B。保留计划、staging、快照、备份与检查输出，并写 .variant-work/native-delivery.json，包含 schemaVersion=1、plan、staging、integrationId、changedFiles、beforeChecks、afterChecks、rollback；路径为项目相对路径，检查记录对应实际命令/版本/退出码/日志。保留原生预览清单，让宿主能独立打开并重放接入。缺失或无法运行的检查如实列为未验证。 接入后的原应用根同样标明 data-native-variant=\"B\"，便于核对实际方向。beforeChecks 和 afterChecks 都是两个记录组成的数组：tool 分别为 typecheck 和 build，每条含 command（实际执行命令文本）、version（分别为 TypeScript/Vite 实际版本）、exitCode、log（各自独立的 .variant-work/ 日志路径）。rollback 为 {completed:true,log:回滚日志路径}。各日志保留命令、版本、退出码和实际输出；不要复用同一个日志文件或补造检查结果。 version 字段使用对应 package.json 中的纯 semver，例如 5.9.2 或 7.1.7。 保持隔离预览在交付后仍可检查：类型配置覆盖实际源码与预览入口，排除 candidate/staging 等临时目标副本，不能因它们的目标相对导入而误把暂存当成活动应用。 保留预览归属收据；若适配器必须更新，先在 .variant-work/ 暂存完整适配集合，再使用 preview-files.mjs publish 的基准保护写入，不能直接编辑后重新 seal。临时 candidate/staging 从首次类型配置起排除，正式 variant-output 源码仍必须检查。 接入准备须绑定当前真实共享依赖闭包；不要删除或修改依赖事实来绕过冲突。"
+    },
+    {
+      "id": "cleanup",
+      "prompt": "继续使用完整技能。现在只清理本次原生隔离预览。宿主已在交付后的一个适配源码追加用户修改，并新增 .variant-work/user-preview-note.txt；保留这两者、原有 variant-preview.html、全部原项目和 variant-output（含历史、备份与最终选择）。使用真实 preview-files.mjs cleanup 和当前归属收据，只移除未改动的本次适配文件（包括原生预览清单）；不得递归删除 .variant-work、改收据、重新 seal、抹掉冲突或手动删除未登记文件。退出码 2 可以表示预期的用户编辑冲突，保留并解释该冲突，不要强制清理。没有本次常驻服务器，不要按端口查杀进程。返回实际 removed/missing/conflicts、备份操作路径与仍保留的文件；不要重新生成已清理的原生预览。"
+    }
+  ],
+  "project": "native-vite",
+  "previewOwnership": true,
+  "sharedDependencies": true
+}

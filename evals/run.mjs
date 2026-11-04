@@ -15,6 +15,7 @@ import { captureNativeVite, probeNativeDependencies } from './native-vite.mjs';
 import { replayNativeDelivery } from './native-delivery.mjs';
 import { createPhaseArchive } from './phase-archive.mjs';
 import { armPreviewCleanup, observePreviewCleanup } from './preview-cleanup.mjs';
+import { probeSharedDependencies } from './shared-dependencies.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -145,6 +146,10 @@ async function chain(fixture, agent, config, dir, install) {
       if (turn.id === 'deliver') {
         try { measurements.native.delivery = await replayNativeDelivery(dir, { out: path.join(out, `${fixture}-${agent}.native`, 'replay'), generated: turns.find(t => t.id === 'generate')?.snapshot, baseline: measurements.native.baseline, manifest: config.nativeVite.manifest, delivery: config.nativeVite.delivery }); }
         catch (error) { measurements.native.delivery = { error: error.stack }; }
+        if (config.sharedDependencies) {
+          try { measurements.sharedDependencies = await probeSharedDependencies(dir, { out: path.join(out, `${fixture}-${agent}.shared-dependencies`), generated: turns.find(t => t.id === 'generate')?.snapshot, baseline: measurements.native.baseline, manifest: config.nativeVite.manifest, delivery: config.nativeVite.delivery }); }
+          catch (error) { measurements.sharedDependencies = { error: error.stack }; }
+        }
         if (config.previewOwnership) {
           try { measurements.previewCleanup = { before: armPreviewCleanup(dir, { baselineArchive: measurements.native.archives.baseline, manifest: config.nativeVite.manifest }) }; }
           catch (error) { measurements.previewCleanup = { before: { error: error.stack } }; }

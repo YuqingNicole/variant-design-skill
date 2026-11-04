@@ -13,6 +13,7 @@ import { systemIdentity } from '../scripts/variant-history.mjs';
 import { gradePremium } from './premium.mjs';
 import { gradeNativeVite } from './native-vite.mjs';
 import { gradePreviewCleanup } from './preview-cleanup.mjs';
+import { gradeSharedDependencies } from './shared-dependencies.mjs';
 import { gradePhaseArchives, verifyPhaseArchive } from './phase-archive.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -263,6 +264,7 @@ export function gradeChain(project, { turns, install, fixture = {}, initial, mea
   if (fixture.nativeVite) for (const check of gradeNativeVite(measurements?.native).checks) checks.push({ ...check, id: `native:${check.id}` });
   if (fixture.nativeVite) for (const check of gradePhaseArchives(measurements?.native?.archives, measurements?.native)) checks.push({ ...check, id: `native:${check.id}` });
   if (fixture.previewOwnership) for (const check of gradePreviewCleanup(measurements?.previewCleanup)) checks.push({ ...check, id: `cleanup:${check.id}` });
+  if (fixture.sharedDependencies) for (const check of gradeSharedDependencies(measurements?.sharedDependencies)) checks.push({ ...check, id: `dependencies:${check.id}` });
   if (fixture.previewOwnership) {
     let details = [];
     try { if (verifyPhaseArchive(measurements?.native?.archives?.cleanup).manifest.phase !== 'cleanup') throw new Error('Archive belongs to another phase'); }
