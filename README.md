@@ -4,7 +4,7 @@ English | **[中文](./README_CN.md)**
 
 > Open-source agent skill for Codex and Claude Code that turns one design brief into three complete, comparable directions (A/B/C) inside your own project, with scoped edits, snapshot undo and an integration step you can roll back.
 
-The three directions share the same task, data and functions, and each states what it optimizes and what it gives up. Edits are snapshotted first and never overwrite changes you have not seen. Inspired by the [Variant](https://variant.com) design community.
+The three directions share the same task, data and functions, and each states what it optimizes and what it gives up. Edits are snapshotted first and never overwrite changes you have not seen.
 
 ---
 
@@ -12,11 +12,7 @@ The three directions share the same task, data and functions, and each states wh
 
 **[Live website →](https://variant-design-skill.vercel.app/)** · [Website source](./website) · [Install the skill](#installation)
 
-Use the bilingual prompt playground to:
-
-1. Describe the product, audience, tone, and constraints.
-2. Compare three prompt-aware positions: **Narrative**, **System**, and **Contrast**.
-3. Take the strongest direction into the full skill for iteration and code export.
+Browse design references with sources and check dates, inspect [A/B/C cases](https://variant-design-skill.vercel.app/cases), and follow the [installation guide](https://variant-design-skill.vercel.app/docs) to use the skill in your own project. The website's [lab](https://variant-design-skill.vercel.app/lab) is a separate experiment; it is not a paid hosted plan. Pro and Team are proposals, not available subscriptions.
 
 Run the [React](https://react.dev/) + [Vite](https://vite.dev/) website locally:
 
@@ -275,31 +271,30 @@ On iteration, the same file is overwritten and re-opened — your browser tab re
 
 No need to re-specify preferences you've already confirmed. Use `show context` to inspect the current context, or `reset context` to start fresh.
 
-**Output format** is context-aware: if your current directory contains a React project (`package.json` with `react` dependency), output is `.tsx` components. Otherwise, zero-dependency HTML is the default. Override with `--react` or `--html`. See below for more.
+### Framework output (context-aware)
 
-### React output (context-aware)
+The skill instructs your agent to inspect `package.json` and choose the matching source format:
 
-In a React project, the skill automatically switches to `.tsx` output:
+| Project | Output for A/B/C |
+|---|---|
+| React / Next.js / Vite with React | `VariantA.tsx`, `VariantB.tsx`, `VariantC.tsx` |
+| Vue 3 | `VariantA.vue`, `VariantB.vue`, `VariantC.vue` |
+| Astro | `VariantA.astro`, `VariantB.astro`, `VariantC.astro` |
+| Svelte / SvelteKit | `VariantA.svelte`, `VariantB.svelte`, `VariantC.svelte` |
+| No matching framework | Interactive HTML |
+
+Files go in `variant-output/`. These are agent instructions, not standalone shell commands:
 
 ```
-# In a React/Next/Vite project directory:
-design a dashboard  →  generates variant-output/VariantA.tsx, VariantB.tsx, VariantC.tsx
-                        Detects Next.js → adds "use client" where needed
-                        Detects framer-motion → uses it; otherwise CSS animations
-
-# In any other directory:
-design a dashboard  →  generates variant-output/variant-dashboard-A.html (unchanged)
-
-# Explicit override anywhere:
-design a dashboard --react   →  always .tsx
-design a dashboard --html    →  always HTML
-
-# Export a specific variation:
-react A              →  export Variation A as .tsx
-export to next       →  export winning variation as Next.js App Router component
+design a dashboard --react   → request React output
+design a dashboard --vue     → request Vue 3 output
+design a dashboard --astro   → request Astro output
+design a dashboard --svelte  → request Svelte output
+design a dashboard --html    → request HTML output
+react A                     → export A as React without selecting it
 ```
 
-Generated `.tsx` files go to `variant-output/` — move them to `src/components/` to include in your project's build. The preview command is inferred from your `package.json` scripts (`npm run dev`, `pnpm dev`, etc.).
+Source format does not establish preview or integration support. The bundled preview helper covers HTML and portable React; native framework features need an isolated project adapter and their own checks. Before moving files into your source tree, use the integration workflow to inspect target paths, preserve backups and keep a rollback path. See [code output](skills/shared/code-output.md), [Vue/Astro/Svelte guidance](skills/shared/frameworks.md) and [preview limits](references/workflow/preview.md).
 
 ---
 

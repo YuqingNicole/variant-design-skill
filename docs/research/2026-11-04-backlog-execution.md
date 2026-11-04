@@ -20,13 +20,13 @@ Work in `/Users/nicole/orca/variant-backlog-work` on task branches. The original
 | Other skill entries | Not started | Actual permitted runs, public evidence, entry content and review |
 | Design sample collection | Ongoing backlog | Watch and annotate new unique authors; preserve source and media evidence |
 | Domain / indexing / directories / GEO | Account-dependent; preparatory work available | Domain binding, redirects, Search Console indexing evidence, permitted submissions, initial ten-query measurement |
-| Positioning / pricing / attribution | Not started | README and GitHub metadata clarity; pricing matches live availability; attribution decision; consistent copy |
-| Website style maintenance | Docs/sponsor implementation and local measurements complete on codex/content-style-budget; homepage budget rechecked | 9 Chrome cases passed; detector timeout, exact CI and maintainer visual acceptance remain |
+| Positioning / pricing / attribution | Concrete draft on codex/positioning-honesty; public metadata untouched | Maintainer pricing direction, metadata permission and attribution choice; exact CI and production gates |
+| Website style maintenance | Draft PR #154; exact loop/landing CI passed; docs/sponsor/home budget checked | 9 local Chrome cases passed; detector timeout and maintainer visual acceptance remain |
 | Artifact evidence, #18 | Partially implemented before this task | Automatic plans and complete real-delivery coverage; classify existing failures |
 | Project integration, #19 | Partially implemented before this task | Real Vite aliases/provider/global styles matrix; preview cleanup ownership; complete delivery receipt |
 | Paid definition / rights / distribution / support, #22–26 | Product and user gates pending | Updated commercial baseline, actual installation/upgrade/rollback/entitlement evidence, two independent human trial users |
 | Hosted AI and cost protection, #39–40 | Needs explicit budget/account decision | Confirm exposure policy and cap; real configured production generation and enforced cost protection if approved |
-| Legacy README PR #2 | Needs review against current direction | Review current diff; integrate useful changes or record why superseded |
+| Legacy README PR #2 | Actual diff reviewed at 7d6e70e; useful source-format notes in the positioning draft | Review/merge of replacement, then maintainer closure decision; no author message sent |
 
 ## Evidence ledger
 
@@ -51,7 +51,7 @@ Ego-browser space 42 inspected the actual local site. Baseline screenshots and r
 
 ## Next action
 
-Content PR #153 and premium readiness follow-up have exact-head loop/landing CI passed. Publish the measured style-maintenance checkpoint, then continue independent distribution/core preparation. P1–P3 production permission, P4 grouping/Claude/visual gates, premium visual review, content human review and RFC-010 feature choices remain pending. Preserve those gates and all later requirements.
+Content PR #153 and premium readiness follow-up have exact-head loop/landing CI passed. Style PR #154 has exact-head CI passed. Finish the concrete positioning/availability draft and maintainer choices, then continue independent distribution/core preparation. P1–P3 production permission, P4 grouping/Claude/visual gates, premium visual review, content human review and RFC-010 feature choices remain pending. Preserve those gates and all later requirements.
 
 
 ### P1 follow-up review
@@ -179,3 +179,10 @@ RFC-010 makes the region-picker and public-checker choices concrete: read-only s
 All five guides received an agent fact/language audit. Git restore/stash/revert scope, legacy snapshot baseline and per-record media permission claims were corrected. Three revised English guides are draft; two unchanged legacy guides retain their old status without an invented approval. Actual production-mode SSR and Chrome expose the previously missing client gate and verify its fix. Website tests: 67 passed; preview build: 239 routes; production build: 236 routes; focused Chrome: 7 passed; actual production artifact route/index/hreflang/sitemap/llms assertions passed. Evidence: `2026-11-04-content-review.md`. Comparison primary documents and source license files were rechecked; its publication location, terms and English remain human gates. No production publication occurred.
 
 Remote status audit found a current-head PR #151 push run with one existing inspiration scroll regression failing on a detached prerendered element, while the PR run at the same head passed. This remains a real failed check on that head. A semantic client-readiness wait was added in `c61f3dc`, passed ten independent Chrome repetitions and is included here; exact new-head CI remains a separate gate. It is unrelated to premium model scoring and is not hidden by the successful duplicate run.
+
+
+### Website/content/positioning checkpoints
+
+Content PR #153 head `f528240`, premium follow-up `c61f3dc` and style PR #154 head `1df0ab4` have both push/PR loop and landing jobs passed. Draft/skipped review is not approval. The homepage detector attempt timed out and its empty JSON does not count as a clean scan; style visual acceptance remains open.
+
+Positioning/availability draft prepares removal of the misleading Variant inspiration line, accurate site/lab README copy, explicit proposed paid tiers, synchronized llms/metadata, and a public GitHub metadata candidate. The public status endpoint returned configured false on a read-only request; no generation or account changes were made. Legacy PR #2's useful framework-format notes were checked against the existing skill and incorporated with preview/integration limits. Maintainer choices remain; original NOTICE and the seven third-party references are unchanged.

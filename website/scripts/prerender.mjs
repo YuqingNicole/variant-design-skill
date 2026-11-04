@@ -21,7 +21,7 @@ const staticPages = {
   '/about': ['关于 Variant Design', '一份需求，在你的项目里做出三个能运行的方向：任务、数据和功能相同，取舍不同。局部修改先存快照，可以撤回，不会覆盖你没看过的改动。'],
   '/docs': ['安装与开始使用 — Variant Design', '安装技能，确认可用，然后在你的项目里走完一次：生成、比较、试改、撤回、接入。'],
   '/submit': ['投稿与授权 — Variant Design', 'Variant Design 方向库的收录、授权与撤下规则。'],
-  '/pricing': ['价格 — Variant Design', 'Variant Design 的方案与价格。'],
+  '/pricing': ['价格 — Variant Design', '本地开源技能免费可用；托管专业版和团队版仍是计划，尚未开放。'],
   '/sponsor': ['赞助 — Variant Design', '品牌赞助 Variant Design 的方式与规则：明确标注，与编辑精选分开。'],
   '/lab': ['实验室 — Variant Design', '工作台和画布等实验功能。'],
   '/guides': ['指南 — Variant Design', '用 AI 做界面时常见问题的回答：怎么比较方向、怎么撤回修改、怎么避免千篇一律。'],
@@ -34,7 +34,7 @@ const staticPagesEn = references => ({
   '/docs': ['Install & get started — Variant Design', 'Install the skill, confirm it works, then go through one full loop in your project: generate, compare, refine, undo, integrate.'],
   '/submit': ['Submissions & permissions — Variant Design', 'How the Variant Design direction library handles submissions, permissions and takedowns.'],
   '/sponsor': ['Sponsor Variant Design', 'How brands can sponsor Variant Design: clearly labeled and kept separate from editorial picks.'],
-  '/pricing': ['Pricing — Variant Design', 'Variant Design plans and pricing.'],
+  '/pricing': ['Pricing — Variant Design', 'The local open-source skill is available; hosted Pro and Team plans are proposals, not available subscriptions.'],
   '/changelog': ['Changelog — Variant Design', 'What changed in each version of the Variant Design skill, from CHANGELOG.md in the repository.'],
   '/skills': ['Design skills — Variant Design', 'Only design delivery skills we ran in throwaway projects, with public records.'],
   '/guides': ['Guides — Variant Design', 'Answers to common questions about designing interfaces with AI: comparing directions, undoing changes and avoiding generic results.'],
@@ -180,7 +180,7 @@ export function llms(entries, docs, site = defaultSite, references = [], guides 
 - Install for Codex: \`${docs.installCommand}\`
 - Install for Claude Code: \`${docs.clone(docs.agents.find(a => a.id === 'claude').path)}\`
 - Or, inside a project: \`npx skills add YuqingNicole/variant-design-skill -a codex\` (or \`-a claude-code\`).
-- Requires Git and Node.js 22+. Your agent supplies the model; there is no hosted service. MIT licensed.
+- Requires Git and Node.js 22+. Your agent supplies model access for this local skill. Hosted Pro and Team plans are proposals, not available subscriptions. MIT licensed, with third-party exceptions listed in NOTICE.
 - Editing a direction does not select it: only an explicit \`pick B\` records the final choice. Output goes to \`variant-output/\` in your project.
 - Or, as a Claude Code plugin from this repository's own marketplace: \`claude plugin marketplace add YuqingNicole/variant-design-skill\`, then \`claude plugin install variant-design@variant-design\` (checked with Claude Code 2.1.316). It is not listed in any third-party plugin directory yet.
 

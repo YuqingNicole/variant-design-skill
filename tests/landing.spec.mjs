@@ -194,13 +194,22 @@ test('expressive homepage gallery opens distinct complete directions with workin
  await page.locator('.site-footer a[href="/pricing"]').click();
  await expect(page.locator('h1')).toHaveCSS('font-family',homeFont);
  await expect(page.locator('.pricing-page')).toHaveCSS('background-color','rgb(247, 247, 242)');
+ await expect(page.locator('.pricing-card header b')).toHaveText(['计划中','计划中']);
+ await expect(page.locator('.pricing-hero-aside')).toContainText('尚未开放购买、开通或生成额度');
+ await expect(page.locator('.pricing-card').nth(1)).toContainText('报价草案');
+ await expect(page.locator('.pricing-card').nth(1).getByRole('link')).toHaveText('讨论专业版计划');
+ await expect(page.locator('.pricing-card').nth(1).getByRole('link')).toHaveAttribute('href',/\/issues\/new$/);
  await expect(page.locator('.price strong')).toHaveText(['$0','$20','$41']);
  await page.getByRole('button',{name:'月付',exact:true}).click();
  await expect(page.locator('.price strong')).toHaveText(['$0','$24','$49']);
  await page.locator('.pricing-faq summary').first().click();
  await expect(page.locator('.pricing-faq details').first()).toHaveAttribute('open','');
  await page.locator('.site-language').click();
- await expect(page.locator('h1')).toContainText('Taste is free.');
+ await expect(page.locator('h1')).toContainText('The local skill is free.');
+ await expect(page.locator('.pricing-card header b')).toHaveText(['Planned','Planned']);
+ await expect(page.locator('.pricing-hero-aside')).toContainText('not available to buy or activate');
+ await expect(page.locator('.pricing-card').nth(1)).toContainText('Proposed price');
+ await expect(page.locator('.pricing-card').nth(1).getByRole('link')).toHaveText('Discuss the Pro proposal');
  for(const width of [320,390,577,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
  await page.locator('.pricing-card').first().getByRole('link').click();
  await expect(page).toHaveURL(/\/en\/docs$/);
@@ -209,6 +218,16 @@ test('expressive homepage gallery opens distinct complete directions with workin
  await expect(page.locator('.site-workbench')).toHaveCSS('background-color','rgb(247, 247, 242)');
  await expect(page.locator('.site-nav')).toBeVisible();
  });
+
+test('pricing proposals are explicit without JavaScript and agree with the agent-facing description',async({browser,request},info)=>{
+ const context=await browser.newContext({javaScriptEnabled:false}),page=await context.newPage();
+ try{for(const [route,planned,price,features]of [['/pricing','计划中','报价草案','以下为拟提供功能'],['/en/pricing','Planned','Proposed price','Proposed features']]){
+  await page.goto(route);await expect(page.locator('.pricing-card header b')).toHaveText([planned,planned]);
+  for(const card of [page.locator('.pricing-card').nth(1),page.locator('.pricing-card').nth(2)]){await expect(card).toContainText(price);await expect(card).toContainText(features);await expect(card.getByRole('link')).toHaveAttribute('href',/\/issues\/new$/);await expect(card.locator('form')).toHaveCount(0)}
+  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await page.evaluate(()=>document.fonts.ready);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:info.outputPath(`${route.startsWith('/en')?'en':'zh'}-${width}.png`)})}
+ }}finally{await context.close()}
+ const text=await(await request.get('/llms.txt')).text();expect(text).toContain('Hosted Pro and Team plans are proposals, not available subscriptions');
+});
 
 test('direction library pages are prerendered, browsable and keep old links working', async ({page,request})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));

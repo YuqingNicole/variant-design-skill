@@ -4,7 +4,7 @@
 
 > 开源的 Agent 技能，用于 Codex 和 Claude Code：把一份设计需求变成你项目里三个完整、可比较的方向（A/B/C），支持局部修改、快照撤回，接入后也能回滚。
 
-三个方向的任务、数据和功能相同，各自说明优化了什么、放弃了什么。修改前先保存快照，不会覆盖你还没看过的改动。受 [Variant](https://variant.com) 设计社区启发。
+三个方向的任务、数据和功能相同，各自说明优化了什么、放弃了什么。修改前先保存快照，不会覆盖你还没看过的改动。
 
 ---
 
@@ -12,11 +12,7 @@
 
 **[在线体验 →](https://variant-design-skill.vercel.app/)** · [网站源码](./website) · [安装 Skill](#安装)
 
-使用双语提示词体验站：
-
-1. 描述产品、用户、语气与约束。
-2. 比较三个定制方向：**叙事型**、**系统型**与**反差型**。
-3. 把胜出的方向交给完整 Skill，继续迭代并导出代码。
+浏览附有出处与核对日期的设计参考，查看 [A/B/C 案例](https://variant-design-skill.vercel.app/cases)，再按[安装指南](https://variant-design-skill.vercel.app/docs)在自己的项目里使用技能。网站的[实验室](https://variant-design-skill.vercel.app/lab)是独立实验，不是付费托管方案。专业版、团队版仍是计划，尚未开放订阅。
 
 在本地运行 [React](https://react.dev/) + [Vite](https://vite.dev/) 网站：
 
@@ -275,31 +271,30 @@ reset context          → 清除 context，下次从头开始
 
 无需重新说明你已确认的偏好。用 `show context` 查看当前 context，用 `reset context` 从头开始。
 
-**输出格式**是上下文感知的：如果当前目录含有 React 项目（`package.json` 含 `react` 依赖），自动输出 `.tsx` 组件；否则输出零依赖 HTML。
+### 框架输出（上下文感知）
 
-### React 输出（上下文感知）
+技能要求 Agent 检查 `package.json`，再选择对应的源码格式：
 
-在 React 项目目录中，技能会自动切换为 `.tsx` 输出：
+| 项目 | A/B/C 输出 |
+|---|---|
+| React / Next.js / 使用 React 的 Vite | `VariantA.tsx`、`VariantB.tsx`、`VariantC.tsx` |
+| Vue 3 | `VariantA.vue`、`VariantB.vue`、`VariantC.vue` |
+| Astro | `VariantA.astro`、`VariantB.astro`、`VariantC.astro` |
+| Svelte / SvelteKit | `VariantA.svelte`、`VariantB.svelte`、`VariantC.svelte` |
+| 未识别到对应框架 | 交互式 HTML |
+
+文件写入 `variant-output/`。下面是发给 Agent 的指令，不是独立的终端命令：
 
 ```
-# 在 React/Next/Vite 项目目录中：
-设计一个仪表盘  →  生成 variant-output/VariantA.tsx, VariantB.tsx, VariantC.tsx
-                    检测到 Next.js → 自动添加 "use client"
-                    检测到 framer-motion → 使用 Framer Motion；否则用 CSS 动画
-
-# 在其他目录中：
-设计一个仪表盘  →  生成 variant-output/variant-dashboard-A.html（不变）
-
-# 任意地方强制指定：
-设计一个仪表盘 --react   →  始终输出 .tsx
-设计一个仪表盘 --html    →  始终输出 HTML
-
-# 导出特定变体：
-react A              →  将变体 A 导出为 .tsx
-export to next       →  将选定变体导出为 Next.js App Router 组件
+设计一个仪表盘 --react   → 请求 React 输出
+设计一个仪表盘 --vue     → 请求 Vue 3 输出
+设计一个仪表盘 --astro   → 请求 Astro 输出
+设计一个仪表盘 --svelte  → 请求 Svelte 输出
+设计一个仪表盘 --html    → 请求 HTML 输出
+react A                 → 导出 A 为 React，不自动选定
 ```
 
-生成的 `.tsx` 文件写入 `variant-output/`，移到 `src/components/` 即可纳入项目构建。预览命令从 `package.json scripts` 自动推断（`npm run dev`、`pnpm dev` 等）。
+源码格式不等于预览和接入已经得到验证。附带的预览助手覆盖 HTML 和可移植 React；框架原生功能需要隔离的项目适配与独立检查。把文件放入源码目录前，先走接入流程核对目标路径、保留备份和回滚入口。见[代码输出](skills/shared/code-output.md)、[Vue/Astro/Svelte 指引](skills/shared/frameworks.md)和[预览限制](references/workflow/preview.md)。
 
 ---
 
