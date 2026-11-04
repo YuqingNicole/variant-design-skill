@@ -67,3 +67,16 @@ test('direct details support keyboard navigation without the transitions API',as
  await page.keyboard.press('ArrowLeft');await expect(page.locator('h1')).toHaveText('Raycast');
  await page.keyboard.press('Escape');await expect(page).toHaveURL(/\/\?sort=curated$/);await expect(page.locator('.insp-feed')).toBeVisible();
 });
+
+// Delay the real update callback so several key events arrive before a transition commits.
+for(const mode of ['modal','page'])test(`rapid detail arrows preserve every navigation intent in ${mode} mode`,async({page})=>{
+ await page.addInitScript(()=>{const start=document.startViewTransition?.bind(document);if(start)document.startViewTransition=update=>start(async()=>{await new Promise(resolve=>setTimeout(resolve,100));return update()})});
+ const list=items.filter(i=>i.category==='landing');
+ if(mode==='modal'){await page.goto('/?category=landing&sort=curated');await page.locator('.insp-card-open').first().click();await expect(page.getByRole('dialog')).toBeVisible();}
+ else await page.goto(`/inspiration/${list[0].id}?category=landing&sort=curated`);
+ await page.getByRole('button',{name:'下一个',exact:true}).focus();
+ const arrows=async(key,count)=>page.evaluate(({key,count,mode})=>{const target=mode==='modal'?document.querySelector('dialog'):window;for(let i=0;i<count;i++)target.dispatchEvent(new KeyboardEvent('keydown',{key,bubbles:true,cancelable:true}))},{key,count,mode});
+ await arrows('ArrowRight',5);await expect(page).toHaveURL(new RegExp(`/inspiration/${list[5].id}\\?`));
+ await arrows('ArrowLeft',2);await expect(page).toHaveURL(new RegExp(`/inspiration/${list[3].id}\\?`));
+ await page.keyboard.press('Escape');await expect(page).toHaveURL(/\/\?category=landing&sort=curated$/);await expect(page.locator('.insp-feed')).toBeVisible();
+});
