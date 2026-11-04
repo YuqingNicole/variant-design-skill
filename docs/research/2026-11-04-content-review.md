@@ -1,6 +1,6 @@
 # Guide and comparison review · 2026-11-04
 
-Branch: `codex/content-review`, based on RFC-010 proposal `c9763ff`. This is an agent fact/language audit and a human review pack. It is not the maintainer's English approval, legal review, a competitor benchmark or a production publication.
+Draft PR [#153](https://github.com/YuqingNicole/variant-design-skill/pull/153), branch `codex/content-review`, based on RFC-010 proposal `c9763ff`. This is an agent fact/language audit and a human review pack. It is not the maintainer's English approval, legal review, a competitor benchmark or a production publication.
 
 ## Five-guide audit
 
