@@ -343,5 +343,54 @@
         "productionChanged": false
       }
     }
-  ]
+  ],
+  "additionalAudit": {
+    "source": "separately labelled corrected-host audit of immutable first-run generation",
+    "file": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-original-confirmation-audit-9fd2632/audit.json",
+    "sha256": "4a4180327f3449d05426a8bd62cc8b82ac88b9947417ca14a25fab8e0dd9185e",
+    "originalResultStillFailed": true,
+    "checks": [
+      {
+        "id": "generate-observed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-tasks",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-brand-assets",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-no-overflow",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-build-typecheck",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-build-coverage",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-fresh",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-comparison",
+        "pass": false,
+        "details": []
+      }
+    ],
+    "correction": "The first diagnostic over-attributed comparison failure to the interrupted payment. Independent comparison capture actually observed mobile overflow; screenshots and source confirm intrinsic iframe/grid sizing. Confirmation handling restores the seven measured generation gates, but does not fix that generated comparison page."
+  }
 }

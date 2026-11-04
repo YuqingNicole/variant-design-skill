@@ -17,6 +17,6 @@
 
 | [012 · 预览文件归属](012-preview-file-ownership.md) | 已实现，真实 Codex 58 项通过；完整验收待审 | Issue #19；PR #159 |
 | [013 · 共享依赖闭包](013-shared-dependency-closure.md) | 已实现，真实 Codex 68 项通过；完整验收待审 | Issue #18、#19；PR #160 |
-| [014 · 版本绑定交付凭证](014-version-bound-delivery-receipts.md) | 本地实现中，尚无真实 CLI 验收 | Issue #18、#19 |
+| [014 · 版本绑定交付凭证](014-version-bound-delivery-receipts.md) | 已实现，真实 Codex 78 项通过；完整验收待审 | Issue #18、#19；PR #161 |
 
 RFC 记录设计决策与约束，PRD 记录验收要求；实现状态以对应 Issue 和验证证据为准。
