@@ -1,0 +1,180 @@
+{
+  "date": "2026-11-04",
+  "installedHead": "4fbfb35",
+  "fixture": "ledger-pick",
+  "agent": "codex",
+  "pass": true,
+  "seconds": 388,
+  "checks": [
+    {
+      "id": "generate:agent-completed",
+      "pass": true
+    },
+    {
+      "id": "generate:delivery-check",
+      "pass": true
+    },
+    {
+      "id": "generate:brand-kept",
+      "pass": true
+    },
+    {
+      "id": "generate:quality-gate",
+      "pass": true
+    },
+    {
+      "id": "generate:generator-habits",
+      "pass": true
+    },
+    {
+      "id": "generate:generated",
+      "pass": true
+    },
+    {
+      "id": "generate:not-selected",
+      "pass": true
+    },
+    {
+      "id": "pick:agent-completed",
+      "pass": true
+    },
+    {
+      "id": "pick:delivery-check",
+      "pass": true
+    },
+    {
+      "id": "pick:brand-kept",
+      "pass": true
+    },
+    {
+      "id": "pick:picked",
+      "pass": true
+    },
+    {
+      "id": "pick:pick-is-not-an-edit",
+      "pass": true
+    },
+    {
+      "id": "pick:ds-drafted",
+      "pass": true
+    },
+    {
+      "id": "pick:ds-waits-for-user",
+      "pass": true
+    },
+    {
+      "id": "pick:ds-contrast",
+      "pass": true
+    },
+    {
+      "id": "pick:ds-layers",
+      "pass": true
+    },
+    {
+      "id": "pick:ds-decisions",
+      "pass": true
+    },
+    {
+      "id": "pick:ds-use-notes",
+      "pass": true
+    },
+    {
+      "id": "project-untouched",
+      "pass": true
+    },
+    {
+      "id": "skill-under-test",
+      "pass": true
+    }
+  ],
+  "reading": {
+    "words": 27690,
+    "files": [
+      "SKILL.md",
+      "references/domains/saas.md",
+      "references/workflow/design-declaration.md",
+      "references/workflow/preview.md",
+      "references/workflow/product-integrity-gate.md",
+      "references/workflow/project-context.md",
+      "references/workflow/project-discovery.md",
+      "references/workflow/quality-baseline.md",
+      "skills/shared/code-output.md",
+      "skills/variant-generate/ROUTE.md",
+      "references/design-system/color-and-contrast.md",
+      "references/design-system/system-decisions.md",
+      "references/ux/component-specs.md",
+      "references/workflow/history.md",
+      "skills/variant-design-system/ROUTE.md"
+    ],
+    "turns": [
+      {
+        "turn": "generate",
+        "files": [
+          "SKILL.md",
+          "references/domains/saas.md",
+          "references/workflow/design-declaration.md",
+          "references/workflow/preview.md",
+          "references/workflow/product-integrity-gate.md",
+          "references/workflow/project-context.md",
+          "references/workflow/project-discovery.md",
+          "references/workflow/quality-baseline.md",
+          "skills/shared/code-output.md",
+          "skills/variant-generate/ROUTE.md"
+        ],
+        "words": 10300
+      },
+      {
+        "turn": "pick",
+        "files": [
+          "SKILL.md",
+          "references/design-system/color-and-contrast.md",
+          "references/design-system/system-decisions.md",
+          "references/ux/component-specs.md",
+          "references/workflow/design-declaration.md",
+          "references/workflow/history.md",
+          "references/workflow/product-integrity-gate.md",
+          "references/workflow/project-context.md",
+          "references/workflow/quality-baseline.md",
+          "skills/shared/code-output.md",
+          "skills/variant-design-system/ROUTE.md",
+          "skills/variant-generate/ROUTE.md"
+        ],
+        "words": 17390
+      }
+    ]
+  },
+  "usage": {
+    "tokens": 1314466
+  },
+  "usageNote": "Tokens include cached input and are not a USD estimate.",
+  "hostFollowup": {
+    "date": "2026-11-04",
+    "installedHead": "4fbfb35",
+    "installedHelperSha256": "ca765f2b6edf457f1d79ab300142b5aaa7d62e45b998fa97a2c249afcd20949c",
+    "agentFixture": "ledger-pick",
+    "generatedExtension": "variant-output/system-extension.css",
+    "setup": "Disposable project copy; existing registered extension, no host confirmation or selection",
+    "before": "unverified",
+    "afterExternalEdit": "stale",
+    "afterNewRun": "unverified",
+    "missingRuntimeChecks": [
+      "brand",
+      "keyboard-focus",
+      "reduced-motion",
+      "scope-preservation",
+      "project-checks"
+    ],
+    "oldReportUnchanged": true,
+    "originalAgentOutputUnchanged": true,
+    "limitations": [
+      "Host follow-up, not an additional Agent action",
+      "No runtime adapter or browser claim in this report",
+      "No automatic task plan or full delivery acceptance"
+    ]
+  },
+  "limitations": [
+    "Brand accent/muted static contrast warnings remain explicit.",
+    "The host follow-up is separate from Agent actions and does not infer a runtime plan.",
+    "No production or maintainer visual acceptance."
+  ]
+}
