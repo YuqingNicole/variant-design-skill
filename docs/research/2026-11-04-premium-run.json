@@ -1,0 +1,138 @@
+{
+  "implementation": "0e03d1615809a3dc5811d30b0893b436455451e9",
+  "agent": "codex",
+  "fixture": "premium",
+  "pass": true,
+  "checks": 18,
+  "seconds": 156,
+  "skillWordsRead": 11870,
+  "samples": [
+    {
+      "phase": "before",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "counts": {
+        "families": 2,
+        "sizes": 11,
+        "weights": 6,
+        "textColors": 12,
+        "radii": 9,
+        "shadows": 3
+      },
+      "task": true,
+      "errors": [],
+      "anchors": {
+        "bodyFont": "Arial",
+        "headingFont": "Georgia",
+        "headingFonts": [
+          "Georgia"
+        ],
+        "headingVisible": true,
+        "background": "rgb(248, 250, 252)",
+        "primary": "rgb(31, 96, 213)",
+        "bodySize": 16,
+        "headingSize": 38,
+        "overflow": false
+      }
+    },
+    {
+      "phase": "before",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "counts": {
+        "families": 2,
+        "sizes": 11,
+        "weights": 6,
+        "textColors": 12,
+        "radii": 9,
+        "shadows": 3
+      },
+      "task": true,
+      "errors": [],
+      "anchors": {
+        "bodyFont": "Arial",
+        "headingFont": "Georgia",
+        "headingFonts": [
+          "Georgia"
+        ],
+        "headingVisible": true,
+        "background": "rgb(248, 250, 252)",
+        "primary": "rgb(31, 96, 213)",
+        "bodySize": 16,
+        "headingSize": 30,
+        "overflow": false
+      }
+    },
+    {
+      "phase": "after",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "counts": {
+        "families": 2,
+        "sizes": 4,
+        "weights": 2,
+        "textColors": 3,
+        "radii": 1,
+        "shadows": 0
+      },
+      "task": true,
+      "errors": [],
+      "anchors": {
+        "bodyFont": "Arial",
+        "headingFont": "Georgia",
+        "headingFonts": [
+          "Georgia"
+        ],
+        "headingVisible": true,
+        "background": "rgb(248, 250, 252)",
+        "primary": "rgb(31, 96, 213)",
+        "bodySize": 16,
+        "headingSize": 38,
+        "overflow": false
+      }
+    },
+    {
+      "phase": "after",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "counts": {
+        "families": 2,
+        "sizes": 4,
+        "weights": 2,
+        "textColors": 3,
+        "radii": 1,
+        "shadows": 0
+      },
+      "task": true,
+      "errors": [],
+      "anchors": {
+        "bodyFont": "Arial",
+        "headingFont": "Georgia",
+        "headingFonts": [
+          "Georgia"
+        ],
+        "headingVisible": true,
+        "background": "rgb(248, 250, 252)",
+        "primary": "rgb(31, 96, 213)",
+        "bodySize": 16,
+        "headingSize": 38,
+        "overflow": false
+      }
+    }
+  ],
+  "undo": {
+    "pass": true,
+    "details": [
+      "One real undo in an isolated copy restores B files, tokens, comparison and prior undo/binding; selection stays unchanged"
+    ]
+  },
+  "scope": "One self-authored English catalogue; Chinese refinement prompt; actual Chrome; not a universal aesthetic or accessibility result"
+}
