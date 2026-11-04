@@ -14,7 +14,7 @@ Work in `/Users/nicole/orca/variant-backlog-work` on task branches. The original
 | Unified inspiration feed / interaction / appearance | PR #148, local and remote checks passed; preview sampled; screenshot review pending | RFC-008 P2: one chronological feed; URL filters; hover/focus/touch credits; visible-only videos; reduced motion; shared-element detail; keyboard/back/scroll; 320/390/1440 in both languages; style budget |
 | Submission and permission intake | PR #149 updated at 508d884; review fixes and focused 11 Chrome tests passed; exact loop/landing CI passed | RFC P3: media URL/file workflow, attribution, distinct usage rights, withdrawal, manual review and evaluated storage |
 | Design system checks | Draft PR #150; exact CI passed; corrective Codex Harbor 34/34 and Ledger 18/18 passed; Claude account 403 | RFC-009 adoption fix, full chain rerun, Claude/account and screenshot gates; grouping default still pending |
-| Premium / adjective evals | Not started | Real Agent fixture and style-budget comparison; preserve task and brand |
+| Premium / adjective evals | PR #151; real Codex 18/18 passed, exact implementation CI passed | Maintainer screenshot review and merge; one controlled case is not universal taste evidence |
 | Region selection / public code checker | Needs product decision | Concrete proposal and bounded implementation after scope decision |
 | English guides and comparison page | Needs review | Five English guides reviewed, comparison facts rechecked and destination chosen |
 | Other skill entries | Not started | Actual permitted runs, public evidence, entry content and review |
@@ -161,3 +161,10 @@ Confirmation/adoption/undo is now implemented in the existing history helper and
 Corrected installed head `eacfee0`: Codex harbor six-turn 34/34 checks and ledger two-turn 18/18 passed; source/install identity and actual helper calls were inspected. Seven actual system contrast pairs had no failing/unverified result or layer errors. Existing pending-page/brand warnings remain explicit. Summary: `2026-11-04-system-adoption-runs.json`. Exact loop/landing CI passed. Claude authentication and screenshot/maintainer review still prevent calling RFC-007 fully accepted; no production merge or default-grouping decision was assumed.
 
 Premium evaluation preparation proceeds separately in `/Users/nicole/orca/variant-premium-eval-work` (`codex/premium-evaluation`, based on `eacfee0`). Its self-authored baseline is measured at 1440/390: two families, eleven sizes, six weights, twelve text colors, nine radii, three shadows; all search/filter/save controls work and there is no overflow. New host evidence/fixture regression is under development. This does not count as a real premium Agent result yet.
+
+
+### Premium real-run checkpoint
+
+Installed head `0e03d16`: actual Codex premium refinement passed 18/18 checks (156s). Both 1440/390 samples changed sizes 11→4, weights 6→2, text colors 12→3, radii 9→1, shadows 3→0, preserving two families, the light/blue brand, all catalogue behavior, A/C, final selection and one real undo. Actual generated source and exported screenshots were inspected; no fake after-sample or API override was used. Exact implementation-head loop/landing CI passed. Research and aggregate JSON are committed under `2026-11-04-premium-*`. User/maintainer visual acceptance and merge remain separate; no global taste claim.
+
+The next safe scope is the two unresolved feature decisions (visual region selection and a public code-check page). A separate `codex/product-feature-decisions` worktree is preparing a concrete proposal; no feature choice or production action is assumed. All later content/distribution/core/commercial rows remain open.
