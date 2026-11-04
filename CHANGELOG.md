@@ -8,6 +8,7 @@
 - DeepSeek Harness (`dsh`) finds the skill in `~/.agents/skills/variant-design` or a project's `.agents/skills`, the folder `npx skills add` uses.
 
 ### Design system
+- Contrast reports include checked and unverified pairs; generated systems use exact role pairs or explicit surface notes, with legacy guessing restricted to `--brand` files. Generated component tokens must alias semantic tokens; product references to another component's tokens are reported. DTCG adds opt-in `--group-by layer` with typed tokens and cross-layer aliases, and lists multiple conditional values instead of silently choosing one.
 - After `pick B`, the skill derives a complete design system from B (`variant-output/design-system.css` and a preview with every component B uses, in all its states) and waits for `ds confirm`. With a locked brand file, it adds only the layers the brand leaves open and records them in `designSystem.extensions`.
 - `delivery-check` reads those extensions (redefining a brand variable is an error) and warns about spacing, font-size and radius values off a confirmed system's scale, naming the nearest token. A system derived from B is checked against B only.
 - `ds confirm` exports the system as DTCG 2025.10 tokens (`scripts/ds-export.mjs` → `design-system.tokens.json`) and lists what DTCG cannot express, such as `clamp()` sizes.

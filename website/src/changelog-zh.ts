@@ -9,6 +9,7 @@ export const changelogZh: Record<string, { title?: string; blocks: string[] }> =
       '子流程文件从 `SKILL.md` 改名为 `skills/*/ROUTE.md`，所以 Claude Code 插件、Codex 和 `npx skills` 都只会把入口注册为技能。',
       'DeepSeek Harness（`dsh`）会在 `~/.agents/skills/variant-design` 或项目的 `.agents/skills` 里找到技能，也就是 `npx skills add` 使用的文件夹。',
       '设计系统',
+      '对比度报告列出已检查配对和未验证项；生成系统用明确角色配对或底色注释，只有 `--brand` 文件沿用旧命名。组件 token 必须引用语义 token；产品代码引用其他组件 token 时会被报告。DTCG 新增可选的 `--group-by layer`，保留类型和跨层别名；有多个条件值时列为未导出，不再静默取其中一个。',
       '`pick B` 之后，技能从 B 提炼出完整的设计系统（`variant-output/design-system.css`，以及包含 B 用到的每个组件、每种状态的预览），然后等待 `ds confirm`。品牌文件已锁定时，只补品牌没规定的部分，并记入 `designSystem.extensions`。',
       '`delivery-check` 会读取这些扩展（重新定义品牌变量算错误），并对不在已确认系统刻度上的间距、字号、圆角给出警告，指出最接近的 token。从 B 提炼的系统只用来检查 B。',
       '`ds confirm` 会把系统导出为 DTCG 2025.10 设计令牌（`scripts/ds-export.mjs` → `design-system.tokens.json`），并列出 DTCG 表达不了的值，例如 `clamp()` 字号。',

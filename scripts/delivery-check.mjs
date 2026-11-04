@@ -6,7 +6,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { localFile, readContext } from './variant-history.mjs';
-import { contrastIssues } from './ds-check.mjs';
+import { checkSystem } from './ds-check.mjs';
+import { tokenMap, references } from './ds-tokens.mjs';
 
 const ids = ['A', 'B', 'C'];
 const keys = ['optimizes', 'tradeoff', 'bestFor'];
@@ -57,9 +58,20 @@ function offScale(source, scale) {
 const systemScale = system => [...cssVars(system)].flatMap(([name, value]) => { const n = px(value), kind = /text|font/.test(name) ? 'text' : /radius/.test(name) ? 'radius' : /space|gap/.test(name) ? 'space' : null; return n != null && kind ? [{ name, px: n, kind }] : []; });
 // What a file uses that a design system does not define: hex colors and spacing, type or radius lengths.
 // Used for work built on a confirmed system after the variants (a component, a new page).
-export function systemDrift(source, system) {
+export function systemDrift(source, system, { component = null } = {}) {
   const own = new Set(hexes(system)), scale = systemScale(system);
-  return { colors: hexes(source).filter(h => !own.has(h) && !plainColors.has(h)), lengths: scale.length ? offScale(source, scale) : [], primitives: [...new Set([...source.matchAll(/var\(\s*(--p-[\w-]+)/g)].map(m => m[1]))] };
+  const layers = productTokenIssues(source, [system], { component });
+  return { colors: hexes(source).filter(h => !own.has(h) && !plainColors.has(h)), lengths: scale.length ? offScale(source, scale) : [], ...layers };
+}
+
+export function productTokenIssues(source, systemSources, { component = null } = {}) {
+  const tokens = tokenMap(systemSources), refs = [...new Set(references(source.replace(/\/\*[\s\S]*?\*\//g, '')))];
+  // A component file can explicitly identify its namespace; never infer ownership from arbitrary selectors.
+  component ??= source.match(/\/\*\s*component:\s*([\w-]+)\s*\*\//)?.[1] ?? null;
+  return {
+    primitives: refs.filter(name => name.startsWith('--p-') && (tokens.has(name) ? tokens.get(name).origin !== 'brand' : systemSources.some(s => typeof s === 'string' || s.origin === 'generated'))),
+    components: refs.filter(name => tokens.get(name)?.layer === 'component' && !(component && name.startsWith(`--${component}-`))),
+  };
 }
 
 export function checkDelivery(root = 'variant-output', { project = path.dirname(path.resolve(root)) } = {}) {
@@ -119,9 +131,14 @@ export function checkDelivery(root = 'variant-output', { project = path.dirname(
         for (const name of cssVars(source).keys()) if (brandVars.has(name)) errors.push(`${file} redefines ${name}, which ${ds.file} defines; extensions refer to brand variables with var() and never redefine them`);
       } catch (error) { errors.push(`Design system extension: ${error.message}`); }
     }
+    const generated = ds.file === 'variant-output/design-system.css';
+    const systemSources = [{ source: dsSource ?? '', origin: generated ? 'generated' : 'brand' }, ...extensions.map(source => ({ source, origin: 'extension' }))];
     const system = [dsSource ?? '', ...extensions].join('\n');
     // The user confirmed this system, and their constraints outrank accessibility suggestions: report, do not block.
-    for (const i of contrastIssues([system])) warnings.push(`Design system pair ${i.text} on ${i.surface} is ${i.ratio}:1, below ${i.min}:1 for text; raise it with ds edit or say why it stays`);
+    const audit = checkSystem(systemSources);
+    for (const i of audit.issues) warnings.push(`Design system pair ${i.text} on ${i.surface} is ${i.ratio}:1, below ${i.min}:1 for text; raise it with ds edit or say why it stays`);
+    for (const i of audit.unverified) warnings.push(`Design system contrast unverified for ${i.text}${i.surface ? ` on ${i.surface}` : ''}: ${i.reason}`);
+    for (const i of audit.layers) errors.push(`Design system ${i.token}${i.target ? ` → ${i.target}` : ''}: ${i.reason}`);
     const scale = systemScale(system);
     const locked = (ds.fonts ?? []).map(f => first(f).toLowerCase());
     const dsHexes = new Set(dsSource ? hexes(system) : []);
@@ -134,8 +151,9 @@ export function checkDelivery(root = 'variant-output', { project = path.dirname(
         if (locked.length) for (const font of declaredFonts(source)) if (!locked.includes(font.toLowerCase())) errors.push(`Variant ${id} ${file} declares font "${font}", outside the locked fonts ${JSON.stringify(ds.fonts)}`);
         if (dsSource) for (const hex of hexes(source)) if (!dsHexes.has(hex) && !plainColors.has(hex)) warnings.push(`Variant ${id} ${file} uses ${hex}, which is not in ${ds.file}; use the locked tokens or explain why`);
         // A skill-generated system keeps primitives behind its semantic tokens (system-decisions.md §4); a brand file's naming is the brand's.
-        const primitives = ds.file === 'variant-output/design-system.css' ? [...new Set([...source.matchAll(/var\(\s*(--p-[\w-]+)/g)].map(m => m[1]))] : [];
+        const { primitives, components } = productTokenIssues(source, systemSources);
         if (primitives.length) warnings.push(`Variant ${id} ${file} uses primitive tokens ${primitives.join(', ')}; use the semantic token that names their role`);
+        if (components.length) warnings.push(`Variant ${id} ${file} uses component tokens ${components.join(', ')} outside declared owning component CSS; use semantic tokens or identify that component file with /* component: name */`);
         const off = scale.length ? offScale(source, scale) : [];
         if (off.length) warnings.push(`Variant ${id} ${file} uses lengths outside the design system: ${off.slice(0, 6).join(', ')}${off.length > 6 ? ` and ${off.length - 6} more` : ''}; ${ds.source === id ? `\`apply ds ${id}\` replaces them with tokens` : "use the system's tokens or explain why"}`);
       }

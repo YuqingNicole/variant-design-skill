@@ -4,6 +4,8 @@
 
 The user cannot see the output until it opens in a browser, so every step should shorten the path from idea to pixels: write files, build the preview, and give the exact path or URL.
 
+On a confirmed system, product code uses semantic tokens. A component's own CSS may use its component tokens; identify that file with `/* component: button */` for `--button-*`. Do not use another component's tokens or `--p-*` primitives. Brand-file names are exempt; generated extensions follow these rules. `delivery-check.mjs` reports usage warnings and generated component-layer errors; missing contrast coverage stays unverified. The design-system route defines explicit pairs and the checks before showing its preview.
+
 ## Detect the output format
 
 Before generating any design, detect the output format. Run this detection once per session and cache the result.

@@ -4,6 +4,8 @@ Read this before any edit to an existing direction (a variation action, a zone e
 
 ## Prepare, apply, undo, select
 
+After a system edit, rerun `ds-check.mjs` on the generated file and any extensions, with `--brand <file>` for an existing brand lock. Missing or unresolvable contrast pairs remain unverified; component tokens must alias semantic tokens, not primitives or other components. Regenerate the DTCG file in its existing format after `ds confirm` or `ds edit`. These read-only checks do not select, apply or undo a direction.
+
 Before generating any patch, prepare a **new, nonexistent** candidate directory from current output:
 
 ```bash

@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { checkDelivery, declaredFonts } from './delivery-check.mjs';
+import { checkDelivery, declaredFonts, productTokenIssues } from './delivery-check.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const comparison = id => ({ optimizes: `Position ${id}`, tradeoff: `Cost ${id}`, bestFor: `Scenario ${id}` });
@@ -13,7 +13,7 @@ const comparison = id => ({ optimizes: `Position ${id}`, tradeoff: `Cost ${id}`,
 function project(change = () => {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'delivery-')), out = path.join(root, 'variant-output');
   fs.mkdirSync(path.join(root, 'src')); fs.mkdirSync(out);
-  fs.writeFileSync(path.join(root, 'src/tokens.css'), ':root{--ink:#14213d;--accent:#e85d04;--font-sans:"Inter",sans-serif}\n');
+  fs.writeFileSync(path.join(root, 'src/tokens.css'), ':root{--ink:#14213d;--paper:#fff;--accent:#e85d04;--font-sans:"Inter",sans-serif}\n');
   const state = { schemaVersion: 2, activeVariant: null, selectedVariant: null,
     taskContract: { primaryJob: 'Read the weekly report', data: 'shared/data.ts', requiredFunctions: ['KPIs', 'trend'] },
     recommendation: { variant: 'A', reason: 'Fits the Monday reader; untested.' },
@@ -71,13 +71,30 @@ test('a locked design system keeps its fonts and colors', () => {
 
 test('a brand lock reads its confirmed extensions, which must exist and never redefine the brand', () => {
   const extend = (css, more = () => {}) => run((s, out) => { fs.writeFileSync(path.join(out, 'design-system.css'), css); s.designSystem.extensions = ['variant-output/design-system.css']; more(s, out); });
-  assert.deepEqual(extend(':root{--space-4:16px;--danger:#c1121f;--ds-text:var(--ink)}\n', (s, out) => fs.appendFileSync(path.join(out, 'VariantA.css'), '.e{color:#c1121f}\n')), { errors: [], warnings: [], variants: ['A', 'B', 'C'] });
+  assert.deepEqual(extend('/* Semantic */:root{--space-4:16px;--danger:#c1121f;--ds-text:var(--ink); /* on: --paper */}\n', (s, out) => fs.appendFileSync(path.join(out, 'VariantA.css'), '.e{color:#c1121f}\n')), { errors: [], warnings: [], variants: ['A', 'B', 'C'] });
   assert.ok(has(extend(':root{--ink:#000000}\n').errors, 'variant-output/design-system.css redefines --ink'));
   assert.ok(has(run(s => { s.designSystem.extensions = ['variant-output/missing.css']; }).errors, 'variant-output/missing.css does not exist'));
   // A confirmed system's own low-contrast pair is reported, not blocking: the user confirmed it.
-  const low = extend(':root{--color-bg:#ffffff;--color-text-muted:#999999}\n');
+  const low = extend(':root{--color-bg:#ffffff;--color-text-muted:#999999; /* on: --color-bg */}\n');
   assert.deepEqual(low.errors, []);
   assert.ok(has(low.warnings, 'Design system pair --color-text-muted on --color-bg is 2.85:1, below 4.5:1'));
+});
+
+test('generated component aliases and product token usage respect the origin of each file', () => {
+  const brand = { source: ':root{--p-brand:#123456;--button-brand:#123456}', origin: 'brand' };
+  const extension = { source: ':root{--p-red-500:#ff0000;--color-danger:var(--p-red-500);--button-bg:var(--color-danger);--input-bg:var(--button-bg)}', origin: 'extension' };
+  const css = '.x{color:var(--p-brand);background:var(--p-red-500);border-color:var(--button-bg);outline-color:var(--button-brand)}';
+  assert.deepEqual(productTokenIssues(css, [brand, extension]), { primitives: ['--p-red-500'], components: ['--button-bg'] });
+  assert.deepEqual(productTokenIssues('/* component: button */'+css, [brand, extension]), { primitives: ['--p-red-500'], components: [] });
+  const result = run((s, out) => {
+    fs.writeFileSync(path.join(out, 'design-system.css'), extension.source);
+    s.designSystem.extensions = ['variant-output/design-system.css'];
+    fs.appendFileSync(path.join(out, 'VariantB.css'), '.x{background:var(--p-red-500);color:var(--button-bg)}');
+  });
+  assert.ok(has(result.errors, '--input-bg → --button-bg'));
+  assert.ok(has(result.warnings, 'uses primitive tokens --p-red-500'));
+  assert.ok(has(result.warnings, 'uses component tokens --button-bg'));
+  assert.ok(has(result.warnings, 'contrast unverified for --color-danger'));
 });
 
 test('lengths outside the design system scale are warnings that name the nearest token', () => {

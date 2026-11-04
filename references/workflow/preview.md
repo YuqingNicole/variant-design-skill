@@ -2,6 +2,8 @@
 
 Read this when building or reopening previews: after the first generation, after every edit, undo or selection, and for `open B` or `compare`.
 
+For a generated design-system preview, run `ds-check.mjs <generated.css> --used-by <preview.html>` before presenting it; pass existing brand files with `--brand <file>`. Its JSON separates checked contrast pairs, failures, unverified pairs and component-layer errors. Fix failures and unused tokens; resolve unverified pairs with rendered evidence or report the limitation. A zero-pair report is not contrast validation.
+
 ## Register and compare
 
 Use schema v2 in `references/workflow/project-context.md`. Register A/B/C with their complete owned file sets, exact tokens, and the three comparison statements. Record the shared task/data/required functions and a reasoned recommendation. Do not set a winner merely because one is recommended or edited.

@@ -7,7 +7,8 @@ import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { checkDelivery, declaredFonts, systemDrift } from '../scripts/delivery-check.mjs';
-import { contrastIssues } from '../scripts/ds-check.mjs';
+import { checkSystem } from '../scripts/ds-check.mjs';
+import { tokenMap } from '../scripts/ds-tokens.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -141,7 +142,9 @@ export function snapshot(project) {
   // How far each variant sits from the confirmed system: colors and lengths it does not define.
   const drift = system ? Object.fromEntries(Object.entries(context.variants ?? {}).map(([id, v]) => [id, (v.files ?? []).map(f => `variant-output/${f}`).filter(f => files[f]).reduce((n, f) => { const d = systemDrift(read(f), system); return n + d.colors.length + d.lengths.length; }, 0)])) : null;
   const delivery = context ? checkDelivery(output, { project }) : null;
-  return { context, files, drift, delivery: delivery && { errors: delivery.errors, warnings: delivery.warnings }, quality: quality(output).errors, habits: quality(output).habits };
+  const draft = path.join(output, 'design-system.css'), brand = context?.designSystem?.confirmed && context.designSystem.file !== 'variant-output/design-system.css' ? context.designSystem.file : null;
+  const systemDraft = fs.existsSync(draft) ? { source: fs.readFileSync(draft, 'utf8'), ...(brand && fs.existsSync(path.join(project, brand)) ? { brandSource: read(brand) } : {}) } : null;
+  return { context, files, drift, systemDraft, delivery: delivery && { errors: delivery.errors, warnings: delivery.warnings }, quality: quality(output).errors, habits: quality(output).habits };
 }
 
 const owned = (snap, id) => Object.fromEntries((snap.context?.variants?.[id]?.files ?? []).map(f => [f, snap.files[`variant-output/${f}`] ?? null]));
@@ -160,14 +163,17 @@ const turnChecks = {
     const missing = ds.filter(f => !now.files[`variant-output/${f}`]);
     add('ds-drafted', !missing.length, missing.map(f => `no variant-output/${f}`));
     add('ds-waits-for-user', same(now.context?.designSystem ?? null, prev.context?.designSystem ?? null), now.context?.designSystem ? [`designSystem written before ds confirm: ${JSON.stringify(now.context.designSystem)}`] : []);
-    const css = path.join(project, 'variant-output/design-system.css'), text = fs.existsSync(css) ? fs.readFileSync(css, 'utf8') : '', issues = text ? contrastIssues([text]) : [];
-    add('ds-contrast', !issues.length, issues.map(i => `${i.text} on ${i.surface} is ${i.ratio}:1`));
+    const text = now.systemDraft?.source ?? '', brand = now.systemDraft?.brandSource;
+    const sources = [...(brand ? [{ source: brand, origin: 'brand' }] : []), text], audit = checkSystem(sources), tokens = tokenMap(sources);
+    const issues = audit.issues.filter(i => tokens.get(i.text)?.origin !== 'brand'), unverified = audit.unverified.filter(i => tokens.get(i.text)?.origin !== 'brand');
+    add('ds-contrast', !issues.length && !unverified.length, [...issues.map(i => `${i.text} on ${i.surface} is ${i.ratio}:1`), ...unverified.map(i => `${i.text}: unverified — ${i.reason}`)]);
+    add('ds-layers', !audit.layers.length, audit.layers.map(i => `${i.token}: ${i.reason}`));
     // references/design-system/system-decisions.md §1 and §4: decisions open the file; every semantic color says where it is used.
     // @import and @charset must come first in CSS, so the decisions comment may follow them.
     const head = text.replace(/^(\s*@(import|charset)[^;]*;)+/, '').match(/^\s*\/\*[\s\S]*?\*\//)?.[0] ?? '';
     add('ds-decisions', /decision|决策/i.test(head) || (head.match(/^\s*(\/\*\s*)?\d\.\s/gm) ?? []).length >= 2, head ? [] : ['design-system.css does not open with a comment']);
-    const colors = [...text.matchAll(/^[ \t]*(--color-[\w-]+)\s*:[^;]*;(.*)$/gm)], bare = colors.filter(m => !/\/\*\s*use:/.test(m[2])).map(m => m[1]);
-    add('ds-use-notes', colors.length > 0 && !bare.length, bare.length ? [`no use note: ${bare.join(', ')}`] : colors.length ? [] : ['no --color-* tokens']);
+    const colors = [...tokenMap([text]).values()].filter(t => t.layer === 'semantic' && t.name.startsWith('--color-')), bare = colors.filter(t => !t.use).map(t => t.name);
+    add('ds-use-notes', (colors.length > 0 || !!brand) && !bare.length, bare.length ? [`no use note: ${bare.join(', ')}`] : colors.length || brand ? [] : ['no --color-* tokens']);
   },
   confirm: (now, [prev], add, project) => {
     const d = now.context?.designSystem;
@@ -196,7 +202,7 @@ const turnChecks = {
     const fresh = Object.keys(now.files).filter(f => !(f in prev.files) && /\.(html|css|tsx|jsx|vue|svelte)$/.test(f));
     add('component-built', fresh.length > 0, fresh.length ? fresh : ['no new component file in variant-output/']);
     const source = system?.confirmed ? [system.file, ...(system.extensions ?? [])].map(f => fs.readFileSync(path.join(project, f), 'utf8')).join('\n') : '';
-    const drift = fresh.flatMap(f => { const d = systemDrift(fs.readFileSync(path.join(project, f), 'utf8'), source); return [...d.colors, ...d.lengths, ...d.primitives.map(p => `primitive ${p}`)].map(v => `${f}: ${v}`); });
+    const drift = fresh.flatMap(f => { const d = systemDrift(fs.readFileSync(path.join(project, f), 'utf8'), source); return [...d.colors, ...d.lengths, ...d.primitives.map(p => `primitive ${p}`), ...d.components.map(p => `component token outside owning CSS ${p}`)].map(v => `${f}: ${v}`); });
     add('component-on-system', fresh.length > 0 && !!source && !drift.length, drift.length ? drift.slice(0, 12) : []);
     const edited = changed(prev, now, ['A', 'B', 'C']);
     add('component-leaves-variants', !edited.length && same(now.context?.designSystem, prev.context?.designSystem) && now.context?.selectedVariant === 'B', edited.map(id => `${id} files changed`));
@@ -204,12 +210,19 @@ const turnChecks = {
 };
 
 // turns: [{id, snapshot, transcript}] in run order; `snapshots` before the first turn is the empty project.
-export function gradeChain(project, { turns, install } = {}) {
+export function gradeChain(project, { turns, install, fixture = {} } = {}) {
   const checks = [], start = { context: null, files: {}, drift: null };
   turns.forEach((turn, i) => {
     const add = (id, pass, details = []) => checks.push({ id: `${turn.id}:${id}`, pass, details });
     const now = turn.snapshot, history = [i ? turns[i - 1].snapshot : start, ...turns.slice(0, i).reverse().slice(1).map(t => t.snapshot)];
     add('delivery-check', !!now.delivery && !now.delivery.errors.length, now.delivery ? [...now.delivery.errors, ...now.delivery.warnings.map(w => `warning: ${w}`)] : ['skipped']);
+    if (fixture.locked) {
+      const ds = now.context?.designSystem, locked = fixture.locked.fonts.map(first), problems = [];
+      if (!ds?.confirmed || ds.file !== fixture.locked.file) problems.push(`expected confirmed brand file ${fixture.locked.file}`);
+      if (!ds?.fonts?.length || ds.fonts.some(f => !locked.includes(first(f)))) problems.push('recorded system fonts do not preserve the brand');
+      for (const [id, v] of Object.entries(now.context?.variants ?? {})) if (!v.tokens?.fonts?.length || v.tokens.fonts.some(f => !locked.includes(first(f)))) problems.push(`variant ${id} does not preserve the brand fonts`);
+      add('brand-kept', !problems.length, problems);
+    }
     if (turn.id === 'generate' || turn.id === 'component') add('quality-gate', !now.quality.length, now.quality);
     if (turn.id === 'generate') add('generator-habits', !now.habits?.length, now.habits ?? []);
     turnChecks[turn.id]?.(now, history, add, project);
@@ -219,7 +232,8 @@ export function gradeChain(project, { turns, install } = {}) {
   const copies = turns.map(t => skillCopies(t.transcript, project, install)).filter(Boolean);
   if (copies.length) checks.push({ id: 'skill-under-test', pass: copies.every(c => c.project > 0 && !c.other.length), details: copies.flatMap((c, i) => [`${turns[i].id}: read the copy under test ${c.project} time(s)`, ...c.other.map(o => `${turns[i].id}: also referenced ${o}`)]) });
   const usages = turns.map(t => usage(t.transcript)), sum = key => usages.some(u => u[key] != null) ? usages.reduce((n, u) => n + (u[key] ?? 0), 0) : undefined;
-  return { pass: checks.every(c => c.pass), checks, usage: { costUsd: sum('costUsd'), turns: sum('turns'), tokens: sum('tokens') }, recommendation: turns[0]?.snapshot.context?.recommendation?.variant ?? null };
+  const readings = turns.map(t => ({ turn: t.id, ...skillReading(t.transcript, project, install) }));
+  return { pass: checks.every(c => c.pass), checks, reading: { words: readings.reduce((n, r) => n + (r.words ?? 0), 0), files: [...new Set(readings.flatMap(r => r.files ?? []))], turns: readings }, usage: { costUsd: sum('costUsd'), turns: sum('turns'), tokens: sum('tokens') }, recommendation: turns[0]?.snapshot.context?.recommendation?.variant ?? null };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href) {

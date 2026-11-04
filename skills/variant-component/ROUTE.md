@@ -28,6 +28,8 @@ When the user asks for a **component** rather than a full page, switch to Compon
 
 **Step 1: Clarify scope** — single component or a system of related components?
 
+If a system is confirmed, read its main file and extensions. Use semantic tokens; only that component's own CSS may use its component tokens (identify its namespace with `/* component: button */` for `--button-*`). Do not reference primitives or another component's tokens. Existing brand names are exempt, while generated extensions follow the layer rules. Component token declarations themselves must be single aliases to semantic or brand variables. Keep missing contrast checks unverified until the actual component is inspected.
+
 **Step 2: Define states** — for every component, design all 8 states before coding:
 `default → hover → focus → active → disabled → loading → error → success`
 

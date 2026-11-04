@@ -132,3 +132,10 @@ Screenshots and measurements: `/Users/nicole/orca/variant-backlog-evidence/submi
 Remaining gates for this phase: exact PR CI, deployed form preview, maintainer review and production merge approval. A real author submission requires the author and a human permission review; the empty registry is intentional, not evidence of real uptake. The full backlog objective remains active; RFC-007 checks are next.
 
 Before publication, the registry validator was tightened to reject extra nested review/translation/media fields and an unused image-poster field, so editorial-only metadata cannot accidentally enter the public record. Regression tests cover the refusal; all 67 website tests and the build passed again. This adds no genuine submission or production write.
+
+
+### P3 published checkpoint and P4 baseline
+
+PR #149 head `c4d375a`: both push/PR loop and landing CI jobs passed; the actual deployed `/submit` preview was inspected at 390px with no overflow. CodeRabbit completed and requested changes: shared-write boundary documentation, submission spacing tokens, the collapsed media disclosure and rapid arrow navigation. These findings are being verified and addressed on the P3 branch; a green CI alone is not reviewer approval. No production merge occurred.
+
+RFC-007 P1 work is on `codex/design-system-validation`; negative baseline, contracts and current gates are recorded in `2026-11-04-design-system-validation.md`. The grouping-default question remains open; the existing default is preserved while an explicit layer format is available for review. Next: final deterministic gates, actual harbor-chain/ledger-pick runs, fix valid P3 review findings and retain the full backlog scope.

@@ -139,7 +139,7 @@ function chain({ pick = () => {}, skipUndo = false, component = 'color: var(--co
   selectVariant(out, 'B');
   // A system derived from B keeps B's recorded colors (delivery-check errors otherwise).
   const kept = Object.entries(JSON.parse(fs.readFileSync(path.join(out, '.variant-context.json'), 'utf8')).variants.B.tokens?.colors ?? {}).map(([k, v]) => `--color-b-${k}:${v};`).join('');
-  const system = `@import url('https://fonts.example/x.css');\n/* Pulse · Decisions: 1. Accent marks the action. */\n:root{\n${kept.replaceAll(';', '; /* use: chart */\n')}--color-text:#14213d; /* use: body */\n--color-bg:#ffffff; /* use: page */\n--space-2:8px;--space-4:16px;--text-sm:14px;--radius-md:8px}`;
+  const system = `@import url('https://fonts.example/x.css');\n/* Pulse · Decisions: 1. Accent marks the action. */\n:root{\n${kept.replaceAll(';', '; /* use: chart; contrast: non-text */\n')}--color-text:#14213d; /* use: body; on: --color-bg */\n--color-bg:#ffffff; /* use: page */\n--space-2:8px;--space-4:16px;--text-sm:14px;--radius-md:8px}`;
   write('design-system.css', system); write('design-system-preview.html', '<!doctype html><title>DS</title>'); write('DESIGN.md', '# Design\n');
   pick(dir); take('pick');
   context(dir, c => { c.designSystem = { confirmed: true, file: 'variant-output/design-system.css', source: 'B' }; });
@@ -169,9 +169,29 @@ test('a chain fails where a turn breaks its promise', () => {
   assert.deepEqual(failed(chain({ skipUndo: true })), ['undo:undone']);
   // A bare token list: no decisions, no use notes (it also drops B's colors, which later turns report).
   const bare = failed(chain({ pick: dir => fs.writeFileSync(path.join(dir, 'variant-output/design-system.css'), ':root{--color-text:#14213d;--color-bg:#ffffff}') }));
-  assert.deepEqual(bare.filter(id => id.startsWith('pick:')), ['pick:ds-decisions', 'pick:ds-use-notes']);
+  assert.deepEqual(bare.filter(id => id.startsWith('pick:')), ['pick:ds-contrast', 'pick:ds-decisions', 'pick:ds-use-notes']);
   assert.deepEqual(failed(chain({ component: 'color: var(--p-blue-500);' })), ['component:component-on-system']);
   const off = chain({ component: 'color: #ff00aa; padding: 13px;' });
   assert.deepEqual(failed(off), ['component:component-on-system']);
   assert.deepEqual(off.checks.find(c => c.id === 'component:component-on-system').details, ['variant-output/component-invite.html: #ff00aa', 'variant-output/component-invite.html: 13px (nearest --space-4 16px)']);
+});
+
+test('chain grading rejects missing coverage and invalid component layers at the pick revision', () => {
+  const fail = mutate => chain({ pick: dir => fs.appendFileSync(path.join(dir, 'variant-output/design-system.css'), mutate) }).checks;
+  assert.equal(fail(':root{--color-muted:#777}').find(c => c.id === 'pick:ds-contrast').pass, false);
+  for (const value of ['#fff', 'var(--p-blue-500)', 'var(--input-bg)']) {
+    const checks = fail(`:root{--p-blue-500:#000;--input-bg:var(--color-text);--button-bg:${value}}`);
+    assert.equal(checks.find(c => c.id === 'pick:ds-layers').pass, false, value);
+  }
+  // The pick snapshot, not a later repaired CSS file, is the evidence for this turn.
+  const r = chain({ pick: dir => fs.appendFileSync(path.join(dir, 'variant-output/design-system.css'), ':root{--button-bg:#fff}') });
+  assert.equal(r.checks.find(c => c.id === 'pick:ds-layers').pass, false);
+});
+
+test('brand-locked chain fixtures must keep their expected file and fonts', () => {
+  const dir = run(), fixture = loadFixture('pulse');
+  const get = () => gradeChain(dir, { fixture, turns: [{ id: 'generate', snapshot: snapshot(dir) }] }).checks.find(c => c.id === 'generate:brand-kept');
+  assert.equal(get().pass, true);
+  context(dir, c => { c.designSystem.file = 'variant-output/design-system.css'; });
+  assert.equal(get().pass, false);
 });

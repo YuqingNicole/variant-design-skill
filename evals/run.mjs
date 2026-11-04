@@ -104,7 +104,7 @@ async function chain(fixture, agent, config, dir, install) {
     const run = await runAgent(agent, [turn.prompt, config.note].filter(Boolean).join(''), dir, turn.id);
     turns.push({ id: turn.id, transcript: run.transcript, exit: run.exit, seconds: run.seconds, timedOut: run.timedOut, snapshot: snapshot(dir) });
   }
-  const result = { fixture, agent, dir, seconds: Math.round((Date.now() - started) / 1000), timedOut: turns.some(t => t.timedOut), ...gradeChain(dir, { turns, install }), turns: turns.map(({ snapshot: s, ...t }) => ({ ...t, selectedVariant: s.context?.selectedVariant ?? null, designSystem: s.context?.designSystem ?? null, drift: s.drift })) };
+  const result = { fixture, agent, dir, seconds: Math.round((Date.now() - started) / 1000), timedOut: turns.some(t => t.timedOut), ...gradeChain(dir, { turns, install, fixture: config }), turns: turns.map(({ snapshot: s, ...t }) => ({ ...t, selectedVariant: s.context?.selectedVariant ?? null, designSystem: s.context?.designSystem ?? null, drift: s.drift })) };
   fs.writeFileSync(path.join(out, `${fixture}-${agent}.json`), JSON.stringify(result, null, 2));
   console.log(`${result.pass ? '✓' : '✗'} ${fixture} · ${agent} (${result.seconds}s${result.timedOut ? ', a turn timed out' : ''})`);
   return result;

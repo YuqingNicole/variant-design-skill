@@ -52,6 +52,7 @@ The checks are deterministic and cover promises, not taste. Whether the three di
 | `harbor` | Vite + React members and permissions page | Exploration without brand constraints; destructive actions |
 | `bakery` | Plain HTML and CSS bakery page, in Chinese | Output without a framework or build step |
 | `ledger` | Next.js App Router pricing page with a shared plans module and a client context provider | A framework without Vite: the preview needs a native adapter route; brand lock from `app/globals.css` |
+| `ledger-pick` | The brand-locked `ledger` project, two turns | Generation and pick preserve brand naming and validate only generated extension layers |
 | `harbor-chain` | The `harbor` project, six turns | The loop after generation: pick, design system, apply, undo, and new work on the confirmed system. See below |
 
 A fixture is a `project/` folder and a `fixture.json` with `description`, `prompt` and optional `locked: {file, fonts}`. Keep fixtures small and written by us.
@@ -65,11 +66,11 @@ After each turn the runner records a snapshot (the context, a hash of every file
 | Turn | Prompt | Fails when |
 |---|---|---|
 | `generate` | the `harbor` prompt | `generated`: no context; `not-selected`: a direction was selected |
-| `pick` | `pick B` | `picked`: `selectedVariant` is not B; `pick-is-not-an-edit`: a variant's files or B's version changed; `ds-drafted`: `design-system.css`, `design-system-preview.html` or `DESIGN.md` is missing from `variant-output/`; `ds-waits-for-user`: `designSystem` changed before `ds confirm`; `ds-contrast`: `ds-check.mjs` finds a pair below 4.5:1; `ds-decisions`: `design-system.css` does not open with a comment naming its decisions; `ds-use-notes`: a `--color-*` token has no trailing `/* use: … */` note |
+| `pick` | `pick B` | `picked`: `selectedVariant` is not B; `pick-is-not-an-edit`: a variant's files or B's version changed; `ds-drafted`: `design-system.css`, `design-system-preview.html` or `DESIGN.md` is missing from `variant-output/`; `ds-waits-for-user`: `designSystem` changed before `ds confirm`; `ds-contrast`: a generated pair fails 4.5:1 or remains unverified; `ds-layers`: a generated component token is not a semantic/brand alias; `ds-decisions`: `design-system.css` does not open with a comment naming its decisions; `ds-use-notes`: a `--color-*` token has no trailing `/* use: … */` note |
 | `confirm` | `ds confirm` | `ds-confirmed`: not confirmed, `source` is not B, or the file is missing; `tokens-exported`: no readable `design-system.tokens.json`; `confirm-is-not-an-edit`: a variant's files changed or the selection moved |
 | `apply` | `apply ds B` | `applied`: B's version did not rise, or B is not active and selected; `apply-stays-in-B`: A, C or the design system changed; `drift-reduced`: B uses as many colors and lengths outside the system as before (zero passes) |
 | `undo` | `undo B` | `undone`: B's files differ from the snapshot before `apply ds B`, or B is no longer selected; `undo-stays-in-B`: A, C or the design system changed |
-| `component` | an invite-member dialog on the confirmed system | `component-built`: no new HTML, CSS or component file in `variant-output/`; `component-on-system`: a new file uses a hex color or a spacing, type or radius length the system does not define, or references a primitive (`--p-*`); `component-leaves-variants`: a variant, the design system or the selection changed |
+| `component` | an invite-member dialog on the confirmed system | `component-built`: no new HTML, CSS or component file in `variant-output/`; `component-on-system`: a new file uses a hex color or a spacing, type or radius length the system does not define, or references a primitive (`--p-*`) or another component’s tokens outside its declared owning CSS; `component-leaves-variants`: a variant, the design system or the selection changed |
 
 `drift-reduced` and `component-on-system` use `systemDrift` from `scripts/delivery-check.mjs`: hex colors and `padding`, `margin`, `gap`, `font-size` and `border-radius` lengths, not every value a page uses.
 
@@ -84,3 +85,5 @@ PLAYWRIGHT_CHANNEL=chrome node evals/blind/pack.mjs --skill <skill-runs> --plain
 
 The package is an `index.html` with screenshots of the original page and both groups (desktop and mobile), their trade-off notes and recommendation, labelled X and Y at random. The answer key is written next to it as `<package>-key.json`; keep it from reviewers. `pack.mjs` uses the Playwright install in `tests/`.
 
+
+Draft system checks use the CSS captured at that turn, not the final CSS left after later turns. Brand-only contrast limitations remain warnings; extensions need explicit pairs or surface notes. `ledger-pick` permits a brand extension with no new colors rather than requiring it to redefine the brand.
