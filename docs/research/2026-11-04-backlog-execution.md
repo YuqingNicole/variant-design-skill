@@ -13,7 +13,7 @@ Work in `/Users/nicole/orca/variant-backlog-work` on task branches. The original
 | Website positioning, PR #138 | Updated at `f1d6001`; local and GitHub loop/landing checks passed | Review findings fixed; final review, deployed preview and production merge remain separate |
 | Unified inspiration feed / interaction / appearance | PR #148, local and remote checks passed; preview sampled; screenshot review pending | RFC-008 P2: one chronological feed; URL filters; hover/focus/touch credits; visible-only videos; reduced motion; shared-element detail; keyboard/back/scroll; 320/390/1440 in both languages; style budget |
 | Submission and permission intake | PR #149 updated at 508d884; review fixes and focused 11 Chrome tests passed; exact loop/landing CI passed | RFC P3: media URL/file workflow, attribution, distinct usage rights, withdrawal, manual review and evaluated storage |
-| Design system checks | Draft PR #150; exact CI passed; real Ledger Codex passed, Harbor exposed an adoption/metadata failure; Claude account 403 | RFC-009 adoption fix, full chain rerun, Claude/account and screenshot gates; grouping default still pending |
+| Design system checks | Draft PR #150; exact CI passed; corrective Codex Harbor 34/34 and Ledger 18/18 passed; Claude account 403 | RFC-009 adoption fix, full chain rerun, Claude/account and screenshot gates; grouping default still pending |
 | Premium / adjective evals | Not started | Real Agent fixture and style-budget comparison; preserve task and brand |
 | Region selection / public code checker | Needs product decision | Concrete proposal and bounded implementation after scope decision |
 | English guides and comparison page | Needs review | Five English guides reviewed, comparison facts rechecked and destination chosen |
@@ -154,3 +154,10 @@ Next action: implement and test explicit system confirmation/adoption with share
 ### RFC-009 corrective checkpoint
 
 Confirmation/adoption/undo is now implemented in the existing history helper and documented across the skill. Helper/grader tests: 102 passed; real Chrome loop: 12 passed; package: 4 passed; website: 67 passed plus 239-route build; MCP: 2 passed. These are local checks. Corrective real Codex harbor/ledger reruns are next; the old real-chain failure is retained. P3's isolated submission-fixture follow-up is `a3929bb` and has four focused Chrome passes; exact-head CI remains a separate check.
+
+
+### P4 corrective real-run checkpoint
+
+Corrected installed head `eacfee0`: Codex harbor six-turn 34/34 checks and ledger two-turn 18/18 passed; source/install identity and actual helper calls were inspected. Seven actual system contrast pairs had no failing/unverified result or layer errors. Existing pending-page/brand warnings remain explicit. Summary: `2026-11-04-system-adoption-runs.json`. Exact loop/landing CI passed. Claude authentication and screenshot/maintainer review still prevent calling RFC-007 fully accepted; no production merge or default-grouping decision was assumed.
+
+Premium evaluation preparation proceeds separately in `/Users/nicole/orca/variant-premium-eval-work` (`codex/premium-evaluation`, based on `eacfee0`). Its self-authored baseline is measured at 1440/390: two families, eleven sizes, six weights, twelve text colors, nine radii, three shadows; all search/filter/save controls work and there is no overflow. New host evidence/fixture regression is under development. This does not count as a real premium Agent result yet.
