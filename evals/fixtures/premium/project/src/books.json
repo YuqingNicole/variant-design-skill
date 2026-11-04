@@ -1,0 +1,38 @@
+[
+  {
+    "id": "tidal",
+    "title": "Tidal Notes",
+    "author": "Rae Hill",
+    "genre": "fiction"
+  },
+  {
+    "id": "atlas",
+    "title": "A Small Atlas",
+    "author": "Kim Reed",
+    "genre": "nonfiction"
+  },
+  {
+    "id": "garden",
+    "title": "The Quiet Garden",
+    "author": "Lee Vale",
+    "genre": "fiction"
+  },
+  {
+    "id": "signals",
+    "title": "Everyday Signals",
+    "author": "Sam Clay",
+    "genre": "nonfiction"
+  },
+  {
+    "id": "windows",
+    "title": "Open Windows",
+    "author": "Max Dale",
+    "genre": "poetry"
+  },
+  {
+    "id": "distance",
+    "title": "Walking Distance",
+    "author": "Alex Pine",
+    "genre": "poetry"
+  }
+]

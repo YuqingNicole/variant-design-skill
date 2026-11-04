@@ -10,6 +10,7 @@ import path from 'node:path';
 import { execFileSync, spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { grade, gradeChain, loadFixture, snapshot, usage } from './grade.mjs';
+import { capturePremium, premiumUndo } from './premium.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -96,7 +97,17 @@ async function one(fixture, agent) {
 // One fresh agent process per turn, as a user returning to the project later would start one. A turn that fails or
 // times out does not stop the chain: the later turns are graded on whatever it left, and its own checks show the failure.
 async function chain(fixture, agent, config, dir, install) {
-  const turns = [], started = Date.now();
+  const turns = [], started = Date.now(), initial = snapshot(dir), measurements = {};
+  const capture = async phase => {
+    try { return await capturePremium(dir, { ...config.styleBudget, out: path.join(out, `${fixture}-${agent}.browser`, phase) }); }
+    catch (error) { return { error: error.message }; }
+  };
+  if (config.styleBudget) {
+    if (config.styleBudget.variant !== 'B' || config.turns.length !== 1 || config.turns[0].id !== 'premium') throw new Error('The premium host contract requires one B refinement turn.');
+    measurements.before = await capture('before');
+    const work = path.join(dir, '.variant-work'); fs.mkdirSync(work, { recursive: true });
+    for (const sample of measurements.before.samples ?? []) fs.writeFileSync(path.join(work, `style-before-${sample.viewport.width}.json`), JSON.stringify(sample.probe, null, 2));
+  }
   // --turns generate,pick runs a prefix of the chain, for a change that only touches its first turns.
   const only = opt('--turns', null)?.split(',');
   for (const turn of config.turns.filter(t => !only || only.includes(t.id))) {
@@ -104,7 +115,8 @@ async function chain(fixture, agent, config, dir, install) {
     const run = await runAgent(agent, [turn.prompt, config.note].filter(Boolean).join(''), dir, turn.id);
     turns.push({ id: turn.id, transcript: run.transcript, exit: run.exit, seconds: run.seconds, timedOut: run.timedOut, snapshot: snapshot(dir) });
   }
-  const result = { fixture, agent, dir, seconds: Math.round((Date.now() - started) / 1000), timedOut: turns.some(t => t.timedOut), ...gradeChain(dir, { turns, install, fixture: config }), turns: turns.map(({ snapshot: s, ...t }) => ({ ...t, selectedVariant: s.context?.selectedVariant ?? null, designSystem: s.context?.designSystem ?? null, drift: s.drift })) };
+  if (config.styleBudget) { measurements.after = await capture('after'); measurements.undo = premiumUndo(dir, initial, path.join(out, `${fixture}-${agent}.browser`), config.styleBudget.variant); }
+  const result = { fixture, agent, dir, seconds: Math.round((Date.now() - started) / 1000), timedOut: turns.some(t => t.timedOut), ...gradeChain(dir, { turns, install, fixture: config, initial, measurements }), ...(config.styleBudget ? { measurements } : {}), turns: turns.map(({ snapshot: s, ...t }) => ({ ...t, selectedVariant: s.context?.selectedVariant ?? null, designSystem: s.context?.designSystem ?? null, drift: s.drift })) };
   fs.writeFileSync(path.join(out, `${fixture}-${agent}.json`), JSON.stringify(result, null, 2));
   console.log(`${result.pass ? '✓' : '✗'} ${fixture} · ${agent} (${result.seconds}s${result.timedOut ? ', a turn timed out' : ''})`);
   return result;

@@ -1,0 +1,21 @@
+{
+  "description": "Refine an existing light-brand book catalogue after a vague premium request; host browser metrics and task checks must improve without changing A/C or selection.",
+  "locked": {
+    "file": "src/brand.css",
+    "fonts": [
+      "Arial",
+      "Georgia"
+    ]
+  },
+  "styleBudget": {
+    "variant": "B",
+    "content": "src/books.json"
+  },
+  "note": "（这是无人值守运行。只改 B，不要启动常驻服务器。宿主已把真实浏览器的改前计数放在 .variant-work/style-before-1440.json 和 style-before-390.json；如当前沙箱无法测浏览器，明确报告，不要编造改后计数。宿主会独立复测。）",
+  "turns": [
+    {
+      "id": "premium",
+      "prompt": "使用完整 Variant Design 技能，把 B 做得更高级、更有质感。保留现有品牌、书目与搜索、分类、收藏功能；只改 B，不要替我选定最终方案。"
+    }
+  ]
+}

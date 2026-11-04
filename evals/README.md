@@ -7,6 +7,7 @@ node evals/run.mjs                                   # every fixture × claude a
 node evals/run.mjs --agent dsh --fixture pulse       # DeepSeek Harness
 node evals/run.mjs --agent claude --fixture pulse    # one run
 node evals/run.mjs --agent claude --fixture pulse --install plugin   # install through the Claude Code plugin marketplace
+PLAYWRIGHT_CHANNEL=chrome node evals/run.mjs --agent codex --fixture premium  # one refinement, with independent host browser evidence
 node evals/run.mjs --agent codex --fixture harbor-chain   # the multi-turn chain: six fresh processes in a row
 node evals/run.mjs --agent codex --fixture harbor-chain --turns generate,pick   # only the turns named
 node evals/run.mjs --prepare-only --out /tmp/evals   # set up projects without running an agent
@@ -52,6 +53,7 @@ The checks are deterministic and cover promises, not taste. Whether the three di
 | `harbor` | Vite + React members and permissions page | Exploration without brand constraints; destructive actions |
 | `bakery` | Plain HTML and CSS bakery page, in Chinese | Output without a framework or build step |
 | `ledger` | Next.js App Router pricing page with a shared plans module and a client context provider | A framework without Vite: the preview needs a native adapter route; brand lock from `app/globals.css` |
+| `premium` | Existing self-authored light-brand HTML catalogue | One B refinement: real before/after style budgets, unchanged brand/task/A/C/selection, one undo |
 | `ledger-pick` | The brand-locked `ledger` project, two turns | Generation and pick preserve brand naming and validate only generated extension layers |
 | `harbor-chain` | The `harbor` project, six turns | The loop after generation: pick, design system, apply, undo, and new work on the confirmed system. See below |
 
@@ -87,3 +89,9 @@ The package is an `index.html` with screenshots of the original page and both gr
 
 
 Draft system checks use the CSS captured at that turn, not the final CSS left after later turns. Brand-only contrast limitations remain warnings; extensions need explicit pairs or surface notes. `ledger-pick` permits a brand extension with no new colors rather than requiring it to redefine the brand.
+
+### Premium fixture evidence
+
+`premium` starts with existing A/B/C artifacts and a brand file. Before the single refinement turn, the host records an initial snapshot and measures the real page at 1440×900 and 390×844, then places the genuine before-count samples under the project's `.variant-work/`. After the Agent finishes, host Playwright independently measures the result, saves screenshots/raw samples beside the run, exercises all six records/search/combined filters/save/unsave/saved-only controls, and verifies one actual undo in a disposable copy. It never grades the Agent's own claimed samples. Use a fresh output directory; existing browser evidence is refused. Chrome/Playwright failure is not a budget pass.
+
+The grader requires final default budgets, a lower combined sizes/text-colors/radii inventory at both widths, readable heading/body hierarchy and no overflow. Computed body/heading families, page backdrop and primary-action fill must retain the initial brand; this samples explicit brand anchors, not every pixel or all CSS semantics. A/C and the original brand remain unchanged, selectedVariant stays unchanged, and the recorded B refinement is reversible in one undo. A real premium run must read the adjective translation and action references. Nonzero/timed-out Agent processes are reported as incomplete, even if partial output exists. Counts and fixture passes do not prove aesthetic quality; review the screenshots.

@@ -10,6 +10,7 @@ import { checkDelivery, declaredFonts, systemDrift } from '../scripts/delivery-c
 import { checkSystem } from '../scripts/ds-check.mjs';
 import { tokenMap } from '../scripts/ds-tokens.mjs';
 import { systemIdentity } from '../scripts/variant-history.mjs';
+import { gradePremium } from './premium.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -24,11 +25,12 @@ export const loadFixture = name => JSON.parse(fs.readFileSync(path.join(here, 'f
 const git = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8' });
 const first = value => String(value).split(',')[0].trim().replace(/^['"]|['"]$/g, '').toLowerCase();
 
-function untouched(project) {
+function untouched(project, allowedTracked = new Set()) {
   const problems = [], notes = [];
   for (const line of git(project, 'status', '--porcelain', '--untracked-files=all').split('\n').filter(Boolean)) {
     const status = line.slice(0, 2), file = line.slice(3).replace(/^"|"$/g, '');
     if (status === '??') { if (allowed.test(file)) continue; if (adapter.test(file)) notes.push(`warning: preview adapter created at ${file}`); else problems.push(`created ${file} outside variant-output/`); continue; }
+    if (allowedTracked.has(file)) continue;
     // Adding ignore lines for the skill's working folders is fine; changing anything else is not.
     if (file === '.gitignore' && git(project, 'diff', '--unified=0', '--', '.gitignore').split('\n').filter(l => /^[-+](?![-+])/.test(l)).every(l => l.startsWith('+'))) continue;
     problems.push(`${status.trim() === 'D' ? 'deleted' : 'changed'} ${file}`);
@@ -215,14 +217,27 @@ const turnChecks = {
     const edited = changed(prev, now, ['A', 'B', 'C']);
     add('component-leaves-variants', !edited.length && same(now.context?.designSystem, prev.context?.designSystem) && now.context?.selectedVariant === 'B', edited.map(id => `${id} files changed`));
   },
+  premium: (now, [prev], add) => {
+    const b = now.context?.variants?.B;
+    add('refined', (b?.version ?? 0) > (prev.context?.variants?.B?.version ?? 0) && now.context?.activeVariant === 'B', ['B must have a new recorded refinement revision']);
+    add('not-selected', now.context?.selectedVariant === prev.context?.selectedVariant, [`selectedVariant: ${now.context?.selectedVariant ?? 'empty'}`]);
+    const edited = changed(prev, now, ['A', 'C']);
+    const sameOthers = ['A', 'C'].every(id => same(now.context?.variants?.[id], prev.context?.variants?.[id]));
+    add('stays-in-B', !edited.length && sameOthers && same(now.context?.designSystem, prev.context?.designSystem), [...edited.map(id => `${id} changed`), ...(!sameOthers ? ['A/C metadata changed'] : [])]);
+  },
 };
 
 // turns: [{id, snapshot, transcript}] in run order; `snapshots` before the first turn is the empty project.
-export function gradeChain(project, { turns, install, fixture = {} } = {}) {
-  const checks = [], start = { context: null, files: {}, drift: null };
+export function gradeChain(project, { turns, install, fixture = {}, initial, measurements } = {}) {
+  const checks = [], start = initial ?? { context: null, files: {}, drift: null };
   turns.forEach((turn, i) => {
     const add = (id, pass, details = []) => checks.push({ id: `${turn.id}:${id}`, pass, details });
     const now = turn.snapshot, history = [i ? turns[i - 1].snapshot : start, ...turns.slice(0, i).reverse().slice(1).map(t => t.snapshot)];
+    if (turn.exit !== undefined) add('agent-completed', turn.exit === 0 && !turn.timedOut, [`exit ${turn.exit}; timed out: ${Boolean(turn.timedOut)}`]);
+    if (turn.id === 'premium' && turn.transcript) {
+      const reading = skillReading(turn.transcript, project, install), required = ['references/workflow/adjective-translation.md', 'skills/variant-generate/actions.md'];
+      add('adjective-route', required.every(file => reading?.files.includes(file)), required.filter(file => !reading?.files.includes(file)).map(file => `not read: ${file}`));
+    }
     add('delivery-check', !!now.delivery && !now.delivery.errors.length, now.delivery ? [...now.delivery.errors, ...now.delivery.warnings.map(w => `warning: ${w}`)] : ['skipped']);
     if (fixture.locked) {
       const ds = now.context?.designSystem, locked = fixture.locked.fonts.map(first), problems = [];
@@ -231,11 +246,17 @@ export function gradeChain(project, { turns, install, fixture = {} } = {}) {
       for (const [id, v] of Object.entries(now.context?.variants ?? {})) if (!v.tokens?.fonts?.length || v.tokens.fonts.some(f => !locked.includes(first(f)))) problems.push(`variant ${id} does not preserve the brand fonts`);
       add('brand-kept', !problems.length, problems);
     }
-    if (turn.id === 'generate' || turn.id === 'component') add('quality-gate', !now.quality.length, now.quality);
+    if (['generate', 'component', 'premium'].includes(turn.id)) add('quality-gate', !now.quality.length, now.quality);
     if (turn.id === 'generate') add('generator-habits', !now.habits?.length, now.habits ?? []);
     turnChecks[turn.id]?.(now, history, add, project);
   });
-  const outside = untouched(project);
+  if (fixture.styleBudget) {
+    const measured = gradePremium(measurements?.before, measurements?.after);
+    for (const c of measured.checks) checks.push({ ...c, id: `premium:${c.id}` });
+    checks.push({ id: 'premium:one-undo', pass: measurements?.undo?.pass === true, details: measurements?.undo?.details ?? ['No host undo check'] });
+  }
+  const allowedTracked = fixture.styleBudget ? new Set(['variant-output/.variant-context.json', ...(start.context?.variants?.B?.files ?? []).map(f => `variant-output/${f}`)]) : new Set();
+  const outside = untouched(project, allowedTracked);
   checks.push({ id: 'project-untouched', pass: !outside.problems.length, details: [...outside.problems, ...outside.notes] });
   const copies = turns.map(t => skillCopies(t.transcript, project, install)).filter(Boolean);
   if (copies.length) checks.push({ id: 'skill-under-test', pass: copies.every(c => c.project > 0 && !c.other.length), details: copies.flatMap((c, i) => [`${turns[i].id}: read the copy under test ${c.project} time(s)`, ...c.other.map(o => `${turns[i].id}: also referenced ${o}`)]) });

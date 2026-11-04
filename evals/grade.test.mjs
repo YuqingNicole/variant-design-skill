@@ -195,3 +195,13 @@ test('brand-locked chain fixtures must keep their expected file and fonts', () =
   context(dir, c => { c.designSystem.file = 'variant-output/design-system.css'; });
   assert.equal(get().pass, false);
 });
+
+test('premium grading never treats absent or empty browser observations as a pass',async()=>{
+ const {gradePremium}=await import('./premium.mjs');
+ for(const report of [undefined,{error:'Browser unavailable'},{samples:[]},{samples:[null,null]},{samples:{length:2}}]){const result=gradePremium(report,report);assert.equal(result.pass,false);assert.equal(result.checks[0].id,'budget-measured');assert.equal(result.checks[0].pass,false);}
+});
+
+test('a nonzero or timed-out Agent process is incomplete even with artifacts',()=>{
+ const dir=run(),state=snapshot(dir),get=(exit,timedOut)=>gradeChain(dir,{turns:[{id:'generate',snapshot:state,exit,timedOut}]}).checks.find(c=>c.id==='generate:agent-completed');
+ assert.equal(get(0,false).pass,true);assert.equal(get(1,false).pass,false);assert.equal(get(0,true).pass,false);
+});
