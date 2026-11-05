@@ -1,0 +1,17 @@
+{
+  "title": "Progress Review",
+  "workspaces": {
+    "studio": {
+      "name": "Studio",
+      "role": "owner",
+      "progress": 100,
+      "activity": 0
+    },
+    "archive": {
+      "name": "Archive",
+      "role": "viewer",
+      "progress": 100,
+      "activity": 0
+    }
+  }
+}

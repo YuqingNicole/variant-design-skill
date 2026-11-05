@@ -104,6 +104,7 @@ async function one(fixture, agent) {
 // One fresh agent process per turn, as a user returning to the project later would start one. A turn that fails or
 // times out does not stop the chain: the later turns are graded on whatever it left, and its own checks show the failure.
 async function chain(fixture, agent, config, dir, install) {
+  if (config.runtimePlans && config.nativeVite) throw new Error('Use a dedicated runtime-plan fixture; native delivery and runtime-plan chains have different archive phases');
   const turns = [], started = Date.now(), initial = snapshot(dir), measurements = {};
   const archive = (phase, state) => {
     const directory = path.join(out, `${fixture}-${agent}.phases`, phase);
@@ -142,7 +143,7 @@ async function chain(fixture, agent, config, dir, install) {
     turns.push({ id: turn.id, transcript: run.transcript, exit: run.exit, seconds: run.seconds, timedOut: run.timedOut, snapshot: snapshot(dir) });
     if (config.runtimePlans) {
       measurements.runtimePlans.archives[turn.id] = archive(turn.id, turns.at(-1).snapshot);
-      try { measurements.runtimePlans[turn.id] = await observeRuntimePlan(dir, { out: path.join(out, `${fixture}-${agent}.runtime-plans`, turn.id), phase: turn.id }); }
+      try { measurements.runtimePlans[turn.id] = await observeRuntimePlan(dir, { out: path.join(out, `${fixture}-${agent}.runtime-plans`, turn.id), phase: turn.id, mode: config.runtimePlans.mode ?? 'file', archive: measurements.runtimePlans.archives[turn.id] }); }
       catch (error) { measurements.runtimePlans[turn.id] = { error: error.stack }; }
     }
     if (config.nativeVite) {

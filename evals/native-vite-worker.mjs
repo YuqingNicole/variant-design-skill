@@ -3,8 +3,9 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { createServer } from 'node:http';
+import { localFile } from '../scripts/variant-history.mjs';
 
-const [mode, project, config, destination] = process.argv.slice(2);
+const [mode, project, config, destination, entryJSON] = process.argv.slice(2);
 let server, http;
 try {
   const vite = await import(pathToFileURL(path.join(project, 'node_modules/vite/dist/node/index.js')).href);
@@ -22,7 +23,10 @@ try {
     process.on('SIGTERM', stop); process.on('disconnect', stop);
     process.send({ url: `http://127.0.0.1:${port}/`, version, transport: 'owned HTTP/WebSocket port; file watching disabled' });
   } else if (mode === 'build') {
-    await vite.build({ root: project, configFile: config, clearScreen: false, build: { outDir: destination, emptyOutDir: false } });
+    const entries = entryJSON ? JSON.parse(entryJSON) : null;
+    if (entries && (!Array.isArray(entries) || !entries.length || entries.length > 8 || !entries.every(file => typeof file === 'string' && file.endsWith('.html')))) throw new Error('List bounded project HTML build entries');
+    const input = entries?.map(file => localFile(project, file));
+    await vite.build({ root: project, configFile: config, clearScreen: false, build: { outDir: destination, emptyOutDir: false, ...(input ? { rollupOptions: { input } } : {}) } });
     process.send({ version });
   } else throw new Error('Unknown native Vite worker mode');
 } catch (error) { console.error(error.stack); http?.closeAllConnections(); http?.close(); await server?.close(); process.exitCode = 1; }

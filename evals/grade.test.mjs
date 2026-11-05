@@ -235,3 +235,7 @@ test('missing native measurements remain unverified rather than observed brand/p
 test('runtime plan grading withholds missing or Agent-authored host observations',()=>{
  for(const value of [undefined,{}, {'generate':{pass:true}},...['generate','plan-edit','plan-undo'].map(phase=>({[phase]:{source:'host-task-runtime-plan-v1',phase,pass:true}}))])assert(gradeRuntimePlans(value).some(c=>!c.pass));
 });
+
+test('Vite runtime grading refuses file-only or missing project/probe observations',()=>{
+ for(const value of [undefined,{},...['generate','plan-edit','plan-undo'].map(phase=>({[phase]:{source:'host-task-runtime-plan-v1',mode:'file',phase,pass:true}}))]){const checks=gradeRuntimePlans(value,{mode:'vite'});for(const id of ['vite-project-checks','vite-source-probe'])assert.equal(checks.find(c=>c.id===id).pass,false);}
+});
