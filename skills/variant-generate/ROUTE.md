@@ -92,6 +92,8 @@ Mark the major sections so later zone edits are possible: `data-zone="hero"` on 
 
 Register A, B and C in `.variant-context.json` following `references/workflow/project-context.md`: owned files, tokens, version 1, and `comparison` with three sentences each (optimizes, tradeoff, bestFor). Record the `taskContract` and a `recommendation: {variant, reason}` that separates hypotheses from tested evidence. Leave `selectedVariant` empty: a recommendation is not a selection.
 
+"Do not pick for me" keeps `selectedVariant: null`; it does not suppress advice. Give a tentative recommendation grounded in the shared criteria, label untested advantages as hypotheses, and leave the user's decision open. If the user explicitly declines recommendations too, honor that request and disclose the missing recommendation instead of inventing advice to pass a check.
+
 ## 5. Preview
 
 Build and open the comparison page with A/B/C direct links and the recommendation, following `references/workflow/preview.md`. Show the actual URL or `file://` path. For portable React without Vite, use the isolated `--vite-root` path in that reference; native framework features still need their adapter.
