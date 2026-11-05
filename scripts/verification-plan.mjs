@@ -124,7 +124,7 @@ export function inspectVerificationPlan(output, planFile) {
   try { const { id, at, limitation, ...expected } = record; return { file: localFile(base, relativeFile), status: same(expected, collect(out, record.variant, record.draftFile, base)) ? 'current-within-recorded-scope' : 'stale', record }; }
   catch (error) { return { file: localFile(base, relativeFile), status: 'stale', reason: error.message, record }; }
 }
-async function perform(page, list) {
+export async function performVerificationActions(page, list) {
   for (const action of list) {
     if (action.whenMotion && !await page.evaluate(value => matchMedia(`(prefers-reduced-motion: ${value})`).matches, action.whenMotion)) continue;
     const target = verificationLocator(page, action);
@@ -150,8 +150,8 @@ export async function runVerificationPlan(output, planFile, adapter = {}) {
   const relativeFile = path.relative(r.project, inspected.file).split(path.sep).join('/');
   return verifyInBrowser(output, r.variant, { projectRoot: r.project, dependencies: r.dependencies, inputs: [...r.inputs, relativeFile], plan, scopeBaseline: d.purpose === 'baseline' }, {
     page: adapter.page, version: adapter.version, ready: adapter.ready,
-    ...(d.plan['reduced-motion'] ? { startMotion: page => perform(page, d.actions.motion) } : {}),
-    ...(d.plan['scope-preservation'] ? { exerciseScope: page => perform(page, d.actions.scope) } : {}),
+    ...(d.plan['reduced-motion'] ? { startMotion: page => performVerificationActions(page, d.actions.motion) } : {}),
+    ...(d.plan['scope-preservation'] ? { exerciseScope: page => performVerificationActions(page, d.actions.scope) } : {}),
     ...(d.projectChecks && adapter.projectChecks ? { projectChecks: adapter.projectChecks } : {})
   });
 }

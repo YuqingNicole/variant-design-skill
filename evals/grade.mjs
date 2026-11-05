@@ -15,6 +15,7 @@ import { gradeNativeVite } from './native-vite.mjs';
 import { gradePreviewCleanup } from './preview-cleanup.mjs';
 import { gradeSharedDependencies } from './shared-dependencies.mjs';
 import { gradeDeliveryReceipts } from './delivery-receipts.mjs';
+import { gradeHTMLDelivery } from './html-delivery.mjs';
 import { gradeRuntimePlans } from './runtime-plans.mjs';
 import { gradePhaseArchives, verifyPhaseArchive } from './phase-archive.mjs';
 
@@ -259,6 +260,7 @@ export function gradeChain(project, { turns, install, fixture = {}, initial, mea
     turnChecks[turn.id]?.(now, history, add, project);
   });
   if (fixture.runtimePlans) for (const check of gradeRuntimePlans(measurements?.runtimePlans, { mode: fixture.runtimePlans.mode ?? 'file' })) checks.push({ ...check, id: `runtime:${check.id}` });
+  if (fixture.htmlDelivery) for (const check of gradeHTMLDelivery(measurements?.htmlDelivery)) checks.push({ ...check, id: `html:${check.id}` });
   if (fixture.styleBudget) {
     const measured = gradePremium(measurements?.before, measurements?.after);
     for (const c of measured.checks) checks.push({ ...c, id: `premium:${c.id}` });

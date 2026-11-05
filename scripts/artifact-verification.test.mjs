@@ -111,3 +111,17 @@ test('reports without closure identity stay stale and are never retrofitted',asy
  const {root}=setup(t),result=await verifyArtifact(root,'B',{},observations),legacy=structuredClone(result.report);delete legacy.fingerprint.dependencyClosure;
  const file=path.join(path.dirname(result.file),'legacy-closure.json'),text=JSON.stringify(legacy);fs.writeFileSync(file,text);assert.equal(inspectVerification(root,file).status,'stale');assert.equal(fs.readFileSync(file,'utf8'),text);
 });
+
+ test('explicit actual diagnostics compare individually while changed logs retain provenance',async t=>{
+ const {compareVerificationReports}=await import('./artifact-verification.mjs'),{root}=setup(t);
+ const prior={id:'legacy',message:'Original failure',file:'project-health.json'},introduced={id:'syntax',message:'Unexpected end of input',file:'delivered/app.js'};
+ const run=(diagnostics,evidence,extra={})=>verifyArtifact(root,'B',{},()=>observations().map(c=>c.id==='project-checks'?{...c,status:'failed',reason:'Actual health check',diagnostics,evidence:[evidence],...extra}:c));
+ const before=await run([prior],'before.log'),after=await run([prior,introduced],'after.log',{reason:'Two actual failures'});
+ const compared=compareVerificationReports(before.report,after.report);assert.deepEqual(compared.failures.map(f=>[f.diagnostic.id,f.classification]),[['legacy','observed-before'],['syntax','new-or-changed']]);assert.deepEqual(compared.failures[0].evidence,['after.log']);assert.equal(after.status,'failed');
+ for(const extra of [{tool:{name:'different checker',version:'2'}},{environment:{url:'different'}}]){const changed=await run([prior],'different.log',extra);assert.equal(compareVerificationReports(before.report,changed.report).failures[0].classification,'new-or-changed');}
+ const changed=await run([{...prior,message:'Different diagnostic'}],'new.log');assert.equal(compareVerificationReports(before.report,changed.report).failures[0].classification,'new-or-changed');
+ });
+ test('invalid or invented diagnostic structures cannot be recorded as observations',async t=>{
+ const {root}=setup(t);for(const diagnostics of [[],[{id:'x',message:'x'},{id:'x',message:'y'}],[{id:'x',message:'x',file:'../secret'}],[{id:'x',message:'x',line:0}],[{id:'x',message:'x',command:'fake'}],Array.from({length:257},(_,i)=>({id:String(i),message:'x'}))])await assert.rejects(()=>verifyArtifact(root,'B',{},()=>observations().map(c=>c.id==='project-checks'?{...c,status:'failed',diagnostics}:c)),/diagnostic|Diagnostic/);
+ await assert.rejects(()=>verifyArtifact(root,'B',{},()=>observations().map(c=>({...c,diagnostics:[{id:'fake',message:'not a failed observation'}]}))),/Failed diagnostics/);
+ });

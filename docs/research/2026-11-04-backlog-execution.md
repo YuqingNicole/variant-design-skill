@@ -16,6 +16,12 @@ The next task branch `codex/task-runtime-plans` is based on that merged master. 
 
 #162 merged as `9b752b1`; post-merge master CI passed and master/dev were synchronized. Production and dev deployments were READY, with production HTTP evidence retained externally. Current branch `codex/vite-runtime-plans` starts from this master in a separate worktree. Vite acceptance at `023116b` passed: actual Codex 27/27, independent direct archive/source/input/host-tool/probe audit, 177 Node, 35 Chrome, four package checks and tests typecheck; push/PR CI also passed. Final research-head CI/review and PR #163 merge are next; see RFC-015 Vite extension. Keep all nine issues and remaining human/account/cross-project gates open.
 
+## Current slice · HTML handoff and granular failures
+
+#163 merged as `98724d9`; its master CI passed. The maintainer additionally requested the literal English headline “The best design inspiration during the ai area.”; PR #164 merged as `b3d758e` with 67 website tests, production build, focused responsive browser regression and all CI/review passed. Current `codex/html-delivery-evidence` worktree is based on that master; the original navigation worktree stays untouched.
+
+RFC-016 adds actual per-diagnostic comparison and an original HTML multi-file handoff matrix with a genuine pre-existing failed project check. Local 180 Node checks and two HTML handoff browser cases passed after correcting test setup's missing .variant-work directory. Original failures must remain failed; controlled syntax regressions are classified separately. Actual installed-skill four-turn evidence, source audit and full checks remain required before this slice merges. All nine issues and remaining human/account/complete-delivery gates stay open.
+
 ## Execution index
 
 | Area | Current state | Acceptance / remaining evidence |

@@ -297,3 +297,5 @@ Print a one-line reminder on every generation:
 
 
 Artifact evidence automatically fingerprints the registered main system, extensions, variant binding and supported transitive local dependencies. After editing those, rerun observations; a prior report cannot certify the changed preview. Use the evidence reference to record actual wrapper/alias/config facts and additional dynamic roots. Integration preparation binds the same closure and adoption state; changed source/config/facts or legacy missing coverage requires a new plan. Partial dependency coverage remains explicit.
+
+When reporting failed project checks, preserve actual structured diagnostics and compare them individually using `references/workflow/artifact-verification.md`. Keep original logs and old/new classifications; an observed-before failure still fails and never establishes delivery acceptance.

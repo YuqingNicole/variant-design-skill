@@ -1,0 +1,9 @@
+{
+  "failures": [
+    {
+      "id": "legacy-health",
+      "message": "Existing project audit failure",
+      "file": "project-health.json"
+    }
+  ]
+}

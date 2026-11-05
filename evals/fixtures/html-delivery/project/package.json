@@ -1,0 +1,12 @@
+{
+  "name": "html-delivery-fixture",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node check.mjs index.html",
+    "health": "node health-check.mjs index.html"
+  },
+  "devDependencies": {
+    "typescript": "5.9.2"
+  }
+}

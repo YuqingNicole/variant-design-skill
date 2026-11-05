@@ -55,6 +55,15 @@ export function fingerprintArtifact(root, id, options = {}) {
 function validateCheck(check) {
   if (!check || !runtimeChecks.includes(check.id) || !['passed','failed','unverified','not-applicable'].includes(check.status) || typeof check.reason !== 'string' || !check.reason.trim()) throw new Error('Each runtime check needs a known id, status and reason.');
   if (['passed','failed'].includes(check.status) && (!check.tool?.name || !check.tool?.version || !check.evidence?.length || !check.environment || typeof check.environment !== 'object')) throw new Error('Observed checks require tool/version, environment and evidence.');
+  if (check.diagnostics !== undefined) {
+    const validText = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
+    if (check.status !== 'failed' || !Array.isArray(check.diagnostics) || !check.diagnostics.length || check.diagnostics.length > 256 || new Set(check.diagnostics.map(d => d?.id)).size !== check.diagnostics.length) throw new Error('Failed diagnostics need 1–256 unique ids.');
+    for (const d of check.diagnostics) {
+      if (!d || typeof d !== 'object' || Array.isArray(d) || Object.keys(d).some(key => !['id','message','file','line','column'].includes(key)) || !validText(d.id,256) || !validText(d.message,4096)) throw new Error('Diagnostic needs a bounded id and actual message.');
+      if (d.file !== undefined && (!validText(d.file,1024) || path.isAbsolute(d.file) || d.file.includes('\\') || d.file.split('/').some(part => !part || part === '.' || part === '..'))) throw new Error('Diagnostic file must be project-relative.');
+      for (const key of ['line','column']) if (d[key] !== undefined && (!Number.isSafeInteger(d[key]) || d[key] < 1)) throw new Error('Diagnostic positions must be positive integers.');
+    }
+  }
   return check;
 }
 // Capture before running checks: never attach old observations to a freshly read revision.
@@ -106,10 +115,12 @@ export function compareVerificationReports(before, after) {
   if (before.fingerprint.project!==after.fingerprint.project || before.fingerprint.output!==after.fingerprint.output || before.fingerprint.id!==after.fingerprint.id) throw new Error('Compare reports for the same project and variant.');
   const failures=report=>[
     ...report.static.findings.filter(f=>f.severity==='error').map(f=>({kind:'static',finding:f,tool:report.static.tool})),
-    ...report.checks.filter(c=>c.status==='failed').map(c=>({kind:'runtime',id:c.id,reason:c.reason,evidence:c.evidence,tool:c.tool,environment:c.environment}))
+    ...report.checks.filter(c=>c.status==='failed').flatMap(c=>c.diagnostics ? c.diagnostics.map(diagnostic=>({kind:'runtime',id:c.id,reason:c.reason,evidence:c.evidence,tool:c.tool,environment:c.environment,diagnostic})) : [{kind:'runtime',id:c.id,reason:c.reason,evidence:c.evidence,tool:c.tool,environment:c.environment}])
   ];
+  before.checks.forEach(validateCheck); after.checks.forEach(validateCheck);
+  const key = f => f.diagnostic ? {kind:f.kind,id:f.id,diagnostic:f.diagnostic,tool:f.tool,environment:f.environment} : f;
   const prior=failures(before),current=failures(after);
-  return {before:before.id,after:after.id,failures:current.map(f=>({...f,classification:prior.some(p=>identity(p)===identity(f))?'observed-before':'new-or-changed'})),
+  return {before:before.id,after:after.id,failures:current.map(f=>({...f,classification:prior.some(p=>identity(key(p))===identity(key(f)))?'observed-before':'new-or-changed'})),
     limitation:'Identical recorded diagnostics only; not proof of cause, unchanged environment or complete regression coverage.'};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(fs.realpathSync(process.argv[1])).href){

@@ -239,3 +239,5 @@ test('runtime plan grading withholds missing or Agent-authored host observations
 test('Vite runtime grading refuses file-only or missing project/probe observations',()=>{
  for(const value of [undefined,{},...['generate','plan-edit','plan-undo'].map(phase=>({[phase]:{source:'host-task-runtime-plan-v1',mode:'file',phase,pass:true}}))]){const checks=gradeRuntimePlans(value,{mode:'vite'});for(const id of ['vite-project-checks','vite-source-probe'])assert.equal(checks.find(c=>c.id===id).pass,false);}
 });
+
+test('HTML handoff grading withholds missing or invented host delivery results',async()=>{const {gradeHTMLDelivery,htmlDeliveryGates}=await import('./html-delivery.mjs');for(const report of [undefined,{}, {source:'host-html-delivery-v1',checks:htmlDeliveryGates.map(id=>({id,pass:false}))}, {source:'Agent assertion',checks:htmlDeliveryGates.map(id=>({id,pass:true}))}])assert(gradeHTMLDelivery(report).every(c=>!c.pass));});

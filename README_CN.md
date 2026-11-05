@@ -399,3 +399,5 @@ react A                 → 导出 A 为 React，不自动选定
 已提供完整插件打包与独立目录安装包验证，见[构建说明](plugin/README.md)和[发布验收](plugin/release-readiness.md)。候选版尚未上架插件目录；不要只复制 SKILL.md。
 
 Agent 可根据当前任务、原始品牌/源码与真实观察生成并封存[运行检查计划](references/workflow/runtime-plans.md)，用声明式动作复用浏览器检查。基准观察在真实前后对比之前仍标为未验证；缺少工具或期望时明确保留缺口。
+
+项目检查可保留工具实际输出的逐条诊断，前后报告会分别列出此前观察过与新增/变化的诊断，并保留日志。旧错误仍是失败，比较结果不证明根因，也不代表交付已验收。见[验证证据](references/workflow/artifact-verification.md)。

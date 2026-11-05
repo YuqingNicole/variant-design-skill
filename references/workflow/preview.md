@@ -109,3 +109,5 @@ When recording artifact evidence for a preview, registered design-system/extensi
 At integration handoff, record the current ownership receipt with the delivery receipt (`references/workflow/delivery-receipt.md`). Preview-only checks do not verify integrated targets. Later cleanup can retire the preview and stale the handoff; it must preserve `.deliveries/`, source, checks and backups.
 
 After building the actual preview, automatically author and run task-specific checks following `references/workflow/runtime-plans.md`. Resolve stable controls from the actual task/DOM/source. Confirm rebuilt preview identity in the ready adapter; a URL alone is insufficient. Missing browser/project tools or expectations stay unverified. Capture real scope baseline observations before editing and retain sealed plans/reports through cleanup.
+
+When reporting failed project checks, preserve actual structured diagnostics and compare them individually using `references/workflow/artifact-verification.md`. Keep original logs and old/new classifications; an observed-before failure still fails and never establishes delivery acceptance.
