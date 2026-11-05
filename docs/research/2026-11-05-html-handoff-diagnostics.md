@@ -18,3 +18,11 @@ The host checks installed helpers, direct baseline/post-undo/delivery archives, 
 - **4 package checks**, website **67 tests/build (239 routes)** passed. Existing headline wording from #164 is retained.
 
 Next: fresh installed-skill Codex generate/edit/undo/deliver run; independent direct archive/source/input/tool/log/report/receipt audit and screenshot inspection; full browser suite/typecheck/docs checks and exact-head CI. Handwritten regressions do not replace actual Agent evidence. Full issue/backlog/human/visual/account gates remain distinct.
+
+## First real run and local timeout correction
+
+Actual installed-skill Codex at `d9007de` passed **43/43** in **515 seconds**. This is retained unchanged under `/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals`. Both implementation-head push/PR CI passed. The simultaneous local full browser run passed 36/37: an existing negative scope assertion was absent from the failed set. Test cleanup removed the raw scope report, so its exact error is not claimed from missing evidence.
+
+Inspection found a concrete deadline edge: a measured mismatch could be discarded when the final retry's transport read timed out. A deterministic transport test failed on the old helper and reproduced that loss (`/tmp/variant-html-transport-before.log`); a separate real Chrome busy-read assertion also exercises measured mismatch preservation. The loop now stops before starting reads past its deadline and retains a last measured mismatch only for a final TimeoutError at that deadline. No observed value and non-timeout/ambiguity errors remain unverified. This is a runtime change, so final-source real CLI evidence and regression checks are required before merge; the older 43/43 is not relabelled as final-source evidence.
+
+After the deadline fix, all **182 Node tests** and **7 affected Chrome cases** passed (`/tmp/variant-html-delivery-fixed-{units,browser}.log`). The deterministic unit covers both retaining a measured mismatch at a final timeout and keeping unobserved/non-timeout failures unverified. Actual final-source four-turn and full-suite results remain separate gates.

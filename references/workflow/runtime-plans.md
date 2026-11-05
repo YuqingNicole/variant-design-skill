@@ -69,3 +69,5 @@ Bounds: 2 MiB draft/bundle, 64 assertions/check, 32 actions/sequence, 32 focus c
 Known compiler identities must match when sealing a comparison, and the actual browser version must match before executing it. HTML script `src` is resolved as an exact URL relative to the document, including paths without `./`; imports within that script retain module resolution. Unresolved resources remain unverified.
 
 The existing `performVerificationActions(page, validatedActions)` executor is exported for trusted adapters using an already validated/sealed declaration. It does not establish before/after preservation or source identity on its own. Integrated-page observations must bind actual targets and real before reports; candidate preview observations are not installed-page evidence.
+
+If an assertion already measured a mismatch, a final read timing out at its deadline retains that last measured failure. No observed value, missing/ambiguous targets or other runner errors remain unverified; a late read cannot invent a passing result.
