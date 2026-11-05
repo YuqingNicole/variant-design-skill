@@ -29,3 +29,19 @@ Required next evidence: fresh installed-skill run, real authored draft/bundle in
 Installed-skill Codex run at `f9fdd70` completed three turns in 337 seconds: **23/25** gates passed. All five runtime checks after edit and undo passed individually, but aggregate remained unverified because HTML `script src="shared/data.js"` was incorrectly treated as a bare module import. The real dependency unknown remained visible and correctly prevented a passing aggregate. The failed attempt is retained unchanged under `/Users/nicole/orca/variant-backlog-evidence/runtime-plans-evals-f9fdd70`.
 
 Correction: HTML script src uses exact document-relative URL resolution; script imports continue module resolution. A regression proves relative script discovery, transitive imports, source mutation invalidation and missing-extension refusal. Comparison sealing now explicitly checks the recorded compiler identity, and execution checks the actual browser version. Four affected real Chrome cases passed, including wrong browser and removed compiler (fresh CLI process to avoid Node require cache). No original expectations or failing-result semantics were weakened. A fresh installed-skill run of this corrected source is required before merge.
+
+## Corrected actual installed-skill acceptance
+
+At source commit `8873b9f`, the fresh real Codex run completed all three turns in **315 seconds**, with **25/25 gates passed**. Command:
+
+```sh
+PLAYWRIGHT_CHANNEL=chrome node evals/run.mjs --agent codex --fixture runtime-plan-html --out /Users/nicole/orca/variant-backlog-evidence/runtime-plans-evals-8873b9f --jobs 1
+```
+
+The Agent authored its own source-derived locators, original Georgia/palette assertions, native button focus, normal progress 50, initial/switched reduced-motion 100, independent Activity 0→1 and original project check. Generate records a genuine scope baseline (four passed checks and scope unverified); edit/undo each passed all five checks and the aggregate. All phases now have supported static dependency coverage with no unknowns. B versions are 1→2→3. The actual edit changes only the heading text, and undo restores all B source bytes. A/C, original files and selectedVariant null are preserved.
+
+Independent direct audit verified all four archive receipts/manifest inventories, every phase source dependency, owned source and observation-input hash; installed seven helper hashes against Git commit `8873b9f`; unchanged recorded reports/drafts/bundles and baseline references; observer before/after preservation, A/C, selection and B restoration. Raw result/screenshots/phase archives remain at the above external evidence root. Screenshots for generated and edited B were visually inspected at 390×844: the requested title change is visible, controls and independent activity remain visible. This does not establish universal design quality or other viewports.
+
+Committed audit summaries retain both the failed 23/25 and corrected 25/25 attempts: [first attempt](2026-11-05-runtime-plans-f9fdd70-audit.json), [corrected attempt](2026-11-05-runtime-plans-8873b9f-audit.json). The audit script is `/tmp/audit-variant-runtime-plans.mjs`; it reads actual archives and Git/helper hashes, not model narratives. New full local validation passed **176 Node tests**, **31 Chrome cases**, and four package checks. Both push and PR loop/landing CI passed at `8873b9f`. Earlier website/guide checks remain recorded above. Final evidence changes only research/RFC status, and must receive their own final-head CI before merge.
+
+This proves the local original HTML/Codex runtime-plan slice. Branded Vite plans, complete cross-project/HTML delivery, genuine human trials, full visual acceptance and account/commercial decisions remain open. Issues #18/#19/#25 and the full backlog are not closed. The maintainer's current authorization covers merging this verified slice and its existing master deployment.
