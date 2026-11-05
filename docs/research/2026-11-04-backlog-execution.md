@@ -8,9 +8,9 @@ Work in `/Users/nicole/orca/variant-backlog-work` on task branches. The original
 
 ## Current merge authorization · 2026-11-05
 
-The maintainer explicitly instructed “继续改 然后合并”. This authorizes merging verified task changes and the existing master-triggered Vercel deployment; it does not decide unimplemented commercial terms, account budgets, domains or unrelated product options. PR #161 and its ancestor PRs were merged as `b2db7b7ec54e8ea928f65c96af70ef72e9051f19`. GitHub now lists only legacy PR #2 open. The production alias resolves to deployment `dpl_2wuCkefFknJEAsLXnETdPpcP7dUs`, target production/READY; public root/scripts and API status were checked, with configured false. Evidence: `2026-11-05-merge-161-production.json`. HTTP/READY checks are not live-browser rendering acceptance. Original navigation worktree is still untouched.
+The maintainer explicitly instructed “继续改 然后合并”. This authorizes merging verified task changes and the existing master-triggered Vercel deployment; it does not decide unimplemented commercial terms, account budgets, domains or unrelated product options. PR #161 and its ancestor PRs were merged as `b2db7b7ec54e8ea928f65c96af70ef72e9051f19`. At that merge checkpoint GitHub listed only legacy PR #2 open; follow-up runtime plans are draft PR #162. The production alias resolves to deployment `dpl_2wuCkefFknJEAsLXnETdPpcP7dUs`, target production/READY; public root/scripts and API status were checked, with configured false. Evidence: `2026-11-05-merge-161-production.json`. HTTP/READY checks are not live-browser rendering acceptance. Original navigation worktree is still untouched.
 
-The next task branch `codex/task-runtime-plans` is based on that merged master. Its source-bound Agent-authored declaration/execution/baseline core is under validation; do not merge it before actual Agent evidence and checks. Existing trial-user, visual and product/account decisions remain separate.
+The next task branch `codex/task-runtime-plans` is based on that merged master. Its source-bound Agent-authored declaration/execution/baseline core is under validation. First actual run passed 23/25 gates; HTML script URL resolution caused partial dependency coverage, now corrected with regressions and a fresh run pending; do not merge it before actual Agent evidence and checks. Existing trial-user, visual and product/account decisions remain separate.
 
 ## Execution index
 
@@ -57,7 +57,7 @@ Ego-browser space 42 inspected the actual local site. Baseline screenshots and r
 
 ## Next action
 
-PR #161's actual installed-skill receipt run and independent archive/source/tool audit passed at `9fd2632`; its exact push/PR loop/landing CI passed (Node 22, 165 Node tests, 27 Chrome cases). Commit/push final evidence, then continue #18 automatic task-specific runtime plans and complete cross-project delivery coverage. The next work must preserve actual before/after expectations, missing-tool states and real browser observations rather than infer results from generated metadata. Native comparison screenshots still need full presentation review; root overflow checks alone do not prove every embedded preview fits. All earlier website/visual/content/feature/distribution/commercial/trial-user/production decisions remain open, and no merge or publication permission is assumed.
+Continue #18 automatic runtime plans in PR #162: retain the failed 23/25 real attempt, run the corrected installed skill, audit direct phase/source/input observations, then merge the verified head under the current explicit authorization. #161 is merged and its production alias READY/HTTP checked. Remaining Vite/cross-project, human/visual and product/account acceptance gates stay open; do not equate this slice with full backlog completion.
 
 
 ### P1 follow-up review

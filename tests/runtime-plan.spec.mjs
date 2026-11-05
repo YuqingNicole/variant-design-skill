@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { createRequire } from 'node:module';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { recordVerificationPlan, inspectVerificationPlan, runVerificationPlan } from '../scripts/verification-plan.mjs';
 import { inspectVerification } from '../scripts/artifact-verification.mjs';
 import { prepareVariant, applyVariant, undoVariant } from '../scripts/variant-history.mjs';
@@ -49,6 +49,8 @@ test('sealed declarative plans run real focus/motion/actions and require an obse
   const wrongViewport = { ...afterSpec, viewport: { width: 1440, height: 900 } }; expect(() => seal(wrongViewport, 'wrong-viewport')).toThrow(/viewport or tools differ/);
   const originalBrand=read('brand.css');write('brand.css',originalBrand+'\n/* external shared edit */');expect(()=>seal(afterSpec,'changed-shared')).toThrow(/shared, task or brand inputs changed/);write('brand.css',originalBrand);
   const baselineDraft=read(beforePlan.record.draftFile);write(beforePlan.record.draftFile,baselineDraft+'\n');expect(()=>seal(afterSpec,'changed-baseline-draft')).toThrow(/Baseline observation inputs changed/);write(beforePlan.record.draftFile,baselineDraft);
+  await expect(runVerificationPlan(output, afterPlan.file, { ...adapter(page, browser, 'Report draft'), version: 'different-browser-version' })).rejects.toThrow(/Baseline browser version differs/);
+  const compilerLink = path.join(project, 'node_modules/typescript'); fs.unlinkSync(compilerLink); write('.variant-work/missing-compiler.json', JSON.stringify(afterSpec)); const changedCompiler = spawnSync(process.execPath, [new URL('../scripts/verification-plan.mjs', import.meta.url).pathname, 'record', output, 'B', '.variant-work/missing-compiler.json', project], { encoding: 'utf8' }); expect(changedCompiler.status).toBe(1); expect(changedCompiler.stderr).toMatch(/Baseline compiler identity differs/); fs.symlinkSync(compiler, compilerLink, process.platform === 'win32' ? 'junction' : 'dir');
   const after = await runVerificationPlan(output, afterPlan.file, adapter(page, browser, 'Report draft')); expect(after.report.checks.map(c => [c.id, c.status])).toEqual(['brand', 'keyboard-focus', 'reduced-motion', 'scope-preservation', 'project-checks'].map(id => [id, 'passed'])); expect(after.status).toBe('passed');
   expect(JSON.parse(read('variant-output/.variant-context.json')).selectedVariant).toBe(null);
   edit(source => source.replace('outline:2px solid rgb(0, 0, 255)', 'outline:none').replace('if(preference.matches)', 'if(false)').replace("if(preference.matches){cancel", "if(false){cancel").replace('Number(counter.textContent)+1', 'Number(counter.textContent)+2').replace('</style>', 'body{font-family:Arial}</style>'), 'negative-render');

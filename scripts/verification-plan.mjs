@@ -94,14 +94,16 @@ function collect(output, id, draftFile, project) {
     const reportBytes = bytes(out, draft.baselineReport, 16 * 1024 * 1024), report = inspectVerification(out, localFile(out, draft.baselineReport)).report, check = report.checks.find(c => c.id === 'scope-preservation');
     need(report.plan?.kind === 'task-runtime-plan' && report.plan.purpose === 'baseline' && report.plan.scopeIdentity === scopeIdentity && same(report.plan.implementation, implementation()), 'Baseline task, actions, expectations, viewport or tools differ');
     need(report.fingerprint.project === base && report.fingerprint.output === out && report.fingerprint.id === id && !report.changedDuringRun, 'Baseline belongs to another source/project or changed during observation');
+    need(same(report.fingerprint.dependencyClosure?.resolver.compiler, fingerprint.dependencyClosure?.resolver.compiler), 'Baseline compiler identity differs; establish a new before baseline');
     need(report.fingerprint.inputs && Object.keys(report.fingerprint.inputs).length > 0, 'Baseline has no sealed observation-input provenance');
     for (const [file, expected] of Object.entries(report.fingerprint.inputs)) need(hash(bytes(base, file, 16 * 1024 * 1024)) === expected, 'Baseline observation inputs changed; keep the original draft and sealed plan');
     const owned = new Set([...Object.keys(report.fingerprint.files), ...Object.keys(fingerprint.files)].map(file => `${prefix}/${file}`));
     for (const [file, expected] of Object.entries(report.fingerprint.dependencies)) if (!owned.has(file)) need(fingerprint.dependencies[file] === expected, 'Baseline shared, task or brand inputs changed; establish a new before baseline');
+    need(check?.tool?.name && check.tool.version, 'Baseline has no observed browser tool identity');
     need(check?.status === 'unverified' && same(check.environment?.viewport, draft.viewport) && Array.isArray(check.evidence) && check.evidence.length === draft.plan['scope-preservation'].length && check.evidence.every(e => e.matches === true), 'Baseline must contain successful actual scope measurements, not missing observations');
     const expected = draft.plan['scope-preservation'];
     need(check.evidence.every((e, i) => same(e.locator, expected[i].locator) && e.property === expected[i].property && e.expected === expected[i].expected && e.actual === expected[i].expected), 'Scope expectations differ from recorded baseline observations');
-    baseline = { file: draft.baselineReport, sha256: hash(reportBytes), id: report.id, version: report.fingerprint.version };
+    baseline = { file: draft.baselineReport, sha256: hash(reportBytes), id: report.id, version: report.fingerprint.version, tool: check.tool };
   }
   return { schemaVersion: 1, project: base, output: out, variant: id, draftFile, draftSha256: hash(raw), draft, dependencies, inputs, fingerprint, scopeIdentity, baseline, implementation: implementation() };
 }
@@ -142,6 +144,7 @@ export async function runVerificationPlan(output, planFile, adapter = {}) {
   const r = inspected.record, d = r.draft, target = localFile(r.project, d.target);
   let url = pathToFileURL(target).href;
   if (adapter.baseURL) { const base = new URL(adapter.baseURL); need(base.protocol === 'http:' && ['127.0.0.1', 'localhost', '[::1]'].includes(base.hostname) && !base.username && !base.password && base.pathname === '/' && !base.search && !base.hash, 'Use the trusted local preview root URL'); url = new URL(d.target, base).href; }
+  if (adapter.page && adapter.ready && r.baseline) need(r.baseline.tool.version === adapter.version, 'Baseline browser version differs; establish a new before baseline');
   if (adapter.page) await adapter.page.setViewportSize(d.viewport);
   const plan = { ...d.plan, url, kind: 'task-runtime-plan', bundle: path.relative(r.project, inspected.file).split(path.sep).join('/'), purpose: d.purpose, scopeIdentity: r.scopeIdentity, implementation: r.implementation, coverage: d.coverage, gaps: d.gaps, baseline: r.baseline };
   const relativeFile = path.relative(r.project, inspected.file).split(path.sep).join('/');

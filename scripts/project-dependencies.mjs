@@ -74,7 +74,7 @@ export function collectProjectDependencies(project, entries, options = {}) {
   };
   const resolve = (from, { value, kind }) => {
     if (!value || value.startsWith('#') && kind !== 'module-import') return;
-    if (value.startsWith('data:')) { if (kind === 'module-import' || /^data:(?:text\/html|image\/svg)/i.test(value)) unknown('embedded-resource-needs-review', from); return; }
+    if (value.startsWith('data:')) { if (kind === 'module-import' || kind === 'html-script' || /^data:(?:text\/html|image\/svg)/i.test(value)) unknown('embedded-resource-needs-review', from); return; }
     if (/^[a-z][\w+.-]*:|^\/\//i.test(value)) { if (!value.startsWith('node:')) unknown('external-resource', from); return; }
     let clean;
     try { clean = decodeURIComponent(value.split(/[?#]/)[0]); } catch { unknown('invalid-resource-encoding', from); return; }

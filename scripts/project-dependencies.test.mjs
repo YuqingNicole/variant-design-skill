@@ -95,3 +95,14 @@ test('CLI reports complete, partial, invalid and help states without writing pro
   write('entry.html', '<img src="missing.png">'); const partial = run([project, 'entry.html']); assert.equal(partial.status, 2); assert.equal(JSON.parse(partial.stdout).coverage.status, 'partial');
   assert.equal(run([project, '../outside']).status, 1); assert.equal(run(['--help']).status, 0); assert(!fs.existsSync(path.join(project, '.variant-work'))); assert(!fs.existsSync(path.join(project, '.verification')));
 });
+
+test('HTML script src values are exact URLs while their imports retain module resolution', t => {
+  const { write, collect } = setup(t);
+  write('index.html', '<script src="shared/data.js"></script><script type="module" src="main.js"></script>');
+  write('shared/data.js', 'globalThis.value = 1;'); write('main.js', 'import "./nested.js";'); write('nested.js', 'export const value = 2;');
+  const before = collect(['index.html']); assert.equal(before.coverage.status, 'within-supported-static-syntax');
+  for (const file of ['shared/data.js', 'main.js', 'nested.js']) assert(before.files[file], file);
+  write('shared/data.js', 'globalThis.value = 3;'); assert.notEqual(collect(['index.html']).identity, before.identity);
+  write('index.html', '<script src="data:text/javascript,alert(1)"></script>'); assert(collect(['index.html']).coverage.unknowns.some(item => item.code === 'embedded-resource-needs-review'));
+  write('index.html', '<script src="missing"></script>'); write('missing.js', ''); assert(collect(['index.html']).coverage.unknowns.some(item => item.code === 'unresolved-local-reference'));
+});
