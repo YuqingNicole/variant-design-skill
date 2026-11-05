@@ -14,6 +14,8 @@ When a real page preview is available, automatically derive checks from its curr
 
 When handing off an integrated page or confirmed-system adoption, use `skills/shared/export.md`, then `references/workflow/delivery-receipt.md` at the handoff step. Seal the actual target inventory and check references before rollback; do not treat a token preview or inventory receipt as rendered acceptance.
 
+For interrupted integration/rollback, use that export workflow's guarded recovery and preserve its backup/intent. Pending operations cannot supply current delivery acceptance; recovery does not change system adoption or selection.
+
 The canonical workflow for production-quality work. Define once, generate consistently.
 
 ```

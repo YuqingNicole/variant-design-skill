@@ -68,6 +68,8 @@ Before a scoped edit, record representative non-target behavior with the browser
 
 Project integration uses the same `.variant-lock` and a separate prepared source/target baseline. See `skills/shared/export.md` before generating integration files. Candidate preparation for edits does not replace integration preparation.
 
+Interrupted integration/rollback uses the guarded `recover` command in `skills/shared/export.md`, not variant undo. Confirm a crashed process has stopped before removing its empty stale lock; never steal it. Keep integration backups and `.integrations/recovery/` intents. Unknown target contents refuse restoration; a completed integration still requires strict rollback preflight. Recovery preserves variant history and selection.
+
 Rebuilding the comparison after an edit or undo retains the preview-first layout and expandable direction details; expanding details or switching viewport does not select a direction.
 
 ## Confirm and apply a design system

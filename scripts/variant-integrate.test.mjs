@@ -4,12 +4,14 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { fixture } from '../tests/fixture.mjs';
 import { readContext } from './variant-history.mjs';
-import { prepareIntegration, integrateVariant, rollbackIntegration, listIntegrations } from './variant-integrate.mjs';
+import { prepareIntegration, integrateVariant, rollbackIntegration, recoverIntegration, listIntegrations } from './variant-integrate.mjs';
 const compiler=path.dirname(createRequire(new URL('../tests/package.json',import.meta.url)).resolve('typescript/package.json'));
 function setup(t) {
-  const project = fs.mkdtempSync(path.join(os.tmpdir(), 'variant-integrate-'));
+  const project = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'variant-integrate-')));
   t.after(()=>fs.rmSync(project,{recursive:true,force:true}));
   const output=path.join(project,'variant-output'), staging=path.join(project,'.variant-work','integrate-B');
   fixture(output);fs.mkdirSync(path.join(project,'src'));
@@ -23,6 +25,26 @@ function setup(t) {
   return {project,output,staging,planFile};
 }
 const read=(project,file)=>fs.readFileSync(path.join(project,file),'utf8');
+const helper = fileURLToPath(new URL('./variant-integrate.mjs', import.meta.url));
+function cliFault(f, command, code = '') {
+  const hook = path.join(f.project, '.variant-work', 'fault.mjs');
+  fs.writeFileSync(hook, `import fs from 'node:fs';const rename=fs.renameSync;let calls=0;fs.renameSync=function(from,to){${code}\nreturn rename.call(this,from,to)};`);
+  const args = command === 'apply' ? ['B',f.staging,f.planFile,f.project] : [listIntegrations(f.output)[0].id,f.project];
+  return spawnSync(process.execPath, ['--import',hook,helper,command,f.output,...args], {encoding:'utf8'});
+}
+function releaseDeadLock(f, child) {
+  assert.equal(child.signal, 'SIGKILL'); // spawnSync has reaped the killed process; no live operation remains.
+  assert(fs.existsSync(path.join(f.output,'.variant-lock')));
+  assert.throws(()=>recoverIntegration(f.output,listIntegrations(f.output)[0].id,f.project),/Another history operation/);
+  fs.rmdirSync(path.join(f.output,'.variant-lock'));
+}
+function assertRestored(f) {
+  assert.equal(read(f.project,'index.html'),'<h1>Original</h1>');
+  assert.equal(fs.existsSync(path.join(f.project,'src/Hero.tsx')),false);
+  assert.equal(read(f.project,'src/App.tsx'),'export const App=()=>null;');
+  assert.equal(readContext(f.output).selectedVariant,'A');
+  assert(listIntegrations(f.output)[0].rolledBackAt);
+}
 test('integration backs up first, records each action, keeps selection, and rolls back created and overwritten files',t=>{
   const {project,output,staging,planFile}=setup(t);
   const record=integrateVariant(output,'B',staging,project,planFile);
@@ -33,6 +55,110 @@ test('integration backs up first, records each action, keeps selection, and roll
   assert.equal(read(project,'index.html'),'<h1>Original</h1>');assert.equal(fs.existsSync(path.join(project,'src','Hero.tsx')),false);
   assert.equal(read(project,'src/App.tsx'),'export const App=()=>null;');
   assert.throws(()=>rollbackIntegration(output,record.id),/already rolled back/);
+});
+
+test('real CLI killed mid-apply retains a backup and lock; recovery resumes known mixed states only',t=>{
+  const f=setup(t), context=read(f.output,'.variant-context.json');
+  const child=cliFault(f,'apply',`if(to===${JSON.stringify(path.join(f.project,'index.html'))}){rename(from,to);process.kill(process.pid,'SIGKILL');}`);
+  releaseDeadLock(f,child);
+  const record=listIntegrations(f.output)[0];assert.equal(record.appliedAt,null);assert.equal(record.rolledBackAt,null);
+  assert.equal(read(f.project,'index.html'),'<h1>Direction B</h1>');assert(!fs.existsSync(path.join(f.project,'src/Hero.tsx')));
+  assert.throws(()=>rollbackIntegration(f.output,record.id,f.project),/use recover/);
+  const recovered=cliFault(f,'recover');assert.equal(recovered.status,0,recovered.stderr);
+  assertRestored(f);assert.equal(read(f.output,'.variant-context.json'),context);
+  assert.equal(read(f.staging,'index.html'),'<h1>Direction B</h1>');
+  assert(fs.existsSync(path.join(f.output,'.integrations/recovery',record.id+'.json')));
+  assert.throws(()=>recoverIntegration(f.output,record.id,f.project),/already rolled back/);
+});
+
+test('all targets written but completion marker interrupted still requires recovery',t=>{
+  const f=setup(t),child=cliFault(f,'apply',`if(to.includes('/.integrations/')&&!to.includes('/recovery/'))process.kill(process.pid,'SIGKILL');`);
+  releaseDeadLock(f,child);assert.equal(read(f.project,'index.html'),'<h1>Direction B</h1>');assert(fs.existsSync(path.join(f.project,'src/Hero.tsx')));
+  const record=listIntegrations(f.output)[0];assert.equal(record.appliedAt,null);recoverIntegration(f.output,record.id,f.project);assertRestored(f);
+});
+
+test('real rollback interruption has a persisted intent; recover continues after a second interruption',t=>{
+  const f=setup(t),record=integrateVariant(f.output,'B',f.staging,f.project,f.planFile);
+  assert(record.appliedAt);
+  const child=cliFault(f,'rollback',`if(to===${JSON.stringify(path.join(f.project,'index.html'))}){rename(from,to);process.kill(process.pid,'SIGKILL');}`);
+  releaseDeadLock(f,child);assert.equal(read(f.project,'index.html'),'<h1>Original</h1>');assert(fs.existsSync(path.join(f.project,'src/Hero.tsx')));
+  assert.throws(()=>rollbackIntegration(f.output,record.id,f.project),/use recover/);
+  // Interrupt after deleting the created file but before recording restoration completion.
+  const again=cliFault(f,'recover',`if(to.includes('/.integrations/')&&!to.includes('/recovery/'))process.kill(process.pid,'SIGKILL');`);
+  releaseDeadLock(f,again);assert(!fs.existsSync(path.join(f.project,'src/Hero.tsx')));
+  recoverIntegration(f.output,record.id,f.project);assertRestored(f);
+});
+
+test('recovery itself killed while restoring a partial apply can be resumed',t=>{
+  const f=setup(t),child=cliFault(f,'apply',`if(to.includes('/.integrations/')&&!to.includes('/recovery/'))process.kill(process.pid,'SIGKILL');`);
+  releaseDeadLock(f,child);
+  const again=cliFault(f,'recover',`if(to===${JSON.stringify(path.join(f.project,'index.html'))}){rename(from,to);process.kill(process.pid,'SIGKILL');}`);
+  releaseDeadLock(f,again);assert.equal(read(f.project,'index.html'),'<h1>Original</h1>');assert(fs.existsSync(path.join(f.project,'src/Hero.tsx')));
+  recoverIntegration(f.output,listIntegrations(f.output)[0].id,f.project);assertRestored(f);
+});
+
+test('ordinary I/O failure restores original targets and retains backup evidence',t=>{
+  const f=setup(t),child=cliFault(f,'apply',`if(to===${JSON.stringify(path.join(f.project,'src/Hero.tsx'))})throw new Error('injected disk failure');`);
+  assert.equal(child.status,1);assert.match(child.stderr,/injected disk failure.*Original targets restored/);
+  assertRestored(f);assert.equal(listIntegrations(f.output)[0].appliedAt,null);
+  assert(!fs.existsSync(path.join(f.output,'.variant-lock')));
+});
+
+test('failed automatic restoration preserves its backup and executable recovery path',t=>{
+  const f=setup(t),child=cliFault(f,'apply',`if(to===${JSON.stringify(path.join(f.project,'src/Hero.tsx'))}||to===${JSON.stringify(path.join(f.project,'index.html'))}&&++calls===2)throw new Error('injected disk failure');`);
+  assert.equal(child.status,1);assert.match(child.stderr,/Recovery failed:.*Backup retained.*Recover: node/);
+  assert.equal(read(f.project,'index.html'),'<h1>Direction B</h1>');
+  recoverIntegration(f.output,listIntegrations(f.output)[0].id,f.project);assertRestored(f);
+});
+
+test('later edit during failed apply is preserved and blocks automatic recovery before any restoration',t=>{
+  const f=setup(t),child=cliFault(f,'apply',`if(to===${JSON.stringify(path.join(f.project,'index.html'))}){rename(from,to);fs.writeFileSync(to,'later user edit');return;}if(to===${JSON.stringify(path.join(f.project,'src/Hero.tsx'))})throw new Error('disk failure');`);
+  assert.equal(child.status,1);assert.match(child.stderr,/Recovery conflict.*index.html.*Backup retained/);
+  assert.equal(read(f.project,'index.html'),'later user edit');assert(!fs.existsSync(path.join(f.project,'src/Hero.tsx')));
+  const id=listIntegrations(f.output)[0].id;assert.throws(()=>recoverIntegration(f.output,id,f.project),/Recovery conflict/);
+  assert.equal(read(f.project,'index.html'),'later user edit');assert.equal(listIntegrations(f.output)[0].rolledBackAt,null);
+});
+
+test('failed intent publication leaves no truncated intent or target writes and can be retried',t=>{
+  const g=setup(t),integrated=integrateVariant(g.output,'B',g.staging,g.project,g.planFile),hook=path.join(g.project,'.variant-work','intent-fault.mjs');
+  fs.writeFileSync(hook,`import fs from 'node:fs';const link=fs.linkSync;fs.linkSync=function(from,to){if(to.includes('/recovery/'))throw new Error('intent disk failure');return link(from,to)};`);
+  const failed=spawnSync(process.execPath,['--import',hook,helper,'rollback',g.output,integrated.id,g.project],{encoding:'utf8'});
+  assert.equal(failed.status,1);assert.match(failed.stderr,/intent disk failure/);assert.equal(read(g.project,'index.html'),'<h1>Direction B</h1>');assert(fs.existsSync(path.join(g.project,'src/Hero.tsx')));
+  assert(!fs.existsSync(path.join(g.output,'.integrations/recovery',integrated.id+'.json')));
+  rollbackIntegration(g.output,integrated.id,g.project);assertRestored(g);
+});
+
+test('completed integrations cannot use recover to bypass strict rollback, including legacy backups',t=>{
+  const f=setup(t),record=integrateVariant(f.output,'B',f.staging,f.project,f.planFile);
+  for(const legacy of [false,true]){
+    if(legacy){const file=path.join(f.output,'.integrations',record.id+'.json'),saved=JSON.parse(fs.readFileSync(file));delete saved.appliedAt;fs.writeFileSync(file,JSON.stringify(saved));}
+    fs.writeFileSync(path.join(f.project,'index.html'),'<h1>Original</h1>');
+    assert.throws(()=>recoverIntegration(f.output,record.id,f.project),/requires rollback/);
+    assert.throws(()=>rollbackIntegration(f.output,record.id,f.project),/changed after integration/);
+    assert(fs.existsSync(path.join(f.project,'src/Hero.tsx')));
+  }
+  fs.writeFileSync(path.join(f.project,'index.html'),'<h1>Direction B</h1>');rollbackIntegration(f.output,record.id,f.project);assertRestored(f);
+});
+
+test('recovery preflight refuses later edits, invalid backups, protected paths and symlinks without writes',t=>{
+  for(const mutation of ['edit','missing','new-file','bytes','duplicate','protected','symlink','intent']){
+    const f=setup(t),child=cliFault(f,'apply',`if(to===${JSON.stringify(path.join(f.project,'index.html'))}){rename(from,to);process.kill(process.pid,'SIGKILL');}`);
+    releaseDeadLock(f,child);
+    const id=listIntegrations(f.output)[0].id,file=path.join(f.output,'.integrations',id+'.json'),saved=JSON.parse(fs.readFileSync(file));
+    if(mutation==='edit')fs.writeFileSync(path.join(f.project,'index.html'),'user edit');
+    if(mutation==='missing')fs.unlinkSync(path.join(f.project,'index.html'));
+    if(mutation==='new-file')fs.writeFileSync(path.join(f.project,'src/Hero.tsx'),'user file');
+    if(mutation==='bytes')saved.files.find(e=>e.action==='overwrite').before.content=Buffer.from('corrupt').toString('base64');
+    if(mutation==='duplicate')saved.files.push(saved.files[0]);
+    if(mutation==='protected')saved.files[0].path='.git/config';
+    if(mutation==='symlink'){fs.renameSync(path.join(f.project,'index.html'),path.join(f.project,'actual.html'));fs.symlinkSync('actual.html',path.join(f.project,'index.html'));}
+    if(mutation==='intent'){const dir=path.join(f.output,'.integrations/recovery');fs.mkdirSync(dir);fs.writeFileSync(path.join(dir,id+'.json'),JSON.stringify({schemaVersion:1,integrationId:id,backupHash:'wrong'}));}
+    if(['bytes','duplicate','protected'].includes(mutation))fs.writeFileSync(file,JSON.stringify(saved));
+    const before=fs.existsSync(path.join(f.project,'index.html'))?read(f.project,'index.html'):null,hero=fs.existsSync(path.join(f.project,'src/Hero.tsx'))?read(f.project,'src/Hero.tsx'):null,backup=fs.readFileSync(file);
+    assert.throws(()=>recoverIntegration(f.output,id,f.project),/Recovery conflict|Invalid|protected|Symlink|differs/);
+    assert.equal(fs.existsSync(path.join(f.project,'index.html'))?read(f.project,'index.html'):null,before);
+    assert.equal(fs.existsSync(path.join(f.project,'src/Hero.tsx'))?read(f.project,'src/Hero.tsx'):null,hero);assert.deepEqual(fs.readFileSync(file),backup);
+  }
 });
 
 test('automatically discovered shared dependency drift refuses integration before target/backup writes',t=>{

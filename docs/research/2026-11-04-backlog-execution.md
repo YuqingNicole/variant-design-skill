@@ -1,5 +1,9 @@
 # Backlog execution · 2026-11-04
 
+## Current checkpoint · 2026-11-05 · interrupted integration recovery
+
+PRs #164/#165 are merged; production and protected dev deployments were READY at `41b2c79`. The separate #166 reference-content change is now on master (`02956b8`) and is retained. Work continues in `/Users/nicole/orca/variant-integration-recovery`, branch `codex/integration-recovery`, from that master. RFC-017 addresses the concrete #19 I10 gap: an interrupted multi-file apply/rollback needs a resumable, conflict-refusing recovery path. Implementation, fault-injected real-process regressions and installed-skill CLI evidence are pending. #18/#19 remain open until their complete acceptance maps are audited; commercial/account/human gates and all other backlog work remain open. Earlier production restrictions in this historical index are superseded only by the maintainer's later explicit merge authorization for verified task changes.
+
 ## Objective and boundaries
 
 Complete, in order, the backlog summarized in the maintainer's conversation: website repositioning, browsing interaction and visual refinement, submissions and permissions, design-system checks, skill quality, content, distribution, positioning and maintenance, and the nine open delivery/commercial/hosted-AI issues. Preserve the full scope until evidence establishes completion; an implementation or a local pass alone is not a production launch or a user acceptance result.

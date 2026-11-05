@@ -228,6 +228,8 @@ For revision-bound delivery evidence, read `references/workflow/artifact-verific
 
 Before generating files for project integration, prepare a source/target baseline using `skills/shared/export.md`. Applying staging without a prepared plan is rejected.
 
+If project integration or rollback is interrupted, follow that export workflow's guarded `recover` path. Preserve the backup, recovery intent and staging; confirm the old process stopped before removing an empty stale lock. Do not turn a pending apply into a success receipt or bypass strict rollback with recovery.
+
 At integration handoff, follow `references/workflow/delivery-receipt.md` to seal the actual target inventory, recovery path and current reports before any rollback. Keep inventory validity separate from observed checks; missing checks are unverified. Preview cleanup never deletes `.deliveries/`.
 
 Comparison delivery uses preview-first cards, with full-page links above and expandable direction details below. Rebuild existing comparisons with the preview helper; do not hide or discard the comparison statements.
