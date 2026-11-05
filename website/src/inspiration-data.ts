@@ -704,6 +704,37 @@ export const inspirationItems = [
     "mobile": "not-tested"
   },
   {
+    "id": "x-luciebajgart-600400",
+    "name": "Butterfly brand concept",
+    "category": "practice",
+    "tag": "Brand",
+    "url": "https://x.com/LucieBajgart/status/2118039625952600400",
+    "source": "link-only",
+    "focus": {
+      "zh": "蝴蝶插画、颗粒肌理与留白构成轻盈的品牌概念",
+      "en": "Butterfly illustration, grain and generous space create an airy brand concept"
+    },
+    "application": {
+      "zh": "探索品牌插画、情绪板和富有想象力的视觉叙事",
+      "en": "Explore brand illustration, moodboards and imaginative visual storytelling"
+    },
+    "publisher": "Lucie Bajgart (@LucieBajgart)",
+    "kind": "social-post",
+    "designer": "Lucie Bajgart",
+    "checkedAt": "2026-11-05",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2118039625952600400",
+      "author": "Lucie Bajgart",
+      "handle": "LucieBajgart",
+      "date": "2026-11-04",
+      "lang": "en",
+      "text": "generated these little fellas for a concept and now i want to build a whole brand around them.\n\nif you're making something that helps people dream and aspire, they're looking for a home",
+      "hasMedia": true
+    }
+  },
+  {
     "id": "paper-widgets",
     "name": "Paper widgets",
     "category": "practice",
