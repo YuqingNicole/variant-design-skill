@@ -161,6 +161,8 @@ React previews can use an isolated Vite package with `--vite-root` while keeping
 
 Project integration now requires a prepared source/target baseline before staging; changed source or target files are rejected before writing. See [integration](skills/shared/export.md).
 
+The online HTML audit and CLI `--strict --json` share a strict static gate: errors and warnings block it, while review suggestions do not. CLI JSON names its policy; default CLI still blocks errors only. Compare identical sanitized HTML, and keep extra online document checks and unverified runtime behavior separate. See [verification scope](references/workflow/artifact-verification.md).
+
 Interrupted integration or rollback has a guarded `recover` command: it restores only recorded before/after states, preserves unknown edits and keeps backups. Completed integrations still require strict rollback. Confirm the old process stopped before removing an empty stale lock; see [recovery steps](skills/shared/export.md#recover-an-interrupted-operation). Pending operations cannot establish current delivery acceptance.
 
 Integration handoffs can seal a local [delivery receipt](references/workflow/delivery-receipt.md) with the actual file inventory, revision, backup, check reports and recovery path. Inventory validity is separate from check results; missing checks remain unverified and rollback retires the historical receipt.

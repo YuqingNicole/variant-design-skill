@@ -157,6 +157,13 @@ export function scanSource(source, file = "<memory>") {
   return findings;
 }
 
+export function summarizeFindings(findings, { strict = false } = {}) {
+  const errors = findings.filter(finding => finding.severity === 'error').length;
+  const warnings = findings.filter(finding => finding.severity === 'warning').length;
+  const reviews = findings.filter(finding => finding.severity === 'review').length;
+  return { policy: strict ? 'strict' : 'errors-only', passed: errors === 0 && (!strict || warnings === 0), errors, warnings, reviews };
+}
+
 function collectFiles(target) {
   const stat = fs.statSync(target);
   if (stat.isFile()) return extensions.has(path.extname(target).toLowerCase()) ? [target] : [];
@@ -222,12 +229,10 @@ if (!fs.existsSync(target)) {
 
 const files = collectFiles(target);
 const findings = files.flatMap((file) => scanSource(fs.readFileSync(file, "utf8"), path.relative(process.cwd(), file)));
-const errors = findings.filter((finding) => finding.severity === "error").length;
-const warnings = findings.filter((finding) => finding.severity === "warning").length;
-const reviews = findings.filter((finding) => finding.severity === "review").length;
+const summary = summarizeFindings(findings, { strict }), { errors, warnings, reviews } = summary;
 
 if (json) {
-  console.log(JSON.stringify({ target: targetArg, files: files.length, errors, warnings, reviews, findings }, null, 2));
+  console.log(JSON.stringify({ target: targetArg, files: files.length, ...summary, findings }, null, 2));
 } else {
   for (const finding of findings) {
     console.log(`${finding.severity.toUpperCase()} ${finding.rule} ${finding.file}:${finding.line}`);
@@ -237,6 +242,6 @@ if (json) {
   console.log(`Quality gate: ${files.length} files · ${errors} errors · ${warnings} warnings${reviews ? ` · ${reviews} generator habits to remove or justify` : ''}`);
 }
 
-process.exit(errors > 0 || (strict && warnings > 0) ? 1 : 0);
+process.exit(summary.passed ? 0 : 1);
 
 }

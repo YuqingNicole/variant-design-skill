@@ -1,0 +1,1493 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-05T16:43:47.166Z",
+  "sourceCommit": "685885ed6d86eb5dd4a86e96876bc2b9aed156b1",
+  "pass": true,
+  "parity": {
+    "file": "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/audit.json",
+    "sha256": "eeec8e5a0aa40031ee259708620a7fcf9e8000f3bf3e7ae48795e6a4fa1aae9e",
+    "schemaVersion": 1,
+    "at": "2026-11-05T16:39:40.838Z",
+    "sourceCommit": "685885ed6d86eb5dd4a86e96876bc2b9aed156b1",
+    "code": {
+      "scripts/quality-gate.mjs": "d64cc8d4164c8ed86de169588e0aa40a8f96e5ca8fd06bfb6ad935749e9e2f4d",
+      "website/server/ai.mjs": "2812b53c7f5ab3db60c59e84d119b84a70ec4a798daf210e7cf06833c382f41d",
+      "website/server/ai.test.mjs": "2c25e5b6a95eb1219634c9d1f03a9ed1012b6034a115af91e875e6bea3bba218"
+    },
+    "pass": true,
+    "prior": {
+      "file": "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe/result.json",
+      "sha256": "ea705e2ddb5ef8b08172f47aff9ebc020d499d3d5bf81149a506c7f1511e4fe7",
+      "contradictionRetained": true
+    },
+    "cases": [
+      {
+        "id": "valid",
+        "sourceSha256": "125b85537813bdfcf53a9b8abddd79f913a811aeef03d17c9f946c223558a66a",
+        "sanitizedSha256": "125b85537813bdfcf53a9b8abddd79f913a811aeef03d17c9f946c223558a66a",
+        "cli": {
+          "argv": [
+            "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+            "/Users/nicole/orca/variant-static-parity/scripts/quality-gate.mjs",
+            "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/valid.html",
+            "--strict",
+            "--json"
+          ],
+          "cwd": "/Users/nicole/orca/variant-static-parity",
+          "exitCode": 0,
+          "report": {
+            "target": "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/valid.html",
+            "files": 1,
+            "policy": "strict",
+            "passed": true,
+            "errors": 0,
+            "warnings": 0,
+            "reviews": 0,
+            "findings": []
+          }
+        },
+        "online": {
+          "passed": true,
+          "staticChecks": {
+            "policy": "strict",
+            "passed": true,
+            "errors": 0,
+            "warnings": 0,
+            "reviews": 0
+          },
+          "scope": "static-only",
+          "runtime": {
+            "status": "unverified",
+            "reason": "No browser checks were run by the HTML audit."
+          },
+          "issues": [],
+          "findings": []
+        }
+      },
+      {
+        "id": "surface-warning",
+        "sourceSha256": "58898985d872a230add6afc02a26588776b87af6300905831c426a104c755e06",
+        "sanitizedSha256": "58898985d872a230add6afc02a26588776b87af6300905831c426a104c755e06",
+        "cli": {
+          "argv": [
+            "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+            "/Users/nicole/orca/variant-static-parity/scripts/quality-gate.mjs",
+            "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/surface-warning.html",
+            "--strict",
+            "--json"
+          ],
+          "cwd": "/Users/nicole/orca/variant-static-parity",
+          "exitCode": 1,
+          "report": {
+            "target": "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/surface-warning.html",
+            "files": 1,
+            "policy": "strict",
+            "passed": false,
+            "errors": 0,
+            "warnings": 1,
+            "reviews": 0,
+            "findings": [
+              {
+                "severity": "warning",
+                "rule": "pure-black-surface",
+                "file": "../variant-backlog-evidence/static-parity-probe-fixed/surface-warning.html",
+                "line": 1,
+                "message": "Pure black surface detected; verify that a tinted near-black is not more appropriate.",
+                "excerpt": "background:#000"
+              }
+            ]
+          }
+        },
+        "online": {
+          "passed": false,
+          "staticChecks": {
+            "policy": "strict",
+            "passed": false,
+            "errors": 0,
+            "warnings": 1,
+            "reviews": 0
+          },
+          "scope": "static-only",
+          "runtime": {
+            "status": "unverified",
+            "reason": "No browser checks were run by the HTML audit."
+          },
+          "issues": [
+            "pure-black-surface"
+          ],
+          "findings": [
+            {
+              "severity": "warning",
+              "rule": "pure-black-surface",
+              "file": "generated.html",
+              "line": 1,
+              "message": "Pure black surface detected; verify that a tinted near-black is not more appropriate.",
+              "excerpt": "background:#000"
+            }
+          ]
+        }
+      },
+      {
+        "id": "suppressed-focus",
+        "sourceSha256": "dc550fa5a4145bcb9bad8fe4875159ac73745f9ea5ef9a495601016e64b222e9",
+        "sanitizedSha256": "dc550fa5a4145bcb9bad8fe4875159ac73745f9ea5ef9a495601016e64b222e9",
+        "cli": {
+          "argv": [
+            "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+            "/Users/nicole/orca/variant-static-parity/scripts/quality-gate.mjs",
+            "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/suppressed-focus.html",
+            "--strict",
+            "--json"
+          ],
+          "cwd": "/Users/nicole/orca/variant-static-parity",
+          "exitCode": 1,
+          "report": {
+            "target": "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/suppressed-focus.html",
+            "files": 1,
+            "policy": "strict",
+            "passed": false,
+            "errors": 0,
+            "warnings": 2,
+            "reviews": 0,
+            "findings": [
+              {
+                "severity": "warning",
+                "rule": "focus-outline-removed",
+                "file": "../variant-backlog-evidence/static-parity-probe-fixed/suppressed-focus.html",
+                "line": 1,
+                "message": "Outline removed: keyboard-test this control's computed focus indicator; a focus-visible keyword is not proof.",
+                "excerpt": "outline:none"
+              },
+              {
+                "severity": "warning",
+                "rule": "focus-visible-suppressed",
+                "file": "../variant-backlog-evidence/static-parity-probe-fixed/suppressed-focus.html",
+                "line": 1,
+                "message": "Focus-visible rule suppresses the outline; verify a visible replacement on this element.",
+                "excerpt": "a:focus-visible{outline:none}"
+              }
+            ]
+          }
+        },
+        "online": {
+          "passed": false,
+          "staticChecks": {
+            "policy": "strict",
+            "passed": false,
+            "errors": 0,
+            "warnings": 2,
+            "reviews": 0
+          },
+          "scope": "static-only",
+          "runtime": {
+            "status": "unverified",
+            "reason": "No browser checks were run by the HTML audit."
+          },
+          "issues": [
+            "focus-outline-removed",
+            "focus-visible-suppressed"
+          ],
+          "findings": [
+            {
+              "severity": "warning",
+              "rule": "focus-outline-removed",
+              "file": "generated.html",
+              "line": 1,
+              "message": "Outline removed: keyboard-test this control's computed focus indicator; a focus-visible keyword is not proof.",
+              "excerpt": "outline:none"
+            },
+            {
+              "severity": "warning",
+              "rule": "focus-visible-suppressed",
+              "file": "generated.html",
+              "line": 1,
+              "message": "Focus-visible rule suppresses the outline; verify a visible replacement on this element.",
+              "excerpt": "a:focus-visible{outline:none}"
+            }
+          ]
+        }
+      },
+      {
+        "id": "copy-warning",
+        "sourceSha256": "431dc0c9ef69744115ba31869ad30220efd83e4273af4e751f06176c961cb3dd",
+        "sanitizedSha256": "431dc0c9ef69744115ba31869ad30220efd83e4273af4e751f06176c961cb3dd",
+        "cli": {
+          "argv": [
+            "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+            "/Users/nicole/orca/variant-static-parity/scripts/quality-gate.mjs",
+            "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/copy-warning.html",
+            "--strict",
+            "--json"
+          ],
+          "cwd": "/Users/nicole/orca/variant-static-parity",
+          "exitCode": 1,
+          "report": {
+            "target": "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/copy-warning.html",
+            "files": 1,
+            "policy": "strict",
+            "passed": false,
+            "errors": 0,
+            "warnings": 1,
+            "reviews": 0,
+            "findings": [
+              {
+                "severity": "warning",
+                "rule": "generic-error-copy",
+                "file": "../variant-backlog-evidence/static-parity-probe-fixed/copy-warning.html",
+                "line": 1,
+                "message": "Generic error copy does not explain the cause or recovery action.",
+                "excerpt": "Something went wrong"
+              }
+            ]
+          }
+        },
+        "online": {
+          "passed": false,
+          "staticChecks": {
+            "policy": "strict",
+            "passed": false,
+            "errors": 0,
+            "warnings": 1,
+            "reviews": 0
+          },
+          "scope": "static-only",
+          "runtime": {
+            "status": "unverified",
+            "reason": "No browser checks were run by the HTML audit."
+          },
+          "issues": [
+            "generic-error-copy"
+          ],
+          "findings": [
+            {
+              "severity": "warning",
+              "rule": "generic-error-copy",
+              "file": "generated.html",
+              "line": 1,
+              "message": "Generic error copy does not explain the cause or recovery action.",
+              "excerpt": "Something went wrong"
+            }
+          ]
+        }
+      },
+      {
+        "id": "image-error",
+        "sourceSha256": "27814e49847274d030911617b07ed24d14b4c2e9f28ec8333065a731b403ec5f",
+        "sanitizedSha256": "27814e49847274d030911617b07ed24d14b4c2e9f28ec8333065a731b403ec5f",
+        "cli": {
+          "argv": [
+            "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+            "/Users/nicole/orca/variant-static-parity/scripts/quality-gate.mjs",
+            "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/image-error.html",
+            "--strict",
+            "--json"
+          ],
+          "cwd": "/Users/nicole/orca/variant-static-parity",
+          "exitCode": 1,
+          "report": {
+            "target": "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/image-error.html",
+            "files": 1,
+            "policy": "strict",
+            "passed": false,
+            "errors": 1,
+            "warnings": 0,
+            "reviews": 0,
+            "findings": [
+              {
+                "severity": "error",
+                "rule": "missing-img-alt",
+                "file": "../variant-backlog-evidence/static-parity-probe-fixed/image-error.html",
+                "line": 1,
+                "message": "Image is missing an alt attribute.",
+                "excerpt": "<img src=\"mark.svg\">"
+              }
+            ]
+          }
+        },
+        "online": {
+          "passed": false,
+          "staticChecks": {
+            "policy": "strict",
+            "passed": false,
+            "errors": 1,
+            "warnings": 0,
+            "reviews": 0
+          },
+          "scope": "static-only",
+          "runtime": {
+            "status": "unverified",
+            "reason": "No browser checks were run by the HTML audit."
+          },
+          "issues": [
+            "missing-img-alt"
+          ],
+          "findings": [
+            {
+              "severity": "error",
+              "rule": "missing-img-alt",
+              "file": "generated.html",
+              "line": 1,
+              "message": "Image is missing an alt attribute.",
+              "excerpt": "<img src=\"mark.svg\">"
+            }
+          ]
+        }
+      },
+      {
+        "id": "review-only",
+        "sourceSha256": "7de0fc517a284bceea3a9263be6a93bad80621cccc7d56ab84d5e7cccea7ae11",
+        "sanitizedSha256": "7de0fc517a284bceea3a9263be6a93bad80621cccc7d56ab84d5e7cccea7ae11",
+        "cli": {
+          "argv": [
+            "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+            "/Users/nicole/orca/variant-static-parity/scripts/quality-gate.mjs",
+            "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/review-only.html",
+            "--strict",
+            "--json"
+          ],
+          "cwd": "/Users/nicole/orca/variant-static-parity",
+          "exitCode": 0,
+          "report": {
+            "target": "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/review-only.html",
+            "files": 1,
+            "policy": "strict",
+            "passed": true,
+            "errors": 0,
+            "warnings": 0,
+            "reviews": 1,
+            "findings": [
+              {
+                "severity": "review",
+                "rule": "direction-label-in-ui",
+                "file": "../variant-backlog-evidence/static-parity-probe-fixed/review-only.html",
+                "line": 1,
+                "message": "A direction name inside the page: the product UI should not say which direction it is; the comparison page does.",
+                "excerpt": ">Direction B"
+              }
+            ]
+          }
+        },
+        "online": {
+          "passed": true,
+          "staticChecks": {
+            "policy": "strict",
+            "passed": true,
+            "errors": 0,
+            "warnings": 0,
+            "reviews": 1
+          },
+          "scope": "static-only",
+          "runtime": {
+            "status": "unverified",
+            "reason": "No browser checks were run by the HTML audit."
+          },
+          "issues": [],
+          "findings": [
+            {
+              "severity": "review",
+              "rule": "direction-label-in-ui",
+              "file": "generated.html",
+              "line": 1,
+              "message": "A direction name inside the page: the product UI should not say which direction it is; the comparison page does.",
+              "excerpt": ">Direction B"
+            }
+          ]
+        }
+      },
+      {
+        "id": "sanitized-script",
+        "sourceSha256": "25278e1ef41e68e8c44abf5e5fd880e77c83ce2233778e06490bedba8e9cdc0a",
+        "sanitizedSha256": "125b85537813bdfcf53a9b8abddd79f913a811aeef03d17c9f946c223558a66a",
+        "cli": {
+          "argv": [
+            "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+            "/Users/nicole/orca/variant-static-parity/scripts/quality-gate.mjs",
+            "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/sanitized-script.html",
+            "--strict",
+            "--json"
+          ],
+          "cwd": "/Users/nicole/orca/variant-static-parity",
+          "exitCode": 0,
+          "report": {
+            "target": "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/sanitized-script.html",
+            "files": 1,
+            "policy": "strict",
+            "passed": true,
+            "errors": 0,
+            "warnings": 0,
+            "reviews": 0,
+            "findings": []
+          }
+        },
+        "online": {
+          "passed": true,
+          "staticChecks": {
+            "policy": "strict",
+            "passed": true,
+            "errors": 0,
+            "warnings": 0,
+            "reviews": 0
+          },
+          "scope": "static-only",
+          "runtime": {
+            "status": "unverified",
+            "reason": "No browser checks were run by the HTML audit."
+          },
+          "issues": [],
+          "findings": []
+        }
+      }
+    ],
+    "defaultCompatibility": {
+      "exitCode": 0,
+      "report": {
+        "target": "/Users/nicole/orca/variant-backlog-evidence/static-parity-probe-fixed/surface-warning.html",
+        "files": 1,
+        "policy": "errors-only",
+        "passed": true,
+        "errors": 0,
+        "warnings": 1,
+        "reviews": 0,
+        "findings": [
+          {
+            "severity": "warning",
+            "rule": "pure-black-surface",
+            "file": "../variant-backlog-evidence/static-parity-probe-fixed/surface-warning.html",
+            "line": 1,
+            "message": "Pure black surface detected; verify that a tinted near-black is not more appropriate.",
+            "excerpt": "background:#000"
+          }
+        ]
+      }
+    },
+    "extraDocumentChecks": {
+      "staticChecks": {
+        "policy": "strict",
+        "passed": true,
+        "errors": 0,
+        "warnings": 0,
+        "reviews": 0
+      },
+      "overallPassed": false,
+      "issues": [
+        "viewport metadata",
+        "substantive page structure",
+        "responsive breakpoint",
+        "reduced motion support",
+        "keyboard focus treatment",
+        "sufficient implementation depth"
+      ],
+      "runtime": {
+        "status": "unverified",
+        "reason": "No browser checks were run by the HTML audit."
+      }
+    },
+    "limits": [
+      "Static policy/readiness only; real CLI vs online function on the exact sanitized input",
+      "Raw script removal is not raw-source/runtime parity",
+      "No hosted model/API request and no key/budget change"
+    ]
+  },
+  "actualCLI": {
+    "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.json",
+    "sha256": "c786454302aff7736e55aff11d9f7845328a10126f577fbde8b632a6ebfbe3da",
+    "pass": true,
+    "passed": 43,
+    "total": 43,
+    "seconds": 405,
+    "reading": {
+      "words": 45376,
+      "files": [
+        "SKILL.md",
+        "references/domains/dashboard.md",
+        "references/workflow/artifact-verification.md",
+        "references/workflow/preview.md",
+        "references/workflow/project-context.md",
+        "references/workflow/project-discovery.md",
+        "references/workflow/quality-baseline.md",
+        "references/workflow/runtime-plans.md",
+        "skills/shared/code-output.md",
+        "skills/variant-generate/ROUTE.md",
+        "references/workflow/history.md",
+        "references/workflow/delivery-receipt.md",
+        "skills/shared/export.md"
+      ],
+      "turns": [
+        {
+          "turn": "generate",
+          "files": [
+            "SKILL.md",
+            "references/domains/dashboard.md",
+            "references/workflow/artifact-verification.md",
+            "references/workflow/preview.md",
+            "references/workflow/project-context.md",
+            "references/workflow/project-discovery.md",
+            "references/workflow/quality-baseline.md",
+            "references/workflow/runtime-plans.md",
+            "skills/shared/code-output.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 14179
+        },
+        {
+          "turn": "plan-edit",
+          "files": [
+            "SKILL.md",
+            "references/workflow/artifact-verification.md",
+            "references/workflow/history.md",
+            "references/workflow/preview.md",
+            "references/workflow/project-context.md",
+            "references/workflow/project-discovery.md",
+            "references/workflow/quality-baseline.md",
+            "references/workflow/runtime-plans.md",
+            "skills/shared/code-output.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 15098
+        },
+        {
+          "turn": "plan-undo",
+          "files": [
+            "SKILL.md",
+            "references/workflow/history.md",
+            "references/workflow/project-context.md",
+            "references/workflow/project-discovery.md",
+            "references/workflow/runtime-plans.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 6955
+        },
+        {
+          "turn": "deliver",
+          "files": [
+            "SKILL.md",
+            "references/workflow/artifact-verification.md",
+            "references/workflow/delivery-receipt.md",
+            "references/workflow/project-discovery.md",
+            "references/workflow/runtime-plans.md",
+            "skills/shared/export.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 9144
+        }
+      ]
+    },
+    "usage": {
+      "tokens": 1843498
+    }
+  },
+  "independentHandoff": {
+    "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/direct-audit.json",
+    "sha256": "ec9dc511a9336c10e70fc533d57040831a32fbc3871c13bd403d533afd9b0153",
+    "result": {
+      "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.json",
+      "sha256": "c786454302aff7736e55aff11d9f7845328a10126f577fbde8b632a6ebfbe3da",
+      "pass": true,
+      "passed": 43,
+      "total": 43
+    },
+    "directAudit": "passed",
+    "phases": {
+      "generate": {
+        "pass": true,
+        "version": 1,
+        "status": "unverified",
+        "scopeIdentity": "8386d3e2fc67ec8c4fc3fddfa17740985635979f8c48171bb70f25140e738db0",
+        "sourceDigest": "eaf89b7c756858b76e704d8e59a1af88c9f5fdde04286dadfaa1af97cdd1ff03",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "unverified"
+          },
+          {
+            "id": "project-checks",
+            "status": "passed"
+          }
+        ],
+        "reportSha256": "136c69209c64697887184b0ce1390ee5c7e3427e7191e830ba014a4cde6afd9a",
+        "bundleSha256": "94a1c1d356457eaf0fd44dc9ed5b0f586c14ca45d7cde8887a6a64077ca4f1f0"
+      },
+      "plan-edit": {
+        "pass": true,
+        "version": 2,
+        "status": "passed",
+        "scopeIdentity": "8386d3e2fc67ec8c4fc3fddfa17740985635979f8c48171bb70f25140e738db0",
+        "sourceDigest": "5d0732b9fa991f62bb5880c6dd7575d72583b8d719a093de4198e6c52869930e",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "passed"
+          },
+          {
+            "id": "project-checks",
+            "status": "passed"
+          }
+        ],
+        "reportSha256": "b8640e24e863b2a16b502433cdfa12d789cd533886565c487f81c517c910a8b9",
+        "bundleSha256": "e67cf9ef19813d024684020c726a4fb2d79c98c316073610851bc1d47a5f16c1"
+      },
+      "plan-undo": {
+        "pass": true,
+        "version": 3,
+        "status": "passed",
+        "scopeIdentity": "8386d3e2fc67ec8c4fc3fddfa17740985635979f8c48171bb70f25140e738db0",
+        "sourceDigest": "82c65c5986d96627ae3750163ce7256df6cb1ef38293eab8f6b70e5de4aecec6",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "passed"
+          },
+          {
+            "id": "project-checks",
+            "status": "passed"
+          }
+        ],
+        "reportSha256": "fd756aa203af0cd9ec75e953c9a57937875afa2ac740ebd50242918e3b9c834d",
+        "bundleSha256": "7e640f9e72e286de8760abf1b547093eccef9a47ff87562145148bd673d1f990"
+      }
+    },
+    "delivery": {
+      "checks": [
+        {
+          "id": "direct-archive",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "installed-helpers",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "agent-handoff",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "agent-failed-receipt",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "preview-matrix",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "compare-entry",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "before-observed",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "prepare-conflict",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "integrated-observed",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "failed-not-accepted",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "old-diagnostic",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "rollback-conflict",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "restored",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "new-diagnostic",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "source-project-unchanged",
+          "pass": true,
+          "details": []
+        }
+      ],
+      "helperSha256": {
+        "artifact-verification.mjs": "6ec079ad729adf51789f5582c9c6708479283b3ca4e0d8be70b73f6df1bd65bb",
+        "browser-verification.mjs": "5d7aac9c90bc06850ed354f0b27681011c6ec43aedac4b813e12d8cac66b87f6",
+        "verification-plan.mjs": "143d21dfbcf97365a6c977effb08b9c5e285a75756cb0b0915ada9417780ab91",
+        "variant-history.mjs": "b5e65163748ab0ec9a6ce4cf41c00ecbeab7f1b1e110cfa68fa4d2a8b8ed13b3",
+        "variant-integrate.mjs": "f2ad01a8dde51ca50e5903dfc38b06b849b3cedefd5e85e023e999ce1cf900a9",
+        "delivery-receipt.mjs": "8955cb2c36014b4ce7c4af0cf72d7406b386e7fc6fa166b5dba392c949d49c17",
+        "project-dependencies.mjs": "76d9b7ca622801d61867280dfa14f8b0e6042cbe0c7c9cf76e9d76d5cd5d9c4b",
+        "dependency-references.mjs": "14dfc7594c5f90af46ac2a127c2f832a9b1b5ddcf83693bfcbd28a7d1eb354f5",
+        "preview-files.mjs": "f3d93a6a9298e299451a427dc762cd47d581cd80dd7ec9a5f3c3ca104086a230",
+        "quality-gate.mjs": "d64cc8d4164c8ed86de169588e0aa40a8f96e5ca8fd06bfb6ad935749e9e2f4d"
+      },
+      "hostSha256": {
+        "html-delivery.mjs": "0809385cf46b24f7eaefdccaeb9ccb587ec703090d5a7cd5d17ef013846a9c16",
+        "phase-archive.mjs": "285312fbf098e5c98f81d4c30a5a73b176e02c757d5012d7a8966bc06c76b288"
+      },
+      "agentReceipt": {
+        "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex/variant-output/.deliveries/10f03df1-4e88-4080-bd06-5bf5319563f6.json",
+        "sha256": "4aa8c6b3b63d53ab258d3323ee3b406a7416f287e04ee811734b9b129de17421",
+        "verification": "failed",
+        "phase": "rolled-back"
+      },
+      "targets": [
+        {
+          "path": "delivered/shared/data.js",
+          "action": "create",
+          "before": null,
+          "after": "04be2f818b201a53d1733c348873866001ce851e2602e55e4130c22c10a3f805"
+        },
+        {
+          "path": "delivered/variant-progress-B.css",
+          "action": "create",
+          "before": null,
+          "after": "0b4f88b1225963586b0dfdfd58e6716c6c26be80573df244d447fc3aef145ccf"
+        },
+        {
+          "path": "delivered/variant-progress-B.js",
+          "action": "create",
+          "before": null,
+          "after": "2c856cfc29bea6efdb1efc11ac694461be2e13eaece576453c6ce590c7f343ff"
+        },
+        {
+          "path": "index.html",
+          "action": "overwrite",
+          "before": "74838ca6dd9c6f1196d0638028f185b7aea6b9566399458de7424ecf8b041eb6",
+          "after": "9ad95e3336c100f119569fb4e704bbc89a795d5b88376e287ce85c401f45314b"
+        }
+      ],
+      "currentReceipt": {
+        "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/variant-output/.deliveries/82cac387-ccd1-4f99-9712-7b0a237d0f2c.json",
+        "sha256": "5024d2c80d23295a8b70b5bcd408408aced0a22afa9c41d04b210c9f1ae5fc40",
+        "verification": "failed",
+        "comparison": {
+          "before": "7d4ba312-ba17-4c07-9a49-304abd4036d7",
+          "after": "46318032-39e6-42ad-9d0e-275f0343dfa6",
+          "failures": [
+            {
+              "kind": "runtime",
+              "id": "project-checks",
+              "reason": "Actual original document syntax and health commands",
+              "evidence": [
+                "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/after/checks.json"
+              ],
+              "tool": {
+                "name": "Original Node HTML checks",
+                "version": "v26.3.0 / 0448fee8f8f9fd79fde6cd6b6d5013eb8c452e86969e5da47ae572f0735c9214"
+              },
+              "environment": {
+                "cwd": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project",
+                "commands": [
+                  [
+                    "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                    "check.mjs",
+                    "index.html"
+                  ],
+                  [
+                    "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                    "health-check.mjs",
+                    "index.html"
+                  ]
+                ]
+              },
+              "diagnostic": {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              },
+              "classification": "observed-before"
+            }
+          ],
+          "limitation": "Identical recorded diagnostics only; not proof of cause, unchanged environment or complete regression coverage."
+        }
+      },
+      "regressionReceipt": {
+        "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/variant-output/.deliveries/105a3388-01a3-4040-9cea-a29b762bd73c.json",
+        "sha256": "a7c32191ac7be0cb9270eaf8c675c580d5aeab9f4c0ed5c0f9a7da8c8ccf8df4",
+        "verification": "failed",
+        "comparison": {
+          "before": "28a407a1-5989-4c1a-9dd4-cfbba3804c37",
+          "after": "3c2127a3-d833-4926-98aa-dd6ac193285c",
+          "failures": [
+            {
+              "kind": "runtime",
+              "id": "reduced-motion",
+              "reason": "Action expectation was not observed within the wait",
+              "evidence": [
+                {
+                  "locator": {
+                    "by": "testId",
+                    "value": "progress"
+                  },
+                  "property": "text",
+                  "expected": "50",
+                  "actual": "100",
+                  "matches": false
+                }
+              ],
+              "tool": {
+                "name": "Playwright browser adapter",
+                "version": "156.0.8078.80"
+              },
+              "environment": {
+                "url": "file:///Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/index.html",
+                "viewport": {
+                  "width": 390,
+                  "height": 844
+                },
+                "scope": "Declared selectors and interactions only"
+              },
+              "classification": "new-or-changed"
+            },
+            {
+              "kind": "runtime",
+              "id": "scope-preservation",
+              "reason": "Action expectation was not observed within the wait",
+              "evidence": [
+                {
+                  "locator": {
+                    "by": "testId",
+                    "value": "activity-count"
+                  },
+                  "property": "text",
+                  "expected": "1",
+                  "actual": "0",
+                  "matches": false
+                }
+              ],
+              "tool": {
+                "name": "Playwright browser adapter",
+                "version": "156.0.8078.80"
+              },
+              "environment": {
+                "url": "file:///Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/index.html",
+                "viewport": {
+                  "width": 390,
+                  "height": 844
+                },
+                "scope": "Declared selectors and interactions only"
+              },
+              "classification": "new-or-changed"
+            },
+            {
+              "kind": "runtime",
+              "id": "project-checks",
+              "reason": "Actual original document syntax and health commands",
+              "evidence": [
+                "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/regression-after/checks.json"
+              ],
+              "tool": {
+                "name": "Original Node HTML checks",
+                "version": "v26.3.0 / 0448fee8f8f9fd79fde6cd6b6d5013eb8c452e86969e5da47ae572f0735c9214"
+              },
+              "environment": {
+                "cwd": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project",
+                "commands": [
+                  [
+                    "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                    "check.mjs",
+                    "index.html"
+                  ],
+                  [
+                    "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                    "health-check.mjs",
+                    "index.html"
+                  ]
+                ]
+              },
+              "diagnostic": {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              },
+              "classification": "observed-before"
+            },
+            {
+              "kind": "runtime",
+              "id": "project-checks",
+              "reason": "Actual original document syntax and health commands",
+              "evidence": [
+                "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/regression-after/checks.json"
+              ],
+              "tool": {
+                "name": "Original Node HTML checks",
+                "version": "v26.3.0 / 0448fee8f8f9fd79fde6cd6b6d5013eb8c452e86969e5da47ae572f0735c9214"
+              },
+              "environment": {
+                "cwd": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project",
+                "commands": [
+                  [
+                    "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                    "check.mjs",
+                    "index.html"
+                  ],
+                  [
+                    "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                    "health-check.mjs",
+                    "index.html"
+                  ]
+                ]
+              },
+              "diagnostic": {
+                "id": "script-syntax:delivered/variant-progress-B.js:1",
+                "message": "Unexpected end of input",
+                "file": "delivered/variant-progress-B.js"
+              },
+              "classification": "new-or-changed"
+            }
+          ],
+          "limitation": "Identical recorded diagnostics only; not proof of cause, unchanged environment or complete regression coverage."
+        }
+      },
+      "captures": {
+        "preview-0": {
+          "status": "failed",
+          "checks": [
+            {
+              "id": "brand",
+              "status": "passed"
+            },
+            {
+              "id": "keyboard-focus",
+              "status": "passed"
+            },
+            {
+              "id": "reduced-motion",
+              "status": "passed"
+            },
+            {
+              "id": "scope-preservation",
+              "status": "unverified"
+            },
+            {
+              "id": "project-checks",
+              "status": "failed",
+              "diagnostics": [
+                {
+                  "id": "legacy-health",
+                  "message": "Existing project audit failure",
+                  "file": "project-health.json"
+                }
+              ]
+            }
+          ],
+          "errors": [],
+          "screenshot": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/preview-A-390/page.png",
+            "sha256": "c41f5ca882db61184ca53f8bd9c295063e1a3f9a37b1293a6a2aa93146f9ae6c"
+          },
+          "report": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/variant-output/.verification/A/aa68b1ca-2600-4a40-be79-c3defb168c28.json",
+            "sha256": "cb3fbd52cb7df28f198f823c0a4ddfa3610c716e867b796d5f680faa733252cd"
+          }
+        },
+        "preview-1": {
+          "status": "failed",
+          "checks": [
+            {
+              "id": "brand",
+              "status": "passed"
+            },
+            {
+              "id": "keyboard-focus",
+              "status": "passed"
+            },
+            {
+              "id": "reduced-motion",
+              "status": "passed"
+            },
+            {
+              "id": "scope-preservation",
+              "status": "unverified"
+            },
+            {
+              "id": "project-checks",
+              "status": "failed",
+              "diagnostics": [
+                {
+                  "id": "legacy-health",
+                  "message": "Existing project audit failure",
+                  "file": "project-health.json"
+                }
+              ]
+            }
+          ],
+          "errors": [],
+          "screenshot": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/preview-B-390/page.png",
+            "sha256": "b8ca519f5371d7f29ea19c65ac279cb1b7ed557e6606a8d374f624d3ae79c537"
+          },
+          "report": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/variant-output/.verification/B/5dbefc57-9533-4d72-ae47-c265d2ab9bbb.json",
+            "sha256": "9f9a8bc19c2f32e621052ac3e4ea8a69a974034aa14a7ef6185222a0fdf50588"
+          }
+        },
+        "preview-2": {
+          "status": "failed",
+          "checks": [
+            {
+              "id": "brand",
+              "status": "passed"
+            },
+            {
+              "id": "keyboard-focus",
+              "status": "passed"
+            },
+            {
+              "id": "reduced-motion",
+              "status": "passed"
+            },
+            {
+              "id": "scope-preservation",
+              "status": "unverified"
+            },
+            {
+              "id": "project-checks",
+              "status": "failed",
+              "diagnostics": [
+                {
+                  "id": "legacy-health",
+                  "message": "Existing project audit failure",
+                  "file": "project-health.json"
+                }
+              ]
+            }
+          ],
+          "errors": [],
+          "screenshot": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/preview-C-390/page.png",
+            "sha256": "6c7bcd9584dc04cf013203fd2decb232102977470d583b44256c08d315362b44"
+          },
+          "report": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/variant-output/.verification/C/1673750f-2357-4b0e-bd6a-6cafc2674228.json",
+            "sha256": "a126ca92137bb4cae532ed0563fa539c768e3655e68426f53e137f2c304cfe71"
+          }
+        },
+        "preview-3": {
+          "status": "failed",
+          "checks": [
+            {
+              "id": "brand",
+              "status": "passed"
+            },
+            {
+              "id": "keyboard-focus",
+              "status": "passed"
+            },
+            {
+              "id": "reduced-motion",
+              "status": "passed"
+            },
+            {
+              "id": "scope-preservation",
+              "status": "unverified"
+            },
+            {
+              "id": "project-checks",
+              "status": "failed",
+              "diagnostics": [
+                {
+                  "id": "legacy-health",
+                  "message": "Existing project audit failure",
+                  "file": "project-health.json"
+                }
+              ]
+            }
+          ],
+          "errors": [],
+          "screenshot": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/preview-A-1440/page.png",
+            "sha256": "0a57dcd83da2ffeb6580f81d71f1adb102ea691f06be7cfb25ace1871290a973"
+          },
+          "report": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/variant-output/.verification/A/819aae66-6aaa-4e1b-9808-6db142a73b34.json",
+            "sha256": "94ddbca38e9cf483ee1d02f7ff70eef02df593203f9c9fbed80a83fd8b9438db"
+          }
+        },
+        "preview-4": {
+          "status": "failed",
+          "checks": [
+            {
+              "id": "brand",
+              "status": "passed"
+            },
+            {
+              "id": "keyboard-focus",
+              "status": "passed"
+            },
+            {
+              "id": "reduced-motion",
+              "status": "passed"
+            },
+            {
+              "id": "scope-preservation",
+              "status": "unverified"
+            },
+            {
+              "id": "project-checks",
+              "status": "failed",
+              "diagnostics": [
+                {
+                  "id": "legacy-health",
+                  "message": "Existing project audit failure",
+                  "file": "project-health.json"
+                }
+              ]
+            }
+          ],
+          "errors": [],
+          "screenshot": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/preview-B-1440/page.png",
+            "sha256": "5d9355900ff56deef30b556589ad85ebdaf2da542887e47579584fbc8f7b4c79"
+          },
+          "report": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/variant-output/.verification/B/2a4f9149-5340-42f5-a23b-6d48659b23d3.json",
+            "sha256": "d6063eac2c2fdd1b249b8873114d66231d5e6ee4dbfb0207c8471cca8ee9d248"
+          }
+        },
+        "preview-5": {
+          "status": "failed",
+          "checks": [
+            {
+              "id": "brand",
+              "status": "passed"
+            },
+            {
+              "id": "keyboard-focus",
+              "status": "passed"
+            },
+            {
+              "id": "reduced-motion",
+              "status": "passed"
+            },
+            {
+              "id": "scope-preservation",
+              "status": "unverified"
+            },
+            {
+              "id": "project-checks",
+              "status": "failed",
+              "diagnostics": [
+                {
+                  "id": "legacy-health",
+                  "message": "Existing project audit failure",
+                  "file": "project-health.json"
+                }
+              ]
+            }
+          ],
+          "errors": [],
+          "screenshot": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/preview-C-1440/page.png",
+            "sha256": "0fe9bbfe165db1dc30907791420d7156f0fb7debd51808fbb93b51d1c5835543"
+          },
+          "report": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/variant-output/.verification/C/0a0e7c24-933c-4f24-9346-b5fb4bb8e1e5.json",
+            "sha256": "848161c9fd658548986a28a613522f151c728f3b9639bcb40e1b1618a9be9d58"
+          }
+        },
+        "before": {
+          "status": "failed",
+          "checks": [
+            {
+              "id": "brand",
+              "status": "passed"
+            },
+            {
+              "id": "keyboard-focus",
+              "status": "passed"
+            },
+            {
+              "id": "reduced-motion",
+              "status": "passed"
+            },
+            {
+              "id": "scope-preservation",
+              "status": "unverified"
+            },
+            {
+              "id": "project-checks",
+              "status": "failed",
+              "diagnostics": [
+                {
+                  "id": "legacy-health",
+                  "message": "Existing project audit failure",
+                  "file": "project-health.json"
+                }
+              ]
+            }
+          ],
+          "errors": [],
+          "screenshot": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/before/page.png",
+            "sha256": "f4a13dad1ee81559ed4351d4b3aac02722643fb1e6d060cad4ba84010ae9c073"
+          },
+          "report": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/variant-output/.verification/B/7d4ba312-ba17-4c07-9a49-304abd4036d7.json",
+            "sha256": "3164e80919120bf57bc774f1aeae17bee340dfa9429e3b5f5aea2b235434c212"
+          }
+        },
+        "after": {
+          "status": "failed",
+          "checks": [
+            {
+              "id": "brand",
+              "status": "passed"
+            },
+            {
+              "id": "keyboard-focus",
+              "status": "passed"
+            },
+            {
+              "id": "reduced-motion",
+              "status": "passed"
+            },
+            {
+              "id": "scope-preservation",
+              "status": "passed"
+            },
+            {
+              "id": "project-checks",
+              "status": "failed",
+              "diagnostics": [
+                {
+                  "id": "legacy-health",
+                  "message": "Existing project audit failure",
+                  "file": "project-health.json"
+                }
+              ]
+            }
+          ],
+          "errors": [],
+          "screenshot": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/after/page.png",
+            "sha256": "b8ca519f5371d7f29ea19c65ac279cb1b7ed557e6606a8d374f624d3ae79c537"
+          },
+          "report": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/variant-output/.verification/B/46318032-39e6-42ad-9d0e-275f0343dfa6.json",
+            "sha256": "0d512ec4059ad93df88f993000d7d77376cff680346a3ddccbd0ccf8458eecd3"
+          }
+        },
+        "regressionBefore": {
+          "status": "failed",
+          "checks": [
+            {
+              "id": "brand",
+              "status": "passed"
+            },
+            {
+              "id": "keyboard-focus",
+              "status": "passed"
+            },
+            {
+              "id": "reduced-motion",
+              "status": "passed"
+            },
+            {
+              "id": "scope-preservation",
+              "status": "unverified"
+            },
+            {
+              "id": "project-checks",
+              "status": "failed",
+              "diagnostics": [
+                {
+                  "id": "legacy-health",
+                  "message": "Existing project audit failure",
+                  "file": "project-health.json"
+                }
+              ]
+            }
+          ],
+          "errors": [],
+          "screenshot": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/regression-before/page.png",
+            "sha256": "f4a13dad1ee81559ed4351d4b3aac02722643fb1e6d060cad4ba84010ae9c073"
+          },
+          "report": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/variant-output/.verification/B/28a407a1-5989-4c1a-9dd4-cfbba3804c37.json",
+            "sha256": "ad2ac7e1cccc59e3590df5e70b4303027da23fb84085e1b012a391fa1b99b425"
+          }
+        },
+        "regressionAfter": {
+          "status": "failed",
+          "checks": [
+            {
+              "id": "brand",
+              "status": "passed"
+            },
+            {
+              "id": "keyboard-focus",
+              "status": "passed"
+            },
+            {
+              "id": "reduced-motion",
+              "status": "failed"
+            },
+            {
+              "id": "scope-preservation",
+              "status": "failed"
+            },
+            {
+              "id": "project-checks",
+              "status": "failed",
+              "diagnostics": [
+                {
+                  "id": "legacy-health",
+                  "message": "Existing project audit failure",
+                  "file": "project-health.json"
+                },
+                {
+                  "id": "script-syntax:delivered/variant-progress-B.js:1",
+                  "message": "Unexpected end of input",
+                  "file": "delivered/variant-progress-B.js"
+                }
+              ]
+            }
+          ],
+          "errors": [
+            "Unexpected end of input",
+            "Unexpected end of input",
+            "Unexpected end of input",
+            "Unexpected end of input",
+            "Unexpected end of input",
+            "Unexpected end of input"
+          ],
+          "screenshot": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/regression-after/page.png",
+            "sha256": "fb9af5292ec1061035fbf91d5e6af24e0fc966e3166997ea5f587660d6b636f4"
+          },
+          "report": {
+            "file": "/Users/nicole/orca/variant-backlog-evidence/static-policy-evals/html-delivery-codex.html-delivery/project/variant-output/.verification/B/3c2127a3-d833-4926-98aa-dd6ac193285c.json",
+            "sha256": "ce22699486eb551a9618482c66e2b7862a2c930e6277bb3388a64de0c2dc309a"
+          }
+        }
+      },
+      "sourceProjectUnchanged": true
+    }
+  },
+  "checks": {
+    "node": {
+      "passed": 189,
+      "log": {
+        "file": "/tmp/variant-parity-node.log",
+        "sha256": "881b6b4004f406c200ec58fbe517c1fca9f54cc0bdeef50769de1def2558acb3"
+      }
+    },
+    "website": {
+      "passed": 70,
+      "log": {
+        "file": "/tmp/variant-parity-website-unit.log",
+        "sha256": "5b090e10fb812067080f200f0c5bb8f8607868050d7822e86ece4e19615c8128"
+      },
+      "build": {
+        "routes": 241,
+        "log": {
+          "file": "/tmp/variant-parity-website-build.log",
+          "sha256": "b044b715f557381ac673b6206d3dcf5641b1e3fe4737cde4f40b58960637fd67"
+        }
+      }
+    },
+    "browser": {
+      "passed": 38,
+      "log": {
+        "file": "/tmp/variant-parity-browser.log",
+        "sha256": "e9f0f3d34b52ec420711330be14df7de4777f1857320e727d894f1ff29393c88"
+      }
+    },
+    "package": {
+      "passed": 4,
+      "log": {
+        "file": "/tmp/variant-parity-package.log",
+        "sha256": "330e85754763d5b7977fde43e37eaa9e8041242a9d0d222a933fd9b4f3198e78"
+      }
+    },
+    "docsBrowser": {
+      "passed": 2,
+      "log": {
+        "file": "/tmp/variant-parity-docs-browser.log",
+        "sha256": "bce5ba68a07e796505d63afa2617f2f7968884ca2e4bec778ced577364c6eb91"
+      }
+    },
+    "typecheck": {
+      "exitCode": 0,
+      "log": {
+        "file": "/tmp/variant-parity-typecheck.log",
+        "sha256": "09c7269c33779698d260100c549c83ea1dc274a192c6e6fbc12c3f4542abdc7c"
+      }
+    },
+    "redBoundary": {
+      "passed": 4,
+      "failed": 2,
+      "log": {
+        "file": "/tmp/variant-parity-before.log",
+        "sha256": "86ccea92450c11647de959ba8461ca7b851a8a8cc7ec99d0f4f631ee517754b8"
+      }
+    },
+    "focused": {
+      "passed": 7,
+      "log": {
+        "file": "/tmp/variant-parity-after.log",
+        "sha256": "af11d6bd37c1dfd87f513ef3e3c3b82f52fe2f6b82a5d2e3a5d549c008dfc20d"
+      }
+    }
+  },
+  "limits": [
+    "Controlled HTML actual generated artifact, plus existing source-bound Vite evidence and current native regressions; not arbitrary framework proof",
+    "Strict static gate policy is not runtime success or WCAG/human design acceptance",
+    "Pre-existing health diagnostics remain failed; observed-before is not a causal explanation",
+    "No outside-user, payment, marketplace, hosted-generation/key/budget or release acceptance"
+  ]
+}

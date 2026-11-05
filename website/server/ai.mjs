@@ -1,4 +1,4 @@
-import { scanSource } from "../../scripts/quality-gate.mjs";
+import { scanSource, summarizeFindings } from "../../scripts/quality-gate.mjs";
 const hexPattern = /^#[0-9a-f]{6}$/i;
 const directionIds = ["A", "B", "C"];
 const layouts = { A: "editorial", B: "system", C: "expressive" };
@@ -142,12 +142,13 @@ export function auditGeneratedHtml(inputHtml, language = "en") {
     ["sufficient implementation depth", html.length >= 3_000],
   ];
   const findings = scanSource(html, "generated.html");
+  const staticChecks = summarizeFindings(findings, { strict: true });
   const issues = checks.filter(([, passed]) => !passed).map(([label]) => label);
   // Static readiness is not a claim of rendered accessibility or product quality.
   for (const finding of findings) {
-    if (finding.severity === 'error' || ['focus-visible-suppressed', 'js-motion-review', 'missing-reduced-motion'].includes(finding.rule)) issues.push(finding.rule);
+    if (finding.severity === 'error' || finding.severity === 'warning') issues.push(finding.rule);
   }
-  return { html, findings, issues, passed: issues.length === 0, scope: 'static-only',
+  return { html, findings, staticChecks, issues, passed: staticChecks.passed && issues.length === 0, scope: 'static-only',
     runtime: { status: 'unverified', reason: 'No browser checks were run by the HTML audit.' } };
 }
 
@@ -298,7 +299,7 @@ async function buildAndAudit({ brief, language, plan }) {
     error.statusCode = 502;
     throw error;
   }
-  return { ...publicDirection(plan, audit.html), verification: { scope: 'static-only', status: 'unverified', findings: audit.findings, reason: audit.runtime.reason } };
+  return { ...publicDirection(plan, audit.html), verification: { scope: 'static-only', status: 'unverified', staticChecks: audit.staticChecks, findings: audit.findings, reason: audit.runtime.reason } };
 }
 
 export async function generateWithModel(input) {

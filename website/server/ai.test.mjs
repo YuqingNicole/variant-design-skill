@@ -1,5 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { auditGeneratedHtml, buildWithModel, generateWithModel } from "./ai.mjs";
 
 function validHtml(id) {
@@ -87,10 +92,62 @@ test("a failed page receives one focused repair pass", async (t) => {
   const result = await buildWithModel({ brief: "A focused product", language: "en", direction: planned.directions[0] });
   assert.equal(repairedA, true);
   assert.equal(auditGeneratedHtml(result.direction.html, "en").passed, true);
+  assert.equal(result.direction.verification.staticChecks.policy, 'strict');
+  assert.equal(result.direction.verification.staticChecks.passed, true);
+  assert.equal(result.direction.verification.status, 'unverified');
+});
+
+test('a shared warning reaches the actual model repair path and is retained if repair still fails',async t=>{
+ const previousFetch=globalThis.fetch,previousKey=process.env.ANTHROPIC_API_KEY;process.env.ANTHROPIC_API_KEY='test-key';
+ t.after(()=>{globalThis.fetch=previousFetch;if(previousKey===undefined)delete process.env.ANTHROPIC_API_KEY;else process.env.ANTHROPIC_API_KEY=previousKey});
+ const warning=validHtml('A').replace('background:var(--paper)','background:#000');let repairSucceeds=true,repairs=[];
+ globalThis.fetch=async(_url,init)=>{const prompt=JSON.parse(init.body).messages[0].content;let text;
+  if(prompt.includes('Write a buildable design contract'))text=JSON.stringify({directions:[plan('A','editorial'),plan('B','system'),plan('C','expressive')]});
+  else if(prompt.includes('TASK: Repair')){repairs.push(prompt);text=repairSucceeds?validHtml('A'):warning}
+  else text=warning;
+  return{ok:true,json:async()=>({content:[{type:'text',text}]})};
+ };
+ const planned=await generateWithModel({brief:'A focused product',language:'en'}),input={brief:'A focused product',language:'en',direction:planned.directions[0]},result=await buildWithModel(input);
+ assert.equal(repairs.length,1);assert(repairs[0].includes('pure-black-surface'));assert.equal(result.direction.verification.staticChecks.passed,true);assert.equal(result.direction.verification.status,'unverified');
+ repairSucceeds=false;await assert.rejects(buildWithModel(input),/quality_gate_failed:A:pure-black-surface/);assert.equal(repairs.length,2);
 });
 
 test('shared focus diagnostics reject suppressed focus and report runtime as unverified',()=>{
  const bad=validHtml('A').replace('outline:3px solid currentColor','outline:none');
  const audit=auditGeneratedHtml(bad);assert.equal(audit.passed,false);assert.ok(audit.findings.some(f=>f.rule==='focus-visible-suppressed'));
  assert.equal(audit.scope,'static-only');assert.equal(audit.runtime.status,'unverified');assert.equal('score' in audit,false);
+});
+
+test('online static readiness matches actual strict CLI findings and gate on identical sanitized inputs',t=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'variant-static-parity-'));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
+ const helper=fileURLToPath(new URL('../../scripts/quality-gate.mjs',import.meta.url));
+ const cases=[
+  ['surface-warning',validHtml('A').replace('background:var(--paper)','background:#000'),false],
+  ['valid',validHtml('A'),true],
+  ['suppressed-focus',validHtml('A').replace('outline:3px solid currentColor','outline:none'),false],
+  ['copy-warning',validHtml('A').replace('</main>','<p>Something went wrong</p></main>'),false],
+  ['image-error',validHtml('A').replace('</main>','<img src="mark.svg"></main>'),false],
+  ['review-only',validHtml('A').replace('</main>','<p class="kicker">Direction B · Room to grow</p></main>'),true],
+  ['sanitized-script',validHtml('A').replace('</main>','<script>requestAnimationFrame(tick)</script></main>'),true]
+ ];
+ const normalize=list=>list.map(({file,...finding})=>finding);
+ for(const [name,input,passed]of cases){
+  const audit=auditGeneratedHtml(input),file=path.join(root,name+'.html');fs.writeFileSync(file,audit.html);
+  const cli=spawnSync(process.execPath,[helper,file,'--strict','--json'],{encoding:'utf8'});assert.equal(cli.error,undefined);const report=JSON.parse(cli.stdout);
+  assert.equal(audit.passed,passed,name);assert.equal(cli.status,passed?0:1,name);
+  assert.deepEqual(normalize(audit.findings),normalize(report.findings),name);
+  assert.deepEqual(audit.staticChecks,{policy:report.policy,passed:report.passed,errors:report.errors,warnings:report.warnings,reviews:report.reviews},name);
+  assert.equal(report.policy,'strict');assert.equal(report.passed,passed);assert.equal(audit.scope,'static-only');assert.equal(audit.runtime.status,'unverified');assert.equal('score' in audit,false);
+  if(name==='review-only')assert(report.reviews>0);
+  if(name==='sanitized-script')assert(!audit.html.includes('<script>'));
+  if(name==='surface-warning'){
+   assert.equal(report.errors,0);assert(report.warnings>0);assert(audit.issues.includes('pure-black-surface'));
+   const loose=spawnSync(process.execPath,[helper,file,'--json'],{encoding:'utf8'}),looseReport=JSON.parse(loose.stdout);assert.equal(loose.status,0);assert.equal(looseReport.policy,'errors-only');assert.equal(looseReport.passed,true);
+  }
+ }
+});
+
+test('online document requirements stay separate from passing shared static rules',()=>{
+ const thin='<!doctype html><html lang="en"><main><h1>Review</h1></main></html>',audit=auditGeneratedHtml(thin);
+ assert.equal(audit.staticChecks.passed,true);assert.equal(audit.passed,false);assert(audit.issues.includes('viewport metadata'));assert.equal(audit.runtime.status,'unverified');
 });

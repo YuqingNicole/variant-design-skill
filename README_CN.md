@@ -161,6 +161,8 @@ React 预览可通过 `--vite-root` 使用独立 Vite 工具包，同时保留�
 
 项目接入需要在生成接入文件前准备源稿与目标文件基准；源稿或目标文件变化时，会在写入前拒绝操作。见[接入流程](skills/shared/export.md)。
 
+线上 HTML 审计与 CLI `--strict --json` 共用严格静态门槛：error 和 warning 会阻止通过，review 建议不会。CLI JSON 明示策略，默认 CLI 仍仅阻止 error。比较时使用同一份清理后的 HTML；线上文档要求和未验证的运行行为另行列出。见[验证范围](references/workflow/artifact-verification.md)。
+
 接入或回滚中断后可用受保护的 `recover` 命令：只恢复明确匹配接入前后状态的文件，保留未知修改和备份。已完成接入仍须先通过严格回滚检查。移除遗留的空锁目录前，要确认原进程已经退出；见[恢复步骤](skills/shared/export.md#recover-an-interrupted-operation)。未完成操作不能作为当前交付验收。
 
 接入交付时可封存本地[交付凭证](references/workflow/delivery-receipt.md)，关联实际文件清单、版本、备份、检查记录与恢复方式。清单有效和检查通过分别显示；缺失检查保持未验证，回滚后原凭证保留为历史记录。
