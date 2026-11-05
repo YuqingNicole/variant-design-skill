@@ -1,0 +1,366 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-05T06:11:13.734Z",
+  "commit": "023116b",
+  "result": {
+    "file": "/Users/nicole/orca/variant-backlog-evidence/vite-runtime-plans-evals/runtime-plan-vite-codex.json",
+    "sha256": "9bbd6d5831a1210a461b231b06ffed6a85686e900114e4e02342086470aaa1d2",
+    "pass": true,
+    "passed": 27,
+    "total": 27,
+    "failed": []
+  },
+  "directAudit": "passed",
+  "phases": {
+    "generate": {
+      "pass": true,
+      "version": 1,
+      "status": "unverified",
+      "checks": [
+        {
+          "id": "brand",
+          "status": "passed",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "keyboard-focus",
+          "status": "passed",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "reduced-motion",
+          "status": "passed",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "scope-preservation",
+          "status": "unverified",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "project-checks",
+          "status": "passed",
+          "tool": {
+            "name": "TypeScript and original Vite worker",
+            "version": "5.9.2 / 7.3.6"
+          }
+        }
+      ],
+      "scopeIdentity": "f5586cb66484626d4c30cff764c279bb3aac9b16eb7b1e219f818ec407815db5",
+      "sourceDigest": "6ccf80d77f171c7c3c88bfd84de1537c436f58e846662487341e58838f5e3e76",
+      "dependencies": 22,
+      "observationInputs": 2,
+      "bundleSha256": "7fce1385e2adfa4b3ea16be342963d7b622bea31249e1060b0a3f0c269ce1d8a",
+      "reportSha256": "9fc472ab337fbb3d9ee347e087e210e4100582a8f12c669e4cfe77a5ef052d1d",
+      "vite": {
+        "environment": {
+          "url": "http://127.0.0.1:61395/",
+          "vite": "7.3.6",
+          "browser": "156.0.8078.80",
+          "node": "v26.3.0",
+          "transport": "owned HTTP/WebSocket port; file watching disabled"
+        },
+        "readyCount": 7,
+        "responses": 91,
+        "sourceUnchanged": true,
+        "hostSha256": {
+          "runtime-vite.mjs": "b5c086d07a04149518f6435c4b187d3f022c4cfd499dc342cb3b05c14a26538a",
+          "native-vite.mjs": "c2d28b345f3bb2e8cea3f7b3f185732e69c7611afafcb672f2a732dbb26f6e3e",
+          "native-vite-worker.mjs": "cd35513d8d7ce42e7854086f21ea7fabaf4853ab4e3cd915bc2897daff767b3b"
+        },
+        "typecheck": {
+          "exit": 0,
+          "version": "5.9.2",
+          "required": [
+            "src/main.tsx",
+            "src/App.tsx",
+            "src/review.tsx",
+            "variant-output/VariantA.tsx",
+            "variant-output/VariantB.tsx",
+            "variant-output/VariantC.tsx"
+          ]
+        },
+        "build": {
+          "exit": 0,
+          "outputs": true
+        },
+        "probe": {
+          "pass": true,
+          "nonce": "e82117d6-dff7-47b2-b5bf-513f7ab189da",
+          "onlyChanged": [
+            "src/review-data.json",
+            "src/review.tsx",
+            "src/global.css"
+          ],
+          "observations": {
+            "heading": "Data e82117d6-dff7-47b2-b5bf-513f7ab189da Provider e82117d6-dff7-47b2-b5bf-513f7ab189da",
+            "marker": "probe-e82117d6-dff7-47b2-b5bf-513f7ab189da",
+            "viewerHidden": true,
+            "workspaceCounts": [
+              12,
+              18
+            ],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/vite-runtime-plans-evals/runtime-plan-vite-codex.runtime-plans/generate/probe/B.png"
+          }
+        }
+      },
+      "screenshots": [
+        {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/vite-runtime-plans-evals/runtime-plan-vite-codex.runtime-plans/generate/B.png",
+          "sha256": "9e3fde16005da0fbaedddaa431e8b75445f33149d78901d94df65c281e649e7c"
+        },
+        {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/vite-runtime-plans-evals/runtime-plan-vite-codex.runtime-plans/generate/probe/B.png",
+          "sha256": "b326c4d3cb681139fbe451839d43be116dbe35420175162802869a399e957cfa"
+        }
+      ]
+    },
+    "plan-edit": {
+      "pass": true,
+      "version": 2,
+      "status": "passed",
+      "checks": [
+        {
+          "id": "brand",
+          "status": "passed",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "keyboard-focus",
+          "status": "passed",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "reduced-motion",
+          "status": "passed",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "scope-preservation",
+          "status": "passed",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "project-checks",
+          "status": "passed",
+          "tool": {
+            "name": "TypeScript and original Vite worker",
+            "version": "5.9.2 / 7.3.6"
+          }
+        }
+      ],
+      "scopeIdentity": "f5586cb66484626d4c30cff764c279bb3aac9b16eb7b1e219f818ec407815db5",
+      "sourceDigest": "7a48d29e3901c5714607d4bff43eb812ea339e2222ff6c1a6c764883a03efaaf",
+      "dependencies": 22,
+      "observationInputs": 3,
+      "bundleSha256": "f33e98ce9cdfeb95ddc9ff7bdc4f1ef496019ac571b4689e55ec70e937b1ec4d",
+      "reportSha256": "a2397d1c09c5a8b3961269dc922cea37535f0cf7ab6b9cf852910d8796c2eb50",
+      "vite": {
+        "environment": {
+          "url": "http://127.0.0.1:62511/",
+          "vite": "7.3.6",
+          "browser": "156.0.8078.80",
+          "node": "v26.3.0",
+          "transport": "owned HTTP/WebSocket port; file watching disabled"
+        },
+        "readyCount": 7,
+        "responses": 91,
+        "sourceUnchanged": true,
+        "hostSha256": {
+          "runtime-vite.mjs": "b5c086d07a04149518f6435c4b187d3f022c4cfd499dc342cb3b05c14a26538a",
+          "native-vite.mjs": "c2d28b345f3bb2e8cea3f7b3f185732e69c7611afafcb672f2a732dbb26f6e3e",
+          "native-vite-worker.mjs": "cd35513d8d7ce42e7854086f21ea7fabaf4853ab4e3cd915bc2897daff767b3b"
+        },
+        "typecheck": {
+          "exit": 0,
+          "version": "5.9.2",
+          "required": [
+            "src/main.tsx",
+            "src/App.tsx",
+            "src/review.tsx",
+            "variant-output/VariantA.tsx",
+            "variant-output/VariantB.tsx",
+            "variant-output/VariantC.tsx"
+          ]
+        },
+        "build": {
+          "exit": 0,
+          "outputs": true
+        },
+        "probe": {
+          "pass": true,
+          "nonce": "1c846bcc-8d47-4cf0-9387-cb3127872066",
+          "onlyChanged": [
+            "src/review-data.json",
+            "src/review.tsx",
+            "src/global.css"
+          ],
+          "observations": {
+            "heading": "Data 1c846bcc-8d47-4cf0-9387-cb3127872066 Provider 1c846bcc-8d47-4cf0-9387-cb3127872066 — Draft",
+            "marker": "probe-1c846bcc-8d47-4cf0-9387-cb3127872066",
+            "viewerHidden": true,
+            "workspaceCounts": [
+              12,
+              18
+            ],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/vite-runtime-plans-evals/runtime-plan-vite-codex.runtime-plans/plan-edit/probe/B.png"
+          }
+        }
+      },
+      "screenshots": [
+        {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/vite-runtime-plans-evals/runtime-plan-vite-codex.runtime-plans/plan-edit/B.png",
+          "sha256": "7d1af010f9c2b1d6ce9fba7435c9bfc572a3f665fbd2de1fb514d48c5daa3523"
+        },
+        {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/vite-runtime-plans-evals/runtime-plan-vite-codex.runtime-plans/plan-edit/probe/B.png",
+          "sha256": "01c64f5c80cb09db476948fef861a01e88fbb25b50f18d3ba307e99a39b7d495"
+        }
+      ]
+    },
+    "plan-undo": {
+      "pass": true,
+      "version": 3,
+      "status": "passed",
+      "checks": [
+        {
+          "id": "brand",
+          "status": "passed",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "keyboard-focus",
+          "status": "passed",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "reduced-motion",
+          "status": "passed",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "scope-preservation",
+          "status": "passed",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "project-checks",
+          "status": "passed",
+          "tool": {
+            "name": "TypeScript and original Vite worker",
+            "version": "5.9.2 / 7.3.6"
+          }
+        }
+      ],
+      "scopeIdentity": "f5586cb66484626d4c30cff764c279bb3aac9b16eb7b1e219f818ec407815db5",
+      "sourceDigest": "784e302d9764ae3f676f7b725987e195c1a57f64ecd9858fffeb4426768e63e2",
+      "dependencies": 22,
+      "observationInputs": 3,
+      "bundleSha256": "52206b41047011bce6d0cb8e39e4a1b5fa8adabf7786da7431e8ca92497f0bd1",
+      "reportSha256": "814fb9fc42ba8383b106da747f154377a593fe2f7bcc472d179a72936532c219",
+      "vite": {
+        "environment": {
+          "url": "http://127.0.0.1:63477/",
+          "vite": "7.3.6",
+          "browser": "156.0.8078.80",
+          "node": "v26.3.0",
+          "transport": "owned HTTP/WebSocket port; file watching disabled"
+        },
+        "readyCount": 7,
+        "responses": 91,
+        "sourceUnchanged": true,
+        "hostSha256": {
+          "runtime-vite.mjs": "b5c086d07a04149518f6435c4b187d3f022c4cfd499dc342cb3b05c14a26538a",
+          "native-vite.mjs": "c2d28b345f3bb2e8cea3f7b3f185732e69c7611afafcb672f2a732dbb26f6e3e",
+          "native-vite-worker.mjs": "cd35513d8d7ce42e7854086f21ea7fabaf4853ab4e3cd915bc2897daff767b3b"
+        },
+        "typecheck": {
+          "exit": 0,
+          "version": "5.9.2",
+          "required": [
+            "src/main.tsx",
+            "src/App.tsx",
+            "src/review.tsx",
+            "variant-output/VariantA.tsx",
+            "variant-output/VariantB.tsx",
+            "variant-output/VariantC.tsx"
+          ]
+        },
+        "build": {
+          "exit": 0,
+          "outputs": true
+        },
+        "probe": {
+          "pass": true,
+          "nonce": "e51ea6a0-8591-4e50-9ac5-25e16f931e16",
+          "onlyChanged": [
+            "src/review-data.json",
+            "src/review.tsx",
+            "src/global.css"
+          ],
+          "observations": {
+            "heading": "Data e51ea6a0-8591-4e50-9ac5-25e16f931e16 Provider e51ea6a0-8591-4e50-9ac5-25e16f931e16",
+            "marker": "probe-e51ea6a0-8591-4e50-9ac5-25e16f931e16",
+            "viewerHidden": true,
+            "workspaceCounts": [
+              12,
+              18
+            ],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/vite-runtime-plans-evals/runtime-plan-vite-codex.runtime-plans/plan-undo/probe/B.png"
+          }
+        }
+      },
+      "screenshots": [
+        {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/vite-runtime-plans-evals/runtime-plan-vite-codex.runtime-plans/plan-undo/B.png",
+          "sha256": "9e3fde16005da0fbaedddaa431e8b75445f33149d78901d94df65c281e649e7c"
+        },
+        {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/vite-runtime-plans-evals/runtime-plan-vite-codex.runtime-plans/plan-undo/probe/B.png",
+          "sha256": "163d88d5e5540274deb86423d644b8fcf7f998cdfbcd560d0d75ab0c1a65bc7b"
+        }
+      ]
+    }
+  },
+  "limits": [
+    "Controlled original React/Vite/Codex fixture only",
+    "No universal framework, complete cross-project delivery or outside-human acceptance",
+    "Agent-authored semantic coverage remains limited to declared/observed tasks"
+  ]
+}

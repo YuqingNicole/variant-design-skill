@@ -14,7 +14,7 @@ The next task branch `codex/task-runtime-plans` is based on that merged master. 
 
 ## Next slice · Vite runtime plans
 
-#162 merged as `9b752b1`; post-merge master CI passed and master/dev were synchronized. Production and dev deployments were READY, with production HTTP evidence retained externally. Current branch `codex/vite-runtime-plans` starts from this master in a separate worktree. Next acceptance: original React/Vite task, actual Agent-authored baseline/edit/undo plans, real host checks/source identities and independent cloned dependency probes; see RFC-015 Vite extension. Keep all nine issues and remaining human/account/cross-project gates open.
+#162 merged as `9b752b1`; post-merge master CI passed and master/dev were synchronized. Production and dev deployments were READY, with production HTTP evidence retained externally. Current branch `codex/vite-runtime-plans` starts from this master in a separate worktree. Vite acceptance at `023116b` passed: actual Codex 27/27, independent direct archive/source/input/host-tool/probe audit, 177 Node, 35 Chrome, four package checks and tests typecheck; push/PR CI also passed. Final research-head CI/review and PR #163 merge are next; see RFC-015 Vite extension. Keep all nine issues and remaining human/account/cross-project gates open.
 
 ## Execution index
 
@@ -32,7 +32,7 @@ The next task branch `codex/task-runtime-plans` is based on that merged master. 
 | Domain / indexing / directories / GEO | Account-dependent; preparatory work available | Domain binding, redirects, Search Console indexing evidence, permitted submissions, initial ten-query measurement |
 | Positioning / pricing / attribution | Draft PR #155 at 47b8b77; exact loop/landing CI passed; public metadata untouched | Maintainer pricing direction, metadata permission and attribution choice; production gate |
 | Website style maintenance | Draft PR #154; exact loop/landing CI passed; docs/sponsor/home budget checked | 9 local Chrome cases passed; detector timeout and maintainer visual acceptance remain |
-| Artifact evidence, #18 | PR #156/#160/#161 merged; PR #162 automatic plans passed actual HTML Codex 25/25 and direct audits at 8873b9f/d0dccf8; local 176 Node, 31 Chrome at 8873b9f, final affected Chrome checks passed | Final evidence-head CI/merge for this slice; branded Vite plans and complete real-delivery coverage still required; unobserved checks remain explicit |
+| Artifact evidence, #18 | PR #156/#160/#161 merged; PR #162 automatic plans passed actual HTML Codex 25/25 and direct audits at 8873b9f/d0dccf8; local 176 Node, 31 Chrome at 8873b9f, final affected Chrome checks passed | HTML slice merged via #162; Vite plans passed actual Codex 27/27 and direct audit at 023116b in PR #163; final research-head CI/merge and complete real-delivery/failure-classification coverage still required; unobserved checks remain explicit |
 | Project integration, #19 | PR #157–161; native preview/replay, ownership cleanup, static shared dependencies and immutable handoff receipts implemented; actual three-turn Codex 78/78 and independent audit passed | Full cross-project/HTML handoff acceptance, native comparison presentation review, remaining failure/recovery and human gates; Merged through #161; other acceptance remains open |
 | Paid definition / rights / distribution / support, #22–26 | Product and user gates pending | Updated commercial baseline, actual installation/upgrade/rollback/entitlement evidence, two independent human trial users |
 | Hosted AI and cost protection, #39–40 | Needs explicit budget/account decision | Confirm exposure policy and cap; real configured production generation and enforced cost protection if approved |
@@ -61,7 +61,7 @@ Ego-browser space 42 inspected the actual local site. Baseline screenshots and r
 
 ## Next action
 
-Continue #18 automatic runtime plans in PR #162: failed 23/25 and corrected 25/25 real attempts plus independent phase/source/input audits are retained; final-head CI, review and authorized merge are next. #161 is merged and its production alias READY/HTTP checked. Remaining Vite/cross-project, human/visual and product/account acceptance gates stay open; do not equate this slice with full backlog completion.
+PR #163 controlled Vite runtime-plan acceptance passed actual Codex 27/27 and independent source/archive/input/host/probe audit at `023116b`; local 177 Node/35 Chrome/package/typecheck and implementation-head CI passed. Complete final research-head CI and review, merge under current authorization, verify the provider deployment and synchronize dev normally. Then continue full cross-project/HTML delivery and pre-existing/new failure classification, keeping human/account/product gates separate. #162 is merged, post-merge master CI passed, production/dev were READY. No full backlog completion is claimed.
 
 
 ### P1 follow-up review
