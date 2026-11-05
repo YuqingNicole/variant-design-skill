@@ -49,3 +49,9 @@ This proves the local original HTML/Codex runtime-plan slice. Branded Vite plans
 ## Final missing-tool review
 
 An additional comparison regression exposed a wrapper boundary: a Page and ready callback with no browser version must preserve the verifier's unverified browser observations and actual independent project check. Version mismatch refusal now applies only when a version is actually available. The four affected Chrome cases passed with this missing-version comparison added. A final installed-skill run of this runtime change is required; the earlier 25/25 result remains explicitly bound to `8873b9f`.
+
+## Final runtime source acceptance
+
+Final runtime source `d0dccf8` completed another fresh installed-skill Codex generate/edit/undo run in **248 seconds**, **25/25 passed**. Same command and flags as above, with output `/Users/nicole/orca/variant-backlog-evidence/runtime-plans-evals-final`. Independent archive/dependency/input/tool/observer/history audit passed again; [final audit](2026-11-05-runtime-plans-d0dccf8-audit.json) binds the result and all seven installed helper hashes to `d0dccf8`. Direct source diff confirms only the B heading text changed, JS stayed unchanged and undo restored B. The undo screenshot was visually inspected at 390×844. All three phases have no unresolved static dependencies; before scope is correctly unverified, and edit/undo checks plus aggregate passed. The missing-version comparison regression and all 176 combined Node checks passed. Final research updates do not change runtime, skill text or fixtures. The earlier 31-case full Chrome run applies to `8873b9f`; final-source full-suite CI is separately required, rather than claiming that older run covers later source.
+
+Current merge checkpoint: real final-source evidence is established; require final-head loop/landing CI and fresh review state, then use the authorized merge. Keep Vite/cross-project/human/account gates open.
