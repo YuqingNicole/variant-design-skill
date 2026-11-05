@@ -397,3 +397,5 @@ react A                 → 导出 A 为 React，不自动选定
 ## Codex 插件候选版
 
 已提供完整插件打包与独立目录安装包验证，见[构建说明](plugin/README.md)和[发布验收](plugin/release-readiness.md)。候选版尚未上架插件目录；不要只复制 SKILL.md。
+
+Agent 可根据当前任务、原始品牌/源码与真实观察生成并封存[运行检查计划](references/workflow/runtime-plans.md)，用声明式动作复用浏览器检查。基准观察在真实前后对比之前仍标为未验证；缺少工具或期望时明确保留缺口。

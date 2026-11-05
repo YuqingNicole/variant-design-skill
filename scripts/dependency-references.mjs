@@ -50,7 +50,7 @@ export function htmlReferences(source) {
     }
     i = cursor + 1;
     const resource = (name, kind = 'html-resource') => { if (attrs[name]) refs.push({ value: attrs[name], kind }); };
-    if (tag === 'script') resource('src', 'module-import');
+    if (tag === 'script') resource('src', 'html-script');
     if (['img', 'source', 'audio', 'video', 'track', 'iframe', 'embed', 'input'].includes(tag)) resource('src');
     if (tag === 'video') resource('poster'); if (tag === 'object') resource('data');
     if (tag === 'link' && /(?:^|\s)(?:stylesheet|icon|preload|modulepreload|manifest)(?:\s|$)/i.test(attrs.rel ?? '')) resource('href');

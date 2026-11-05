@@ -17,7 +17,7 @@ Read files only at the step that names them, and only the section you need. Do n
 | Recording `.variant-context.json` | `references/workflow/project-context.md` |
 | Building the comparison and previews | `references/workflow/preview.md` |
 | The brief rests on a quality adjective (premium, 高级, cleaner, polished, techy) | `references/workflow/adjective-translation.md` |
-| Checking before presenting | `references/workflow/quality-baseline.md` |
+| Checking the actual preview before presenting; before/after an edit | `references/workflow/quality-baseline.md`, then `references/workflow/runtime-plans.md` |
 | Money, privacy, permissions, deletion, health, safety or AI-derived conclusions | `references/workflow/design-declaration.md`, then `references/workflow/product-integrity-gate.md` |
 
 | Later turn | Example | Read |

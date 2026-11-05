@@ -17,6 +17,7 @@ import { createPhaseArchive } from './phase-archive.mjs';
 import { armPreviewCleanup, observePreviewCleanup } from './preview-cleanup.mjs';
 import { probeSharedDependencies } from './shared-dependencies.mjs';
 import { probeDeliveryReceipts } from './delivery-receipts.mjs';
+import { observeRuntimePlan } from './runtime-plans.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -132,12 +133,18 @@ async function chain(fixture, agent, config, dir, install) {
     measurements.native = { archives: { baseline: archive('baseline', initial) } };
     measurements.native.baseline = await native('baseline');
   }
+  if (config.runtimePlans) measurements.runtimePlans = { archives: { baseline: archive('baseline', initial) } };
   // --turns generate,pick runs a prefix of the chain, for a change that only touches its first turns.
   const only = opt('--turns', null)?.split(',');
   for (const turn of config.turns.filter(t => !only || only.includes(t.id))) {
     console.log(`  ↳ ${fixture} · ${agent} · ${turn.id}`);
     const run = await runAgent(agent, [turn.prompt, config.note].filter(Boolean).join(''), dir, turn.id);
     turns.push({ id: turn.id, transcript: run.transcript, exit: run.exit, seconds: run.seconds, timedOut: run.timedOut, snapshot: snapshot(dir) });
+    if (config.runtimePlans) {
+      measurements.runtimePlans.archives[turn.id] = archive(turn.id, turns.at(-1).snapshot);
+      try { measurements.runtimePlans[turn.id] = await observeRuntimePlan(dir, { out: path.join(out, `${fixture}-${agent}.runtime-plans`, turn.id), phase: turn.id }); }
+      catch (error) { measurements.runtimePlans[turn.id] = { error: error.stack }; }
+    }
     if (config.nativeVite) {
       const saved = archive(turn.id, turns.at(-1).snapshot);
       measurements.native.archives[turn.id] = saved; turns.at(-1).archive = saved;
@@ -163,7 +170,7 @@ async function chain(fixture, agent, config, dir, install) {
     }
   }
   if (config.styleBudget) { measurements.after = await capture('after'); measurements.undo = premiumUndo(dir, initial, path.join(out, `${fixture}-${agent}.browser`), config.styleBudget.variant); }
-  const result = { fixture, agent, dir, seconds: Math.round((Date.now() - started) / 1000), timedOut: turns.some(t => t.timedOut), ...gradeChain(dir, { turns, install, fixture: config, initial, measurements }), ...(config.styleBudget || config.nativeVite ? { measurements } : {}), turns: turns.map(({ snapshot: s, ...t }) => ({ ...t, selectedVariant: s.context?.selectedVariant ?? null, designSystem: s.context?.designSystem ?? null, drift: s.drift })) };
+  const result = { fixture, agent, dir, seconds: Math.round((Date.now() - started) / 1000), timedOut: turns.some(t => t.timedOut), ...gradeChain(dir, { turns, install, fixture: config, initial, measurements }), ...(config.styleBudget || config.nativeVite || config.runtimePlans ? { measurements } : {}), turns: turns.map(({ snapshot: s, ...t }) => ({ ...t, selectedVariant: s.context?.selectedVariant ?? null, designSystem: s.context?.designSystem ?? null, drift: s.drift })) };
   fs.writeFileSync(path.join(out, `${fixture}-${agent}.json`), JSON.stringify(result, null, 2));
   console.log(`${result.pass ? '✓' : '✗'} ${fixture} · ${agent} (${result.seconds}s${result.timedOut ? ', a turn timed out' : ''})`);
   return result;

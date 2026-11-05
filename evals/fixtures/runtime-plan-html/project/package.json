@@ -1,0 +1,1 @@
+{"name":"runtime-plan-html-fixture","private":true,"type":"module","scripts":{"check":"node check.mjs index.html"},"devDependencies":{"typescript":"5.9.2"}}

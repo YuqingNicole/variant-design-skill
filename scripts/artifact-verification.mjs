@@ -15,8 +15,8 @@ function sorted(value) {
   return value;
 }
 const identity = value => hash(JSON.stringify(sorted(value)));
-const checkerIdentity = () => Object.fromEntries(['artifact-verification.mjs','browser-verification.mjs','project-dependencies.mjs','dependency-references.mjs'].map(file=>[file,hash(fs.readFileSync(new URL(file,import.meta.url)))]));
-function capture(root, id, project, dependencies) {
+const checkerIdentity = () => Object.fromEntries(['artifact-verification.mjs','browser-verification.mjs','verification-plan.mjs','project-dependencies.mjs','dependency-references.mjs'].map(file=>[file,hash(fs.readFileSync(new URL(file,import.meta.url)))]));
+function capture(root, id, project, dependencies, inputs = []) {
   const state = readContext(root), variant = state.variants?.[id];
   if (!['A','B','C'].includes(id) || !variant?.files?.length || !variant.files.includes(variant.entry)) throw new Error('Invalid registered variant.');
   const output = fs.realpathSync(root), projectPath = fs.realpathSync(project);
@@ -34,12 +34,23 @@ function capture(root, id, project, dependencies) {
     ...(variant.systemBinding ? {systemBinding:variant.systemBinding} : {}),
     files:Object.fromEntries(Object.entries(sources).map(([file,bytes])=>[file,hash(bytes)])),
     dependencies:Object.fromEntries([...new Set([...shared, ...Object.keys(dependencyClosure.files)])].sort().map(file=>[file,hash(fs.readFileSync(localFile(projectPath,file)))])), dependencyClosure };
+  if (inputs.length) {
+    if (inputs.length > 128) throw new Error('At most 128 observation input files.');
+    let total = 0;
+    fingerprint.inputs = Object.fromEntries([...new Set(inputs)].sort().map(file => {
+      const full = localFile(projectPath, file), stat = fs.lstatSync(full);
+      if (!stat.isFile() || stat.nlink !== 1 || stat.size > 16 * 1024 * 1024 || (total += stat.size) > 64 * 1024 * 1024 || file.split('/').some(part => part === '.git' || part === 'node_modules' || /^\.env(?:\.|$)/.test(part))) throw new Error('Observation inputs must be bounded regular project files, excluding private environment and tool directories.');
+      return [file, hash(fs.readFileSync(full))];
+    }));
+  }
   return {fingerprint, sources};
 }
 export function fingerprintArtifact(root, id, options = {}) {
   const dependencies = options.dependencies ?? [];
   if (!Array.isArray(dependencies) || dependencies.some(file => typeof file !== 'string')) throw new Error('Dependencies must be relative project paths.');
-  return capture(root, id, options.projectRoot ?? path.dirname(path.resolve(root)), dependencies).fingerprint;
+  const inputs = options.inputs ?? [];
+  if (!Array.isArray(inputs) || inputs.some(file => typeof file !== 'string')) throw new Error('Inputs must be relative project paths.');
+  return capture(root, id, options.projectRoot ?? path.dirname(path.resolve(root)), dependencies, inputs).fingerprint;
 }
 function validateCheck(check) {
   if (!check || !runtimeChecks.includes(check.id) || !['passed','failed','unverified','not-applicable'].includes(check.status) || typeof check.reason !== 'string' || !check.reason.trim()) throw new Error('Each runtime check needs a known id, status and reason.');
@@ -51,8 +62,10 @@ export async function verifyArtifact(root, id, options = {}, runChecks) {
   const project = options.projectRoot ?? path.dirname(path.resolve(root));
   const dependencies = options.dependencies ?? [];
   if (!Array.isArray(dependencies) || dependencies.some(file=>typeof file !== 'string')) throw new Error('Dependencies must be relative project paths.');
+  const inputs = options.inputs ?? [];
+  if (!Array.isArray(inputs) || inputs.some(file=>typeof file !== 'string')) throw new Error('Inputs must be relative project paths.');
   const startedAt = new Date().toISOString();
-  const {fingerprint,sources} = capture(root,id,project,dependencies);
+  const {fingerprint,sources} = capture(root,id,project,dependencies,inputs);
   const findings = Object.entries(sources).flatMap(([file,bytes]) => /\.(html|css|scss|js|jsx|ts|tsx|vue|svelte|astro)$/.test(file) ? scanSource(bytes.toString(),file) : []);
   let observed = [];
   try { observed = runChecks ? await runChecks() : []; }
@@ -61,9 +74,9 @@ export async function verifyArtifact(root, id, options = {}, runChecks) {
   observed.forEach(validateCheck);
   const checks = runtimeChecks.map(id=>observed.find(check=>check.id===id) ?? {id,status:'unverified',reason:'No observation supplied; this check has not run.'});
   let unchanged=false;
-  try { unchanged=identity(capture(root,id,project,dependencies).fingerprint)===identity(fingerprint); } catch {}
+  try { unchanged=identity(capture(root,id,project,dependencies,inputs).fingerprint)===identity(fingerprint); } catch {}
   const report = {schemaVersion:1,id:randomUUID(),startedAt,finishedAt:new Date().toISOString(),
-    fingerprint, dependencies, coverage:{mode:'static-closure-and-declared-files',...fingerprint.dependencyClosure.coverage},
+    fingerprint, dependencies, ...(inputs.length ? {inputs} : {}), coverage:{mode:'static-closure-and-declared-files',...fingerprint.dependencyClosure.coverage},
     static:{status:findings.some(f=>f.severity==='error')?'failed':findings.some(f=>f.severity==='warning')?'unverified':'passed',tool:{name:'variant-quality-gate',version:hash(fs.readFileSync(new URL('./quality-gate.mjs',import.meta.url)))},findings},
     checks, checkerIdentity:checkerIdentity(), plan:options.plan ?? null, changedDuringRun:!unchanged};
   const file=localFile(root,`.verification/${id}/${report.id}.json`);
@@ -75,9 +88,10 @@ export function inspectVerification(root, file) {
   if (!relative.startsWith('.verification'+path.sep)) throw new Error('Report must be inside output/.verification.');
   const report=JSON.parse(fs.readFileSync(localFile(root,relative),'utf8'));
   if (report.schemaVersion!==1 || !report.fingerprint || !Array.isArray(report.dependencies) || !Array.isArray(report.checks) || report.checks.length!==runtimeChecks.length || new Set(report.checks.map(c=>c.id)).size!==runtimeChecks.length) throw new Error('Invalid verification report.');
+  if (report.inputs !== undefined && (!Array.isArray(report.inputs) || report.inputs.some(file => typeof file !== 'string'))) throw new Error('Invalid observation input list.');
   report.checks.forEach(validateCheck);
   let current=false,reason='Files, dependencies, constraints or revision changed.';
-  try {current=identity(capture(root,report.fingerprint.id,report.fingerprint.project,report.dependencies).fingerprint)===identity(report.fingerprint);}catch(error){reason=error.message;}
+  try {current=identity(capture(root,report.fingerprint.id,report.fingerprint.project,report.dependencies,report.inputs ?? []).fingerprint)===identity(report.fingerprint);}catch(error){reason=error.message;}
   if(report.changedDuringRun)current=false;
   if(report.static?.tool?.version!==hash(fs.readFileSync(new URL('./quality-gate.mjs',import.meta.url)))){current=false;reason='Static checker implementation changed; run verification again.';}
   if(report.checkerIdentity && identity(report.checkerIdentity)!==identity(checkerIdentity())){current=false;reason='Verification implementation changed; run verification again.';}

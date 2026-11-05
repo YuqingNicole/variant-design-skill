@@ -8,7 +8,7 @@ import { pathToFileURL } from 'node:url';
 import { cssReferences, htmlReferences, scriptReferences } from './dependency-references.mjs';
 
 const factsFile = '.variant-work/dependency-resolution.json';
-const forbidden = /^(?:\.env(?:\..*)?|\.git|node_modules|dist|build|coverage|\.verification|\.history|\.integrations|\.deliveries|secrets?|credentials?|.*\.(?:pem|key|p12))$/i;
+const forbidden = /^(?:\.env(?:\..*)?|\.git|node_modules|dist|build|coverage|\.verification|\.history|\.integrations|\.deliveries|\.runtime-plans|secrets?|credentials?|.*\.(?:pem|key|p12))$/i;
 const sha = value => createHash('sha256').update(value).digest('hex');
 const need = (test, message) => { if (!test) throw new Error(message); };
 const sort = value => Array.isArray(value) ? value.map(sort) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(key => [key, sort(value[key])])) : value;
@@ -74,7 +74,7 @@ export function collectProjectDependencies(project, entries, options = {}) {
   };
   const resolve = (from, { value, kind }) => {
     if (!value || value.startsWith('#') && kind !== 'module-import') return;
-    if (value.startsWith('data:')) { if (kind === 'module-import' || /^data:(?:text\/html|image\/svg)/i.test(value)) unknown('embedded-resource-needs-review', from); return; }
+    if (value.startsWith('data:')) { if (kind === 'module-import' || kind === 'html-script' || /^data:(?:text\/html|image\/svg)/i.test(value)) unknown('embedded-resource-needs-review', from); return; }
     if (/^[a-z][\w+.-]*:|^\/\//i.test(value)) { if (!value.startsWith('node:')) unknown('external-resource', from); return; }
     let clean;
     try { clean = decodeURIComponent(value.split(/[?#]/)[0]); } catch { unknown('invalid-resource-encoding', from); return; }
