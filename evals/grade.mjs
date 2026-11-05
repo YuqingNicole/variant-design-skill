@@ -258,7 +258,7 @@ export function gradeChain(project, { turns, install, fixture = {}, initial, mea
     if (turn.id === 'generate') add('generator-habits', !now.habits?.length, now.habits ?? []);
     turnChecks[turn.id]?.(now, history, add, project);
   });
-  if (fixture.runtimePlans) for (const check of gradeRuntimePlans(measurements?.runtimePlans)) checks.push({ ...check, id: `runtime:${check.id}` });
+  if (fixture.runtimePlans) for (const check of gradeRuntimePlans(measurements?.runtimePlans, { mode: fixture.runtimePlans.mode ?? 'file' })) checks.push({ ...check, id: `runtime:${check.id}` });
   if (fixture.styleBudget) {
     const measured = gradePremium(measurements?.before, measurements?.after);
     for (const c of measured.checks) checks.push({ ...c, id: `premium:${c.id}` });

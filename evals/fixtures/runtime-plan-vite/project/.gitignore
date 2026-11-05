@@ -1,0 +1,4 @@
+node_modules/
+dist/
+variant-output/
+.variant-work/

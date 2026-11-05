@@ -40,8 +40,8 @@ export function nativeManifest(project, file = '.variant-work/native-preview.jso
 }
 
 // Only this worker handle is stopped. No port scanning or killing a user's existing server.
-async function viteProcess(project, config, { mode = 'serve', destination, timeout = 30000 } = {}) {
-  const argv = [worker, mode, project, existing(project, config), ...(destination ? [destination] : [])];
+export async function viteProcess(project, config, { mode = 'serve', destination, entries, timeout = 30000 } = {}) {
+  const argv = [worker, mode, project, existing(project, config), ...(destination ? [destination] : []), ...(entries ? [JSON.stringify(entries)] : [])];
   const child = spawn(process.execPath, argv, { cwd: project, stdio: ['ignore', 'pipe', 'pipe', 'ipc'] });
   let stdout = '', stderr = '', message, timedOut = false;
   child.stdout.on('data', b => { stdout = (stdout + b).slice(-100000); });
@@ -69,7 +69,7 @@ async function viteProcess(project, config, { mode = 'serve', destination, timeo
   } catch (error) { clearTimeout(timer); await stop(); throw error; }
 }
 
-async function typecheck(project, config) {
+export async function typecheck(project, config) {
   const bin = existing(project, 'node_modules/typescript/bin/tsc'), argv = [bin, '--noEmit', '--listFiles', '-p', existing(project, config)];
   const child = spawn(process.execPath, argv, { cwd: project, stdio: ['ignore', 'pipe', 'pipe'] });
   let stdout = '', stderr = '', timedOut = false;

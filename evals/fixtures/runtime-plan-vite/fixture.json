@@ -1,0 +1,27 @@
+{
+  "description": "Original React/Vite provider/data/roles/RAF fixture; actual Agent plans and independent source-bound Vite observations.",
+  "locked": {
+    "file": "src/global.css",
+    "fonts": [
+      "Georgia"
+    ]
+  },
+  "runtimePlans": {
+    "mode": "vite"
+  },
+  "note": "（本地实测：完整技能已项目级安装。不要改原始 src/config/package 或依赖，不启动端口、不发布。保留原 ReviewProvider/useReview、数据、@ alias、define、global.css；候选正式独立 TSX/CSS 放 variant-output/ 并登记；隔离 HTML/TSX 入口放 .variant-work/preview/。host 使用原 vite.config.ts 和 tsconfig.json 独立执行类型/构建/浏览器。每版根 data-runtime-variant=A/B/C；计划 target 是各自真实隔离 HTML。保留 configuration 的原 define、全部原控件名称/testid。不要复制 provider 或硬编码原数据，不造浏览器通过。）",
+  "turns": [
+    {
+      "id": "generate",
+      "prompt": "使用完整 Variant Design 技能，在当前 React/Vite Progress Review 项目生成 A/B/C 可比较方向，不替我选定。复用原业务 provider/hook 与品牌，保留工作室切换、owner/viewer权限、独立计数和真实RAF动效。自动为B根据真实任务/源码写baseline draft，并调用真实verification-plan.mjs record封存；视口390×844。计划覆盖原Georgia/配色、Workspace及两个按钮的键盘焦点、正常动画50与初始/切换reduced-motion100；scope必须先Studio Inspect activity计数0→1且progress100，再切Archive核对Read only/Animate按钮display:none与独立计数0→1，返回Studio计数仍1；原项目真实类型检查与构建由host回调执行，计划projectChecks=true。basis指向实际业务/品牌/配置源码，完整审查taskContract.requiredFunctions。不把可变context/计划当源码依据。写 .variant-work/runtime-plan.json 为{schemaVersion:1,bundle:实际返回的项目相对封存路径}。不要在JSON放代码/命令，不伪造runtime通过。"
+    },
+    {
+      "id": "plan-edit",
+      "prompt": "继续使用完整技能。读取 .variant-work/runtime-baseline.json 和真实基准报告。只把 B 主标题最后加上“ — Draft”，用真实 history prepare/apply 完成一个请求，保留 A/C、未修改区、原品牌与选择。审查旧计划变为 stale 后，写新的 comparison draft，引用实际 output-relative baselineReport，scope 动作/断言/视口和任务期望保持一致；用真实 verification-plan.mjs record 封存。更新 runtime-plan.json 指向新 bundle。不要改旧草稿、bundle、基准或期望来消除失败。宿主会独立运行；仍不伪造本会话没有执行的浏览器结果。"
+    },
+    {
+      "id": "plan-undo",
+      "prompt": "继续使用完整技能。用真实 undo B 撤回刚才那个标题请求，保留 A/C、原始文件和最终选择。审查当前源码，保留原基准和 scope 动作/断言，封存新的 comparison 计划并更新 runtime-plan.json；旧计划/报告不改。返回实际版本、撤回与当前计划位置，不把宿主之前的观察当作这个新版本的结果。"
+    }
+  ]
+}

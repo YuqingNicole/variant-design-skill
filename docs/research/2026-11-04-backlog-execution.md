@@ -12,6 +12,10 @@ The maintainer explicitly instructed “继续改 然后合并”. This authoriz
 
 The next task branch `codex/task-runtime-plans` is based on that merged master. Its source-bound Agent-authored declaration/execution/baseline core passed corrected actual Codex HTML acceptance at `8873b9f` and final runtime `d0dccf8` (each 25/25), direct archive/source/input audits, 176 Node checks and affected Chrome regressions; the first 23/25 attempt is retained. Final evidence-head CI is the remaining merge gate for PR #162. Existing trial-user, visual and product/account decisions remain separate.
 
+## Next slice · Vite runtime plans
+
+#162 merged as `9b752b1`; post-merge master CI passed and master/dev were synchronized. Production and dev deployments were READY, with production HTTP evidence retained externally. Current branch `codex/vite-runtime-plans` starts from this master in a separate worktree. Next acceptance: original React/Vite task, actual Agent-authored baseline/edit/undo plans, real host checks/source identities and independent cloned dependency probes; see RFC-015 Vite extension. Keep all nine issues and remaining human/account/cross-project gates open.
+
 ## Execution index
 
 | Area | Current state | Acceptance / remaining evidence |

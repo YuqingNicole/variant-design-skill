@@ -37,3 +37,11 @@
 5. 完整 #18/#19、展示质量、更多项目/技术栈与人工试用继续逐项验收；本 RFC 的实现/单项通过不能关闭整个 backlog。
 
 比较封存时核对实际 compiler 身份，执行前核对实际浏览器版本。HTML script src 按相对文档的精确 URL 解析，脚本内 import 继续使用模块解析；无法解析的资源仍维持未验证。
+
+## Vite 实测扩展 · 2026-11-05
+
+HTML 实际 Agent 计划已在 #162 合并并通过。下一步不修改声明式运行时协议，新增原生 React/Vite 场景：实际 Agent 生成三版与 B 的 baseline/edit/undo 计划；宿主使用原始受保护配置启动 Vite，原 tsconfig 覆盖 src、正式组件与隔离入口，构建显式包含原应用及真实 B 入口。JSON 不携带执行命令或配置代码。复用已有独立 Vite worker，服务仅占自己创建的临时回环端口，退出时仅停止自己进程。
+
+Vite 响应经过转换，不能套用 file URL 字节相等。宿主先核对当前封存计划、直接阶段归档、所有源码/输入/配置指纹，再通过新进程加载真实 B 入口，记录响应错误、Vite/browser 版本、原 define、实际方向和视口。每轮额外在归档的独立副本中修改原数据标题、原 provider 返回的标题以及原全局 CSS 标记，重新启动 Vite；实际 B 必须反映这些 nonce。复制 provider 但只引用原数据的假复用必须失败；不修改 Agent 原项目来做探针。原文件、A/C、选择和 undo 字节恢复继续核验。
+
+回归先验证真实 React/Vite 正向、复制 provider/错误 define/类型错误等负向、缺失宿主记录不通过、原项目不变及清理。随后从 node evals/run.mjs 运行全新安装技能的实际三轮 Codex 流程并独立审计。HTML 既有路径必须保持通过。当前只支持受控的原创 fixture；不把它等同任意框架、完整跨项目接入或人工体验验收。官方依据：[Vite JavaScript API](https://vite.dev/guide/api-javascript.html) 的独立进程/原配置及 middleware API、[Playwright Network](https://playwright.dev/docs/network) 的真实响应/请求失败观察；实际 API 以锁定 Vite 7.3.6、Playwright 1.56.1 为准。
