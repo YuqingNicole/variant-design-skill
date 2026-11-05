@@ -55,7 +55,7 @@ test('every reference gets its own detail page with an escaped title and a link 
     const html = pages.get(`/inspiration/${r.id}`);
     assert.ok(html, r.id);
     assert.match(html, new RegExp(`<title>${escape(r.name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} — 灵感参考`));
-    assert.ok(html.includes('href="/inspiration"') && html.includes(`href="${escape(r.url)}"`), r.id);
+    assert.ok(html.includes('href="/"') && html.includes(`href="${escape(r.url)}"`), r.id);
   }
 });
 
@@ -71,7 +71,12 @@ test('the install guide, structured data and llms.txt are readable without JavaS
   const [howTo, faqPage] = data(guide)[0]['@graph'];
   assert.equal(howTo['@type'], 'HowTo');
   assert.equal(faqPage.mainEntity.length, docs.faq.length);
-  const skill = data(pages.get('/'))[0]['@graph'].find(g => g['@type'] === 'SoftwareSourceCode');
+  // The home page is the inspiration feed; the skill is described on /skills.
+  const [home] = data(pages.get('/'));
+  assert.equal(home['@type'], 'WebSite');
+  assert.ok(home.description.includes(`目前 ${references.length} 条`) && pages.get('/').includes(`目前 ${references.length} 条`));
+  const [skill] = data(pages.get('/skills'));
+  assert.equal(skill['@type'], 'SoftwareSourceCode');
   assert.equal(skill.version, '9.9.9');
   assert.match(skill.codeRepository, /^https:\/\/github\.com\//);
   for (const e of entries) assert.equal(data(pages.get(`/d/${e.slug}`))[0].url, `${site}/d/${e.slug}`);
@@ -161,8 +166,10 @@ test('draft English stays out of the English pages, hreflang and sitemap, and th
   const [draft, kept] = guides, marked = [{ ...draft, translations: { en: { status: 'draft' } } }, { ...kept, translations: { en: { status: 'complete', reviewedAt: '2026-11-02' } } }, ...guides.slice(2)];
   const pulse = entries.find(e => e.slug === 'pulse'), draftEntries = entries.map(e => e === pulse ? { ...e, translations: { en: { status: 'draft' } } } : e);
   const drafts = draftRoutes({ guides: marked, entries: draftEntries });
-  assert.deepEqual(drafts, [`/guides/${draft.slug}`, '/d/pulse']);
-  assert.deepEqual(draftRoutes({ guides, entries }), [], 'items without a status count as published');
+  assert.deepEqual(drafts, [...marked.filter(g => g.translations?.en?.status === 'draft').map(g => `/guides/${g.slug}`), '/d/pulse']);
+  const legacy = guides.map(({ translations, ...guide }) => guide);
+  assert.deepEqual(draftRoutes({ guides: legacy, entries }), [], 'legacy items without a status count as published');
+  assert.deepEqual(draftRoutes({ guides, entries }), ['/guides/undo-ai-design-changes', '/guides/git-or-snapshot-undo', '/guides/design-references-with-sources']);
   const body = route => `<main><h1>${route}</h1></main>`, routes = [...guides.map(g => `/guides/${g.slug}`), '/d/pulse'];
   const english = Object.fromEntries(routes.map(r => [r, body(r)])), rendered = Object.fromEntries(guides.map(g => [`/guides/${g.slug}`, body(g.slug)]));
   const pages = renderSite(draftEntries, template, 'https://example.test', [], { guides: marked, rendered, english: withoutDrafts(english, drafts) });

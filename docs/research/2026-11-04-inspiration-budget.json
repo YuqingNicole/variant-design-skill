@@ -1,0 +1,128 @@
+[
+  {
+    "language": "zh",
+    "width": 320,
+    "before": {
+      "families": 2,
+      "sizes": 7,
+      "weights": 2,
+      "textColors": 5,
+      "radii": 5,
+      "shadows": 0
+    },
+    "after": {
+      "families": 2,
+      "sizes": 5,
+      "weights": 2,
+      "textColors": 4,
+      "radii": 2,
+      "shadows": 0
+    },
+    "over": []
+  },
+  {
+    "language": "zh",
+    "width": 390,
+    "before": {
+      "families": 2,
+      "sizes": 8,
+      "weights": 2,
+      "textColors": 5,
+      "radii": 5,
+      "shadows": 0
+    },
+    "after": {
+      "families": 2,
+      "sizes": 5,
+      "weights": 2,
+      "textColors": 4,
+      "radii": 2,
+      "shadows": 0
+    },
+    "over": []
+  },
+  {
+    "language": "zh",
+    "width": 1440,
+    "before": {
+      "families": 2,
+      "sizes": 9,
+      "weights": 2,
+      "textColors": 5,
+      "radii": 5,
+      "shadows": 0
+    },
+    "after": {
+      "families": 2,
+      "sizes": 7,
+      "weights": 2,
+      "textColors": 4,
+      "radii": 2,
+      "shadows": 0
+    },
+    "over": []
+  },
+  {
+    "language": "en",
+    "width": 320,
+    "before": {
+      "families": 2,
+      "sizes": 7,
+      "weights": 2,
+      "textColors": 5,
+      "radii": 5,
+      "shadows": 0
+    },
+    "after": {
+      "families": 2,
+      "sizes": 5,
+      "weights": 2,
+      "textColors": 4,
+      "radii": 2,
+      "shadows": 0
+    },
+    "over": []
+  },
+  {
+    "language": "en",
+    "width": 390,
+    "before": {
+      "families": 2,
+      "sizes": 8,
+      "weights": 2,
+      "textColors": 5,
+      "radii": 5,
+      "shadows": 0
+    },
+    "after": {
+      "families": 2,
+      "sizes": 5,
+      "weights": 2,
+      "textColors": 4,
+      "radii": 2,
+      "shadows": 0
+    },
+    "over": []
+  },
+  {
+    "language": "en",
+    "width": 1440,
+    "before": {
+      "families": 2,
+      "sizes": 9,
+      "weights": 2,
+      "textColors": 5,
+      "radii": 5,
+      "shadows": 0
+    },
+    "after": {
+      "families": 2,
+      "sizes": 7,
+      "weights": 2,
+      "textColors": 4,
+      "radii": 2,
+      "shadows": 0
+    },
+    "over": []
+  }
+]

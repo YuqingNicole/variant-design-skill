@@ -2,6 +2,8 @@
 
 Read this when building or reopening previews: after the first generation, after every edit, undo or selection, and for `open B` or `compare`.
 
+For a generated design-system preview, run `ds-check.mjs <generated.css> --used-by <preview.html>` before presenting it; pass existing brand files with `--brand <file>`. Its JSON separates checked contrast pairs, failures, unverified pairs and component-layer errors. Fix failures and unused tokens; resolve unverified pairs with rendered evidence or report the limitation. A zero-pair report is not contrast validation.
+
 ## Register and compare
 
 Use schema v2 in `references/workflow/project-context.md`. Register A/B/C with their complete owned file sets, exact tokens, and the three comparison statements. Record the shared task/data/required functions and a reasoned recommendation. Do not set a winner merely because one is recommended or edited.
@@ -11,6 +13,8 @@ node <skill-root>/scripts/build-preview.mjs variant-output
 ```
 
 This writes `_compare.html`. HTML entries load directly; React entries get separate `_preview/A.html`, B.html, C.html documents and React mounts, isolating global styles between variants. The comparison page is read-only; selection, iteration, undo, and export commands run in the agent chat. Refresh the builder after edits/undo/selection so cards and revision numbers stay current. Set `language: "zh"` for Chinese comparison labels and `preview: {colorScheme: "dark"}` for a dark comparison shell. Desktop/mobile controls render each iframe at the same 1200px/390px viewport, scaled to fit, so three narrow columns do not accidentally compare only mobile layouts.
+
+The builder records preview ownership under the parent project's `.variant-work/preview-files/` and returns `ownership.project`/`ownership.receipt`. For nested output, pass the actual project root as the second CLI argument. Existing unowned comparison/mount files are preserved, even if identical; use a fresh output path and retain the old one. Rebuilds verify every previously owned file's bytes, permissions and file identity before changing any preview. A conflict preserves all targets; do not delete the old file, change its receipt or re-adopt it to bypass the guard. Variant source, context, history and shared dependencies are never cleanup targets.
 
 ## React preview
 
@@ -30,6 +34,8 @@ node <skill-root>/scripts/react-preview.mjs <project-root> <project-root>/varian
 
 It writes `variant-output/_static/` with the comparison page and A/B/C pages that open directly from `file://`, with scripts and styles inlined. Rebuild it after every edit, undo or selection. A hanging bundler fails after 180 seconds (`VARIANT_STATIC_TIMEOUT_MS` overrides it). Report the printed `file://` paths. When nothing can be rendered, give the user one command they can run themselves to start the live server, and list the visual checks as unverified. It uses the project's React and Vite without editing its package or production entrypoint. When Vite is absent, use the isolated bundler path below; do not hand-write a bundler or transpile React into an improvised loader.
 
+Static bundling completes in a temporary directory before publishing its files. It never recursively empties `_static/`: unknown files remain, and an edited/replaced owned file blocks that static rebuild. The CLI prints separate comparison and static ownership receipts; keep both for cleanup. A static failure does not imply that an already refreshed comparison was rolled back.
+
 The helper intentionally does not load arbitrary project Vite configuration: import each variant's CSS and dependencies explicitly. If output depends on Tailwind/PostCSS, aliases, a router, providers, Next image/font/server components, or other framework behavior, choose a native isolated adapter instead. The agent must build this adapter; do not hand manual import work to the user:
 
 - Next App Router: find the existing app directory; create a collision-free preview route such as `app/variant-preview/page.tsx` and a `[variant]/page.tsx` route (or three explicit subroutes). Import and mount A/B/C in separate pages with required providers; compare through iframes. Preserve layouts and middleware; verify the actual URLs, including basePath/auth behavior. Do not overwrite a pre-existing route. Track generated adapter files for cleanup.
@@ -48,6 +54,26 @@ For Next in an environment that cannot run a server, first determine whether the
 For a Next project whose preview routes can be statically exported, a native build is another server-free fallback when Vite installation is unavailable. Create an isolated Next app under `.variant-work/next-preview/`, reuse the installed Next/React versions, add explicit A/B/C routes and their needed layout/providers, and set `output: 'export'` with relative asset URLs (`assetPrefix: './'`). Run the project's installed Next binary against that directory, then retain the complete exported asset tree with the comparison page. Verify the actual file URLs and interactive hydration; checking that HTML files exist is insufficient. Server-only behavior, dynamic routes without static params, auth/middleware and remote assets may prevent this route from working. Keep those cases unverified rather than rewriting the application or stubbing features.
 
 Read the project's scripts and run its existing typecheck/check command using its package manager. If the generated directory is excluded, add a temporary preview tsconfig that extends the project config and includes generated TSX plus needed source/assets declarations, then run the installed `tsc --noEmit -p <preview-config>`. A successful Vite transform is not a typecheck. Report pre-existing failures separately; never claim a passing project check when none exists or was run.
+
+## Own and clean native adapters
+
+Before writing any native adapter, choose a new lowercase group and save its complete project-relative file list in `.variant-work/preview-paths.json`. Include the comparison/entry HTML, mount/config files and generated preview manifest. Exclude original files, variant source, history, dependencies, logs and staging. Prepare while **every target is absent**, then create the adapter and seal it once:
+
+```bash
+node <skill-root>/scripts/preview-files.mjs prepare <project-root> native-preview .variant-work/preview-paths.json
+# Write the prepared adapter files, then:
+node <skill-root>/scripts/preview-files.mjs seal <project-root> native-preview
+```
+
+Retain the returned receipt in the delivery summary. A native manifest can include the stable `ownershipGroup: "native-preview"`; keep the changing receipt path in the handoff, outside the owned manifest, to avoid a circular receipt dependency. For later adapter changes, stage the complete updated adapter set under `.variant-work/preview-staging/`, mirroring project-relative paths, then run `preview-files.mjs publish <project-root> native-preview <staging-dir>`. This checks the current receipt before writing; do not edit adapters first and seal again. A stale receipt or pre-existing unowned adapter is not automatically adopted.
+
+On an explicit cleanup/exit request, first stop only the server process started for this preview, using its managed process handle. File cleanup neither finds nor kills servers. Use each current ownership receipt:
+
+```bash
+node <skill-root>/scripts/preview-files.mjs cleanup <project-root> <receipt-relative-path>
+```
+
+The JSON lists removed/missing files, preserved conflicts, filesystem errors and a durable backup operation. Exit 2 means conflicts/errors remain. It deletes matching regular files only, keeps all directories and unlisted files, and preserves changed bytes, permissions, links and same-name replacements. File identity uses exact device/inode/creation-nanosecond strings; filesystems without creation identity are rejected, not assumed safe. Repeated cleanup does not delete recreated files. Missing/old/changed receipts stop cleanup. Never substitute recursive directory removal or forced adoption. A failed publish reports its backup and recovery conflicts; completed writes are restored only while still matching this operation. If recovery produced a fresh receipt, use that receipt. Interrupted processes may leave a lock and backups: inspect the actual owning process, preserve diagnostics and reconcile manually; do not automatically steal a lock or claim global atomicity.
 
 ## Open the result
 
@@ -74,3 +100,10 @@ It starts at port 3333 and automatically tries the next available port when occu
 The comparison puts aligned previews first. Each card keeps its full-page link above the preview and its complete comparison statements in an expandable section below. Recommendation rationale is expandable; the recommended direction is labeled without selecting it. Phone previews are centered at a shared 390px viewport. Rebuild existing `_compare.html` files to update the layout.
 
 The comparison shell uses neutral light or dark surfaces, compact status labels and a segmented viewport control. Recommendation rationale and next-step guidance sit below the preview grid. These presentation controls do not mutate variant selection or the generated designs.
+
+A confirmed system's preview can show proposed fonts before the picked direction adopts them. Keep the picked page unchanged at confirmation; label it pending until explicit `apply ds B` uses `apply-system`. After apply or undo, rebuild that page's previews and report its actual binding and rendered checks. Pending does not mean the old page passed the new system's font/contrast requirements.
+
+
+When recording artifact evidence for a preview, registered design-system/extension files, any adoption binding and supported transitive local imports/resources are fingerprinted automatically. Follow `references/workflow/artifact-verification.md` to record actual native wrappers, adapter manifests, aliases and separate check/build configs in `.variant-work/dependency-resolution.json` before checking or preparing integration. It is a reviewed discovery input, not an adapter cleanup target. Do not rely on scanning the whole work directory or guessing Vite config behavior. Missing parsers or unresolved/dynamic relations remain partial/unverified. Integration plans bind the same closure before staging; changing tracked source/config/facts requires a fresh plan. Cleaning a registered preview retires its old observations; missing wrappers do not make old evidence current.
+
+At integration handoff, record the current ownership receipt with the delivery receipt (`references/workflow/delivery-receipt.md`). Preview-only checks do not verify integrated targets. Later cleanup can retire the preview and stale the handoff; it must preserve `.deliveries/`, source, checks and backups.

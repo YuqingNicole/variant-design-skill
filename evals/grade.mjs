@@ -7,7 +7,15 @@ import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { checkDelivery, declaredFonts, systemDrift } from '../scripts/delivery-check.mjs';
-import { contrastIssues } from '../scripts/ds-check.mjs';
+import { checkSystem } from '../scripts/ds-check.mjs';
+import { tokenMap } from '../scripts/ds-tokens.mjs';
+import { systemIdentity } from '../scripts/variant-history.mjs';
+import { gradePremium } from './premium.mjs';
+import { gradeNativeVite } from './native-vite.mjs';
+import { gradePreviewCleanup } from './preview-cleanup.mjs';
+import { gradeSharedDependencies } from './shared-dependencies.mjs';
+import { gradeDeliveryReceipts } from './delivery-receipts.mjs';
+import { gradePhaseArchives, verifyPhaseArchive } from './phase-archive.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -22,11 +30,12 @@ export const loadFixture = name => JSON.parse(fs.readFileSync(path.join(here, 'f
 const git = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8' });
 const first = value => String(value).split(',')[0].trim().replace(/^['"]|['"]$/g, '').toLowerCase();
 
-function untouched(project) {
+function untouched(project, allowedTracked = new Set()) {
   const problems = [], notes = [];
   for (const line of git(project, 'status', '--porcelain', '--untracked-files=all').split('\n').filter(Boolean)) {
     const status = line.slice(0, 2), file = line.slice(3).replace(/^"|"$/g, '');
     if (status === '??') { if (allowed.test(file)) continue; if (adapter.test(file)) notes.push(`warning: preview adapter created at ${file}`); else problems.push(`created ${file} outside variant-output/`); continue; }
+    if (allowedTracked.has(file)) continue;
     // Adding ignore lines for the skill's working folders is fine; changing anything else is not.
     if (file === '.gitignore' && git(project, 'diff', '--unified=0', '--', '.gitignore').split('\n').filter(l => /^[-+](?![-+])/.test(l)).every(l => l.startsWith('+'))) continue;
     problems.push(`${status.trim() === 'D' ? 'deleted' : 'changed'} ${file}`);
@@ -121,6 +130,8 @@ export function grade(project, { fixture = {}, transcript, install } = {}) {
   }
   const copies = skillCopies(transcript, project, install);
   if (copies) add('skill-under-test', copies.project > 0 && copies.other.length === 0, [`read the copy under test ${copies.project} time(s)`, ...copies.other.map(o => `also referenced ${o}`)]);
+  if (fixture.nativeVite) for (const check of gradeNativeVite().checks) checks.push({ ...check, id: `native:${check.id}` });
+  if (fixture.nativeVite) for (const check of gradePhaseArchives()) checks.push({ ...check, id: `native:${check.id}` });
   return { pass: checks.every(c => c.pass), checks, usage: usage(transcript), reading: skillReading(transcript, project, install), recommendation: context?.recommendation?.variant ?? null };
 }
 
@@ -141,7 +152,11 @@ export function snapshot(project) {
   // How far each variant sits from the confirmed system: colors and lengths it does not define.
   const drift = system ? Object.fromEntries(Object.entries(context.variants ?? {}).map(([id, v]) => [id, (v.files ?? []).map(f => `variant-output/${f}`).filter(f => files[f]).reduce((n, f) => { const d = systemDrift(read(f), system); return n + d.colors.length + d.lengths.length; }, 0)])) : null;
   const delivery = context ? checkDelivery(output, { project }) : null;
-  return { context, files, drift, delivery: delivery && { errors: delivery.errors, warnings: delivery.warnings }, quality: quality(output).errors, habits: quality(output).habits };
+  const draft = path.join(output, 'design-system.css'), brand = context?.designSystem?.confirmed && context.designSystem.file !== 'variant-output/design-system.css' ? context.designSystem.file : null;
+  const systemDraft = fs.existsSync(draft) ? { source: fs.readFileSync(draft, 'utf8'), ...(brand && fs.existsSync(path.join(project, brand)) ? { brandSource: read(brand) } : {}) } : null;
+  let systemDigest = null;
+  try { if (context?.designSystem?.confirmed) systemDigest = systemIdentity(context, project); } catch {}
+  return { context, files, drift, systemDraft, systemDigest, delivery: delivery && { errors: delivery.errors, warnings: delivery.warnings }, quality: quality(output).errors, habits: quality(output).habits };
 }
 
 const owned = (snap, id) => Object.fromEntries((snap.context?.variants?.[id]?.files ?? []).map(f => [f, snap.files[`variant-output/${f}`] ?? null]));
@@ -160,25 +175,33 @@ const turnChecks = {
     const missing = ds.filter(f => !now.files[`variant-output/${f}`]);
     add('ds-drafted', !missing.length, missing.map(f => `no variant-output/${f}`));
     add('ds-waits-for-user', same(now.context?.designSystem ?? null, prev.context?.designSystem ?? null), now.context?.designSystem ? [`designSystem written before ds confirm: ${JSON.stringify(now.context.designSystem)}`] : []);
-    const css = path.join(project, 'variant-output/design-system.css'), text = fs.existsSync(css) ? fs.readFileSync(css, 'utf8') : '', issues = text ? contrastIssues([text]) : [];
-    add('ds-contrast', !issues.length, issues.map(i => `${i.text} on ${i.surface} is ${i.ratio}:1`));
+    const text = now.systemDraft?.source ?? '', brand = now.systemDraft?.brandSource;
+    const sources = [...(brand ? [{ source: brand, origin: 'brand' }] : []), text], audit = checkSystem(sources), tokens = tokenMap(sources);
+    const issues = audit.issues.filter(i => tokens.get(i.text)?.origin !== 'brand'), unverified = audit.unverified.filter(i => tokens.get(i.text)?.origin !== 'brand');
+    add('ds-contrast', !issues.length && !unverified.length, [...issues.map(i => `${i.text} on ${i.surface} is ${i.ratio}:1`), ...unverified.map(i => `${i.text}: unverified — ${i.reason}`)]);
+    add('ds-layers', !audit.layers.length, audit.layers.map(i => `${i.token}: ${i.reason}`));
     // references/design-system/system-decisions.md §1 and §4: decisions open the file; every semantic color says where it is used.
     // @import and @charset must come first in CSS, so the decisions comment may follow them.
     const head = text.replace(/^(\s*@(import|charset)[^;]*;)+/, '').match(/^\s*\/\*[\s\S]*?\*\//)?.[0] ?? '';
     add('ds-decisions', /decision|决策/i.test(head) || (head.match(/^\s*(\/\*\s*)?\d\.\s/gm) ?? []).length >= 2, head ? [] : ['design-system.css does not open with a comment']);
-    const colors = [...text.matchAll(/^[ \t]*(--color-[\w-]+)\s*:[^;]*;(.*)$/gm)], bare = colors.filter(m => !/\/\*\s*use:/.test(m[2])).map(m => m[1]);
-    add('ds-use-notes', colors.length > 0 && !bare.length, bare.length ? [`no use note: ${bare.join(', ')}`] : colors.length ? [] : ['no --color-* tokens']);
+    const colors = [...tokenMap([text]).values()].filter(t => t.layer === 'semantic' && t.name.startsWith('--color-')), bare = colors.filter(t => !t.use).map(t => t.name);
+    add('ds-use-notes', (colors.length > 0 || !!brand) && !bare.length, bare.length ? [`no use note: ${bare.join(', ')}`] : colors.length || brand ? [] : ['no --color-* tokens']);
   },
   confirm: (now, [prev], add, project) => {
     const d = now.context?.designSystem;
     add('ds-confirmed', d?.confirmed === true && d.source === 'B' && fs.existsSync(path.join(project, d.file ?? '')), [`designSystem: ${JSON.stringify(d ?? null)}`]);
+    const binding = now.context?.variants?.B?.systemBinding;
+    add('ds-registered', !!d?.digest && d.digest === now.systemDigest && binding?.status === 'pending' && binding.digest === d.digest, [`binding: ${JSON.stringify(binding ?? null)}`]);
     let groups = 0;
     try { groups = Object.keys(JSON.parse(fs.readFileSync(path.join(project, 'variant-output/design-system.tokens.json'), 'utf8'))).filter(k => !k.startsWith('$')).length; } catch {}
     add('tokens-exported', groups > 0, groups ? [`${groups} token groups`] : ['no readable variant-output/design-system.tokens.json']);
     const edited = changed(prev, now, ['A', 'B', 'C']);
-    add('confirm-is-not-an-edit', !edited.length && now.context?.selectedVariant === 'B', edited.map(id => `${id} files changed`));
+    const metadataChanged = ['A', 'B', 'C'].filter(id => ['tokens', 'version', 'undo'].some(key => !same(now.context?.variants?.[id]?.[key], prev.context?.variants?.[id]?.[key])));
+    add('confirm-is-not-an-edit', !edited.length && !metadataChanged.length && now.context?.selectedVariant === 'B', [...edited.map(id => `${id} files changed`), ...metadataChanged.map(id => `${id} tokens/version/undo changed`)]);
   },
   apply: (now, [prev], add) => {
+    const binding = now.context?.variants?.B?.systemBinding;
+    add('system-adopted', binding?.status === 'applied' && !!now.systemDigest && binding.digest === now.systemDigest, [`binding: ${JSON.stringify(binding ?? null)}`]);
     const b = now.context?.variants?.B, before = prev.context?.variants?.B;
     add('applied', (b?.version ?? 0) > (before?.version ?? 0) && now.context?.activeVariant === 'B' && now.context?.selectedVariant === 'B', [`B v${before?.version} → v${b?.version}, active ${now.context?.activeVariant}, selected ${now.context?.selectedVariant}`]);
     const edited = changed(prev, now, ['A', 'C']), system = now.context?.designSystem?.file;
@@ -186,8 +209,8 @@ const turnChecks = {
     add('drift-reduced', now.drift?.B != null && prev.drift?.B != null && (now.drift.B === 0 || now.drift.B < prev.drift.B), [`B off-system values: ${prev.drift?.B ?? '?'} → ${now.drift?.B ?? '?'}`]);
   },
   undo: (now, [prev, beforeApply], add) => {
-    const restored = same(owned(now, 'B'), owned(beforeApply, 'B'));
-    add('undone', restored && now.context?.selectedVariant === 'B', [restored ? 'B files match the snapshot before apply ds B' : 'B files differ from the snapshot before apply ds B', `selected ${now.context?.selectedVariant}`]);
+    const restored = same(owned(now, 'B'), owned(beforeApply, 'B')) && ['tokens', 'systemBinding'].every(key => same(now.context?.variants?.B?.[key], beforeApply.context?.variants?.B?.[key]));
+    add('undone', restored && now.context?.selectedVariant === 'B', [restored ? 'B files, tokens and binding match the snapshot before apply ds B' : 'B files, tokens or binding differ from the snapshot before apply ds B', `selected ${now.context?.selectedVariant}`]);
     const edited = changed(prev, now, ['A', 'C']);
     add('undo-stays-in-B', !edited.length && same(now.context?.designSystem, prev.context?.designSystem), edited.map(id => `${id} files changed`));
   },
@@ -196,30 +219,68 @@ const turnChecks = {
     const fresh = Object.keys(now.files).filter(f => !(f in prev.files) && /\.(html|css|tsx|jsx|vue|svelte)$/.test(f));
     add('component-built', fresh.length > 0, fresh.length ? fresh : ['no new component file in variant-output/']);
     const source = system?.confirmed ? [system.file, ...(system.extensions ?? [])].map(f => fs.readFileSync(path.join(project, f), 'utf8')).join('\n') : '';
-    const drift = fresh.flatMap(f => { const d = systemDrift(fs.readFileSync(path.join(project, f), 'utf8'), source); return [...d.colors, ...d.lengths, ...d.primitives.map(p => `primitive ${p}`)].map(v => `${f}: ${v}`); });
+    const drift = fresh.flatMap(f => { const d = systemDrift(fs.readFileSync(path.join(project, f), 'utf8'), source); return [...d.colors, ...d.lengths, ...d.primitives.map(p => `primitive ${p}`), ...d.components.map(p => `component token outside owning CSS ${p}`)].map(v => `${f}: ${v}`); });
     add('component-on-system', fresh.length > 0 && !!source && !drift.length, drift.length ? drift.slice(0, 12) : []);
     const edited = changed(prev, now, ['A', 'B', 'C']);
     add('component-leaves-variants', !edited.length && same(now.context?.designSystem, prev.context?.designSystem) && now.context?.selectedVariant === 'B', edited.map(id => `${id} files changed`));
   },
+  premium: (now, [prev], add) => {
+    const b = now.context?.variants?.B;
+    add('refined', (b?.version ?? 0) > (prev.context?.variants?.B?.version ?? 0) && now.context?.activeVariant === 'B', ['B must have a new recorded refinement revision']);
+    add('not-selected', now.context?.selectedVariant === prev.context?.selectedVariant, [`selectedVariant: ${now.context?.selectedVariant ?? 'empty'}`]);
+    const edited = changed(prev, now, ['A', 'C']);
+    const sameOthers = ['A', 'C'].every(id => same(now.context?.variants?.[id], prev.context?.variants?.[id]));
+    add('stays-in-B', !edited.length && sameOthers && same(now.context?.designSystem, prev.context?.designSystem), [...edited.map(id => `${id} changed`), ...(!sameOthers ? ['A/C metadata changed'] : [])]);
+  },
 };
 
 // turns: [{id, snapshot, transcript}] in run order; `snapshots` before the first turn is the empty project.
-export function gradeChain(project, { turns, install } = {}) {
-  const checks = [], start = { context: null, files: {}, drift: null };
+export function gradeChain(project, { turns, install, fixture = {}, initial, measurements } = {}) {
+  const checks = [], start = initial ?? { context: null, files: {}, drift: null };
   turns.forEach((turn, i) => {
     const add = (id, pass, details = []) => checks.push({ id: `${turn.id}:${id}`, pass, details });
     const now = turn.snapshot, history = [i ? turns[i - 1].snapshot : start, ...turns.slice(0, i).reverse().slice(1).map(t => t.snapshot)];
+    if (turn.exit !== undefined) add('agent-completed', turn.exit === 0 && !turn.timedOut, [`exit ${turn.exit}; timed out: ${Boolean(turn.timedOut)}`]);
+    if (turn.id === 'premium' && turn.transcript) {
+      const reading = skillReading(turn.transcript, project, install), required = ['references/workflow/adjective-translation.md', 'skills/variant-generate/actions.md'];
+      add('adjective-route', required.every(file => reading?.files.includes(file)), required.filter(file => !reading?.files.includes(file)).map(file => `not read: ${file}`));
+    }
     add('delivery-check', !!now.delivery && !now.delivery.errors.length, now.delivery ? [...now.delivery.errors, ...now.delivery.warnings.map(w => `warning: ${w}`)] : ['skipped']);
-    if (turn.id === 'generate' || turn.id === 'component') add('quality-gate', !now.quality.length, now.quality);
+    if (fixture.locked) {
+      const ds = now.context?.designSystem, locked = fixture.locked.fonts.map(first), problems = [];
+      if (!ds?.confirmed || ds.file !== fixture.locked.file) problems.push(`expected confirmed brand file ${fixture.locked.file}`);
+      if (!ds?.fonts?.length || ds.fonts.some(f => !locked.includes(first(f)))) problems.push('recorded system fonts do not preserve the brand');
+      for (const [id, v] of Object.entries(now.context?.variants ?? {})) if (!v.tokens?.fonts?.length || v.tokens.fonts.some(f => !locked.includes(first(f)))) problems.push(`variant ${id} does not preserve the brand fonts`);
+      add('brand-kept', !problems.length, problems);
+    }
+    if (['generate', 'component', 'premium'].includes(turn.id)) add('quality-gate', !now.quality.length, now.quality);
     if (turn.id === 'generate') add('generator-habits', !now.habits?.length, now.habits ?? []);
     turnChecks[turn.id]?.(now, history, add, project);
   });
-  const outside = untouched(project);
+  if (fixture.styleBudget) {
+    const measured = gradePremium(measurements?.before, measurements?.after);
+    for (const c of measured.checks) checks.push({ ...c, id: `premium:${c.id}` });
+    checks.push({ id: 'premium:one-undo', pass: measurements?.undo?.pass === true, details: measurements?.undo?.details ?? ['No host undo check'] });
+  }
+  if (fixture.nativeVite) for (const check of gradeNativeVite(measurements?.native).checks) checks.push({ ...check, id: `native:${check.id}` });
+  if (fixture.nativeVite) for (const check of gradePhaseArchives(measurements?.native?.archives, measurements?.native)) checks.push({ ...check, id: `native:${check.id}` });
+  if (fixture.previewOwnership) for (const check of gradePreviewCleanup(measurements?.previewCleanup)) checks.push({ ...check, id: `cleanup:${check.id}` });
+  if (fixture.sharedDependencies) for (const check of gradeSharedDependencies(measurements?.sharedDependencies)) checks.push({ ...check, id: `dependencies:${check.id}` });
+  if (fixture.deliveryReceipts) for (const check of gradeDeliveryReceipts(measurements?.deliveryReceipts)) checks.push({ ...check, id: `receipts:${check.id}` });
+  if (fixture.previewOwnership) {
+    let details = [];
+    try { if (verifyPhaseArchive(measurements?.native?.archives?.cleanup).manifest.phase !== 'cleanup') throw new Error('Archive belongs to another phase'); }
+    catch (error) { details = [error.message]; }
+    checks.push({ id: 'cleanup:archive', pass: !details.length, details });
+  }
+  const allowedTracked = fixture.styleBudget ? new Set(['variant-output/.variant-context.json', ...(start.context?.variants?.B?.files ?? []).map(f => `variant-output/${f}`)]) : new Set();
+  const outside = untouched(project, allowedTracked);
   checks.push({ id: 'project-untouched', pass: !outside.problems.length, details: [...outside.problems, ...outside.notes] });
   const copies = turns.map(t => skillCopies(t.transcript, project, install)).filter(Boolean);
   if (copies.length) checks.push({ id: 'skill-under-test', pass: copies.every(c => c.project > 0 && !c.other.length), details: copies.flatMap((c, i) => [`${turns[i].id}: read the copy under test ${c.project} time(s)`, ...c.other.map(o => `${turns[i].id}: also referenced ${o}`)]) });
   const usages = turns.map(t => usage(t.transcript)), sum = key => usages.some(u => u[key] != null) ? usages.reduce((n, u) => n + (u[key] ?? 0), 0) : undefined;
-  return { pass: checks.every(c => c.pass), checks, usage: { costUsd: sum('costUsd'), turns: sum('turns'), tokens: sum('tokens') }, recommendation: turns[0]?.snapshot.context?.recommendation?.variant ?? null };
+  const readings = turns.map(t => ({ turn: t.id, ...skillReading(t.transcript, project, install) }));
+  return { pass: checks.every(c => c.pass), checks, reading: { words: readings.reduce((n, r) => n + (r.words ?? 0), 0), files: [...new Set(readings.flatMap(r => r.files ?? []))], turns: readings }, usage: { costUsd: sum('costUsd'), turns: sum('turns'), tokens: sum('tokens') }, recommendation: turns[0]?.snapshot.context?.recommendation?.variant ?? null };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href) {

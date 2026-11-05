@@ -1,0 +1,339 @@
+{
+  "date": "2026-11-04",
+  "baseline": "f528240",
+  "environment": "local Chrome, reduced motion, hydrated pages",
+  "budgets": {
+    "families": {
+      "docs": 3,
+      "sponsor": 2
+    },
+    "sizes": 7,
+    "weights": 3,
+    "textColors": 5,
+    "radii": 3,
+    "shadows": 2
+  },
+  "runs": {
+    "before": [
+      {
+        "route": "/docs",
+        "width": 320,
+        "height": 900,
+        "counts": {
+          "families": 3,
+          "sizes": 8,
+          "weights": 2,
+          "textColors": 9,
+          "radii": 2,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/docs",
+        "width": 390,
+        "height": 900,
+        "counts": {
+          "families": 3,
+          "sizes": 9,
+          "weights": 2,
+          "textColors": 9,
+          "radii": 2,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/docs",
+        "width": 1440,
+        "height": 900,
+        "counts": {
+          "families": 3,
+          "sizes": 10,
+          "weights": 2,
+          "textColors": 9,
+          "radii": 2,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/en/docs",
+        "width": 320,
+        "height": 900,
+        "counts": {
+          "families": 3,
+          "sizes": 8,
+          "weights": 2,
+          "textColors": 9,
+          "radii": 2,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/en/docs",
+        "width": 390,
+        "height": 900,
+        "counts": {
+          "families": 3,
+          "sizes": 9,
+          "weights": 2,
+          "textColors": 9,
+          "radii": 2,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/en/docs",
+        "width": 1440,
+        "height": 900,
+        "counts": {
+          "families": 3,
+          "sizes": 10,
+          "weights": 2,
+          "textColors": 9,
+          "radii": 2,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/en/sponsor",
+        "width": 320,
+        "height": 900,
+        "counts": {
+          "families": 2,
+          "sizes": 8,
+          "weights": 2,
+          "textColors": 5,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/en/sponsor",
+        "width": 390,
+        "height": 900,
+        "counts": {
+          "families": 2,
+          "sizes": 9,
+          "weights": 2,
+          "textColors": 5,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/en/sponsor",
+        "width": 1440,
+        "height": 900,
+        "counts": {
+          "families": 2,
+          "sizes": 7,
+          "weights": 2,
+          "textColors": 5,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/sponsor",
+        "width": 320,
+        "height": 900,
+        "counts": {
+          "families": 2,
+          "sizes": 8,
+          "weights": 2,
+          "textColors": 5,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/sponsor",
+        "width": 390,
+        "height": 900,
+        "counts": {
+          "families": 2,
+          "sizes": 9,
+          "weights": 2,
+          "textColors": 5,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/sponsor",
+        "width": 1440,
+        "height": 900,
+        "counts": {
+          "families": 2,
+          "sizes": 7,
+          "weights": 2,
+          "textColors": 5,
+          "radii": 1,
+          "shadows": 0
+        }
+      }
+    ],
+    "after": [
+      {
+        "route": "/docs",
+        "width": 320,
+        "height": 900,
+        "counts": {
+          "families": 3,
+          "sizes": 6,
+          "weights": 2,
+          "textColors": 4,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/docs",
+        "width": 390,
+        "height": 900,
+        "counts": {
+          "families": 3,
+          "sizes": 7,
+          "weights": 2,
+          "textColors": 4,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/docs",
+        "width": 1440,
+        "height": 900,
+        "counts": {
+          "families": 3,
+          "sizes": 6,
+          "weights": 2,
+          "textColors": 4,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/en/docs",
+        "width": 320,
+        "height": 900,
+        "counts": {
+          "families": 3,
+          "sizes": 6,
+          "weights": 2,
+          "textColors": 4,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/en/docs",
+        "width": 390,
+        "height": 900,
+        "counts": {
+          "families": 3,
+          "sizes": 7,
+          "weights": 2,
+          "textColors": 4,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/en/docs",
+        "width": 1440,
+        "height": 900,
+        "counts": {
+          "families": 3,
+          "sizes": 6,
+          "weights": 2,
+          "textColors": 4,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/en/sponsor",
+        "width": 320,
+        "height": 900,
+        "counts": {
+          "families": 2,
+          "sizes": 6,
+          "weights": 2,
+          "textColors": 5,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/en/sponsor",
+        "width": 390,
+        "height": 900,
+        "counts": {
+          "families": 2,
+          "sizes": 7,
+          "weights": 2,
+          "textColors": 5,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/en/sponsor",
+        "width": 1440,
+        "height": 900,
+        "counts": {
+          "families": 2,
+          "sizes": 6,
+          "weights": 2,
+          "textColors": 5,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/sponsor",
+        "width": 320,
+        "height": 900,
+        "counts": {
+          "families": 2,
+          "sizes": 6,
+          "weights": 2,
+          "textColors": 5,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/sponsor",
+        "width": 390,
+        "height": 900,
+        "counts": {
+          "families": 2,
+          "sizes": 7,
+          "weights": 2,
+          "textColors": 5,
+          "radii": 1,
+          "shadows": 0
+        }
+      },
+      {
+        "route": "/sponsor",
+        "width": 1440,
+        "height": 900,
+        "counts": {
+          "families": 2,
+          "sizes": 6,
+          "weights": 2,
+          "textColors": 5,
+          "radii": 1,
+          "shadows": 0
+        }
+      }
+    ]
+  },
+  "limitations": [
+    "Counts do not measure taste or certify accessibility.",
+    "Chinese no-JS docs retain their separate static layout.",
+    "No production deployment or maintainer acceptance."
+  ]
+}

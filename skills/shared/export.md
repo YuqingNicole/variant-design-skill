@@ -25,7 +25,7 @@ When the user says "export to [framework]" or `react [A/B/C]`, transform the cho
 
 ## Integrate into the project
 
-Before generating integration files, list the intended project-relative targets in `.variant-work/targets.json` (a JSON array, for example `["src/App.tsx", "src/variant.css"]`). Prepare a new plan to capture the current source revision, owned-file hashes, brand constraints and target hashes. Then write every final project file into staging with matching paths, such as `.variant-work/integrate-B/src/App.tsx`. Use the bundled helper:
+Before generating integration files, list the intended project-relative targets in `.variant-work/targets.json` (a JSON array, for example `["src/App.tsx", "src/variant.css"]`). Prepare a new plan to capture the current source revision, owned-file hashes, brand constraints, every registered system extension, any adoption binding and target hashes. Then write every final project file into staging with matching paths, such as `.variant-work/integrate-B/src/App.tsx`. Use the bundled helper:
 
 ```bash
 node <skill-root>/scripts/variant-integrate.mjs prepare variant-output B .variant-work/targets.json .variant-work/integration-plan.json
@@ -35,9 +35,13 @@ node <skill-root>/scripts/variant-integrate.mjs rollback variant-output <integra
 node <skill-root>/scripts/variant-integrate.mjs list variant-output
 ```
 
-`apply` requires the prepared plan; source or target changes and added/removed staging targets refuse before any project writes. Existing plan files cannot be overwritten by `prepare`. Keep conflicted staging and the old plan, prepare a new plan, and reconcile explicitly. Selection changes alone are not conflicts. Both commands accept an optional final project root for nested output.
+`apply` requires the prepared plan; source or target changes and added/removed staging targets refuse before any project writes. Existing plan files cannot be overwritten by `prepare`. Keep conflicted staging and the old plan, prepare a new plan, and reconcile explicitly. Plans written before extension/binding coverage are not upgraded in place: keep the old plan and prepare a new one. Selection changes alone are not conflicts. Both commands accept an optional final project root for nested output.
 
 `apply` saves the prior bytes of every target in `variant-output/.integrations/<id>.json` before writing, refuses targets inside `variant-output/`, `.git/`, `node_modules/` or `.variant-work/`, and records each file as created, overwritten or unchanged. `rollback` restores those files and deletes created ones, but refuses without writing anything if the user edited an integrated file afterwards. In the delivery summary, give the changed files, the checks that actually ran, the preview URL, and the exact rollback command.
+
+Include current comparison/static/native preview ownership receipts and their project roots with the handoff. Cleanup is separate from integration rollback: stop only this preview's managed process, then use `preview-files.mjs cleanup` as described in `references/workflow/preview.md`. Preserve changed adapters and all unlisted files; never delete variant source, staging, checks or backups as a cleanup shortcut.
+
+For an actual integration, read `references/workflow/delivery-receipt.md` at handoff. Before rolling back or cleaning its preview, seal a local delivery receipt from the real plan, staging, backup, version-bound before/after reports and current preview ownership. Include all integration targets in post-integration verification dependencies. Missing reports stay unverified; inventory validity is separate from check results. Give the receipt path and recheck its status before using it as current evidence. Keep `.deliveries/` with history/backups; rollback retires current verification without deleting the historical handoff.
 
 Preparation, apply and rollback share the history helper lock. External editors do not honor it; avoid simultaneous editing during commit. Ordinary write failures restore completed writes when they still match this integration; conflicting later edits preserve the backup for manual recovery. Multi-file process interruption is not globally atomic.
 
@@ -45,7 +49,9 @@ Run the target project's production build after integrating the named export. Wi
 
 ## Verify before claiming delivery
 
-Before claiming verified delivery, record and recheck version-bound evidence following `references/workflow/artifact-verification.md`. Missing runtime checks remain unverified; static readiness cannot substitute for them.
+Include the design-system check's coverage and unverified pairs in the delivery record. `ds-check.mjs` checks explicitly named or annotated pairs and component aliases; pass brand files with `--brand`. Confirmed contrast issues are delivery warnings, while generated component-layer violations are errors. Exporting DTCG with `ds-export.mjs` preserves aliases and use notes; keep the existing type grouping unless the user chooses `--group-by layer`, and list skipped or conditional values. None of these static checks proves rendered contrast.
+
+Before claiming verified delivery, record and recheck version-bound evidence following `references/workflow/artifact-verification.md`. Registered systems/extensions/bindings and supported transitive local dependencies are tracked automatically. Record actual wrapper/alias/config facts and additional dynamic/data-driven roots before preparing integration. The plan and backup bind the current closure; source, resource, compiler input or resolver/fact changes require a NEW plan, preserving old plans/staging. Old plans without closure coverage are not retrofitted. Partial dependency coverage is listed, not certified as accepted runtime delivery. Missing runtime checks remain unverified; static readiness cannot substitute for them.
 
 The skill's own regression suite checks these mechanics with fixture projects in a real browser:
 
@@ -114,3 +120,5 @@ xclip -selection clipboard < variant-output/variant-coffee-A.html
 If no clipboard utility is available, return the exact file path instead of treating clipboard support as required.
 
 Rebuild `_compare.html` before delivery to include the preview-first cards and expandable comparison statements. Full-page links remain available above each preview.
+
+For a system derived from the picked page, confirmation and adoption are separate. If its binding is pending, explicitly report that it has not adopted the new generated system. A requested `apply ds B` must use the history helper's prepared `apply-system` operation so code, aligned tokens and binding share a snapshot and undo. Exports preserve the actual current state; they never mark a pending page applied. System identities and candidate checks cover all registered extensions.

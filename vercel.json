@@ -51,7 +51,17 @@
           "key": "direction"
         }
       ],
+      "destination": "/cases",
+      "permanent": true
+    },
+    {
+      "source": "/inspiration",
       "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/en/inspiration",
+      "destination": "/en",
       "permanent": true
     }
   ],

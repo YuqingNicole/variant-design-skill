@@ -6,6 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {referenceRecords} from './reference-records.mjs';
 import { contentRoot, loadEntries, toCard } from './content.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repository = 'https://github.com/YuqingNicole/variant-design-skill';
@@ -19,9 +20,8 @@ const order = entries => [...entries].sort((a, b) => Number(b.featured) - Number
 const staticPages = {
   '/about': ['关于 Variant Design', '一份需求，在你的项目里做出三个能运行的方向：任务、数据和功能相同，取舍不同。局部修改先存快照，可以撤回，不会覆盖你没看过的改动。'],
   '/docs': ['安装与开始使用 — Variant Design', '安装技能，确认可用，然后在你的项目里走完一次：生成、比较、试改、撤回、接入。'],
-  '/inspiration': ['灵感参考 — Variant Design', '95 个外部设计参考，只附我们自己的分析和原站链接。'],
   '/submit': ['投稿与授权 — Variant Design', 'Variant Design 方向库的收录、授权与撤下规则。'],
-  '/pricing': ['价格 — Variant Design', 'Variant Design 的方案与价格。'],
+  '/pricing': ['价格 — Variant Design', '本地开源技能免费可用；托管专业版和团队版仍是计划，尚未开放。'],
   '/sponsor': ['赞助 — Variant Design', '品牌赞助 Variant Design 的方式与规则：明确标注，与编辑精选分开。'],
   '/lab': ['实验室 — Variant Design', '工作台和画布等实验功能。'],
   '/guides': ['指南 — Variant Design', '用 AI 做界面时常见问题的回答：怎么比较方向、怎么撤回修改、怎么避免千篇一律。'],
@@ -32,10 +32,9 @@ const staticPages = {
 const staticPagesEn = references => ({
   '/about': ['About Variant Design', 'One brief becomes three runnable directions in your own project: the same task, data and functions, different tradeoffs. Scoped edits are snapshotted first, can be undone and never overwrite changes you have not seen.'],
   '/docs': ['Install & get started — Variant Design', 'Install the skill, confirm it works, then go through one full loop in your project: generate, compare, refine, undo, integrate.'],
-  '/inspiration': ['Inspiration — Variant Design', `${references} outside design references, with only our own notes and links to the source.`],
   '/submit': ['Submissions & permissions — Variant Design', 'How the Variant Design direction library handles submissions, permissions and takedowns.'],
   '/sponsor': ['Sponsor Variant Design', 'How brands can sponsor Variant Design: clearly labeled and kept separate from editorial picks.'],
-  '/pricing': ['Pricing — Variant Design', 'Variant Design plans and pricing.'],
+  '/pricing': ['Pricing — Variant Design', 'The local open-source skill is available; hosted Pro and Team plans are proposals, not available subscriptions.'],
   '/changelog': ['Changelog — Variant Design', 'What changed in each version of the Variant Design skill, from CHANGELOG.md in the repository.'],
   '/skills': ['Design skills — Variant Design', 'Only design delivery skills we ran in throwaway projects, with public records.'],
   '/guides': ['Guides — Variant Design', 'Answers to common questions about designing interfaces with AI: comparing directions, undoing changes and avoiding generic results.'],
@@ -48,9 +47,10 @@ export const withNoindex = html => html.includes(noindexTag) ? html : html.repla
 
 // RFC-005 §3.5: routes whose English is marked draft. Production leaves them out of the English pages,
 // hreflang, sitemap and llms.txt; local and preview builds keep them so reviewers can read them.
-export const draftRoutes = ({ guides = [], entries = [] }, locale = 'en') => [
+export const draftRoutes = ({ guides = [], entries = [], references = [] }, locale = 'en') => [
   ...guides.filter(g => g.translations?.[locale]?.status === 'draft').map(g => `/guides/${g.slug}`),
-  ...entries.filter(e => e.translations?.[locale]?.status === 'draft').map(e => `/d/${e.slug}`)];
+  ...entries.filter(e => e.translations?.[locale]?.status === 'draft').map(e => `/d/${e.slug}`),
+  ...references.filter(r=>r.translations?.[locale]?.status==='draft').map(r=>`/inspiration/${r.id}`)];
 export function withoutDrafts(english, drafts) {
   const kept = { ...english };
   for (const route of drafts) delete kept[route];
@@ -58,18 +58,16 @@ export function withoutDrafts(english, drafts) {
 }
 
 // The reference library lives in a TS module of plain JSON literals; read it without a TS loader.
-export function loadReferences() {
-  const source = fs.readFileSync(path.join(here, '../src/inspiration-data.ts'), 'utf8'), start = source.indexOf('export const inspirationItems = ');
-  const from = source.indexOf('[', start);
-  return JSON.parse(source.slice(from, source.indexOf('\n];', from) + 2));
-}
+export const loadReferences=()=>referenceRecords().published;
+export const loadWithdrawnReferences=()=>referenceRecords().withdrawn;
 // Without JavaScript the inspiration page shows only its first tab; this index links every reference page.
 export function referenceIndex(references, lang = 'zh') {
   const en = lang === 'en', href = id => (en ? '/en' : '') + `/inspiration/${id}`;
   return `<nav aria-label="${en ? 'All references' : '全部参考'}"><h2>${en ? `All ${references.length} references` : `全部 ${references.length} 个参考`}</h2><ul>${references.map(r => `<li><a href="${href(escape(r.id))}">${escape(r.name)}</a></li>`).join('')}</ul></nav>`;
 }
 function referenceBody(r) {
-  return `<main><p><a href="/inspiration">灵感参考</a></p><h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus.zh)}</dd><dt>用在哪里</dt><dd>${escape(r.application.zh)}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}${r.via ? ` · <a href="${escape(r.via)}">经 ${escape(new URL(r.via).hostname)} 发现</a>` : ''}</dd></dl><p><a href="${escape(r.url)}">访问原站</a></p></main>`;
+  const permission=r.source==='permission'?`<aside><p>作者授权 · 仅限本站展示，不含下载、复用、MCP、再分发或商业使用。</p><p><a href="${escape(r.credit.url)}">${escape(r.credit.name)}</a> · <a href="${escape(r.permission.record)}">授权记录</a></p></aside>`:'';
+  return `<main><p><a href="/">灵感</a></p><h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus.zh)}</dd><dt>用在哪里</dt><dd>${escape(r.application.zh)}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}${r.via ? ` · <a href="${escape(r.via)}">经 ${escape(new URL(r.via).hostname)} 发现</a>` : ''}</dd></dl>${permission}<p><a href="${escape(r.url)}">访问原站</a></p></main>`;
 }
 // The install guide (src/docs-content.ts) as static HTML, so /docs reads without JavaScript.
 function docsBody(d, lang = 'zh') {
@@ -82,7 +80,7 @@ function docsBody(d, lang = 'zh') {
     + `<h3>${x('confirm')}</h3><p>${x('confirmNode')}</p>${d.agents.map(a => code(d.verify(a.path, lang === 'zh'))).join('')}<p>${x('confirmPrompt')}</p>${code(d.prompts.check[lang])}</section>`
     + `<section id="first-project"><h2>${x('firstProject')}</h2><p>${x('firstIntro')}</p>${code(d.prompts.first[lang])}<h3>${x('outcomes')}</h3>${list(d.outcomes)}</section>`
     + `<section id="refine"><h2>${x('refine')}</h2><p>${x('refineIntro')}</p>${commands(d.refine)}</section>`
-    + `<section id="deliver"><h2>${x('deliver')}</h2>${commands(d.deliver)}<p>${x('integrate')}</p>${code(d.prompts.integrate[lang])}<h3>${x('handoff')}</h3>${list(d.handoff)}</section>`
+    + `<section id="deliver"><h2>${x('deliver')}</h2>${commands(d.deliver)}<p>${escape(d.systemChecks[lang])}</p><p>${x('integrate')}</p>${code(d.prompts.integrate[lang])}<h3>${x('handoff')}</h3>${list(d.handoff)}</section>`
     + `<section id="more"><h2>${x('more')}</h2><p>${x('moreIntro')}</p>${commands(d.otherUses)}</section>`
     + `<section id="faq"><h2>${x('faq')}</h2>${d.faq.map(([q, a]) => `<h3>${escape(q[lang])}</h3><p>${escape(a[lang])}</p>`).join('')}</section></main>`;
 }
@@ -134,12 +132,14 @@ function page(template, { site, route, title, description, image, type = 'websit
   return unlisted.has(route) ? withNoindex(html) : html;
 }
 
-export function renderSite(entries, template, site = defaultSite, references = [], { docs, version = '', guides = [], rendered = {}, english = {} } = {}) {
+export function renderSite(entries, template, site = defaultSite, references = [], { docs, version = '', guides = [], rendered = {}, english = {}, withdrawn = [] } = {}) {
   const sorted = order(entries), pages = new Map();
   const zhPage = options => page(template, { site, translated: !!english[options.route], ...options });
   const enPage = options => { if (english[options.route]) pages.set(pathIn(options.route, 'en'), page(template, { site, lang: 'en', translated: true, body: english[options.route], ...options })); };
   const library = 'Variant Design 方向库';
-  pages.set('/', zhPage({ route: '/', data: { '@graph': [{ '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/`, name: 'Variant Design', inLanguage: ['zh-CN', 'en'] }, skillData(site, version)] }, title: 'Variant Design — 设计导航，只收核对过的', description: '给用 AI 做产品的人：精选外部参考、实测过的设计技能和真实的 A/B/C 案例。参考写明来源、核对日期和还不知道的事，技能附实测记录，案例附产出记录。', body: `<main><h1>设计导航，只收核对过的。</h1><p>给用 AI 做产品的人：精选外部参考、实测过的设计技能和真实的 A/B/C 案例。参考写明来源、核对日期和还不知道的事，技能附实测记录，案例附产出记录。</p><nav><a href="/inspiration">浏览设计参考</a> · <a href="/skills">设计技能</a> · <a href="#works">A/B/C 案例</a> · <a href="/docs">安装与使用</a></nav><section><h2>精选技能：variant-design</h2><p>把一个任务做成 A/B/C 三个可比较的方向，支持局部修改、快照撤回和可回滚的接入。</p><a href="/d/pulse">查看 Pulse 案例与产出记录</a></section><section id="works"><h2>一个任务，三种方向。</h2>${sorted.map(card).join('')}</section></main>` }));
+  const homeTitle = 'Variant Design — 互联网上最好的设计灵感', homeDescription = `精选网站、界面和动效作品，每条都附出处和我们写的笔记：研究什么、用在哪里。目前 ${references.length} 条。`;
+  pages.set('/', zhPage({ route: '/', data: { '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/`, name: 'Variant Design', description: homeDescription, inLanguage: ['zh-CN', 'en'] }, title: homeTitle, description: homeDescription, body: rendered['/'] ?? '' }));
+  pages.set('/cases', zhPage({ route: '/cases', title: `A/B/C 案例 — ${library}`, description: '同一个任务的三个方向：每个方向说明优化什么、牺牲什么、适合什么场景。技能产出和概念作品分别标注。', body: rendered['/cases'] ?? '' }));
   for (const category of [...new Set(sorted.map(e => e.category))]) {
     const name = categoryNames[category] ?? category, list = sorted.filter(e => e.category === category);
     pages.set(`/c/${category}`, zhPage({ route: `/c/${category}`, title: `${name} — ${library}`, description: `${name}：${list.length} 件作品，每件包含同一个任务的三个方向。`, body: `<main><h1>${escape(name)}</h1>${list.map(card).join('')}</main>` }));
@@ -149,19 +149,23 @@ export function renderSite(entries, template, site = defaultSite, references = [
     pages.set(`/d/${e.slug}`, zhPage({ route: `/d/${e.slug}`, type: 'article', data: { '@type': 'CreativeWork', name: e.title[0], alternateName: e.title[1], description: e.summary[0], datePublished: e.publishedAt, url: `${site}/d/${e.slug}`, image: site + `/media/${e.slug}/${image.file}`, isPartOf: { '@id': `${site}/#website` } }, title: `${e.title[0]} — ${library}`, description: e.summary[0],
       image: { src: `/media/${e.slug}/${image.file}`, width: image.width, height: image.height, alt: image.alt[0] }, body: entryBody(e) }));
   }
-  for (const r of references) pages.set(`/inspiration/${r.id}`, zhPage({ route: `/inspiration/${r.id}`, title: `${r.name} — 灵感参考 — Variant Design`, description: `${r.name}：${r.focus.zh}。用在${r.application.zh}。`, body: referenceBody(r) }));
-  for (const [route, [title, description]] of Object.entries(staticPages)) pages.set(route, zhPage({ route, title, description, body: rendered[route] ?? '', ...(route === '/docs' && docs ? { body: docsBody(docs), data: docsData(docs, site) } : {}) }));
+  for (const r of references) pages.set(`/inspiration/${r.id}`, zhPage({ route: `/inspiration/${r.id}`, title: `${r.name} — 灵感参考 — Variant Design`, description: `${r.name}：${r.focus.zh}。用在${r.application.zh}。`, body: rendered[`/inspiration/${r.id}`]??referenceBody(r) }));
+  for (const [route, [title, description]] of Object.entries(staticPages)) pages.set(route, zhPage({ route, title, description, body: rendered[route] ?? '', ...(route === '/docs' && docs ? { body: docsBody(docs), data: docsData(docs, site) } : {}), ...(route === '/skills' ? { data: skillData(site, version) } : {}) }));
   for (const g of guides) pages.set(`/guides/${g.slug}`, zhPage({ route: `/guides/${g.slug}`, type: 'article', title: `${g.title.zh} — Variant Design`, description: g.answer.zh, data: guideData(g, site), body: rendered[`/guides/${g.slug}`] ?? '' }));
 
   // English exists only where it rendered in full; a page without it stays Chinese-only and unlisted in hreflang.
   const enLibrary = 'Variant Design direction library', enCategories = { landing: 'Landing pages', product: 'Product UI', data: 'Data', brand: 'Brand', component: 'Components' };
-  enPage({ route: '/', title: 'Variant Design — a design guide, checked before it’s listed', description: 'For people building products with AI: curated outside references, tried design skills and real A/B/C cases, each with its source, check date and what is still unknown.', data: { '@graph': [{ '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/en`, name: 'Variant Design', inLanguage: ['zh-CN', 'en'] }, skillData(site, version, 'en')] } });
+  const englishReferences=references.filter(r=>english[`/inspiration/${r.id}`]);
+  const enHomeDescription = `Curated websites, interfaces and motion work, each with its source and our own notes on what to study and where to use it. ${englishReferences.length} so far.`;
+  enPage({ route: '/', title: 'Variant Design — The best design inspiration on the internet', description: enHomeDescription, data: { '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/en`, name: 'Variant Design', description: enHomeDescription, inLanguage: ['zh-CN', 'en'] } });
+  enPage({ route: '/cases', title: `A/B/C cases — ${enLibrary}`, description: 'Three directions for one brief: what each optimizes, what it gives up and where it fits. Skill outputs and concept studies are labeled separately.' });
   for (const category of new Set(sorted.map(e => e.category))) { const name = enCategories[category] ?? category, count = sorted.filter(e => e.category === category).length; enPage({ route: `/c/${category}`, title: `${name} — ${enLibrary}`, description: `${name}: ${count} ${count === 1 ? 'entry' : 'entries'}, each with three directions for the same brief.` }); }
   for (const e of sorted) { const { image } = cover(e); enPage({ route: `/d/${e.slug}`, type: 'article', title: `${e.title[1]} — ${enLibrary}`, description: e.summary[1], image: { src: `/media/${e.slug}/${image.file}`, width: image.width, height: image.height, alt: image.alt[1] },
     data: { '@type': 'CreativeWork', name: e.title[1], description: e.summary[1], datePublished: e.publishedAt, url: `${site}/en/d/${e.slug}`, image: site + `/media/${e.slug}/${image.file}`, isPartOf: { '@id': `${site}/#website` } } }); }
   for (const r of references) enPage({ route: `/inspiration/${r.id}`, title: `${r.name} — Inspiration — Variant Design`, description: `${r.name}: ${r.focus.en}. Use it for ${r.application.en}.` });
-  for (const [route, [title, description]] of Object.entries(staticPagesEn(references.length))) enPage({ route, title, description, ...(route === '/docs' && docs ? { data: docsData(docs, site, 'en') } : {}) });
+  for (const [route, [title, description]] of Object.entries(staticPagesEn(references.length))) enPage({ route, title, description, ...(route === '/docs' && docs ? { data: docsData(docs, site, 'en') } : {}), ...(route === '/skills' ? { data: skillData(site, version, 'en') } : {}) });
   for (const g of guides) enPage({ route: `/guides/${g.slug}`, type: 'article', title: `${g.title.en} — Variant Design`, description: g.answer.en, data: guideData(g, site, 'en') });
+  for(const r of withdrawn)for(const lang of ['zh','en']){const en=lang==='en',route=`/inspiration/${r.id}`,title=en?'This work has been removed':'这条作品已撤下';const body=(en?english[route]:rendered[route])??`<main><h1>${title}</h1><p>${escape(r.name)}</p><p>${escape(r.withdrawnAt)}</p><p>${escape(r.reason[lang])}</p><a href="${en?'/en':'/'}">${en?'Back to inspiration':'返回灵感作品流'}</a></main>`;pages.set(pathIn(route,lang),withNoindex(page(template,{site,route,lang,translated:true,title:`${r.name} — ${title} — Variant Design`,description:r.reason[lang],body}))) }
   return pages;
 }
 
@@ -171,12 +175,12 @@ export function llms(entries, docs, site = defaultSite, references = [], guides 
   const answers = guides.map(g => `- [${g.title.en}](${site}/en/guides/${g.slug}): ${g.answer.en}`).join('\n');
   return `# Variant Design
 
-> Variant Design is an open-source agent skill for Codex and Claude Code that turns one design brief into three distinct, comparable directions (A/B/C) inside your own project, with scoped edits, snapshot undo and an integration step you can roll back. Its website is a bilingual (Chinese/English) design navigation site: curated external references with sources and check dates, design skills that were actually run, and real A/B/C cases with their output records.
+> Variant Design is a bilingual (Chinese/English) design inspiration site: curated websites, interfaces and motion work, each with its source, the date it was checked and our own notes on what to study and where to use it. It also publishes variant-design, an open-source agent skill for Codex and Claude Code that turns one design brief into three distinct, comparable directions (A/B/C) inside your own project, with scoped edits, snapshot undo and an integration step you can roll back. A/B/C cases from real skill runs are listed with their output records.
 
 - Install for Codex: \`${docs.installCommand}\`
 - Install for Claude Code: \`${docs.clone(docs.agents.find(a => a.id === 'claude').path)}\`
 - Or, inside a project: \`npx skills add YuqingNicole/variant-design-skill -a codex\` (or \`-a claude-code\`).
-- Requires Git and Node.js 22+. Your agent supplies the model; there is no hosted service. MIT licensed.
+- Requires Git and Node.js 22+. Your agent supplies model access for this local skill. Hosted Pro and Team plans are proposals, not available subscriptions. MIT licensed, with third-party exceptions listed in NOTICE.
 - Editing a direction does not select it: only an explicit \`pick B\` records the final choice. Output goes to \`variant-output/\` in your project.
 - Or, as a Claude Code plugin from this repository's own marketplace: \`claude plugin marketplace add YuqingNicole/variant-design-skill\`, then \`claude plugin install variant-design@variant-design\` (checked with Claude Code 2.1.316). It is not listed in any third-party plugin directory yet.
 
@@ -199,7 +203,7 @@ ${cases}
 
 ## Library
 
-- [Design references](${site}/en/inspiration): ${references.length} curated external references, each with our own notes on what to study and where to use it, the source and the date it was checked.
+- [Design inspiration](${site}/en): ${references.length} curated external references, each with our own notes on what to study and where to use it, the source and the date it was checked.
 - [Design skills](${site}/en/skills): design delivery skills that were run in a throwaway project, with public records.
 
 ## Optional
@@ -217,12 +221,13 @@ export function llmsFull(entries, docs, site = defaultSite, references = [], gui
       ...docs.agents.flatMap(a => [`### ${a.label || (lang === 'en' ? 'Other agents' : '其他 Agent')}`, code(a.id === 'codex' ? docs.installCommand : docs.clone(a.path)), a.note[lang]]),
       `### ${x('confirm')}`, x('confirmNode'), ...docs.agents.map(a => code(docs.verify(a.path, lang === 'zh'))), x('confirmPrompt'), code(docs.prompts.check[lang]),
       `## ${x('firstProject')}`, x('firstIntro'), code(docs.prompts.first[lang]), `### ${x('outcomes')}`, list(docs.outcomes),
-      `## ${x('refine')}`, x('refineIntro'), commands(docs.refine), `## ${x('deliver')}`, commands(docs.deliver), x('integrate'), code(docs.prompts.integrate[lang]), `### ${x('handoff')}`, list(docs.handoff),
+      `## ${x('refine')}`, x('refineIntro'), commands(docs.refine), `## ${x('deliver')}`, commands(docs.deliver), docs.systemChecks[lang], x('integrate'), code(docs.prompts.integrate[lang]), `### ${x('handoff')}`, list(docs.handoff),
       `## ${x('more')}`, x('moreIntro'), commands(docs.otherUses), `## ${x('faq')}`, ...docs.faq.flatMap(([q, a]) => [`### ${q[lang]}`, a[lang]])].join('\n\n');
   };
   return `${llms(entries, docs, site, references, guides)}\n---\n\n${guide('en')}\n\n---\n\n${guide('zh')}\n`;
 }
 
+export const indexableRoutes=pages=>[...pages].filter(([,html])=>!html.includes(noindexTag)).map(([route])=>route);
 export function sitemap(routes, site = defaultSite) {
   const listed = [...routes].filter(r => !unlisted.has(r)), known = new Set(listed), abs = r => escape(site + (r === '/' ? '/' : r));
   const versions = r => { const base = r === '/en' ? '/' : r.startsWith('/en/') ? r.slice(3) : r, en = pathIn(base, 'en');
@@ -247,18 +252,19 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   const { guides } = await importTs(path.join(here, '../src/guides-content.ts')), { renderPages } = await import('../.ssr/ssr-pages.js');
   const { zh: rendered, en: english } = renderPages();
   for (const [route, html] of [...Object.entries(rendered), ...Object.entries(english)]) if (!html.includes('<h1')) throw new Error(`Empty static render for ${route}`);
-  const version = fs.readFileSync(path.join(here, '../../VERSION'), 'utf8').trim(), references = loadReferences();
-  rendered['/inspiration'] += referenceIndex(references); english['/inspiration'] += referenceIndex(references, 'en');
+  const version = fs.readFileSync(path.join(here, '../../VERSION'), 'utf8').trim(), references = loadReferences(), withdrawn=loadWithdrawnReferences();
   const dist = path.resolve(here, '../dist'), site = (process.env.SITE_URL || defaultSite).replace(/\/$/, '');
   const { entries, problems } = loadEntries();
   if (problems.length) { console.error(problems.join('\n')); process.exit(1); }
-  const drafts = process.env.VERCEL_ENV === 'production' ? draftRoutes({ guides, entries }) : [];
+  const drafts = process.env.VERCEL_ENV === 'production' ? draftRoutes({ guides, entries, references }) : [];
   if (drafts.length) console.log(`Draft English left out of production: ${drafts.join(', ')}`);
+  const englishReferences=references.filter(r=>!drafts.includes(`/inspiration/${r.id}`));
+  rendered['/']+=referenceIndex(references);english['/']+=referenceIndex(englishReferences,'en');
   const listed = { guides: guides.filter(g => !drafts.includes(`/guides/${g.slug}`)), entries: entries.filter(e => !drafts.includes(`/d/${e.slug}`)) };
   // The untouched shell stays available as app.html: the fallback for routes without their own page.
   const shell = path.join(dist, 'app.html');
   if (!fs.existsSync(shell)) fs.copyFileSync(path.join(dist, 'index.html'), shell);
-  const template = fs.readFileSync(shell, 'utf8').replace(`    ${noindexTag}\n`, ''), pages = renderSite(entries, template, site, references, { docs, version, guides, rendered, english: withoutDrafts(english, drafts) });
+  const template = fs.readFileSync(shell, 'utf8').replace(`    ${noindexTag}\n`, ''), pages = renderSite(entries, template, site, references, { docs, version, guides, rendered, english: withoutDrafts(english, drafts), withdrawn });
   for (const [route, html] of pages) {
     const file = route === '/' ? path.join(dist, 'index.html') : path.join(dist, route.slice(1), 'index.html');
     fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, html);
@@ -268,10 +274,10 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   for (const file of [shell, ...htmlIn(path.join(dist, 'variant-output')), ...htmlIn(path.join(dist, 'lab'))]) fs.writeFileSync(file, withNoindex(fs.readFileSync(file, 'utf8')));
   fs.cpSync(path.join(contentRoot, 'media'), path.join(dist, 'media'), { recursive: true });
   for (const entry of entries) fs.writeFileSync(path.join(dist, 'd', `${entry.slug}.json`), JSON.stringify(toCard(entry, site), null, 2) + '\n');
-  fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap(pages.keys(), site));
+  fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap(indexableRoutes(pages), site));
   fs.writeFileSync(path.join(dist, 'feed.xml'), rss(entries, site));
-  fs.writeFileSync(path.join(dist, 'llms.txt'), llms(listed.entries, docs, site, references, listed.guides));
-  fs.writeFileSync(path.join(dist, 'llms-full.txt'), llmsFull(listed.entries, docs, site, references, listed.guides));
+  fs.writeFileSync(path.join(dist, 'llms.txt'), llms(listed.entries, docs, site, englishReferences, listed.guides));
+  fs.writeFileSync(path.join(dist, 'llms-full.txt'), llmsFull(listed.entries, docs, site, englishReferences, listed.guides));
   fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site}/sitemap.xml\n`);
   console.log(`Prerendered ${pages.size} routes (including reference details) and ${entries.length} direction cards for ${site}; sitemap.xml, feed.xml, llms.txt and robots.txt written.`);
 }

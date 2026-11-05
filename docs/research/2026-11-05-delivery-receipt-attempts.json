@@ -1,0 +1,396 @@
+{
+  "attempts": [
+    {
+      "schemaVersion": 1,
+      "implementationHead": "4d2527d91c9b961b084bbf1f18d459fd26709b9e",
+      "observedAt": "2026-11-04T18:30:35.859Z",
+      "rawDirectory": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-4d2527d",
+      "result": {
+        "sha256": "978d709c27aa5b09d56c2c1be0857c4369add8d2830502f78373523b603ef560",
+        "pass": false,
+        "checks": 78,
+        "passed": 60,
+        "failed": [
+          {
+            "id": "native:generate-tasks",
+            "pass": false,
+            "details": [
+              "A/1440: page.waitForFunction: Timeout 5000ms exceeded.",
+              "B/1440: page.waitForFunction: Timeout 5000ms exceeded.",
+              "C/1440: page.waitForFunction: Timeout 5000ms exceeded.",
+              "A/390: page.waitForFunction: Timeout 5000ms exceeded.",
+              "B/390: page.waitForFunction: Timeout 5000ms exceeded.",
+              "C/390: page.waitForFunction: Timeout 5000ms exceeded."
+            ]
+          },
+          {
+            "id": "native:generate-brand-assets",
+            "pass": false,
+            "details": []
+          },
+          {
+            "id": "native:generate-no-overflow",
+            "pass": false,
+            "details": []
+          },
+          {
+            "id": "native:generate-comparison",
+            "pass": false,
+            "details": []
+          },
+          {
+            "id": "native:deliver-tasks",
+            "pass": false,
+            "details": [
+              "A/1440: page.waitForFunction: Timeout 5000ms exceeded.",
+              "B/1440: page.waitForFunction: Timeout 5000ms exceeded.",
+              "C/1440: page.waitForFunction: Timeout 5000ms exceeded.",
+              "A/390: page.waitForFunction: Timeout 5000ms exceeded.",
+              "B/390: page.waitForFunction: Timeout 5000ms exceeded.",
+              "C/390: page.waitForFunction: Timeout 5000ms exceeded."
+            ]
+          },
+          {
+            "id": "native:deliver-brand-assets",
+            "pass": false,
+            "details": []
+          },
+          {
+            "id": "native:deliver-no-overflow",
+            "pass": false,
+            "details": []
+          },
+          {
+            "id": "native:deliver-comparison",
+            "pass": false,
+            "details": []
+          },
+          {
+            "id": "native:probe-tasks",
+            "pass": false,
+            "details": [
+              "A/1440: page.waitForFunction: Timeout 5000ms exceeded.",
+              "B/1440: page.waitForFunction: Timeout 5000ms exceeded.",
+              "C/1440: page.waitForFunction: Timeout 5000ms exceeded.",
+              "A/390: page.waitForFunction: Timeout 5000ms exceeded.",
+              "B/390: page.waitForFunction: Timeout 5000ms exceeded.",
+              "C/390: page.waitForFunction: Timeout 5000ms exceeded."
+            ]
+          },
+          {
+            "id": "native:probe-brand-assets",
+            "pass": false,
+            "details": []
+          },
+          {
+            "id": "native:probe-no-overflow",
+            "pass": false,
+            "details": []
+          },
+          {
+            "id": "native:probe-comparison",
+            "pass": false,
+            "details": []
+          },
+          {
+            "id": "native:original-dependencies-reused",
+            "pass": false,
+            "details": []
+          },
+          {
+            "id": "native:delivery-replayed",
+            "pass": false,
+            "details": [
+              "history-replayed: ",
+              "integration-replayed: "
+            ]
+          },
+          {
+            "id": "dependencies:fresh-observation",
+            "pass": false,
+            "details": [
+              "Focus, motion and non-target checks are not inferred from these observations and remain unverified."
+            ]
+          },
+          {
+            "id": "dependencies:fresh-apply-rollback",
+            "pass": false,
+            "details": []
+          },
+          {
+            "id": "receipts:current-observations",
+            "pass": false,
+            "details": []
+          },
+          {
+            "id": "receipts:sealed-receipt",
+            "pass": false,
+            "details": []
+          }
+        ],
+        "seconds": 584,
+        "timedOut": false,
+        "turns": [
+          {
+            "id": "generate",
+            "exit": 0,
+            "seconds": 161,
+            "timedOut": false,
+            "transcriptSha256": "23defab6c0d87daabb1684128c1bca121d3c269b511a0bd6ef5b5e451e5c36c9"
+          },
+          {
+            "id": "deliver",
+            "exit": 0,
+            "seconds": 109,
+            "timedOut": false,
+            "transcriptSha256": "210cb3e01600a089297b7ee9197bddaf1286caa748fae7b0ebf005a4e6f7e6ff"
+          },
+          {
+            "id": "cleanup",
+            "exit": 0,
+            "seconds": 35,
+            "timedOut": false,
+            "transcriptSha256": "3aa38b067647dd9db093d0cc42462ce489fc6fd2fdabe3dd8ca3408ed01b9722"
+          }
+        ],
+        "reading": {
+          "words": 21891,
+          "files": [
+            "SKILL.md",
+            "references/domains/dashboard.md",
+            "references/workflow/design-declaration.md",
+            "references/workflow/project-context.md",
+            "references/workflow/project-discovery.md",
+            "skills/shared/code-output.md",
+            "skills/variant-generate/ROUTE.md",
+            "references/workflow/artifact-verification.md",
+            "references/workflow/delivery-receipt.md",
+            "references/workflow/history.md",
+            "references/workflow/preview.md",
+            "skills/shared/export.md"
+          ],
+          "turns": [
+            {
+              "turn": "generate",
+              "files": [
+                "SKILL.md",
+                "references/domains/dashboard.md",
+                "references/workflow/design-declaration.md",
+                "references/workflow/project-context.md",
+                "references/workflow/project-discovery.md",
+                "skills/shared/code-output.md",
+                "skills/variant-generate/ROUTE.md"
+              ],
+              "words": 7418
+            },
+            {
+              "turn": "deliver",
+              "files": [
+                "SKILL.md",
+                "references/workflow/artifact-verification.md",
+                "references/workflow/delivery-receipt.md",
+                "references/workflow/history.md",
+                "references/workflow/preview.md",
+                "skills/shared/export.md",
+                "skills/variant-generate/ROUTE.md"
+              ],
+              "words": 9921
+            },
+            {
+              "turn": "cleanup",
+              "files": [
+                "SKILL.md",
+                "references/workflow/preview.md",
+                "skills/variant-generate/ROUTE.md"
+              ],
+              "words": 4552
+            }
+          ]
+        },
+        "usage": {
+          "tokens": 1104824
+        }
+      },
+      "phases": {
+        "baseline": {
+          "receipt": {
+            "schemaVersion": 1,
+            "phase": "baseline",
+            "directory": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-4d2527d/native-vite-receipts-codex.phases/baseline",
+            "manifestSha256": "a617d26df93601949e9d10cdcf8ce1631e30ca622827f311e45f62380539ccb2",
+            "snapshotSha256": "cfd5b8e8f8f704f4b4e683491beeefa84c2737046f360ef33544b9c81473c92b",
+            "sourceDigest": "7de20d4199c78747cb1ccfad38e4d0b2490ce840543df7874faab4d0f6aa44fb",
+            "receiptSha256": "8880c7ec78b163499b9767ad59980e4bbc3bc5cb6bf2903bbd80f88b6e566d74"
+          },
+          "files": 109,
+          "versions": null,
+          "selected": null
+        },
+        "generate": {
+          "receipt": {
+            "schemaVersion": 1,
+            "phase": "generate",
+            "directory": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-4d2527d/native-vite-receipts-codex.phases/generate",
+            "manifestSha256": "8b789eb2e437a2f24f4b3a2da4dcdc063e5485b60af70f46d1b9bcf86962be88",
+            "snapshotSha256": "3ffac2c1d96339cecce8cddc47915a49c3f522b73da61af79f794778573e9f7f",
+            "sourceDigest": "9f86df50b4130e68849058fe169ff33afaefa7fbf5df025d63d3bb1611158238",
+            "receiptSha256": "e4648bc02768e6fd3834382b9c65aa4272ca74d115cf0919d1f41567d0366d10"
+          },
+          "files": 153,
+          "versions": {
+            "A": 1,
+            "B": 1,
+            "C": 1
+          },
+          "selected": null
+        },
+        "deliver": {
+          "receipt": {
+            "schemaVersion": 1,
+            "phase": "deliver",
+            "directory": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-4d2527d/native-vite-receipts-codex.phases/deliver",
+            "manifestSha256": "7599e667b72d542b31474f030018f3af67939d779675fabeedde5a91e87b3392",
+            "snapshotSha256": "29aefe832a7ede2927e1284e775b8857c9d1c0a2ffbca07e09a437af6f473c57",
+            "sourceDigest": "70f78d945b303cf142f51f4aa4fb320a2263d88a04c2b2ebc0ff63e57cc10574",
+            "receiptSha256": "46cd63f3e5b11f701d9d580c3c3e82dc2593f9ec1bdeb639bafa6ef6e36ac56c"
+          },
+          "files": 209,
+          "versions": {
+            "A": 1,
+            "B": 3,
+            "C": 1
+          },
+          "selected": null
+        },
+        "cleanup": {
+          "receipt": {
+            "schemaVersion": 1,
+            "phase": "cleanup",
+            "directory": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-4d2527d/native-vite-receipts-codex.phases/cleanup",
+            "manifestSha256": "2a946935e60a062285a88da2e4f0728bbfd82f9ba3421904268bad06c311878b",
+            "snapshotSha256": "29aefe832a7ede2927e1284e775b8857c9d1c0a2ffbca07e09a437af6f473c57",
+            "sourceDigest": "6bf79ddfd31d4e0f8016aa5f28e925e45b11515818a63379e1e288fdd0d3384d",
+            "receiptSha256": "7066fb42a3f463c4cc170123070651557b46385e96e2e94d303fb32b68cbb57a"
+          },
+          "files": 203,
+          "versions": {
+            "A": 1,
+            "B": 3,
+            "C": 1
+          },
+          "selected": null
+        }
+      },
+      "receiptHost": [
+        {
+          "id": "installed-helpers",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "agent-receipt",
+          "pass": true,
+          "details": [
+            "Agent report claims remain recorded claims; independent host observations below cover only the checks actually run. The saved integration is historical after rollback."
+          ]
+        },
+        {
+          "id": "target-inventory",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "current-observations",
+          "pass": false,
+          "details": []
+        },
+        {
+          "id": "sealed-receipt",
+          "pass": false,
+          "details": []
+        },
+        {
+          "id": "target-drift",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "report-drift",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "source-drift",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "rolled-back",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "source-project-unchanged",
+          "pass": true,
+          "details": []
+        }
+      ],
+      "diagnosis": "The output adds window.confirm before the real provider markPaid call. The host has no dialog handler, so Playwright dismisses it and total() times out. Brand/overflow/comparison measurements after that task are not observed; failing grader gates do not establish actual brand defects.",
+      "next": "Add explicit confirmation/acknowledgement handling during the authorized local payment step, retain all task/state assertions, add a real browser regression and run a fresh installed-skill case. Original result stays failed.",
+      "scope": {
+        "fullRuntimeVerification": false,
+        "fullIssues18and19": false,
+        "productionChanged": false
+      }
+    }
+  ],
+  "additionalAudit": {
+    "source": "separately labelled corrected-host audit of immutable first-run generation",
+    "file": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-original-confirmation-audit-9fd2632/audit.json",
+    "sha256": "4a4180327f3449d05426a8bd62cc8b82ac88b9947417ca14a25fab8e0dd9185e",
+    "originalResultStillFailed": true,
+    "checks": [
+      {
+        "id": "generate-observed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-tasks",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-brand-assets",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-no-overflow",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-build-typecheck",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-build-coverage",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-fresh",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "generate-comparison",
+        "pass": false,
+        "details": []
+      }
+    ],
+    "correction": "The first diagnostic over-attributed comparison failure to the interrupted payment. Independent comparison capture actually observed mobile overflow; screenshots and source confirm intrinsic iframe/grid sizing. Confirmation handling restores the seven measured generation gates, but does not fix that generated comparison page."
+  }
+}

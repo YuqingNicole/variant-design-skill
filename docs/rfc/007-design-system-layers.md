@@ -1,6 +1,6 @@
 # RFC-007 · 设计系统分层：决策、基础值、语义、组件与模式
 
-- 状态：提案，待维护者确认。按 §7 的建议先实现了 P0，并实现了 P1 的一部分：`ds-export` 导出用途说明、`delivery-check` 对直接引用基础值发出警告、评分器新增检查。§4 里 `ds-check` 的“未检查”清单和“组件层只引用语义层”这条检查还没做；DTCG 的分组方式未定。试跑记录见 `docs/research/2026-11-03-design-system-after-pick.md`。
+- 状态：P0/P1 已实现；修复后的 Codex 完整 harbor-chain 与 ledger-pick 通过。Claude 账号验证、维护者截图验收和 §7 的未决选择仍待完成；默认 DTCG 按类型分组，按层导出已作为选项提供。证据见 `docs/research/2026-11-04-design-system-validation.md`。
 - 日期：2026-11-03。
 - 依据：
   - `docs/research/2026-11-03-design-system-layering.md`：Material 3、Polaris、Atlassian、Radix、shadcn/ui、Carbon、Figma Variables、DTCG 2025.10 的公开文档；
@@ -83,3 +83,9 @@ RFC-006 把“选定之后给用户一套完善的设计系统”定为核心卖
 1. **组件 token 写多少？** 我建议：只给状态 ≥3 个、并且后续页面会复用的组件写，每个组件只写对外可调的那几个。另一个选择是完全不做组件 token（shadcn 的做法），只在 `DESIGN.md` 里写组件规则。
 2. **DTCG 文件怎么分组？** 按层（`primitive`、`semantic`、`component`）分组，导入 Figma 时更接近 collection；按类型分组是现状，和 DTCG 的 `$type` 继承一致。我倾向按层分组，在每个 token 上写 `$type`。
 3. **对比度标准。** 继续用 WCAG 2 的 4.5:1。Radix 用的是 APCA，我们不混用；如果以后要支持 APCA，需要另外决定。
+
+## 8. P1 后续实现（2026-11-04，待完整验收）
+
+`codex/design-system-validation` 补齐明确配对、未验证清单、组件层约束与品牌来源区分。共享文字色可用尾随 `/* on: --color-bg --color-surface */` 声明多个底色；只有明确的非文字色才可用 `contrast: non-text`。组件 token 是单一语义或品牌变量别名；组合字体和状态比例先写入语义层。旧品牌文件用 `--brand` 指定，扩展遵守新规则。
+
+DTCG 新增可审阅的 `--group-by layer`，当前默认仍按类型分组，§7.2 的默认切换决定未收到答复。真实 CLI 链路及截图验收尚未完成。契约、负向基线和验证记录见 [设计系统检查记录](../research/2026-11-04-design-system-validation.md)。

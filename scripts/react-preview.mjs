@@ -5,7 +5,9 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { buildPreview } from './build-preview.mjs';
+import { publishPreview } from './preview-files.mjs';
 
 const args = process.argv.slice(2);
 const staticMode = args.includes('--static');
@@ -43,9 +45,8 @@ function viteOptions(require) {
 async function buildStatic(vite, require, result) {
   const target = path.join(output, '_static');
   const work = fs.mkdtempSync(path.join(os.tmpdir(), 'variant-static-'));
+  const files = {}, relative = file => path.relative(project, path.join(target, file)).split(path.sep).join('/');
   try {
-    fs.rmSync(target, { recursive: true, force: true });
-    fs.mkdirSync(path.join(target, '_preview'), { recursive: true });
     for (const id of Object.keys(result.urls)) {
       const outDir = path.join(work, id);
       await vite.build({ ...viteOptions(require), base: './', logLevel: 'error', build: {
@@ -59,9 +60,11 @@ async function buildStatic(vite, require, result) {
         .replace(/\s*<script type="module"[^>]*><\/script>/g, '').replace(/\s*<link rel="stylesheet"[^>]*>/g, '')
         // Replacer functions: a string replacement would expand $&, $` and $$ inside the bundle.
         .replace('</head>', () => `<style>${css}</style></head>`).replace('</body>', () => `<script>${js}</script></body>`);
-      fs.writeFileSync(path.join(target, result.urls[id]), html);
+      files[relative(result.urls[id])] = html;
     }
-    fs.copyFileSync(path.join(output, result.comparison), path.join(target, result.comparison));
+    files[relative(result.comparison)] = fs.readFileSync(path.join(output, result.comparison));
+    const group = 'static-' + createHash('sha256').update(output).digest('hex').slice(0, 24);
+    console.log(`Static ownership: ${JSON.stringify(publishPreview(project, group, files))}`);
   } finally { fs.rmSync(work, { recursive: true, force: true }); }
   console.log(`Comparison: ${pathToFileURL(path.join(target, result.comparison)).href}`);
   for (const [id, url] of Object.entries(result.urls)) console.log(`${id}: ${pathToFileURL(path.join(target, url)).href}`);
@@ -69,7 +72,8 @@ async function buildStatic(vite, require, result) {
 }
 
 try {
-  const result = buildPreview(output);
+  const result = buildPreview(output, project);
+  console.log(`Comparison ownership: ${JSON.stringify(result.ownership)}`);
   if (!result.react) throw new Error('React preview requires three React entries. Use preview-server.mjs for HTML.');
   const require = createRequire(path.join(project, 'package.json'));
   for (const name of ['react', 'react-dom/client']) require.resolve(name);

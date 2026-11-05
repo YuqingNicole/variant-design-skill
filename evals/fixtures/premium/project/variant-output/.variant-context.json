@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 2,
+  "framework": "html",
+  "selectedVariant": null,
+  "activeVariant": null,
+  "taskContract": {
+    "primaryJob": "Find a book and save it",
+    "data": "src/books.json",
+    "requiredFunctions": [
+      "Search title or author",
+      "Filter genre",
+      "Save and unsave",
+      "View saved books"
+    ]
+  },
+  "recommendation": {
+    "variant": "B",
+    "reason": "A compact catalogue for daily browsing"
+  },
+  "designSystem": {
+    "confirmed": true,
+    "file": "src/brand.css",
+    "fonts": [
+      "Arial",
+      "Georgia"
+    ]
+  },
+  "variants": {
+    "A": {
+      "entry": "A.html",
+      "files": [
+        "A.html"
+      ],
+      "version": 1,
+      "tokens": {
+        "fonts": [
+          "Arial",
+          "Georgia"
+        ],
+        "colors": {
+          "ink": "#1c283a",
+          "paper": "#f8fafc",
+          "accent": "#1f60d5"
+        }
+      },
+      "comparison": {
+        "optimizes": "A catalogue reading",
+        "tradeoff": "A space allocation",
+        "bestFor": "A browsing context"
+      },
+      "history": [],
+      "undo": []
+    },
+    "B": {
+      "entry": "B.html",
+      "files": [
+        "B.html"
+      ],
+      "version": 1,
+      "tokens": {
+        "fonts": [
+          "Arial",
+          "Georgia"
+        ],
+        "colors": {
+          "ink": "#1c283a",
+          "paper": "#f8fafc",
+          "accent": "#1f60d5"
+        }
+      },
+      "comparison": {
+        "optimizes": "B catalogue reading",
+        "tradeoff": "B space allocation",
+        "bestFor": "B browsing context"
+      },
+      "history": [],
+      "undo": []
+    },
+    "C": {
+      "entry": "C.html",
+      "files": [
+        "C.html"
+      ],
+      "version": 1,
+      "tokens": {
+        "fonts": [
+          "Arial",
+          "Georgia"
+        ],
+        "colors": {
+          "ink": "#1c283a",
+          "paper": "#f8fafc",
+          "accent": "#1f60d5"
+        }
+      },
+      "comparison": {
+        "optimizes": "C catalogue reading",
+        "tradeoff": "C space allocation",
+        "bestFor": "C browsing context"
+      },
+      "history": [],
+      "undo": []
+    }
+  }
+}

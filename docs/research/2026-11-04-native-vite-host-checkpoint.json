@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-04T12:56:07.517Z",
+  "branch": "codex/native-vite-matrix",
+  "baseCommit": "9d8e4c4",
+  "sourceSha256": {
+    "evals/native-vite.mjs": "ccf7bfaaa6777dcb428c1398491e2830b2dee115f44393e1fc60272048b14732",
+    "evals/native-vite-worker.mjs": "f2456738eeae7c18fcf345bed2a78b546cb1a79ad14f44a056d3089055a1b1dd",
+    "evals/run.mjs": "db254aea0965b65acc96f8d274b2f9f7e6aaba121b9fde30daed00edc451c8c5",
+    "evals/grade.mjs": "704780a767c6f0fd3f33c2963f831b9bc30cfe775f2fda925f9532a3d59bf271",
+    "evals/grade.test.mjs": "e5c62edf57bf7945ebc512252394dd3ae8d00b03d786be4d9f36b4f2f274ad90",
+    "tests/native-vite-eval.spec.mjs": "c6a39d9319f4037b32f83abae49c86c051fd2c471e56aef6c29d58fcd705f27a",
+    "tests/loop.spec.mjs": "489267a3f6000d9e224a92ed1e8dd597f1acc122d858b81fd28eb475912607d5",
+    "tests/playwright.config.mjs": "d07b4359cc62ca028dad2c3431dabb95b900de03ffba38aac8eca051cbfac05a"
+  },
+  "rawEvidence": "/Users/nicole/orca/variant-backlog-evidence/native-host-checkpoint/native-vite-eval-UJQT40",
+  "environment": {
+    "browser": "156.0.8078.80",
+    "vite": "7.1.7",
+    "node": "v26.3.0"
+  },
+  "validation": {
+    "chromeRegression": {
+      "passed": 20,
+      "failed": 0,
+      "nativeCases": 5,
+      "command": "NATIVE_VITE_EVIDENCE=/Users/nicole/orca/variant-backlog-evidence/native-host-checkpoint PLAYWRIGHT_CHANNEL=chrome npx playwright test"
+    },
+    "graderTests": {
+      "passed": 14,
+      "failed": 0
+    },
+    "repeatedIntegrationCase": {
+      "passed": 2,
+      "failed": 0
+    }
+  },
+  "previewChecks": [
+    {
+      "id": "baseline-observed",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "baseline-tasks",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "baseline-brand-assets",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "baseline-no-overflow",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "baseline-build-typecheck",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "baseline-build-coverage",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "baseline-fresh",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "generate-observed",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "generate-tasks",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "generate-brand-assets",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "generate-no-overflow",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "generate-build-typecheck",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "generate-build-coverage",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "generate-fresh",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "generate-comparison",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "deliver-observed",
+      "pass": false,
+      "details": [
+        "Missing complete independent native browser observations"
+      ]
+    },
+    {
+      "id": "probe-observed",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "probe-tasks",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "probe-brand-assets",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "probe-no-overflow",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "probe-build-typecheck",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "probe-build-coverage",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "probe-fresh",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "probe-comparison",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "original-dependencies-reused",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "delivery-replayed",
+      "pass": false,
+      "details": [
+        "Independent integration/history/rollback replay not yet observed"
+      ]
+    }
+  ],
+  "nativeAcceptance": false,
+  "positiveAdapter": "Handwritten reuse of the original App; not an Agent design",
+  "negativeObservations": {
+    "missingProvider": [
+      {
+        "width": 1440,
+        "task": false,
+        "errors": [
+          "Workshop Ledger requires the original WorkspaceProvider",
+          "locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('workspace-name') to be visible\u001b[22m\n"
+        ]
+      },
+      {
+        "width": 390,
+        "task": false,
+        "errors": [
+          "Workshop Ledger requires the original WorkspaceProvider",
+          "locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('workspace-name') to be visible\u001b[22m\n"
+        ]
+      }
+    ],
+    "brokenImageDespiteHttpSuccess": [
+      {
+        "width": 1440,
+        "task": true,
+        "logo": {
+          "url": "http://127.0.0.1:59379/missing-workshop-logo.svg",
+          "loaded": false
+        }
+      },
+      {
+        "width": 390,
+        "task": true,
+        "logo": {
+          "url": "http://127.0.0.1:59379/missing-workshop-logo.svg",
+          "loaded": false
+        }
+      }
+    ],
+    "comparison": [
+      {
+        "width": 1440,
+        "url": "http://127.0.0.1:59379/.variant-work/native/compare.html",
+        "links": false,
+        "overflow": false,
+        "errors": [
+          "comparison runtime failure http://127.0.0.1:59379/.variant-work/native/compare.html"
+        ],
+        "failedRequests": [],
+        "warnings": [],
+        "screenshot": "/Users/nicole/orca/variant-backlog-evidence/native-host-checkpoint/native-vite-eval-UJQT40/evidence/missing-provider/compare-1440.png"
+      },
+      {
+        "width": 390,
+        "url": "http://127.0.0.1:59379/.variant-work/native/compare.html",
+        "links": false,
+        "overflow": false,
+        "errors": [
+          "comparison runtime failure http://127.0.0.1:59379/.variant-work/native/compare.html"
+        ],
+        "failedRequests": [],
+        "warnings": [],
+        "screenshot": "/Users/nicole/orca/variant-backlog-evidence/native-host-checkpoint/native-vite-eval-UJQT40/evidence/missing-provider/compare-390.png"
+      }
+    ],
+    "copiedProvider": {
+      "sourceProjectUnchanged": true,
+      "originalBefore": {
+        "src/workspaces.json": "789b396643af6839ed28c51a9ae6dc102f11eeb0c329c6dccb67536740133626",
+        "src/global.css": "957a2174fc6944427f628db8b84ef3af1146998218a8ae6c0022da50563534a3",
+        "src/workspace.tsx": "a88f2698079f4ba92eb0940609ac736a5148619976d0bc2b93df6eb4c2479113"
+      },
+      "originalAfter": {
+        "src/workspaces.json": "789b396643af6839ed28c51a9ae6dc102f11eeb0c329c6dccb67536740133626",
+        "src/global.css": "957a2174fc6944427f628db8b84ef3af1146998218a8ae6c0022da50563534a3",
+        "src/workspace.tsx": "a88f2698079f4ba92eb0940609ac736a5148619976d0bc2b93df6eb4c2479113"
+      },
+      "failedSamples": 6
+    },
+    "incompleteConfigurations": {
+      "typecheckExit": 0,
+      "missingTypecheckedFiles": [
+        ".variant-work/native/A.tsx",
+        ".variant-work/native/B.tsx",
+        ".variant-work/native/C.tsx"
+      ],
+      "buildExit": 0,
+      "expectedHtmlEmitted": false
+    }
+  },
+  "serverShutdowns": [
+    {
+      "file": "baseline/server.json",
+      "exit": 0,
+      "timedOut": false
+    },
+    {
+      "file": "generate/server.json",
+      "exit": 0,
+      "timedOut": false
+    },
+    {
+      "file": "probe/capture/server.json",
+      "exit": 0,
+      "timedOut": false
+    },
+    {
+      "file": "missing-provider/server.json",
+      "exit": 0,
+      "timedOut": false
+    },
+    {
+      "file": "copied-provider/capture/server.json",
+      "exit": 0,
+      "timedOut": false
+    },
+    {
+      "file": "incomplete-configs/server.json",
+      "exit": 0,
+      "timedOut": false
+    }
+  ],
+  "remaining": [
+    "Independent history/integration/rollback replay",
+    "Real installed-skill generate/deliver Agent run",
+    "Visual/maintainer acceptance",
+    "Node 22 exact-head CI",
+    "Preview cleanup ownership and complete shared-import discovery remain outside this checkpoint"
+  ],
+  "productionChanged": false
+}

@@ -4,7 +4,7 @@ English | **[中文](./README_CN.md)**
 
 > Open-source agent skill for Codex and Claude Code that turns one design brief into three complete, comparable directions (A/B/C) inside your own project, with scoped edits, snapshot undo and an integration step you can roll back.
 
-The three directions share the same task, data and functions, and each states what it optimizes and what it gives up. Edits are snapshotted first and never overwrite changes you have not seen. Inspired by the [Variant](https://variant.com) design community.
+The three directions share the same task, data and functions, and each states what it optimizes and what it gives up. Edits are snapshotted first and never overwrite changes you have not seen.
 
 ---
 
@@ -12,11 +12,7 @@ The three directions share the same task, data and functions, and each states wh
 
 **[Live website →](https://variant-design-skill.vercel.app/)** · [Website source](./website) · [Install the skill](#installation)
 
-Use the bilingual prompt playground to:
-
-1. Describe the product, audience, tone, and constraints.
-2. Compare three prompt-aware positions: **Narrative**, **System**, and **Contrast**.
-3. Take the strongest direction into the full skill for iteration and code export.
+Browse design references with sources and check dates, inspect [A/B/C cases](https://variant-design-skill.vercel.app/cases), and follow the [installation guide](https://variant-design-skill.vercel.app/docs) to use the skill in your own project. The website's [lab](https://variant-design-skill.vercel.app/lab) is a separate experiment; it is not a paid hosted plan. Pro and Team are proposals, not available subscriptions.
 
 Run the [React](https://react.dev/) + [Vite](https://vite.dev/) website locally:
 
@@ -149,8 +145,12 @@ The optional release check runs at most once per 24 hours, reports an available 
 
 - Three directions retain the same core task, data, and required functions. Each explains **what it optimizes, what it sacrifices, and when to use it**, followed by a reasoned recommendation.
 - The comparison page opens by default, with previews first and expandable direction details. React output gets three isolated mounts and direct preview URLs; project type checks must include the generated files. Native adapters handle framework-specific dependencies.
+- Preview receipts protect generated comparison, mount and static files during rebuild and cleanup. Existing unowned files and later user edits are preserved; native adapters must register absent paths before writing. See [safe preview cleanup](references/workflow/preview.md#own-and-clean-native-adapters).
+- Evidence and integration plans also track supported transitive local source, CSS/assets and compiler inputs. Shared changes require fresh checks/plans; unresolved dependency coverage stays unverified. See [coverage and reviewed project facts](references/workflow/artifact-verification.md).
 - `B vary subtle — hero` edits B without selecting it. `pick B` explicitly chooses B, then derives a complete design system from it (palette and type scales, spacing, radius, elevation, motion, and every component B uses in all its states) with a preview and usage rules in `DESIGN.md`; `ds confirm` locks it and exports it as DTCG design tokens (`design-system.tokens.json`) for Figma variables and other token tools. `undo B` restores B's last files and tokens while preserving A/C and the selected winner.
 - Schema v2 stores each direction's files, tokens, version, comparison, and history separately. A durable snapshot precedes every replacement; Git alone is not a snapshot.
+- Confirming a derived system keeps the picked page unchanged and pending. Explicit `apply ds B` uses prepared `apply-system` to align code and token metadata in one snapshot; undo restores both and the prior binding. Normal variations retain their token lock. System identity and stale-candidate checks cover every registered extension. Integration plans also bind extension content and adoption state; changed or missing coverage requires a fresh plan before writing targets.
+- Design-system checks report measured pairs and unverified coverage separately. Generated colors use explicit pairs or surface notes; only `--brand` files use legacy naming. Component tokens alias semantic tokens. DTCG exports keep type grouping by default, with `--group-by layer` available; neither format proves rendered accessibility.
 - Precedence: user constraints → product task and existing design system → accessibility → style advice. Report unresolved accessibility conflicts. Brand-locked output retains fonts/tokens; free exploration may vary them. There is no animation quota.
 
 Implementation and verification: [preview](references/workflow/preview.md), [history](references/workflow/history.md), [export and integration](skills/shared/export.md), [context schema](references/workflow/project-context.md), [regression tests](tests/README.md). Existing route-first routing, local zones, and Product Integrity Gate remain in place.
@@ -161,7 +161,9 @@ React previews can use an isolated Vite package with `--vite-root` while keeping
 
 Project integration now requires a prepared source/target baseline before staging; changed source or target files are rejected before writing. See [integration](skills/shared/export.md).
 
-Runtime evidence can use a reusable Playwright check plan for named brand elements, keyboard focus, exercised motion and non-target interactions. Reports track the artifact revision; missing checks remain unverified. See [verification evidence](references/workflow/artifact-verification.md).
+Integration handoffs can seal a local [delivery receipt](references/workflow/delivery-receipt.md) with the actual file inventory, revision, backup, check reports and recovery path. Inventory validity is separate from check results; missing checks remain unverified and rollback retires the historical receipt.
+
+Runtime evidence can use a reusable Playwright check plan for named brand elements, keyboard focus, exercised motion and non-target interactions. Reports track the artifact revision, registered design-system files and extensions, and any adoption binding. Other shared dependencies must be declared; changed or missing coverage requires a rerun. Missing checks remain unverified. See [verification evidence](references/workflow/artifact-verification.md).
 
 ## Usage
 
@@ -273,31 +275,30 @@ On iteration, the same file is overwritten and re-opened — your browser tab re
 
 No need to re-specify preferences you've already confirmed. Use `show context` to inspect the current context, or `reset context` to start fresh.
 
-**Output format** is context-aware: if your current directory contains a React project (`package.json` with `react` dependency), output is `.tsx` components. Otherwise, zero-dependency HTML is the default. Override with `--react` or `--html`. See below for more.
+### Framework output (context-aware)
 
-### React output (context-aware)
+The skill instructs your agent to inspect `package.json` and choose the matching source format:
 
-In a React project, the skill automatically switches to `.tsx` output:
+| Project | Output for A/B/C |
+|---|---|
+| React / Next.js / Vite with React | `VariantA.tsx`, `VariantB.tsx`, `VariantC.tsx` |
+| Vue 3 | `VariantA.vue`, `VariantB.vue`, `VariantC.vue` |
+| Astro | `VariantA.astro`, `VariantB.astro`, `VariantC.astro` |
+| Svelte / SvelteKit | `VariantA.svelte`, `VariantB.svelte`, `VariantC.svelte` |
+| No matching framework | Interactive HTML |
+
+Files go in `variant-output/`. These are agent instructions, not standalone shell commands:
 
 ```
-# In a React/Next/Vite project directory:
-design a dashboard  →  generates variant-output/VariantA.tsx, VariantB.tsx, VariantC.tsx
-                        Detects Next.js → adds "use client" where needed
-                        Detects framer-motion → uses it; otherwise CSS animations
-
-# In any other directory:
-design a dashboard  →  generates variant-output/variant-dashboard-A.html (unchanged)
-
-# Explicit override anywhere:
-design a dashboard --react   →  always .tsx
-design a dashboard --html    →  always HTML
-
-# Export a specific variation:
-react A              →  export Variation A as .tsx
-export to next       →  export winning variation as Next.js App Router component
+design a dashboard --react   → request React output
+design a dashboard --vue     → request Vue 3 output
+design a dashboard --astro   → request Astro output
+design a dashboard --svelte  → request Svelte output
+design a dashboard --html    → request HTML output
+react A                     → export A as React without selecting it
 ```
 
-Generated `.tsx` files go to `variant-output/` — move them to `src/components/` to include in your project's build. The preview command is inferred from your `package.json` scripts (`npm run dev`, `pnpm dev`, etc.).
+Source format does not establish preview or integration support. The bundled preview helper covers HTML and portable React; native framework features need an isolated project adapter and their own checks. Before moving files into your source tree, use the integration workflow to inspect target paths, preserve backups and keep a rollback path. See [code output](skills/shared/code-output.md), [Vue/Astro/Svelte guidance](skills/shared/frameworks.md) and [preview limits](references/workflow/preview.md).
 
 ---
 

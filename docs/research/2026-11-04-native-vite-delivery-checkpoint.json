@@ -1,0 +1,438 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-04T13:50:22.067Z",
+  "branch": "codex/native-vite-matrix",
+  "baseCommit": "d0ca6f0",
+  "sourceSha256": {
+    "evals/native-delivery.mjs": "f1cca5c69831e59d844b2bdb97d478e826564410d996e92ccd4c74e028c2f2b5",
+    "evals/native-vite.mjs": "0f49cabdcfa4ea302fd2fc5d1993b691e1528ed5f11672cd31ca25932054a988",
+    "evals/run.mjs": "1d0700c00b052a3b25a152f05cb5199be104b9e6226831682be699344eecb808",
+    "evals/fixtures/native-vite/fixture.json": "22ca61e9fc52d00b92dadc062dc310a7464775adbc4d4570e771e31c9666abbf",
+    "tests/native-delivery-eval.spec.mjs": "3fa8ca079a35532d6dfc3c70d0fcb2e1a2f196370352e8b9b3446a9dfab58ef2",
+    "tests/playwright.config.mjs": "920e9fdb11186184b8ff5e5f3064c9058438573e36ff39ce7d7f926e9a97d68d"
+  },
+  "rawEvidence": "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW",
+  "validation": {
+    "chromeRegression": {
+      "passed": 23,
+      "failed": 0,
+      "nativeDeliveryCases": 3,
+      "reportedDuration": "3.8m"
+    },
+    "graderTests": {
+      "passed": 14,
+      "failed": 0
+    },
+    "packageChecks": {
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "positive": {
+    "pass": true,
+    "checks": [
+      {
+        "id": "recorded-delivery",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "source-identity",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "undo-drift-refused",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "history-replayed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "stale-integration-refused",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "rollback-drift-refused",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "integration-replayed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "original-restored",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "source-project-unchanged",
+        "pass": true,
+        "details": []
+      }
+    ],
+    "helperSha256": {
+      "variant-history.mjs": "b5e65163748ab0ec9a6ce4cf41c00ecbeab7f1b1e110cfa68fa4d2a8b8ed13b3",
+      "variant-integrate.mjs": "5bdc3b952210217ff1c471599afeeb2946132cf1d428d35e87bf6c600c6a4ba1"
+    },
+    "actions": [
+      {
+        "operation": "prepareIntegration:source-check",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/variant-output",
+          "B",
+          [
+            "src/App.tsx"
+          ],
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/.variant-work/native-host-ec071df8-2a88-4a6f-b2d3-cd8affc6b62b.json",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project"
+        ],
+        "at": "2026-11-04T13:46:10.032Z",
+        "status": "passed"
+      },
+      {
+        "operation": "prepareVariant",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/variant-output",
+          "B",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/.variant-work/native-host-47474431-553e-4fac-b2a9-b22790826640",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project"
+        ],
+        "at": "2026-11-04T13:46:10.058Z",
+        "status": "passed"
+      },
+      {
+        "operation": "applyVariant",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/variant-output",
+          "B",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/.variant-work/native-host-47474431-553e-4fac-b2a9-b22790826640"
+        ],
+        "at": "2026-11-04T13:46:10.064Z",
+        "status": "passed"
+      },
+      {
+        "operation": "undoVariant:drift-probe",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/undo-guard/variant-output",
+          "B"
+        ],
+        "at": "2026-11-04T13:46:20.929Z",
+        "status": "failed",
+        "error": "Files changed since the saved revision; preserve your edits and reconcile before undo."
+      },
+      {
+        "operation": "undoVariant",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/variant-output",
+          "B"
+        ],
+        "at": "2026-11-04T13:46:20.930Z",
+        "status": "passed"
+      },
+      {
+        "operation": "prepareIntegration:stale-probe",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integration-guard/variant-output",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integration-guard/.variant-work/native-host-305f2fb4-c8db-49ac-b50d-7f936590a236.json"
+        ],
+        "at": "2026-11-04T13:46:20.968Z",
+        "status": "passed"
+      },
+      {
+        "operation": "integrateVariant:stale-probe",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integration-guard/variant-output",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integration-guard/.variant-work/staging",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integration-guard/.variant-work/native-host-305f2fb4-c8db-49ac-b50d-7f936590a236.json"
+        ],
+        "at": "2026-11-04T13:46:20.974Z",
+        "status": "failed",
+        "error": "Integration conflict: target changed: src/App.tsx. Current files are unchanged; keep staging and prepare a new plan before reconciling."
+      },
+      {
+        "operation": "prepareIntegration:rollback-probe",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integration-guard/variant-output",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integration-guard/.variant-work/native-host-40d67f49-7c4d-4dd9-906a-071c7c0b44a1.json"
+        ],
+        "at": "2026-11-04T13:46:20.977Z",
+        "status": "passed"
+      },
+      {
+        "operation": "integrateVariant:rollback-probe",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integration-guard/variant-output",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integration-guard/.variant-work/staging",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integration-guard/.variant-work/native-host-40d67f49-7c4d-4dd9-906a-071c7c0b44a1.json"
+        ],
+        "at": "2026-11-04T13:46:20.983Z",
+        "status": "passed"
+      },
+      {
+        "operation": "rollbackIntegration:drift-probe",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integration-guard/variant-output",
+          "2026-11-04T13-46-20-986Z-B"
+        ],
+        "at": "2026-11-04T13:46:20.992Z",
+        "status": "failed",
+        "error": "Files changed after integration; nothing was rolled back: src/App.tsx"
+      },
+      {
+        "operation": "prepareIntegration",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/variant-output",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/.variant-work/native-host-edc62284-c983-4321-93bf-cb7d78449287.json"
+        ],
+        "at": "2026-11-04T13:46:20.994Z",
+        "status": "passed"
+      },
+      {
+        "operation": "integrateVariant",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/variant-output",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/.variant-work/staging",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/.variant-work/native-host-edc62284-c983-4321-93bf-cb7d78449287.json"
+        ],
+        "at": "2026-11-04T13:46:20.999Z",
+        "status": "passed"
+      },
+      {
+        "operation": "rollbackIntegration",
+        "inputs": [
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project/variant-output",
+          "2026-11-04T13-46-21-001Z-B",
+          "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/project"
+        ],
+        "at": "2026-11-04T13:46:26.185Z",
+        "status": "passed"
+      }
+    ],
+    "sourceUnchanged": true,
+    "captures": {
+      "draft": {
+        "environment": {
+          "browser": "156.0.8078.80",
+          "vite": "7.1.7",
+          "node": "v26.3.0"
+        },
+        "samples": [
+          {
+            "id": "B",
+            "width": 1440,
+            "url": "http://127.0.0.1:55694/.variant-work/native/B.html",
+            "identity": true,
+            "task": true,
+            "heading": "North Studio invoices — Draft",
+            "errors": [],
+            "failedRequests": [],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/draft/B-1440.png"
+          },
+          {
+            "id": "B",
+            "width": 390,
+            "url": "http://127.0.0.1:55694/.variant-work/native/B.html",
+            "identity": true,
+            "task": true,
+            "heading": "North Studio invoices — Draft",
+            "errors": [],
+            "failedRequests": [],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/draft/B-390.png"
+          }
+        ],
+        "checks": {
+          "originalTypecheck": {
+            "exit": 0,
+            "version": "5.9.2",
+            "timedOut": false
+          },
+          "originalBuild": {
+            "exit": 0,
+            "version": "7.1.7",
+            "timedOut": false
+          },
+          "previewTypecheck": {
+            "exit": 0,
+            "version": "5.9.2",
+            "timedOut": false
+          },
+          "previewBuild": {
+            "exit": 0,
+            "version": "7.1.7",
+            "timedOut": false
+          }
+        }
+      },
+      "integrated": {
+        "environment": {
+          "browser": "156.0.8078.80",
+          "vite": "7.1.7",
+          "node": "v26.3.0"
+        },
+        "samples": [
+          {
+            "id": "original",
+            "width": 1440,
+            "url": "http://127.0.0.1:55845/index.html",
+            "identity": true,
+            "task": true,
+            "heading": "North Studio invoices",
+            "errors": [],
+            "failedRequests": [],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integrated/original-1440.png"
+          },
+          {
+            "id": "original",
+            "width": 390,
+            "url": "http://127.0.0.1:55845/index.html",
+            "identity": true,
+            "task": true,
+            "heading": "North Studio invoices",
+            "errors": [],
+            "failedRequests": [],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/integrated/original-390.png"
+          }
+        ],
+        "checks": {
+          "originalTypecheck": {
+            "exit": 0,
+            "version": "5.9.2",
+            "timedOut": false
+          },
+          "originalBuild": {
+            "exit": 0,
+            "version": "7.1.7",
+            "timedOut": false
+          }
+        }
+      },
+      "restored": {
+        "environment": {
+          "browser": "156.0.8078.80",
+          "vite": "7.1.7",
+          "node": "v26.3.0"
+        },
+        "samples": [
+          {
+            "id": "original",
+            "width": 1440,
+            "url": "http://127.0.0.1:55930/index.html",
+            "identity": true,
+            "task": true,
+            "heading": "North Studio invoices",
+            "errors": [],
+            "failedRequests": [],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/restored/original-1440.png"
+          },
+          {
+            "id": "original",
+            "width": 390,
+            "url": "http://127.0.0.1:55930/index.html",
+            "identity": true,
+            "task": true,
+            "heading": "North Studio invoices",
+            "errors": [],
+            "failedRequests": [],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/native-delivery-final/native-delivery-oHBgnW/positive-replay/restored/original-390.png"
+          }
+        ],
+        "checks": {
+          "originalTypecheck": {
+            "exit": 0,
+            "version": "5.9.2",
+            "timedOut": false
+          },
+          "originalBuild": {
+            "exit": 0,
+            "version": "7.1.7",
+            "timedOut": false
+          }
+        }
+      }
+    }
+  },
+  "wrongDirection": {
+    "pass": false,
+    "checks": [
+      {
+        "id": "recorded-delivery",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "source-identity",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "undo-drift-refused",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "history-replayed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "stale-integration-refused",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "rollback-drift-refused",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "integration-replayed",
+        "pass": false,
+        "details": []
+      },
+      {
+        "id": "original-restored",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "source-project-unchanged",
+        "pass": true,
+        "details": []
+      }
+    ],
+    "samples": [
+      {
+        "width": 1440,
+        "identity": false,
+        "task": true,
+        "heading": "North Studio invoices",
+        "errors": []
+      },
+      {
+        "width": 390,
+        "identity": false,
+        "task": true,
+        "heading": "North Studio invoices",
+        "errors": []
+      }
+    ],
+    "sourceUnchanged": true
+  },
+  "realAgentRun": false,
+  "nativeAcceptance": false,
+  "remaining": [
+    "Real installed-skill two-turn Agent run and independent observation",
+    "Actual generated design and staging-source review",
+    "Exact new-head CI",
+    "Claude account verification",
+    "Human visual acceptance and remaining #19 scope"
+  ],
+  "productionChanged": false
+}

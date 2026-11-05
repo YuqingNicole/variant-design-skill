@@ -21,10 +21,10 @@ export function fromOembed(json, post) {
   const d = new Date(`${date[1]} UTC`);
   return { author: decode(json.author_name), handle: post.handle, date: d.toISOString().slice(0, 10), lang: p[1], text, hasMedia: /pic\.twitter\.com/.test(json.html) };
 }
-export function draftEntry(post, meta, tag = 'Interaction', today = new Date().toISOString().slice(0, 10)) {
+export function draftEntry(post, meta, tag = 'Interaction', at = new Date().toISOString()) {
   return { id: `x-${post.handle.toLowerCase()}-${post.id.slice(-6)}`, name: 'TODO', category: 'practice', tag, url: post.url, source: 'link-only',
     focus: { zh: 'TODO 研究什么', en: 'TODO Study' }, application: { zh: 'TODO 用在哪里', en: 'TODO Apply' }, publisher: `${meta.author} (@${meta.handle})`, kind: 'social-post',
-    designer: meta.author, checkedAt: today, verification: 'public-post', mobile: 'not-tested', post: { id: post.id, author: meta.author, handle: meta.handle, date: meta.date, lang: meta.lang, text: meta.text, hasMedia: meta.hasMedia } };
+    designer: meta.author, checkedAt: at.slice(0, 10), addedAt: new Date(at).toISOString(), verification: 'public-post', mobile: 'not-tested', post: { id: post.id, author: meta.author, handle: meta.handle, date: meta.date, lang: meta.lang, text: meta.text, hasMedia: meta.hasMedia } };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

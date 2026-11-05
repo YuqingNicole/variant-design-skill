@@ -4,13 +4,15 @@ Read this before any edit to an existing direction (a variation action, a zone e
 
 ## Prepare, apply, undo, select
 
+After a system edit, rerun `ds-check.mjs` on the generated file and any extensions, with `--brand <file>` for an existing brand lock. Missing or unresolvable contrast pairs remain unverified; component tokens must alias semantic tokens, not primitives or other components. Regenerate the DTCG file in its existing format after `ds confirm` or `ds edit`. These read-only checks do not select, apply or undo a direction.
+
 Before generating any patch, prepare a **new, nonexistent** candidate directory from current output:
 
 ```bash
 node <skill-root>/scripts/variant-history.mjs prepare variant-output B .variant-work/candidate-B
 ```
 
-Keep all working files (candidates, change files, screenshots, backups) under one `.variant-work/` directory in the project root, never in the project's source folders or outside the project. Create it first; it contains project source, so do not commit it. The command copies all B-owned files and writes `.candidate-baseline.json` with their original bytes, SHA-256 digests, version, task/brand constraints and the registered design-system file digest. The project root defaults to the parent of `variant-output`; for nested output pass the actual project root as the final argument. `designSystem.file` is resolved relative to that root. Missing registered design-system files fail preparation.
+Keep all working files (candidates, change files, screenshots, backups) under one `.variant-work/` directory in the project root, never in the project's source folders or outside the project. Create it first; it contains project source, so do not commit it. The command copies all B-owned files and writes `.candidate-baseline.json` with their original bytes, SHA-256 digests, version, task/brand constraints, registered main/extension file digests and any binding. The project root defaults to the parent of `variant-output`; for nested output pass the actual project root as the final argument. `designSystem.file` and extensions are resolved relative to that root. Missing registered system or extension files fail preparation.
 
 Generate local patches **inside this prepared candidate**, preserving the same relative file paths for **all files owned by the target variant**. Do not modify its baseline or write the live artifact first. Write `change.json` with `summary`, optional `zone`, optional full `tokens` and `comparison` updates, and a `request` id naming the user's request. For a hero edit:
 
@@ -56,8 +58,22 @@ The helper rechecks before snapshot/commit, but an external editor can still wri
 
 Rebuild static previews after apply or undo. If React uses an isolated bundler, retain the same original project root and `--vite-root` argument described in `references/workflow/preview.md`.
 
+Preview rebuilds use separate ownership receipts and preserve later user edits; history apply/undo never grants ownership of adapters or selects a direction. On a preview conflict keep the conflicting files and receipt, then follow the fresh-path workflow in `references/workflow/preview.md`. File cleanup uses that receipt, not the variant's owned source list or recursive deletion.
+
+Integration handoffs use the separate immutable records in `.deliveries/` (`references/workflow/delivery-receipt.md`). Edits/undo may stale their recorded version; integration rollback retires their current verification. Preserve the receipts and referenced backups/reports. They do not replace history or authorize selection, cleanup or forced recovery.
+
+After shared imports/resources, compiler inputs or reviewed dependency-resolution facts change, rerun artifact verification; an owned file's unchanged bytes do not keep its old observations current. Integration preparation reads that closure again. This does not replace the history helper's own immediate candidate/undo baselines or change selection.
+
 Before a scoped edit, record representative non-target behavior with the browser plan in `references/workflow/artifact-verification.md`, then rerun the same assertions after applying. Byte preservation alone does not prove rendered behavior. Retain pre-edit project-check failures so delivery can distinguish identical prior diagnostics from new or changed errors.
 
 Project integration uses the same `.variant-lock` and a separate prepared source/target baseline. See `skills/shared/export.md` before generating integration files. Candidate preparation for edits does not replace integration preparation.
 
 Rebuilding the comparison after an edit or undo retains the preview-first layout and expandable direction details; expanding details or switching viewport does not select a direction.
+
+## Confirm and apply a design system
+
+After explicit `ds confirm`, write the approved definition (file, fonts, optional source/extensions) to `.variant-work/system-confirm.json` and run `variant-history.mjs confirm-system variant-output .variant-work/system-confirm.json`. It verifies a context backup, registers the main/extension identity, and marks the picked source pending without editing its files, tokens, version, undo or selection. Do not hand-edit context to claim adoption. Existing brand files and fonts stay locked.
+
+For explicit `apply ds B`, prepare a new candidate as above, align its code and complete token record with the confirmed system, then run `variant-history.mjs apply-system variant-output B <candidate> <change.json>`. The JSON uses the usual summary/request/optional zone, with fonts exactly matching the confirmed list and colors resolving in that system. It is a constrained adoption operation, not a force flag; ordinary apply still rejects token changes. A current registered identity is required. Unsupported color records must be resolved before this operation, not approximated. Undo restores code, tokens and binding together.
+
+Candidate baselines now cover every design-system extension and any binding. Artifact verification also fingerprints these automatically; prior reports become stale on their changes and must be rerun. Integration preparation binds extension content and the variant binding too; old plans missing this coverage are rejected and must be prepared again. A legacy baseline without extension coverage is refused explicitly; keep it for comparison and prepare a new one. System changes invalidate pending/applied bindings until the current system is explicitly approved and registered again. A pending generated source is reported as not yet adopted; it is not certified against the future font/color set. Legacy contexts without a binding retain strict checks.

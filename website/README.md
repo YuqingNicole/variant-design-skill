@@ -65,3 +65,7 @@ Open `/#guided-demo` to inspect the three real site directions, compare tradeoff
 ## Editable landing canvas
 
 Open `/lab/canvas` to create three built-in landing layouts, select/edit nodes, reorder sections, replace images, undo/redo and export a standalone HTML page. On the published site it runs in web mode and keeps projects in that browser only; run it locally to store projects as files and let the optional canvas MCP edit the same document as the browser. See [CANVAS.md](CANVAS.md) for setup, architecture, tool inventory, validation and current boundaries.
+
+## Submissions
+
+See [SUBMISSIONS.md](SUBMISSIONS.md) for author media intake, manual review, translation gates, local admission and withdrawal.

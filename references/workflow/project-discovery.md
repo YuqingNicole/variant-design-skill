@@ -12,6 +12,8 @@ The helper prints JSON to stdout and does not write project files, execute packa
 
 ## Complete the semantic review
 
+For verification/integration dependency scope, `project-dependencies.mjs` follows supported static local references and compiler-config inputs without executing project config. Record reviewed wrapper/alias/config facts using `references/workflow/artifact-verification.md` when preparing those checks. This does not turn the lexical profile into complete semantic or runtime discovery; each transaction rereads its own current baseline.
+
 This helper is not a compiler or complete project-understanding engine. Import syntax can be missed or matched in comments. Package aliases, providers, dynamic imports, routes, shared consumers, brand rules and real actions require targeted review. Resolve these with the project's existing tools and relevant source; record evidence locations and unknowns. Do not label an untested framework or preview as supported.
 
 Create a concise task brief using:

@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "implementationHead": "34baa7d49e8a364921972d512530409e55a37ed6",
+  "observedAt": "2026-11-04T15:35:59.187Z",
+  "fixture": "native-vite",
+  "agent": "codex",
+  "rawDirectory": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-34baa7d",
+  "result": {
+    "file": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-34baa7d/native-vite-codex.json",
+    "sha256": "3df9734a5e354c6a6b0884ffd3b22019086c3912ea8802d2d652052a4361b37f",
+    "pass": true,
+    "checks": 48,
+    "seconds": 354,
+    "timedOut": false,
+    "turns": [
+      {
+        "id": "generate",
+        "exit": 0,
+        "seconds": 170,
+        "timedOut": false
+      },
+      {
+        "id": "deliver",
+        "exit": 0,
+        "seconds": 113,
+        "timedOut": false
+      }
+    ],
+    "usage": {
+      "tokens": 893131
+    },
+    "reading": {
+      "words": 18157,
+      "files": [
+        "SKILL.md",
+        "references/domains/dashboard.md",
+        "references/workflow/design-declaration.md",
+        "references/workflow/project-discovery.md",
+        "skills/shared/code-output.md",
+        "skills/variant-generate/ROUTE.md",
+        "references/workflow/artifact-verification.md",
+        "references/workflow/history.md",
+        "references/workflow/preview.md",
+        "references/workflow/project-context.md",
+        "skills/shared/export.md"
+      ],
+      "turns": [
+        {
+          "turn": "generate",
+          "files": [
+            "SKILL.md",
+            "references/domains/dashboard.md",
+            "references/workflow/design-declaration.md",
+            "references/workflow/project-discovery.md",
+            "skills/shared/code-output.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 6482
+        },
+        {
+          "turn": "deliver",
+          "files": [
+            "SKILL.md",
+            "references/workflow/artifact-verification.md",
+            "references/workflow/history.md",
+            "references/workflow/preview.md",
+            "references/workflow/project-context.md",
+            "references/workflow/project-discovery.md",
+            "skills/shared/code-output.md",
+            "skills/shared/export.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 11675
+        }
+      ]
+    }
+  },
+  "phases": {
+    "baseline": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "baseline",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-34baa7d/native-vite-codex.phases/baseline",
+        "manifestSha256": "5d55f6854b2991bf1776c2e25d917ec0e102697729ea4ecd042489c5d2e7dd94",
+        "snapshotSha256": "cfd5b8e8f8f704f4b4e683491beeefa84c2737046f360ef33544b9c81473c92b",
+        "sourceDigest": "327a52033ad796cd1f3086bcc522ef4aab0f6f76a5f6550395b3e6b7c94904ae",
+        "receiptSha256": "8aa93a02703915530b0b6b4d9f5019cab3c9980c44c0c67dec0399acdf609b3c"
+      },
+      "createdAt": "2026-11-04T15:27:15.637Z",
+      "files": 104,
+      "directories": 20,
+      "excluded": [
+        ".git",
+        "node_modules"
+      ],
+      "observationFingerprints": 15,
+      "context": null
+    },
+    "generate": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "generate",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-34baa7d/native-vite-codex.phases/generate",
+        "manifestSha256": "673072b9d01ce94a806b22826a89614d8720491d680acdbc36d2d6a9ef1da5a1",
+        "snapshotSha256": "2693d147569dccf62afe3448f68aed225ac7d9f28d2092ef0babe636a3850ffc",
+        "sourceDigest": "3c9a12c8ec9c58e0cf7e0b5d1503d9a7fb4382e69e877a0989cdf0adfc238c73",
+        "receiptSha256": "de68d5aea526d3d0a8018797aa5d8aed3b9f7f724c2d3a7fe12a17ec650f5d3f"
+      },
+      "createdAt": "2026-11-04T15:30:18.580Z",
+      "files": 143,
+      "directories": 25,
+      "excluded": [
+        ".git",
+        "dist",
+        "node_modules"
+      ],
+      "observationFingerprints": 32,
+      "context": {
+        "schemaVersion": 2,
+        "selectedVariant": null,
+        "activeVariant": null,
+        "versions": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        }
+      }
+    },
+    "deliver": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "deliver",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-34baa7d/native-vite-codex.phases/deliver",
+        "manifestSha256": "8325308380e7f00a7ae3a69d91f3ce53a11f4b2c0bad0308993c93fb247d3c00",
+        "snapshotSha256": "324a9af76a0e78c3a89721b46fdb8700943592458a1a08d49b05e22988bd0513",
+        "sourceDigest": "63fd3de79ecf0aab3d27d0a7aa497f0f346bb7c9e55e9b00410759f0867320d8",
+        "receiptSha256": "31121583fc843c78ceadb753b5a6a2f3aedc65f1ea68b6021aa7a77bc1a82116"
+      },
+      "createdAt": "2026-11-04T15:32:38.286Z",
+      "files": 177,
+      "directories": 31,
+      "excluded": [
+        ".git",
+        "dist",
+        "node_modules"
+      ],
+      "observationFingerprints": 32,
+      "context": {
+        "schemaVersion": 2,
+        "selectedVariant": null,
+        "activeVariant": "B",
+        "versions": {
+          "A": 1,
+          "B": 3,
+          "C": 1
+        }
+      }
+    }
+  },
+  "archiveGrades": [
+    {
+      "id": "archive:baseline",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "archive:generate",
+      "pass": true,
+      "details": []
+    },
+    {
+      "id": "archive:deliver",
+      "pass": true,
+      "details": []
+    }
+  ],
+  "baselineReceiptObservedBeforeFinalResult": {
+    "at": "2026-11-04T15:31:05.707Z",
+    "unchanged": true,
+    "note": "Earlier observation confirms persisted baseline receipt, not that generate was still running."
+  },
+  "restoration": {
+    "directory": "/Users/nicole/orca/variant-backlog-evidence/native-agent-evals-34baa7d/post-delivery-restoration-9kU6qM",
+    "sourcePhase": "generate",
+    "performedAfterDelivery": true,
+    "restoredBVersion": 1,
+    "editedFirstCopyIndependent": true,
+    "archiveReverified": true,
+    "originalProjectDigestBeforeAndAfter": "a0c265eadbc2d223da8e8be5ebcc1e560d9fd06415563ee4a1d2856fdaa399c2",
+    "originalResultUnchanged": true
+  },
+  "ci": [
+    {
+      "run": 41857827000,
+      "status": "success"
+    },
+    {
+      "run": 41857810009,
+      "status": "success"
+    }
+  ],
+  "scope": {
+    "directPhaseArchives": true,
+    "fixtureMechanicalChecks": true,
+    "fullIssue19": false,
+    "humanVisualAcceptance": false,
+    "productionChanged": false
+  }
+}

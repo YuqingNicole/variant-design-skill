@@ -1,0 +1,362 @@
+{
+  "schemaVersion": 1,
+  "implementationHead": "97db5776f9380119aeb41013a0b023a1a8047b4d",
+  "observedAt": "2026-11-04T16:20:58.307Z",
+  "fixture": "native-vite-cleanup",
+  "agent": "codex",
+  "rawDirectory": "/Users/nicole/orca/variant-backlog-evidence/native-cleanup-evals-97db577",
+  "result": {
+    "sha256": "fdc2c1e4350c127c8e67699d7e7c44ee634eafaea3eb20d1f0efd5f43ec021fb",
+    "pass": true,
+    "checks": 58,
+    "seconds": 414,
+    "timedOut": false,
+    "turns": [
+      {
+        "id": "generate",
+        "exit": 0,
+        "seconds": 174,
+        "timedOut": false,
+        "transcriptSha256": "05ab435214ba75b8e2633c2f701a749a06f907c54706894159b3e41c9d781fef"
+      },
+      {
+        "id": "deliver",
+        "exit": 0,
+        "seconds": 119,
+        "timedOut": false,
+        "transcriptSha256": "e560f28455308a80985f743f70c4a0437c7d983e8fb97648b88e8b8e4bd05cfc"
+      },
+      {
+        "id": "cleanup",
+        "exit": 0,
+        "seconds": 51,
+        "timedOut": false,
+        "transcriptSha256": "e29ece098990233bca09fad38b60c8180005924f0532afa3ec478175b7008faa"
+      }
+    ],
+    "usage": {
+      "tokens": 1115043
+    },
+    "reading": {
+      "words": 23695,
+      "files": [
+        "SKILL.md",
+        "references/domains/dashboard.md",
+        "references/workflow/product-integrity-gate.md",
+        "references/workflow/project-discovery.md",
+        "references/workflow/quality-baseline.md",
+        "skills/shared/code-output.md",
+        "skills/variant-generate/ROUTE.md",
+        "references/workflow/history.md",
+        "references/workflow/preview.md",
+        "references/workflow/project-context.md",
+        "skills/shared/export.md"
+      ],
+      "turns": [
+        {
+          "turn": "generate",
+          "files": [
+            "SKILL.md",
+            "references/domains/dashboard.md",
+            "references/workflow/product-integrity-gate.md",
+            "references/workflow/project-discovery.md",
+            "references/workflow/quality-baseline.md",
+            "skills/shared/code-output.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 8151
+        },
+        {
+          "turn": "deliver",
+          "files": [
+            "SKILL.md",
+            "references/workflow/history.md",
+            "references/workflow/preview.md",
+            "references/workflow/project-context.md",
+            "references/workflow/project-discovery.md",
+            "skills/shared/code-output.md",
+            "skills/shared/export.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 11090
+        },
+        {
+          "turn": "cleanup",
+          "files": [
+            "SKILL.md",
+            "references/workflow/preview.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 4454
+        }
+      ]
+    }
+  },
+  "implementation": {
+    "scripts/preview-files.mjs": "ab530d6eb31bf17d2b10c7af66f8836b8d2c3aeae9a7b07de9b3ad7f1f1017f0",
+    "scripts/build-preview.mjs": "c4d181b5c6f690fc235664278882723ec9b142fc45651103062c7065baf32368",
+    "scripts/react-preview.mjs": "283d5a95a0cc6a675c8efa3cfecd26d3520907c58744386777f7b0ab993af41f",
+    "evals/run.mjs": "cef0d14749fed5cb48aa80adf9c4250e81b399f37348a96c2a0aa0a3d705f5ad",
+    "evals/grade.mjs": "fa5a8d29b9b3d244505c6290cdf4b26ee4ca03fb55152931acb48a381b15099b",
+    "evals/preview-cleanup.mjs": "524115eaeafe4e5afe68335d9c545b862e1a09c5098cce495f38a7645c94e429",
+    "evals/native-delivery.mjs": "cf3932960bf381cee68ba21567d1e4d4a9c6dc9c408738913898c217168863e9"
+  },
+  "phases": {
+    "baseline": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "baseline",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/native-cleanup-evals-97db577/native-vite-cleanup-codex.phases/baseline",
+        "manifestSha256": "2a4139d1701463fbd4f376c5304f4d3c639b5d8b64edbbd6378d1e3dfd143098",
+        "snapshotSha256": "cfd5b8e8f8f704f4b4e683491beeefa84c2737046f360ef33544b9c81473c92b",
+        "sourceDigest": "a98b2cbcea7edb445e5f64832ba0d4527a3229df0907918428427e37c12a448a",
+        "receiptSha256": "00189c3c9c6fb2a7fdc2519cf6a2e97baca9f425fd9dbf0da3757357c2134293"
+      },
+      "createdAt": "2026-11-04T16:10:51.475Z",
+      "files": 105,
+      "directories": 20,
+      "excluded": [
+        ".git",
+        "node_modules"
+      ],
+      "context": null
+    },
+    "generate": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "generate",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/native-cleanup-evals-97db577/native-vite-cleanup-codex.phases/generate",
+        "manifestSha256": "315c5ed3452e7e855501448f76c998785b59f06770f617fd24546364e0152d7b",
+        "snapshotSha256": "dd5d23ed00793a6dad4a3442e009fd3896db4c44024092a500b2e39075d54015",
+        "sourceDigest": "a5c7b66fa45b253f62f2e2260b502b25a1249e4b1e09b1879381a3d52134ffbe",
+        "receiptSha256": "68ba70ba708c9ad5441ccab99a531243a122b9b5940f02a8a5ad7343c22eff8f"
+      },
+      "createdAt": "2026-11-04T16:13:53.833Z",
+      "files": 148,
+      "directories": 27,
+      "excluded": [
+        ".git",
+        "dist",
+        "node_modules"
+      ],
+      "context": {
+        "selectedVariant": null,
+        "versions": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        }
+      }
+    },
+    "deliver": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "deliver",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/native-cleanup-evals-97db577/native-vite-cleanup-codex.phases/deliver",
+        "manifestSha256": "fc046e3cd736c16ba542c6bf5f75acd4f01928b4c197c446146c6c65bdee51f8",
+        "snapshotSha256": "713894b641e5d863a7b6b201d71b54ef09cd2411e8095d14ffcb1c62e27cb4ad",
+        "sourceDigest": "b18a8501b383b0f70ef0e4c271d18b4f23f661591ceddb9948b3334c6b293e4c",
+        "receiptSha256": "49f9b08317c6481e56e43d03d0006d0cfd5cce6288805d66b91aaf1df6d8f18a"
+      },
+      "createdAt": "2026-11-04T16:16:28.206Z",
+      "files": 194,
+      "directories": 36,
+      "excluded": [
+        ".git",
+        "dist",
+        "node_modules"
+      ],
+      "context": {
+        "selectedVariant": null,
+        "activeVariant": "B",
+        "versions": {
+          "A": 1,
+          "B": 3,
+          "C": 1
+        }
+      }
+    },
+    "cleanup": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "cleanup",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/native-cleanup-evals-97db577/native-vite-cleanup-codex.phases/cleanup",
+        "manifestSha256": "888699b86f9a7da7c354289867cf9ef24ddaf3159ac5ca094754bdadbec1842d",
+        "snapshotSha256": "713894b641e5d863a7b6b201d71b54ef09cd2411e8095d14ffcb1c62e27cb4ad",
+        "sourceDigest": "2000d4bf3829e049d5a76d7aaabcd7ec1c9d09bfe0c9d1c42bc3e6117a3cd24b",
+        "receiptSha256": "4d5be44d664d9024dd4416397c1f144a947d97802489fc6b8d0a42cc902c6485"
+      },
+      "createdAt": "2026-11-04T16:17:44.679Z",
+      "files": 188,
+      "directories": 36,
+      "excluded": [
+        ".git",
+        "dist",
+        "node_modules"
+      ],
+      "context": {
+        "selectedVariant": null,
+        "activeVariant": "B",
+        "versions": {
+          "A": 1,
+          "B": 3,
+          "C": 1
+        }
+      }
+    }
+  },
+  "ownership": {
+    "planFile": ".variant-work/preview-files/workshop-ledger-native/plan.json",
+    "planSha256": "eb1c471133dacbdc86095a3c178ad806bcce6d6d9236fe1e8818b603bbff8621",
+    "preparedFiles": 10,
+    "allPreparedFilesAbsentInBaseline": true,
+    "initialReceipt": ".variant-work/preview-files/workshop-ledger-native/e8f454b5-e5a2-4fc7-9a7d-23c1939cd639.receipt.json",
+    "currentReceipt": ".variant-work/preview-files/workshop-ledger-native/9f5de530-867d-4c32-a0d9-ae2b6c2449ab.receipt.json",
+    "currentReceiptSha256": "9fd846db9f9a4443161ad8b66ffb3e5871f055c0443c9012a0f3083209eea007",
+    "receiptRefreshedDuringDelivery": true,
+    "transcriptCommandReferences": [
+      {
+        "turn": "generate",
+        "eventIndex": 15,
+        "operations": [
+          "prepare"
+        ],
+        "commandSha256": "1179a45e39315cc0dca057af0080d17001f8a75090b92aa3bde34fdf5c81bf2d",
+        "exit": 0,
+        "outputSha256": "fea66569ab8c318f307b61ca66f7b708c1c3c5ac16b1834634f99fec480f07b9"
+      },
+      {
+        "turn": "generate",
+        "eventIndex": 17,
+        "operations": [
+          "seal"
+        ],
+        "commandSha256": "ee0780ab1208221f85388c3b6ea6de3498bf47bdc26d172a2e13896e68a320ca",
+        "exit": 0,
+        "outputSha256": "96848d4ff5a1511018c7b77f3efa1d954240c9df13a96819ff048d41dd85e8f1"
+      },
+      {
+        "turn": "deliver",
+        "eventIndex": 20,
+        "operations": [
+          "publish"
+        ],
+        "commandSha256": "8a24a9acdfb44c52dfad4042e65443c4c91f05b0ec8094a9ad769c0fd9c772a4",
+        "exit": 1,
+        "outputSha256": "0874ab87988083888843b7bcbf69eda483dd9d3d28622116d16b3522a0bfad52"
+      },
+      {
+        "turn": "cleanup",
+        "eventIndex": 11,
+        "operations": [
+          "cleanup"
+        ],
+        "commandSha256": "2457e36dbc457b0ca2a683609a8161ef963ec4929d154897d3d0ff37ea20270b",
+        "exit": 2,
+        "outputSha256": "5fa3257e29ac992aefde32e366049d0fdb1ac0e6f00f8434d65bbfc3ab3cb2b7"
+      }
+    ],
+    "livePlanObservation": {
+      "file": "plan-live-observation.json",
+      "observedAt": "2026-11-04T16:12:58.723Z",
+      "absentAtSample": 0,
+      "note": "This later sample was after file creation; it is not independent prewrite proof."
+    }
+  },
+  "cleanup": {
+    "removed": [
+      ".variant-work/A.html",
+      ".variant-work/B.html",
+      ".variant-work/C.html",
+      ".variant-work/compare.html",
+      ".variant-work/entry-B.tsx",
+      ".variant-work/entry-C.tsx",
+      ".variant-work/native-preview.json",
+      ".variant-work/tsconfig.preview.json",
+      ".variant-work/vite.preview.config.ts"
+    ],
+    "missing": [],
+    "conflicts": [
+      ".variant-work/entry-A.tsx"
+    ],
+    "errors": [],
+    "operation": ".variant-work/preview-files/workshop-ledger-native/b420cd7d-7c77-4a50-949a-ff7bc9ae9c69.cleanup.json",
+    "operationSha256": "39117dc26f4b77374a8b3672d3f633a190d4038422b85804b78c0233c6fb762a",
+    "resultSha256": "7a0081587e9286be79732d01328e65858723dc5fa9094d8d5da4505022b7cd0c",
+    "observation": {
+      "source": "host-preview-cleanup-observation-v1",
+      "at": "2026-11-04T16:20:58.233Z",
+      "pass": true,
+      "checks": [
+        {
+          "id": "owned-removed",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "user-edit-preserved",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "unowned-preserved",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "original-preserved",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "variants-preserved",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "cleanup-recorded",
+          "pass": true,
+          "details": []
+        }
+      ]
+    },
+    "editedFile": ".variant-work/entry-A.tsx",
+    "editedSha256": "066682f540dd9f9107f8f78f6cecb93a444f635ca00a8aefa5c883bcd968e3d4",
+    "unownedFile": ".variant-work/user-preview-note.txt",
+    "unownedSha256": "5f93f46ca142d072418576d559e2808c1b513e6d9e38f14fab33ee8788b22bbd"
+  },
+  "preservation": {
+    "originalFiles": 15,
+    "wholeOutputUnchangedBetweenDeliveryAndCleanup": true,
+    "generatedVariantBytesUnchanged": true,
+    "originalProjectDigestBeforeAndAfterAudit": "28862be362d52e3294dee667151c7ef77d354bdb126052f1b7ede5a8d047e8e8",
+    "originalResultUnchanged": true
+  },
+  "localValidation": {
+    "combinedNodeTests": 138,
+    "focusedOwnershipHostLinks": 23,
+    "packageChecks": 4,
+    "loopBrowserTests": 15,
+    "correctedAliasReplayBrowserTests": 2,
+    "docsBrowserTests": 2,
+    "testsTypecheck": true,
+    "websiteTests": true,
+    "websiteBuildRoutes": 239
+  },
+  "ci": {
+    "head": "97db5776f9380119aeb41013a0b023a1a8047b4d",
+    "status": "queued",
+    "runs": [
+      41864744176,
+      41864884502
+    ]
+  },
+  "scope": {
+    "nativeAdapterCleanup": true,
+    "bundledPreviewProtection": true,
+    "allBuildArtifactsRemoved": false,
+    "fullIssue19": false,
+    "humanVisualAcceptance": false,
+    "productionChanged": false
+  }
+}

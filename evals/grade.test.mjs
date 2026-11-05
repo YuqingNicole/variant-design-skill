@@ -6,8 +6,10 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { grade, gradeChain, loadFixture, skillCopies, skillReading, snapshot, usage } from './grade.mjs';
-import { selectVariant, prepareVariant, applyVariant, undoVariant } from '../scripts/variant-history.mjs';
+import { selectVariant, prepareVariant, applyVariant, undoVariant, confirmSystem, applySystemVariant, readContext } from '../scripts/variant-history.mjs';
 import { exportTokens } from '../scripts/ds-export.mjs';
+import { gradeNativeVite, nativeObservationChecks } from './native-vite.mjs';
+import { gradeDeliveryReceipts, deliveryReceiptGates } from './delivery-receipts.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const evidence = path.join(here, '../website/content/evidence/pulse/variant-output');
@@ -23,6 +25,18 @@ function run(change = () => {}) {
 }
 const result = change => grade(run(change), { fixture: loadFixture('pulse') });
 const check = (r, id) => r.checks.find(c => c.id === id);
+
+test('native grading fails closed for missing, empty, duplicated and Agent-authored observations', () => {
+  for (const report of [undefined, { error: 'Vite unavailable' }, { samples: [] }, { source: 'Agent report', samples: [{ id: 'A', width: 1440 }] }, { source: 'host Playwright / original project Vite', samples: Array(6).fill({ id: 'A', width: 1440 }) }]) {
+    const result = gradeNativeVite({ baseline: report, generate: report, deliver: report, probe: report });
+    assert.equal(result.pass, false); assert.equal(check(result, 'generate-observed').pass, false); assert.equal(check(result, 'delivery-replayed').pass, false);
+  }
+  for (const delivery of [{ pass: true }, { source: 'host native delivery replay', checks: [] }, { source: 'host native delivery replay', checks: [null] }]) assert.equal(check(gradeNativeVite({ delivery }), 'delivery-replayed').pass, false);
+  const dir = run(), fixture = loadFixture('native-vite');
+  assert.equal(check(grade(dir, { fixture }), 'native:generate-observed').pass, false);
+  assert.equal(check(gradeChain(dir, { fixture, turns: [{ id: 'generate', snapshot: snapshot(dir) }] }), 'native:generate-observed').pass, false);
+  for (const c of gradeChain(dir, { fixture, turns: [] }).checks.filter(c => c.id.startsWith('native:archive:'))) assert.equal(c.pass, false);
+});
 const context = (dir, edit) => { const file = path.join(dir, 'variant-output/.variant-context.json'), c = JSON.parse(fs.readFileSync(file, 'utf8')); edit(c); fs.writeFileSync(file, JSON.stringify(c)); };
 
 test('the recorded Pulse run passes every check but generator habits', () => {
@@ -139,16 +153,16 @@ function chain({ pick = () => {}, skipUndo = false, component = 'color: var(--co
   selectVariant(out, 'B');
   // A system derived from B keeps B's recorded colors (delivery-check errors otherwise).
   const kept = Object.entries(JSON.parse(fs.readFileSync(path.join(out, '.variant-context.json'), 'utf8')).variants.B.tokens?.colors ?? {}).map(([k, v]) => `--color-b-${k}:${v};`).join('');
-  const system = `@import url('https://fonts.example/x.css');\n/* Pulse · Decisions: 1. Accent marks the action. */\n:root{\n${kept.replaceAll(';', '; /* use: chart */\n')}--color-text:#14213d; /* use: body */\n--color-bg:#ffffff; /* use: page */\n--space-2:8px;--space-4:16px;--text-sm:14px;--radius-md:8px}`;
+  const system = `@import url('https://fonts.example/x.css');\n/* Pulse · Decisions: 1. Accent marks the action. */\n:root{\n${kept.replaceAll(';', '; /* use: chart; contrast: non-text */\n')}--color-text:#14213d; /* use: body; on: --color-bg */\n--color-bg:#ffffff; /* use: page */\n--space-2:8px;--space-4:16px;--text-sm:14px;--radius-md:8px}`;
   write('design-system.css', system); write('design-system-preview.html', '<!doctype html><title>DS</title>'); write('DESIGN.md', '# Design\n');
   pick(dir); take('pick');
-  context(dir, c => { c.designSystem = { confirmed: true, file: 'variant-output/design-system.css', source: 'B' }; });
+  confirmSystem(out, { file: 'variant-output/design-system.css', source: 'B', fonts: readContext(out).variants.B.tokens.fonts });
   write('design-system.tokens.json', JSON.stringify(exportTokens([system]).tokens)); take('confirm');
   const candidate = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'cand-')), 'B');
   prepareVariant(out, 'B', candidate);
   const css = path.join(candidate, 'VariantB.css');
   fs.writeFileSync(css, fs.readFileSync(css, 'utf8').replace(/#[0-9a-fA-F]{3,8}\b/g, 'var(--color-text)').replace(/-?\d*\.?\d+(px|rem)\b/g, 'var(--space-4)'));
-  applyVariant(out, 'B', candidate, { summary: 'apply ds B', request: 'apply-ds-B' }); take('apply');
+  applySystemVariant(out, 'B', candidate, { summary: 'apply ds B', request: 'apply-ds-B', tokens: { ...readContext(out).variants.B.tokens, colors: { text: '#14213d' } } }); take('apply');
   if (!skipUndo) undoVariant(out, 'B');
   take('undo');
   write('component-invite.html', `<!doctype html><title>Invite</title><link rel="stylesheet" href="design-system.css"><style>.dialog{${component}}</style><div class="dialog">Invite</div>`); take('component');
@@ -169,9 +183,50 @@ test('a chain fails where a turn breaks its promise', () => {
   assert.deepEqual(failed(chain({ skipUndo: true })), ['undo:undone']);
   // A bare token list: no decisions, no use notes (it also drops B's colors, which later turns report).
   const bare = failed(chain({ pick: dir => fs.writeFileSync(path.join(dir, 'variant-output/design-system.css'), ':root{--color-text:#14213d;--color-bg:#ffffff}') }));
-  assert.deepEqual(bare.filter(id => id.startsWith('pick:')), ['pick:ds-decisions', 'pick:ds-use-notes']);
+  assert.deepEqual(bare.filter(id => id.startsWith('pick:')), ['pick:ds-contrast', 'pick:ds-decisions', 'pick:ds-use-notes']);
   assert.deepEqual(failed(chain({ component: 'color: var(--p-blue-500);' })), ['component:component-on-system']);
   const off = chain({ component: 'color: #ff00aa; padding: 13px;' });
   assert.deepEqual(failed(off), ['component:component-on-system']);
   assert.deepEqual(off.checks.find(c => c.id === 'component:component-on-system').details, ['variant-output/component-invite.html: #ff00aa', 'variant-output/component-invite.html: 13px (nearest --space-4 16px)']);
+});
+
+test('chain grading rejects missing coverage and invalid component layers at the pick revision', () => {
+  const fail = mutate => chain({ pick: dir => fs.appendFileSync(path.join(dir, 'variant-output/design-system.css'), mutate) }).checks;
+  assert.equal(fail(':root{--color-muted:#777}').find(c => c.id === 'pick:ds-contrast').pass, false);
+  for (const value of ['#fff', 'var(--p-blue-500)', 'var(--input-bg)']) {
+    const checks = fail(`:root{--p-blue-500:#000;--input-bg:var(--color-text);--button-bg:${value}}`);
+    assert.equal(checks.find(c => c.id === 'pick:ds-layers').pass, false, value);
+  }
+  // The pick snapshot, not a later repaired CSS file, is the evidence for this turn.
+  const r = chain({ pick: dir => fs.appendFileSync(path.join(dir, 'variant-output/design-system.css'), ':root{--button-bg:#fff}') });
+  assert.equal(r.checks.find(c => c.id === 'pick:ds-layers').pass, false);
+});
+
+test('brand-locked chain fixtures must keep their expected file and fonts', () => {
+  const dir = run(), fixture = loadFixture('pulse');
+  const get = () => gradeChain(dir, { fixture, turns: [{ id: 'generate', snapshot: snapshot(dir) }] }).checks.find(c => c.id === 'generate:brand-kept');
+  assert.equal(get().pass, true);
+  context(dir, c => { c.designSystem.file = 'variant-output/design-system.css'; });
+  assert.equal(get().pass, false);
+});
+
+test('premium grading never treats absent or empty browser observations as a pass',async()=>{
+ const {gradePremium}=await import('./premium.mjs');
+ for(const report of [undefined,{error:'Browser unavailable'},{samples:[]},{samples:[null,null]},{samples:{length:2}}]){const result=gradePremium(report,report);assert.equal(result.pass,false);assert.equal(result.checks[0].id,'budget-measured');assert.equal(result.checks[0].pass,false);}
+});
+
+test('a nonzero or timed-out Agent process is incomplete even with artifacts',()=>{
+ const dir=run(),state=snapshot(dir),get=(exit,timedOut)=>gradeChain(dir,{turns:[{id:'generate',snapshot:state,exit,timedOut}]}).checks.find(c=>c.id==='generate:agent-completed');
+ assert.equal(get(0,false).pass,true);assert.equal(get(1,false).pass,false);assert.equal(get(0,true).pass,false);
+});
+
+test('delivery receipt grading requires every unique independent host gate',()=>{
+ const good={source:'host-delivery-receipt-probe-v1',checks:deliveryReceiptGates.map(id=>({id,pass:true,details:[]}))};assert(gradeDeliveryReceipts(good).every(c=>c.pass));
+ for(const report of [null,{pass:true},{...good,source:'Agent report'},{...good,error:'probe failed'},{...good,checks:good.checks.slice(1)},{...good,checks:[...good.checks,good.checks[0]]}])assert(gradeDeliveryReceipts(report).some(c=>!c.pass));
+});
+
+
+test('missing native measurements remain unverified rather than observed brand/project failures',()=>{
+ for(const capture of [undefined,{samples:[],checks:{}},{source:'host Playwright / original project Vite',samples:Array(6).fill({id:'A',width:1440,errors:['scenario stopped']}),environment:{browser:'real version',vite:'real version'},checks:{}}])assert(nativeObservationChecks(capture).every(c=>c.status==='unverified'));
+ const measured={source:'host Playwright / original project Vite',samples:[1440,390].map(width=>({id:'original',width,brand:{bodyFont:'Arial',headingFont:'Georgia',background:'rgb(247, 250, 252)',logo:null,originalLogo:'local asset'},errors:[],failedRequests:[]})),environment:{browser:'fixture contract',vite:'fixture contract'},checks:{}};assert.equal(nativeObservationChecks(measured,{original:true})[0].status,'failed');
 });

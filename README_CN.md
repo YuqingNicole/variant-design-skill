@@ -4,7 +4,7 @@
 
 > 开源的 Agent 技能，用于 Codex 和 Claude Code：把一份设计需求变成你项目里三个完整、可比较的方向（A/B/C），支持局部修改、快照撤回，接入后也能回滚。
 
-三个方向的任务、数据和功能相同，各自说明优化了什么、放弃了什么。修改前先保存快照，不会覆盖你还没看过的改动。受 [Variant](https://variant.com) 设计社区启发。
+三个方向的任务、数据和功能相同，各自说明优化了什么、放弃了什么。修改前先保存快照，不会覆盖你还没看过的改动。
 
 ---
 
@@ -12,11 +12,7 @@
 
 **[在线体验 →](https://variant-design-skill.vercel.app/)** · [网站源码](./website) · [安装 Skill](#安装)
 
-使用双语提示词体验站：
-
-1. 描述产品、用户、语气与约束。
-2. 比较三个定制方向：**叙事型**、**系统型**与**反差型**。
-3. 把胜出的方向交给完整 Skill，继续迭代并导出代码。
+浏览附有出处与核对日期的设计参考，查看 [A/B/C 案例](https://variant-design-skill.vercel.app/cases)，再按[安装指南](https://variant-design-skill.vercel.app/docs)在自己的项目里使用技能。网站的[实验室](https://variant-design-skill.vercel.app/lab)是独立实验，不是付费托管方案。专业版、团队版仍是计划，尚未开放订阅。
 
 在本地运行 [React](https://react.dev/) + [Vite](https://vite.dev/) 网站：
 
@@ -149,8 +145,12 @@ Claude Code 或其他本地 agent 同样需要完整目录；可以安装到对�
 
 - 三版保留相同核心任务、数据和必要功能。每版说明**优化什么、牺牲什么、适合什么场景**，并给出有理由的推荐。
 - 默认打开比较页，先展示预览，方案说明可展开查看。React 输出自动挂载三版，提供独立预览地址；项目类型检查必须覆盖生成文件。框架特有依赖使用原生隔离预览入口。
+- 预览收据用于保护比较页、挂载和静态文件的重建与清理。已有的无归属文件、你后来的修改都会保留；原生适配器须在写入前登记尚不存在的路径。见[安全清理预览](references/workflow/preview.md#own-and-clean-native-adapters)。
+- 验证证据和接入计划也跟踪已支持的传递源码、CSS/资源和编译输入。共享依赖变化后须重验或准备新计划；无法解析的覆盖范围保持未验证。见[覆盖范围与项目事实](references/workflow/artifact-verification.md)。
 - `B vary subtle — hero` 只修改 B，不自动选定；`pick B` 才选为胜者，并从 B 提炼出完整的设计系统（色板与字体层级、间距、圆角、阴影、动效，以及 B 用到的每个组件的全部状态）、预览和使用规则（`DESIGN.md`），`ds confirm` 后锁定，并导出 DTCG 格式的设计令牌（`design-system.tokens.json`），可导入 Figma 变量等工具；`undo B` 恢复 B 上次的文件和 tokens，保留 A/C 与最终选择。
 - v2 上下文分别存储各版文件、tokens、版本、比较信息和历史。覆盖前必须保存持久快照，Git 本身不会保存中间修改。
+- 确认提炼出的系统会保留原页面，并标为待应用。明确执行 `apply ds B` 时，准备候选后用 `apply-system` 把代码与 token 记录写入同一快照；撤回同时恢复两者和原应用状态。普通修改仍不能改锁定 token。系统身份和过期候选检查覆盖全部已登记扩展。接入计划同样绑定扩展内容和应用状态，内容变化或旧计划缺少覆盖时，必须重新准备，再写目标文件。
+- 设计系统检查分别报告实际检查的配对与未验证项。生成的颜色使用明确配对或底色注释；只有通过 `--brand` 指定的品牌文件沿用旧命名。组件 token 只引用语义 token。DTCG 默认仍按类型分组，可用 `--group-by layer` 按层导出；两种格式都不代表渲染后的无障碍验收。
 - 优先级：用户约束 → 产品任务和已有设计系统 → 可访问性 → 风格建议。无法解决的可访问性冲突要明确报告。品牌锁定保留字体和 tokens，自由探索允许变化；取消动效数量配额。
 
 实现与验证：[预览](references/workflow/preview.md)、[历史](references/workflow/history.md)、[导出与接入](skills/shared/export.md)、[上下文结构](references/workflow/project-context.md)、[回归测试](tests/README.md)。保留 route-first 路由、局部变体和 Product Integrity Gate。
@@ -161,7 +161,9 @@ React 预览可通过 `--vite-root` 使用独立 Vite 工具包，同时保留�
 
 项目接入需要在生成接入文件前准备源稿与目标文件基准；源稿或目标文件变化时，会在写入前拒绝操作。见[接入流程](skills/shared/export.md)。
 
-运行验证可复用 Playwright 检查计划，覆盖指定品牌元素、键盘焦点、实际触发的动效及非修改区域交互。记录绑定产物版本，未运行的检查明确保留为未验证。见[验证证据](references/workflow/artifact-verification.md)。
+接入交付时可封存本地[交付凭证](references/workflow/delivery-receipt.md)，关联实际文件清单、版本、备份、检查记录与恢复方式。清单有效和检查通过分别显示；缺失检查保持未验证，回滚后原凭证保留为历史记录。
+
+运行验证可复用 Playwright 检查计划，覆盖指定品牌元素、键盘焦点、实际触发的动效及非修改区域交互。记录绑定产物版本、注册的设计系统主文件与扩展，以及应用状态绑定。其他共享依赖仍须显式列出；内容变化或旧记录缺少覆盖时要重新验证。未运行的检查明确保留为未验证。见[验证证据](references/workflow/artifact-verification.md)。
 
 ## 使用方法
 
@@ -273,31 +275,30 @@ reset context          → 清除 context，下次从头开始
 
 无需重新说明你已确认的偏好。用 `show context` 查看当前 context，用 `reset context` 从头开始。
 
-**输出格式**是上下文感知的：如果当前目录含有 React 项目（`package.json` 含 `react` 依赖），自动输出 `.tsx` 组件；否则输出零依赖 HTML。
+### 框架输出（上下文感知）
 
-### React 输出（上下文感知）
+技能要求 Agent 检查 `package.json`，再选择对应的源码格式：
 
-在 React 项目目录中，技能会自动切换为 `.tsx` 输出：
+| 项目 | A/B/C 输出 |
+|---|---|
+| React / Next.js / 使用 React 的 Vite | `VariantA.tsx`、`VariantB.tsx`、`VariantC.tsx` |
+| Vue 3 | `VariantA.vue`、`VariantB.vue`、`VariantC.vue` |
+| Astro | `VariantA.astro`、`VariantB.astro`、`VariantC.astro` |
+| Svelte / SvelteKit | `VariantA.svelte`、`VariantB.svelte`、`VariantC.svelte` |
+| 未识别到对应框架 | 交互式 HTML |
+
+文件写入 `variant-output/`。下面是发给 Agent 的指令，不是独立的终端命令：
 
 ```
-# 在 React/Next/Vite 项目目录中：
-设计一个仪表盘  →  生成 variant-output/VariantA.tsx, VariantB.tsx, VariantC.tsx
-                    检测到 Next.js → 自动添加 "use client"
-                    检测到 framer-motion → 使用 Framer Motion；否则用 CSS 动画
-
-# 在其他目录中：
-设计一个仪表盘  →  生成 variant-output/variant-dashboard-A.html（不变）
-
-# 任意地方强制指定：
-设计一个仪表盘 --react   →  始终输出 .tsx
-设计一个仪表盘 --html    →  始终输出 HTML
-
-# 导出特定变体：
-react A              →  将变体 A 导出为 .tsx
-export to next       →  将选定变体导出为 Next.js App Router 组件
+设计一个仪表盘 --react   → 请求 React 输出
+设计一个仪表盘 --vue     → 请求 Vue 3 输出
+设计一个仪表盘 --astro   → 请求 Astro 输出
+设计一个仪表盘 --svelte  → 请求 Svelte 输出
+设计一个仪表盘 --html    → 请求 HTML 输出
+react A                 → 导出 A 为 React，不自动选定
 ```
 
-生成的 `.tsx` 文件写入 `variant-output/`，移到 `src/components/` 即可纳入项目构建。预览命令从 `package.json scripts` 自动推断（`npm run dev`、`pnpm dev` 等）。
+源码格式不等于预览和接入已经得到验证。附带的预览助手覆盖 HTML 和可移植 React；框架原生功能需要隔离的项目适配与独立检查。把文件放入源码目录前，先走接入流程核对目标路径、保留备份和回滚入口。见[代码输出](skills/shared/code-output.md)、[Vue/Astro/Svelte 指引](skills/shared/frameworks.md)和[预览限制](references/workflow/preview.md)。
 
 ---
 

@@ -10,6 +10,8 @@ For product-critical work, also read `references/workflow/design-declaration.md`
 
 ## Design System Mode
 
+When handing off an integrated page or confirmed-system adoption, use `skills/shared/export.md`, then `references/workflow/delivery-receipt.md` at the handoff step. Seal the actual target inventory and check references before rollback; do not treat a token preview or inventory receipt as rendered acceptance.
+
 The canonical workflow for production-quality work. Define once, generate consistently.
 
 ```
@@ -57,12 +59,12 @@ If user says "surprise me" or has no preferences, infer from their codebase (REA
   --color-surface:       #ffffff; /* use: member list, dialogs, inputs */
   --color-border:        #dcd6ca; /* use: row dividers */
   --color-border-control:#8a8273; /* use: input and select borders */
-  --color-text:          #23201b; /* use: names, headings, body */
-  --color-text-muted:    #5f584d; /* use: emails, last active, helper text */
+  --color-text:          #23201b; /* use: names, headings, body; on: --color-bg --color-surface */
+  --color-text-muted:    #5f584d; /* use: emails, last active, helper text; on: --color-bg --color-surface */
   --color-accent:        #1f5f8b; /* use: invite button, selected role */
   --color-on-accent:     #ffffff; /* use: invite button label */
   --color-focus:         #1f5f8b; /* use: focus ring on every control */
-  --color-danger:        #a3271b; /* use: remove-access button, removal errors */
+  --color-danger:        #a3271b; /* use: remove-access button, removal errors; on: --color-bg --color-surface */
   --color-on-danger:     #ffffff; /* use: confirm-removal label */
 
   --font-ui:   "Instrument Sans", sans-serif;   /* use: everything; one family */
@@ -81,6 +83,8 @@ If user says "surprise me" or has no preferences, infer from their codebase (REA
   --radius-container: 10px;    /* use: dialogs */
   --shadow-dialog: 0 12px 32px rgb(35 32 27 / 0.18); /* use: confirmation dialog only */
   --duration-feedback: 150ms;  /* use: hover, focus, pressed */
+  --font-control: 500 var(--text-ui)/1 var(--font-ui); /* use: control labels */
+  --opacity-hover: 8%; --opacity-pressed: 12%; /* use: control state layers */
 }
 
 /* ── Components ── only in that component's CSS; semantic tokens only ── */
@@ -89,15 +93,15 @@ If user says "surprise me" or has no preferences, infer from their codebase (REA
   --button-height:            var(--control-height-md);   /* 36px; padding 14px = 0.39 of the height */
   --button-padding-inline:    var(--space-3-5);
   --button-radius:            var(--radius-control);      /* shared with inputs and selects */
-  --button-font:              500 var(--text-ui)/1 var(--font-ui);
+  --button-font:              var(--font-control);
   --button-primary-bg:        var(--color-accent);
   --button-primary-fg:        var(--color-on-accent);
   --button-secondary-bg:      var(--color-surface);
   --button-secondary-border:  var(--color-border);         /* the divider, not the input border */
   --button-danger-fg:         var(--color-danger);         /* on the page: red label, no fill */
   --button-danger-confirm-bg: var(--color-danger);         /* confirmation dialog only */
-  --button-state-hover:       8%;
-  --button-state-pressed:     12%;
+  --button-state-hover:       var(--opacity-hover);
+  --button-state-pressed:     var(--opacity-pressed);
   --input-border:             var(--color-border-control);
   --input-border-error:       var(--color-danger);
 }
@@ -119,7 +123,7 @@ A picked direction is a page, not yet a system. After `select` succeeds (`refere
 
 1. **Collect what B actually uses.** Read B's owned files and `variants.B.tokens`: every color, font, size, weight, line height, spacing value, radius, shadow, duration and easing in the rendered page, and the components it contains (buttons, inputs, cards, tables, navigation, badges, charts) with the states it implements. `pick` selects; it does not edit. If you find a defect in B (a broken validation, a wrong initial state), list it in the report with the edit that fixes it (`fix B: …`) and leave B's files unchanged.
 2. **Decide and audit** (`references/design-system/system-decisions.md` §1, §2, §6). Write the three to five decisions B's choice implies for this product. Sort B's traits into its point, which the system keeps, and generator habits (eyebrow labels, a slogan hero on a tool page, decorative numbers, a card around everything, a mood palette, a default font), which it drops or keeps only as a stated decision.
-3. **Write `variant-output/design-system.css`**: the decisions at the top, then the layers of Step 1 sized to the product (§3) and layered with use notes and named pairs (§4): B's values that serve the decisions, normalized to scales, and the states the product needs that B never shows (hover, active, focus, disabled, error, empty, loading). No computed ramps or unused steps. Check text and interactive contrast against `references/design-system/color-and-contrast.md` and fix failing pairs in the system rather than copying them. Before presenting, run `node <skill-root>/scripts/ds-check.mjs variant-output/design-system.css` (under a brand-file lock, pass the brand file first) and fix every pair it reports. It pairs tokens by name (`text`/`ink`/`fg` on `bg`/`surface`/`paper`/`canvas`, and `on-X` on `X`), so name tokens that way. List each B value that the system normalizes (`17px → --text-base`) or drops (`dropped: uppercase eyebrow labels`) in a comment at the top of the file.
+3. **Write `variant-output/design-system.css`**: the decisions at the top, then the layers of Step 1 sized to the product (§3) and layered with use notes and named pairs (§4): B's values that serve the decisions, normalized to scales, and the states the product needs that B never shows (hover, active, focus, disabled, error, empty, loading). No computed ramps or unused steps. Check text and interactive contrast against `references/design-system/color-and-contrast.md`. Before presenting, run `node <skill-root>/scripts/ds-check.mjs variant-output/design-system.css` (under a brand lock, add `--brand <designSystem.file>`). Generated content colors use exact `--color-on-<role>` / `--color-<role>` pairs, or a trailing `/* use: body; on: --color-bg --color-surface */` for text on several surfaces. Other color roles need a pair or an explicit `/* use: chart; contrast: non-text */` note; border/focus/overlay roles are already non-text. Legacy name guessing runs only on `--brand` files. Fix reported contrast and layer failures; missing, conditional, unsupported or translucent pairs stay unverified until rendered checks establish them. Never call an unverified pair passed. List each B value that the system normalizes (`17px → --text-base`) or drops (`dropped: uppercase eyebrow labels`) in a comment at the top of the file.
 4. **Write `variant-output/design-system-preview.html`** as in Step 1: compositions from B's own content rebuilt with the system's tokens (for a members page: the member list mid role change, the remove-access confirmation, an empty or error state), then the token reference and each component B uses in its states. Run `ds-check.mjs` with `--used-by variant-output/design-system-preview.html` and use or remove each unused token. Open it with the preview workflow.
 5. **Write `variant-output/DESIGN.md`**, the system's rules for the agents and people who build on it. The CSS holds the values; this file says how to use them. Sections, in this order: Overview (the decisions, each with what it rules out), Colors, Typography, Layout, Elevation & Depth, Shapes, Components, Do's and Don'ts. Name tokens (`--space-4`), never repeat raw values, and keep each section to the rules a builder would otherwise get wrong: which surface each text token goes on, which type step each heading level uses, when to use each elevation, which component states exist. Under Components, add a Patterns subsection for each recurring situation B has (when to use it, structure, copy rules, tokens). Under a brand-file lock, say what the brand fixes and what the extension adds. The section order follows Google's DESIGN.md draft so other tools can read it; the format is a draft there, so do not claim compatibility.
 6. **Report and stop.** Print the decisions, the palette, fonts and scales, the normalizations and what was dropped from B, any proposed font change, and what the system adds beyond B. Next actions: `ds confirm` · `ds edit [section]` · `apply ds B` (prepare and apply B through history so it uses the system's tokens; one request, one undo). Leave `designSystem` unchanged until the user confirms; do not add a draft entry such as `confirmed: false`.
@@ -130,24 +134,23 @@ A picked direction is a page, not yet a system. After `select` succeeds (`refere
 
 When the user approves (says `ds confirm`, "looks good", "confirm this", "ship it"):
 
-1. Write the confirmed status to `.variant-context.json` (when the system came from a pick, also record `"source": "B"`; for a brand-file lock, see the end of Step 1b):
+1. Write the approved system metadata to `.variant-work/system-confirm.json` (when it came from a pick, include `"source": "B"`; for a brand-file lock, retain its main file/fonts and add only extensions):
 ```json
 {
-  "designSystem": {
-    "confirmed": true,
-    "file": "variant-output/design-system.css",
-    "palette": "[palette name]",
-    "fonts": ["[Display]", "[Body]"],
-    "confirmedAt": "[ISO date]"
-  }
+  "file": "variant-output/design-system.css",
+  "palette": "[palette name]",
+  "fonts": ["[Display]", "[Body]"],
+  "source": "B"
 }
 ```
+
+Run `node <skill-root>/scripts/variant-history.mjs confirm-system variant-output .variant-work/system-confirm.json` (an optional final project root supports nested output). Do not directly rewrite the context to simulate confirmation. The helper verifies a context backup before recording the system identity and a pending binding on its picked source; it leaves A/B/C files, token records, versions, undo stacks and selection unchanged. Only explicit user confirmation authorizes this command. Existing brand files/fonts remain locked. For an already-approved legacy system without a digest, explicitly register that same current definition with this command before a newly requested application; never silently reinterpret its old context or claim old code already adopted it.
 
 2. Export the confirmed system as DTCG 2025.10 tokens, for Figma variables and other token tools. Pass every file of the system (under a brand-file lock: the brand file, then each extension):
 ```bash
 node <skill-root>/scripts/ds-export.mjs variant-output/design-system.css --out variant-output/design-system.tokens.json
 ```
-The CSS stays the source; regenerate the JSON after every `ds edit` and update `variant-output/DESIGN.md` with it, never edit the JSON by hand. The command lists the tokens DTCG cannot express (`clamp()` sizes, `em` tracking, shorthands); name them in the confirmation instead of approximating them.
+The CSS stays the source; regenerate the JSON after every `ds edit` and update `variant-output/DESIGN.md` with it, never edit the JSON by hand. The default groups by type; `--group-by layer` writes primitive/semantic/component groups with per-token `$type` and preserves alias paths (brand variables get a `brand` group when passed with `--brand <file>`). Do not silently change an existing project's export format. The command lists the tokens DTCG cannot express (`clamp()` sizes, `em` tracking, shorthands, multiple conditional values); name them in the confirmation instead of approximating them.
 
 3. Print confirmation:
 ```
@@ -164,9 +167,21 @@ The CSS stays the source; regenerate the JSON after every `ds edit` and update `
     ds edit palette    → refine colors before building
 ```
 
-4. From this point forward, **all Generate, Component, and Compose outputs** must `<link rel="stylesheet" href="design-system.css">` (or inline the tokens) — no aesthetic invention allowed outside the locked token system.
+4. The original picked page is pending adoption until the user requests `apply ds B`; confirmation does not retrofit or validate it. From this point forward, **all new Generate, Component, and Compose outputs** must `<link rel="stylesheet" href="design-system.css">` (or inline the tokens) — no aesthetic invention allowed outside the locked token system.
 
 5. For product-critical work, compile the confirmed declaration into `variant-output/design-contract.md` and run the Product Integrity Gate separately from the visual quality gate.
+
+### Apply the confirmed system to an existing direction (`apply ds B`)
+
+This explicitly aligns code and its token record; it is not an ordinary variation and never selects a direction. Read `references/workflow/history.md` and use its prepare flow first. Replace B's values with the confirmed semantic tokens in the new candidate. Write a change JSON under `.variant-work/` with a summary, a unique request ID for this user action, and a complete `tokens` record: `fonts` exactly matches `designSystem.fonts`, and each recorded color is a supported value or resolvable CSS variable from the system. Preserve other token metadata accurately.
+
+```bash
+node <skill-root>/scripts/variant-history.mjs prepare variant-output B .variant-work/apply-system-B
+# Edit only the prepared candidate and write .variant-work/apply-system-B.json.
+node <skill-root>/scripts/variant-history.mjs apply-system variant-output B .variant-work/apply-system-B .variant-work/apply-system-B.json
+```
+
+`apply-system` requires the current confirmed identity; it refuses unknown fonts/colors, changed system files/extensions, stale candidates and out-of-zone changes. It snapshots files, tokens and binding together. Ordinary `apply` keeps its token lock. Run delivery and rendered checks on the actual result; unsupported color records must be resolved rather than guessed. `undo B` restores the previous files, tokens and pending/absent binding while retaining selection. After undo, report that the original page is pending adoption again rather than pretending it uses the new foundation.
 
 ### Step 3 — Build Components (`component [name]`)
 
@@ -277,3 +292,6 @@ Print a one-line reminder on every generation:
 ```
 ✦ DS locked: Amber Warm · DM Sans + Newsreader · variations differ in layout only
 ```
+
+
+Artifact evidence automatically fingerprints the registered main system, extensions, variant binding and supported transitive local dependencies. After editing those, rerun observations; a prior report cannot certify the changed preview. Use the evidence reference to record actual wrapper/alias/config facts and additional dynamic roots. Integration preparation binds the same closure and adoption state; changed source/config/facts or legacy missing coverage requires a new plan. Partial dependency coverage remains explicit.

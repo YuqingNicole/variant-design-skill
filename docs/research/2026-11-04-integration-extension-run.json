@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-04",
+  "implementationHead": "e39f056",
+  "integrationHelperSha256": "5bdc3b952210217ff1c471599afeeb2946132cf1d428d35e87bf6c600c6a4ba1",
+  "generatedBy": {
+    "agent": "codex",
+    "fixture": "ledger-pick",
+    "installedHead": "4fbfb35"
+  },
+  "mode": "Host invokes later integration CLI on a disposable copy of actual generated output; Agent did not use this later helper",
+  "extension": "variant-output/system-extension.css",
+  "stalePlanRefused": true,
+  "noBackupOrTargetOnConflict": true,
+  "oldPlanPreserved": true,
+  "freshPlanIntegratedActualB": true,
+  "rollbackRemovedCreatedTarget": true,
+  "sharedExtensionUserEditPreserved": true,
+  "allVariantSourceBytesPreserved": true,
+  "selectionPreserved": true,
+  "originalAgentOutputPreserved": true,
+  "calls": [
+    {
+      "action": "prepare",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "action": "apply",
+      "exit": 1,
+      "stderr": "Integration conflict: source revision, contents or constraints changed. Current files are unchanged; keep staging and prepare a new plan before reconciling.\n"
+    },
+    {
+      "action": "prepare",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "action": "apply",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "action": "list",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "action": "rollback",
+      "exit": 0,
+      "stderr": ""
+    }
+  ],
+  "harnessCorrection": "First host script incorrectly parsed human-readable apply stdout as JSON; its one disposable integration was rolled back. This complete v2 run reads the actual list/backup record and retains each CLI log.",
+  "limitations": [
+    "No new framework adapter or automatic shared-import discovery",
+    "No claim that earlier Agent used the later helper",
+    "Not human acceptance or production deployment"
+  ]
+}

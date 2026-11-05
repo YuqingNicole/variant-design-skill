@@ -26,8 +26,8 @@ Read files only at the step that names them, and only the section you need. Do n
 | Zone edit | `B vary subtle — hero`, `zones A` | `skills/variant-generate/zones.md`, then `references/workflow/history.md` |
 | Undo, recover | `undo B`, `recover` | `references/workflow/history.md` |
 | Pick | `pick B` | `references/workflow/history.md` (select), then `skills/variant-design-system/ROUTE.md` → Design system from a picked direction |
-| Reopen or compare | `open B`, `compare` | `references/workflow/preview.md` |
-| Export or integrate (prepare target baseline before staging) | `react B`, `export to next`, `integrate B`, `copy` | `skills/shared/export.md` |
+| Reopen, compare or clean previews | `open B`, `compare`, `clean previews` | `references/workflow/preview.md` |
+| Export or integrate (prepare target baseline before staging; seal the actual integration handoff before rollback) | `react B`, `export to next`, `integrate B`, `copy` | `skills/shared/export.md`; at integration handoff, `references/workflow/delivery-receipt.md` |
 | Context | `show context`, `reset context` | `references/workflow/project-context.md` |
 
 ## 1. Context and fast path
@@ -96,6 +96,8 @@ Register A, B and C in `.variant-context.json` following `references/workflow/pr
 
 Build and open the comparison page with A/B/C direct links and the recommendation, following `references/workflow/preview.md`. Show the actual URL or `file://` path. For portable React without Vite, use the isolated `--vite-root` path in that reference; native framework features still need their adapter.
 
+Use the preview reference's ownership protocol before creating native adapters; preserve the receipts returned by native or bundled helpers. Rebuild only from an unchanged ownership baseline. On explicit cleanup, stop the owned process and use receipts to preserve user-edited adapters and original files.
+
 ## 6. Check
 
 ```bash
@@ -105,7 +107,7 @@ node <skill-root>/scripts/delivery-check.mjs variant-output
 
 Scan only the current deliverables (name the files when the directory holds older output). Inspect quality-gate findings in context and fix confirmed ones. For each `review` finding (a generator habit), remove it or say in the presentation why this product needs it. Fix every delivery-check error: missing or shared files, empty or repeated comparisons, a missing task contract or recommendation, a changed locked font or color, or a design-system extension that redefines a brand variable. Under a confirmed system, colors and lengths outside its tokens, and direct references to its primitives (`--p-*`), are warnings: replace them with semantic tokens or say why. A `selectedVariant` warning means a direction was selected without the user. Then review the rendered pages with `references/workflow/quality-baseline.md`: hierarchy, distinctness, responsive behavior and working interactions.
 
-When recording version-bound runtime checks, use `references/workflow/artifact-verification.md`: fill the browser plan from task expectations, and retain unverified items explicitly. For edits, compare pre-edit and post-edit observations.
+When recording version-bound runtime checks, use `references/workflow/artifact-verification.md`: fill expectations from the task, register actual native wrapper/alias/config facts, and retain unknowns explicitly. For edits, compare pre-edit and post-edit observations. Registered systems/bindings and supported transitive local dependencies automatically invalidate old evidence/plans when changed. Dynamic/data-driven roots still need review. Prepare a new integration plan before staging after tracked source, config or dependency facts change.
 
 For product-critical UI, run `references/workflow/product-integrity-gate.md` and report it separately from visual quality; do not present a P0 result as complete. Report only checks that ran; never claim WCAG compliance, browser coverage or "no AI slop" from self-assessment.
 

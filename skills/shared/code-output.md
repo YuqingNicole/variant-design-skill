@@ -4,6 +4,8 @@
 
 The user cannot see the output until it opens in a browser, so every step should shorten the path from idea to pixels: write files, build the preview, and give the exact path or URL.
 
+On a confirmed system, product code uses semantic tokens. A component's own CSS may use its component tokens; identify that file with `/* component: button */` for `--button-*`. Do not use another component's tokens or `--p-*` primitives. Brand-file names are exempt; generated extensions follow these rules. `delivery-check.mjs` reports usage warnings and generated component-layer errors; missing contrast coverage stays unverified. The design-system route defines explicit pairs and the checks before showing its preview.
+
 ## Detect the output format
 
 Before generating any design, detect the output format. Run this detection once per session and cache the result.
@@ -95,6 +97,8 @@ Write to `./variant-output/` in the target project, never into its source folder
 
 - HTML: `variant-[scenario]-A.html`, `-B.html`, `-C.html` (for example `variant-dashboard-A.html`).
 - React: Write default-exported `VariantA.tsx`, `VariantB.tsx`, and `VariantC.tsx` into `variant-output/`. Mount them automatically using `references/workflow/preview.md`; the comparison view and three direct URLs are part of delivery. Starting the original project's server alone is insufficient. Keep production routes untouched. Use a native isolated route adapter when framework-specific imports/providers require it, and remove only files created by this task during cleanup.
+
+Before writing native adapters, prepare their absent paths with `preview-files.mjs`, then seal ownership once; bundled comparisons/static builds return receipts automatically. Follow the preview reference at this phase for guarded rebuilds and explicit cleanup. Unowned legacy files and later user edits stay intact; do not re-adopt or recursively remove them.
 - Data shared by all three directions: one file under `variant-output/shared/`.
 - Working files (candidates, change files, probes, screenshots): `.variant-work/` in the project root. It contains project source; do not commit it.
 
@@ -220,8 +224,12 @@ For React projects without Vite, the preview helper accepts `--vite-root` for an
 
 ## Verification records
 
-For revision-bound delivery evidence, read `references/workflow/artifact-verification.md`. Use the reusable browser runner with explicit task expectations when Playwright is available. Capture non-target behavior and project-check failures before an edit, rerun after it, and retain both reports. Missing tools or expectations remain unverified; static scans alone cannot establish runtime success.
+For revision-bound delivery evidence, read `references/workflow/artifact-verification.md`. Use the reusable browser runner with explicit task expectations when Playwright is available. Capture non-target behavior and project-check failures before an edit, rerun after it, and retain both reports. Evidence and integration plans bind registered system extensions/bindings plus supported transitive local imports/resources and compiler inputs. Record actual native wrapper/alias/config facts before checks or integration preparation. Dynamic/data-driven dependencies still need explicit review/roots; missing tools, unresolved coverage or missing expectations stay unverified. Static scans alone cannot establish runtime success.
 
 Before generating files for project integration, prepare a source/target baseline using `skills/shared/export.md`. Applying staging without a prepared plan is rejected.
 
+At integration handoff, follow `references/workflow/delivery-receipt.md` to seal the actual target inventory, recovery path and current reports before any rollback. Keep inventory validity separate from observed checks; missing checks are unverified. Preview cleanup never deletes `.deliveries/`.
+
 Comparison delivery uses preview-first cards, with full-page links above and expandable direction details below. Rebuild existing comparisons with the preview helper; do not hide or discard the comparison statements.
+
+Confirming a derived design system leaves the original page pending; it does not silently rewrite it. For explicit `apply ds B`, use `variant-history.mjs apply-system` after preparation, with token metadata aligned to the approved system. Ordinary variation token locks remain in force. Preserve `systemBinding` in unrelated context updates; only the confirmation/adoption/undo helpers change it. Never manually mark a page applied. Prepared integration plans also bind registered extension content and adoption state; prepare a new plan when they change.
