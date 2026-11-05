@@ -324,7 +324,7 @@ test('inspiration references filter, create an original brief and recover from c
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('95 个参考');await expect(page.getByRole('searchbox')).toHaveValue('');
  await expect(page.getByRole('button',{name:'全部',exact:true})).toHaveAttribute('aria-pressed','true');
  await page.locator('.site-language').click();
- await expect(page.locator('h1')).toHaveText('The best design inspiration on the internet.');
+ await expect(page.locator('h1')).toHaveText('The best design inspiration during the ai area.');
  for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
