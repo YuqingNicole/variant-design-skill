@@ -233,3 +233,5 @@ At integration handoff, follow `references/workflow/delivery-receipt.md` to seal
 Comparison delivery uses preview-first cards, with full-page links above and expandable direction details below. Rebuild existing comparisons with the preview helper; do not hide or discard the comparison statements.
 
 Confirming a derived design system leaves the original page pending; it does not silently rewrite it. For explicit `apply ds B`, use `variant-history.mjs apply-system` after preparation, with token metadata aligned to the approved system. Ordinary variation token locks remain in force. Preserve `systemBinding` in unrelated context updates; only the confirmation/adoption/undo helpers change it. Never manually mark a page applied. Prepared integration plans also bind registered extension content and adoption state; prepare a new plan when they change.
+
+When reporting failed project checks, preserve actual structured diagnostics and compare them individually using `references/workflow/artifact-verification.md`. Keep original logs and old/new classifications; an observed-before failure still fails and never establishes delivery acceptance.

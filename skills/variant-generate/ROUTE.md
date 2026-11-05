@@ -128,3 +128,5 @@ Then the recommendation and its reason, and the next actions:
 > **Deliver** — pick B (then its design system) · react B · integrate B · tokens A
 
 The generated comparison shows previews before expandable direction details. Keep the full optimization, trade-off and suitable-scenario text in the manifest; rebuilding the comparison preserves it.
+
+When reporting failed project checks, preserve actual structured diagnostics and compare them individually using `references/workflow/artifact-verification.md`. Keep original logs and old/new classifications; an observed-before failure still fails and never establishes delivery acceptance.

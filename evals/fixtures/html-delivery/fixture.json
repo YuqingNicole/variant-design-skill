@@ -1,0 +1,30 @@
+{
+  "description": "Actual HTML multi-file handoff, failed health baseline, granular diagnostics, receipts and protected rollback.",
+  "locked": {
+    "file": "brand.css",
+    "fonts": [
+      "Georgia"
+    ]
+  },
+  "runtimePlans": true,
+  "note": "（无人值守本地实测：使用项目级安装的完整技能；不要启动服务器、发布或修改依赖/原始文件。正式 A/B/C 放在 variant-output/ 并完整登记到 context，工作文件放 .variant-work/。当前 CLI 不能绑定端口；你要根据真实任务/源码自动生成并封存计划，浏览器由宿主独立执行，不要伪造 runtime 通过。所有 HTML 直接 file URL 可打开，不用网络资源。原 aria-label/data-testid 是行为契约；每版根元素标 data-runtime-variant=\"A/B/C\"。） 原项目 health-check.mjs/project-health.json 故意包含一条已存在的健康失败，保留并披露；runtime-plan 阶段的原语法检查不代表完整项目健康验收。使用经典脚本及项目内相对资源路径。保留原有 variant-preview.html；候选与比较页仍是正式保留产物，不是退出时删除的临时适配器。",
+  "turns": [
+    {
+      "id": "generate",
+      "prompt": "使用完整 Variant Design 技能，为当前 Progress Review 生成 A/B/C 三个可比较方向，保留原品牌和真实进度模拟/独立活动计数行为，不替我选定。保留原文件，候选代码登记为各自独立 HTML/CSS/JS 文件。按 runtime-plans.md 自动为 B 根据实际代码生成 baseline draft，并用真实 verification-plan.mjs record 封存。视口先用 390×844；计划必须实际覆盖品牌字体、两个关键控件的键盘焦点、真实 progress 动作在正常状态50/初始和切换 reduced-motion100的行为、Inspect activity 点击后计数1的非修改区基准、原项目 check 命令。使用实际稳定定位器，完整覆盖 taskContract.requiredFunctions，每个依据指向真实业务/品牌/检查源码。不要把可变 .variant-context.json 或计划/报告当作源码依据。不要在 JSON 写代码/命令；不手写通过。写 .variant-work/runtime-plan.json 为 {schemaVersion:1,bundle:真实返回的项目相对封存文件路径}，供宿主执行。"
+    },
+    {
+      "id": "plan-edit",
+      "prompt": "继续使用完整技能。读取 .variant-work/runtime-baseline.json 和真实基准报告。只把 B 主标题最后加上“ — Draft”，用真实 history prepare/apply 完成一个请求，保留 A/C、未修改区、原品牌与选择。审查旧计划变为 stale 后，写新的 comparison draft，引用实际 output-relative baselineReport，scope 动作/断言/视口和任务期望保持一致；用真实 verification-plan.mjs record 封存。更新 runtime-plan.json 指向新 bundle。不要改旧草稿、bundle、基准或期望来消除失败。宿主会独立运行；仍不伪造本会话没有执行的浏览器结果。"
+    },
+    {
+      "id": "plan-undo",
+      "prompt": "继续使用完整技能。用真实 undo B 撤回刚才那个标题请求，保留 A/C、原始文件和最终选择。审查当前源码，保留原基准和 scope 动作/断言，封存新的 comparison 计划并更新 runtime-plan.json；旧计划/报告不改。返回实际版本、撤回与当前计划位置，不把宿主之前的观察当作这个新版本的结果。"
+    },
+    {
+      "id": "deliver",
+      "prompt": "继续使用完整技能，将当前真实 B 作为本地候选交付（不要选中B）。此临时接入/回滚与保留失败候选已明确授权。真实 integration prepare/apply 把 B 接入 index.html，并将所需 CSS/经典JS/共享数据作为新建资源放在 delivered/；完整 targets 含 index.html 且只额外使用 delivered/ 下路径，禁止覆盖原 brand.css、项目配置/检查器和 variant-preview.html。prepare 必须在生成 staging 前，staging 精确对应 targets。保留真实相对资源与 data-runtime-variant=B，不能让原 index 只是链接到候选页。\n接入前和后都实际运行原 node check.mjs index.html 与 node health-check.mjs index.html；后者 stdout 是实际诊断 JSON，既有 legacy-health 应保留。请写自己的本地观察脚本，导入真实安装的 verifyArtifact，callback 实际运行两个原检查命令、解析 health stdout 的 diagnostics；project-checks 状态根据实际退出码为 failed，tool含实际Node版本及health-check.mjs摘要，environment用实际cwd/命令；evidence是各轮独立实际JSON日志路径，reason可汇总。dependencies包含 check.mjs、health-check.mjs、project-health.json 和当前存在的全部接入 targets。四类浏览器检查在CLI缺浏览器时仍未验证，不能伪造通过。不要直接手写report JSON。\n真实 apply 后、rollback 前，调用真实 delivery-receipt record 封存 before/afterReport 引用，确认 inventory current、verification failed；baseline比较保留真实legacy-health诊断。用真实rollback恢复index并移除新建资源，确认原凭证为rolled-back历史；保留全部计划、staging、报告、日志、备份与凭证。\n写 .variant-work/html-delivery.json={schemaVersion:1,plan:项目相对真实计划,staging:项目相对staging,integrationId:真实id,targets:完整数组,beforeReport:output-relative真实报告,afterReport:output-relative真实报告,receipt:output-relative真实凭证,beforeLog:项目相对真实JSON检查日志,afterLog:项目相对真实JSON检查日志,rollbackLog:项目相对真实回滚日志,disposition:\"candidate-with-recorded-failures\"}。两份检查日志各自包含 {runs:[{command:实际argv数组,version:实际Node版本,exitCode:实际退出码,stdout,stderr}]}，每轮两条，禁止重用日志或改旧报告。不要修复/删掉预存health失败，也不要把它报告为已验收可上线。"
+    }
+  ],
+  "htmlDelivery": true
+}

@@ -18,6 +18,7 @@ import { armPreviewCleanup, observePreviewCleanup } from './preview-cleanup.mjs'
 import { probeSharedDependencies } from './shared-dependencies.mjs';
 import { probeDeliveryReceipts } from './delivery-receipts.mjs';
 import { observeRuntimePlan } from './runtime-plans.mjs';
+import { replayHTMLDelivery } from './html-delivery.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -143,8 +144,12 @@ async function chain(fixture, agent, config, dir, install) {
     turns.push({ id: turn.id, transcript: run.transcript, exit: run.exit, seconds: run.seconds, timedOut: run.timedOut, snapshot: snapshot(dir) });
     if (config.runtimePlans) {
       measurements.runtimePlans.archives[turn.id] = archive(turn.id, turns.at(-1).snapshot);
-      try { measurements.runtimePlans[turn.id] = await observeRuntimePlan(dir, { out: path.join(out, `${fixture}-${agent}.runtime-plans`, turn.id), phase: turn.id, mode: config.runtimePlans.mode ?? 'file', archive: measurements.runtimePlans.archives[turn.id] }); }
+      if (['generate','plan-edit','plan-undo'].includes(turn.id)) try { measurements.runtimePlans[turn.id] = await observeRuntimePlan(dir, { out: path.join(out, `${fixture}-${agent}.runtime-plans`, turn.id), phase: turn.id, mode: config.runtimePlans.mode ?? 'file', archive: measurements.runtimePlans.archives[turn.id] }); }
       catch (error) { measurements.runtimePlans[turn.id] = { error: error.stack }; }
+    }
+    if (config.htmlDelivery && turn.id === 'deliver') {
+      try { measurements.htmlDelivery = await replayHTMLDelivery(dir, { out: path.join(out, `${fixture}-${agent}.html-delivery`), archive: measurements.runtimePlans.archives.deliver, initialArchive: measurements.runtimePlans.archives.baseline, sourceArchive: measurements.runtimePlans.archives['plan-undo'], draft: measurements.runtimePlans['plan-undo']?.bundle?.draft }); }
+      catch (error) { measurements.htmlDelivery = { error: error.stack }; }
     }
     if (config.nativeVite) {
       const saved = archive(turn.id, turns.at(-1).snapshot);

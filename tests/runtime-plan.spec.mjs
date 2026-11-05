@@ -82,3 +82,9 @@ test('declarative label locators fill, select and press real controls before ass
   spec.plan['scope-preservation'].push(...[['query-value','Canopy'],['mode-value','owner'],['last-key','Enter']].map(([value,expected])=>({locator:byTest(value),property:'text',expected})));
   const sealed=seal(spec,'controls'),result=await runVerificationPlan(output,sealed.file,adapter(page,browser,'Report'));const scope=result.report.checks.find(c=>c.id==='scope-preservation');expect(scope.status).toBe('unverified');expect(scope.evidence).toHaveLength(4);expect(scope.evidence.every(e=>e.matches)).toBe(true);
 });
+
+test('a late browser read cannot erase a mismatch already measured within an action deadline',async({page,browser})=>{
+ setup();const delayed=`const descriptor=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');let armed=false,seen=false;const inspect=document.querySelector('#inspect'),original=inspect.onclick;inspect.onclick=()=>{original();counter.textContent='2';armed=true};Object.defineProperty(counter,'textContent',{get(){const value=descriptor.get.call(this);if(armed&&!seen){seen=true;setTimeout(()=>{const end=performance.now()+240;while(performance.now()<end){}},10)}return value},set(value){descriptor.set.call(this,value)}});`;
+ write('variant-output/B.html',read('variant-output/B.html').replace('</script>',delayed+'</script>'));const spec=draft();spec.actions.scope[0].locator={by:'css',value:'#inspect'};spec.actions.scope[1].timeoutMs=100;
+ const sealed=seal(spec,'late-read'),result=await runVerificationPlan(output,sealed.file,adapter(page,browser,'Report')),scope=result.report.checks.find(c=>c.id==='scope-preservation');expect(scope.status).toBe('failed');expect(scope.evidence[0].actual).toBe('2');expect(scope.evidence[0].matches).toBe(false);expect(result.status).toBe('failed');
+});

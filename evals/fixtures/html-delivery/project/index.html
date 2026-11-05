@@ -1,0 +1,6 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Progress Review</title><link rel="stylesheet" href="brand.css"></head><body><main><section><h1>Progress Review</h1><p>Review a local progress simulation, then inspect the activity counter.</p><button id="animate" aria-label="Animate progress">Animate progress</button><output data-testid="progress" aria-label="Progress">100</output></section></main><footer><h2>Activity</h2><button id="inspect" aria-label="Inspect activity">Inspect activity</button><output data-testid="activity-count" aria-label="Activity count">0</output></footer><script>
+const progress=document.querySelector('[data-testid="progress"]'),activity=document.querySelector('[data-testid="activity-count"]'),preference=matchMedia('(prefers-reduced-motion: reduce)');let frame;
+document.querySelector('#inspect').onclick=()=>{activity.textContent=String(Number(activity.textContent)+1)};
+document.querySelector('#animate').onclick=()=>{cancelAnimationFrame(frame);if(preference.matches){progress.textContent='100';return;}const tick=()=>{progress.textContent='50';frame=requestAnimationFrame(tick)};tick()};
+preference.addEventListener('change',()=>{if(preference.matches){cancelAnimationFrame(frame);progress.textContent='100'}});
+</script></body></html>

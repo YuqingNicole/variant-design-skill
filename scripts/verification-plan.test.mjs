@@ -7,7 +7,7 @@ import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { fixture } from '../tests/fixture.mjs';
-import { recordVerificationPlan, inspectVerificationPlan, runVerificationPlan } from './verification-plan.mjs';
+import { recordVerificationPlan, inspectVerificationPlan, runVerificationPlan, performVerificationActions } from './verification-plan.mjs';
 
 const compiler = path.dirname(createRequire(new URL('../tests/package.json', import.meta.url)).resolve('typescript/package.json'));
 function setup(t) {
@@ -81,3 +81,11 @@ test('oversize drafts and too many actions refuse without creating a sealed plan
  const {project,output,draft,draftFile,save}=setup(t),file=path.join(project,draftFile);fs.truncateSync(file,2*1024*1024+1);assert.throws(()=>recordVerificationPlan(output,'B',draftFile),/bounded regular/);save(draft);
  draft.plan['scope-preservation']=[{locator:{by:'css',value:'output'},property:'text',expected:'1'}];draft.basis['scope-preservation']=[{file:'preview.html',reason:'Actual footer'}];delete draft.gaps['scope-preservation'];draft.actions.scope=Array.from({length:33},()=>({action:'click',locator:{by:'role',role:'button',name:'Inspect'}}));save(draft);assert.throws(()=>recordVerificationPlan(output,'B',draftFile),/1–32/);assert.equal(fs.existsSync(path.join(project,'.variant-work/.runtime-plans')),false);
 });
+
+ test('a final transport timeout retains an actually measured assertion mismatch',async()=>{
+ let reads=0;const target={waitFor:async()=>{},count:async()=>1,textContent:async({timeout})=>{if(!reads++)return '2';await new Promise(resolve=>setTimeout(resolve,timeout+2));const error=new Error('Transport timed out');error.name='TimeoutError';throw error}},page={locator:()=>target};
+ await assert.rejects(()=>performVerificationActions(page,[{action:'assert',locator:{by:'css',value:'output'},property:'text',expected:'1',timeoutMs:90}]),error=>error.verificationEvidence?.[0]?.actual==='2'&&error.verificationEvidence[0].matches===false);
+ });
+ test('unobserved or non-timeout transport failures do not invent a measured assertion failure',async()=>{
+ for(const kind of ['unobserved','ambiguous']){let reads=0;const target={waitFor:async()=>{},count:async()=>1,textContent:async({timeout})=>{if(kind==='ambiguous'&&!reads++)return '2';if(kind==='unobserved')await new Promise(resolve=>setTimeout(resolve,timeout+2));const error=new Error(kind);error.name=kind==='unobserved'?'TimeoutError':'Error';throw error}},page={locator:()=>target};await assert.rejects(()=>performVerificationActions(page,[{action:'assert',locator:{by:'css',value:'output'},property:'text',expected:'1',timeoutMs:90}]),error=>!error.verificationEvidence);}
+ });

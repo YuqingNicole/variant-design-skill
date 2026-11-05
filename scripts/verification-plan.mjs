@@ -124,15 +124,22 @@ export function inspectVerificationPlan(output, planFile) {
   try { const { id, at, limitation, ...expected } = record; return { file: localFile(base, relativeFile), status: same(expected, collect(out, record.variant, record.draftFile, base)) ? 'current-within-recorded-scope' : 'stale', record }; }
   catch (error) { return { file: localFile(base, relativeFile), status: 'stale', reason: error.message, record }; }
 }
-async function perform(page, list) {
+export async function performVerificationActions(page, list) {
   for (const action of list) {
     if (action.whenMotion && !await page.evaluate(value => matchMedia(`(prefers-reduced-motion: ${value})`).matches, action.whenMotion)) continue;
     const target = verificationLocator(page, action);
     if (action.action === 'assert') {
       const timeout = action.timeoutMs ?? 2000, deadline = Date.now() + timeout; let actual;
       await target.waitFor({ state: 'attached', timeout }); need(await target.count() === 1, 'Expected exactly one assertion target');
-      do { const remaining = Math.max(1, deadline - Date.now()); actual = action.property === 'text' ? await target.textContent({ timeout: remaining }) : await target.evaluate((el, property) => getComputedStyle(el).getPropertyValue(property), action.property, { timeout: remaining }); if (actual === action.expected) break; await new Promise(resolve => setTimeout(resolve, 40)); } while (Date.now() < deadline);
-      if (actual !== action.expected) { const error = new Error('Action expectation did not become true'); error.verificationEvidence = [{ locator: action.locator, property: action.property, expected: action.expected, actual, matches: false }]; throw error; }
+      while (true) {
+        const remaining = deadline - Date.now();
+        if (remaining <= 0) { need(actual !== undefined, 'No assertion value was observed within the wait'); break; }
+        try { actual = action.property === 'text' ? await target.textContent({ timeout: remaining }) : await target.evaluate((el, property) => getComputedStyle(el).getPropertyValue(property), action.property, { timeout: remaining }); }
+        catch (error) { if (actual !== undefined && error.name === 'TimeoutError' && Date.now() >= deadline) break; throw error; }
+        if (actual === action.expected || Date.now() >= deadline) break;
+        await new Promise(resolve => setTimeout(resolve, Math.min(40, Math.max(1, deadline - Date.now()))));
+      }
+      if (actual !== action.expected) { const error = new Error('Action expectation was not observed within the wait'); error.verificationEvidence = [{ locator: action.locator, property: action.property, expected: action.expected, actual, matches: false }]; throw error; }
     } else if (action.action === 'click') await target.click({ timeout: 5000 });
     else if (action.action === 'fill') await target.fill(action.value, { timeout: 5000 });
     else if (action.action === 'select') await target.selectOption(action.value, { timeout: 5000 });
@@ -150,8 +157,8 @@ export async function runVerificationPlan(output, planFile, adapter = {}) {
   const relativeFile = path.relative(r.project, inspected.file).split(path.sep).join('/');
   return verifyInBrowser(output, r.variant, { projectRoot: r.project, dependencies: r.dependencies, inputs: [...r.inputs, relativeFile], plan, scopeBaseline: d.purpose === 'baseline' }, {
     page: adapter.page, version: adapter.version, ready: adapter.ready,
-    ...(d.plan['reduced-motion'] ? { startMotion: page => perform(page, d.actions.motion) } : {}),
-    ...(d.plan['scope-preservation'] ? { exerciseScope: page => perform(page, d.actions.scope) } : {}),
+    ...(d.plan['reduced-motion'] ? { startMotion: page => performVerificationActions(page, d.actions.motion) } : {}),
+    ...(d.plan['scope-preservation'] ? { exerciseScope: page => performVerificationActions(page, d.actions.scope) } : {}),
     ...(d.projectChecks && adapter.projectChecks ? { projectChecks: adapter.projectChecks } : {})
   });
 }
