@@ -27,7 +27,7 @@ Read files only at the step that names them, and only the section you need. Do n
 | Undo, recover | `undo B`, `recover` | `references/workflow/history.md` |
 | Pick | `pick B` | `references/workflow/history.md` (select), then `skills/variant-design-system/ROUTE.md` → Design system from a picked direction |
 | Reopen, compare or clean previews | `open B`, `compare`, `clean previews` | `references/workflow/preview.md` |
-| Export or integrate (prepare target baseline before staging; seal the actual integration handoff before rollback) | `react B`, `export to next`, `integrate B`, `copy` | `skills/shared/export.md`; at integration handoff, `references/workflow/delivery-receipt.md` |
+| Export, integrate or recover (prepare target baseline before staging; preserve interrupted backups; seal actual handoff before rollback) | `react B`, `export to next`, `integrate B`, interrupted integration/rollback, `copy` | `skills/shared/export.md`; at integration handoff, `references/workflow/delivery-receipt.md` |
 | Context | `show context`, `reset context` | `references/workflow/project-context.md` |
 
 ## 1. Context and fast path
@@ -91,6 +91,8 @@ Follow `skills/shared/code-output.md` for format detection, file paths and the o
 Mark the major sections so later zone edits are possible: `data-zone="hero"` on the element, and `<!-- zone:hero:start -->` / `<!-- zone:hero:end -->` around it (TSX: `{/* zone:hero:start */}` / `{/* zone:hero:end */}`), plus `/* zone:hero:start */` / `/* zone:hero:end */` around its styles.
 
 Register A, B and C in `.variant-context.json` following `references/workflow/project-context.md`: owned files, tokens, version 1, and `comparison` with three sentences each (optimizes, tradeoff, bestFor). Record the `taskContract` and a `recommendation: {variant, reason}` that separates hypotheses from tested evidence. Leave `selectedVariant` empty: a recommendation is not a selection.
+
+"Do not pick for me" keeps `selectedVariant: null`; it does not suppress advice. Give a tentative recommendation grounded in the shared criteria, label untested advantages as hypotheses, and leave the user's decision open. If the user explicitly declines recommendations too, honor that request and disclose the missing recommendation instead of inventing advice to pass a check.
 
 ## 5. Preview
 

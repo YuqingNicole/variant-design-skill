@@ -32,6 +32,7 @@ node <skill-root>/scripts/variant-integrate.mjs prepare variant-output B .varian
 # Generate staged files only after prepare succeeds.
 node <skill-root>/scripts/variant-integrate.mjs apply variant-output B .variant-work/integrate-B .variant-work/integration-plan.json
 node <skill-root>/scripts/variant-integrate.mjs rollback variant-output <integration-id>
+node <skill-root>/scripts/variant-integrate.mjs recover variant-output <interrupted-integration-id>
 node <skill-root>/scripts/variant-integrate.mjs list variant-output
 ```
 
@@ -43,7 +44,17 @@ Include current comparison/static/native preview ownership receipts and their pr
 
 For an actual integration, read `references/workflow/delivery-receipt.md` at handoff. Before rolling back or cleaning its preview, seal a local delivery receipt from the real plan, staging, backup, version-bound before/after reports and current preview ownership. Include all integration targets in post-integration verification dependencies. Missing reports stay unverified; inventory validity is separate from check results. Give the receipt path and recheck its status before using it as current evidence. Keep `.deliveries/` with history/backups; rollback retires current verification without deleting the historical handoff.
 
-Preparation, apply and rollback share the history helper lock. External editors do not honor it; avoid simultaneous editing during commit. Ordinary write failures restore completed writes when they still match this integration; conflicting later edits preserve the backup for manual recovery. Multi-file process interruption is not globally atomic.
+Preparation, apply, rollback and recovery share the history helper lock. External editors do not honor it; avoid simultaneous editing during commit. Multi-file process interruption is not globally atomic and this is not a power-loss durability guarantee.
+
+### Recover an interrupted operation
+
+`list` reports `appliedAt: null` for an interrupted new integration; a completed apply records a timestamp. Old backups without this field are not assumed interrupted. A normal completed integration must use strict `rollback`, which refuses any changed target before creating a recovery intent. `recover` cannot bypass that check. A rollback interrupted after its preflight has a saved intent in `.integrations/recovery/<id>.json` bound to the exact backup; use the same `recover` command to continue it.
+
+After a crash, first confirm the owning process is no longer running and inspect the backup, target files and any recovery intent. Only then remove its **empty** `variant-output/.variant-lock` directory (`rmdir`, never recursive deletion). Helpers never steal or automatically remove a lock. Run `list`, then `recover` with the retained id and optional final project root. Keep staging, plans, backups and recovery intents.
+
+Recovery validates the whole backup and checks every changed target before writing. Each must exactly match its recorded before or after hash (absence is the before state of a created file). Unknown contents, missing overwritten files, symlinks or an invalid/mismatched intent refuse recovery without initial writes. Keep these files and diagnostics; reconcile them explicitly with the user instead of deleting evidence or forcing recovery. If an external edit arrives during restoration, completed restores remain recorded by their before bytes, unknown edits are preserved, and retry is still guarded. An interrupted recovery can be rerun with the same id.
+
+Ordinary apply I/O errors attempt the same controlled restoration and retain the backup plus intent. If restoration also fails, the error prints the retained backup and executable recovery command. A successful recovery restores prior bytes, removes created targets and records `rolledBackAt`; it does not select, alter variants/history/staging or establish runtime acceptance. An unfinished apply or started restoration cannot create a current delivery receipt. After recovery, prepare a **new** plan before trying integration again.
 
 Run the target project's production build after integrating the named export. With Vite multiple HTML entries, register the comparison and A/B/C entries in `build.rollupOptions.input`; a working dev URL does not mean the preview survives a production build. Open the built application and every preview route and verify real controls, not just HTTP 200 (an SPA fallback can return the wrong page with 200).
 

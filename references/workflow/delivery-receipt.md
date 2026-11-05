@@ -4,6 +4,8 @@ Read this when handing off an actual integration. A receipt joins the real integ
 
 ## Record while the integration is present
 
+An interrupted apply (`appliedAt: null`) or started restoration cannot create a current receipt, even when all target bytes look integrated. Use the guarded recovery workflow in `skills/shared/export.md`; retain historical receipts, backups and `.integrations/recovery/` intents. A recovered operation is historical, not current delivery acceptance.
+
 1. Before integration, run task-specific checks with `verifyArtifact` (`artifact-verification.md`). Include every existing integration target in `dependencies`; a new target cannot have a before hash. Keep the report and actual diagnostic output for prior-failure comparison. Missing checks stay unverified.
 2. Prepare the real integration plan **before** writing staging, then apply with `variant-integrate.mjs`. Run checks on the integrated project inside a **new** `verifyArtifact` callback. Include **all** integration targets in `dependencies` so those checks bind the installed target bytes as well as the generated direction. A preview-only report cannot establish integrated application behavior.
 3. While those integrated bytes still exist, create `.variant-work/delivery-config.json` with actual project-relative plan/staging paths and output-relative report paths. Use the exact current preview ownership receipt paths, never a guessed receipt or a hand-written success field:

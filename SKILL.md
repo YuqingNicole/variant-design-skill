@@ -15,7 +15,7 @@ Choose one route and read its file. Each route file has a load map: read the oth
 
 | Request | Read |
 |---|---|
-| Three directions, a new page, variation actions, undo, pick, export, or preview cleanup | `skills/variant-generate/ROUTE.md` |
+| Three directions, a new page, variation actions, undo, pick, export, integration recovery, or preview cleanup | `skills/variant-generate/ROUTE.md` |
 | Tokens, `ds`, design-system confirmation, or page composition | `skills/variant-design-system/ROUTE.md` |
 | A button, form, card, modal, navigation, or component library | `skills/variant-component/ROUTE.md` |
 | Audit existing code, extract tokens, match a site, or plan migration | `skills/variant-analyze/ROUTE.md` |

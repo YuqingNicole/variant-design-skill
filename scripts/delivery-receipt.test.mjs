@@ -34,6 +34,18 @@ async function setup(t, { reports = true, failure = false } = {}) {
   return { project, output, options, integration, write };
 }
 const receiptCount = output => fs.existsSync(path.join(output, '.deliveries')) ? fs.readdirSync(path.join(output, '.deliveries')).length : 0;
+test('pending integration or restoration cannot create or retain current delivery acceptance', async t => {
+  for (const pending of ['apply','rollback']) {
+    const { output, options, integration } = await setup(t), receipt = createDeliveryReceipt(output,integration.id,options);
+    if (pending === 'apply') {
+      const file=path.join(output,'.integrations',integration.id+'.json'),record=JSON.parse(fs.readFileSync(file));record.appliedAt=null;fs.writeFileSync(file,JSON.stringify(record));
+    } else {
+      const dir=path.join(output,'.integrations/recovery');fs.mkdirSync(dir);fs.writeFileSync(path.join(dir,integration.id+'.json'),'{}');
+    }
+    assert.throws(()=>createDeliveryReceipt(output,integration.id,options),/interrupted|restoration has started/);
+    assert.equal(inspectDeliveryReceipt(output,receipt.file).inventoryStatus,'stale');assert.equal(receiptCount(output),1);
+  }
+});
 test('receipt inventories real create/overwrite/unchanged, binds checks and leaves project/selection unchanged', async t => {
   const { project, output, options, integration } = await setup(t), context = fs.readFileSync(path.join(output, '.variant-context.json'), 'utf8');
   const result = createDeliveryReceipt(output, integration.id, options);

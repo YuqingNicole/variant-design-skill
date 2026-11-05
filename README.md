@@ -161,6 +161,8 @@ React previews can use an isolated Vite package with `--vite-root` while keeping
 
 Project integration now requires a prepared source/target baseline before staging; changed source or target files are rejected before writing. See [integration](skills/shared/export.md).
 
+Interrupted integration or rollback has a guarded `recover` command: it restores only recorded before/after states, preserves unknown edits and keeps backups. Completed integrations still require strict rollback. Confirm the old process stopped before removing an empty stale lock; see [recovery steps](skills/shared/export.md#recover-an-interrupted-operation). Pending operations cannot establish current delivery acceptance.
+
 Integration handoffs can seal a local [delivery receipt](references/workflow/delivery-receipt.md) with the actual file inventory, revision, backup, check reports and recovery path. Inventory validity is separate from check results; missing checks remain unverified and rollback retires the historical receipt.
 
 Runtime evidence can use a reusable Playwright check plan for named brand elements, keyboard focus, exercised motion and non-target interactions. Reports track the artifact revision, registered design-system files and extensions, and any adoption binding. Other shared dependencies must be declared; changed or missing coverage requires a rerun. Missing checks remain unverified. See [verification evidence](references/workflow/artifact-verification.md).

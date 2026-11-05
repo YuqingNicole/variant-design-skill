@@ -58,6 +58,7 @@ function backup(output, id, project, relative) {
     need(entry.action === 'create' || (entry.action === 'unchanged') === (entry.before.sha256 === entry.after.sha256), 'Integration target action differs from hashes');
   }
   need(record.rolledBackAt === null || typeof record.rolledBackAt === 'string' && Number.isFinite(Date.parse(record.rolledBackAt)), 'Invalid rollback lifecycle');
+  need(!Object.hasOwn(record, 'appliedAt') || record.appliedAt === null || typeof record.appliedAt === 'string' && Number.isFinite(Date.parse(record.appliedAt)), 'Invalid integration lifecycle');
   return { file, record };
 }
 const sourceView = source => ({ version: source.version, entry: source.entry, tokens: source.tokens, comparison: source.comparison, taskContract: source.taskContract, designSystem: source.designSystem, systemBinding: source.systemBinding, files: source.files });
@@ -93,6 +94,8 @@ function capture(output, id, options) {
   name(options.plan, '.variant-work/'); name(options.staging, '.variant-work/');
   const { file, record } = backup(out, id, base, relative);
   need(record.rolledBackAt === null, 'Integration is already rolled back; preserve its historical receipt');
+  need(record.appliedAt !== null, 'Integration was interrupted; recover it before preparing a new delivery');
+  need(!fs.existsSync(localFile(out, `.integrations/recovery/${id}.json`)), 'Integration restoration has started; recover it before preparing a new delivery');
   const plan = read(base, options.plan), staged = stageFiles(base, options.staging);
   need(plan.schemaVersion === 1 && plan.project === base && plan.output === out && plan.variant === record.variant && same(plan.source, record.source), 'Integration plan differs from backup source/project');
   const files = [...record.files].sort((a, b) => a.path.localeCompare(b.path));
