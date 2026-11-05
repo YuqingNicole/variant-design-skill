@@ -1,0 +1,831 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-05T16:20:22.647Z",
+  "sourceCommit": "a90a7f4ca21730e3a6e707336bf81e5c8109e5d6",
+  "attempts": [
+    {
+      "file": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals/html-delivery-codex.json",
+      "sha256": "5e2613f5650ae447daf46f50d16a0c73898e6dc4109bd9d171e02b80554a01e6",
+      "pass": false,
+      "passed": 22,
+      "total": 43,
+      "seconds": 386,
+      "failed": [
+        {
+          "id": "runtime:baseline-observed",
+          "details": [
+            "browserType.launch: Executable doesn't exist at /Users/nicole/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell"
+          ]
+        },
+        {
+          "id": "runtime:edit-observed",
+          "details": [
+            "Error: Runtime plan is stale or has the wrong phase/variant"
+          ]
+        },
+        {
+          "id": "runtime:undo-observed",
+          "details": [
+            "browserType.launch: Executable doesn't exist at /Users/nicole/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell"
+          ]
+        },
+        {
+          "id": "runtime:same-scope",
+          "details": []
+        },
+        {
+          "id": "runtime:history-replayed",
+          "details": []
+        },
+        {
+          "id": "runtime:source-bound",
+          "details": []
+        },
+        {
+          "id": "html:installed-helpers",
+          "details": []
+        },
+        {
+          "id": "html:direct-archive",
+          "details": []
+        },
+        {
+          "id": "html:agent-handoff",
+          "details": []
+        },
+        {
+          "id": "html:agent-failed-receipt",
+          "details": []
+        },
+        {
+          "id": "html:preview-matrix",
+          "details": [
+            "browserType.launch: Executable doesn't exist at /Users/nicole/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell"
+          ]
+        },
+        {
+          "id": "html:compare-entry",
+          "details": [
+            "browserType.launch: Executable doesn't exist at /Users/nicole/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell"
+          ]
+        },
+        {
+          "id": "html:before-observed",
+          "details": [
+            "browserType.launch: Executable doesn't exist at /Users/nicole/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell"
+          ]
+        },
+        {
+          "id": "html:integrated-observed",
+          "details": [
+            "browserType.launch: Executable doesn't exist at /Users/nicole/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell"
+          ]
+        },
+        {
+          "id": "html:failed-not-accepted",
+          "details": [
+            "browserType.launch: Executable doesn't exist at /Users/nicole/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell"
+          ]
+        },
+        {
+          "id": "html:old-diagnostic",
+          "details": [
+            "browserType.launch: Executable doesn't exist at /Users/nicole/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell"
+          ]
+        },
+        {
+          "id": "html:new-diagnostic",
+          "details": [
+            "browserType.launch: Executable doesn't exist at /Users/nicole/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell"
+          ]
+        },
+        {
+          "id": "html:prepare-conflict",
+          "details": [
+            "browserType.launch: Executable doesn't exist at /Users/nicole/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell"
+          ]
+        },
+        {
+          "id": "html:rollback-conflict",
+          "details": [
+            "browserType.launch: Executable doesn't exist at /Users/nicole/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell"
+          ]
+        },
+        {
+          "id": "html:restored",
+          "details": [
+            "browserType.launch: Executable doesn't exist at /Users/nicole/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell"
+          ]
+        },
+        {
+          "id": "html:source-project-unchanged",
+          "details": []
+        }
+      ]
+    },
+    {
+      "file": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-chrome/html-delivery-codex.json",
+      "sha256": "0f6c7741b542c334d7c8202628ecbe0f03f9f80a8dab93db8e228341befe2798",
+      "pass": false,
+      "passed": 39,
+      "total": 43,
+      "seconds": 455,
+      "failed": [
+        {
+          "id": "generate:delivery-check",
+          "details": [
+            "recommendation needs a variant A/B/C and a reason"
+          ]
+        },
+        {
+          "id": "plan-edit:delivery-check",
+          "details": [
+            "recommendation needs a variant A/B/C and a reason"
+          ]
+        },
+        {
+          "id": "plan-undo:delivery-check",
+          "details": [
+            "recommendation needs a variant A/B/C and a reason"
+          ]
+        },
+        {
+          "id": "deliver:delivery-check",
+          "details": [
+            "recommendation needs a variant A/B/C and a reason"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex.json",
+      "sha256": "3d2c08af89968378746565ef6cdea217693dbc30e54f5dc6a3c6dc250039eeb9",
+      "pass": true,
+      "passed": 43,
+      "total": 43,
+      "seconds": 445,
+      "failed": []
+    }
+  ],
+  "directHandoffAudit": {
+    "file": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/direct-audit.json",
+    "sha256": "aa19564741584785aa1c3de239e2bfaec81ce522982dc0ac0f5626851280b4c3",
+    "result": {
+      "file": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex.json",
+      "sha256": "3d2c08af89968378746565ef6cdea217693dbc30e54f5dc6a3c6dc250039eeb9",
+      "pass": true,
+      "passed": 43,
+      "total": 43
+    },
+    "directAudit": "passed",
+    "phases": {
+      "generate": {
+        "pass": true,
+        "version": 1,
+        "status": "unverified",
+        "scopeIdentity": "f9b332745a7d8e7f1bda3238a4fceb3c80fa64adb7cd81af2879e1a53227776f",
+        "sourceDigest": "566a055b795dd8ba8977a4686b33833644c10676486d9d64945ad9892e3bf927",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "unverified"
+          },
+          {
+            "id": "project-checks",
+            "status": "passed"
+          }
+        ],
+        "reportSha256": "00f03557785c8c6924292fbfb2fb5081fb27b0a1890d84e4cc54805495d770a5",
+        "bundleSha256": "3d6019ebabc3d477aebc2b41dfd27ccdea38263c60f3435a1916b06933d6f17f"
+      },
+      "plan-edit": {
+        "pass": true,
+        "version": 2,
+        "status": "passed",
+        "scopeIdentity": "f9b332745a7d8e7f1bda3238a4fceb3c80fa64adb7cd81af2879e1a53227776f",
+        "sourceDigest": "f1eb44556701957630017e4bbfce9014db62c5dac046050b101653c416ea5649",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "passed"
+          },
+          {
+            "id": "project-checks",
+            "status": "passed"
+          }
+        ],
+        "reportSha256": "e2ba7d32cadc580253d9d8c5ad532b4749c6953038731c9199bb03f8db84664c",
+        "bundleSha256": "b9d26b3d855d014874474b70fd0652366d807b8c8e0f0e9ab29dc95d9c63cba7"
+      },
+      "plan-undo": {
+        "pass": true,
+        "version": 3,
+        "status": "passed",
+        "scopeIdentity": "f9b332745a7d8e7f1bda3238a4fceb3c80fa64adb7cd81af2879e1a53227776f",
+        "sourceDigest": "54a12ad2eaa59403f11fb5d280c2913395ebd7ba08caefc20f82f7f5648478fc",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "passed"
+          },
+          {
+            "id": "project-checks",
+            "status": "passed"
+          }
+        ],
+        "reportSha256": "36ed0b684d10a574effd68ae37c2d3dd48e60605ff9539a0f520998021d8a65e",
+        "bundleSha256": "c92ed5af47066c72e590b063d632ac1b92ee8b50dce67d6fb806b161c2093171"
+      }
+    },
+    "delivery": {
+      "checks": [
+        {
+          "id": "direct-archive",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "installed-helpers",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "agent-handoff",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "agent-failed-receipt",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "preview-matrix",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "compare-entry",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "before-observed",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "prepare-conflict",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "integrated-observed",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "failed-not-accepted",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "old-diagnostic",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "rollback-conflict",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "restored",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "new-diagnostic",
+          "pass": true,
+          "details": []
+        },
+        {
+          "id": "source-project-unchanged",
+          "pass": true,
+          "details": []
+        }
+      ],
+      "helperSha256": {
+        "artifact-verification.mjs": "6ec079ad729adf51789f5582c9c6708479283b3ca4e0d8be70b73f6df1bd65bb",
+        "browser-verification.mjs": "5d7aac9c90bc06850ed354f0b27681011c6ec43aedac4b813e12d8cac66b87f6",
+        "verification-plan.mjs": "143d21dfbcf97365a6c977effb08b9c5e285a75756cb0b0915ada9417780ab91",
+        "variant-history.mjs": "b5e65163748ab0ec9a6ce4cf41c00ecbeab7f1b1e110cfa68fa4d2a8b8ed13b3",
+        "variant-integrate.mjs": "f2ad01a8dde51ca50e5903dfc38b06b849b3cedefd5e85e023e999ce1cf900a9",
+        "delivery-receipt.mjs": "8955cb2c36014b4ce7c4af0cf72d7406b386e7fc6fa166b5dba392c949d49c17",
+        "project-dependencies.mjs": "76d9b7ca622801d61867280dfa14f8b0e6042cbe0c7c9cf76e9d76d5cd5d9c4b",
+        "dependency-references.mjs": "14dfc7594c5f90af46ac2a127c2f832a9b1b5ddcf83693bfcbd28a7d1eb354f5",
+        "preview-files.mjs": "f3d93a6a9298e299451a427dc762cd47d581cd80dd7ec9a5f3c3ca104086a230",
+        "quality-gate.mjs": "a5499124d1c4d50c425340bfab738597bfcb96881084b1badd4910e18ab5587b"
+      },
+      "hostSha256": {
+        "html-delivery.mjs": "0809385cf46b24f7eaefdccaeb9ccb587ec703090d5a7cd5d17ef013846a9c16",
+        "phase-archive.mjs": "285312fbf098e5c98f81d4c30a5a73b176e02c757d5012d7a8966bc06c76b288"
+      },
+      "sourceProjectUnchanged": true,
+      "agentReceipt": {
+        "file": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex/variant-output/.deliveries/9aa57768-8f19-42ac-9cc0-9c89486052ba.json",
+        "sha256": "e0102e6020cde76b390df76af8bcb82f98b1f21bf65be892dae19114069e20c5",
+        "verification": "failed",
+        "phase": "rolled-back"
+      },
+      "currentReceipt": {
+        "file": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.deliveries/12883184-f4d9-4b18-b751-5129c5e4e6e8.json",
+        "sha256": "1b5f3d5499db0d0ca3ca701f7a3e9ea0f2abb44a690f93de38e4c266192ec5af",
+        "verification": "failed",
+        "comparison": {
+          "before": "fea03dd9-bd7d-4a5f-9357-5e671d8d28c5",
+          "after": "6c810feb-fbb3-44a6-9436-65170cf385dd",
+          "failures": [
+            {
+              "kind": "runtime",
+              "id": "project-checks",
+              "reason": "Actual original document syntax and health commands",
+              "evidence": [
+                "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex.html-delivery/after/checks.json"
+              ],
+              "tool": {
+                "name": "Original Node HTML checks",
+                "version": "v26.3.0 / 0448fee8f8f9fd79fde6cd6b6d5013eb8c452e86969e5da47ae572f0735c9214"
+              },
+              "environment": {
+                "cwd": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex.html-delivery/project",
+                "commands": [
+                  [
+                    "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                    "check.mjs",
+                    "index.html"
+                  ],
+                  [
+                    "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                    "health-check.mjs",
+                    "index.html"
+                  ]
+                ]
+              },
+              "diagnostic": {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              },
+              "classification": "observed-before"
+            }
+          ],
+          "limitation": "Identical recorded diagnostics only; not proof of cause, unchanged environment or complete regression coverage."
+        }
+      },
+      "regressionReceipt": {
+        "file": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.deliveries/1a9f0645-06d1-4df8-80b7-8fcc3f326e88.json",
+        "sha256": "5fffeb0339eddb3b0da144d60b397c4d12a41e9df529c39b90cc6fa0815ed808",
+        "verification": "failed",
+        "comparison": {
+          "before": "1e17be02-92dc-4b80-9ff4-ef2f302c74c6",
+          "after": "38b18bdc-6c9c-408d-85ce-d6c51ba79d32",
+          "failures": [
+            {
+              "kind": "runtime",
+              "id": "reduced-motion",
+              "reason": "Action expectation was not observed within the wait",
+              "evidence": [
+                {
+                  "locator": {
+                    "by": "testId",
+                    "value": "progress"
+                  },
+                  "property": "text",
+                  "expected": "50",
+                  "actual": "100",
+                  "matches": false
+                }
+              ],
+              "tool": {
+                "name": "Playwright browser adapter",
+                "version": "156.0.8078.80"
+              },
+              "environment": {
+                "url": "file:///Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex.html-delivery/project/index.html",
+                "viewport": {
+                  "width": 390,
+                  "height": 844
+                },
+                "scope": "Declared selectors and interactions only"
+              },
+              "classification": "new-or-changed"
+            },
+            {
+              "kind": "runtime",
+              "id": "scope-preservation",
+              "reason": "Action expectation was not observed within the wait",
+              "evidence": [
+                {
+                  "locator": {
+                    "by": "testId",
+                    "value": "activity-count"
+                  },
+                  "property": "text",
+                  "expected": "1",
+                  "actual": "0",
+                  "matches": false
+                }
+              ],
+              "tool": {
+                "name": "Playwright browser adapter",
+                "version": "156.0.8078.80"
+              },
+              "environment": {
+                "url": "file:///Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex.html-delivery/project/index.html",
+                "viewport": {
+                  "width": 390,
+                  "height": 844
+                },
+                "scope": "Declared selectors and interactions only"
+              },
+              "classification": "new-or-changed"
+            },
+            {
+              "kind": "runtime",
+              "id": "project-checks",
+              "reason": "Actual original document syntax and health commands",
+              "evidence": [
+                "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex.html-delivery/regression-after/checks.json"
+              ],
+              "tool": {
+                "name": "Original Node HTML checks",
+                "version": "v26.3.0 / 0448fee8f8f9fd79fde6cd6b6d5013eb8c452e86969e5da47ae572f0735c9214"
+              },
+              "environment": {
+                "cwd": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex.html-delivery/project",
+                "commands": [
+                  [
+                    "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                    "check.mjs",
+                    "index.html"
+                  ],
+                  [
+                    "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                    "health-check.mjs",
+                    "index.html"
+                  ]
+                ]
+              },
+              "diagnostic": {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              },
+              "classification": "observed-before"
+            },
+            {
+              "kind": "runtime",
+              "id": "project-checks",
+              "reason": "Actual original document syntax and health commands",
+              "evidence": [
+                "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex.html-delivery/regression-after/checks.json"
+              ],
+              "tool": {
+                "name": "Original Node HTML checks",
+                "version": "v26.3.0 / 0448fee8f8f9fd79fde6cd6b6d5013eb8c452e86969e5da47ae572f0735c9214"
+              },
+              "environment": {
+                "cwd": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-evals-final/html-delivery-codex.html-delivery/project",
+                "commands": [
+                  [
+                    "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                    "check.mjs",
+                    "index.html"
+                  ],
+                  [
+                    "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                    "health-check.mjs",
+                    "index.html"
+                  ]
+                ]
+              },
+              "diagnostic": {
+                "id": "script-syntax:delivered/variant-progress-B.js:1",
+                "message": "Unexpected end of input",
+                "file": "delivered/variant-progress-B.js"
+              },
+              "classification": "new-or-changed"
+            }
+          ],
+          "limitation": "Identical recorded diagnostics only; not proof of cause, unchanged environment or complete regression coverage."
+        }
+      }
+    }
+  },
+  "recovery": {
+    "schemaVersion": 1,
+    "at": "2026-11-05T16:19:36.642Z",
+    "commit": "a90a7f4ca21730e3a6e707336bf81e5c8109e5d6",
+    "project": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/project",
+    "integrationId": "2026-11-05T16-16-42-821Z-B",
+    "helperHashes": {
+      "scripts/variant-integrate.mjs": "f2ad01a8dde51ca50e5903dfc38b06b849b3cedefd5e85e023e999ce1cf900a9",
+      "scripts/delivery-receipt.mjs": "8955cb2c36014b4ce7c4af0cf72d7406b386e7fc6fa166b5dba392c949d49c17",
+      "SKILL.md": "2e0a6f21a796931a1d03d065b88a66665deeb4aae3c97260e29aa318b2723cdf",
+      "skills/variant-generate/ROUTE.md": "1b9c3f214792a62964eb80d9fc3f17b3abaa38922b1cb6e1e3a1ba542be73b80",
+      "skills/shared/export.md": "02760c18a9318470bb92383445bf24bad49afb238f1094a7a418f461daa632ee"
+    },
+    "pass": true,
+    "originalResultUntouched": true,
+    "sourceProjectUnchanged": true,
+    "refusal": {
+      "at": "2026-11-05T16:18:04.269Z",
+      "unchanged": true,
+      "changed": [],
+      "transcriptSha256": "ba5225bb74208bed351c0d30875e4984602ef2a1acb276f61cdde5c1e13e160e",
+      "userEditPreserved": true,
+      "backupPreserved": true
+    },
+    "restoration": {
+      "transcriptSha256": "0229fe3769a6c738c70de9134e2ff43a2dc0ba2ea5e74e2a8c474f3b72086154",
+      "rolledBackAt": "2026-11-05T16:18:59.400Z",
+      "appliedAt": null,
+      "newFiles": [
+        "variant-output/.integrations/recovery/2026-11-05T16-16-42-821Z-B.json"
+      ],
+      "targets": [
+        {
+          "path": "delivered/shared/data.js",
+          "action": "create",
+          "before": null,
+          "after": "22f1008b58af3e2042ea2ffdf68e9151b9bedd65e7787c07a7c0157fa101ab50"
+        },
+        {
+          "path": "delivered/variant-progress-B.css",
+          "action": "create",
+          "before": null,
+          "after": "3de150a31830e7535edae705f15a95e9811f94aa563abe27d6a7ea56ba9c47ec"
+        },
+        {
+          "path": "delivered/variant-progress-B.js",
+          "action": "create",
+          "before": null,
+          "after": "43568a4f4e4405beae6e5a21d687a2ba65b8eb19a8358756c5964c97c7605395"
+        },
+        {
+          "path": "index.html",
+          "action": "overwrite",
+          "before": "74838ca6dd9c6f1196d0638028f185b7aea6b9566399458de7424ecf8b041eb6",
+          "after": "2169550edb821e07f204c6611c68a086c0261dae6c383e6a56b9bb3066957d83"
+        }
+      ],
+      "checks": {
+        "syntax": {
+          "argv": [
+            "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+            "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/project/check.mjs"
+          ],
+          "cwd": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/project",
+          "status": 0,
+          "signal": null,
+          "stdout": "",
+          "stderr": ""
+        },
+        "health": {
+          "argv": [
+            "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+            "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/project/health-check.mjs"
+          ],
+          "cwd": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/project",
+          "status": 1,
+          "signal": null,
+          "stdout": "{\"schemaVersion\":1,\"diagnostics\":[{\"id\":\"legacy-health\",\"message\":\"Existing project audit failure\",\"file\":\"project-health.json\"}]}\n",
+          "stderr": ""
+        }
+      }
+    },
+    "limits": [
+      "Controlled HTML fixture; real agent flow and actual killed helper process",
+      "Existing legacy-health diagnostic still fails; recovery is not runtime acceptance",
+      "No power-loss durability or globally atomic multi-file guarantee"
+    ],
+    "raw": {
+      "file": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/audit.json",
+      "sha256": "ec806d982ba3f748c3a4b62f0fb5388e06e88c6128f7df6b23eb9601a01e26b7"
+    },
+    "killed": {
+      "status": null,
+      "signal": "SIGKILL",
+      "stdout": "",
+      "stderr": ""
+    },
+    "mixedTargets": [
+      {
+        "path": "delivered/shared/data.js",
+        "action": "create",
+        "before": null,
+        "after": "22f1008b58af3e2042ea2ffdf68e9151b9bedd65e7787c07a7c0157fa101ab50",
+        "current": "22f1008b58af3e2042ea2ffdf68e9151b9bedd65e7787c07a7c0157fa101ab50"
+      },
+      {
+        "path": "delivered/variant-progress-B.css",
+        "action": "create",
+        "before": null,
+        "after": "3de150a31830e7535edae705f15a95e9811f94aa563abe27d6a7ea56ba9c47ec",
+        "current": null
+      },
+      {
+        "path": "delivered/variant-progress-B.js",
+        "action": "create",
+        "before": null,
+        "after": "43568a4f4e4405beae6e5a21d687a2ba65b8eb19a8358756c5964c97c7605395",
+        "current": null
+      },
+      {
+        "path": "index.html",
+        "action": "overwrite",
+        "before": "74838ca6dd9c6f1196d0638028f185b7aea6b9566399458de7424ecf8b041eb6",
+        "after": "2169550edb821e07f204c6611c68a086c0261dae6c383e6a56b9bb3066957d83",
+        "current": "74838ca6dd9c6f1196d0638028f185b7aea6b9566399458de7424ecf8b041eb6"
+      }
+    ],
+    "staleLockRefusal": {
+      "argv": [
+        "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+        "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/project/.agents/skills/variant-design/scripts/variant-integrate.mjs",
+        "recover",
+        "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/project/variant-output",
+        "2026-11-05T16-16-42-821Z-B",
+        "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/project"
+      ],
+      "status": 1,
+      "signal": null,
+      "stdout": "",
+      "stderr": "Another history operation holds .variant-lock. If it crashed, inspect snapshots and files before removing the lock.\n"
+    },
+    "backupSha256": "8c1dbbb5fa05f13dbb00b69e628efb4327965af5272d46249f0ce38224235103",
+    "refusalRun": {
+      "at": "2026-11-05T16:17:43.232Z",
+      "phase": "refusal",
+      "project": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/project",
+      "commit": "a90a7f4ca21730e3a6e707336bf81e5c8109e5d6",
+      "command": [
+        "codex",
+        "exec",
+        "--skip-git-repo-check",
+        "-s",
+        "workspace-write",
+        "-c",
+        "approval_policy=\"never\"",
+        "-c",
+        "features.hooks=false",
+        "--ignore-user-config",
+        "--ignore-rules",
+        "--ephemeral",
+        "--json",
+        "-o",
+        "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/refusal.last.txt",
+        "使用当前项目级安装的完整 Variant Design 技能。上一次项目接入进程已异常退出，宿主已确认该进程结束、检查备份和混合目标状态后，仅移除了其空遗留锁。请检查现有接入记录，并实际调用技能提供的恢复入口尝试恢复这次接入，不重新生成。注意 delivered/shared/data.js 有我在中断后加的注释，不能丢失任何后续编辑；若有冲突，保留文件、备份和 staging 并如实报告。只允许恢复 helper 写项目文件，不另建日志，不手工改写项目、技能、备份、意图或计划。不要替我选择方向；不运行浏览器/服务器/网络，不发布。"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "timeout": false,
+      "seconds": 51
+    },
+    "restoreRun": {
+      "at": "2026-11-05T16:19:09.559Z",
+      "phase": "restore",
+      "project": "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/project",
+      "commit": "a90a7f4ca21730e3a6e707336bf81e5c8109e5d6",
+      "command": [
+        "codex",
+        "exec",
+        "--skip-git-repo-check",
+        "-s",
+        "workspace-write",
+        "-c",
+        "approval_policy=\"never\"",
+        "-c",
+        "features.hooks=false",
+        "--ignore-user-config",
+        "--ignore-rules",
+        "--ephemeral",
+        "--json",
+        "-o",
+        "/Users/nicole/orca/variant-backlog-evidence/integration-recovery-agent-final/restore.last.txt",
+        "继续使用当前项目级安装的完整技能。上轮冲突后，宿主已将自己注入的注释另存于 .variant-work/user-note-copy.txt，并严格核对其内容后，只将 delivered/shared/data.js 恢复为该次接入记录的 after 字节。请使用技能的恢复入口继续恢复同一次中断接入。保留原备份、恢复意图、staging、历史和 A/C，不选择方向。核对覆盖文件恢复、新建文件移除，并实际运行原 check 和 health 命令；已有 legacy-health 失败仍需披露，不认定运行验收通过。所有观察直接输出，不额外写日志或报告，不手工改写文件、记录或技能。不运行浏览器/服务器/网络，不发布。"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "timeout": false,
+      "seconds": 55
+    },
+    "inventoryExcludes": [
+      ".git",
+      "node_modules"
+    ]
+  },
+  "checks": {
+    "node": {
+      "passed": 189,
+      "log": {
+        "file": "/tmp/variant-recovery-all-units.log",
+        "sha256": "2c6d07874fa5e9f2495110dacfdccea5163c1f6cdd903dccc2b3785d425baf3e"
+      }
+    },
+    "browser": {
+      "passed": 38,
+      "log": {
+        "file": "/tmp/variant-recovery-browser.log",
+        "sha256": "7fb85048ba959e8915e9d3a9eb03eabcab37d94a317f60653c756967a8f9f27b"
+      }
+    },
+    "package": {
+      "passed": 4,
+      "log": {
+        "file": "/tmp/variant-recovery-package.log",
+        "sha256": "b41f6a3621120200edc4e5f6c6f7c8347dcba5541d9fbcae063cd093682c25ef"
+      }
+    },
+    "website": {
+      "passed": 67,
+      "log": {
+        "file": "/tmp/variant-recovery-website-unit.log",
+        "sha256": "21ce80d183b90e193171ba4bee8d4fb5d96e6180e5d74a91dfc3a5ed1845b7e3"
+      },
+      "build": {
+        "routes": 241,
+        "log": {
+          "file": "/tmp/variant-recovery-website-build.log",
+          "sha256": "6abf16452fd00f211ff798eb10a69b472f71ac22aeecb1e8c04fa7f7fabe41ba"
+        }
+      }
+    },
+    "docsBrowser": {
+      "passed": 2,
+      "log": {
+        "file": "/tmp/variant-recovery-docs-browser.log",
+        "sha256": "9fc9953038a7a809b9c8a07f0961fc4eef2d64cf7c4794c520e9d467be25c47f"
+      }
+    },
+    "mcp": {
+      "passed": 2,
+      "log": {
+        "file": "/tmp/variant-recovery-mcp.log",
+        "sha256": "5338f1729bbcb23b67e3fc2b51f1578fac1a1fc6655673d3a21e5ba2081ce179"
+      }
+    },
+    "typecheck": {
+      "exitCode": 0,
+      "log": {
+        "file": "/tmp/variant-recovery-typecheck.log",
+        "sha256": "09c7269c33779698d260100c549c83ea1dc274a192c6e6fbc12c3f4542abdc7c"
+      }
+    }
+  },
+  "limits": [
+    "Controlled HTML fixture; real agent flow and actual killed helper process",
+    "Existing legacy-health diagnostic still fails; recovery is not runtime acceptance",
+    "No power-loss durability or globally atomic multi-file guarantee",
+    "Prior failed runs remain unchanged; a successful later run does not erase them",
+    "Real Codex fixture runs are not outside human-user evidence for #25",
+    "Shared online/CLI V8 parity still needs its direct boundary test; #18/#19 remain open at this checkpoint"
+  ]
+}
