@@ -108,6 +108,8 @@ When recording artifact evidence for a preview, registered design-system/extensi
 
 At integration handoff, record the current ownership receipt with the delivery receipt (`references/workflow/delivery-receipt.md`). Preview-only checks do not verify integrated targets. Later cleanup can retire the preview and stale the handoff; it must preserve `.deliveries/`, source, checks and backups.
 
+Static readiness uses the explicit gate policy in `references/workflow/artifact-verification.md`. Online/CLI parity concerns the same sanitized input and strict findings summary; it does not establish preview rendering or permit reuse of stale browser evidence.
+
 Preview cleanup also preserves `.integrations/recovery/` intents. For interrupted project writes, follow `skills/shared/export.md` recovery; deleting adapters, backups or a live lock is not recovery. Pending integration or restoration cannot supply current delivery acceptance.
 
 After building the actual preview, automatically author and run task-specific checks following `references/workflow/runtime-plans.md`. Resolve stable controls from the actual task/DOM/source. Confirm rebuilt preview identity in the ready adapter; a URL alone is insufficient. Missing browser/project tools or expectations stay unverified. Capture real scope baseline observations before editing and retain sealed plans/reports through cleanup.

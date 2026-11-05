@@ -64,6 +64,8 @@ Include the design-system check's coverage and unverified pairs in the delivery 
 
 Before claiming verified delivery, record and recheck version-bound evidence following `references/workflow/artifact-verification.md`. Registered systems/extensions/bindings and supported transitive local dependencies are tracked automatically. Record actual wrapper/alias/config facts and additional dynamic/data-driven roots before preparing integration. The plan and backup bind the current closure; source, resource, compiler input or resolver/fact changes require a NEW plan, preserving old plans/staging. Old plans without closure coverage are not retrofitted. Partial dependency coverage is listed, not certified as accepted runtime delivery. Missing runtime checks remain unverified; static readiness cannot substitute for them.
 
+CLI JSON makes static policy explicit (`strict` for generated delivery, default `errors-only` otherwise). Online HTML audits use the same strict findings summary on their sanitized input, with additional document checks. Warning rejection at a strict gate still leaves observation evidence unverified; review-only suggestions do not block that gate. Preserve runtime gaps separately.
+
 The skill's own regression suite checks these mechanics with fixture projects in a real browser:
 
 1. Brand lock: A/B/C computed font families match the locked fonts after a layout edit.

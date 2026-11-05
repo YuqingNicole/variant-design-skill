@@ -16,6 +16,8 @@ When handing off an integrated page or confirmed-system adoption, use `skills/sh
 
 For interrupted integration/rollback, use that export workflow's guarded recovery and preserve its backup/intent. Pending operations cannot supply current delivery acceptance; recovery does not change system adoption or selection.
 
+For integrated-page static readiness, use the explicit strict gate in `references/workflow/artifact-verification.md`; the online HTML audit shares its summary on sanitized input and adds document checks. Keep rendered system evidence and missing runtime checks separate.
+
 The canonical workflow for production-quality work. Define once, generate consistently.
 
 ```

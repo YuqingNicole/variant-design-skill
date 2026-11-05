@@ -2,6 +2,8 @@
 
 Verification is scoped evidence, not a quality score or a promise that the whole product is ready. The HTML model audit and CLI share `scanSource`; HTML audit output explicitly says static-only and runtime unverified. A suppressed focus outline requires browser review; static rejection is conservative and does not prove that every alternative focus indicator is invalid.
 
+The HTML audit's `staticChecks` uses the same `strict` gate summary as CLI `--strict --json`: errors or warnings block the gate, while `review` suggestions do not. CLI JSON exposes `policy` and `passed`; default CLI remains `errors-only`. Online document requirements are additional checks and sanitization changes its input, so compare the exact returned sanitized HTML with CLI. Runtime stays separately unverified. Strict warning rejection does not change the observation status below: a warning still means unverified evidence.
+
 ## Record static findings
 
 Static status is `failed` on any quality-gate error, `unverified` on any warning, and `passed` otherwise. Generator-habit findings (`review`) are taste, not evidence: they do not change the status, and they are reported with the presentation.

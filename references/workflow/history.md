@@ -62,6 +62,8 @@ Preview rebuilds use separate ownership receipts and preserve later user edits; 
 
 Integration handoffs use the separate immutable records in `.deliveries/` (`references/workflow/delivery-receipt.md`). Edits/undo may stale their recorded version; integration rollback retires their current verification. Preserve the receipts and referenced backups/reports. They do not replace history or authorize selection, cleanup or forced recovery.
 
+Checker implementation changes also stale existing observations. A shared online/CLI strict gate is static-only; retain the recorded policy and runtime gaps and rerun evidence rather than relabelling older reports after a checker update.
+
 After shared imports/resources, compiler inputs or reviewed dependency-resolution facts change, rerun artifact verification; an owned file's unchanged bytes do not keep its old observations current. Integration preparation reads that closure again. This does not replace the history helper's own immediate candidate/undo baselines or change selection.
 
 Before a scoped edit, record representative non-target behavior with the browser plan in `references/workflow/artifact-verification.md`, then rerun the same assertions after applying. Byte preservation alone does not prove rendered behavior. Retain pre-edit project-check failures so delivery can distinguish identical prior diagnostics from new or changed errors.
