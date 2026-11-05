@@ -10,6 +10,7 @@ import { selectVariant, prepareVariant, applyVariant, undoVariant, confirmSystem
 import { exportTokens } from '../scripts/ds-export.mjs';
 import { gradeNativeVite, nativeObservationChecks } from './native-vite.mjs';
 import { gradeDeliveryReceipts, deliveryReceiptGates } from './delivery-receipts.mjs';
+import { gradeRuntimePlans } from './runtime-plans.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const evidence = path.join(here, '../website/content/evidence/pulse/variant-output');
@@ -229,4 +230,8 @@ test('delivery receipt grading requires every unique independent host gate',()=>
 test('missing native measurements remain unverified rather than observed brand/project failures',()=>{
  for(const capture of [undefined,{samples:[],checks:{}},{source:'host Playwright / original project Vite',samples:Array(6).fill({id:'A',width:1440,errors:['scenario stopped']}),environment:{browser:'real version',vite:'real version'},checks:{}}])assert(nativeObservationChecks(capture).every(c=>c.status==='unverified'));
  const measured={source:'host Playwright / original project Vite',samples:[1440,390].map(width=>({id:'original',width,brand:{bodyFont:'Arial',headingFont:'Georgia',background:'rgb(247, 250, 252)',logo:null,originalLogo:'local asset'},errors:[],failedRequests:[]})),environment:{browser:'fixture contract',vite:'fixture contract'},checks:{}};assert.equal(nativeObservationChecks(measured,{original:true})[0].status,'failed');
+});
+
+test('runtime plan grading withholds missing or Agent-authored host observations',()=>{
+ for(const value of [undefined,{}, {'generate':{pass:true}},...['generate','plan-edit','plan-undo'].map(phase=>({[phase]:{source:'host-task-runtime-plan-v1',phase,pass:true}}))])assert(gradeRuntimePlans(value).some(c=>!c.pass));
 });

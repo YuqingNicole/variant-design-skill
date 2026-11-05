@@ -402,3 +402,5 @@ The [local MCP adapter](mcp/README.md) exposes 13 tools for reading existing var
 ## Codex plugin release candidate
 
 A self-contained Codex plugin package and fresh-directory smoke test are available. See [build instructions](plugin/README.md) and [release gates](plugin/release-readiness.md). This candidate is not yet published in the plugin directory.
+
+The agent can author sealed task-specific [runtime plans](references/workflow/runtime-plans.md) from the task, original brand/source and actual observations. Declarative actions reuse the existing browser checker; baseline scope measurements remain unverified until a real after comparison. Missing tools/expectations stay explicit.

@@ -10,6 +10,14 @@ const ids=['brand','keyboard-focus','reduced-motion','scope-preservation','proje
 const compiler=path.dirname(createRequire(new URL('../tests/package.json',import.meta.url)).resolve('typescript/package.json'));
 function setup(t){const project=fs.mkdtempSync(path.join(os.tmpdir(),'variant-evidence-'));t.after(()=>fs.rmSync(project,{recursive:true,force:true}));const root=path.join(project,'output');fixture(root);fs.mkdirSync(path.join(project,'node_modules'));fs.symlinkSync(compiler,path.join(project,'node_modules/typescript'),process.platform==='win32'?'junction':'dir');fs.writeFileSync(path.join(project,'package.json'),'{"dependencies":{"react":"19.1.1"}}');return {root,project};}
 const observations=()=>ids.map(id=>({id,status:'passed',reason:'Controlled adapter observation',tool:{name:'test-adapter',version:'1'},environment:{fixture:true},evidence:['Explicit test result']}));
+test('non-source observation inputs bind baseline evidence without parsing private report directories',async t=>{
+ const {root,project}=setup(t),input='output/.verification/baseline.json';fs.mkdirSync(path.dirname(path.join(project,input)),{recursive:true});fs.writeFileSync(path.join(project,input),'{"observation":"original"}');
+ const result=await verifyArtifact(root,'B',{inputs:[input]},observations);assert.equal(result.status,'passed');assert(result.report.fingerprint.inputs[input]);assert.equal(result.report.fingerprint.dependencyClosure.files[input],undefined);
+ fs.appendFileSync(path.join(project,input),'\n');assert.equal(inspectVerification(root,result.file).status,'stale');
+ const changed=await verifyArtifact(root,'B',{inputs:[input]},()=>{fs.appendFileSync(path.join(project,input),' ');return observations()});assert.equal(changed.status,'stale');assert(changed.report.changedDuringRun);
+ await assert.rejects(()=>verifyArtifact(root,'B',{inputs:'bad'}),/Inputs/);await assert.rejects(()=>verifyArtifact(root,'B',{inputs:['../outside']}),/relative/);
+ fs.writeFileSync(path.join(project,'.env'),'NEVER_EXPOSE_THIS=secret');await assert.rejects(()=>verifyArtifact(root,'B',{inputs:['.env']}),/private environment/);
+});
 test('static-only evidence never implies runtime verification',async t=>{
  const {root}=setup(t);const result=await verifyArtifact(root,'B');assert.equal(result.status,'unverified');assert.equal(result.report.checks.filter(c=>c.status==='unverified').length,5);
  assert.equal(result.report.fingerprint.version,1);assert.ok(result.report.fingerprint.files['VariantB.tsx']);

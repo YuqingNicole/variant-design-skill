@@ -2,14 +2,24 @@
 import { verifyArtifact } from './artifact-verification.mjs';
 
 const ids = ['brand','keyboard-focus','reduced-motion','scope-preservation'];
+export function verificationLocator(page, rule) {
+  if (rule.selector && !rule.locator) return page.locator(rule.selector);
+  if (rule.selector || !rule.locator) throw new Error('Use one explicit locator.');
+  const l = rule.locator;
+  if (l.by === 'role') return page.getByRole(l.role, { name: l.name, exact: true });
+  if (l.by === 'label') return page.getByLabel(l.name, { exact: true });
+  if (l.by === 'testId') return page.getByTestId(l.value);
+  if (l.by === 'css') return page.locator(l.value);
+  throw new Error('Unsupported verification locator.');
+}
 const sample = async (page, assertions) => Promise.all(assertions.map(async rule => {
-  const element = page.locator(rule.selector);
+  const element = verificationLocator(page, rule);
   if (await element.count() !== 1) return { ...rule, actual:null, matches:false };
   const actual = rule.property === 'text' ? await element.textContent() : await element.evaluate((el, property) => getComputedStyle(el).getPropertyValue(property), rule.property);
   return { ...rule, actual, matches:actual === rule.expected };
 }));
 function validateAssertions(rules) {
-  if (!Array.isArray(rules) || !rules.length || rules.some(r=>!r.selector || !r.property || typeof r.expected !== 'string')) throw new Error('Assertions need selector, property and expected text.');
+  if (!Array.isArray(rules) || !rules.length || rules.some(r=>(!r.selector && !r.locator) || !r.property || typeof r.expected !== 'string')) throw new Error('Assertions need locator, property and expected text.');
 }
 function bounded(value, fallback, max) {
   const result=value??fallback;
@@ -23,7 +33,8 @@ export async function verifyInBrowser(root, id, options, adapter) {
   const plan = options.plan ?? {};
   return verifyArtifact(root,id,options,async()=>{
     const results=[];
-    if (!adapter?.page || !adapter?.version || typeof adapter.ready !== 'function') return [];
+    const projectCheck = async () => { try { return await adapter.projectChecks(); } catch (error) { return {id:'project-checks',status:'unverified',reason:`Project runner could not finish: ${error.message}`}; } };
+    if (!adapter?.page || !adapter?.version || typeof adapter.ready !== 'function') return adapter?.projectChecks ? [await projectCheck()] : [];
     const {page}=adapter;
     const tool={name:'Playwright browser adapter',version:adapter.version};
     const environment={url:plan.url,viewport:page.viewportSize(),scope:'Declared selectors and interactions only'};
@@ -31,8 +42,9 @@ export async function verifyInBrowser(root, id, options, adapter) {
       if (!plan[id]) return;
       try {
         const evidence=await run(plan[id]);
-        results.push({id,status:evidence.every(e=>e.matches)?'passed':'failed',reason:'Compared observed results with the explicit check plan.',tool,environment,evidence});
-      } catch(error) { results.push({id,status:'unverified',reason:`Check could not finish: ${error.message}`}); }
+        const matched = evidence.every(e=>e.matches), baseline = id === 'scope-preservation' && options.scopeBaseline;
+        results.push({id,status:!matched?'failed':baseline?'unverified':'passed',reason:baseline?'Observed baseline only; preservation needs a later comparison against this unchanged plan.':'Compared observed results with the explicit check plan.',tool,environment,evidence});
+      } catch(error) { results.push(Array.isArray(error.verificationEvidence) && error.verificationEvidence.length ? {id,status:'failed',reason:error.message,tool,environment,evidence:error.verificationEvidence} : {id,status:'unverified',reason:`Check could not finish: ${error.message}`}); }
     };
     const open=async()=>{await page.goto(plan.url);await adapter.ready(page);};
     await open();
@@ -42,8 +54,8 @@ export async function verifyInBrowser(root, id, options, adapter) {
       const evidence=[];
       for (const rule of rules) {
         await open();
-        const target=page.locator(rule.selector);
-        if (await target.count() !== 1) throw new Error(`Expected one control: ${rule.selector}`);
+        const target=verificationLocator(page, rule);
+        if (await target.count() !== 1) throw new Error('Expected one control for the recorded locator.');
         const style=()=>target.evaluate(el=>{const c=getComputedStyle(el);return {outlineStyle:c.outlineStyle,outlineWidth:parseFloat(c.outlineWidth),outlineColor:c.outlineColor,boxShadow:c.boxShadow,backgroundColor:c.backgroundColor};});
         const before=await style();
         let focused=false;
@@ -55,7 +67,7 @@ export async function verifyInBrowser(root, id, options, adapter) {
         const alternative=rule.indicator && ['boxShadow','backgroundColor'].includes(rule.indicator.property)
           && after[rule.indicator.property]===rule.indicator.expected && before[rule.indicator.property]!==after[rule.indicator.property]
           && !['none','transparent','rgba(0, 0, 0, 0)'].includes(rule.indicator.expected);
-        evidence.push({selector:rule.selector,focused,visible,before,after,matches:!!(focused&&visible&&(outline||alternative))});
+        evidence.push({...(rule.locator ? {locator:rule.locator} : {selector:rule.selector}),focused,visible,before,after,matches:!!(focused&&visible&&(outline||alternative))});
       }
       return evidence;
     });
@@ -87,7 +99,7 @@ export async function verifyInBrowser(root, id, options, adapter) {
       if (typeof adapter.exerciseScope !== 'function') throw new Error('Supply exerciseScope(page) for non-target interactions.');
       await open();await adapter.exerciseScope(page);return sample(page,rules);
     });
-    if (adapter.projectChecks) results.push(await adapter.projectChecks());
+    if (adapter.projectChecks) results.push(await projectCheck());
     return results;
   });
 }

@@ -16,7 +16,7 @@ const groupPath = group => `${metadata}/${groupName(group)}`;
 function targetName(relative) {
   need(typeof relative === 'string' && !relative.includes('\\'), 'Use normalized project-relative preview paths');
   need(!path.isAbsolute(relative) && !relative.split('/').some(part => !part || part === '.' || part === '..'), 'Use normalized project-relative preview paths');
-  need(!relative.split('/').some(part => ['.git', 'node_modules', '.history', '.integrations', '.verification', '.deliveries', '.variant-context.json'].includes(part)) && relative !== metadata && !relative.startsWith(metadata + '/'), 'Protected preview target');
+  need(!relative.split('/').some(part => ['.git', 'node_modules', '.history', '.integrations', '.verification', '.deliveries', '.runtime-plans', '.variant-context.json'].includes(part)) && relative !== metadata && !relative.startsWith(metadata + '/'), 'Protected preview target');
   return relative;
 }
 const target = (project, relative) => localFile(project, targetName(relative));

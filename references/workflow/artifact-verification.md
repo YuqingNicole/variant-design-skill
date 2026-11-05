@@ -65,6 +65,8 @@ A passing report covers only its listed observations, not every acceptance crite
 
 ## Reusable Playwright checks
 
+For new artifacts, automatically author/seal task-specific checks using `references/workflow/runtime-plans.md`. The Agent chooses actual locators, actions and expectations from the task/source/observations; the helper validates and executes declarations without a bundled model or importing Agent code. Baseline scope measurements stay unverified until a real comparison. The lower-level API below remains available for trusted adapters outside that vocabulary.
+
 `scripts/browser-verification.mjs` exports `verificationPlan(url)` and `verifyInBrowser(output, id, options, adapter)`. Reuse a Playwright Page available in the target project or agent environment; this helper does not install dependencies or launch a browser. Start with the empty plan and fill expectations from the task and brand rules. Missing entries remain unverified.
 
 ```js
@@ -97,3 +99,6 @@ Motion checks run with reduced motion initially and switch to it during an exerc
 Regression coverage includes actual computed font/focus drift in a React fixture and a heading-font observation on the real landing B artifact with shared website source tracked. Remaining checks in that real landing report deliberately stay unverified. Existing reduced-motion regression still checks the coffee example, not every new generated artifact.
 
 This is the evidence infrastructure for PRD-002. Project-specific expectations, complete task coverage, and real-delivery validation still require an adapter and recorded observations. The reusable runner covers explicit alternate focus, motion and scope checks; it does not infer the correct assertions for arbitrary products. These gaps must stay open on the tracking issue; this implementation must not be described as full PRD-002 completion.
+
+
+Optional `inputs` bind project-relative non-source observation files, such as a sealed plan or baseline report, without parsing historical evidence as source dependencies. Their hashes are captured before/after and on status. Inputs must be regular unlinked project files: at most 128, 16 MiB each and 64 MiB total, excluding environment and private tool directories. Source path/symlink guards still apply. Changed inputs stale the report; never rewrite a baseline to make old observations current. A project-check runner exception preserves any browser failures already observed.

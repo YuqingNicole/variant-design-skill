@@ -8,6 +8,8 @@ Before writing `design-system.css` (Step 1 or Step 1b), read `references/design-
 
 For product-critical work, also read `references/workflow/design-declaration.md` and `references/workflow/product-integrity-gate.md`. A confirmed design system locks the declaration's product constraints as well as visual tokens.
 
+When a real page preview is available, automatically derive checks from its current task and original brand using `references/workflow/runtime-plans.md`. Capture a genuine before baseline before adoption/edits; token previews alone do not establish rendered page acceptance.
+
 ## Design System Mode
 
 When handing off an integrated page or confirmed-system adoption, use `skills/shared/export.md`, then `references/workflow/delivery-receipt.md` at the handoff step. Seal the actual target inventory and check references before rollback; do not treat a token preview or inventory receipt as rendered acceptance.
