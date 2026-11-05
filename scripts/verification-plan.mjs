@@ -144,7 +144,7 @@ export async function runVerificationPlan(output, planFile, adapter = {}) {
   const r = inspected.record, d = r.draft, target = localFile(r.project, d.target);
   let url = pathToFileURL(target).href;
   if (adapter.baseURL) { const base = new URL(adapter.baseURL); need(base.protocol === 'http:' && ['127.0.0.1', 'localhost', '[::1]'].includes(base.hostname) && !base.username && !base.password && base.pathname === '/' && !base.search && !base.hash, 'Use the trusted local preview root URL'); url = new URL(d.target, base).href; }
-  if (adapter.page && adapter.ready && r.baseline) need(r.baseline.tool.version === adapter.version, 'Baseline browser version differs; establish a new before baseline');
+  if (adapter.page && adapter.version && adapter.ready && r.baseline) need(r.baseline.tool.version === adapter.version, 'Baseline browser version differs; establish a new before baseline');
   if (adapter.page) await adapter.page.setViewportSize(d.viewport);
   const plan = { ...d.plan, url, kind: 'task-runtime-plan', bundle: path.relative(r.project, inspected.file).split(path.sep).join('/'), purpose: d.purpose, scopeIdentity: r.scopeIdentity, implementation: r.implementation, coverage: d.coverage, gaps: d.gaps, baseline: r.baseline };
   const relativeFile = path.relative(r.project, inspected.file).split(path.sep).join('/');
