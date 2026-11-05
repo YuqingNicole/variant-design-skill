@@ -20,7 +20,7 @@ The next task branch `codex/task-runtime-plans` is based on that merged master. 
 
 #163 merged as `98724d9`; its master CI passed. The maintainer additionally requested the literal English headline “The best design inspiration during the ai area.”; PR #164 merged as `b3d758e` with 67 website tests, production build, focused responsive browser regression and all CI/review passed. Current `codex/html-delivery-evidence` worktree is based on that master; the original navigation worktree stays untouched.
 
-RFC-016 adds actual per-diagnostic comparison and an original HTML multi-file handoff matrix with a genuine pre-existing failed project check. Local 180 Node checks and two HTML handoff browser cases passed after correcting test setup's missing .variant-work directory. Original failures must remain failed; controlled syntax regressions are classified separately. Actual installed-skill four-turn evidence, source audit and full checks remain required before this slice merges. All nine issues and remaining human/account/complete-delivery gates stay open.
+RFC-016 adds actual per-diagnostic comparison and an original HTML multi-file handoff matrix with a genuine pre-existing failed project check. Final runtime `bcee774` passed actual Codex four-turn 43/43, direct archive/source/input/tool/log/receipt audit, 182 Node, 38 Chrome, package/typecheck and two bilingual guide cases. Original failures remain failed; controlled syntax regressions are classified separately. Earlier d9007de real 43/43 and local 36/37 attempt are retained; a reproduced final-read deadline bug was fixed and rerun. Final research-head CI/review and PR #165 merge remain. All nine issues and remaining human/account/complete-delivery gates stay open.
 
 ## Execution index
 
@@ -67,7 +67,7 @@ Ego-browser space 42 inspected the actual local site. Baseline screenshots and r
 
 ## Next action
 
-PR #163 controlled Vite runtime-plan acceptance passed actual Codex 27/27 and independent source/archive/input/host/probe audit at `023116b`; local 177 Node/35 Chrome/package/typecheck and implementation-head CI passed. Complete final research-head CI and review, merge under current authorization, verify the provider deployment and synchronize dev normally. Then continue full cross-project/HTML delivery and pre-existing/new failure classification, keeping human/account/product gates separate. #162 is merged, post-merge master CI passed, production/dev were READY. No full backlog completion is claimed.
+PR #165 final runtime bcee774 passed actual HTML Codex 43/43 and independent direct archive/source/input/tool/log/receipt audit; local 182 Node/38 Chrome/package/typecheck/guide cases and exact runtime-head CI passed. Complete final research-head CI/review and authorized merge, verify production/dev and retain the literal English headline already merged in #164. Then perform explicit per-item #18/#19 acceptance and remaining interruption/presentation/human/account gates rather than equating this controlled matrix with the full backlog. Earlier #163 Vite actual evidence remains valid for its recorded source and environment.
 
 
 ### P1 follow-up review

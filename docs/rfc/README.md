@@ -17,6 +17,6 @@
 | [013 · 共享依赖闭包](013-shared-dependency-closure.md) | 已实现，真实 Codex 68 项通过；完整验收待审 | Issue #18、#19；PR #160 |
 | [014 · 版本绑定交付凭证](014-version-bound-delivery-receipts.md) | 已实现，真实 Codex 78 项通过；完整验收待审 | Issue #18、#19；PR #161 |
 | [015 · Agent 自动生成运行检查计划](015-agent-authored-runtime-plans.md) | 实际 HTML 25/25、Vite 27/27 与独立审计通过；完整交付/跨项目门槛待验 | Issue #18、#19、#25 |
-| [016 · HTML 交付闭环与逐条失败比较](016-html-handoff-and-diagnostic-comparison.md) | 实现与回归验证中；实际 Agent 门槛待验 | Issue #18、#19 |
+| [016 · HTML 交付闭环与逐条失败比较](016-html-handoff-and-diagnostic-comparison.md) | 已实现；实际 Codex 43/43 与独立审计通过，完整 issue 验收待审 | Issue #18、#19 |
 
 RFC 记录设计决策与约束，PRD 记录验收要求；实现状态以对应 Issue 和验证证据为准。
