@@ -13,12 +13,12 @@ jobs:
           cache: npm
           cache-dependency-path: tests/package-lock.json
       - run: python3 scripts/plugin-package.test.py
-      - run: node --test scripts/variant-loop.test.mjs scripts/variant-integrate.test.mjs scripts/artifact-verification.test.mjs scripts/project-profile.test.mjs scripts/design-task.test.mjs scripts/direction-card.test.mjs scripts/skill-links.test.mjs scripts/delivery-check.test.mjs scripts/ds-export.test.mjs scripts/ds-check.test.mjs scripts/style-budget.test.mjs evals/grade.test.mjs
+      - run: npm ci
+        working-directory: tests
+      - run: node --test scripts/verification-plan.test.mjs scripts/delivery-receipt.test.mjs scripts/project-dependencies.test.mjs scripts/preview-files.test.mjs scripts/variant-loop.test.mjs scripts/design-system-state.test.mjs scripts/variant-integrate.test.mjs scripts/artifact-verification.test.mjs scripts/project-profile.test.mjs scripts/design-task.test.mjs scripts/direction-card.test.mjs scripts/skill-links.test.mjs scripts/delivery-check.test.mjs scripts/ds-export.test.mjs scripts/ds-check.test.mjs scripts/style-budget.test.mjs evals/grade.test.mjs evals/phase-archive.test.mjs evals/preview-cleanup.test.mjs
       - run: node scripts/quality-gate.mjs --self-test
       - run: node scripts/check-update.mjs --self-test
       - run: node scripts/quality-gate.mjs examples/coffee-brand-interactive.html --strict
-      - run: npm ci
-        working-directory: tests
       # Installing Chromium's apt dependencies (--with-deps) has hung for 10+ minutes on hosted
       # runners. The image's preinstalled Chrome already brings the system libraries, so download
       # only Playwright's own Chromium, which matches the pinned Playwright version.

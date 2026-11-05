@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-04",
+  "environment": "Self-authored fixture baseline; no Agent run",
+  "vite": "7.1.7",
+  "browser": "156.0.8078.80",
+  "positive": {
+    "aliasAndDefine": true,
+    "providerState": true,
+    "searchAndCombinedFilters": true,
+    "ownerMarkPaid": true,
+    "viewerReadOnly": true,
+    "returnPreservesState": true,
+    "globalStyles": true,
+    "localAsset": true,
+    "widths": [
+      320,
+      390,
+      1440
+    ],
+    "noJsErrors": true
+  },
+  "negative": {
+    "missingProviderRejected": true,
+    "errors": [
+      "Workshop Ledger requires the original WorkspaceProvider"
+    ]
+  },
+  "limitations": [
+    "Baseline fixture and host expectations only",
+    "No generated variant or integration acceptance"
+  ],
+  "screenshotsState": "North owner after exercising payment and workspace return; not a fresh initial-state comparison"
+}

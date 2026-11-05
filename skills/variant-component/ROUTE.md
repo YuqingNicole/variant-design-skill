@@ -28,6 +28,8 @@ When the user asks for a **component** rather than a full page, switch to Compon
 
 **Step 1: Clarify scope** — single component or a system of related components?
 
+If a system is confirmed, read its main file and extensions. Use semantic tokens; only that component's own CSS may use its component tokens (identify its namespace with `/* component: button */` for `--button-*`). Do not reference primitives or another component's tokens. Existing brand names are exempt, while generated extensions follow the layer rules. Component token declarations themselves must be single aliases to semantic or brand variables. Keep missing contrast checks unverified until the actual component is inspected. Artifact evidence fingerprints registered system extensions automatically; name other shared dependencies explicitly. For registered variants, integration plans also bind system extensions and adoption state; refresh a stale plan before staging.
+
 **Step 2: Define states** — for every component, design all 8 states before coding:
 `default → hover → focus → active → disabled → loading → error → success`
 
@@ -103,3 +105,5 @@ B update card — card zone     → apply new card component to the card zone in
 | `component nav` | Navigation component with responsive behavior |
 | `states [component]` | Show all 8 interactive states for a specific component |
 | `dark component` | Re-generate component set in dark mode |
+
+A newly confirmed system can coexist with a picked page still pending adoption. Build the new component on the confirmed foundation and leave A/B/C and their binding untouched. Report that distinction; do not alter old page token metadata just to clear a delivery warning.

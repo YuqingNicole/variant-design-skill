@@ -1,0 +1,36 @@
+{
+  "observedAt": "2026-11-05T03:47:19.878Z",
+  "mergeCommit": "b2db7b7ec54e8ea928f65c96af70ef72e9051f19",
+  "pullRequest": 161,
+  "authorization": "User: 继续改 然后合并",
+  "deployment": {
+    "id": "dpl_2wuCkefFknJEAsLXnETdPpcP7dUs",
+    "url": "variant-design-skill-8npqtpzlg-nicolechen-9191s-projects.vercel.app",
+    "target": "production",
+    "state": "READY",
+    "aliases": [
+      "variant-design-skill.vercel.app",
+      "variant-design-skill-nicolechen-9191s-projects.vercel.app",
+      "variant-design-skill-git-master-nicolechen-9191s-projects.vercel.app"
+    ]
+  },
+  "public": {
+    "url": "https://variant-design-skill.vercel.app",
+    "status": 200,
+    "title": "Variant Design — 互联网上最好的设计灵感",
+    "header": true,
+    "assets": [
+      {
+        "file": "/assets/main-DIgwas9p.js",
+        "status": 200,
+        "bytes": 4955,
+        "sha256": "4a93e36b94e91979bda69ac7edfff8dda2f94285bad1e5b4a04c1b4fa1019fca"
+      }
+    ],
+    "apiStatus": {
+      "http": 200,
+      "configured": false
+    }
+  },
+  "limitation": "Vercel alias/READY state, HTTP and script retrieval checked. This is not a live-browser rendering or interaction acceptance."
+}

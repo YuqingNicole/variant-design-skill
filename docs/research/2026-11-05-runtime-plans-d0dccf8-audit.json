@@ -1,0 +1,238 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-05T04:18:41.430Z",
+  "commit": "d0dccf8",
+  "result": {
+    "file": "/Users/nicole/orca/variant-backlog-evidence/runtime-plans-evals-final/runtime-plan-html-codex.json",
+    "sha256": "828b875bcfe39335be6112b00063f6dfc929c2fb11118c1b30a42b62d0bc4f47",
+    "pass": true,
+    "passed": 25,
+    "total": 25,
+    "failed": []
+  },
+  "directArchiveAudit": "passed",
+  "phases": {
+    "generate": {
+      "pass": true,
+      "version": 1,
+      "status": "unverified",
+      "checks": [
+        {
+          "id": "brand",
+          "status": "passed",
+          "reason": "Compared observed results with the explicit check plan.",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "keyboard-focus",
+          "status": "passed",
+          "reason": "Compared observed results with the explicit check plan.",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "reduced-motion",
+          "status": "passed",
+          "reason": "Compared observed results with the explicit check plan.",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "scope-preservation",
+          "status": "unverified",
+          "reason": "Observed baseline only; preservation needs a later comparison against this unchanged plan.",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "project-checks",
+          "status": "passed",
+          "reason": "Actual original document/script syntax command; does not execute generated scripts",
+          "tool": {
+            "name": "Node project checker",
+            "version": "v26.3.0"
+          }
+        }
+      ],
+      "coverage": "within-supported-static-syntax",
+      "unknowns": [],
+      "originalFiles": 103,
+      "dependencies": 9,
+      "observationInputs": 2,
+      "scopeIdentity": "5ff0d9dde7f339e5ea1bcc8a343d90cf5edd779379b6351c7de084f9a3ac8f05",
+      "baseline": null,
+      "bundleSha256": "00351f2ef7afb9688b941241cf61d45dd247e0a209cc5875eb86c8df4e3d825b",
+      "reportSha256": "ba79cb8e82588006d082e63f1d963af1e302d3a30420c43706e704b9d6eb94f0",
+      "screenshot": {
+        "file": "/Users/nicole/orca/variant-backlog-evidence/runtime-plans-evals-final/runtime-plan-html-codex.runtime-plans/generate/B.png",
+        "sha256": "e26cfb799822d980c93bd00d39ba8115c67cc2adb6c36c47edbe0dd81955bd29"
+      },
+      "sourceDigest": "4963121989924e7a1cb9632028651b40ab28e95c34b12e475d553627ddfafecc"
+    },
+    "plan-edit": {
+      "pass": true,
+      "version": 2,
+      "status": "passed",
+      "checks": [
+        {
+          "id": "brand",
+          "status": "passed",
+          "reason": "Compared observed results with the explicit check plan.",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "keyboard-focus",
+          "status": "passed",
+          "reason": "Compared observed results with the explicit check plan.",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "reduced-motion",
+          "status": "passed",
+          "reason": "Compared observed results with the explicit check plan.",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "scope-preservation",
+          "status": "passed",
+          "reason": "Compared observed results with the explicit check plan.",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "project-checks",
+          "status": "passed",
+          "reason": "Actual original document/script syntax command; does not execute generated scripts",
+          "tool": {
+            "name": "Node project checker",
+            "version": "v26.3.0"
+          }
+        }
+      ],
+      "coverage": "within-supported-static-syntax",
+      "unknowns": [],
+      "originalFiles": 103,
+      "dependencies": 9,
+      "observationInputs": 3,
+      "scopeIdentity": "5ff0d9dde7f339e5ea1bcc8a343d90cf5edd779379b6351c7de084f9a3ac8f05",
+      "baseline": {
+        "file": ".verification/B/e99c3b43-3709-4f52-8f20-3c84724f1c84.json",
+        "sha256": "ba79cb8e82588006d082e63f1d963af1e302d3a30420c43706e704b9d6eb94f0",
+        "id": "e99c3b43-3709-4f52-8f20-3c84724f1c84",
+        "version": 1,
+        "tool": {
+          "name": "Playwright browser adapter",
+          "version": "156.0.8078.80"
+        }
+      },
+      "bundleSha256": "8a1f09514756b1e40463e16f12d781ce881d0710faf960e7880793e1eb730661",
+      "reportSha256": "edb56b32a6eb08053f8d905bd44103bfe37c2536a084a7fa0178d841ed9eb9bb",
+      "screenshot": {
+        "file": "/Users/nicole/orca/variant-backlog-evidence/runtime-plans-evals-final/runtime-plan-html-codex.runtime-plans/plan-edit/B.png",
+        "sha256": "b94cb28090649b3895557238a4120930cb81fe2289957dbed1a3c5481473f62f"
+      },
+      "sourceDigest": "a03e8d96f8336a8b784b7a7369a32f1bc576f7a5ce506384b8b236961df17c41"
+    },
+    "plan-undo": {
+      "pass": true,
+      "version": 3,
+      "status": "passed",
+      "checks": [
+        {
+          "id": "brand",
+          "status": "passed",
+          "reason": "Compared observed results with the explicit check plan.",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "keyboard-focus",
+          "status": "passed",
+          "reason": "Compared observed results with the explicit check plan.",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "reduced-motion",
+          "status": "passed",
+          "reason": "Compared observed results with the explicit check plan.",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "scope-preservation",
+          "status": "passed",
+          "reason": "Compared observed results with the explicit check plan.",
+          "tool": {
+            "name": "Playwright browser adapter",
+            "version": "156.0.8078.80"
+          }
+        },
+        {
+          "id": "project-checks",
+          "status": "passed",
+          "reason": "Actual original document/script syntax command; does not execute generated scripts",
+          "tool": {
+            "name": "Node project checker",
+            "version": "v26.3.0"
+          }
+        }
+      ],
+      "coverage": "within-supported-static-syntax",
+      "unknowns": [],
+      "originalFiles": 103,
+      "dependencies": 9,
+      "observationInputs": 3,
+      "scopeIdentity": "5ff0d9dde7f339e5ea1bcc8a343d90cf5edd779379b6351c7de084f9a3ac8f05",
+      "baseline": {
+        "file": ".verification/B/e99c3b43-3709-4f52-8f20-3c84724f1c84.json",
+        "sha256": "ba79cb8e82588006d082e63f1d963af1e302d3a30420c43706e704b9d6eb94f0",
+        "id": "e99c3b43-3709-4f52-8f20-3c84724f1c84",
+        "version": 1,
+        "tool": {
+          "name": "Playwright browser adapter",
+          "version": "156.0.8078.80"
+        }
+      },
+      "bundleSha256": "d318fea37065c05f1628e2616715783a7b021ad4b28414a5ec984d022f09fd35",
+      "reportSha256": "9c2ccca0bbea11da7f8c36e1cddd10d049b8ce7d772848390ac4a05204f59010",
+      "screenshot": {
+        "file": "/Users/nicole/orca/variant-backlog-evidence/runtime-plans-evals-final/runtime-plan-html-codex.runtime-plans/plan-undo/B.png",
+        "sha256": "e26cfb799822d980c93bd00d39ba8115c67cc2adb6c36c47edbe0dd81955bd29"
+      },
+      "sourceDigest": "b3f8971a1c0ce4573655e44129ac25deb368d539460921f16c555e8b092eea1e"
+    }
+  },
+  "limits": [
+    "Local self-authored HTML fixture and Codex only",
+    "No Vite runtime-plan acceptance claimed",
+    "No production browser or outside human acceptance",
+    "Declared coverage remains Agent judgment, not proof of semantic completeness"
+  ]
+}

@@ -6,6 +6,8 @@ Read `variant-output/.variant-context.json` before work. Current user instructio
 
 Paths in `variants.*.files` and `entry` are relative to `variant-output/`. `designSystem.file` is relative to the target project root, so an existing system stays where it is (`src/tokens.css`, `app/globals.css`); register it in place rather than copying it. `variant-output/design-system.css` is only for a system the skill generated. `source` (optional) names the picked direction a system was derived from; it is set on `ds confirm`, after the user picked that direction. With a brand-file lock, `extensions` lists the skill's files that add the layers the brand leaves open; they refer to the brand's variables and are never the lock itself. List every file owned by that variant, including local CSS and assets. Shared assets and the locked DS are read-only during variant edits. Each variant has independent files, tokens, comparison, monotonically increasing version, audit history, and undo stack.
 
+`confirm-system` records `designSystem.digest`, covering the main file, every extension and the confirmed font list. A derived source may have `variants.B.systemBinding: {status: "pending" | "applied", digest: "..."}`. Pending means its original page has not adopted the new generated system; it is not a font/contrast pass. `apply-system` writes code, aligned tokens and the applied binding in one snapshot; undo restores all three. Brand constraints remain strict. Missing fields in old v2 contexts keep their existing strict meaning; registering an already-approved current system is an explicit backed-up operation, not an automatic migration.
+
 ```json
 {
   "schemaVersion": 2,

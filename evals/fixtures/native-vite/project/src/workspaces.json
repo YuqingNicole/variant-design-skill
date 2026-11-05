@@ -1,0 +1,4 @@
+{
+  "north": {"name":"North Studio","role":"owner","invoices":[{"id":"N-104","client":"Canopy Studio","cents":120000,"status":"open"},{"id":"N-105","client":"Paper Workshop","cents":84000,"status":"open"},{"id":"N-106","client":"Cedar Labs","cents":36000,"status":"paid"}]},
+  "south": {"name":"South Field","role":"viewer","invoices":[{"id":"S-201","client":"Bridge Studio","cents":99000,"status":"open"},{"id":"S-202","client":"Garden Works","cents":62000,"status":"paid"},{"id":"S-203","client":"Mill Notes","cents":41000,"status":"open"}]}
+}

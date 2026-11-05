@@ -18,3 +18,7 @@ If Google Chrome is already installed, use `PLAYWRIGHT_CHANNEL=chrome npm test` 
 ## Real landing-page production regression
 
 After `npm ci --prefix website` and `npm run build --prefix website`, run `npm run test:landing` here. This suite starts the actual production server, loads all three real landing variants, checks viewport comparison and the integrated B export, then checks mobile navigation, language-switch retention, visible keyboard focus, and reduced motion. No provider calls are made. The separate `landing` CI job builds and tests this path on every PR.
+
+The loop suite also exercises confirmed-system adoption on a real HTML page: confirmation preserves its computed font and original token record, explicit prepared adoption changes the computed font while its counter works, and undo restores the original bytes/font/tokens/pending binding. The fixture uses local Georgia/Arial declarations; it does not establish availability of downloaded web fonts.
+
+`premium-eval.spec.mjs` tests the host evidence path against the actual fixture and real history helpers. It checks a measured refinement, source restoration with one undo, and negative pages that hide books or change the light/blue brand into dark/gold. The manually authored test refinement verifies the harness only; it is not a real Agent outcome.

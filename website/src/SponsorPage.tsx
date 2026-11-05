@@ -3,6 +3,7 @@ import type { Language } from './direction-engine';
 import { t, type Localized } from './i18n/localized';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import './content-pages.css';
+import './home.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
 const copyText={msg:{zh:'。',en:'.'}} satisfies Record<string,Localized>;
@@ -11,7 +12,7 @@ const msg={} satisfies Record<string,Localized>;
 const contact='https://github.com/YuqingNicole/variant-design-skill/issues/new?template=sponsorship.md';
 const m={
  title:{zh:'赞助 Variant Design',en:'Sponsor Variant Design'},
- lead:{zh:'给用 AI 做产品的人的设计导航。品牌可以赞助，把产品介绍给这群读者。',en:'A design navigation site for people who build products with AI. Brands can sponsor it to reach these readers.'},
+ lead:{zh:'Variant Design 精选互联网上最好的设计灵感，读者是设计师和用 AI 做产品的人。品牌可以赞助，把产品介绍给这群读者。',en:'Variant Design curates the best design inspiration on the internet for designers and people building products with AI. Brands can sponsor it to reach these readers.'},
  cta:{zh:'发起赞助咨询',en:'Start an inquiry'},
  toRules:{zh:'先看赞助规则',en:'Read the rules first'},
  audience:{zh:'读者是谁',en:'Who reads it'},

@@ -6,8 +6,8 @@
 
 ## 1. 先修：诚实和定位
 
-- [ ] 【维护者】改掉 README、`README_CN.md` 和 GitHub 描述里的“受 Variant（variant.com）设计社区启发”，避免读者以为和这个商业产品有关联。同时把 GitHub 主页地址改成官网、补 topics。建议的描述：Open-source agent skill for Codex and Claude Code that turns one design brief into three comparable directions (A/B/C) inside your own project.
-- [ ] 【维护者】价格页在卖“托管生成额度”，`llms.txt` 却写着没有托管服务。二选一：把付费档标成“计划中”，或者先拿掉。
+- [ ] 【维护者】README、`README_CN.md` 的 Variant 引用移除、官网介绍与公开 GitHub 元数据候选值已在 `codex/positioning-honesty` 起草。精确元数据见 `docs/drafts/github-metadata.json`，未应用到 GitHub。待确认措辞及公开更新权限。
+- [ ] 【维护者】价格页可用性修正已起草：Pro/Team 明确为计划、功能与数字为报价草案，讨论链接不表示开通；README 与 llms.txt 同步。另一选择是完全移除付费卡片。当前流程实际没有结账；公开模型状态当次为未配置。待确认方向，见 `docs/drafts/positioning-and-availability.md`。
 - [ ] 【维护者】确认 Impeccable 署名的处理：`references/design-system/` 里 7 个文件是 Impeccable（Apache-2.0）原文的完整复制，已补 `NOTICE`、许可证全文和文件头说明。要不要改写成自己的文字、或者联系作者，由你决定。
 
 ## 2. 分发：先让人找得到
@@ -19,20 +19,23 @@
 
 ## 3. 内容：选对手还没答好的问题
 
-- [ ] 【维护者】审阅 `/guides` 的英文（5 篇）。目前由代理撰写，已经发布在 `/en/guides/...`。没审完前想先下线，就在 `guides-content.ts` 里给那篇加 `translations: { en: { status: 'draft' } }`；审完改成 `complete` 并写 `reviewedAt`。
-- [ ] 【维护者】确认对比页草稿 `docs/drafts/compare-page.md`（Impeccable、Taste Skill、frontend-design，事实已于 2026-11-02 按对方公开页面核对），决定放在 `/compare` 还是 `/guides`，确认后由代理做成页面。
+- [ ] 【维护者】审阅 `/guides` 的英文（5 篇）。2026-11-04 代理已做事实和语言初审：修正 Git、旧快照和授权说明，改写的 3 篇英文标为 `draft`，生产模式的列表与直达页面也遵守该状态；2 篇未改的旧英文保留原状态。均不算人工审定，审完改成 `complete` 并写 `reviewedAt`。审阅包见 `docs/research/2026-11-04-content-review.md`。
+- [ ] 【维护者】确认对比页草稿 `docs/drafts/compare-page.md`（Impeccable、Taste Skill、frontend-design，2026-11-04 已重新核对公开文档和源码许可证；不算实际运行），决定放在 `/compare` 还是 `/guides`，确认后由代理做成页面。涉及 Anthropic 的发布条款仍待确认。
 - [ ] `/skills` 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 `evals/run.mjs` 在一次性项目里跑 Impeccable、Taste Skill、UI UX Pro Max，公开记录后收录。发布涉及 Anthropic 技能的对比前，先由【维护者】确认条款。
 
 ## 4. 产品
 
 - [ ] 决定要不要做“在比较页上直接选某个区域”：Impeccable 的 Live Mode、Subframe 和 Claude Design 都让用户在页面上点选。先决定做还是明确不做，再动手。
-- [ ] 给 `Refine premium` 和形容词翻译加 eval fixture：让真实 Agent 把一个页面“做得更高级”，评分检查 `style-budget.mjs` 计数下降、没有改成深色加金色（`docs/research/2026-11-02-premium-style-budget.md`）。
+- [ ] `Refine premium` 和形容词翻译的真实 eval 已在 PR #151 实现：Codex 18/18 检查通过，1440/390 下计数下降且保留品牌、任务和一次撤回；待审阅与合并。证据见 `docs/research/2026-11-04-premium-evaluation.md`。
 - [ ] 【维护者】决定要不要做公开的界面代码检查页。评估见 `docs/research/2026-11-02-antipattern-catalog-evaluation.md`：建议做成一页、先把规则改成共用数据，不仿 `/slop` 做视觉目录。
 
 ## 5. 网站维护
 
-- [ ] 改写定价页口号「审美免费。连续性值得付费。」。等第 1 组价格页的决定之后再改，口号要和付费档的说法一致。
-- [ ] 用 `scripts/style-budget.mjs` 量其他页面：`/docs`（11 个字号）、`/inspiration`（9 个）、`/sponsor`（9 个），按首页的做法收敛。
+- [ ] RFC-008 P2：统一作品流、交互与审美已在 `codex/inspiration-browsing` 实现并通过 44 项本地浏览器回归；待审阅与合并。计数和截图证据见 `docs/research/2026-11-04-backlog-execution.md`。
+- [ ] RFC-008 P3：投稿、媒体地址、人工审核登记与撤下已在 `codex/submission-permissions` 实现并完成本地验证；待审阅和合并。维护流程见 `website/SUBMISSIONS.md`。
+
+- [ ] 定价页口号已随“本地可用、托管计划中”方案在 `codex/positioning-honesty` 起草；与第 1 组价格方向一起确认，尚未发布。
+- [ ] 文档、赞助页字号已在 `codex/content-style-budget` 收敛：1440 下各 6 种、390 下各 7 种，保留命令框等宽字体；中英文 × 320/390/1440 和首页预算复核通过，9 项相关 Chrome 回归通过。待 PR 审阅/合并、视觉验收；Impeccable 首页扫描导航超时，不能当作零问题。证据见 `docs/research/2026-11-04-content-style-budget.md`。
 
 ## X 设计样本收集箱
 

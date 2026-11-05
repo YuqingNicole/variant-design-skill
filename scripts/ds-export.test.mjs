@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { exportTokens } from './ds-export.mjs';
+import { exportTokens, color } from './ds-export.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 
@@ -50,6 +50,10 @@ test('values DTCG cannot express are listed, not guessed', () => {
   assert.equal(skipped.at(-1).reason, 'DTCG dimensions are px or rem only');
 });
 
+test('malformed color channels do not become black through null coercion', () => {
+  for (const value of ['rgb(oops 0 0)', 'rgb(0 0 0 1 1)', 'hsl(0 nope 50%)', 'oklch(50% oops% 0)']) assert.equal(color(value), null, value);
+});
+
 test('the CLI writes a .tokens.json file and reports what it left out', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ds-export-')), css = path.join(dir, 'design-system.css'), out = path.join(dir, 'design-system.tokens.json');
   fs.writeFileSync(css, ':root{--ink:#000;--space-2:8px;--hero:clamp(1rem,2vw,2rem)}');
@@ -64,4 +68,49 @@ test('a trailing use note becomes the DTCG $description', () => {
   assert.equal(tokens.color['color-danger'].$description, 'Use: remove-access button, removal errors');
   assert.equal(tokens.color['button-danger-bg'].$description, 'Use: confirm removal');
   assert.equal(tokens.dimension['space-4'].$description, undefined);
+});
+
+test('layer export types each token and preserves cross-layer and shadow aliases', () => {
+  const sources = [{ source: ':root{--brand-ink:#111;--brand-radius:6px}', origin: 'brand' }, `:root{
+    --p-blue-500:#123456;--color-accent:var(--p-blue-500); /* use: primary action */
+    --color-on-accent:var(--brand-ink);--radius-control:var(--brand-radius);
+    --shadow-dialog:0 2px 8px var(--color-accent);--button-bg:var(--color-accent);
+  }`];
+  const r = exportTokens(sources, { groupBy: 'layer' });
+  assert.deepEqual(r.skipped, []);
+  assert.equal(r.tokens.primitive['p-blue-500'].$type, 'color');
+  assert.deepEqual(r.tokens.semantic['color-accent'], { $type: 'color', $value: '{primitive.p-blue-500}', $description: 'Use: primary action' });
+  assert.equal(r.tokens.component['button-bg'].$value, '{semantic.color-accent}');
+  assert.equal(r.tokens.semantic['color-on-accent'].$value, '{brand.brand-ink}');
+  assert.equal(r.tokens.semantic['shadow-dialog'].$value[0].color, '{semantic.color-accent}');
+  assert.equal(r.tokens.semantic['radius-control'].$type, 'dimension');
+  assert.equal(r.tokens.semantic['radius-control'].$value, '{brand.brand-radius}');
+  // Both formats have the same values and complete, resolvable alias chains.
+  const byType = exportTokens(sources).tokens;
+  const flatten = tokens => new Map(Object.entries(tokens).filter(([key]) => !key.startsWith('$')).flatMap(([group, children]) => Object.entries(children).filter(([key]) => !key.startsWith('$')).map(([name, t]) => [`${group}.${name}`, t])));
+  const resolve = (map, value) => typeof value === 'string' && /^\{[^}]+\}$/.test(value) ? resolve(map, map.get(value.slice(1, -1)).$value) : Array.isArray(value) ? value.map(v => resolve(map, v)) : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).map(([k, v]) => [k, resolve(map, v)])) : value;
+  const a = flatten(r.tokens), b = flatten(byType);
+  assert.equal(a.size, b.size);
+  for (const [key, token] of a) {
+    const same = [...b].find(([other]) => other.endsWith(`.${key.split('.').at(-1)}`))[1];
+    assert.deepEqual(resolve(a, token.$value), resolve(b, same.$value));
+  }
+});
+
+test('export skips conditional values and their aliases, and ignores commented declarations', () => {
+  const r = exportTokens(['/* --fake:#000; */ :root{--color-bg:#fff;--color-on-bg:var(--color-bg);--font-ui:"Text; UI",sans-serif} .dark{--color-bg:#111}']);
+  assert.deepEqual(r.skipped.map(s => s.name), ['--color-bg', '--color-on-bg']);
+  assert.deepEqual(r.tokens.fontFamily['font-ui'].$value, ['Text; UI', 'sans-serif']);
+  assert.equal(r.tokens.color, undefined);
+});
+
+test('the export CLI accepts a layer format with brand files and validates option values', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ds-layers-')), brand = path.join(dir, 'brand.css'), css = path.join(dir, 'ds.css'), out = path.join(dir, 'tokens.json');
+  fs.writeFileSync(brand, ':root{--brand-ink:#111}');
+  fs.writeFileSync(css, ':root{--color-on-bg:var(--brand-ink);--button-fg:var(--color-on-bg)}');
+  execFileSync(process.execPath, [path.join(here, 'ds-export.mjs'), css, '--brand', brand, '--group-by', 'layer', '--out', out]);
+  assert.equal(JSON.parse(fs.readFileSync(out, 'utf8')).component['button-fg'].$value, '{semantic.color-on-bg}');
+  const run = args => spawnSync(process.execPath, [path.join(here, 'ds-export.mjs'), ...args], { encoding: 'utf8' });
+  assert.equal(run([css, '--group-by', 'unknown']).status, 2);
+  assert.equal(run([css, '--out']).status, 2);
 });

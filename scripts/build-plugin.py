@@ -37,9 +37,9 @@ def package_files(root=ROOT):
     # All paths inside the existing router remain relative to its own skill root.
     required = ('SKILL.md', 'skills/variant-generate/ROUTE.md', 'skills/shared/code-output.md',
                 'references/workflow/project-context.md', 'scripts/variant-history.mjs', 'scripts/build-preview.mjs',
-                'scripts/react-preview.mjs', 'scripts/variant-integrate.mjs', 'scripts/quality-gate.mjs', 'scripts/artifact-verification.mjs',
-                'scripts/browser-verification.mjs', 'scripts/project-profile.mjs', 'scripts/design-task.mjs', 'references/workflow/project-discovery.md',
-                'scripts/direction-card.mjs', 'references/sources/direction-cards.md', 'scripts/delivery-check.mjs', 'scripts/ds-export.mjs', 'scripts/ds-check.mjs', 'scripts/style-budget.mjs', 'references/workflow/adjective-translation.md',
+                'scripts/react-preview.mjs', 'scripts/preview-files.mjs', 'scripts/variant-integrate.mjs', 'scripts/quality-gate.mjs', 'scripts/artifact-verification.mjs',
+                'scripts/browser-verification.mjs', 'scripts/verification-plan.mjs', 'scripts/project-profile.mjs', 'scripts/project-dependencies.mjs', 'scripts/dependency-references.mjs', 'scripts/design-task.mjs', 'references/workflow/project-discovery.md',
+                'scripts/direction-card.mjs', 'references/sources/direction-cards.md', 'scripts/delivery-check.mjs', 'scripts/delivery-receipt.mjs', 'scripts/ds-export.mjs', 'scripts/ds-check.mjs', 'scripts/ds-tokens.mjs', 'scripts/style-budget.mjs', 'references/workflow/adjective-translation.md',
                 'references/workflow/preview.md', 'references/workflow/history.md', 'skills/shared/export.md',
                 'skills/variant-generate/actions.md', 'skills/variant-generate/zones.md')
     for name in required:

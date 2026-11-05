@@ -2,10 +2,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { createHash } from 'node:crypto';
 import { localFile, readContext } from './variant-history.mjs';
+import { publishPreview } from './preview-files.mjs';
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
-export function buildPreview(root) {
+export function buildPreview(root, project = path.dirname(path.resolve(root))) {
+  root = fs.realpathSync(root);
+  project = fs.realpathSync(project);
+  if (!root.startsWith(project + path.sep)) throw new Error('Project root must contain variant output.');
+  const prefix = path.relative(project, root).split(path.sep).join('/'), files = {};
   const state = readContext(root);
   const react = ['A', 'B', 'C'].every(id => /\.[jt]sx$/.test(state.variants?.[id]?.entry ?? ''));
   const urls = {};
@@ -22,12 +28,11 @@ export function buildPreview(root) {
   // Validate the full manifest before writing anything.
   if (react) {
     const dir = localFile(root, '_preview');
-    fs.mkdirSync(dir, { recursive: true });
     for (const id of ['A', 'B', 'C']) {
       const entry = path.relative(dir, localFile(root, state.variants[id].entry)).split(path.sep).join('/').replace(/\.[jt]sx$/, '');
       const js = `import React from 'react';\nimport {createRoot} from 'react-dom/client';\nimport Variant from ${JSON.stringify(entry)};\ncreateRoot(document.getElementById('root')!).render(<Variant />);\n`;
-      fs.writeFileSync(localFile(root, `_preview/${id}.tsx`), js);
-      fs.writeFileSync(localFile(root, `_preview/${id}.html`), `<!doctype html><html lang="en"><head><link rel="icon" href="data:,"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Variant ${id}</title></head><body><div id="root"></div><script type="module" src="./${id}.tsx"></script></body></html>`);
+      files[`${prefix}/_preview/${id}.tsx`] = js;
+      files[`${prefix}/_preview/${id}.html`] = `<!doctype html><html lang="en"><head><link rel="icon" href="data:,"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Variant ${id}</title></head><body><div id="root"></div><script type="module" src="./${id}.tsx"></script></body></html>`;
     }
   }
   const zh = state.language === 'zh';
@@ -71,10 +76,15 @@ document.querySelectorAll('[data-width]').forEach(button => button.addEventListe
 new ResizeObserver(resizePreviews).observe(document.body);
 resizePreviews();
 </script></body></html>`;
-  fs.writeFileSync(localFile(root, '_compare.html'), html);
-  return { react, urls, comparison: '_compare.html' };
+  files[`${prefix}/_compare.html`] = html;
+  for (const variant of Object.values(state.variants)) for (const file of variant.files) {
+    if (Object.hasOwn(files, `${prefix}/${file}`)) throw new Error(`Preview path is registered variant source: ${file}`);
+  }
+  const group = 'compare-' + createHash('sha256').update(root).digest('hex').slice(0, 24);
+  const ownership = publishPreview(project, group, files);
+  return { react, urls, comparison: '_compare.html', ownership };
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href) {
-  try { console.log(JSON.stringify(buildPreview(path.resolve(process.argv[2] ?? 'variant-output')), null, 2)); }
+  try { console.log(JSON.stringify(buildPreview(path.resolve(process.argv[2] ?? 'variant-output'), process.argv[3]), null, 2)); }
   catch(error) { console.error(error.message); process.exitCode = 1; }
 }

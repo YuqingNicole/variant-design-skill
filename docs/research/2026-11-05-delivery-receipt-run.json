@@ -1,0 +1,543 @@
+{
+  "schemaVersion": 1,
+  "implementationHead": "9fd263220d32b0a4411efba5e81a91dc4ac29fca",
+  "observedAt": "2026-11-04T18:44:42.599Z",
+  "rawDirectory": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632",
+  "result": {
+    "sha256": "c06b4cd0112c589173201f1c85717e03442261a1d8d2e7a4df9f09886251fb76",
+    "pass": true,
+    "checks": 78,
+    "seconds": 492,
+    "timedOut": false,
+    "turns": [
+      {
+        "id": "generate",
+        "exit": 0,
+        "seconds": 187,
+        "timedOut": false,
+        "transcriptSha256": "4574e37b6c72854a482031bfe4f05a48c7d1085f5f97c46a9b59f37d995407f7"
+      },
+      {
+        "id": "deliver",
+        "exit": 0,
+        "seconds": 162,
+        "timedOut": false,
+        "transcriptSha256": "f0aeb2037ee654daf8f339231c6304d7c7ebb51c5af6ea4b602b3f361b42bea0"
+      },
+      {
+        "id": "cleanup",
+        "exit": 0,
+        "seconds": 41,
+        "timedOut": false,
+        "transcriptSha256": "da18864be7ba29182544d340a0c41b910d2a3c3794d08c18c749bf6fae4eb158"
+      }
+    ],
+    "usage": {
+      "tokens": 1445616
+    },
+    "reading": {
+      "words": 30292,
+      "files": [
+        "SKILL.md",
+        "references/domains/dashboard.md",
+        "references/workflow/artifact-verification.md",
+        "references/workflow/design-declaration.md",
+        "references/workflow/preview.md",
+        "references/workflow/product-integrity-gate.md",
+        "references/workflow/project-context.md",
+        "references/workflow/project-discovery.md",
+        "references/workflow/quality-baseline.md",
+        "skills/shared/code-output.md",
+        "skills/variant-generate/ROUTE.md",
+        "references/workflow/delivery-receipt.md",
+        "references/workflow/history.md",
+        "skills/shared/export.md"
+      ],
+      "turns": [
+        {
+          "turn": "generate",
+          "files": [
+            "SKILL.md",
+            "references/domains/dashboard.md",
+            "references/workflow/artifact-verification.md",
+            "references/workflow/design-declaration.md",
+            "references/workflow/preview.md",
+            "references/workflow/product-integrity-gate.md",
+            "references/workflow/project-context.md",
+            "references/workflow/project-discovery.md",
+            "references/workflow/quality-baseline.md",
+            "skills/shared/code-output.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 12711
+        },
+        {
+          "turn": "deliver",
+          "files": [
+            "SKILL.md",
+            "references/workflow/artifact-verification.md",
+            "references/workflow/delivery-receipt.md",
+            "references/workflow/history.md",
+            "references/workflow/preview.md",
+            "references/workflow/project-discovery.md",
+            "skills/shared/code-output.md",
+            "skills/shared/export.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 13029
+        },
+        {
+          "turn": "cleanup",
+          "files": [
+            "SKILL.md",
+            "references/workflow/preview.md",
+            "skills/variant-generate/ROUTE.md"
+          ],
+          "words": 4552
+        }
+      ]
+    }
+  },
+  "phases": {
+    "baseline": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "baseline",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632/native-vite-receipts-codex.phases/baseline",
+        "manifestSha256": "2f62a3859dfc6063c1944b0514fcec29d09a81e429c8c23703a4b03982e43eff",
+        "snapshotSha256": "cfd5b8e8f8f704f4b4e683491beeefa84c2737046f360ef33544b9c81473c92b",
+        "sourceDigest": "7fc937296603a19f325c0f7f526f51eefb9b210d95591e4ed7e73385e5c6ef8b",
+        "receiptSha256": "e226455166cb3809cf675ee4cf19c7fdb89d84c290485f3907ba6dbb3b71fcca"
+      },
+      "files": 109,
+      "directories": 20,
+      "state": null
+    },
+    "generate": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "generate",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632/native-vite-receipts-codex.phases/generate",
+        "manifestSha256": "683e3f3fbfaac30e276e65f24f2c52805c70ed059a695b87baa22c97143b6d62",
+        "snapshotSha256": "377e59eaea0c95eb8e908cb758be4cab5450b460350e82916ac50c4a93532f29",
+        "sourceDigest": "8ea1c2f83a688c2e875e5fcbfcc92ac98bf029f3e6a3ab81e8ebdf329641e0f2",
+        "receiptSha256": "4ad222af7f689f86392de8eb663c512f1b3004a37189310c476768fcd1076f03"
+      },
+      "files": 156,
+      "directories": 29,
+      "state": {
+        "selectedVariant": null,
+        "versions": {
+          "A": 1,
+          "B": 1,
+          "C": 1
+        }
+      }
+    },
+    "deliver": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "deliver",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632/native-vite-receipts-codex.phases/deliver",
+        "manifestSha256": "04061a53857813dbe55f6eab51d797691b726139c5db4639f68335acfe722be3",
+        "snapshotSha256": "b06ae280359aa4d34d41a020087b6ae9681a03a21833e0ae79616e55987908da",
+        "sourceDigest": "7aaff41055a4de6a83e294c211ac759dabbce5bb8e1a03187bd9251539fd4a2e",
+        "receiptSha256": "07d130a4a5ab8b310634d757a91fb0b0c0f68db4057c556623ec8a3b6ab62396"
+      },
+      "files": 221,
+      "directories": 38,
+      "state": {
+        "selectedVariant": null,
+        "activeVariant": "B",
+        "versions": {
+          "A": 1,
+          "B": 3,
+          "C": 1
+        }
+      }
+    },
+    "cleanup": {
+      "receipt": {
+        "schemaVersion": 1,
+        "phase": "cleanup",
+        "directory": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632/native-vite-receipts-codex.phases/cleanup",
+        "manifestSha256": "1f67d36cec8875b88e455446afc6eb1dbc6f6f6abd7d85a4b67c1618bf37243c",
+        "snapshotSha256": "b06ae280359aa4d34d41a020087b6ae9681a03a21833e0ae79616e55987908da",
+        "sourceDigest": "0ad3b828fca7dc13ddee54d59eae981bcea8d4967f967f7674b1dece6e35ddfc",
+        "receiptSha256": "c5fb4441973190af4aadff944d959e658e0300ed142e9d13dcf3fd098941a715"
+      },
+      "files": 215,
+      "directories": 38,
+      "state": {
+        "selectedVariant": null,
+        "activeVariant": "B",
+        "versions": {
+          "A": 1,
+          "B": 3,
+          "C": 1
+        }
+      }
+    }
+  },
+  "agentReceipt": {
+    "file": ".deliveries/79876c31-e172-42f8-8eb6-eeb86d733348.json",
+    "sha256": "15351afb131859d2dd32562414cc4a0694c8c803dc00c9d02692079cf288f339",
+    "phase": "rolled-back",
+    "recordedVerificationStatus": "unverified",
+    "version": 3,
+    "inventory": [
+      {
+        "path": "src/App.tsx",
+        "action": "overwrite",
+        "before": "bacf448b6fdd2197daab74d59a1f1bd483890969539581bf634e5c9c33883418",
+        "after": "b84bad8ccfac84650bae6330cb0c735c22e7829c3ee3121940c670a671278653"
+      }
+    ],
+    "reports": {
+      "before": {
+        "file": ".verification/B/b43e9b35-39f7-4638-a870-583b5903671b.json",
+        "sha256": "66ab3f315b43fa49d818f40f756da103c095fccc473c77a5cef08bdbeb55ada3",
+        "static": "passed",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "unverified"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "unverified"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "unverified"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "unverified"
+          },
+          {
+            "id": "project-checks",
+            "status": "unverified"
+          }
+        ],
+        "version": 3
+      },
+      "after": {
+        "file": ".verification/B/9efe3e35-c143-40a5-b8f2-839037eb0e76.json",
+        "sha256": "b7d1f92d8f751f8f558e0dab91c7bed30ce45823cbc32f21e79e6240534f81dd",
+        "static": "passed",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "unverified"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "unverified"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "unverified"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "unverified"
+          },
+          {
+            "id": "project-checks",
+            "status": "unverified"
+          }
+        ],
+        "version": 3
+      }
+    }
+  },
+  "independentHost": {
+    "checks": [
+      {
+        "id": "installed-helpers",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "agent-receipt",
+        "pass": true,
+        "details": [
+          "Agent report claims remain recorded claims; independent host observations below cover only the checks actually run. The saved integration is historical after rollback."
+        ]
+      },
+      {
+        "id": "target-inventory",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "current-observations",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "sealed-receipt",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "target-drift",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "report-drift",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "source-drift",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "rolled-back",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "source-project-unchanged",
+        "pass": true,
+        "details": []
+      }
+    ],
+    "actions": [
+      {
+        "id": "target-drift",
+        "file": "src/App.tsx",
+        "before": "b84bad8ccfac84650bae6330cb0c735c22e7829c3ee3121940c670a671278653",
+        "after": "2192f78cc33409ac5c150452bfcb0034a36775d5e2360408f2a63c13c263eb6d",
+        "stale": true,
+        "preserved": true,
+        "refusal": "Files changed after integration; nothing was rolled back: src/App.tsx"
+      },
+      {
+        "id": "report-drift",
+        "file": "variant-output/.verification/B/1763edd4-c4e4-4a03-9132-6af70fa52d9e.json",
+        "before": "7ed056464099a62b7f5aa554d7f55741a67001e6866733a2dad10aeb4b4923b8",
+        "after": "806975c6ff76036fec090b8f5965d681d2eeb2f9637c98c8e6e20a94c6938790",
+        "stale": true,
+        "preserved": true,
+        "refusal": null
+      },
+      {
+        "id": "source-drift",
+        "file": "variant-output/VariantB.tsx",
+        "before": "9bbfd608603ba82f25c33161f85f6eef23691cd829e429b73636dfb4a86c58d5",
+        "after": "07426518f56f8dcf1792e7d1164dc390f4901ba58510fc1965ee90e920b8d4f9",
+        "stale": true,
+        "preserved": true,
+        "refusal": null
+      }
+    ],
+    "sealed": {
+      "file": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632/native-vite-receipts-codex.delivery-receipts/project/variant-output/.deliveries/0bf927b5-f050-41e4-b55c-4a7bfe18b581.json",
+      "sha256": "c95320d4696485c4e55880378e91723180d51766704e01541b4b8ff226faa2f4",
+      "recordedVerificationStatus": "unverified",
+      "currentPhase": "rolled-back"
+    },
+    "observations": {
+      "before": {
+        "file": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632/native-vite-receipts-codex.delivery-receipts/before/report.json",
+        "sha256": "0944091c2e3e46db91eafc76b646749ee7bc8ac06da46c39ad59d0de68af26df",
+        "samples": [
+          {
+            "id": "original",
+            "width": 1440,
+            "task": true,
+            "identity": true,
+            "errors": [],
+            "failedRequests": [],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632/native-vite-receipts-codex.delivery-receipts/before/original-1440.png",
+            "screenshotSha256": "3276da956971b296db73b7a041f59c644dd3bca00f64ace7b90527a3c86895cc"
+          },
+          {
+            "id": "original",
+            "width": 390,
+            "task": true,
+            "identity": true,
+            "errors": [],
+            "failedRequests": [],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632/native-vite-receipts-codex.delivery-receipts/before/original-390.png",
+            "screenshotSha256": "1ef01ad1e8f9417796607568c9bc6b25288cd605a05dd9d11eb269b1fc7f9f3d"
+          }
+        ],
+        "environment": {
+          "browser": "156.0.8078.80",
+          "vite": "7.1.7",
+          "transport": "owned HTTP/WebSocket port; file watching disabled",
+          "node": "v26.3.0"
+        }
+      },
+      "after": {
+        "file": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632/native-vite-receipts-codex.delivery-receipts/after/report.json",
+        "sha256": "1c1616f1aaac573e76110404513007deac82d8c864449fbfdd0551a029487a75",
+        "samples": [
+          {
+            "id": "original",
+            "width": 1440,
+            "task": true,
+            "identity": true,
+            "errors": [],
+            "failedRequests": [],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632/native-vite-receipts-codex.delivery-receipts/after/original-1440.png",
+            "screenshotSha256": "fbdb17c4a0ff2a6f65517e37059293ec9327b85d2768923cfcb219b3cd4522cd"
+          },
+          {
+            "id": "original",
+            "width": 390,
+            "task": true,
+            "identity": true,
+            "errors": [],
+            "failedRequests": [],
+            "screenshot": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632/native-vite-receipts-codex.delivery-receipts/after/original-390.png",
+            "screenshotSha256": "a317a2d4dddc7a69b30381bbced5273893a2ac6f5caf52be5f78bfe4a1bfb7d5"
+          }
+        ],
+        "environment": {
+          "browser": "156.0.8078.80",
+          "vite": "7.1.7",
+          "transport": "owned HTTP/WebSocket port; file watching disabled",
+          "node": "v26.3.0"
+        }
+      }
+    },
+    "helperSha256": {
+      "delivery-receipt.mjs": "7da3bca732e087053a5bdf64c2366b837e76a92f3293dc863fddba9e818ebc78",
+      "variant-history.mjs": "b5e65163748ab0ec9a6ce4cf41c00ecbeab7f1b1e110cfa68fa4d2a8b8ed13b3",
+      "variant-integrate.mjs": "a9c480eda8f53d72d5a26adca39f0d85de4ee4130e69d1304b2672b1a388a29f",
+      "artifact-verification.mjs": "41ecf848f3bb7715a725644ae679927697d927bbf108d8dce6deac5419f1b185",
+      "browser-verification.mjs": "21fa4bd13a0e6640d3b6e4d09cb79d3d788ba60b380e147791819dafb76238db",
+      "project-dependencies.mjs": "7832f5a9df0ab5c5807b2c735b3d0c6e0e5c68aa1d868352240fffa533e37be1",
+      "dependency-references.mjs": "8d5ff3778eca137519f563d3ac1a3059736f47071b448ace1c073b9217074dd9",
+      "preview-files.mjs": "e2159483e6b7791c3e85ecc57f12ae29e62064f6d0c874cde6d00b737949498b"
+    },
+    "originalBinding": "All host before/after source hashes equal direct delivery archive inventory"
+  },
+  "cleanup": {
+    "removedExpected": 9,
+    "editedPreserved": ".variant-work/entry-A.tsx",
+    "unownedPreserved": ".variant-work/user-preview-note.txt",
+    "completeVariantOutputIncludingReceiptsPreserved": true
+  },
+  "preservation": {
+    "originalFiles": 15,
+    "originalTreeDigest": "3564d891626e0189c3abe4c17566ee53cea7ee6d5268513b266ffc7f394a0a88",
+    "hostCopyTreeDigest": "c3841862b53c576e71e8792033084047b24e465286f1927882234120be9e77ce",
+    "originalResultUnchanged": true
+  },
+  "auditImplementationSha256": "12a676144a92471f4cc538f7afe27c0a1a375fdc56bc8ab978043e91198385ea",
+  "scope": {
+    "deliveryReceiptMechanicalGate": true,
+    "fullRuntimeVerification": false,
+    "fullIssues18and19": false,
+    "productionChanged": false
+  },
+  "additionalToolAudit": {
+    "file": "/Users/nicole/orca/variant-backlog-evidence/delivery-receipt-evals-9fd2632/post-run-tool-audit.json",
+    "sha256": "bdef97817c65c075329b89d16fe39433ac2b332af08086e8dab446dd62ba8b82",
+    "implementationHead": "9fd263220d32b0a4411efba5e81a91dc4ac29fca",
+    "observedAt": "2026-11-04T18:45:30.039Z",
+    "helperIdentities": {
+      "delivery-receipt.mjs": "7da3bca732e087053a5bdf64c2366b837e76a92f3293dc863fddba9e818ebc78",
+      "variant-history.mjs": "b5e65163748ab0ec9a6ce4cf41c00ecbeab7f1b1e110cfa68fa4d2a8b8ed13b3",
+      "variant-integrate.mjs": "a9c480eda8f53d72d5a26adca39f0d85de4ee4130e69d1304b2672b1a388a29f",
+      "preview-files.mjs": "e2159483e6b7791c3e85ecc57f12ae29e62064f6d0c874cde6d00b737949498b",
+      "artifact-verification.mjs": "41ecf848f3bb7715a725644ae679927697d927bbf108d8dce6deac5419f1b185",
+      "browser-verification.mjs": "21fa4bd13a0e6640d3b6e4d09cb79d3d788ba60b380e147791819dafb76238db",
+      "quality-gate.mjs": "a5499124d1c4d50c425340bfab738597bfcb96881084b1badd4910e18ab5587b",
+      "project-dependencies.mjs": "7832f5a9df0ab5c5807b2c735b3d0c6e0e5c68aa1d868352240fffa533e37be1",
+      "dependency-references.mjs": "8d5ff3778eca137519f563d3ac1a3059736f47071b448ace1c073b9217074dd9"
+    },
+    "compiler": {
+      "name": "typescript",
+      "version": "5.9.2",
+      "sha256": "e5f1f6b3e82228a89873cc7b941b2465185e839c0692860f83e3e63e53f94c2b"
+    },
+    "compilerBytesMatch": true,
+    "closure": {
+      "files": 29,
+      "edges": 49,
+      "coverage": {
+        "status": "within-supported-static-syntax",
+        "unknowns": [],
+        "limits": {
+          "files": 256,
+          "bytes": 67108864,
+          "textBytes": 1048576
+        },
+        "limitation": "Local static imports/URLs only. Candidate sets are conservative, not runtime resolution. Installed packages, environment, plugin-generated/dynamic dependencies and data-driven resources require separate review and fresh observations."
+      }
+    },
+    "runtimeScope": {
+      "agentChecks": [
+        {
+          "id": "brand",
+          "status": "unverified"
+        },
+        {
+          "id": "keyboard-focus",
+          "status": "unverified"
+        },
+        {
+          "id": "reduced-motion",
+          "status": "unverified"
+        },
+        {
+          "id": "scope-preservation",
+          "status": "unverified"
+        },
+        {
+          "id": "project-checks",
+          "status": "unverified"
+        }
+      ],
+      "hostObserved": [
+        "brand",
+        "project-checks"
+      ],
+      "hostUnverified": [
+        "keyboard-focus",
+        "reduced-motion",
+        "scope-preservation"
+      ]
+    }
+  },
+  "localValidation": {
+    "combinedNodeTestsBeforeCorrectiveGrader": 164,
+    "correctiveFocusedTests": 26,
+    "finalGraderChecks": 16,
+    "correctiveChromeCases": 3,
+    "docsChromeCases": 2,
+    "packageChecks": 4,
+    "testsTypecheck": true,
+    "websiteTests": 67,
+    "websiteBuildRoutes": 239,
+    "initialFullChrome": {
+      "passed": 25,
+      "total": 26,
+      "correctedAliasCase": 1
+    }
+  },
+  "ci": {
+    "implementationHead": "9fd263220d32b0a4411efba5e81a91dc4ac29fca",
+    "pushRun": 41888592194,
+    "pullRequestRun": 41888605912,
+    "pushLoop": "success",
+    "pushLanding": "success",
+    "pullRequestLoop": "success",
+    "pullRequestLanding": "success",
+    "logConfirms": {
+      "node": 22,
+      "nodeTests": 165,
+      "chromeCases": 27
+    },
+    "documentationFollowup": "separate head, not covered"
+  }
+}

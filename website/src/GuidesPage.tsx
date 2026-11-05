@@ -6,6 +6,7 @@ import { t, type Localized } from './i18n/localized';
 import './content-pages.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
+import { isDraft, showDrafts } from './i18n/translations';
 
 const m = {
   title: { zh: '指南', en: 'Guides' },
@@ -18,7 +19,8 @@ const m = {
 
 export function GuidesPage({ slug }: { slug?: string }) {
   const language = useLocale();
-  const guide = guides.find(g => g.slug === slug), known = !slug || !!guide;
+  const visible = guides.filter(g => showDrafts || !isDraft(g, language));
+  const guide = visible.find(g => g.slug === slug), known = !slug || !!guide;
   const title = guide ? t(guide.title, language) : t(known ? m.title : m.missing, language);
   useEffect(() => {
     document.title = `${title} — Variant Design`; document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
@@ -36,7 +38,7 @@ export function GuidesPage({ slug }: { slug?: string }) {
       <section className="content-closing site-shell"><a className="content-button" href={localePath('/docs',language)}>{t(m.start, language)} ↗</a><a className="content-secondary" href={localePath('/guides',language)}>{t(m.back, language)} →</a></section>
     </> : <>
       <header className="content-hero site-shell"><h1>{title}</h1>{known ? <p>{t(m.intro, language)}</p> : <p><a href={localePath('/guides',language)}>{t(m.back, language)}</a></p>}</header>
-      {known && <section className="site-shell guide-list">{guides.map(g => <article key={g.slug}><h2><a href={localePath(`/guides/${g.slug}`,language)}>{t(g.title, language)}</a></h2><p>{t(g.answer, language)}</p></article>)}</section>}
+      {known && <section className="site-shell guide-list">{visible.map(g => <article key={g.slug}><h2><a href={localePath(`/guides/${g.slug}`,language)}>{t(g.title, language)}</a></h2><p>{t(g.answer, language)}</p></article>)}</section>}
     </>}
     <SiteFooter language={language}/></main>;
 }

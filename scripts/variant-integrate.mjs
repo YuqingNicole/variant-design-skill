@@ -6,6 +6,7 @@ import path from 'node:path';
 import { randomUUID, createHash } from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { localFile, readContext, withHistoryLock } from './variant-history.mjs';
+import { collectProjectDependencies } from './project-dependencies.mjs';
 
 const digest = content => createHash('sha256').update(content).digest('hex');
 const blocked = ['.git', 'node_modules', '.variant-work'];
@@ -35,10 +36,16 @@ function recordFile(output, id) {
 function sourceIdentity(output, variant, project) {
   const state=readContext(output),source=state.variants?.[variant];
   if (!['A','B','C'].includes(variant) || !source?.files?.length) throw new Error('Register variant A/B/C first.');
+  const extensions=state.designSystem?.extensions;
+  if (extensions!==undefined && (!Array.isArray(extensions) || extensions.some(file=>typeof file!=='string' || !file.trim()))) throw new Error('System extensions must be relative file paths.');
+  const prefix = path.relative(project, output).split(path.sep).join('/');
+  const dependencyClosure = collectProjectDependencies(project, [...new Set([...source.files.map(file => `${prefix}/${file}`), ...(state.designSystem?.file ? [state.designSystem.file] : []), ...(extensions ?? [])])]);
   return {version:source.version,entry:source.entry,tokens:source.tokens,comparison:source.comparison,
+    ...(source.systemBinding!==undefined ? {systemBinding:source.systemBinding} : {}),
     taskContract:state.taskContract,designSystem:state.designSystem,
     designSystemHash:state.designSystem?.file?digest(fs.readFileSync(localFile(project,state.designSystem.file))):null,
-    files:Object.fromEntries([...source.files].sort().map(file=>[file,digest(fs.readFileSync(localFile(output,file)))]))};
+    ...(extensions!==undefined ? {designSystemExtensionHashes:Object.fromEntries(extensions.map(file=>[file,digest(fs.readFileSync(localFile(project,file)))]))} : {}),
+    files:Object.fromEntries([...source.files].sort().map(file=>[file,digest(fs.readFileSync(localFile(output,file)))])), dependencyClosure};
 }
 function targetPath(base,outRelative,file) {
   if (file===outRelative || file.startsWith(outRelative+'/') || blocked.some(dir=>file===dir || file.startsWith(dir+'/'))) throw new Error(`Refusing to integrate into protected path: ${file}`);
@@ -83,9 +90,9 @@ function integrateUnlocked(output, variant, staging, project = path.dirname(path
   if(plan.schemaVersion!==1 || plan.output!==out || plan.project!==base || plan.variant!==variant || !plan.targets || !plan.source) throw new Error('Invalid integration plan or different project/variant.');
   const check=()=>{
     const conflict=message=>{throw new Error(`Integration conflict: ${message}. Current files are unchanged; keep staging and prepare a new plan before reconciling.`);};
-    if(JSON.stringify(sourceIdentity(out,variant,base))!==JSON.stringify(plan.source)) conflict('source revision, contents or constraints changed');
     if(JSON.stringify([...files].sort())!==JSON.stringify(Object.keys(plan.targets).sort())) conflict('target file set changed');
     for(const entry of entries) if(targetHash(localFile(base,entry.path))!==plan.targets[entry.path]) conflict(`target changed: ${entry.path}`);
+    if(JSON.stringify(sourceIdentity(out,variant,base))!==JSON.stringify(plan.source)) conflict('source revision, contents or constraints changed (including shared dependencies)');
   };
   check();
   const id = `${new Date().toISOString().replace(/[:.]/g, '-')}-${variant}`;
@@ -163,6 +170,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process
       if (!variant || !staging) throw new Error('Missing variant or staging directory.');
       const record = integrateVariant(output, variant, staging, project, planFile);
       console.log(`Integrated ${record.variant} revision ${record.version} as ${record.id}`);
+      console.log(`Dependency coverage: ${record.source.dependencyClosure.coverage.status}; ${record.source.dependencyClosure.coverage.unknowns.length} unresolved item(s). Integration is not a runtime acceptance.`);
       for (const entry of record.files) console.log(`  ${entry.action.padEnd(9)} ${entry.path}`);
       console.log(`Roll back: node ${self} rollback ${output} ${record.id}${project ? ` ${project}` : ''}`);
     } else if (command === 'rollback') {

@@ -1,0 +1,848 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-05T09:34:37.981Z",
+  "commit": "bcee774",
+  "result": {
+    "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.json",
+    "sha256": "4b69b5ce91d25664274054167b0913be74724c2dc10bb45d75c146a9c62cc7d5",
+    "pass": true,
+    "passed": 43,
+    "total": 43
+  },
+  "directAudit": "passed",
+  "phases": {
+    "generate": {
+      "pass": true,
+      "version": 1,
+      "status": "unverified",
+      "scopeIdentity": "2a1d644be37380f54b4bd245bc607c9fd95ad9e36de73eecfde76a2564cd7101",
+      "sourceDigest": "d693d769b5fcb1d3a1508f15412874d6356a5a2df7a79f5ffa618e61de987a8e",
+      "checks": [
+        {
+          "id": "brand",
+          "status": "passed"
+        },
+        {
+          "id": "keyboard-focus",
+          "status": "passed"
+        },
+        {
+          "id": "reduced-motion",
+          "status": "passed"
+        },
+        {
+          "id": "scope-preservation",
+          "status": "unverified"
+        },
+        {
+          "id": "project-checks",
+          "status": "passed"
+        }
+      ],
+      "reportSha256": "983b4fcf131f67a3805ad6d2af3370f33c20af15078476b8028f9a8c3c8568b2",
+      "bundleSha256": "75f7401ce3af6b49a156c0544821436add5055d3c190295cae232c76d9ec963a"
+    },
+    "plan-edit": {
+      "pass": true,
+      "version": 2,
+      "status": "passed",
+      "scopeIdentity": "2a1d644be37380f54b4bd245bc607c9fd95ad9e36de73eecfde76a2564cd7101",
+      "sourceDigest": "68b2ccd98399a07c6c30ae94ae5058ff3ffe3a78718937d8efc09cd4d30f932c",
+      "checks": [
+        {
+          "id": "brand",
+          "status": "passed"
+        },
+        {
+          "id": "keyboard-focus",
+          "status": "passed"
+        },
+        {
+          "id": "reduced-motion",
+          "status": "passed"
+        },
+        {
+          "id": "scope-preservation",
+          "status": "passed"
+        },
+        {
+          "id": "project-checks",
+          "status": "passed"
+        }
+      ],
+      "reportSha256": "f1ccd0700895688aa4928d31339dc4ae2ce8b4805b8db5c1b94669c0dbf7f7cd",
+      "bundleSha256": "8c7c78e476583798fb71898c463b5f6f20168f5f1f88aa6bb08ff4b19a9d7d43"
+    },
+    "plan-undo": {
+      "pass": true,
+      "version": 3,
+      "status": "passed",
+      "scopeIdentity": "2a1d644be37380f54b4bd245bc607c9fd95ad9e36de73eecfde76a2564cd7101",
+      "sourceDigest": "0ee2b98f2a0ad3b5f2353452a392858edd681c16e1161b109fc4a01aa0a9014d",
+      "checks": [
+        {
+          "id": "brand",
+          "status": "passed"
+        },
+        {
+          "id": "keyboard-focus",
+          "status": "passed"
+        },
+        {
+          "id": "reduced-motion",
+          "status": "passed"
+        },
+        {
+          "id": "scope-preservation",
+          "status": "passed"
+        },
+        {
+          "id": "project-checks",
+          "status": "passed"
+        }
+      ],
+      "reportSha256": "8ded127b582a2e1f4a1565e6c0630187741fa7c707e132d0eaacba512750f07a",
+      "bundleSha256": "33f90b84c283ab576c9bfa3c82936eef04262045f8e629528ac2e8ada5b48781"
+    }
+  },
+  "delivery": {
+    "checks": [
+      {
+        "id": "direct-archive",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "installed-helpers",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "agent-handoff",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "agent-failed-receipt",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "preview-matrix",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "compare-entry",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "before-observed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "prepare-conflict",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "integrated-observed",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "failed-not-accepted",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "old-diagnostic",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "rollback-conflict",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "restored",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "new-diagnostic",
+        "pass": true,
+        "details": []
+      },
+      {
+        "id": "source-project-unchanged",
+        "pass": true,
+        "details": []
+      }
+    ],
+    "helperSha256": {
+      "artifact-verification.mjs": "6ec079ad729adf51789f5582c9c6708479283b3ca4e0d8be70b73f6df1bd65bb",
+      "browser-verification.mjs": "5d7aac9c90bc06850ed354f0b27681011c6ec43aedac4b813e12d8cac66b87f6",
+      "verification-plan.mjs": "143d21dfbcf97365a6c977effb08b9c5e285a75756cb0b0915ada9417780ab91",
+      "variant-history.mjs": "b5e65163748ab0ec9a6ce4cf41c00ecbeab7f1b1e110cfa68fa4d2a8b8ed13b3",
+      "variant-integrate.mjs": "a9c480eda8f53d72d5a26adca39f0d85de4ee4130e69d1304b2672b1a388a29f",
+      "delivery-receipt.mjs": "7da3bca732e087053a5bdf64c2366b837e76a92f3293dc863fddba9e818ebc78",
+      "project-dependencies.mjs": "76d9b7ca622801d61867280dfa14f8b0e6042cbe0c7c9cf76e9d76d5cd5d9c4b",
+      "dependency-references.mjs": "14dfc7594c5f90af46ac2a127c2f832a9b1b5ddcf83693bfcbd28a7d1eb354f5",
+      "preview-files.mjs": "f3d93a6a9298e299451a427dc762cd47d581cd80dd7ec9a5f3c3ca104086a230",
+      "quality-gate.mjs": "a5499124d1c4d50c425340bfab738597bfcb96881084b1badd4910e18ab5587b"
+    },
+    "hostSha256": {
+      "html-delivery.mjs": "0809385cf46b24f7eaefdccaeb9ccb587ec703090d5a7cd5d17ef013846a9c16",
+      "phase-archive.mjs": "285312fbf098e5c98f81d4c30a5a73b176e02c757d5012d7a8966bc06c76b288"
+    },
+    "agentReceipt": {
+      "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex/variant-output/.deliveries/e31848c7-4669-4d18-ab31-05de6a082913.json",
+      "sha256": "63c857cd3b0acebea1ca01dc0497be5428aaa2d3dbb62325ac2e10ae0b60f5b7",
+      "verification": "failed",
+      "phase": "rolled-back"
+    },
+    "targets": [
+      {
+        "path": "delivered/shared/data.js",
+        "action": "create",
+        "before": null,
+        "after": "199535e395903ebc1b702cbb53d6c118f9cca6e39de3ac9e0d5a09d6663da3a7"
+      },
+      {
+        "path": "delivered/variant-progress-B.css",
+        "action": "create",
+        "before": null,
+        "after": "78ebf1dcdd4d3e10a0c4ec063256ed546acfd2c43f538b405be7d2a08392f8a5"
+      },
+      {
+        "path": "delivered/variant-progress-B.js",
+        "action": "create",
+        "before": null,
+        "after": "a4845d291cf77635368604a6e5d7de76d3eb05c524b3ed137162860f29d7dfda"
+      },
+      {
+        "path": "index.html",
+        "action": "overwrite",
+        "before": "74838ca6dd9c6f1196d0638028f185b7aea6b9566399458de7424ecf8b041eb6",
+        "after": "f7195ba9bd4970e18c23d6dd3d6dbd5719789f21f5cb56dd8151ecdbe3413613"
+      }
+    ],
+    "currentReceipt": {
+      "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.deliveries/b6183071-6d4d-4a20-99dc-4c37ea3ebca9.json",
+      "sha256": "574eda73d34ecc09b232a626575c1c3c74e1ef094aac24b7c9030ef194ae0c7c",
+      "verification": "failed",
+      "comparison": {
+        "before": "89583280-357b-4afe-961d-bd2795d00fc5",
+        "after": "7f1eea2e-0874-4de2-b681-eaa02fe07b3e",
+        "failures": [
+          {
+            "kind": "runtime",
+            "id": "project-checks",
+            "reason": "Actual original document syntax and health commands",
+            "evidence": [
+              "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/after/checks.json"
+            ],
+            "tool": {
+              "name": "Original Node HTML checks",
+              "version": "v26.3.0 / 0448fee8f8f9fd79fde6cd6b6d5013eb8c452e86969e5da47ae572f0735c9214"
+            },
+            "environment": {
+              "cwd": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project",
+              "commands": [
+                [
+                  "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                  "check.mjs",
+                  "index.html"
+                ],
+                [
+                  "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                  "health-check.mjs",
+                  "index.html"
+                ]
+              ]
+            },
+            "diagnostic": {
+              "id": "legacy-health",
+              "message": "Existing project audit failure",
+              "file": "project-health.json"
+            },
+            "classification": "observed-before"
+          }
+        ],
+        "limitation": "Identical recorded diagnostics only; not proof of cause, unchanged environment or complete regression coverage."
+      }
+    },
+    "regressionReceipt": {
+      "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.deliveries/935a260a-5a39-4237-865b-a385f64a1ea0.json",
+      "sha256": "883d56584d01bef8fe29b57eb447d89efe4e5d65e7c1910453f86f7326dc10e6",
+      "verification": "failed",
+      "comparison": {
+        "before": "8c853454-0184-4951-a1f2-2e308a734d89",
+        "after": "8edbf8b6-d505-428c-8a2e-687dfb8d0d47",
+        "failures": [
+          {
+            "kind": "runtime",
+            "id": "reduced-motion",
+            "reason": "Action expectation was not observed within the wait",
+            "evidence": [
+              {
+                "locator": {
+                  "by": "testId",
+                  "value": "progress"
+                },
+                "property": "text",
+                "expected": "50",
+                "actual": "100",
+                "matches": false
+              }
+            ],
+            "tool": {
+              "name": "Playwright browser adapter",
+              "version": "156.0.8078.80"
+            },
+            "environment": {
+              "url": "file:///Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/index.html",
+              "viewport": {
+                "width": 390,
+                "height": 844
+              },
+              "scope": "Declared selectors and interactions only"
+            },
+            "classification": "new-or-changed"
+          },
+          {
+            "kind": "runtime",
+            "id": "scope-preservation",
+            "reason": "Action expectation was not observed within the wait",
+            "evidence": [
+              {
+                "locator": {
+                  "by": "testId",
+                  "value": "activity-count"
+                },
+                "property": "text",
+                "expected": "1",
+                "actual": "0",
+                "matches": false
+              }
+            ],
+            "tool": {
+              "name": "Playwright browser adapter",
+              "version": "156.0.8078.80"
+            },
+            "environment": {
+              "url": "file:///Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/index.html",
+              "viewport": {
+                "width": 390,
+                "height": 844
+              },
+              "scope": "Declared selectors and interactions only"
+            },
+            "classification": "new-or-changed"
+          },
+          {
+            "kind": "runtime",
+            "id": "project-checks",
+            "reason": "Actual original document syntax and health commands",
+            "evidence": [
+              "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/regression-after/checks.json"
+            ],
+            "tool": {
+              "name": "Original Node HTML checks",
+              "version": "v26.3.0 / 0448fee8f8f9fd79fde6cd6b6d5013eb8c452e86969e5da47ae572f0735c9214"
+            },
+            "environment": {
+              "cwd": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project",
+              "commands": [
+                [
+                  "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                  "check.mjs",
+                  "index.html"
+                ],
+                [
+                  "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                  "health-check.mjs",
+                  "index.html"
+                ]
+              ]
+            },
+            "diagnostic": {
+              "id": "legacy-health",
+              "message": "Existing project audit failure",
+              "file": "project-health.json"
+            },
+            "classification": "observed-before"
+          },
+          {
+            "kind": "runtime",
+            "id": "project-checks",
+            "reason": "Actual original document syntax and health commands",
+            "evidence": [
+              "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/regression-after/checks.json"
+            ],
+            "tool": {
+              "name": "Original Node HTML checks",
+              "version": "v26.3.0 / 0448fee8f8f9fd79fde6cd6b6d5013eb8c452e86969e5da47ae572f0735c9214"
+            },
+            "environment": {
+              "cwd": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project",
+              "commands": [
+                [
+                  "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                  "check.mjs",
+                  "index.html"
+                ],
+                [
+                  "/opt/homebrew/Cellar/node/26.3.0/bin/node",
+                  "health-check.mjs",
+                  "index.html"
+                ]
+              ]
+            },
+            "diagnostic": {
+              "id": "script-syntax:delivered/variant-progress-B.js:1",
+              "message": "Unexpected end of input",
+              "file": "delivered/variant-progress-B.js"
+            },
+            "classification": "new-or-changed"
+          }
+        ],
+        "limitation": "Identical recorded diagnostics only; not proof of cause, unchanged environment or complete regression coverage."
+      }
+    },
+    "captures": {
+      "preview-0": {
+        "status": "failed",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "unverified"
+          },
+          {
+            "id": "project-checks",
+            "status": "failed",
+            "diagnostics": [
+              {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              }
+            ]
+          }
+        ],
+        "errors": [],
+        "screenshot": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/preview-A-390/page.png",
+          "sha256": "b39c838362cedee351920aecde558543eac43e20d2e8acd8da8339de96eb460b"
+        },
+        "report": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.verification/A/41e5accc-97af-432e-82ff-8d1502521c3c.json",
+          "sha256": "3a8db5b1873b9c273163edb9e1a23fa87f2e76e9544b9a49e02702aad37ac0c0"
+        }
+      },
+      "preview-1": {
+        "status": "failed",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "unverified"
+          },
+          {
+            "id": "project-checks",
+            "status": "failed",
+            "diagnostics": [
+              {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              }
+            ]
+          }
+        ],
+        "errors": [],
+        "screenshot": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/preview-B-390/page.png",
+          "sha256": "a5c3506a1c04b65e1b89652acc54fc690f9d14f75886ebf0afcfcff070d9e230"
+        },
+        "report": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.verification/B/e0bebf6c-32f4-4106-a675-569b7f1245aa.json",
+          "sha256": "381691e52bf5657e1fb3471730676a5d55ebd40f92613ffd9e75d4a9e36874b5"
+        }
+      },
+      "preview-2": {
+        "status": "failed",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "unverified"
+          },
+          {
+            "id": "project-checks",
+            "status": "failed",
+            "diagnostics": [
+              {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              }
+            ]
+          }
+        ],
+        "errors": [],
+        "screenshot": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/preview-C-390/page.png",
+          "sha256": "682c12c4c5b33f005078c3e985fa59d9336da36b0ca77abb2049e771e6c3d619"
+        },
+        "report": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.verification/C/384fa65d-0f06-448a-be9d-4e4dfff03fbc.json",
+          "sha256": "ea709ef70c1bf49339d1ac53fb78897b14c57a0283b7a773aec4f7b73cea3171"
+        }
+      },
+      "preview-3": {
+        "status": "failed",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "unverified"
+          },
+          {
+            "id": "project-checks",
+            "status": "failed",
+            "diagnostics": [
+              {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              }
+            ]
+          }
+        ],
+        "errors": [],
+        "screenshot": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/preview-A-1440/page.png",
+          "sha256": "936758b4706ee753fafddaa7f4283be734e6cf62bf5d46b07775e7e35a721244"
+        },
+        "report": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.verification/A/255c1888-95c2-45d7-98b1-140c5e9d6b44.json",
+          "sha256": "f73650fa38733b5b663572e8bab4641c95582b30ba3dbd7a4a848977730e10c6"
+        }
+      },
+      "preview-4": {
+        "status": "failed",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "unverified"
+          },
+          {
+            "id": "project-checks",
+            "status": "failed",
+            "diagnostics": [
+              {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              }
+            ]
+          }
+        ],
+        "errors": [],
+        "screenshot": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/preview-B-1440/page.png",
+          "sha256": "ac11ecff2eb1d10d11cde165a947fbc93d9736c8ea50f50ee78d01f639a2d7b7"
+        },
+        "report": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.verification/B/7d41022d-e8f7-4a11-a3e3-c26a31ca2aee.json",
+          "sha256": "0313826af0d6765b6a74e1f8ee27b1faa4cd093dd0009b2fb3a55aa7acc208bc"
+        }
+      },
+      "preview-5": {
+        "status": "failed",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "unverified"
+          },
+          {
+            "id": "project-checks",
+            "status": "failed",
+            "diagnostics": [
+              {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              }
+            ]
+          }
+        ],
+        "errors": [],
+        "screenshot": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/preview-C-1440/page.png",
+          "sha256": "eb7ab8590a07574a7774c1973278ccd75becab9cf8f6aad4bf49bf0535241e7a"
+        },
+        "report": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.verification/C/57999452-40e7-4b19-bdcb-f4fb614171e2.json",
+          "sha256": "0048b24bb4c426200f80c28a6d5f17c9bf7f1734611075462a8f560c010d14cf"
+        }
+      },
+      "before": {
+        "status": "failed",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "unverified"
+          },
+          {
+            "id": "project-checks",
+            "status": "failed",
+            "diagnostics": [
+              {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              }
+            ]
+          }
+        ],
+        "errors": [],
+        "screenshot": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/before/page.png",
+          "sha256": "f4a13dad1ee81559ed4351d4b3aac02722643fb1e6d060cad4ba84010ae9c073"
+        },
+        "report": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.verification/B/89583280-357b-4afe-961d-bd2795d00fc5.json",
+          "sha256": "21f287a869ee7c92592a6203142ab60d6df5e7191af79dfe4e51776ee871e6bf"
+        }
+      },
+      "after": {
+        "status": "failed",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "passed"
+          },
+          {
+            "id": "project-checks",
+            "status": "failed",
+            "diagnostics": [
+              {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              }
+            ]
+          }
+        ],
+        "errors": [],
+        "screenshot": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/after/page.png",
+          "sha256": "a5c3506a1c04b65e1b89652acc54fc690f9d14f75886ebf0afcfcff070d9e230"
+        },
+        "report": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.verification/B/7f1eea2e-0874-4de2-b681-eaa02fe07b3e.json",
+          "sha256": "8da3c8ecc55d544753f160b94990db841737e6fe3be2194e491e2198f45cd365"
+        }
+      },
+      "regressionBefore": {
+        "status": "failed",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "passed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "unverified"
+          },
+          {
+            "id": "project-checks",
+            "status": "failed",
+            "diagnostics": [
+              {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              }
+            ]
+          }
+        ],
+        "errors": [],
+        "screenshot": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/regression-before/page.png",
+          "sha256": "f4a13dad1ee81559ed4351d4b3aac02722643fb1e6d060cad4ba84010ae9c073"
+        },
+        "report": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.verification/B/8c853454-0184-4951-a1f2-2e308a734d89.json",
+          "sha256": "199ef8a12966969f46150994755344e18b590ec40447143b2ce8ca78af404d31"
+        }
+      },
+      "regressionAfter": {
+        "status": "failed",
+        "checks": [
+          {
+            "id": "brand",
+            "status": "passed"
+          },
+          {
+            "id": "keyboard-focus",
+            "status": "passed"
+          },
+          {
+            "id": "reduced-motion",
+            "status": "failed"
+          },
+          {
+            "id": "scope-preservation",
+            "status": "failed"
+          },
+          {
+            "id": "project-checks",
+            "status": "failed",
+            "diagnostics": [
+              {
+                "id": "legacy-health",
+                "message": "Existing project audit failure",
+                "file": "project-health.json"
+              },
+              {
+                "id": "script-syntax:delivered/variant-progress-B.js:1",
+                "message": "Unexpected end of input",
+                "file": "delivered/variant-progress-B.js"
+              }
+            ]
+          }
+        ],
+        "errors": [
+          "Unexpected end of input",
+          "Unexpected end of input",
+          "Unexpected end of input",
+          "Unexpected end of input",
+          "Unexpected end of input",
+          "Unexpected end of input"
+        ],
+        "screenshot": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/regression-after/page.png",
+          "sha256": "f2c59815aadee5f07c85712477e2e8d31e9780981ad66acd83eec0aac4335b73"
+        },
+        "report": {
+          "file": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/.verification/B/8edbf8b6-d505-428c-8a2e-687dfb8d0d47.json",
+          "sha256": "dbab8d90b00208f9c57b192749eea9a0a815c630f067f4795a64afc0901a6c0c"
+        }
+      }
+    },
+    "sourceProjectUnchanged": true
+  },
+  "limits": [
+    "Controlled original HTML fixture; observed-before diagnoses are still failures, not causal proof",
+    "Individual previews and comparison addresses/viewport/screenshots are observed, not complete human presentation acceptance",
+    "No universal framework, arbitrary cross-root, commercial/account or full backlog acceptance"
+  ]
+}

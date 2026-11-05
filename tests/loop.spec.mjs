@@ -3,11 +3,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
+import { randomUUID } from 'node:crypto';
 import { fixture } from './fixture.mjs';
-import { prepareVariant, applyVariant, undoVariant } from '../scripts/variant-history.mjs';
-const root=path.resolve('.generated'),candidate=path.resolve('.candidate');
+import { prepareVariant, applyVariant, undoVariant, confirmSystem, applySystemVariant, readContext } from '../scripts/variant-history.mjs';
+import { cleanupPreview } from '../scripts/preview-files.mjs';
+// Fresh ownership per run; retain generated source for the following typecheck step.
+const runId=randomUUID(),root=path.resolve('.generated',runId),candidate=path.resolve('.candidate',runId);
 let server, base;
 test.beforeAll(async()=>{
+  fs.mkdirSync(path.dirname(candidate),{recursive:true});
   fixture(root);
   server=spawn(process.execPath,['../scripts/react-preview.mjs',process.cwd(),root],{stdio:['ignore','pipe','pipe']});
   base=await new Promise((resolve,reject)=>{let output='';const timeout=setTimeout(()=>reject(new Error(output)),20000);server.stdout.on('data',b=>{output+=b;const match=output.match(/Comparison: (http:\/\/[^\s]+)\/\_compare.html/);if(match){clearTimeout(timeout);resolve(match[1]);}});server.stderr.on('data',b=>output+=b);server.on('exit',code=>{clearTimeout(timeout);reject(new Error(`Preview exited ${code}: ${output}`));});});
@@ -18,6 +22,29 @@ test.beforeAll(async()=>{
 test.beforeEach(async({context})=>{await context.routeWebSocket(/./,()=>{});});
 const open=(page,url,ready)=>expect(async()=>{await page.goto(url);await ready();}).toPass({timeout:20000});
 test.afterAll(()=>{server?.kill();fs.rmSync(candidate,{recursive:true,force:true});});
+test('a system extension edit blocks integration while the original page remains usable',async({page})=>{
+ const {prepareIntegration,integrateVariant,listIntegrations}=await import('../scripts/variant-integrate.mjs');
+ const project=fs.mkdtempSync(path.join(root,'integration-system-')),output=path.join(project,'variant-output'),stage=path.join(project,'.variant-work','stage');fs.mkdirSync(output,{recursive:true});fs.mkdirSync(stage,{recursive:true});
+ const original='<!doctype html><html><body><h1>Original project</h1><button onclick="this.textContent=\'Working\'">Inspect</button></body></html>',replacement=original.replace('Original project','Direction B'),target=path.join(project,'index.html');
+ fs.writeFileSync(target,original);fs.writeFileSync(path.join(output,'B.html'),replacement);fs.writeFileSync(path.join(stage,'index.html'),replacement);fs.writeFileSync(path.join(project,'extension.css'),':root{--space-row:16px}');
+ fs.writeFileSync(path.join(output,'.variant-context.json'),JSON.stringify({schemaVersion:2,selectedVariant:null,designSystem:{confirmed:true,extensions:['extension.css'],fonts:['Georgia']},variants:{B:{entry:'B.html',files:['B.html'],tokens:{fonts:['Georgia']},version:1}}}));
+ const plan=path.join(project,'.variant-work','plan.json');prepareIntegration(output,'B',['index.html'],plan);fs.appendFileSync(path.join(project,'extension.css'),'\n/* user changed shared design tokens */');
+ expect(()=>integrateVariant(output,'B',stage,project,plan)).toThrow(/Integration conflict/);expect(fs.readFileSync(target,'utf8')).toBe(original);expect(listIntegrations(output)).toEqual([]);expect(readContext(output).selectedVariant).toBe(null);
+ await page.goto(pathToFileURL(target).href);await expect(page.locator('h1')).toHaveText('Original project');await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Working');fs.rmSync(project,{recursive:true,force:true});
+});
+test('a shared system extension changes the rendered page and invalidates its existing evidence',async({page,browser})=>{
+ const {verifyInBrowser,verificationPlan}=await import('../scripts/browser-verification.mjs'),{inspectVerification}=await import('../scripts/artifact-verification.mjs');
+ const project=path.join(root,'system-evidence'),output=path.join(project,'output');fs.mkdirSync(output,{recursive:true});
+ const file=path.join(output,'B.html'),extension=path.join(project,'extension.css');
+ fs.writeFileSync(path.join(project,'brand.css'),':root{--font-ui:Georgia}');fs.writeFileSync(extension,':root{--color-text:rgb(17,17,17)}');
+ fs.writeFileSync(file,'<!doctype html><html><head><meta charset="utf-8"><title>System evidence</title><link rel="stylesheet" href="../brand.css"><link rel="stylesheet" href="../extension.css"><style>body{font-family:var(--font-ui);color:var(--color-text)}</style></head><body><h1>Direction B</h1><button onclick="this.textContent=\'Inspected\'">Inspect</button></body></html>');
+ fs.writeFileSync(path.join(output,'.variant-context.json'),JSON.stringify({schemaVersion:2,designSystem:{confirmed:true,file:'brand.css',extensions:['extension.css'],fonts:['Georgia']},variants:{B:{entry:'B.html',files:['B.html'],version:1,tokens:{fonts:['Georgia']}}}}));
+ const plan={...verificationPlan(pathToFileURL(file).href),brand:[{selector:'h1',property:'font-family',expected:'Georgia'},{selector:'h1',property:'color',expected:'rgb(17, 17, 17)'}]};
+ const good=await verifyInBrowser(output,'B',{plan},{page,version:browser.version(),ready:async()=>expect(page.locator('h1')).toHaveText('Direction B')});
+ expect(good.report.checks.find(c=>c.id==='brand').status).toBe('passed');expect(good.status).toBe('unverified');expect(good.report.fingerprint.dependencies['extension.css']).toBeTruthy();
+ const owned=fs.readFileSync(file);fs.writeFileSync(extension,':root{--color-text:rgb(80,80,80)}');expect(inspectVerification(output,good.file).status).toBe('stale');
+ await page.reload();await expect(page.locator('h1')).toHaveCSS('color','rgb(80, 80, 80)');await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Inspected');expect(fs.readFileSync(file)).toEqual(owned);
+});
 test('React A/B/C render with working controls, locked font, comparison and keyboard focus',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));page.on('console',msg=>{if(msg.type()==='error')errors.push(`${msg.text()} ${msg.location().url}`);});
   for(const id of ['A','B','C']){
@@ -209,4 +236,37 @@ test('comparison keeps long explanations below aligned previews and centers phon
  await page.locator('.recommendation summary').focus();await page.keyboard.press('Enter');
  await expect(page.locator('.recommendation p')).toHaveText(state.recommendation.reason);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
+test('system confirmation preserves the old page; explicit adoption and undo restore actual fonts and controls',async({page})=>{
+ const project=path.join(root,'adoption'),output=path.join(project,'variant-output'),work=path.join(project,'.variant-work');fs.rmSync(project,{recursive:true,force:true});fs.mkdirSync(output,{recursive:true});fs.mkdirSync(work);
+ const state={schemaVersion:2,selectedVariant:'B',activeVariant:null,taskContract:{primaryJob:'Inspect members',data:'shared member rows',requiredFunctions:['inspect counter']},recommendation:{variant:'B',reason:'Compact member rows'},variants:{}};
+ for(const id of ['A','B','C']){const entry=`${id}.html`;fs.writeFileSync(path.join(output,entry),`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Members ${id}</title><style>body{font-family:Georgia}</style></head><body><h1>Members ${id}</h1><button onclick="document.querySelector('output').textContent=Number(document.querySelector('output').textContent)+1">Inspect</button><output>0</output></body></html>`);state.variants[id]={entry,files:[entry],tokens:{fonts:['Georgia']},comparison:{optimizes:`${id} rows`,tradeoff:`${id} density`,bestFor:`${id} teams`},version:1,history:[],undo:[]};}
+ fs.writeFileSync(path.join(output,'.variant-context.json'),JSON.stringify(state));fs.writeFileSync(path.join(output,'design-system.css'),':root{--font-ui:Arial,sans-serif;--color-bg:#fff;--color-on-bg:#111}');
+ const original=fs.readFileSync(path.join(output,'B.html')),others=['A','C'].map(id=>fs.readFileSync(path.join(output,`${id}.html`),'utf8')),url=pathToFileURL(path.join(output,'B.html')).href;
+ await page.goto(url);await expect(page.locator('body')).toHaveCSS('font-family','Georgia');
+ confirmSystem(output,{file:'variant-output/design-system.css',fonts:['Arial'],source:'B'});
+ expect(readContext(output).variants.B.tokens.fonts).toEqual(['Georgia']);expect(readContext(output).variants.B.systemBinding.status).toBe('pending');await page.reload();await expect(page.locator('body')).toHaveCSS('font-family','Georgia');
+ const prepared=path.join(work,'B');prepareVariant(output,'B',prepared);fs.writeFileSync(path.join(prepared,'B.html'),original.toString().replace('font-family:Georgia','font-family:Arial'));
+ applySystemVariant(output,'B',prepared,{summary:'apply ds B',request:'browser-adoption',tokens:{fonts:['Arial']}});
+ await page.reload();await expect(page.locator('body')).toHaveCSS('font-family','Arial');await page.getByRole('button',{name:'Inspect',exact:true}).click();await expect(page.locator('output')).toHaveText('1');expect(readContext(output).variants.B.systemBinding.status).toBe('applied');
+ undoVariant(output,'B');await page.reload();await expect(page.locator('body')).toHaveCSS('font-family','Georgia');await page.getByRole('button',{name:'Inspect',exact:true}).click();await expect(page.locator('output')).toHaveText('1');
+ expect(fs.readFileSync(path.join(output,'B.html'))).toEqual(original);expect(readContext(output).selectedVariant).toBe('B');expect(readContext(output).variants.B.systemBinding.status).toBe('pending');expect(['A','C'].map(id=>fs.readFileSync(path.join(output,`${id}.html`),'utf8'))).toEqual(others);
+});
+
+test('static rebuild and cleanup preserve user files while all three real previews remain interactive',async({page})=>{
+ const work=fs.mkdtempSync(path.resolve('.owned-preview-')),output=path.join(work,'variant-output');
+ try{
+  fixture(output);const context=fs.readFileSync(path.join(output,'.variant-context.json')),original=fs.readFileSync(path.join(output,'VariantB.tsx'));
+  const build=()=>spawnSync(process.execPath,['../scripts/react-preview.mjs',process.cwd(),output,'--static'],{encoding:'utf8',timeout:30000});
+  const receipt=(run,label)=>JSON.parse(run.stdout.split('\n').find(line=>line.startsWith(`${label}: `)).slice(label.length+2));
+  const first=build();expect(first.status,first.stderr).toBe(0);
+  const second=build();expect(second.status,second.stderr).toBe(0);const owned=receipt(second,'Static ownership');
+  for(const id of ['A','B','C']){await page.goto(pathToFileURL(path.join(output,`_static/_preview/${id}.html`)).href);await expect(page.getByRole('heading')).toHaveText(`Direction ${id}`);await page.getByRole('button').click();await expect(page.getByRole('button')).toHaveText('Inspect 1');}
+  const edited=path.join(output,'_static/_preview/A.html'),unknown=path.join(output,'_static/user-notes.html');fs.appendFileSync(edited,'\n<!-- user edit -->');fs.writeFileSync(unknown,'user notes');const editedBytes=fs.readFileSync(edited),bBytes=fs.readFileSync(path.join(output,'_static/_preview/B.html'));
+  const failed=build();expect(failed.status).toBe(1);expect(failed.stderr).toContain('Preview conflict');expect(fs.readFileSync(edited)).toEqual(editedBytes);expect(fs.readFileSync(path.join(output,'_static/_preview/B.html'))).toEqual(bBytes);
+  const cleaned=cleanupPreview(owned.project,owned.receipt);expect(cleaned.conflicts).toEqual([path.relative(owned.project,edited).split(path.sep).join('/')]);expect(cleaned.removed).toHaveLength(3);expect(fs.readFileSync(edited)).toEqual(editedBytes);expect(fs.readFileSync(unknown,'utf8')).toBe('user notes');
+  const comparison=receipt(failed,'Comparison ownership');expect(cleanupPreview(comparison.project,comparison.receipt).removed).toHaveLength(7);
+  expect(fs.readFileSync(path.join(output,'.variant-context.json'))).toEqual(context);expect(fs.readFileSync(path.join(output,'VariantB.tsx'))).toEqual(original);
+ }finally{fs.rmSync(work,{recursive:true,force:true});}
 });

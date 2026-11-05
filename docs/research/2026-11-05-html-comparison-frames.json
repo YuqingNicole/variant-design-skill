@@ -1,0 +1,28 @@
+{
+  "before": [
+    {
+      "url": "file:///Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/variant-progress-A.html",
+      "heading": "Progress Review",
+      "markers": [
+        "A"
+      ]
+    },
+    {
+      "url": "file:///Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/variant-progress-B.html",
+      "heading": "Progress Review",
+      "markers": [
+        "B"
+      ]
+    },
+    {
+      "url": "file:///Users/nicole/orca/variant-backlog-evidence/html-delivery-evals-final/html-delivery-codex.html-delivery/project/variant-output/variant-progress-C.html",
+      "heading": "Progress Review",
+      "markers": [
+        "C"
+      ]
+    }
+  ],
+  "errors": [],
+  "screenshot": "/Users/nicole/orca/variant-backlog-evidence/html-delivery-compare-C-visible.png",
+  "scope": "390px comparison after scrolling C into the viewport; separate read-only browser observation"
+}

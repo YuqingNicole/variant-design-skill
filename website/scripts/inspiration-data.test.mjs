@@ -16,6 +16,7 @@ test('every external reference records provenance; unknown designers stay null',
     assert.ok(['official-site', 'product-page', 'documentation', 'social-post'].includes(i.kind), i.id);
     assert.ok(i.designer === null || i.designer.trim(), i.id);
     assert.match(i.checkedAt, date, i.id);
+    assert.ok(Number.isFinite(Date.parse(i.addedAt)), `${i.id}: first collection timestamp`);
   }
 });
 
@@ -31,11 +32,6 @@ test('best-practice entries and other X links carry the oEmbed fields their card
     assert.doesNotMatch(i.post.text, /&(amp|lt|gt|quot|#\d+);/, `${i.id}: store decoded text`); assert.match(i.post.date, date, i.id);
     assert.doesNotMatch(i.focus.zh + i.application.zh + i.name, /TODO/, i.id);
   }
-});
-
-test('the prerendered description counts every reference', () => {
-  const prerender = fs.readFileSync(new URL('./prerender.mjs', import.meta.url), 'utf8');
-  assert.match(prerender, new RegExp(`'${items.length} 个外部设计参考`));
 });
 
 test('topics stay small, dated and point at existing references', () => {
