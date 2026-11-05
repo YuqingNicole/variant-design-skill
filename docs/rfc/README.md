@@ -19,6 +19,6 @@
 | [015 · Agent 自动生成运行检查计划](015-agent-authored-runtime-plans.md) | 实际 HTML 25/25、Vite 27/27 与独立审计通过；完整交付/跨项目门槛待验 | Issue #18、#19、#25 |
 | [016 · HTML 交付闭环与逐条失败比较](016-html-handoff-and-diagnostic-comparison.md) | 已实现；实际 Codex 43/43 与独立审计通过，完整 issue 验收待审 | Issue #18、#19 |
 | [017 · 接入和回滚中断恢复](017-interrupted-integration-recovery.md) | 已实现；真实 Codex 43/43 与中断后的拒绝/恢复流程通过 | Issue #19 I10 |
-| [018 · 线上与 CLI 的共享静态判定策略](018-shared-static-gate-policy.md) | 实现中，尚未验收 | Issue #18 V8 |
+| [018 · 线上与 CLI 的共享静态判定策略](018-shared-static-gate-policy.md) | 已实现；真实 CLI/线上七组对照、实际 Codex 43/43 与独立审计通过 | Issue #18 V8 |
 
 RFC 记录设计决策与约束，PRD 记录验收要求；实现状态以对应 Issue 和验证证据为准。
