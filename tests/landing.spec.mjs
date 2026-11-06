@@ -665,6 +665,30 @@ test('pages read without JavaScript, guides render in both languages, and unknow
   expect(await (await request.get('/sitemap.xml')).text()).toContain('/guides/undo-ai-design-changes</loc>');
 });
 
+test('changelog marks the current skill version in both languages', async ({ page }) => {
+  await page.goto('/changelog');
+  await expect(page.locator('.changelog-current').first()).toHaveText('当前');
+  await expect(page.locator('.changelog-nav-current')).toHaveAttribute('aria-current', 'location');
+  await page.locator('.site-language').click();
+  await expect(page.locator('.changelog-current').first()).toHaveText('Current');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+});
+
+test('footer invitation is localized and fits a phone viewport', async ({ page }) => {
+  for (const [route, heading, action] of [['/docs', '好方向，始于更好的参考。', '浏览设计灵感'], ['/en/docs', 'A better direction starts with a better reference.', 'Explore inspiration']]) {
+    for (const width of [320, 390]) {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto(route);
+      const footer = page.locator('.site-footer');
+      await expect(footer.getByRole('heading', { level: 2 })).toHaveText(heading);
+      const link = footer.getByRole('link', { name: action });
+      await expect(link).toHaveAttribute('href', route.startsWith('/en') ? '/en' : '/');
+      expect(await link.evaluate(el => el.getBoundingClientRect().height)).toBeGreaterThanOrEqual(44);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${route} ${width}px`).toBe(true);
+    }
+  }
+});
+
 test('English has its own addresses: readable without JavaScript, linked both ways and never forced', async ({ browser, page, request }) => {
   const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
   for (const [route, text] of [['/en', 'The best design inspiration'], ['/en/docs', 'Install'], ['/en/d/pulse', 'Pulse: three ways to read a weekly report'], ['/en/c/landing', 'Landing pages'], ['/en/guides/undo-ai-design-changes', 'How to undo design changes made by AI'], ['/en/about', 'Variant'], ['/en/pricing', 'Local'], ['/en/submit', 'Submissions'], ['/en/sponsor', 'Sponsor'], ['/en/skills', 'skills'], ['/en/changelog', 'Changelog']]) {
@@ -749,7 +773,7 @@ test('without JavaScript the inspiration page links every reference, and with it
 test('on phones, links and fields are big enough to tap and read', async ({ page }) => {
   // 44px follows Apple and Material touch guidance (WCAG 2.5.8 only asks 24px); 16px fields stop iOS zooming on focus.
   await page.setViewportSize({ width: 375, height: 800 });
-  const targets = '.site-nav-links a, .site-footer > div a, .docs-layout > aside a, .content-back a, .content-link a, .content-secondary, .library-more a, .home-show-links a, .home-practice-head a, .home-case-brief > a, .insp-title > a, .insp-search, .paper-actions > a, .canvas-label > a';
+  const targets = '.site-nav-links a, .site-footer > div a, .site-footer-action, .docs-layout > aside a, .content-back a, .content-link a, .content-secondary, .library-more a, .home-show-links a, .home-practice-head a, .home-case-brief > a, .insp-title > a, .insp-search, .paper-actions > a, .canvas-label > a';
   for (const route of ['/', '/en/docs', '/guides/git-or-snapshot-undo', '/inspiration', '/about', '/en/skills', '/d/pulse', '/changelog']) {
     await page.goto(route, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('h1').first()).toBeVisible();

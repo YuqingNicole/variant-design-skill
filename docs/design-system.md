@@ -131,7 +131,7 @@
 | 组件 | 位置 | 要点 |
 |---|---|---|
 | 导航 | `SiteHeader`（`SiteChrome.tsx`） | 品牌字标、6 个链接、语言按钮。当前页用下划线标出，偏移 6px |
-| 页脚 | `SiteFooter` + `FontNote` | 品牌、站内链接、字体授权行（见第 3 节，不能删） |
+| 页脚 | `SiteFooter` + `FontNote` | 浅绿收尾 CTA + 品牌和四组站内链接；CTA 回到灵感流。字体授权行必须保留（见第 3 节） |
 | 主按钮 | `.home-action-primary` | 品牌绿底、白字、6px 圆角、内边距 12px 20px、15px 字 |
 | 次按钮 | `.home-action-secondary` | 透明底、品牌绿 1px 边框、品牌绿字 |
 | 切换器 | `.home-shelves` | surface 色胶囊底槽，选中项是卡片底色的胶囊块，带唯一阴影。按钮用 `aria-pressed`，标签固定不变 |
