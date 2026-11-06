@@ -4,7 +4,7 @@
 .inspiration-page :is(a,button,select,input,textarea,summary):focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
 .insp-head{display:grid;gap:var(--space-2);padding-block:var(--space-6) var(--space-5)}
 .insp-title{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:var(--space-3) var(--space-6)}
-.insp-title h1{grid-column:1/-1;max-width:none;font-size:clamp(28px,3.4vw,46px);line-height:1.12;letter-spacing:-.01em;margin:0}
+.insp-title h1{grid-column:1/-1;max-width:none;font-size:clamp(28px,3.4vw,46px);line-height:1.12;letter-spacing:-.01em;margin:0;text-wrap:balance}
 .insp-title p{margin:0;color:var(--site-muted);font-size:16px;max-width:56ch}
 @media(max-width:650px){.insp-title{grid-template-columns:minmax(0,1fr)}}
 .insp-title a{color:var(--site-brand);font-size:14px;text-underline-offset:4px}
@@ -129,9 +129,16 @@ div.insp-thumb{position:relative;display:grid;grid-template-rows:auto auto auto 
 @media(max-width:900px){.inspiration-sources>div{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.insp-bar>.site-shell{flex-wrap:wrap}.insp-pills{flex-basis:100%}.insp-search{flex:1}.insp-search input,.insp-search input:focus,.insp-search input:not(:placeholder-shown){width:100%}.inspiration-pack,.inspiration-brief{padding:18px}.inspiration-pack fieldset{grid-template-columns:1fr}:is(.insp-detail-media,.insp-shot)>.insp-thumb{padding:var(--space-4)}}
 @media(prefers-reduced-motion:reduce){.inspiration-page *{transition:none!important}.insp-dialog[open],.insp-dialog[open]::backdrop{animation:none}}
-/* Product images and motion studies fill the card; a chip keeps the name and rights visible at rest. */
-div.insp-thumb.insp-thumb-media{display:block;padding:0;background:var(--site-surface)}
-.insp-thumb-media>img{display:block;width:100%;height:100%;object-fit:contain}
+/* Show the reference note until its remote preview has loaded, then fade the image in. */
+div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;background:var(--site-surface)}
+.insp-thumb-media>img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;opacity:1;transition:opacity 180ms var(--ease-out);background:var(--site-surface)}
+.insp-thumb-media[data-loaded=false]>img{opacity:0}
+.insp-thumb-media[data-loaded=true]>img{opacity:1}
+.insp-thumb-media>.insp-thumb-fallback{position:absolute;inset:0;display:grid;grid-template-rows:auto auto auto 1fr;gap:6px;width:100%;height:100%;padding:var(--space-5);overflow:hidden;color:var(--site-ink);background:var(--site-card)}
+.insp-thumb-fallback .insp-thumb-tag{font-size:12px;color:var(--site-muted)}
+.insp-thumb-fallback b{font-family:var(--font-display);font-weight:500;font-size:20px;line-height:1.1;letter-spacing:-.01em}
+.insp-thumb-fallback span{font-size:12px;line-height:1.45;color:var(--site-muted);max-width:30ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.insp-thumb-media[data-loaded=true]>.insp-thumb-fallback{visibility:hidden}
 .insp-thumb-post b{font-size:18px;line-height:1.35;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .insp-shot img{display:block;width:100%;height:auto;border:1px solid var(--site-line);border-radius:var(--radius-panel);background:var(--site-surface)}
 /* A shared X post: its text first, X's own embed on request. */
@@ -162,6 +169,8 @@ div.insp-thumb.insp-thumb-media{display:block;padding:0;background:var(--site-su
 
 /* Give search a full row on narrow screens instead of squeezing it between two selects. */
 @media(max-width:650px){.insp-bar>.site-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.insp-pills{grid-column:1/-1}.insp-bar select{width:100%;max-width:none;min-width:0}.insp-search{grid-column:1/-1;grid-row:3;min-width:0}.insp-search input{min-width:0}}
+@media(max-width:650px){.insp-pills{flex-wrap:wrap;overflow:visible}.insp-pills button{height:44px}}
 @media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
+@media(prefers-reduced-motion:reduce){.insp-thumb-media>img{transition:none}}
 
 .reference-permission{padding-top:16px;border-top:1px solid var(--site-line);margin-top:24px;font-size:14px}.reference-permission p{margin:8px 0}.reference-permission a{text-underline-offset:3px}.reference-media-unavailable{padding:24px;border:1px solid var(--site-line);color:var(--site-muted)}.insp-detail-media>.insp-thumb-media{height:auto;min-height:160px}.insp-detail-media>.insp-thumb-media>img{height:auto}

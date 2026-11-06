@@ -522,8 +522,9 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.route(/platform\.twitter\.com/,r=>r.abort());await page.route(/pbs\.twimg\.com/,r=>r.fulfill({contentType:'image/png',body:pixel}));
  // The widgets video fails; the sheep video stays pending, so the suite never streams from X.
  await page.route(/video\.twimg\.com/,r=>{if(r.request().url()===media['paper-widgets'].video)return r.abort()});
- await page.goto('/?category=landing&sort=curated');await expect(page.locator('.insp-pills button')).toHaveText(['Best practice','全部','Landing','产品界面','关键流程']);
+ await page.goto('/?category=landing&sort=curated');await expect(page.locator('.insp-pills button')).toHaveText(['Best practice','全部','Landing','产品界面','关键流程','动效']);
  expect(xRequests.filter(u=>new URL(u).hostname==='video.twimg.com')).toEqual([]);
+ await page.getByRole('button',{name:'动效',exact:true}).click();await expect(page.locator('.insp-feed > li')).toHaveCount(19);
  await page.getByRole('button',{name:'Best practice',exact:true}).click();
  const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(30);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
