@@ -26,6 +26,7 @@
 ## 4. 产品
 
 - [ ] 决定要不要做“在比较页上直接选某个区域”：Impeccable 的 Live Mode、Subframe 和 Claude Design 都让用户在页面上点选。先决定做还是明确不做，再动手。
+- [ ] 完善账号体系：先定匿名使用与登录账号的边界，再规划注册/登录、个人资料、收藏与灵感同步、数据导出和删除；实现前明确认证服务、隐私说明和账号数据归属。
 - [ ] `Refine premium` 和形容词翻译的真实 eval 已在 PR #151 实现：Codex 18/18 检查通过，1440/390 下计数下降且保留品牌、任务和一次撤回；待审阅与合并。证据见 `docs/research/2026-11-04-premium-evaluation.md`。
 - [ ] 【维护者】决定要不要做公开的界面代码检查页。评估见 `docs/research/2026-11-02-antipattern-catalog-evaluation.md`：建议做成一页、先把规则改成共用数据，不仿 `/slop` 做视觉目录。
 

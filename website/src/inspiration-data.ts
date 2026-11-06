@@ -768,6 +768,38 @@ export const inspirationItems = [
     }
   },
   {
+    "id": "x-nikkbadlani-025127",
+    "name": "Map & feed exploration",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/nikkbadlani/status/2118302805866025127",
+    "source": "link-only",
+    "focus": {
+      "zh": "Map 与 Feed 两种发现模式用并列的移动端画面作对照",
+      "en": "Map and Feed discovery modes compared side by side on mobile"
+    },
+    "application": {
+      "zh": "让同一产品里的地图探索与内容浏览各自清晰，同时保持一致的视觉语言",
+      "en": "Keep map discovery and content browsing distinct within one product while sharing a visual language"
+    },
+    "publisher": "Nikk Badlani (@nikkbadlani)",
+    "kind": "social-post",
+    "designer": "Nikk Badlani",
+    "checkedAt": "2026-11-06",
+    "addedAt": "2026-11-06T09:31:55.487Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2118302805866025127",
+      "author": "Nikk Badlani",
+      "handle": "nikkbadlani",
+      "date": "2026-11-05",
+      "lang": "en",
+      "text": "The most cleanest app we ever designed at studio 😎",
+      "hasMedia": true
+    }
+  },
+  {
     "id": "paper-widgets",
     "name": "Paper widgets",
     "category": "practice",
