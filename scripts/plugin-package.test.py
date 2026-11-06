@@ -5,11 +5,15 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+import warnings
 import zipfile
 
 spec = importlib.util.spec_from_file_location('builder', Path(__file__).with_name('build-plugin.py'))
 builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
+verifier_spec = importlib.util.spec_from_file_location('verifier', Path(__file__).with_name('verify-plugin.py'))
+verifier = importlib.util.module_from_spec(verifier_spec)
+verifier_spec.loader.exec_module(verifier)
 
 class PackageTests(unittest.TestCase):
     def test_only_the_router_is_named_skill_md(self):
@@ -53,6 +57,9 @@ class PackageTests(unittest.TestCase):
             first, second = root/'first.zip', root/'second.zip'
             builder.build(first); builder.build(second)
             self.assertEqual(first.read_bytes(), second.read_bytes())
+            self.assertEqual(verifier.verify(first)['status'], 'valid')
+            with self.assertRaisesRegex(FileExistsError, 'Refusing to overwrite'):
+                builder.build(first)
             with zipfile.ZipFile(first) as archive:
                 names = archive.namelist()
                 self.assertFalse(any('node_modules' in name or '.env' in name or name.startswith('website/') for name in names))
@@ -103,5 +110,39 @@ class PackageTests(unittest.TestCase):
             self.assertIn('Candidate conflict', refused.stderr)
             self.assertEqual((output/'variant-B.html').read_bytes(),original)
             self.assertIsNone(json.loads((output/'.variant-context.json').read_text())['selectedVariant'])
+
+    def test_verifier_rejects_unsafe_duplicate_and_corrupt_archives(self):
+        with tempfile.TemporaryDirectory(prefix='variant-plugin-verify-') as directory:
+            root = Path(directory)
+            good = root/'good.zip'
+            builder.build(good)
+            with zipfile.ZipFile(good) as archive:
+                entries = [(name, archive.read(name)) for name in archive.namelist()]
+            variants = {
+                'traversal.zip': entries + [('../escape', b'bad')],
+                'duplicate.zip': entries + [('.codex-plugin/plugin.json', b'{}')],
+                'corrupt.zip': [(name, b'corrupt' if name == 'skills/variant-design/SKILL.md' else data)
+                                for name, data in entries],
+            }
+            for filename, changed in variants.items():
+                package = root/filename
+                with warnings.catch_warnings():
+                    warnings.simplefilter('ignore', UserWarning)
+                    with zipfile.ZipFile(package, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
+                        for name, data in changed:
+                            archive.writestr(name, data)
+                with self.subTest(filename=filename), self.assertRaises(verifier.PackageError):
+                    verifier.verify(package)
+
+    def test_builder_rejects_symlinked_root_sources(self):
+        root = Path(tempfile.mkdtemp(prefix='variant-plugin-symlink-'))
+        try:
+            (root/'plugin').mkdir()
+            (root/'plugin/plugin.json').symlink_to(Path(__file__).resolve().parents[1]/'plugin/plugin.json')
+            with self.assertRaisesRegex(ValueError, 'Symlinks are not distributable'):
+                builder.package_files(root)
+        finally:
+            import shutil
+            shutil.rmtree(root)
 
 if __name__ == '__main__': unittest.main()

@@ -6,11 +6,12 @@ Build from repository root (Python 3 standard library):
 
 ```sh
 python3 scripts/build-plugin.py /absolute/output/variant-design-codex.zip
+python3 scripts/verify-plugin.py /absolute/output/variant-design-codex.zip
 python3 scripts/plugin-package.test.py
 node --test scripts/variant-loop.test.mjs
 ```
 
-The ZIP contains `.codex-plugin/plugin.json`, icons, a full `skills/variant-design/` tree and a SHA-256 inventory. It excludes the website, dependencies, tests and local project state. The compatibility manifest is authored in `plugin/plugin.json`; the builder puts it at the required distribution path. Existing relative route and script paths remain intact beneath the packaged skill root. Do not install only SKILL.md.
+The ZIP contains `.codex-plugin/plugin.json`, icons, a full `skills/variant-design/` tree and a SHA-256 inventory. It excludes the website, dependencies, tests and local project state. The compatibility manifest is authored in `plugin/plugin.json`; the builder puts it at the required distribution path. Existing relative route and script paths remain intact beneath the packaged skill root. Do not install only SKILL.md. The builder refuses to overwrite an existing output; choose a new filename for each build. The verifier checks ZIP paths, entry types, size limits, CRCs, the complete checksum inventory, entrypoint, icons and version consistency without extracting the archive.
 
 This is a release candidate, not a published directory listing. Package smoke tests unpack into a fresh temporary project and execute comparison, scoped apply and undo from outside the repository. They do not prove plugin-manager discovery or model-generated design quality.
 
