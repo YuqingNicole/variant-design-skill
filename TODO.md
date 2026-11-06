@@ -27,16 +27,11 @@
 
 - [ ] 决定要不要做“在比较页上直接选某个区域”：Impeccable 的 Live Mode、Subframe 和 Claude Design 都让用户在页面上点选。先决定做还是明确不做，再动手。
 - [ ] 完善账号体系：先定匿名使用与登录账号的边界，再规划注册/登录、个人资料、收藏与灵感同步、数据导出和删除；实现前明确认证服务、隐私说明和账号数据归属。
-- [ ] `Refine premium` 和形容词翻译的真实 eval 已在 PR #151 实现：Codex 18/18 检查通过，1440/390 下计数下降且保留品牌、任务和一次撤回；待审阅与合并。证据见 `docs/research/2026-11-04-premium-evaluation.md`。
 - [ ] 【维护者】决定要不要做公开的界面代码检查页。评估见 `docs/research/2026-11-02-antipattern-catalog-evaluation.md`：建议做成一页、先把规则改成共用数据，不仿 `/slop` 做视觉目录。
 
 ## 5. 网站维护
 
-- [ ] RFC-008 P2：统一作品流、交互与审美已在 `codex/inspiration-browsing` 实现并通过 44 项本地浏览器回归；待审阅与合并。计数和截图证据见 `docs/research/2026-11-04-backlog-execution.md`。
-- [ ] RFC-008 P3：投稿、媒体地址、人工审核登记与撤下已在 `codex/submission-permissions` 实现并完成本地验证；待审阅和合并。维护流程见 `website/SUBMISSIONS.md`。
-
-- [ ] 定价页口号已随“本地可用、托管计划中”方案在 `codex/positioning-honesty` 起草；与第 1 组价格方向一起确认，尚未发布。
-- [ ] 文档、赞助页字号已在 `codex/content-style-budget` 收敛：1440 下各 6 种、390 下各 7 种，保留命令框等宽字体；中英文 × 320/390/1440 和首页预算复核通过，9 项相关 Chrome 回归通过。待 PR 审阅/合并、视觉验收；Impeccable 首页扫描导航超时，不能当作零问题。证据见 `docs/research/2026-11-04-content-style-budget.md`。
+（当前没有等待代理执行的已实现网站维护 PR；定位、定价与发布措辞仍待维护者确认，见第 1 组。）
 
 ## X 设计样本收集箱
 
