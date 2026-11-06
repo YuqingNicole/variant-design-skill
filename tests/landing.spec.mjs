@@ -300,7 +300,7 @@ test('inspiration references filter, create an original brief and recover from c
  // The prerendered page answers clicks only after React replaces it; its static reference index goes away then.
  await expect(page.locator('nav[aria-label="全部参考"]')).toHaveCount(0);
  const cards=page.locator('.inspiration-grid .insp-card');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('96 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('97 个参考');
  for(const [name,count] of [['Landing',20],['产品界面',8],['关键流程',4]]){
   await page.getByRole('button',{name,exact:true}).click();
   await expect(cards).toHaveCount(count);
@@ -321,7 +321,7 @@ test('inspiration references filter, create an original brief and recover from c
  await expect(cards).toHaveCount(0);
  await expect(page.locator('.inspiration-empty')).toBeVisible();
  await page.locator('.inspiration-empty').getByRole('button',{name:'清除筛选'}).click();
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('96 个参考');await expect(page.getByRole('searchbox')).toHaveValue('');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('97 个参考');await expect(page.getByRole('searchbox')).toHaveValue('');
  await expect(page.getByRole('button',{name:'全部',exact:true})).toHaveAttribute('aria-pressed','true');
  await page.locator('.site-language').click();
  await expect(page.locator('h1')).toHaveText('The best design inspiration during the ai area.');
@@ -524,7 +524,7 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.route(/video\.twimg\.com/,r=>{if(r.request().url()===media['paper-widgets'].video)return r.abort()});
  await page.goto('/?category=landing&sort=curated');await expect(page.locator('.insp-pills button')).toHaveText(['Best practice','全部','Landing','产品界面','关键流程','动效']);
  expect(xRequests.filter(u=>new URL(u).hostname==='video.twimg.com')).toEqual([]);
- await page.getByRole('button',{name:'动效',exact:true}).click();await expect(page.locator('.insp-feed > li')).toHaveCount(19);
+ await page.getByRole('button',{name:'动效',exact:true}).click();await expect(page.locator('.insp-feed > li')).toHaveCount(20);
  await page.getByRole('button',{name:'Best practice',exact:true}).click();
  const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(30);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
@@ -572,8 +572,8 @@ test('a reference opens as a dialog from the grid and as its own page from a dir
  await expect(page.locator('h1')).toHaveText('Notion');await expect(page.getByRole('dialog')).toHaveCount(0);
  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/^Notion：/);
  await expect(page.getByRole('link',{name:'访问原站'})).toHaveAttribute('href','https://www.notion.com/');
- await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('96 个参考');
- await page.goto('/inspiration/no-such-reference');await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('96 个参考');
+ await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('97 个参考');
+ await page.goto('/inspiration/no-such-reference');await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('97 个参考');
 });
 
 test('a topic narrows the library to its dated references and states what is unknown', async ({page})=>{
@@ -584,7 +584,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('11 个参考');await expect(page.locator('.inspiration-topic')).toContainText('2026-11-01');
  await expect(page.locator('.insp-card-out[href="https://attio.com/"]')).toHaveCount(1);
  await page.goto('/?topic=unknown');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('96 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('97 个参考');
  await page.goto('/');
  const cards=page.locator('.inspiration-grid .insp-card');
  const topic=page.getByRole('combobox',{name:'专题'});
@@ -593,7 +593,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-topic')).toContainText('2026-10-29');
  await expect(cards.locator('.insp-card-open[href="/inspiration/lovable"]')).toHaveCount(0);
  await expect(cards.locator('.insp-card-out[href="https://impeccable.style/"]')).toHaveCount(1);
- await expect(page.locator('.insp-title')).toContainText('目前 96 条');await expect(page.locator('.insp-counts')).toContainText('20 Landing');
+ await expect(page.locator('.insp-title')).toContainText('目前 97 条');await expect(page.locator('.insp-counts')).toContainText('20 Landing');
  await page.getByRole('searchbox').fill('Vercel');
  await expect(cards).toHaveCount(1);await expect(cards.first().locator('.insp-card-open')).toHaveAttribute('href','/inspiration/v0');
  await page.getByRole('searchbox').fill('');
@@ -601,7 +601,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(cards).toHaveCount(0);
  await page.locator('.inspiration-empty').getByRole('button',{name:'清除筛选'}).click();
  await expect(topic).toHaveValue('');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('96 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('97 个参考');
 });
 test('reference pack restores locally and reports storage failures', async ({page})=>{
  await page.goto('/');
@@ -761,7 +761,7 @@ test('without JavaScript the inspiration page links every reference, and with it
   for (const [route, prefix] of [['/', '/inspiration/'], ['/en', '/en/inspiration/']]) {
     await reader.goto(route);
     const links = await reader.locator(`#root a[href^="${prefix}"]`).evaluateAll(as => [...new Set(as.map(a => a.getAttribute('href').split(/[?#]/)[0]))]);
-    expect(links.length, route).toBe(96);
+    expect(links.length, route).toBe(97);
   }
   await noScript.close();
   await page.goto('/');
