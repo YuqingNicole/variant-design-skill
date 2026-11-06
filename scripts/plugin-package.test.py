@@ -51,6 +51,14 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(entry['version'], version)
         self.assertEqual(json.loads((root/'plugin/plugin.json').read_text())['version'], version)
 
+    def test_version_record_matches_the_product_manifests(self):
+        root = Path(__file__).resolve().parent.parent
+        skill_version = (root/'VERSION').read_text().strip()
+        website_version = json.loads((root/'website/package.json').read_text())['version']
+        record = (root/'docs/versioning.md').read_text()
+        self.assertIn(f'**Variant Design skill and plugin: `{skill_version}`**', record)
+        self.assertIn(f'**Website package: `{website_version}`**', record)
+
     def test_reproducible_complete_package_runs_outside_repository(self):
         with tempfile.TemporaryDirectory(prefix='variant-plugin-') as directory:
             root = Path(directory)

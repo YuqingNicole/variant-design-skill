@@ -95,7 +95,7 @@ node evals/run.mjs --agent claude --fixture pulse       # one real, graded agent
 - Deployments (Vercel project `variant-design-skill`): `master` is production at `https://variant-design-skill.vercel.app`; the `dev` branch is always deployed to `https://variant-design-skill-dev.vercel.app`, which sits behind Vercel Authentication (team members only, not indexed). Pull requests still target `master`. To try a change on dev before merging, merge its branch into `dev` and push; never force-push `dev`. After a release, bring `dev` back level with `master` by merging `master` into it. Every pull request also gets its own preview URL.
 - Other agent sessions may be working in this tree at the same time (for example on `mcp/`). Before committing, check `git status` and stage only the files you changed. Do not revert or reformat other people's in-progress work.
 - Never commit `.variant-work/`, `.verification/`, `.integrations/` from test projects, `website/.env`, or anything containing a user's project source.
-- `VERSION` follows semver with release-candidate tags (currently `1.1.0`). Change it only as part of a release, together with the versions in `plugin/plugin.json` and `.claude-plugin/marketplace.json`.
+- Versioning policy is in `docs/versioning.md`. Each merged skill update that changes user-facing behavior, workflow instructions or bundled helper behavior gets a semver bump in the release PR; keep `VERSION`, `plugin/plugin.json`, `.claude-plugin/marketplace.json` and `CHANGELOG.md` aligned. Website runtime releases use `website/package.json` independently. Editorial content and internal maintenance scripts do not bump product versions.
 
 ## Third-party products
 
