@@ -131,7 +131,8 @@ div.insp-thumb{position:relative;display:grid;grid-template-rows:auto auto auto 
 @media(prefers-reduced-motion:reduce){.inspiration-page *{transition:none!important}.insp-dialog[open],.insp-dialog[open]::backdrop{animation:none}}
 /* Show the reference note until its remote preview has loaded, then fade the image in. */
 div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;background:var(--site-surface)}
-.insp-thumb-media>img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;transition:opacity 180ms var(--ease-out);background:var(--site-surface)}
+.insp-thumb-media>img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;opacity:1;transition:opacity 180ms var(--ease-out);background:var(--site-surface)}
+.insp-thumb-media[data-loaded=false]>img{opacity:0}
 .insp-thumb-media[data-loaded=true]>img{opacity:1}
 .insp-thumb-media>.insp-thumb-fallback{position:absolute;inset:0;display:grid;grid-template-rows:auto auto auto 1fr;gap:6px;width:100%;height:100%;padding:var(--space-5);overflow:hidden;color:var(--site-ink);background:var(--site-card)}
 .insp-thumb-fallback .insp-thumb-tag{font-size:12px;color:var(--site-muted)}
