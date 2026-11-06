@@ -4,6 +4,8 @@ export const changelogZh: Record<string, { title?: string; blocks: string[] }> =
   Unreleased: {
     title: '未发布',
     blocks: [
+      '网站',
+      '网站包 `0.1.1` 新增中英双语的编辑式页脚，可直接返回灵感流；更新记录页也会标出当前技能版本。',
       '安装',
       'Claude Code 插件市场：先运行 `claude plugin marketplace add YuqingNicole/variant-design-skill`，再运行 `claude plugin install variant-design@variant-design`。用这种方式安装时，更新检查会给出插件的更新命令。',
       '子流程文件从 `SKILL.md` 改名为 `skills/*/ROUTE.md`，所以 Claude Code 插件、Codex 和 `npx skills` 都只会把入口注册为技能。',
