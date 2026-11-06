@@ -3,26 +3,38 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
+import tempfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
 
 def package_files(root=ROOT):
-    manifest = json.loads((root / 'plugin/plugin.json').read_text())
+    root = Path(root)
+    def read_source(path):
+        path = Path(path)
+        current = root
+        for part in path.relative_to(root).parts:
+            current = current / part
+            if current.is_symlink():
+                raise ValueError(f'Symlinks are not distributable: {current}')
+        return path.read_bytes()
+
+    manifest = json.loads(read_source(root / 'plugin/plugin.json'))
     files = {'.codex-plugin/plugin.json': (json.dumps(manifest, indent=2) + '\n').encode(),
-             'LICENSE': (root / 'LICENSE').read_bytes(), 'NOTICE': (root / 'NOTICE').read_bytes()}
+             'LICENSE': read_source(root / 'LICENSE'), 'NOTICE': read_source(root / 'NOTICE')}
     for name in ('composerIcon', 'logo'):
         relative = manifest['interface'][name]
         if not relative.startswith('./assets/') or '..' in Path(relative).parts:
             raise ValueError('Icon path must remain inside plugin/assets')
         file = root / 'plugin' / relative
-        if file.is_symlink():
-            raise ValueError('Symlinks are not distributable')
-        files[relative[2:]] = file.read_bytes()
+        files[relative[2:]] = read_source(file)
     # NOTICE and the Apache-2.0 text travel with the third-party references they cover (see NOTICE).
     source_files = [root / name for name in ('SKILL.md', 'VERSION', 'LICENSE', 'NOTICE', 'LICENSES/Apache-2.0.txt')]
     for folder in ('references', 'skills', 'scripts', 'assets'):
+        if (root / folder).is_symlink():
+            raise ValueError(f'Symlinks are not distributable: {root / folder}')
         for file in sorted((root / folder).rglob('*')):
             if file.is_symlink():
                 raise ValueError(f'Symlinks are not distributable: {file}')
@@ -33,7 +45,7 @@ def package_files(root=ROOT):
             source_files.append(file)
     for file in source_files:
         relative = file.relative_to(root).as_posix()
-        files[f'skills/variant-design/{relative}'] = file.read_bytes()
+        files[f'skills/variant-design/{relative}'] = read_source(file)
     # All paths inside the existing router remain relative to its own skill root.
     required = ('SKILL.md', 'skills/variant-generate/ROUTE.md', 'skills/shared/code-output.md',
                 'references/workflow/project-context.md', 'scripts/variant-history.mjs', 'scripts/build-preview.mjs',
@@ -52,7 +64,11 @@ def build(output, root=ROOT):
     files = package_files(root)
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    temporary = output.with_suffix('.zip.tmp')
+    if output.exists():
+        raise FileExistsError(f'Refusing to overwrite existing package: {output}')
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f'.{output.name}.', suffix='.tmp', dir=output.parent)
+    os.close(descriptor)
+    temporary = Path(temporary_name)
     try:
         with zipfile.ZipFile(temporary, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
             for name, data in sorted(files.items()):
@@ -60,7 +76,8 @@ def build(output, root=ROOT):
                 entry.compress_type = zipfile.ZIP_DEFLATED
                 entry.external_attr = 0o100644 << 16
                 archive.writestr(entry, data)
-        temporary.replace(output)
+        # A same-directory hard link publishes atomically and fails if another process created output.
+        os.link(temporary, output)
     finally:
         temporary.unlink(missing_ok=True)
     return len(files)

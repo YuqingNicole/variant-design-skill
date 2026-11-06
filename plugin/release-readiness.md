@@ -6,6 +6,7 @@ Target: a person opens an existing project, installs the plugin, obtains three m
 
 - Full distributable plugin with stable name, RC version, listing metadata and square icons.
 - Reproducible ZIP; checksum verification and fresh-directory unpack smoke test.
+- Standalone ZIP verifier checks archive paths, duplicate entries, file types, size limits, CRCs, full inventory hashes, manifest version and packaged icons without extraction; the builder rejects symlinked sources and never overwrites an existing output.
 - Installed-path comparison, scoped apply and undo execute outside the source checkout.
 - Prepared candidates detect stale versions, external source edits and registered design-system drift before apply.
 - Undo detects external file/metadata edits; sequential undo works with increasing revisions.
@@ -27,4 +28,4 @@ First close install/discovery and upgrade evidence. Then run the project matrix 
 
 ## Test record for this candidate
 
-Local package test and fourteen history/preview/scanner tests pass. Four website Node tests pass. CI repeats package/history tests and existing browser suites. Runtime tests are not a visual quality score. No public upload or policy attestation has been made.
+The package suite exercises a fresh unpack, helper workflow, unsafe ZIP entries, checksum failure, symlinked sources and overwrite refusal. The current suite passes locally. The verifier establishes archive integrity; it does not prove plugin-manager installation or skill discovery. Four website Node tests pass. CI repeats package/history tests and existing browser suites. Runtime tests are not a visual quality score. No public upload or policy attestation has been made.
