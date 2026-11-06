@@ -1,0 +1,31 @@
+{
+  "updatedAt": "2026-11-06T07:18:09.000Z",
+  "source": "Ego Lite on X search",
+  "reviewPolicy": "Candidates are not published until a person watches the original post and writes bilingual research notes.",
+  "candidates": [
+    {
+      "id": "2114049200749175174",
+      "url": "https://x.com/elayadesigns/status/2114049200749175174",
+      "handle": "elayadesigns",
+      "author": "Elaya",
+      "publishedAt": "2026-10-25",
+      "likes": 11181,
+      "views": 876755,
+      "capturedAt": "2026-11-06T07:18:09.000Z",
+      "query": "(design OR UI OR interaction) filter:videos min_faves:100",
+      "status": "pending"
+    },
+    {
+      "id": "2115106690836435400",
+      "url": "https://x.com/sundyme/status/2115106690836435400",
+      "handle": "sundyme",
+      "author": "sundyme",
+      "publishedAt": "2026-10-27",
+      "likes": 4243,
+      "views": 275592,
+      "capturedAt": "2026-11-06T07:18:09.000Z",
+      "query": "(design OR UI OR interaction) filter:videos min_faves:100",
+      "status": "pending"
+    }
+  ]
+}
