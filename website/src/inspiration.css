@@ -18,7 +18,6 @@
 .insp-pills{display:flex;gap:var(--space-1);overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0}
 .insp-pills::-webkit-scrollbar{display:none}
 .insp-pills button{flex:none;height:32px;padding:0 var(--space-4);border:0;border-radius:var(--radius-pill);background:var(--site-surface);color:var(--site-ink);font-size:14px;transition:background var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
-.insp-pills button span{margin-left:6px;font-size:11px;opacity:.72;font-variant-numeric:tabular-nums}
 .inspiration-page .insp-pills button[aria-pressed=true]{background:var(--site-brand);color:var(--site-paper)}
 .insp-bar select,.insp-search{flex:none;height:32px;border:1px solid var(--site-line);border-radius:var(--radius-pill);background:var(--site-card);color:var(--site-ink);font:inherit;font-size:14px}
 .insp-bar select{padding:0 var(--space-3);max-width:180px}
@@ -134,7 +133,11 @@ div.insp-thumb{position:relative;display:grid;grid-template-rows:auto auto auto 
 div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;background:var(--site-surface)}
 .insp-thumb-media>img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;transition:opacity 180ms var(--ease-out);background:var(--site-surface)}
 .insp-thumb-media[data-loaded=true]>img{opacity:1}
-.insp-thumb-media>.insp-thumb{position:absolute;inset:0;width:100%;height:100%;padding:var(--space-5);border:0;border-radius:0}
+.insp-thumb-media>.insp-thumb-fallback{position:absolute;inset:0;display:grid;grid-template-rows:auto auto auto 1fr;gap:6px;width:100%;height:100%;padding:var(--space-5);overflow:hidden;color:var(--site-ink);background:var(--site-card)}
+.insp-thumb-fallback .insp-thumb-tag{font-size:12px;color:var(--site-muted)}
+.insp-thumb-fallback b{font-family:var(--font-display);font-weight:500;font-size:20px;line-height:1.1;letter-spacing:-.01em}
+.insp-thumb-fallback span{font-size:12px;line-height:1.45;color:var(--site-muted);max-width:30ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.insp-thumb-media[data-loaded=true]>.insp-thumb-fallback{visibility:hidden}
 .insp-thumb-post b{font-size:18px;line-height:1.35;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .insp-shot img{display:block;width:100%;height:auto;border:1px solid var(--site-line);border-radius:var(--radius-panel);background:var(--site-surface)}
 /* A shared X post: its text first, X's own embed on request. */
