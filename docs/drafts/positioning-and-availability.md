@@ -1,10 +1,10 @@
 # 定位与可用性：待维护者确认
 
-状态：草案。对应 `TODO.md` 第 1 组【维护者】事项；此分支提供具体文案与页面供审阅，没有修改线上仓库元数据、开通付费方案或部署生产。
+状态：部分完成。README、官网定位文案与 GitHub 公开元数据已对齐；2026-11-07 更新 GitHub description、homepage 和 topics。价格方案与第三方参考的处理仍待维护者决定。
 
 ## 建议方案
 
-1. **README 与仓库定位**：移除“受 Variant 设计社区启发”的表述。保留当前本地技能定位句，官网部分改为来源参考、A/B/C 案例和安装入口；实验室单独说明。仓库说明、官网地址和新增 topics 的精确候选值在 [github-metadata.json](github-metadata.json)。现有 topics 均保留。
+1. **README 与仓库定位（已完成）**：README、README_CN.md 与官网定位均以本地开源技能和设计灵感目录为准，不再声称技能受 Variant 设计社区启发。2026-11-07 已将 GitHub description 更新为 `github-metadata.json` 的候选值，homepage 指向官网，并保留原有 topics、添加 agent-skills、codex、design-system。
 2. **价格页保留计划，明确未开放**：双语标题说明本地开源可用、托管仍是提案。Pro/Team 各自标明“计划中”“报价草案”和“拟提供功能”，讨论链接只指向 GitHub 编辑器。原有数字保留为可讨论草案，不代表报价已确认。另一可选方案是完全移除付费卡片；本次先把前一种方案做成页面，方便审阅。FAQ、README、预渲染描述与 llms.txt 同步，不再把它称为“早期访问”。
 3. **Impeccable 引用暂保留现状**：当前七份原文、来源注释、完整 Apache-2.0 和 NOTICE 均保留。建议先保留并明确披露，等待维护者选择是否改写。没有联系作者；若选择改写，仍需保留适用的来源与许可声明，不能把“改写”当成清除原始义务的证明。
 
@@ -12,7 +12,7 @@
 
 - 2026-11-04，公开 `/api/status` 的只读 GET 返回 `{"configured":false}`；没有发起生成请求。这只说明当次公开状态，不证明未来部署或其他环境。
 - 代码中的付费按钮指向 `/issues/new`，没有结账。原文已说暂不扣款，但“早期访问”、托管额度与云端功能仍像可以开通；修正的是可用性表述，不是停止一项已经存在的收费服务。
-- GitHub 当次 description 仍含 “inspired by the Variant design community”，homepage 仍是仓库地址。候选 JSON 尚未应用。
+- GitHub 公开仓库元数据已按 `github-metadata.json` 更新并核对；description 不再包含社区启发表述，homepage 指向官网。当前 topics 包含原有六项及 `agent-skills`、`codex`、`design-system`。
 - `NOTICE` 列出的七个文件与源码来源注释保留；源码授权不能代替对其他服务条款的判断。
 
 ## 老 README PR #2
@@ -24,5 +24,4 @@
 ## 确认后可以做什么
 
 - 确认价格方向后，保留本草稿或按“移除付费卡片”修改，再走 PR 审阅。生产合并仍需要当前明确批准。
-- 单独明确允许后，才把候选 JSON 同步到公开 GitHub 元数据；确认文案不自动等于批准生产部署。
 - 维护者选择保留或改写第三方参考；未选择前保持许可材料完整，不发信。

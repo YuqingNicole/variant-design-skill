@@ -6,7 +6,6 @@
 
 ## 1. 先修：诚实和定位
 
-- [ ] 【维护者】README、`README_CN.md` 的 Variant 引用移除、官网介绍与公开 GitHub 元数据候选值已在 `codex/positioning-honesty` 起草。精确元数据见 `docs/drafts/github-metadata.json`，未应用到 GitHub。待确认措辞及公开更新权限。
 - [ ] 【维护者】价格页可用性修正已起草：Pro/Team 明确为计划、功能与数字为报价草案，讨论链接不表示开通；README 与 llms.txt 同步。另一选择是完全移除付费卡片。当前流程实际没有结账；公开模型状态当次为未配置。待确认方向，见 `docs/drafts/positioning-and-availability.md`。
 - [ ] 【维护者】确认 Impeccable 署名的处理：`references/design-system/` 里 7 个文件是 Impeccable（Apache-2.0）原文的完整复制，已补 `NOTICE`、许可证全文和文件头说明。要不要改写成自己的文字、或者联系作者，由你决定。
 
