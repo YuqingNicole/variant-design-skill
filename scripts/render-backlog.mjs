@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const sourcePath = path.join(root, 'TODO.md');
-const outputPath = process.argv[2] ? path.resolve(process.cwd(), process.argv[2]) : path.join(root, 'backlog.html');
+const outputPath = process.argv[2] ? path.resolve(process.cwd(), process.argv[2]) : path.join(root, 'website', 'public', 'backlog.html');
 
 function escapeHtml(value) {
   return value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
@@ -17,7 +17,8 @@ function inline(value) {
     .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
       const safeHref = href.startsWith('https://') || href.startsWith('http://') || href.startsWith('/') || /^[\w./-]+$/.test(href);
-      return safeHref ? `<a href="${href}">${label}</a>` : label;
+      const target = safeHref && !href.startsWith('https://') && !href.startsWith('http://') && !href.startsWith('/') ? `https://github.com/YuqingNicole/variant-design-skill/blob/master/${href}` : href;
+      return safeHref ? `<a href="${target}">${label}</a>` : label;
     });
 }
 
@@ -100,7 +101,7 @@ const html = `<!doctype html>
   </style>
 </head>
 <body>
-  <div class="topline"><div class="shell"><a href="TODO.md">Variant Design</a> <span aria-hidden="true">/</span> 项目待办</div></div>
+  <div class="topline"><div class="shell"><a href="https://github.com/YuqingNicole/variant-design-skill/blob/master/TODO.md">Variant Design</a> <span aria-hidden="true">/</span> 项目待办</div></div>
   <header class="hero shell">
     <p class="eyebrow">Backlog · Maintainer &amp; agents</p>
     <h1>把下一步，<br>变得清楚。</h1>
