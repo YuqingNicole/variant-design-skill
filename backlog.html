@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>TODO · Backlog</title>
+  <style>
+    :root{color-scheme:light;--paper:#f6f6f0;--card:#fffefa;--ink:#252920;--muted:#656b60;--line:#d9ddd1;--green:#354b2e;--wash:#e6ecdf;--serif:Georgia,"Songti SC",serif;--sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;--ease:cubic-bezier(.22,1,.36,1)}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased}a{color:var(--green);text-underline-offset:3px}button,input,select{font:inherit;color:inherit}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--green);outline-offset:3px}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .shell{width:min(1120px,calc(100% - 48px));margin:auto}.topline{padding:20px 0;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}.topline a{font-weight:600;text-decoration:none}.hero{padding:72px 0 44px}.eyebrow{margin:0 0 14px;color:var(--green);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.hero h1{margin:0;font:500 clamp(42px,7vw,76px)/1.02 var(--serif);letter-spacing:-.035em}.hero-intro{max-width:760px;margin:22px 0 0;color:var(--muted);font-size:17px}.hero-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}.meta-pill{padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-size:13px}.meta-pill strong{color:var(--green);font-variant-numeric:tabular-nums}
+    .toolbar{position:sticky;top:0;z-index:5;padding:14px 0;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(12px);border-block:1px solid var(--line)}.toolbar-inner{display:grid;grid-template-columns:minmax(220px,1fr) auto minmax(190px,.55fr);align-items:center;gap:14px}.search{width:100%;height:46px;padding:0 16px;border:1px solid var(--line);border-radius:8px;background:var(--card)}.filters{display:flex;gap:5px;padding:4px;border:1px solid var(--line);border-radius:999px;background:#eceee7}.filters button{min-height:36px;padding:0 12px;border:0;border-radius:999px;background:transparent;font-size:13px;cursor:pointer;transition:background .15s var(--ease),color .15s var(--ease)}.filters button[aria-pressed=true]{background:var(--green);color:#fff}.filters button:hover{color:var(--green)}.filters button[aria-pressed=true]:hover{color:#fff}.section-select{height:46px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:var(--card)}.result-line{padding:24px 0 6px;color:var(--muted);font-size:13px}.result-line strong{color:var(--ink)}
+    .backlog-section{padding:28px 0 46px;border-bottom:1px solid var(--line)}.section-heading{display:flex;align-items:baseline;gap:14px;margin-bottom:18px}.section-index{color:#8d9486;font:13px ui-monospace,SFMono-Regular,monospace}.section-heading h2{margin:0;font:500 clamp(26px,4vw,36px)/1.2 var(--serif);letter-spacing:-.02em}.section-count{margin-left:auto;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}.section-note{max-width:820px;margin:0 0 14px;color:var(--muted);font-size:14px}.section-note code,.task-copy code{padding:.12em .4em;border-radius:4px;background:#eceee7;font: .9em ui-monospace,SFMono-Regular,monospace;overflow-wrap:anywhere}.task-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0;padding:0;list-style:none}.task{display:flex;align-items:flex-start;gap:14px;min-height:100px;padding:18px;border:1px solid var(--line);border-radius:9px;background:var(--card);transition:border-color .18s var(--ease),transform .18s var(--ease)}.task:hover{border-color:#aeb9a5;transform:translateY(-1px)}.task[hidden],.backlog-section[hidden]{display:none}.task-state{display:grid;place-items:center;flex:none;width:23px;height:23px;margin-top:2px;border:1px solid #aeb5a8;border-radius:6px;color:white;font-size:14px}.task-state.is-done{border-color:var(--green);background:var(--green)}.task-copy{min-width:0}.task-copy h3{margin:0;font-size:15px;font-weight:500;line-height:1.55;overflow-wrap:anywhere}.task-owner{display:inline-flex;margin-top:10px;color:var(--muted);font-size:11px}.task-owner::before{content:"";width:6px;height:6px;margin:5px 7px 0 0;border-radius:50%;background:#b7c3ad}.task[data-owner=yes] .task-owner{color:#816544}.task[data-owner=yes] .task-owner::before{background:#b98d55}.empty-section{color:var(--muted);font-size:14px}.no-results{padding:40px 0;text-align:center;color:var(--muted)}footer{padding:28px 0 56px;color:var(--muted);font-size:12px}
+    @media(max-width:760px){.hero{padding:52px 0 34px}.toolbar-inner{grid-template-columns:1fr auto}.search{grid-column:1/-1;grid-row:1}.filters{grid-column:1;grid-row:2;justify-self:start}.section-select{grid-column:2;grid-row:2;max-width:100%}.task-list{grid-template-columns:1fr}.task{min-height:0}.result-line{padding-top:18px}}
+    @media(max-width:420px){.shell{width:calc(100% - 32px)}.topline{padding:16px 0}.hero h1{font-size:44px}.hero-intro{font-size:15px}.toolbar{padding:10px 0}.toolbar-inner{gap:8px}.filters{max-width:100%;overflow:auto}.filters button{white-space:nowrap;padding-inline:10px}.section-heading{gap:10px}.section-heading h2{font-size:28px}.task{padding:15px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="topline"><div class="shell"><a href="TODO.md">Variant Design</a> <span aria-hidden="true">/</span> 项目待办</div></div>
+  <header class="hero shell">
+    <p class="eyebrow">Backlog · Maintainer &amp; agents</p>
+    <h1>把下一步，<br>变得清楚。</h1>
+    <p class="hero-intro">维护者和编码代理共用的待办清单。做完的条目直接删掉，记录留在 PR 和 git 历史里。较大的工作仍然开 GitHub Issue。<br>排序依据：<code>docs/research/2026-11-02-competitor-comparison.md</code>（竞品对比）和 <code>docs/research/2026-11-02-geo-strategy.md</code>（GEO 策略）。标【维护者】的需要账号、付费、公开发布或措辞确认，代理只能起草。</p>
+    <div class="hero-meta"><span class="meta-pill"><strong>17</strong> 项待处理</span><span class="meta-pill"><strong>11</strong> 项需要维护者</span><span class="meta-pill">来源 <code>TODO.md</code></span></div>
+  </header>
+  <div class="toolbar"><div class="shell toolbar-inner">
+    <label><span class="visually-hidden">搜索待办</span><input class="search" type="search" placeholder="搜索 backlog" autocomplete="off"></label>
+    <div class="filters" role="group" aria-label="按执行者筛选"><button type="button" data-kind="all" aria-pressed="true">全部</button><button type="button" data-kind="agent" aria-pressed="false">可继续推进</button><button type="button" data-kind="owner" aria-pressed="false">需要维护者</button></div>
+    <label><span class="visually-hidden">筛选分组</span><select class="section-select"><option value="all">所有分组</option><option value="0">1. 先修：诚实和定位</option><option value="1">2. 分发：先让人找得到</option><option value="2">3. 内容：选对手还没答好的问题</option><option value="3">4. 产品</option><option value="4">5. 网站维护</option><option value="5">X 设计样本收集箱</option><option value="6">定期维护</option></select></label>
+  </div></div>
+  <main class="shell">
+    <p class="result-line" aria-live="polite">显示 <strong class="visible-count">17</strong> / 17 项</p>
+    <section class="backlog-section" data-section="0">
+    <header class="section-heading"><span class="section-index">01</span><h2>1. 先修：诚实和定位</h2><span class="section-count">3 项</span></header>
+    <ul class="task-list"><li class="task" data-owner="yes" data-done="no" data-search="1. 先修：诚实和定位 【维护者】readme、`readme_cn.md` 的 variant 引用移除、官网介绍与公开 github 元数据候选值已在 `codex/positioning-honesty` 起草。精确元数据见 `docs/drafts/github-metadata.json`，未应用到 github。待确认措辞及公开更新权限。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】README、<code>README_CN.md</code> 的 Variant 引用移除、官网介绍与公开 GitHub 元数据候选值已在 <code>codex/positioning-honesty</code> 起草。精确元数据见 <code>docs/drafts/github-metadata.json</code>，未应用到 GitHub。待确认措辞及公开更新权限。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="1. 先修：诚实和定位 【维护者】价格页可用性修正已起草：pro/team 明确为计划、功能与数字为报价草案，讨论链接不表示开通；readme 与 llms.txt 同步。另一选择是完全移除付费卡片。当前流程实际没有结账；公开模型状态当次为未配置。待确认方向，见 `docs/drafts/positioning-and-availability.md`。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】价格页可用性修正已起草：Pro/Team 明确为计划、功能与数字为报价草案，讨论链接不表示开通；README 与 llms.txt 同步。另一选择是完全移除付费卡片。当前流程实际没有结账；公开模型状态当次为未配置。待确认方向，见 <code>docs/drafts/positioning-and-availability.md</code>。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="1. 先修：诚实和定位 【维护者】确认 impeccable 署名的处理：`references/design-system/` 里 7 个文件是 impeccable（apache-2.0）原文的完整复制，已补 `notice`、许可证全文和文件头说明。要不要改写成自己的文字、或者联系作者，由你决定。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】确认 Impeccable 署名的处理：<code>references/design-system/</code> 里 7 个文件是 Impeccable（Apache-2.0）原文的完整复制，已补 <code>NOTICE</code>、许可证全文和文件头说明。要不要改写成自己的文字、或者联系作者，由你决定。</h3><span class="task-owner">需要维护者</span></div>
+  </li></ul>
+  </section>
+<section class="backlog-section" data-section="1">
+    <header class="section-heading"><span class="section-index">02</span><h2>2. 分发：先让人找得到</h2><span class="section-count">4 项</span></header>
+    <ul class="task-list"><li class="task" data-owner="yes" data-done="no" data-search="2. 分发：先让人找得到 【维护者】自有域名：买好后在 vercel 绑定，代理负责改 `site_url`、`library-data.ts` 里写死的地址，并把旧地址 301 过去。越晚做，已被收录的旧地址越多。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】自有域名：买好后在 Vercel 绑定，代理负责改 <code>SITE_URL</code>、<code>library-data.ts</code> 里写死的地址，并把旧地址 301 过去。越晚做，已被收录的旧地址越多。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="2. 分发：先让人找得到 【维护者】search console：用新域名验证并提交 sitemap，检查 `/en/...` 的索引和 `hreflang` 报告（不以 http 200 为准）。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】Search Console：用新域名验证并提交 sitemap，检查 <code>/en/...</code> 的索引和 <code>hreflang</code> 报告（不以 HTTP 200 为准）。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="2. 分发：先让人找得到 【维护者】投稿到 claudemarketplaces.com（免费，可以投技能仓库或插件市场仓库）、codex 插件合集和 skills.sh 一类目录。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】投稿到 claudemarketplaces.com（免费，可以投技能仓库或插件市场仓库）、Codex 插件合集和 skills.sh 一类目录。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="2. 分发：先让人找得到 【维护者】第一次做 ai 搜索基线测量（geo 策略里的 10 个问题），之后每两周一次，见“定期维护”。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】第一次做 AI 搜索基线测量（GEO 策略里的 10 个问题），之后每两周一次，见“定期维护”。</h3><span class="task-owner">需要维护者</span></div>
+  </li></ul>
+  </section>
+<section class="backlog-section" data-section="2">
+    <header class="section-heading"><span class="section-index">03</span><h2>3. 内容：选对手还没答好的问题</h2><span class="section-count">3 项</span></header>
+    <ul class="task-list"><li class="task" data-owner="yes" data-done="no" data-search="3. 内容：选对手还没答好的问题 【维护者】审阅 `/guides` 的英文（5 篇）。2026-11-04 代理已做事实和语言初审：修正 git、旧快照和授权说明，改写的 3 篇英文标为 `draft`，生产模式的列表与直达页面也遵守该状态；2 篇未改的旧英文保留原状态。均不算人工审定，审完改成 `complete` 并写 `reviewedat`。审阅包见 `docs/research/2026-11-04-content-review.md`。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】审阅 <code>/guides</code> 的英文（5 篇）。2026-11-04 代理已做事实和语言初审：修正 Git、旧快照和授权说明，改写的 3 篇英文标为 <code>draft</code>，生产模式的列表与直达页面也遵守该状态；2 篇未改的旧英文保留原状态。均不算人工审定，审完改成 <code>complete</code> 并写 <code>reviewedAt</code>。审阅包见 <code>docs/research/2026-11-04-content-review.md</code>。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="3. 内容：选对手还没答好的问题 【维护者】确认对比页草稿 `docs/drafts/compare-page.md`（impeccable、taste skill、frontend-design，2026-11-04 已重新核对公开文档和源码许可证；不算实际运行），决定放在 `/compare` 还是 `/guides`，确认后由代理做成页面。涉及 anthropic 的发布条款仍待确认。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】确认对比页草稿 <code>docs/drafts/compare-page.md</code>（Impeccable、Taste Skill、frontend-design，2026-11-04 已重新核对公开文档和源码许可证；不算实际运行），决定放在 <code>/compare</code> 还是 <code>/guides</code>，确认后由代理做成页面。涉及 Anthropic 的发布条款仍待确认。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="3. 内容：选对手还没答好的问题 `/skills` 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 `evals/run.mjs` 在一次性项目里跑 impeccable、taste skill、ui ux pro max，公开记录后收录。发布涉及 anthropic 技能的对比前，先由【维护者】确认条款。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3><code>/skills</code> 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 <code>evals/run.mjs</code> 在一次性项目里跑 Impeccable、Taste Skill、UI UX Pro Max，公开记录后收录。发布涉及 Anthropic 技能的对比前，先由【维护者】确认条款。</h3><span class="task-owner">需要维护者</span></div>
+  </li></ul>
+  </section>
+<section class="backlog-section" data-section="3">
+    <header class="section-heading"><span class="section-index">04</span><h2>4. 产品</h2><span class="section-count">3 项</span></header>
+    <ul class="task-list"><li class="task" data-owner="no" data-done="no" data-search="4. 产品 决定要不要做“在比较页上直接选某个区域”：impeccable 的 live mode、subframe 和 claude design 都让用户在页面上点选。先决定做还是明确不做，再动手。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>决定要不要做“在比较页上直接选某个区域”：Impeccable 的 Live Mode、Subframe 和 Claude Design 都让用户在页面上点选。先决定做还是明确不做，再动手。</h3><span class="task-owner">可继续推进</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="4. 产品 完善账号体系：先定匿名使用与登录账号的边界，再规划注册/登录、个人资料、收藏与灵感同步、数据导出和删除；实现前明确认证服务、隐私说明和账号数据归属。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>完善账号体系：先定匿名使用与登录账号的边界，再规划注册/登录、个人资料、收藏与灵感同步、数据导出和删除；实现前明确认证服务、隐私说明和账号数据归属。</h3><span class="task-owner">可继续推进</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="4. 产品 【维护者】决定要不要做公开的界面代码检查页。评估见 `docs/research/2026-11-02-antipattern-catalog-evaluation.md`：建议做成一页、先把规则改成共用数据，不仿 `/slop` 做视觉目录。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】决定要不要做公开的界面代码检查页。评估见 <code>docs/research/2026-11-02-antipattern-catalog-evaluation.md</code>：建议做成一页、先把规则改成共用数据，不仿 <code>/slop</code> 做视觉目录。</h3><span class="task-owner">需要维护者</span></div>
+  </li></ul>
+  </section>
+<section class="backlog-section" data-section="4">
+    <header class="section-heading"><span class="section-index">05</span><h2>5. 网站维护</h2><span class="section-count">0 项</span></header>
+    <p class="section-note">（当前没有等待代理执行的已实现网站维护 PR；定位、定价与发布措辞仍待维护者确认，见第 1 组。）</p><p class="empty-section">当前没有待办。</p>
+  </section>
+<section class="backlog-section" data-section="5">
+    <header class="section-heading"><span class="section-index">06</span><h2>X 设计样本收集箱</h2><span class="section-count">1 项</span></header>
+    <p class="section-note">把链接贴在这里，每条写一句好在哪。代理先把它登记进 <code>website/src/inspiration-data.ts</code>（带 <code>post</code> 字段），再运行 <code>node website/scripts/x-media.mjs</code> 取视频并提交 <code>website/src/x-media.json</code>：带视频的进 Best practice 自动播放，其他用 X 官方嵌入。加完就从这里删掉。</p><p class="section-note">Ego Lite 每周一 09:00（Asia/Shanghai）搜索最近 7 天、互动数至少 100 的设计视频，把链接和互动数据放进 <code>website/content/x-post-inbox.json</code>。收件箱只供人工筛选；看过原帖并补齐中英文研究笔记后，才能加入公开灵感页。手动运行：<code>website/scripts/run-x-discovery.sh</code>。</p><ul class="task-list"><li class="task" data-owner="no" data-done="no" data-search="x 设计样本收集箱 recent.design 首页的 947 条作品（维护者本地的 `recent-design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 x 帖子加入，条目带 `via` 指回 recent.design。其余按同样做法分批挑选：看过视频再写笔记，同一作者不重复；instagram 的 54 条现在没有对应的展示方式，先不加。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>recent.design 首页的 947 条作品（维护者本地的 <code>Recent-Design首页作品链接.csv</code>，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入，条目带 <code>via</code> 指回 recent.design。其余按同样做法分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。</h3><span class="task-owner">可继续推进</span></div>
+  </li></ul>
+  </section>
+<section class="backlog-section" data-section="6">
+    <header class="section-heading"><span class="section-index">07</span><h2>定期维护</h2><span class="section-count">3 项</span></header>
+    <ul class="task-list"><li class="task" data-owner="no" data-done="no" data-search="定期维护 每两周按 geo 策略里的 10 个问题测一次 ai 搜索是否提到并引用本站，结果记在 `docs/research/`。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>每两周按 GEO 策略里的 10 个问题测一次 AI 搜索是否提到并引用本站，结果记在 <code>docs/research/</code>。</h3><span class="task-owner">可继续推进</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="定期维护 每季度重看一次竞品对比，更新 `docs/research/` 里的记录（star 数、定价和功能变化很快）。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>每季度重看一次竞品对比，更新 <code>docs/research/</code> 里的记录（star 数、定价和功能变化很快）。</h3><span class="task-owner">可继续推进</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="定期维护 x 视频只剩封面、不再播放时，运行 `node website/scripts/x-media.mjs` 刷新 `website/src/x-media.json`。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>X 视频只剩封面、不再播放时，运行 <code>node website/scripts/x-media.mjs</code> 刷新 <code>website/src/x-media.json</code>。</h3><span class="task-owner">可继续推进</span></div>
+  </li></ul>
+  </section>
+    <p class="no-results" hidden>没有匹配的待办，试试其他关键词或筛选条件。</p>
+  </main>
+  <footer class="shell">这是由 <code>TODO.md</code> 生成的浏览视图。修改待办请编辑 Markdown，再运行 <code>node scripts/render-backlog.mjs</code>。</footer>
+  <script>
+    const search=document.querySelector('.search'),kindButtons=[...document.querySelectorAll('[data-kind]')],sectionSelect=document.querySelector('.section-select'),cards=[...document.querySelectorAll('.task')],sections=[...document.querySelectorAll('.backlog-section')],visibleCount=document.querySelector('.visible-count'),noResults=document.querySelector('.no-results');let kind='all';
+    function filter(){const query=search.value.trim().toLocaleLowerCase();let visible=0;for(const card of cards){const sectionMatch=sectionSelect.value==='all'||card.closest('.backlog-section').dataset.section===sectionSelect.value;const kindMatch=kind==='all'||(kind==='owner'?card.dataset.owner==='yes':card.dataset.owner==='no'&&card.dataset.done==='no');const matches=sectionMatch&&kindMatch&&card.dataset.search.includes(query);card.hidden=!matches;if(matches)visible++}for(const section of sections){const hasVisible=Boolean(section.querySelector('.task:not([hidden])'));const informativeEmpty=!section.querySelector('.task')&&sectionSelect.value==='all'&&kind==='all'&&!query;section.hidden=!hasVisible&&!informativeEmpty}visibleCount.textContent=visible;noResults.hidden=visible>0}
+    search.addEventListener('input',filter);sectionSelect.addEventListener('change',filter);for(const button of kindButtons)button.addEventListener('click',()=>{kind=button.dataset.kind;for(const item of kindButtons)item.setAttribute('aria-pressed',String(item===button));filter()});
+  </script>
+</body>
+</html>
