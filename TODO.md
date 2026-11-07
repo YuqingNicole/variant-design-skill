@@ -12,7 +12,7 @@
 
 （2026-11-07 决定暂不购买自有域名，继续使用 `https://variant-design-skill.vercel.app/`。）
 
-- [ ] 【维护者】Search Console：用新域名验证并提交 sitemap，检查 `/en/...` 的索引和 `hreflang` 报告（不以 HTTP 200 为准）。
+- [ ] 【维护者】Search Console：为当前 Vercel URL 前缀完成站点验证并提交 sitemap，检查 `/en/...` 的索引和 `hreflang` 报告（不以 HTTP 200 为准）。静态核对已完成；Search Console 属性还未建立，原因与证据见 `docs/research/2026-11-07-search-console-readiness.md`。
 - [ ] 【维护者】投稿到 claudemarketplaces.com（免费，可以投技能仓库或插件市场仓库）、Codex 插件合集和 skills.sh 一类目录。
 - [ ] 【维护者】第一次做 AI 搜索基线测量（GEO 策略里的 10 个问题），之后每两周一次，见“定期维护”。
 
