@@ -9,6 +9,9 @@ test.beforeEach(async({page})=>{
  await page.route(/^https:\/\/platform\.twitter\.com\//,r=>r.abort());
 });
 
+
+// The inspiration styles load with the page's script chunk: read computed styles only after React has taken over the prerendered page.
+const hydrated=page=>page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
 for(const route of ['/docs','/sponsor'])test(`${route} keeps a consistent type and color scale in both languages`,async({page},info)=>{
  await page.emulateMedia({reducedMotion:'reduce'});const samples=[];
  for(const language of ['zh','en'])for(const width of [320,390,1440]){
@@ -858,7 +861,7 @@ test('old category links and empty sections land on the right page', async ({pag
 });
 
 test('on a phone the tabs stay in one row with the current one in view, and the filters no longer pin over the list', async ({page})=>{
- await page.setViewportSize({width:390,height:844});await page.goto('/browse/branding');
+ await page.setViewportSize({width:390,height:844});await page.goto('/browse/branding');await hydrated(page);
  const row=page.locator('.insp-pills');
  await expect(row.locator('a')).toHaveCount(6);
  const m=await row.evaluate(r=>{const cur=r.querySelector('[aria-current=page]').getBoundingClientRect();return{h:r.getBoundingClientRect().height,wrap:getComputedStyle(r).flexWrap,inView:cur.left>=0&&cur.right<=innerWidth,overflow:document.documentElement.scrollWidth>innerWidth}});
@@ -869,7 +872,7 @@ test('on a phone the tabs stay in one row with the current one in view, and the 
 });
 
 test('a tab is fetched as soon as the pointer or finger is on it, once', async ({page})=>{
- await page.goto('/browse/web');
+ await page.goto('/browse/web');await hydrated(page);
  const tab=page.locator('.insp-pills a',{hasText:'动效'});
  await tab.hover();await tab.dispatchEvent('touchstart');await tab.focus();
  await expect(page.locator('link[rel=prefetch][href="/browse/motion"]')).toHaveCount(1);
@@ -877,16 +880,16 @@ test('a tab is fetched as soon as the pointer or finger is on it, once', async (
 });
 
 test('feed motion stays inside the budget: 200ms card zoom, a fixed-width search box, hover only where hover exists', async ({page,browser})=>{
- await page.goto('/browse/interaction');
+ await page.goto('/browse/interaction');await hydrated(page);
  expect(await page.locator('.insp-card-open').first().evaluate(a=>{const c=a.querySelector('.insp-thumb,.insp-vcard-media');const s=getComputedStyle(c);return [s.transitionProperty,s.transitionDuration]})).toEqual(['transform','0.2s']);
  const search=page.locator('.insp-search input'),width=await search.evaluate(e=>e.getBoundingClientRect().width);
  expect(await search.evaluate(e=>getComputedStyle(e).transitionProperty.includes('width'))).toBe(false);
  await search.focus();await search.fill('x');expect(await search.evaluate(e=>e.getBoundingClientRect().width)).toBe(width);
- await page.goto('/cases');
+ await page.goto('/cases');await hydrated(page);
  const link=page.locator('.library-card a').first();await link.hover();
  await expect.poll(()=>link.locator('img').first().evaluate(e=>getComputedStyle(e).transform)).toBe('matrix(1.025, 0, 0, 1.025, 0, 0)');
  const phone=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true}),p=await phone.newPage();
- await p.goto('/cases');const tap=p.locator('.library-card a').first();await tap.hover();await p.waitForTimeout(400);
+ await p.goto('/cases');await hydrated(p);const tap=p.locator('.library-card a').first();await tap.hover();await p.waitForTimeout(400);
  expect(await tap.locator('img').first().evaluate(e=>getComputedStyle(e).transform)).toBe('none');await phone.close();
 });
 
@@ -916,7 +919,7 @@ test('switching a tab crossfades the page without flying cards, and the referenc
 });
 
 test('motion tokens, tabs without a hover lift, a save button that answers with colour and press, reduced motion that keeps feedback', async ({page,browser})=>{
- await page.goto('/browse/interaction');
+ await page.goto('/browse/interaction');await hydrated(page);
  // The tokens resolve on :root (the page transition reads them too); compare computed values, not the minified source text.
  expect(await page.evaluate(()=>{const e=document.createElement('i');document.body.append(e);const out=['--dur-press','--dur-fast','--dur-base','--dur-slow'].map(k=>{e.style.transitionDuration=`var(${k})`;return getComputedStyle(e).transitionDuration});e.style.transitionTimingFunction='var(--ease-out)';out.push(getComputedStyle(e).transitionTimingFunction);e.remove();return out})).toEqual(['0.16s','0.14s','0.2s','0.34s','cubic-bezier(0.22, 1, 0.36, 1)']);
  // Tabs change colour only: no lift on hover, and transform is not among their transitions.
@@ -928,7 +931,7 @@ test('motion tokens, tabs without a hover lift, a save button that answers with 
  expect(props.name).toBe('none');for(const p of ['background-color','color','transform'])expect(props.transition).toContain(p);
  await save.click();await expect(save).toHaveAttribute('aria-pressed','true');expect(await save.evaluate(b=>getComputedStyle(b).animationName)).toBe('none');
  // Reduced motion: movement goes, opacity and colour feedback stay, and the dialog still fades in.
- const calm=await browser.newContext({reducedMotion:'reduce'}),q=await calm.newPage();await q.goto('/browse/interaction');
+ const calm=await browser.newContext({reducedMotion:'reduce'}),q=await calm.newPage();await q.goto('/browse/interaction');await hydrated(q);
  expect(await q.locator('.insp-card-meta').first().evaluate(m=>{const s=getComputedStyle(m);return [s.transitionProperty.includes('opacity'),s.transitionProperty.includes('transform'),parseFloat(s.transitionDuration)>0]})).toEqual([true,false,true]);
  expect(await q.locator('.insp-card-save').first().evaluate(b=>getComputedStyle(b).transitionProperty.includes('transform'))).toBe(false);
  await q.locator('.insp-card-open').first().click();await expect(q.getByRole('dialog')).toBeVisible();
