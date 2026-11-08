@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import { probe, grade, defaults } from '../scripts/style-budget.mjs';
+import { measure, pages as labPages } from './perf-lab.mjs';
 const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
 // The homepage includes X motion now; regressions isolate its media in every scenario.
 // Individual media tests override these routes with their own playback/failure fixture.
@@ -959,4 +960,17 @@ test('a path with no page answers 404 with noindex, while every real page and ev
  expect(vercel.rewrites.filter(r=>r.destination==='/app.html').map(r=>r.source)).toEqual(['/lab/canvas','/lab/workbench','/directions','/showcase']);
  // The shell still boots on a 404 and tells the reader so.
  const response=await page.goto('/nope');expect(response.status()).toBe(404);await expect(page.locator('h1')).toContainText('页面不存在');
+});
+
+// Lab budget (docs/research/2026-11-08-lab-performance.md). Third-party images are stubbed, so this describes our own HTML,
+// scripts and styles. CLS uses the "good" line of 0.1; LCP is held only on pages whose largest element is ours, because the
+// detail page's is a preview image from another site. Bytes are gzip sizes with about 15% headroom over today's.
+test('lab budget: no layout shift past 0.1, a quick first paint on our own pages, and bounded script and style bytes', async ({browser},info)=>{
+ const base=info.project.use.baseURL;
+ for(const mobile of [true,false])for(const path of labPages){
+  const m=await measure(browser,{base,path,mobile});
+  expect(m.cls,`${path} ${mobile?'phone':'desktop'} CLS`).toBeLessThanOrEqual(0.1);
+  if(path!=='/inspiration/linear')expect(m.lcp,`${path} ${mobile?'phone':'desktop'} LCP`).toBeLessThanOrEqual(2500);
+  if(path==='/'&&!mobile){expect(m.kb.js,'home gzip script KB').toBeLessThanOrEqual(145);expect(m.kb.css,'home gzip style KB').toBeLessThanOrEqual(95)}
+ }
 });
