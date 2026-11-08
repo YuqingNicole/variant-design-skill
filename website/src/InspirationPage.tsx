@@ -132,6 +132,10 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  },[open]);
  useEffect(()=>{if(open?.mode!=='page')return;const onKey=(e:KeyboardEvent)=>{if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.altKey||e.target instanceof HTMLElement&&e.target.closest('input,textarea,select,[contenteditable="true"]'))return;if(e.key==='Escape'){e.preventDefault();close()}else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();step(e.key==='ArrowLeft'?-1:1)}};addEventListener('keydown',onKey);return()=>removeEventListener('keydown',onKey)},[open,results]);
  const searchRef=useRef<HTMLInputElement>(null);
+ // Each tab is a static page: fetch it as soon as the pointer or finger is on the link, and keep the current tab in view when the row scrolls.
+ const pillsRef=useRef<HTMLElement>(null),prefetched=useRef(new Set<string>());
+ const prefetch=(e:{currentTarget:HTMLAnchorElement})=>{const href=e.currentTarget.getAttribute('href')??'';if(!href||prefetched.current.has(href))return;prefetched.current.add(href);const link=document.createElement('link');link.rel='prefetch';link.href=href;link.as='document';document.head.append(link)};
+ useEffect(()=>{const row=pillsRef.current,tab=row?.querySelector<HTMLElement>('[aria-current=page]');if(row&&tab)row.scrollLeft=tab.offsetLeft-(row.clientWidth-tab.offsetWidth)/2},[section]);
  useEffect(()=>{const onKey=(e:KeyboardEvent)=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();searchRef.current?.focus()}};addEventListener('keydown',onKey);return()=>removeEventListener('keydown',onKey)},[]);
  const sentinel=useRef<HTMLDivElement>(null);
  useEffect(()=>{const el=sentinel.current;if(!el||typeof IntersectionObserver==='undefined')return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting)setVisible(v=>v+pageSize)},{rootMargin:'400px'});io.observe(el);return()=>io.disconnect()},[results.length,visible]);
@@ -169,7 +173,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    <details className="inspiration-disclosure"><summary>{l('disclosure')}</summary><p>{l('disclosureBody')}</p></details>
   </header>
   <div className="insp-bar"><div className="site-shell">
-   <nav className="insp-pills" aria-label={l('refType')}>{[{id:'',name:{zh:'全部',en:'All'}},...tabs].map(c=><a key={c.id||'all'} href={localePath(sectionPath(c.id),language)} aria-current={section===c.id?'page':undefined}>{t(c.name,language)}</a>)}</nav>
+   <nav className="insp-pills" aria-label={l('refType')} ref={pillsRef}>{[{id:'',name:{zh:'全部',en:'All'}},...tabs].map(c=><a key={c.id||'all'} href={localePath(sectionPath(c.id),language)} aria-current={section===c.id?'page':undefined} onPointerEnter={prefetch} onFocus={prefetch} onTouchStart={prefetch}>{t(c.name,language)}</a>)}</nav>
    <select aria-label={l('topic')} value={topic} onChange={e=>{const v=e.target.value;filter(()=>setTopic(v))}}><option value="">{l('allTopics')}</option>{inspirationTopics.map(tp=><option key={tp.id} value={tp.id}>{t(tp.title,language)} · {tp.items.length}</option>)}</select>
    <label className="insp-search"><Icon d={icons.search}/><span className="insp-visually-hidden">{l('search')}</span><input ref={searchRef} type="search" value={query} onChange={e=>{setQuery(e.target.value);setVisible(pageSize)}} placeholder={l('searchHint')}/></label>
    <select aria-label={l('sort')} value={sort} onChange={e=>{const v=e.target.value;filter(()=>setSort(v))}}><option value="default">{l('curated')}</option><option value="curated">{l('original')}</option><option value="checked">{l('recent')}</option><option value="name">{l('byName')}</option></select>

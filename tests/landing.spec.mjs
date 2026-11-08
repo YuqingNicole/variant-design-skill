@@ -856,3 +856,22 @@ test('old category links and empty sections land on the right page', async ({pag
  await go('/inspiration/linear?category=landing','/inspiration/linear?in=web');
  await go('/browse/illustration','/');
 });
+
+test('on a phone the tabs stay in one row with the current one in view, and the filters no longer pin over the list', async ({page})=>{
+ await page.setViewportSize({width:390,height:844});await page.goto('/browse/branding');
+ const row=page.locator('.insp-pills');
+ await expect(row.locator('a')).toHaveCount(6);
+ const m=await row.evaluate(r=>{const cur=r.querySelector('[aria-current=page]').getBoundingClientRect();return{h:r.getBoundingClientRect().height,wrap:getComputedStyle(r).flexWrap,inView:cur.left>=0&&cur.right<=innerWidth,overflow:document.documentElement.scrollWidth>innerWidth}});
+ expect(m).toEqual({h:44,wrap:'nowrap',inView:true,overflow:false});
+ expect(await page.locator('.insp-bar').evaluate(b=>getComputedStyle(b).position)).toBe('static');
+ await page.setViewportSize({width:1440,height:900});
+ expect(await page.locator('.insp-bar').evaluate(b=>getComputedStyle(b).position)).toBe('sticky');
+});
+
+test('a tab is fetched as soon as the pointer or finger is on it, once', async ({page})=>{
+ await page.goto('/browse/web');
+ const tab=page.locator('.insp-pills a',{hasText:'动效'});
+ await tab.hover();await tab.dispatchEvent('touchstart');await tab.focus();
+ await expect(page.locator('link[rel=prefetch][href="/browse/motion"]')).toHaveCount(1);
+ await expect(page.locator('link[rel=prefetch]')).toHaveCount(1);
+});
