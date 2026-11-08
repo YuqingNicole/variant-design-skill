@@ -16,19 +16,32 @@
 - [ ] 【维护者】投稿到 claudemarketplaces.com 与 Codex 插件目录。skills.sh 已自动收录，不需要投稿；其余渠道的准备状态、文案与发布门槛见[投稿材料](docs/drafts/distribution-submissions.md)。
 - [ ] 【维护者】第一次做 AI 搜索基线测量（GEO 策略里的 10 个问题），之后每两周一次，见“定期维护”。已准备 10 题 × 4 引擎方案；单次实时采集预估 $2.95 / 2,950 credits，需维护者批准后再运行，见 `docs/research/2026-11-08-geo-baseline-prep.md`。
 
-## 3. 内容：选对手还没答好的问题
+## 3. 对标 recent.design：灵感内容产品
+
+对标对象是 recent.design 公开呈现的内容产品（2026-11-08 按普通访客读首页：分类 Web、Interface、Branding、Motion、Illustration、Posters、Print；浏览入口 Launch Videos、Websites、OG Images、App Screenshots、App Icons；资源 Tools、Skills、Jobs；每条有 `/i/<id>-<slug>` 页和作者署名）。只对标形态和规模，不复制界面、文案和素材（RFC-008 §1）。现状：灵感库约 99 条，其中 60 条来自 recent.design 首页的 947 条；分类以 X 视频（practice 65）为主，landing 20、product 8、flow 4。数字以 `website/src/inspiration-data.ts` 为准，动手前先重数。
+
+- [ ] 【维护者】定内容规模目标和每周上线条数（代理建议：6 周内到 300 条，每周 ≥ 40 条；不是定论）。定了以后写进本条，作为第 7 条指标的基线。
+- [ ] 把“收件箱到上线”写成固定流程并落到 `website/content/`：筛 `x-post-inbox.json` → 看过原视频 → 中英文笔记 → 同一作者不重复 → `x-media.mjs` 取视频 → 上线。每批在 `docs/research/` 记录条数、剔除原因和用时。
+- [ ] 【维护者】决定要不要补齐分类：Interface、Branding、Illustration、Posters、Print。先看现有 99 条在这些类别下各有几条，缺口大的类别再定收录标准；决定“不做”也写明原因。
+- [ ] 【维护者】决定要不要增加浏览入口：Websites、App 图标、OG 图，以及 Instagram 那 54 条的展示方式（现在没有对应形态）。授权规则不变：只给链接、官方嵌入或作者授权的媒体。
+- [ ] 决定 `/tools` 要不要做，再动手。`/skills` 只有我们 1 条，与“只收实际跑过的技能”的评测条目放在第 4 组；这里只定 Tools 页的收录范围和是否值得做。
+- [ ] 回访机制：先选一种最小方案再做——RSS、每周精选邮件，或“本周新增”页。对方首页没看到订阅入口，这是可以拉开差距的地方。邮件涉及收集地址，先由【维护者】确认隐私说明。
+- [ ] 核对 `/inspiration/<id>` 详情页：预渲染后的独立标题、描述、分享卡片（`og:*`）、作者署名、`hreflang` 是否齐全，逐项用真实预渲染产物检查，缺什么补什么，并加回归测试。
+- [ ] 【维护者】定对标指标并建基线：收录条数、每周新增、详情页被搜索收录数（Search Console）、回访或订阅数。没有指标，“对标”无法验证；指标取不到的（如对方的流量）不编，写“无法获得”。
+
+## 4. 内容：选对手还没答好的问题
 
 - [ ] 【维护者】审阅 `/guides` 的英文（5 篇）。2026-11-04 代理已做事实和语言初审：修正 Git、旧快照和授权说明，改写的 3 篇英文标为 `draft`，生产模式的列表与直达页面也遵守该状态；2 篇未改的旧英文保留原状态。均不算人工审定，审完改成 `complete` 并写 `reviewedAt`。审阅包见 `docs/research/2026-11-04-content-review.md`。
 - [ ] 【维护者】确认对比页草稿 `docs/drafts/compare-page.md`（Impeccable、Taste Skill、frontend-design，2026-11-04 已重新核对公开文档和源码许可证；不算实际运行），决定放在 `/compare` 还是 `/guides`，确认后由代理做成页面。涉及 Anthropic 的发布条款仍待确认。
 - [ ] `/skills` 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 `evals/run.mjs` 在一次性项目里跑 Impeccable、Taste Skill、UI UX Pro Max，公开记录后收录。发布涉及 Anthropic 技能的对比前，先由【维护者】确认条款。
 
-## 4. 产品
+## 5. 产品
 
 - [ ] 决定要不要做“在比较页上直接选某个区域”：Impeccable 的 Live Mode、Subframe 和 Claude Design 都让用户在页面上点选。先决定做还是明确不做，再动手。
 - [ ] 完善账号体系：先定匿名使用与登录账号的边界，再规划注册/登录、个人资料、收藏与灵感同步、数据导出和删除；实现前明确认证服务、隐私说明和账号数据归属。
 - [ ] 【维护者】决定要不要做公开的界面代码检查页。评估见 `docs/research/2026-11-02-antipattern-catalog-evaluation.md`：建议做成一页、先把规则改成共用数据，不仿 `/slop` 做视觉目录。
 
-## 5. 网站维护
+## 6. 网站维护
 
 （当前没有等待代理执行的已实现网站维护 PR；定位、定价与发布措辞仍待维护者确认，见第 1 组。）
 
@@ -40,7 +53,7 @@ Ego Lite 每周一 09:00（Asia/Shanghai）搜索最近 7 天、互动数至少 
 
 <!-- 格式：- https://x.com/<handle>/status/<id> — 好在哪（可选：分类） -->
 
-- recent.design 首页的 947 条作品（维护者本地的 `Recent-Design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入，条目带 `via` 指回 recent.design。其余按同样做法分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。
+- recent.design 首页的 947 条作品（维护者本地的 `Recent-Design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入，条目带 `via` 指回 recent.design。其余按第 3 组的固定流程分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。
 
 ## 定期维护
 
