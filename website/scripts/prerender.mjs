@@ -235,12 +235,29 @@ export function llmsFull(entries, docs, site = defaultSite, references = [], gui
 }
 
 export const indexableRoutes=pages=>[...pages].filter(([,html])=>!html.includes(noindexTag)).map(([route])=>route);
-export function sitemap(routes, site = defaultSite) {
+// Real dates only: a reference is last modified when it was last checked or added, a section or the home page when its newest
+// reference was, and entries and guides by their publish date. Pages without a recorded date get no <lastmod> rather than the build time.
+export function lastModified({ references = [], entries = [], guides = [], sectionOf = () => '' } = {}) {
+  const day = v => String(v ?? '').slice(0, 10), valid = v => /^\d{4}-\d{2}-\d{2}$/.test(v), newest = list => list.filter(valid).sort().at(-1);
+  const dates = {}, bySection = {};
+  for (const r of references) {
+    const d = newest([day(r.checkedAt), day(r.addedAt)]); if (!d) continue;
+    dates[`/inspiration/${r.id}`] = d;
+    const id = sectionOf(r); (bySection[id] ??= []).push(d);
+  }
+  for (const [id, list] of Object.entries(bySection)) if (id) dates[`/browse/${id}`] = newest(list);
+  const all = newest(Object.values(bySection).flat()); if (all) dates['/'] = all;
+  for (const e of entries) if (valid(e.publishedAt)) dates[`/d/${e.slug}`] = e.publishedAt;
+  for (const g of guides) if (valid(g.publishedAt)) dates[`/guides/${g.slug}`] = g.publishedAt;
+  return dates;
+}
+export function sitemap(routes, site = defaultSite, dates = {}) {
   const listed = [...routes].filter(r => !unlisted.has(r)), known = new Set(listed), abs = r => escape(site + (r === '/' ? '/' : r));
+  const lastmod = r => { const d = dates[r === '/en' ? '/' : r.startsWith('/en/') ? r.slice(3) : r]; return d ? `<lastmod>${d}</lastmod>` : ''; };
   const versions = r => { const base = r === '/en' ? '/' : r.startsWith('/en/') ? r.slice(3) : r, en = pathIn(base, 'en');
     if (!known.has(base) || !known.has(en)) return '';
     return [['zh-CN', base], ['en', en], ['x-default', base]].map(([tag, target]) => `<xhtml:link rel="alternate" hreflang="${tag}" href="${abs(target)}"/>`).join(''); };
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${listed.map(r => `  <url><loc>${abs(r)}</loc>${versions(r)}</url>`).join('\n')}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${listed.map(r => `  <url><loc>${abs(r)}</loc>${lastmod(r)}${versions(r)}</url>`).join('\n')}\n</urlset>\n`;
 }
 
 export function rss(entries, site = defaultSite, references = []) {
@@ -285,7 +302,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   for (const file of [shell, ...htmlIn(path.join(dist, 'variant-output')), ...htmlIn(path.join(dist, 'lab'))]) fs.writeFileSync(file, withNoindex(fs.readFileSync(file, 'utf8')));
   fs.cpSync(path.join(contentRoot, 'media'), path.join(dist, 'media'), { recursive: true });
   for (const entry of entries) fs.writeFileSync(path.join(dist, 'd', `${entry.slug}.json`), JSON.stringify(toCard(entry, site), null, 2) + '\n');
-  fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap(indexableRoutes(pages), site));
+  fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap(indexableRoutes(pages), site, lastModified({ references, entries: listed.entries, guides: listed.guides, sectionOf: sectionModule.sectionOf })));
   fs.writeFileSync(path.join(dist, 'feed.xml'), rss(entries, site, references));
   fs.writeFileSync(path.join(dist, 'llms.txt'), llms(listed.entries, docs, site, englishReferences, listed.guides));
   fs.writeFileSync(path.join(dist, 'llms-full.txt'), llmsFull(listed.entries, docs, site, englishReferences, listed.guides));
