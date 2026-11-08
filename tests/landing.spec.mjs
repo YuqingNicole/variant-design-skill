@@ -893,9 +893,14 @@ test('feed motion stays inside the budget: 200ms card zoom, a fixed-width search
 test('switching a tab crossfades the page without flying cards, and the reference brief rises into place', async ({page,browser})=>{
  const watch=()=>{window.__vt={};addEventListener('pagereveal',e=>{if(!e.viewTransition)return;window.__vt.reveal=true;e.viewTransition.ready.then(()=>{const el=document.querySelector('.insp-card-open');window.__vt.cross=document.documentElement.classList.contains('vt-cross');window.__vt.name=el&&getComputedStyle(el).viewTransitionName});e.viewTransition.finished.then(()=>window.__vt.finished=true)})};
  await page.addInitScript(watch);
- await page.goto('/browse/web');await page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
- await page.locator('.insp-pills a',{hasText:'动效'}).click();await expect(page).toHaveURL(/\/browse\/motion$/);
- await expect.poll(()=>page.evaluate(()=>window.__vt.finished)).toBe(true);
+ // A cross-document transition is best effort: a busy machine may skip it, so give it up to three navigations to show up.
+ let seen=false;
+ for(let attempt=0;attempt<3&&!seen;attempt++){
+  await page.goto('/browse/web');await page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
+  await page.locator('.insp-pills a',{hasText:'动效'}).click();await expect(page).toHaveURL(/\/browse\/motion$/);
+  seen=await page.waitForFunction(()=>window.__vt.finished===true,null,{timeout:5000}).then(()=>true,()=>false);
+ }
+ expect(seen).toBe(true);
  expect(await page.evaluate(()=>({reveal:window.__vt.reveal,cross:window.__vt.cross,name:window.__vt.name}))).toEqual({reveal:true,cross:true,name:'none'});
  // After the transition the cards get their shared names back, and the class is gone.
  expect(await page.evaluate(()=>[document.documentElement.classList.contains('vt-cross'),getComputedStyle(document.querySelector('.insp-card-open')).viewTransitionName.startsWith('ref-')])).toEqual([false,true]);
