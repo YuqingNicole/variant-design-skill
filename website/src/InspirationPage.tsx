@@ -6,6 +6,7 @@ import { XVideo, mediaOf } from './XVideo';
 import { locales, type Locale } from './i18n/locales';
 import { t, type Localized } from './i18n/localized';
 import { inspirationSources, inspirationTopics } from './inspiration-data';
+import { sectionOf, sectionPath, sectionById, activeSections } from './inspiration-sections';
 import { inspirationItems, referencesFor, withdrawnReferences, permissionOf, type Reference } from './reference-library';
 import { AuthorizationDetails, AuthorizedMedia, authorizedVideo, WithdrawnReferencePage } from './ReferencePermission';
 import linkPreviews from './link-previews.json';
@@ -43,7 +44,7 @@ const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdra
 disclosureBody:{zh:'作品版权归原作者。标有「作者授权」的媒体按授权记录直接从作者地址加载，仅限本站展示；其他条目是仅链接参考。本站不在仓库里保存对方的截图或素材：网站条目显示该网站为分享链接公开的预览图、标题和描述，图片取自原站，经本站托管方 Vercel 的图片服务按显示尺寸缩小并缓存；如果 Vercel 图片请求失败，浏览器会直接从来源地址重试。X 帖子与网站在同一作品流中，卡片直接从 X 的服务器播放帖子视频（静音循环），详情用 X 官方嵌入，X 可能记录这次访问。没有公开预览的条目显示我们写的分析卡。登录后操作和手机体验未实测。',en:'The work belongs to its owners. Media labeled “Author permission” loads from the author’s URL for display here under its recorded permission; other entries are link-only references. This site keeps none of their screenshots or assets in its repository: a website entry shows the preview image, title and description the site publishes for shared links, taken from the site and resized and cached by our host Vercel’s image service. If that image request fails, the browser retries directly from the source. X posts and websites share one feed, where each X card streams the post’s video from X (muted, looping) and the detail uses X’s official embed; X may record the visit. Entries without a public preview show our own analysis card. Authenticated flows and mobile behavior not tested.'},
  refType:{zh:'参考类型',en:'Reference type'},all:{zh:'全部',en:'All'},topic:{zh:'专题',en:'Topic'},allTopics:{zh:'全部专题',en:'All topics'},search:{zh:'搜索参考',en:'Search references'},searchHint:{zh:'搜索 ⌘K',en:'Search ⌘K'},
  sort:{zh:'排序',en:'Sort'},curated:{zh:'最近收录',en:'Recently added'},original:{zh:'编辑顺序',en:'Editorial order'},recent:{zh:'最近核对',en:'Recently checked'},byName:{zh:'按名称',en:'By name'},references:{zh:'个参考',en:'references'},openOnX:{zh:'在 X 上打开',en:'Open on X'},
- openSource:{zh:'打开来源',en:'Open source'},noMatches:{zh:'没有匹配结果。试试其他关键词或分类。',en:'No matches. Try another query or category.'},clear:{zh:'清除筛选',en:'Clear filters'},
+ openSource:{zh:'打开来源',en:'Open source'},noMatches:{zh:'没有匹配结果。试试其他关键词或专题。',en:'No matches. Try another query or topic.'},clear:{zh:'清除筛选',en:'Clear filters'},
  explore:{zh:'继续找素材与代码',en:'Keep exploring references and code'},exploreNote:{zh:'素材和代码是否可复用，需查看具体条目的许可。以下是来源入口，不表示本站拥有其作品。',en:'Check each item’s license before reusing assets or code. These are source directories, not work owned by this site.'},
  closing:{zh:'看过之后，做出自己的版本。',en:'Make your own version.'},install:{zh:'安装并开始',en:'Install & start'},studies:{zh:'查看我们的 A/B/C 案例',en:'See our A/B/C cases'},
  checked:{zh:'公开来源核对：2026-10-07；SaaS 首页专题复核：2026-10-29；初创公司首页专题核对：2026-11-01',en:'Public sources checked: 2026-10-07; SaaS homepages topic rechecked: 2026-10-29; startup homepages topic checked: 2026-11-01'},
@@ -83,13 +84,14 @@ const kinds:Record<string,Localized>={'submitted-work':{zh:'作者投稿',en:'Au
 const unknowns=(item:Item,locale:Locale)=>[...(item.designer?[]:[m.unknownDesignerField]),...(item.mobile==='not-tested'?[m.unknownMobile]:[]),permissionOf(item)?m.unknownReuse:m.unknownRights].map(v=>t(v,locale)).join(t(m.listJoin,locale));
 const packKey='variant-inspiration-pack-v1';
 function loadPack():{selection:Record<string,Intent>;error:boolean}{try{const raw=localStorage.getItem(packKey);if(!raw)return {selection:{},error:false};const parsed:unknown=JSON.parse(raw);if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error();const selection:Record<string,Intent>={};for(const [id,value] of Object.entries(parsed)){if(!(inspirationItems.some(item=>item.id===id)||withdrawnReferences.some(item=>item.id===id))||!value||typeof value!=='object'||typeof value.use!=='string'||typeof value.avoid!=='string')throw new Error();selection[id]={use:value.use,avoid:value.avoid}}return {selection,error:false}}catch{return {selection:{},error:true}}}
-export function InspirationPage({detail=''}:{detail?:string}){
- const language = useLocale(),inspirationItems=referencesFor(language),total=inspirationItems.length,count=(c:string)=>c==='all'?total:c==='motion'?inspirationItems.filter(i=>i.category==='practice'&&i.tag.toLowerCase()==='motion').length:inspirationItems.filter(i=>i.category===c).length,withdrawn=withdrawnReferences.find(r=>r.id===detail);const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);const [category,setCategory]=useState(()=>{const c=new URLSearchParams(location.search).get('category');return c&&c in labels?c:'all'});const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('q')??'');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [sort,setSort]=useState(()=>{const s=new URLSearchParams(location.search).get('sort');return s==='name'||s==='checked'||s==='curated'?s:'default'});const [visible,setVisible]=useState(()=>typeof IntersectionObserver==='undefined'?Infinity:pageSize);
+export function InspirationPage({detail='',section:sectionProp=''}:{detail?:string;section?:string}){
+ const language = useLocale(),inspirationItems=referencesFor(language),total=inspirationItems.length,count=(c:string)=>inspirationItems.filter(i=>sectionOf(i)===c).length,tabs=activeSections(inspirationItems),withdrawn=withdrawnReferences.find(r=>r.id===detail);const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);// A section is the page's own address (/browse/<id>); a detail opened from one keeps it in `in` so Esc and the arrows stay inside it.
+ const [section]=useState(()=>{const id=sectionProp||(detail?new URLSearchParams(location.search).get('in')??'':'');return tabs.some(s=>s.id===id)?id:''});const sectionInfo=sectionById(section);const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('q')??'');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [sort,setSort]=useState(()=>{const s=new URLSearchParams(location.search).get('sort');return s==='name'||s==='checked'||s==='curated'?s:'default'});const [visible,setVisible]=useState(()=>typeof IntersectionObserver==='undefined'?Infinity:pageSize);
  // `page` is a detail opened by its own address; `modal` is one opened from the grid over it.
  const [open,setOpen]=useState<{id:string;mode:'page'|'modal'}|null>(()=>inspirationItems.some(i=>i.id===detail)?{id:detail,mode:'page'}:null);
  const requestedOpen=useRef(open);
  const openItem=inspirationItems.find(i=>i.id===open?.id);
- useEffect(()=>{if(withdrawn)return;document.title=t(f.docTitle,language)(openItem?.name);document.documentElement.lang=locales[language].htmlLang;document.querySelector('meta[name="description"]')?.setAttribute('content',openItem?t(f.itemDescription,language)(openItem):t(f.pageDescription,language)(total))},[language,openItem]);
+ useEffect(()=>{if(withdrawn)return;document.title=openItem||!sectionInfo?t(f.docTitle,language)(openItem?.name):`${t(sectionInfo.title,language)} — Variant Design`;document.documentElement.lang=locales[language].htmlLang;document.querySelector('meta[name="description"]')?.setAttribute('content',openItem?t(f.itemDescription,language)(openItem):sectionInfo?t(sectionInfo.intro,language):t(f.pageDescription,language)(total))},[language,openItem]);
  const [initialPack]=useState(loadPack);const [selection,setSelection]=useState<Record<string,Intent>>(initialPack.selection);const [storageError,setStorageError]=useState(initialPack.error);
  function saveSelection(next:Record<string,Intent>){setSelection(next);try{if(initialPack.error)throw new Error();localStorage.setItem(packKey,JSON.stringify(next));setStorageError(false)}catch{setStorageError(true)}}
  const selected=inspirationItems.filter(item=>selection[item.id]),unavailable=withdrawnReferences.filter(item=>selection[item.id]);
@@ -99,12 +101,14 @@ export function InspirationPage({detail=''}:{detail?:string}){
  const briefRef=useRef<HTMLElement>(null);
  useEffect(()=>{if(prompt){briefRef.current?.focus({preventScroll:true});briefRef.current?.scrollIntoView({block:'center',behavior:'instant'});}},[prompt]);
  // One stream, sorted by the commit that first collected each reference, not its later review date.
- const matches=inspirationItems.filter(r=>(category==='all'||(category==='motion'?r.category==='practice'&&r.tag.toLowerCase()==='motion':r.category===category))&&(!activeTopic||activeTopic.items.includes(r.id))&&[r.name,r.tag,r.publisher,...Object.values(r.focus),...Object.values(r.application)].join(' ').toLowerCase().includes(query.trim().toLowerCase()));
+ const matches=inspirationItems.filter(r=>(!section||sectionOf(r)===section)&&(!activeTopic||activeTopic.items.includes(r.id))&&[r.name,r.tag,r.publisher,...Object.values(r.focus),...Object.values(r.application)].join(' ').toLowerCase().includes(query.trim().toLowerCase()));
  const results=sort==='checked'?[...matches].sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt)):sort==='name'?[...matches].sort((a,b)=>a.name.localeCompare(b.name)):sort==='curated'?matches:[...matches].sort((a,b)=>Date.parse(b.addedAt)-Date.parse(a.addedAt));
  const shown=results.slice(0,visible);
  function useReference(item:Item){setNotice('');setPrompt(fl('useReference')(item))}
  async function copy(){try{await navigator.clipboard.writeText(prompt);setNotice(l('copied'))}catch{setNotice(l('copyManually'))}}
  useEffect(()=>{if(detail&&!withdrawn&&!inspirationItems.some(i=>i.id===detail))history.replaceState(null,'',localePath('/',language)+location.search)},[detail]);
+ // A section with no reference has no page; its address falls back to the feed instead of showing the feed twice.
+ useEffect(()=>{if(sectionProp&&!tabs.some(s=>s.id===sectionProp))history.replaceState(null,'',localePath('/',language)+location.search)},[]);
  const pushed=useRef(false),returnTo=useRef<{x:number;y:number;opener:HTMLElement|null}|null>(null),afterClose=useRef<(()=>void)|null>(null);
  const fromGrid=useRef(!detail),dialogRef=useRef<HTMLDialogElement>(null);
  const remember=()=>{returnTo.current={x:scrollX,y:scrollY,opener:document.activeElement instanceof HTMLElement?document.activeElement:null}};
@@ -112,14 +116,15 @@ export function InspirationPage({detail=''}:{detail?:string}){
   const valid=inspirationItems.some(i=>i.id===id);if(valid&&fromGrid.current&&!returnTo.current)remember();
   const next=valid?{id,mode:fromGrid.current?'modal' as const:'page' as const}:null;requestedOpen.current=next;
   transition(()=>{setOpen(next);
-   const params=new URLSearchParams(location.search),c=params.get('category'),s=params.get('sort');setCategory(c&&c in labels?c:'all');setTopic(params.get('topic')??'');setQuery(params.get('q')??'');setSort(s==='name'||s==='checked'||s==='curated'?s:'default')});
+   const params=new URLSearchParams(location.search),s=params.get('sort');setTopic(params.get('topic')??'');setQuery(params.get('q')??'');setSort(s==='name'||s==='checked'||s==='curated'?s:'default')});
  };addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
- useEffect(()=>{const url=new URL(location.href);for(const [key,value] of Object.entries({category:category==='all'?'':category,topic,q:query,sort:sort==='default'?'':sort})){if(value)url.searchParams.set(key,value);else url.searchParams.delete(key)}history.replaceState(history.state,'',url.pathname+url.search+url.hash)},[category,topic,query,sort]);
+ useEffect(()=>{const url=new URL(location.href);for(const [key,value] of Object.entries({topic,q:query,sort:sort==='default'?'':sort})){if(value)url.searchParams.set(key,value);else url.searchParams.delete(key)}history.replaceState(history.state,'',url.pathname+url.search+url.hash)},[topic,query,sort]);
+ const inQuery=(drop=false)=>{const p=new URLSearchParams(location.search);if(drop||!section)p.delete('in');else p.set('in',section);const q=p.toString();return q?'?'+q:''};
  function show(id:string,mode:'page'|'modal'){if(!requestedOpen.current&&mode==='modal')remember();requestedOpen.current={id,mode};transition(()=>{
-  if(parseLocale(location.pathname).route!==`/inspiration/${id}`){if(open)history.replaceState(null,'',localePath(`/inspiration/${id}`,language)+location.search);else{history.pushState(null,'',localePath(`/inspiration/${id}`,language)+location.search);pushed.current=true}}
+  if(parseLocale(location.pathname).route!==`/inspiration/${id}`){if(open)history.replaceState(null,'',localePath(`/inspiration/${id}`,language)+inQuery());else{history.pushState(null,'',localePath(`/inspiration/${id}`,language)+inQuery());pushed.current=true}}
   setOpen({id,mode});if(dialogRef.current)dialogRef.current.scrollTop=0;
  })}
- function close(){requestedOpen.current=null;if(pushed.current){pushed.current=false;history.back()}else transition(()=>{history.replaceState(null,'',localePath('/',language)+location.search);setOpen(null)})}
+ function close(){requestedOpen.current=null;if(pushed.current){pushed.current=false;history.back()}else transition(()=>{history.replaceState(null,'',localePath(sectionPath(section),language)+inQuery(true));setOpen(null)})}
  // Track requested navigation immediately: transition callbacks may lag behind several key presses.
  function step(by:number){const current=requestedOpen.current;if(!current)return;const list=results.some(r=>r.id===current.id)?results:inspirationItems;const at=list.findIndex(r=>r.id===current.id);if(at<0)return;show(list[(at+by+list.length)%list.length].id,current.mode)}
  useLayoutEffect(()=>{const d=dialogRef.current;if(!d)return;if(open?.mode==='modal'&&!d.open)d.showModal();if(open?.mode!=='modal'&&d.open)d.close();
@@ -139,7 +144,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
     <nav className="insp-detail-tools" aria-label={l('refNav')}>{asPage?<a href={localePath('/',language)} onClick={e=>{e.preventDefault();close()}}><Icon d={icons.prev}/>{l('allRefs')}</a>:<button type="button" onClick={close} aria-label={l('close')}><Icon d={icons.close}/></button>}
      <button type="button" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])}><Icon d={icons.save}/>{l(selection[item.id]?'removePack':'addPack')}</button>
      <span><button type="button" onClick={()=>step(-1)} aria-label={l('prev')}><Icon d={icons.prev}/></button><button type="button" onClick={()=>step(1)} aria-label={l('next')}><Icon d={icons.next}/></button></span></nav>
-    <p className="insp-detail-label">{t(labels[item.category],language)} · {item.tag} {rights(item,language)}</p>
+    <p className="insp-detail-label">{t(sectionById(sectionOf(item))!.name,language)} · {item.tag} {rights(item,language)}</p>
     <H id={`detail-${item.id}`}>{item.name}</H><p className="inspiration-host">{new URL(item.url).hostname}</p>
     <dl><dt>{l('study')}</dt><dd>{t(item.focus,language)}</dd><dt>{l('apply')}</dt><dd>{t(item.application,language)}</dd><dt>{l('source')}</dt><dd><a href={item.url} target="_blank" rel="noreferrer">{item.publisher}</a> · {t(kinds[item.kind],language)} · {item.checkedAt}{viaOf(item)&&<> · <a href={viaOf(item)} target="_blank" rel="noreferrer">{fl('via')(new URL(viaOf(item)!).hostname)}</a></>}</dd><dt>{l('designer')}</dt><dd>{item.designer ?? l('unknownDesigner')}</dd><dt>{l('stillUnknown')}</dt><dd>{unknowns(item,language)}</dd></dl>
     <button type="button" className="insp-detail-brief" onClick={()=>brief(item)}>{l('createBrief')}</button>
@@ -154,26 +159,26 @@ export function InspirationPage({detail=''}:{detail?:string}){
   {selected.length>0&&<section className="inspiration-pack" aria-labelledby="pack-title"><h2 id="pack-title">{l('pack')} ({selected.length})</h2><p>{l('packNote')}</p>{selected.map(item=><fieldset key={item.id}><legend>{item.name}</legend><label>{l('useFor')}<textarea aria-label={l('useFor')} value={selection[item.id].use} onChange={e=>updateIntent(item.id,'use',e.target.value)}/></label><label>{l('avoid')}<textarea aria-label={l('avoid')} value={selection[item.id].avoid} onChange={e=>updateIntent(item.id,'avoid',e.target.value)}/></label><button type="button" onClick={()=>toggleSelection(item.id)}>{l('remove')}</button></fieldset>)}<button className="content-button" onClick={createPack}>{l('packBrief')}</button></section>}
   {prompt&&<section ref={briefRef} tabIndex={-1} className="inspiration-brief" aria-labelledby="reference-brief-title"><h2 id="reference-brief-title">{l('takeIt')}</h2><textarea aria-label={l('briefLabel')} readOnly value={prompt} rows={6}/><button className="content-button" onClick={copy}>{l('copyBrief')}</button><button className="inspiration-dismiss" onClick={()=>{setPrompt('');setNotice('')}}>{l('dismiss')}</button><p role="status">{notice}</p></section>}
  </>;
- const header=<SiteHeader language={language} page="inspiration" inspirationCategory={category==='motion'?'practice':category}/>;
+ const header=<SiteHeader language={language} page="inspiration" inspirationCategory={section}/>;
  if(withdrawn)return <WithdrawnReferencePage record={withdrawn}/>;
  if(open?.mode==='page'&&openItem)return <main className="content-page inspiration-page">{header}<div className="site-shell insp-page-detail">{detailView(openItem,true)}{tail}</div><SiteFooter language={language}/></main>;
  return <main className="content-page inspiration-page">{header}
   <header className="site-shell insp-head">
-   <div className="insp-title"><h1>{l('title')}</h1><p>{fl('intro')(total)}</p><a href={localePath('/submit',language)}>{l('submissions')}</a></div>
-   <p className="insp-counts">{(['landing','product','flow','practice','motion'] as const).map(c=>`${count(c)} ${t(labels[c],language)}`).join(' · ')}</p>
+   <div className="insp-title"><h1>{sectionInfo?t(sectionInfo.title,language):l('title')}</h1><p>{sectionInfo?t(sectionInfo.intro,language):fl('intro')(total)}</p><a href={localePath('/submit',language)}>{l('submissions')}</a></div>
+   <p className="insp-counts">{tabs.map(c=>`${count(c.id)} ${t(c.name,language)}`).join(' · ')}</p>
    <details className="inspiration-disclosure"><summary>{l('disclosure')}</summary><p>{l('disclosureBody')}</p></details>
   </header>
   <div className="insp-bar"><div className="site-shell">
-   <div className="insp-pills" role="group" aria-label={l('refType')}>{[['practice',t(labels.practice,language)],['all',l('all')],...(['landing','product','flow','motion'] as const).map(c=>[c,t(labels[c],language)])].map(([id,label])=><button key={id} aria-pressed={category===id} onClick={()=>id==='motion'?transition(()=>filter(()=>setCategory(id))):filter(()=>setCategory(id))}>{label}</button>)}</div>
+   <nav className="insp-pills" aria-label={l('refType')}>{[{id:'',name:{zh:'全部',en:'All'}},...tabs].map(c=><a key={c.id||'all'} href={localePath(sectionPath(c.id),language)} aria-current={section===c.id?'page':undefined}>{t(c.name,language)}</a>)}</nav>
    <select aria-label={l('topic')} value={topic} onChange={e=>{const v=e.target.value;filter(()=>setTopic(v))}}><option value="">{l('allTopics')}</option>{inspirationTopics.map(tp=><option key={tp.id} value={tp.id}>{t(tp.title,language)} · {tp.items.length}</option>)}</select>
    <label className="insp-search"><Icon d={icons.search}/><span className="insp-visually-hidden">{l('search')}</span><input ref={searchRef} type="search" value={query} onChange={e=>{setQuery(e.target.value);setVisible(pageSize)}} placeholder={l('searchHint')}/></label>
    <select aria-label={l('sort')} value={sort} onChange={e=>{const v=e.target.value;filter(()=>setSort(v))}}><option value="default">{l('curated')}</option><option value="curated">{l('original')}</option><option value="checked">{l('recent')}</option><option value="name">{l('byName')}</option></select>
   </div></div>
   <section className="site-shell insp-body">
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
-   <p className="inspiration-count" role="status">{results.length} {l('references')}{category==='motion'&&<> · {l('motionNote')}</>}</p>
-   <ul className={`inspiration-grid insp-feed${category==='practice'?' insp-videos':''}`}>{shown.map(item=>{const media=mediaFor(item),post=postOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
-    <a className={`insp-card-open${media?' insp-vcard-open':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(labels[item.category],language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
+   <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
+   <ul className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}`}>{shown.map(item=>{const media=mediaFor(item),post=postOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
+    <a className={`insp-card-open${media?' insp-vcard-open':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
      {media?<XVideo media={media}/>:<Thumb item={item} locale={language}/>}
      <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={media.avatar} width="28" height="28" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer"/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:new URL(item.url).hostname} · {rightsLabel(item,language)}</small></span></span>
     </a>
@@ -181,7 +186,7 @@ export function InspirationPage({detail=''}:{detail?:string}){
     <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l(post?'openOnX':'openSource')}：${item.name}`}><Icon d={icons.out}/></a>
    </li>})}</ul>
    {visible<results.length&&<div ref={sentinel} className="insp-more"><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}
-   {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setCategory('all');setTopic('');setQuery('')})}>{l('clear')}</button></p>}
+   {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setTopic('');setQuery('')})}>{l('clear')}</button></p>}
    {tail}
    <section className="inspiration-sources"><h2>{l('explore')}</h2><p>{l('exploreNote')}</p><div>{sources.map(s=><a key={s.name} href={s.url} target="_blank" rel="noreferrer"><strong>{s.name}</strong><span>{t(s.type,language)}</span></a>)}</div></section><section className="content-closing"><h2>{l('closing')}</h2><a className="content-button" href={localePath('/docs',language)}>{l('install')}</a><a className="content-secondary" href={localePath('/cases',language)}>{l('studies')}</a><p className="inspiration-count">{l('checked')}</p></section>
   </section>
