@@ -146,7 +146,8 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .insp-thumb-fallback span{font-size:12px;line-height:1.45;color:var(--site-muted);max-width:30ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .insp-thumb-media[data-loaded=true]>.insp-thumb-fallback{visibility:hidden}
 .insp-thumb-post b{font-size:18px;line-height:1.35;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
-.insp-shot img{display:block;width:100%;height:auto;border:1px solid var(--site-line);border-radius:var(--radius-panel);background:var(--site-surface)}
+/* Preview images carry no recorded size: reserve the card ratio so the caption and footer do not jump when the image arrives (CLS 0.08 to 0.14 before). */
+.insp-shot img{display:block;width:100%;aspect-ratio:16/10;object-fit:contain;border:1px solid var(--site-line);border-radius:var(--radius-panel);background:var(--site-surface)}
 /* A shared X post: its text first, X's own embed on request. */
 .x-post{margin:0;display:grid;gap:var(--space-3)}
 .x-post blockquote{margin:0;padding:var(--space-5);border:1px solid var(--site-line);border-radius:var(--radius-panel);background:var(--site-card)}
