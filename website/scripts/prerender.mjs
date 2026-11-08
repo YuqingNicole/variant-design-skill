@@ -44,6 +44,16 @@ const staticPagesEn = references => ({
 // Experiments stay reachable but out of search results (RFC-005 §3.3).
 const unlisted = new Set(['/lab']);
 const noindexTag = '<meta name="robots" content="noindex">';
+// Served with status 404 for any path that has no page (vercel.json rewrites only the client-only routes to the app shell).
+// No canonical and no share card: this is not a page to index or to share. The app still boots and shows its own "not found" view.
+export function notFoundPage(template) {
+  const title = '页面不存在 — Variant Design', description = '这个地址没有对应的页面。';
+  const html = template.replace(/<html[^>]*>/, () => '<html lang="zh-CN">').replace(/<title>[\s\S]*?<\/title>/, () => `<title>${title}</title>`)
+    .replace(/<meta\s+name="description"\s+content="[^"]*"\s*\/?>/, () => `<meta name="description" content="${description}" />`)
+    .replace('<div id="root"></div>', () => `<div id="root"><main><h1>页面不存在</h1><p>${description}<a href="/">回到首页</a></p></main></div>`);
+  if (!html.includes(`<title>${title}</title>`) || !html.includes(`content="${description}"`) || !html.includes('<h1>页面不存在</h1>')) throw new Error('Could not place the not-found page');
+  return withNoindex(html);
+}
 export const withNoindex = html => html.includes(noindexTag) ? html : html.replace('</head>', () => `    ${noindexTag}\n  </head>`);
 
 // RFC-005 §3.5: routes whose English is marked draft. Production leaves them out of the English pages,
@@ -302,6 +312,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   for (const file of [shell, ...htmlIn(path.join(dist, 'variant-output')), ...htmlIn(path.join(dist, 'lab'))]) fs.writeFileSync(file, withNoindex(fs.readFileSync(file, 'utf8')));
   fs.cpSync(path.join(contentRoot, 'media'), path.join(dist, 'media'), { recursive: true });
   for (const entry of entries) fs.writeFileSync(path.join(dist, 'd', `${entry.slug}.json`), JSON.stringify(toCard(entry, site), null, 2) + '\n');
+  fs.writeFileSync(path.join(dist, '404.html'), notFoundPage(template));
   fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap(indexableRoutes(pages), site, lastModified({ references, entries: listed.entries, guides: listed.guides, sectionOf: sectionModule.sectionOf })));
   fs.writeFileSync(path.join(dist, 'feed.xml'), rss(entries, site, references));
   fs.writeFileSync(path.join(dist, 'llms.txt'), llms(listed.entries, docs, site, englishReferences, listed.guides));

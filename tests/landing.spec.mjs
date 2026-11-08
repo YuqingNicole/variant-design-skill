@@ -9,6 +9,9 @@ test.beforeEach(async({page})=>{
  await page.route(/^https:\/\/platform\.twitter\.com\//,r=>r.abort());
 });
 
+
+// The inspiration styles load with the page's script chunk: read computed styles only after React has taken over the prerendered page.
+const hydrated=page=>page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
 for(const route of ['/docs','/sponsor'])test(`${route} keeps a consistent type and color scale in both languages`,async({page},info)=>{
  await page.emulateMedia({reducedMotion:'reduce'});const samples=[];
  for(const language of ['zh','en'])for(const width of [320,390,1440]){
@@ -858,7 +861,7 @@ test('old category links and empty sections land on the right page', async ({pag
 });
 
 test('on a phone the tabs stay in one row with the current one in view, and the filters no longer pin over the list', async ({page})=>{
- await page.setViewportSize({width:390,height:844});await page.goto('/browse/branding');
+ await page.setViewportSize({width:390,height:844});await page.goto('/browse/branding');await hydrated(page);
  const row=page.locator('.insp-pills');
  await expect(row.locator('a')).toHaveCount(6);
  const m=await row.evaluate(r=>{const cur=r.querySelector('[aria-current=page]').getBoundingClientRect();return{h:r.getBoundingClientRect().height,wrap:getComputedStyle(r).flexWrap,inView:cur.left>=0&&cur.right<=innerWidth,overflow:document.documentElement.scrollWidth>innerWidth}});
@@ -869,7 +872,7 @@ test('on a phone the tabs stay in one row with the current one in view, and the 
 });
 
 test('a tab is fetched as soon as the pointer or finger is on it, once', async ({page})=>{
- await page.goto('/browse/web');
+ await page.goto('/browse/web');await hydrated(page);
  const tab=page.locator('.insp-pills a',{hasText:'动效'});
  await tab.hover();await tab.dispatchEvent('touchstart');await tab.focus();
  await expect(page.locator('link[rel=prefetch][href="/browse/motion"]')).toHaveCount(1);
@@ -877,16 +880,16 @@ test('a tab is fetched as soon as the pointer or finger is on it, once', async (
 });
 
 test('feed motion stays inside the budget: 200ms card zoom, a fixed-width search box, hover only where hover exists', async ({page,browser})=>{
- await page.goto('/browse/interaction');
+ await page.goto('/browse/interaction');await hydrated(page);
  expect(await page.locator('.insp-card-open').first().evaluate(a=>{const c=a.querySelector('.insp-thumb,.insp-vcard-media');const s=getComputedStyle(c);return [s.transitionProperty,s.transitionDuration]})).toEqual(['transform','0.2s']);
  const search=page.locator('.insp-search input'),width=await search.evaluate(e=>e.getBoundingClientRect().width);
  expect(await search.evaluate(e=>getComputedStyle(e).transitionProperty.includes('width'))).toBe(false);
  await search.focus();await search.fill('x');expect(await search.evaluate(e=>e.getBoundingClientRect().width)).toBe(width);
- await page.goto('/cases');
+ await page.goto('/cases');await hydrated(page);
  const link=page.locator('.library-card a').first();await link.hover();
  await expect.poll(()=>link.locator('img').first().evaluate(e=>getComputedStyle(e).transform)).toBe('matrix(1.025, 0, 0, 1.025, 0, 0)');
  const phone=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true}),p=await phone.newPage();
- await p.goto('/cases');const tap=p.locator('.library-card a').first();await tap.hover();await p.waitForTimeout(400);
+ await p.goto('/cases');await hydrated(p);const tap=p.locator('.library-card a').first();await tap.hover();await p.waitForTimeout(400);
  expect(await tap.locator('img').first().evaluate(e=>getComputedStyle(e).transform)).toBe('none');await phone.close();
 });
 
@@ -916,7 +919,7 @@ test('switching a tab crossfades the page without flying cards, and the referenc
 });
 
 test('motion tokens, tabs without a hover lift, a save button that answers with colour and press, reduced motion that keeps feedback', async ({page,browser})=>{
- await page.goto('/browse/interaction');
+ await page.goto('/browse/interaction');await hydrated(page);
  // The tokens resolve on :root (the page transition reads them too); compare computed values, not the minified source text.
  expect(await page.evaluate(()=>{const e=document.createElement('i');document.body.append(e);const out=['--dur-press','--dur-fast','--dur-base','--dur-slow'].map(k=>{e.style.transitionDuration=`var(${k})`;return getComputedStyle(e).transitionDuration});e.style.transitionTimingFunction='var(--ease-out)';out.push(getComputedStyle(e).transitionTimingFunction);e.remove();return out})).toEqual(['0.16s','0.14s','0.2s','0.34s','cubic-bezier(0.22, 1, 0.36, 1)']);
  // Tabs change colour only: no lift on hover, and transform is not among their transitions.
@@ -928,7 +931,7 @@ test('motion tokens, tabs without a hover lift, a save button that answers with 
  expect(props.name).toBe('none');for(const p of ['background-color','color','transform'])expect(props.transition).toContain(p);
  await save.click();await expect(save).toHaveAttribute('aria-pressed','true');expect(await save.evaluate(b=>getComputedStyle(b).animationName)).toBe('none');
  // Reduced motion: movement goes, opacity and colour feedback stay, and the dialog still fades in.
- const calm=await browser.newContext({reducedMotion:'reduce'}),q=await calm.newPage();await q.goto('/browse/interaction');
+ const calm=await browser.newContext({reducedMotion:'reduce'}),q=await calm.newPage();await q.goto('/browse/interaction');await hydrated(q);
  expect(await q.locator('.insp-card-meta').first().evaluate(m=>{const s=getComputedStyle(m);return [s.transitionProperty.includes('opacity'),s.transitionProperty.includes('transform'),parseFloat(s.transitionDuration)>0]})).toEqual([true,false,true]);
  expect(await q.locator('.insp-card-save').first().evaluate(b=>getComputedStyle(b).transitionProperty.includes('transform'))).toBe(false);
  await q.locator('.insp-card-open').first().click();await expect(q.getByRole('dialog')).toBeVisible();
@@ -940,4 +943,20 @@ test('the lab preview frame no longer animates layout properties', async ()=>{
  for(const selector of ['.workspace-frame','.workspace-frame .direction-preview','.workspace-live-frame']){
   const rule=css.split('\n').find(l=>l.startsWith(selector+' {'));expect(rule,selector).toBeTruthy();expect(rule).not.toContain('transition');
  }
+});
+
+test('a path with no page answers 404 with noindex, while every real page and every sitemap address answers 200', async ({page,request})=>{
+ for(const path of ['/nope','/en/nope','/inspiration/does-not-exist','/d/nope','/c/nope','/guides/nope','/browse/zzz','/browse/illustration','/missing.txt']){
+  const r=await request.get(path);expect(r.status(),path).toBe(404);
+  if(!path.endsWith('.txt')){const html=await r.text();expect(html,path).toContain('<title>页面不存在 — Variant Design</title>');expect(html,path).toContain('name="robots" content="noindex"');expect(html,path).not.toContain('rel="canonical"')}
+ }
+ // Client-only routes are the ones vercel.json rewrites to the app shell; the old redirects keep working.
+ for(const path of ['/','/en','/cases','/inspiration/linear','/browse/web','/en/browse/web','/d/forma','/c/landing','/guides','/lab','/lab/forma','/lab/canvas','/lab/workbench','/directions','/showcase?direction=B','/sitemap.xml','/feed.xml','/llms.txt','/robots.txt'])expect((await request.get(path)).status(),path).toBe(200);
+ const sitemap=await(await request.get('/sitemap.xml')).text(),locs=[...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>new URL(m[1]).pathname);
+ expect(locs.length).toBeGreaterThan(200);
+ for(const path of locs)expect((await request.get(path)).status(),path).toBe(200);
+ const vercel=JSON.parse(fs.readFileSync(new URL('../vercel.json',import.meta.url),'utf8'));
+ expect(vercel.rewrites.filter(r=>r.destination==='/app.html').map(r=>r.source)).toEqual(['/lab/canvas','/lab/workbench','/directions','/showcase']);
+ // The shell still boots on a 404 and tells the reader so.
+ const response=await page.goto('/nope');expect(response.status()).toBe(404);await expect(page.locator('h1')).toContainText('页面不存在');
 });

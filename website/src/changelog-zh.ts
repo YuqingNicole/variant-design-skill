@@ -6,6 +6,10 @@ export const changelogZh: Record<string, { title?: string; blocks: string[] }> =
     blocks: [
       '网站',
       '网站包 `0.1.1` 新增中英双语的编辑式页脚，可直接返回灵感流；更新记录页也会标出当前技能版本。',
+      '网站包 `0.2.0`：灵感的每个分类都有自己的页面（`/browse/web`、`/browse/interface`、`/browse/interaction`、`/browse/motion`、`/browse/branding` 和 `/en/browse/...`），有各自的标题、描述和预渲染的列表。一条参考只属于一个分类，所以 tab 之间不会重复；首页仍是完整列表。暂时没有参考的分类（插画、海报、印刷）在收录第一条后才出现 tab。旧的 `?category=` 链接会改写到新地址。',
+      '手机上：六个分类 tab 排成一行横向滚动，当前 tab 在可见范围内，筛选栏不再一直盖在列表上。指针、手指或键盘焦点一碰到 tab 链接，就开始预取对应页面。',
+      '动效：页面之间切换时淡入淡出（开启减少动效时不启用）。信息流卡片悬停放大从 360ms 缩到 200ms，搜索框改为固定宽度，不再做展开动画；案例卡片和首页按钮的悬停位移只在能悬停的设备上生效。生成的参考指令面板会上移出现。收藏按钮用颜色填充和按下反馈代替会重播的弹跳，导航 tab 悬停不再上移。减少动效时，页面保留透明度和颜色反馈，弹层仍然淡入；实验室的预览框不再动画布局。',
+      '可发现性：`feed.xml` 现在同时列出参考和方向案例，`sitemap.xml` 为每个有记录日期的页面带上 `lastmod`，没有对应页面的路径返回真正的 404（`404.html`，带 `noindex`），不再用状态码 200 显示首页。只在浏览器里运行的路由（`/lab/canvas`、`/lab/workbench`、`/directions`、`/showcase`）不变。',
       '安装',
       'Claude Code 插件市场：先运行 `claude plugin marketplace add YuqingNicole/variant-design-skill`，再运行 `claude plugin install variant-design@variant-design`。用这种方式安装时，更新检查会给出插件的更新命令。',
       '子流程文件从 `SKILL.md` 改名为 `skills/*/ROUTE.md`，所以 Claude Code 插件、Codex 和 `npx skills` 都只会把入口注册为技能。',
