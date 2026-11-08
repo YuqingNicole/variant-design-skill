@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import { probe, grade, defaults } from '../scripts/style-budget.mjs';
 import { measure, pages as labPages } from './perf-lab.mjs';
+import { probeFocus } from './focus-probe.mjs';
 const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
 // The homepage includes X motion now; regressions isolate its media in every scenario.
 // Individual media tests override these routes with their own playback/failure fixture.
@@ -972,5 +973,20 @@ test('lab budget: no layout shift past 0.1, a quick first paint on our own pages
   expect(m.cls,`${path} ${mobile?'phone':'desktop'} CLS`).toBeLessThanOrEqual(0.1);
   if(path!=='/inspiration/linear')expect(m.lcp,`${path} ${mobile?'phone':'desktop'} LCP`).toBeLessThanOrEqual(2500);
   if(path==='/'&&!mobile){expect(m.kb.js,'home gzip script KB').toBeLessThanOrEqual(145);expect(m.kb.css,'home gzip style KB').toBeLessThanOrEqual(95)}
+ }
+});
+
+// One focus ring across the site (the brand green, 2px) that stands out from what is behind it. This checks the ring's colour
+// and its contrast against the background, with the WCAG 2.2 3:1 line; it is not a claim of WCAG conformance.
+test('every public page shows the same brand-green focus ring, at 3:1 or better against its background', async ({browser})=>{
+ // A fresh context per page: a stored language preference makes the language notice appear, and that dark bar rightly uses a light ring.
+ for(const path of ['/','/browse/web','/inspiration/linear','/cases','/skills','/guides','/docs','/pricing','/about','/sponsor','/submit','/changelog','/lab','/en','/en/cases','/en/docs']){
+  const context=await browser.newContext({viewport:{width:1440,height:900}}),page=await context.newPage();await page.route(u=>u.origin!=='http://127.0.0.1:4197',r=>r.abort());
+  await page.goto(path);await hydrated(page);
+  // A live preview iframe (the about page's) is a real tab stop whose ring comes from the page inside it, not from this site.
+  const rows=(await probeFocus(page,{tabs:16})).filter(r=>r.tag!=='iframe');
+  expect(rows.length,`${path} focusable elements`).toBeGreaterThan(5);
+  for(const r of rows){expect(r.ring,`${path} ${r.tag} "${r.label}" has no focus ring`).not.toBeNull();expect(r.ring,`${path} ${r.tag} "${r.label}"`).toEqual([46,67,37]);expect(r.width,`${path} ${r.label}`).toBe('2px');expect(r.ratio,`${path} ${r.label} contrast`).toBeGreaterThanOrEqual(3)}
+  await context.close();
  }
 });
