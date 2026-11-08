@@ -18,7 +18,19 @@
       "destination": "/api"
     },
     {
-      "source": "/((?!api/)(?!.*\\.[A-Za-z0-9]+$).*)",
+      "source": "/lab/canvas",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/lab/workbench",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/directions",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/showcase",
       "destination": "/app.html"
     }
   ],

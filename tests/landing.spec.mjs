@@ -941,3 +941,19 @@ test('the lab preview frame no longer animates layout properties', async ()=>{
   const rule=css.split('\n').find(l=>l.startsWith(selector+' {'));expect(rule,selector).toBeTruthy();expect(rule).not.toContain('transition');
  }
 });
+
+test('a path with no page answers 404 with noindex, while every real page and every sitemap address answers 200', async ({page,request})=>{
+ for(const path of ['/nope','/en/nope','/inspiration/does-not-exist','/d/nope','/c/nope','/guides/nope','/browse/zzz','/browse/illustration','/missing.txt']){
+  const r=await request.get(path);expect(r.status(),path).toBe(404);
+  if(!path.endsWith('.txt')){const html=await r.text();expect(html,path).toContain('<title>页面不存在 — Variant Design</title>');expect(html,path).toContain('name="robots" content="noindex"');expect(html,path).not.toContain('rel="canonical"')}
+ }
+ // Client-only routes are the ones vercel.json rewrites to the app shell; the old redirects keep working.
+ for(const path of ['/','/en','/cases','/inspiration/linear','/browse/web','/en/browse/web','/d/forma','/c/landing','/guides','/lab','/lab/forma','/lab/canvas','/lab/workbench','/directions','/showcase?direction=B','/sitemap.xml','/feed.xml','/llms.txt','/robots.txt'])expect((await request.get(path)).status(),path).toBe(200);
+ const sitemap=await(await request.get('/sitemap.xml')).text(),locs=[...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>new URL(m[1]).pathname);
+ expect(locs.length).toBeGreaterThan(200);
+ for(const path of locs)expect((await request.get(path)).status(),path).toBe(200);
+ const vercel=JSON.parse(fs.readFileSync(new URL('../vercel.json',import.meta.url),'utf8'));
+ expect(vercel.rewrites.filter(r=>r.destination==='/app.html').map(r=>r.source)).toEqual(['/lab/canvas','/lab/workbench','/directions','/showcase']);
+ // The shell still boots on a 404 and tells the reader so.
+ const response=await page.goto('/nope');expect(response.status()).toBe(404);await expect(page.locator('h1')).toContainText('页面不存在');
+});
