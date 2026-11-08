@@ -4,6 +4,10 @@
 
 ### Website
 - Website package `0.1.1` adds a bilingual editorial footer with a direct path back to inspiration, and marks the current skill version in the changelog.
+- Website package `0.2.0`: every inspiration category is its own page (`/browse/web`, `/browse/interface`, `/browse/interaction`, `/browse/motion`, `/browse/branding`, and `/en/browse/...`), with its own title, description and prerendered list. A reference belongs to exactly one category, so no tab repeats another; the home page stays the full list. Categories with no reference yet (illustration, posters, print) get a tab when the first one is added. Old `?category=` links are rewritten to the new addresses.
+- Phones: the six category tabs scroll in one row with the current one in view, and the filter bar no longer stays pinned over the list. A tab page is fetched as soon as a pointer, finger or keyboard focus reaches its link.
+- Motion: moving between pages crossfades (not with reduced motion). Feed cards zoom on hover in 200ms instead of 360ms, the search box keeps a fixed width instead of animating it, and hover movement on case cards and the home button only applies where a device can hover. A generated reference brief rises into place. The save button answers with a colour fill and a press instead of a restarting pop, and navigation tabs no longer lift. With reduced motion the page keeps its opacity and colour feedback and the dialog still fades in; the lab preview frame no longer animates layout.
+- Discovery: `feed.xml` now lists the references together with the direction cases, `sitemap.xml` carries `lastmod` for every page that has a recorded date, and a path with no page answers a real 404 (`404.html`, `noindex`) instead of the home page with status 200. Client-only routes (`/lab/canvas`, `/lab/workbench`, `/directions`, `/showcase`) are unchanged.
 
 ### Install
 - Claude Code plugin marketplace: `claude plugin marketplace add YuqingNicole/variant-design-skill`, then `claude plugin install variant-design@variant-design`. The update check prints the plugin update commands for this install.
