@@ -108,24 +108,24 @@
   </section>
 <section class="backlog-section" data-section="6">
     <header class="section-heading"><span class="section-index">07</span><h2>7. 变现：先把度量做出来</h2><span class="section-count">6 项</span></header>
-    <p class="section-note">目标是让广告主付费买本站的赞助位。现状是仓库里没有任何统计代码，赞助页自己写着&quot;不写数字&quot;和&quot;网站目前还没有赞助位&quot;，所以先做度量，之后才有版位和报价。完整拆解（45 个小闭环、关键路径、需要维护者定的 6 件事）见 <a href="https://github.com/YuqingNicole/variant-design-skill/blob/master/docs/drafts/ads-revenue-loops.md"><code>docs/drafts/ads-revenue-loops.md</code></a>。本组是其中的阶段 B，按顺序做，后一条依赖前一条。版位、成交和交付三个阶段不在这里，等度量有了数字再排。</p><ul class="task-list"><li class="task" data-owner="yes" data-done="no" data-search="7. 变现：先把度量做出来 【维护者】访问量（b1）：先到 vercel 仪表盘核实 web analytics 现在有没有开启（geo 策略假定在用，仓库里没有统计代码）。没开就选一个不用 cookie 的工具并说明选择理由。做完后每周有一份访问量、独立访客和来源的记录，存到 `docs/research/`。">
+    <p class="section-note">目标是让广告主付费买本站的赞助位。现状是仓库里没有任何统计代码，赞助页自己写着&quot;不写数字&quot;和&quot;网站目前还没有赞助位&quot;，所以先做度量，之后才有版位和报价。完整拆解（45 个小闭环、关键路径、需要维护者定的 6 件事）见 <a href="https://github.com/YuqingNicole/variant-design-skill/blob/master/docs/drafts/ads-revenue-loops.md"><code>docs/drafts/ads-revenue-loops.md</code></a>。本组是其中的阶段 B，按顺序做，后一条依赖前一条。版位、成交和交付三个阶段不在这里，等度量有了数字再排。</p><ul class="task-list"><li class="task" data-owner="yes" data-done="no" data-search="7. 变现：先把度量做出来 【维护者】访问量（b1）：2026-11-08 已核实，现在**没有任何数据在收集**（web analytics 没开，页面也没加载任何统计脚本，证据见 `docs/research/2026-11-08-analytics-state.md`）。到仪表盘决定用 web analytics 还是别的不用 cookie 的工具，并核对那份记录里列的 4 项；定了以后代理加脚本。做完后每周有一份访问量、独立访客和来源的记录，存到 `docs/research/`。">
     <span class="task-state" aria-label="待处理"></span>
-    <div class="task-copy"><h3>【维护者】访问量（B1）：先到 Vercel 仪表盘核实 Web Analytics 现在有没有开启（GEO 策略假定在用，仓库里没有统计代码）。没开就选一个不用 cookie 的工具并说明选择理由。做完后每周有一份访问量、独立访客和来源的记录，存到 <code>docs/research/</code>。</h3><span class="task-owner">需要维护者</span></div>
-  </li><li class="task" data-owner="no" data-done="no" data-search="7. 变现：先把度量做出来 来源归因（b2）：区分 ai 引荐（chatgpt.com、perplexity.ai、claude.ai 等）、搜索、x 和直接访问，约定外链的 utm 写法。完成后能回答&quot;流量从哪来&quot;，并和&quot;定期维护&quot;里的 ai 搜索测量对得上。依赖 b1。">
+    <div class="task-copy"><h3>【维护者】访问量（B1）：2026-11-08 已核实，现在**没有任何数据在收集**（Web Analytics 没开，页面也没加载任何统计脚本，证据见 <code>docs/research/2026-11-08-analytics-state.md</code>）。到仪表盘决定用 Web Analytics 还是别的不用 cookie 的工具，并核对那份记录里列的 4 项；定了以后代理加脚本。做完后每周有一份访问量、独立访客和来源的记录，存到 <code>docs/research/</code>。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="7. 变现：先把度量做出来 来源归因（b2）：区分 ai 引荐（chatgpt.com、perplexity.ai、claude.ai 等）、搜索、x 和直接访问，约定外链的 utm 写法（初稿见 `docs/drafts/measurement-method.md` 第 1、2 节，要用第一个月的真实来源校正）。完成后能回答&quot;流量从哪来&quot;，并和&quot;定期维护&quot;里的 ai 搜索测量对得上。依赖 b1。">
     <span class="task-state" aria-label="待处理"></span>
-    <div class="task-copy"><h3>来源归因（B2）：区分 AI 引荐（chatgpt.com、perplexity.ai、claude.ai 等）、搜索、X 和直接访问，约定外链的 UTM 写法。完成后能回答&quot;流量从哪来&quot;，并和&quot;定期维护&quot;里的 AI 搜索测量对得上。依赖 B1。</h3><span class="task-owner">可继续推进</span></div>
-  </li><li class="task" data-owner="no" data-done="no" data-search="7. 变现：先把度量做出来 真人与爬虫分开（b3）：已知爬虫和 ai 抓取不计入对外报价的数字，口径写明。ai 抓取是我们想要的，但广告主买的是真人访问。依赖 b1。">
+    <div class="task-copy"><h3>来源归因（B2）：区分 AI 引荐（chatgpt.com、perplexity.ai、claude.ai 等）、搜索、X 和直接访问，约定外链的 UTM 写法（初稿见 <code>docs/drafts/measurement-method.md</code> 第 1、2 节，要用第一个月的真实来源校正）。完成后能回答&quot;流量从哪来&quot;，并和&quot;定期维护&quot;里的 AI 搜索测量对得上。依赖 B1。</h3><span class="task-owner">可继续推进</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="7. 变现：先把度量做出来 真人与爬虫分开（b3）：已知爬虫和 ai 抓取不计入对外报价的数字，口径写明（初稿见同一文件第 3 节）。ai 抓取是我们想要的，但广告主买的是真人访问。依赖 b1。">
     <span class="task-state" aria-label="待处理"></span>
-    <div class="task-copy"><h3>真人与爬虫分开（B3）：已知爬虫和 AI 抓取不计入对外报价的数字，口径写明。AI 抓取是我们想要的，但广告主买的是真人访问。依赖 B1。</h3><span class="task-owner">可继续推进</span></div>
+    <div class="task-copy"><h3>真人与爬虫分开（B3）：已知爬虫和 AI 抓取不计入对外报价的数字，口径写明（初稿见同一文件第 3 节）。AI 抓取是我们想要的，但广告主买的是真人访问。依赖 B1。</h3><span class="task-owner">可继续推进</span></div>
   </li><li class="task" data-owner="no" data-done="no" data-search="7. 变现：先把度量做出来 行为事件（b4）：给卡片点击、详情打开、&quot;访问原站&quot;点击、保存、生成参考指令、安装命令复制定名字和触发条件，每个事件有 playwright 测试。这些是以后赞助位点击率的基线。依赖 b1，且不得破坏赞助页&quot;不给读者数据&quot;的承诺。">
     <span class="task-state" aria-label="待处理"></span>
     <div class="task-copy"><h3>行为事件（B4）：给卡片点击、详情打开、&quot;访问原站&quot;点击、保存、生成参考指令、安装命令复制定名字和触发条件，每个事件有 Playwright 测试。这些是以后赞助位点击率的基线。依赖 B1，且不得破坏赞助页&quot;不给读者数据&quot;的承诺。</h3><span class="task-owner">可继续推进</span></div>
-  </li><li class="task" data-owner="yes" data-done="no" data-search="7. 变现：先把度量做出来 【维护者】隐私一致（b5）：统计工具不识别个人，补一页隐私说明，措辞要能被赞助页的承诺覆盖。法律措辞由维护者核对，代理只起草。依赖 b1。">
+  </li><li class="task" data-owner="yes" data-done="no" data-search="7. 变现：先把度量做出来 【维护者】隐私一致（b5）：统计工具不识别个人，补一页隐私说明，措辞要能被赞助页的承诺覆盖。站点现在存了什么、请求了什么，已从代码核对并列在 `docs/drafts/measurement-method.md` 第 5 节；统计工具那一项等 b1。法律措辞由维护者核对，代理只起草。依赖 b1。">
     <span class="task-state" aria-label="待处理"></span>
-    <div class="task-copy"><h3>【维护者】隐私一致（B5）：统计工具不识别个人，补一页隐私说明，措辞要能被赞助页的承诺覆盖。法律措辞由维护者核对，代理只起草。依赖 B1。</h3><span class="task-owner">需要维护者</span></div>
-  </li><li class="task" data-owner="no" data-done="no" data-search="7. 变现：先把度量做出来 统计口径页（b6）：把&quot;访问量怎么数&quot;写成一页，每个数字写明日期和来源，赞助页再链过去。赞助页现在说&quot;洽谈时提供统计口径&quot;，这一页让它有东西可给。依赖 b1–b3。">
+    <div class="task-copy"><h3>【维护者】隐私一致（B5）：统计工具不识别个人，补一页隐私说明，措辞要能被赞助页的承诺覆盖。站点现在存了什么、请求了什么，已从代码核对并列在 <code>docs/drafts/measurement-method.md</code> 第 5 节；统计工具那一项等 B1。法律措辞由维护者核对，代理只起草。依赖 B1。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="7. 变现：先把度量做出来 统计口径页（b6）：把&quot;访问量怎么数&quot;写成一页，每个数字写明日期和来源，赞助页再链过去。赞助页现在说&quot;洽谈时提供统计口径&quot;，这一页让它有东西可给。数字清单和定义见 `docs/drafts/measurement-method.md` 第 4 节，现在每一项都是&quot;尚无数据&quot;。依赖 b1–b3。">
     <span class="task-state" aria-label="待处理"></span>
-    <div class="task-copy"><h3>统计口径页（B6）：把&quot;访问量怎么数&quot;写成一页，每个数字写明日期和来源，赞助页再链过去。赞助页现在说&quot;洽谈时提供统计口径&quot;，这一页让它有东西可给。依赖 B1–B3。</h3><span class="task-owner">可继续推进</span></div>
+    <div class="task-copy"><h3>统计口径页（B6）：把&quot;访问量怎么数&quot;写成一页，每个数字写明日期和来源，赞助页再链过去。赞助页现在说&quot;洽谈时提供统计口径&quot;，这一页让它有东西可给。数字清单和定义见 <code>docs/drafts/measurement-method.md</code> 第 4 节，现在每一项都是&quot;尚无数据&quot;。依赖 B1–B3。</h3><span class="task-owner">可继续推进</span></div>
   </li></ul>
   </section>
 <section class="backlog-section" data-section="7">
