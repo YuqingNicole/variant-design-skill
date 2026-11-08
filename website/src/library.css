@@ -6,7 +6,7 @@
 .library-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 24px}
 .library-card a{display:flex;flex-direction:column;gap:8px;color:inherit;text-decoration:none}
 .library-card-image{position:relative;display:block;aspect-ratio:16/10;overflow:hidden;border-radius:6px;background:var(--site-surface);border:1px solid var(--site-line)}
-.library-card-image img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .3s ease}
+.library-card-image img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;transition:transform var(--dur-base) var(--ease-out)}
 .library-card a:focus-visible img{transform:scale(1.025)}
 @media(hover:hover) and (pointer:fine){.library-card a:hover img{transform:scale(1.025)}}
 .library-card-image small{position:absolute;right:10px;bottom:10px;background:#fffffff0;color:var(--site-ink,#232622);border-radius:6px;padding:4px 7px;font-size:13px}

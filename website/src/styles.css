@@ -184,10 +184,10 @@ main[data-language="zh"] h2 em { font-style: normal; }
 .workspace-toolbar button { min-height: 2rem; padding-inline: .75rem; color: #a8a8ae; background: transparent; border: 0; cursor: pointer; font: inherit; }
 .workspace-toolbar button + button { border-left: 1px solid #5f5f66; }
 .workspace-toolbar button.is-active { color: var(--color-ink); background: var(--color-action); }
-.workspace-frame { min-height: 35rem; display: grid; place-items: center; padding: var(--space-3); overflow: hidden; background: #0f0f12; transition: padding .2s ease; }
-.workspace-frame .direction-preview { width: 100%; min-height: 31rem; margin: 0; padding: clamp(1.5rem, 4vw, 4rem); transition: width .25s ease; }
+.workspace-frame { min-height: 35rem; display: grid; place-items: center; padding: var(--space-3); overflow: hidden; background: #0f0f12; }
+.workspace-frame .direction-preview { width: 100%; min-height: 31rem; margin: 0; padding: clamp(1.5rem, 4vw, 4rem); }
 .workspace-frame.is-mobile .direction-preview { width: min(23rem, 100%); }
-.workspace-live-frame { width: 100%; min-height: 31rem; background: #fff; border: 0; transition: width .25s ease; }
+.workspace-live-frame { width: 100%; min-height: 31rem; background: #fff; border: 0; }
 .workspace-frame.is-mobile .workspace-live-frame { width: min(23rem, 100%); }
 .workspace-frame .direction-preview strong { max-width: 13ch; margin-top: clamp(4rem, 10vw, 8rem); font-size: clamp(3rem, 7vw, 6.25rem); }
 .workspace-frame.is-mobile .direction-preview strong { font-size: clamp(2.5rem, 12vw, 4rem); }
