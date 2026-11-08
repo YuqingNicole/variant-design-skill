@@ -22,15 +22,15 @@
     <p class="eyebrow">Backlog · Maintainer &amp; agents</p>
     <h1>把下一步，<br>变得清楚。</h1>
     <p class="hero-intro">维护者和编码代理共用的待办清单。做完的条目直接删掉，记录留在 PR 和 git 历史里。较大的工作仍然开 GitHub Issue。<br>排序依据：<code>docs/research/2026-11-02-competitor-comparison.md</code>（竞品对比）和 <code>docs/research/2026-11-02-geo-strategy.md</code>（GEO 策略）。标【维护者】的需要账号、付费、公开发布或措辞确认，代理只能起草。</p>
-    <div class="hero-meta"><span class="meta-pill"><strong>13</strong> 项待处理</span><span class="meta-pill"><strong>7</strong> 项需要维护者</span><span class="meta-pill">来源 <code>TODO.md</code></span></div>
+    <div class="hero-meta"><span class="meta-pill"><strong>21</strong> 项待处理</span><span class="meta-pill"><strong>11</strong> 项需要维护者</span><span class="meta-pill">来源 <code>TODO.md</code></span></div>
   </header>
   <div class="toolbar"><div class="shell toolbar-inner">
     <label><span class="visually-hidden">搜索待办</span><input class="search" type="search" placeholder="搜索 backlog" autocomplete="off"></label>
     <div class="filters" role="group" aria-label="按执行者筛选"><button type="button" data-kind="all" aria-pressed="true">全部</button><button type="button" data-kind="agent" aria-pressed="false">可继续推进</button><button type="button" data-kind="owner" aria-pressed="false">需要维护者</button></div>
-    <label><span class="visually-hidden">筛选分组</span><select class="section-select"><option value="all">所有分组</option><option value="0">1. 先修：诚实和定位</option><option value="1">2. 分发：先让人找得到</option><option value="2">3. 内容：选对手还没答好的问题</option><option value="3">4. 产品</option><option value="4">5. 网站维护</option><option value="5">X 设计样本收集箱</option><option value="6">定期维护</option></select></label>
+    <label><span class="visually-hidden">筛选分组</span><select class="section-select"><option value="all">所有分组</option><option value="0">1. 先修：诚实和定位</option><option value="1">2. 分发：先让人找得到</option><option value="2">3. 对标 recent.design：灵感内容产品</option><option value="3">4. 内容：选对手还没答好的问题</option><option value="4">5. 产品</option><option value="5">6. 网站维护</option><option value="6">X 设计样本收集箱</option><option value="7">定期维护</option></select></label>
   </div></div>
   <main class="shell">
-    <p class="result-line" aria-live="polite">显示 <strong class="visible-count">13</strong> / 13 项</p>
+    <p class="result-line" aria-live="polite">显示 <strong class="visible-count">21</strong> / 21 项</p>
     <section class="backlog-section" data-section="0">
     <header class="section-heading"><span class="section-index">01</span><h2>1. 先修：诚实和定位</h2><span class="section-count">0 项</span></header>
     <p class="section-note">（本组已完成，决策记录见 <code>docs/drafts/positioning-and-availability.md</code>。）</p><p class="empty-section">当前没有待办。</p>
@@ -49,44 +49,72 @@
   </li></ul>
   </section>
 <section class="backlog-section" data-section="2">
-    <header class="section-heading"><span class="section-index">03</span><h2>3. 内容：选对手还没答好的问题</h2><span class="section-count">3 项</span></header>
-    <ul class="task-list"><li class="task" data-owner="yes" data-done="no" data-search="3. 内容：选对手还没答好的问题 【维护者】审阅 `/guides` 的英文（5 篇）。2026-11-04 代理已做事实和语言初审：修正 git、旧快照和授权说明，改写的 3 篇英文标为 `draft`，生产模式的列表与直达页面也遵守该状态；2 篇未改的旧英文保留原状态。均不算人工审定，审完改成 `complete` 并写 `reviewedat`。审阅包见 `docs/research/2026-11-04-content-review.md`。">
+    <header class="section-heading"><span class="section-index">03</span><h2>3. 对标 recent.design：灵感内容产品</h2><span class="section-count">8 项</span></header>
+    <p class="section-note">对标对象是 recent.design 公开呈现的内容产品（2026-11-08 按普通访客读首页：分类 Web、Interface、Branding、Motion、Illustration、Posters、Print；浏览入口 Launch Videos、Websites、OG Images、App Screenshots、App Icons；资源 Tools、Skills、Jobs；每条有 <code>/i/&lt;id&gt;-&lt;slug&gt;</code> 页和作者署名）。只对标形态和规模，不复制界面、文案和素材（RFC-008 §1）。现状：灵感库约 99 条，其中 60 条来自 recent.design 首页的 947 条；分类以 X 视频（practice 65）为主，landing 20、product 8、flow 4。数字以 <code>website/src/inspiration-data.ts</code> 为准，动手前先重数。</p><ul class="task-list"><li class="task" data-owner="no" data-done="no" data-search="3. 对标 recent.design：灵感内容产品 内容规模目标（维护者 2026-11-08 已定）：灵感库到 300 条，每周上线 40 条。起点以动手前重数的条数为准；按每周 40 条算，从现有约 99 条到 300 条约需 5 周，实际周期以重数结果为准。这是指标条目的基线。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>内容规模目标（维护者 2026-11-08 已定）：灵感库到 300 条，每周上线 40 条。起点以动手前重数的条数为准；按每周 40 条算，从现有约 99 条到 300 条约需 5 周，实际周期以重数结果为准。这是指标条目的基线。</h3><span class="task-owner">可继续推进</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="3. 对标 recent.design：灵感内容产品 把“收件箱到上线”写成固定流程并落到 `website/content/`：筛 `x-post-inbox.json` → 看过原视频 → 中英文笔记 → 同一作者不重复 → `x-media.mjs` 取视频 → 上线。每批在 `docs/research/` 记录条数、剔除原因和用时。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>把“收件箱到上线”写成固定流程并落到 <code>website/content/</code>：筛 <code>x-post-inbox.json</code> → 看过原视频 → 中英文笔记 → 同一作者不重复 → <code>x-media.mjs</code> 取视频 → 上线。每批在 <code>docs/research/</code> 记录条数、剔除原因和用时。</h3><span class="task-owner">可继续推进</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="3. 对标 recent.design：灵感内容产品 【维护者】决定要不要补齐分类：interface、branding、illustration、posters、print。先看现有 99 条在这些类别下各有几条，缺口大的类别再定收录标准；决定“不做”也写明原因。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】决定要不要补齐分类：Interface、Branding、Illustration、Posters、Print。先看现有 99 条在这些类别下各有几条，缺口大的类别再定收录标准；决定“不做”也写明原因。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="3. 对标 recent.design：灵感内容产品 【维护者】决定要不要增加浏览入口：websites、app 图标、og 图，以及 instagram 那 54 条的展示方式（现在没有对应形态）。授权规则不变：只给链接、官方嵌入或作者授权的媒体。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】决定要不要增加浏览入口：Websites、App 图标、OG 图，以及 Instagram 那 54 条的展示方式（现在没有对应形态）。授权规则不变：只给链接、官方嵌入或作者授权的媒体。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="3. 对标 recent.design：灵感内容产品 决定 `/tools` 要不要做，再动手。`/skills` 只有我们 1 条，与“只收实际跑过的技能”的评测条目放在第 4 组；这里只定 tools 页的收录范围和是否值得做。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>决定 <code>/tools</code> 要不要做，再动手。<code>/skills</code> 只有我们 1 条，与“只收实际跑过的技能”的评测条目放在第 4 组；这里只定 Tools 页的收录范围和是否值得做。</h3><span class="task-owner">可继续推进</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="3. 对标 recent.design：灵感内容产品 回访机制：先选一种最小方案再做——rss、每周精选邮件，或“本周新增”页。对方首页没看到订阅入口，这是可以拉开差距的地方。邮件涉及收集地址，先由【维护者】确认隐私说明。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>回访机制：先选一种最小方案再做——RSS、每周精选邮件，或“本周新增”页。对方首页没看到订阅入口，这是可以拉开差距的地方。邮件涉及收集地址，先由【维护者】确认隐私说明。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="3. 对标 recent.design：灵感内容产品 核对 `/inspiration/&lt;id&gt;` 详情页：预渲染后的独立标题、描述、分享卡片（`og:*`）、作者署名、`hreflang` 是否齐全，逐项用真实预渲染产物检查，缺什么补什么，并加回归测试。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>核对 <code>/inspiration/&lt;id&gt;</code> 详情页：预渲染后的独立标题、描述、分享卡片（<code>og:*</code>）、作者署名、<code>hreflang</code> 是否齐全，逐项用真实预渲染产物检查，缺什么补什么，并加回归测试。</h3><span class="task-owner">可继续推进</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="3. 对标 recent.design：灵感内容产品 【维护者】定对标指标并建基线：收录条数、每周新增、详情页被搜索收录数（search console）、回访或订阅数。没有指标，“对标”无法验证；指标取不到的（如对方的流量）不编，写“无法获得”。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】定对标指标并建基线：收录条数、每周新增、详情页被搜索收录数（Search Console）、回访或订阅数。没有指标，“对标”无法验证；指标取不到的（如对方的流量）不编，写“无法获得”。</h3><span class="task-owner">需要维护者</span></div>
+  </li></ul>
+  </section>
+<section class="backlog-section" data-section="3">
+    <header class="section-heading"><span class="section-index">04</span><h2>4. 内容：选对手还没答好的问题</h2><span class="section-count">3 项</span></header>
+    <ul class="task-list"><li class="task" data-owner="yes" data-done="no" data-search="4. 内容：选对手还没答好的问题 【维护者】审阅 `/guides` 的英文（5 篇）。2026-11-04 代理已做事实和语言初审：修正 git、旧快照和授权说明，改写的 3 篇英文标为 `draft`，生产模式的列表与直达页面也遵守该状态；2 篇未改的旧英文保留原状态。均不算人工审定，审完改成 `complete` 并写 `reviewedat`。审阅包见 `docs/research/2026-11-04-content-review.md`。">
     <span class="task-state" aria-label="待处理"></span>
     <div class="task-copy"><h3>【维护者】审阅 <code>/guides</code> 的英文（5 篇）。2026-11-04 代理已做事实和语言初审：修正 Git、旧快照和授权说明，改写的 3 篇英文标为 <code>draft</code>，生产模式的列表与直达页面也遵守该状态；2 篇未改的旧英文保留原状态。均不算人工审定，审完改成 <code>complete</code> 并写 <code>reviewedAt</code>。审阅包见 <code>docs/research/2026-11-04-content-review.md</code>。</h3><span class="task-owner">需要维护者</span></div>
-  </li><li class="task" data-owner="yes" data-done="no" data-search="3. 内容：选对手还没答好的问题 【维护者】确认对比页草稿 `docs/drafts/compare-page.md`（impeccable、taste skill、frontend-design，2026-11-04 已重新核对公开文档和源码许可证；不算实际运行），决定放在 `/compare` 还是 `/guides`，确认后由代理做成页面。涉及 anthropic 的发布条款仍待确认。">
+  </li><li class="task" data-owner="yes" data-done="no" data-search="4. 内容：选对手还没答好的问题 【维护者】确认对比页草稿 `docs/drafts/compare-page.md`（impeccable、taste skill、frontend-design，2026-11-04 已重新核对公开文档和源码许可证；不算实际运行），决定放在 `/compare` 还是 `/guides`，确认后由代理做成页面。涉及 anthropic 的发布条款仍待确认。">
     <span class="task-state" aria-label="待处理"></span>
     <div class="task-copy"><h3>【维护者】确认对比页草稿 <code>docs/drafts/compare-page.md</code>（Impeccable、Taste Skill、frontend-design，2026-11-04 已重新核对公开文档和源码许可证；不算实际运行），决定放在 <code>/compare</code> 还是 <code>/guides</code>，确认后由代理做成页面。涉及 Anthropic 的发布条款仍待确认。</h3><span class="task-owner">需要维护者</span></div>
-  </li><li class="task" data-owner="yes" data-done="no" data-search="3. 内容：选对手还没答好的问题 `/skills` 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 `evals/run.mjs` 在一次性项目里跑 impeccable、taste skill、ui ux pro max，公开记录后收录。发布涉及 anthropic 技能的对比前，先由【维护者】确认条款。">
+  </li><li class="task" data-owner="yes" data-done="no" data-search="4. 内容：选对手还没答好的问题 `/skills` 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 `evals/run.mjs` 在一次性项目里跑 impeccable、taste skill、ui ux pro max，公开记录后收录。发布涉及 anthropic 技能的对比前，先由【维护者】确认条款。">
     <span class="task-state" aria-label="待处理"></span>
     <div class="task-copy"><h3><code>/skills</code> 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 <code>evals/run.mjs</code> 在一次性项目里跑 Impeccable、Taste Skill、UI UX Pro Max，公开记录后收录。发布涉及 Anthropic 技能的对比前，先由【维护者】确认条款。</h3><span class="task-owner">需要维护者</span></div>
   </li></ul>
   </section>
-<section class="backlog-section" data-section="3">
-    <header class="section-heading"><span class="section-index">04</span><h2>4. 产品</h2><span class="section-count">3 项</span></header>
-    <ul class="task-list"><li class="task" data-owner="no" data-done="no" data-search="4. 产品 决定要不要做“在比较页上直接选某个区域”：impeccable 的 live mode、subframe 和 claude design 都让用户在页面上点选。先决定做还是明确不做，再动手。">
+<section class="backlog-section" data-section="4">
+    <header class="section-heading"><span class="section-index">05</span><h2>5. 产品</h2><span class="section-count">3 项</span></header>
+    <ul class="task-list"><li class="task" data-owner="no" data-done="no" data-search="5. 产品 决定要不要做“在比较页上直接选某个区域”：impeccable 的 live mode、subframe 和 claude design 都让用户在页面上点选。先决定做还是明确不做，再动手。">
     <span class="task-state" aria-label="待处理"></span>
     <div class="task-copy"><h3>决定要不要做“在比较页上直接选某个区域”：Impeccable 的 Live Mode、Subframe 和 Claude Design 都让用户在页面上点选。先决定做还是明确不做，再动手。</h3><span class="task-owner">可继续推进</span></div>
-  </li><li class="task" data-owner="no" data-done="no" data-search="4. 产品 完善账号体系：先定匿名使用与登录账号的边界，再规划注册/登录、个人资料、收藏与灵感同步、数据导出和删除；实现前明确认证服务、隐私说明和账号数据归属。">
+  </li><li class="task" data-owner="no" data-done="no" data-search="5. 产品 完善账号体系：先定匿名使用与登录账号的边界，再规划注册/登录、个人资料、收藏与灵感同步、数据导出和删除；实现前明确认证服务、隐私说明和账号数据归属。">
     <span class="task-state" aria-label="待处理"></span>
     <div class="task-copy"><h3>完善账号体系：先定匿名使用与登录账号的边界，再规划注册/登录、个人资料、收藏与灵感同步、数据导出和删除；实现前明确认证服务、隐私说明和账号数据归属。</h3><span class="task-owner">可继续推进</span></div>
-  </li><li class="task" data-owner="yes" data-done="no" data-search="4. 产品 【维护者】决定要不要做公开的界面代码检查页。评估见 `docs/research/2026-11-02-antipattern-catalog-evaluation.md`：建议做成一页、先把规则改成共用数据，不仿 `/slop` 做视觉目录。">
+  </li><li class="task" data-owner="yes" data-done="no" data-search="5. 产品 【维护者】决定要不要做公开的界面代码检查页。评估见 `docs/research/2026-11-02-antipattern-catalog-evaluation.md`：建议做成一页、先把规则改成共用数据，不仿 `/slop` 做视觉目录。">
     <span class="task-state" aria-label="待处理"></span>
     <div class="task-copy"><h3>【维护者】决定要不要做公开的界面代码检查页。评估见 <code>docs/research/2026-11-02-antipattern-catalog-evaluation.md</code>：建议做成一页、先把规则改成共用数据，不仿 <code>/slop</code> 做视觉目录。</h3><span class="task-owner">需要维护者</span></div>
   </li></ul>
   </section>
-<section class="backlog-section" data-section="4">
-    <header class="section-heading"><span class="section-index">05</span><h2>5. 网站维护</h2><span class="section-count">0 项</span></header>
+<section class="backlog-section" data-section="5">
+    <header class="section-heading"><span class="section-index">06</span><h2>6. 网站维护</h2><span class="section-count">0 项</span></header>
     <p class="section-note">（当前没有等待代理执行的已实现网站维护 PR；定位、定价与发布措辞仍待维护者确认，见第 1 组。）</p><p class="empty-section">当前没有待办。</p>
   </section>
-<section class="backlog-section" data-section="5">
-    <header class="section-heading"><span class="section-index">06</span><h2>X 设计样本收集箱</h2><span class="section-count">1 项</span></header>
-    <p class="section-note">把链接贴在这里，每条写一句好在哪。代理先把它登记进 <code>website/src/inspiration-data.ts</code>（带 <code>post</code> 字段），再运行 <code>node website/scripts/x-media.mjs</code> 取视频并提交 <code>website/src/x-media.json</code>：带视频的进 Best practice 自动播放，其他用 X 官方嵌入。加完就从这里删掉。</p><p class="section-note">Ego Lite 每周一 09:00（Asia/Shanghai）搜索最近 7 天、互动数至少 100 的设计视频，把链接和互动数据放进 <code>website/content/x-post-inbox.json</code>。收件箱只供人工筛选；看过原帖并补齐中英文研究笔记后，才能加入公开灵感页。手动运行：<code>website/scripts/run-x-discovery.sh</code>。</p><ul class="task-list"><li class="task" data-owner="no" data-done="no" data-search="x 设计样本收集箱 recent.design 首页的 947 条作品（维护者本地的 `recent-design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 x 帖子加入，条目带 `via` 指回 recent.design。其余按同样做法分批挑选：看过视频再写笔记，同一作者不重复；instagram 的 54 条现在没有对应的展示方式，先不加。">
+<section class="backlog-section" data-section="6">
+    <header class="section-heading"><span class="section-index">07</span><h2>X 设计样本收集箱</h2><span class="section-count">1 项</span></header>
+    <p class="section-note">把链接贴在这里，每条写一句好在哪。代理先把它登记进 <code>website/src/inspiration-data.ts</code>（带 <code>post</code> 字段），再运行 <code>node website/scripts/x-media.mjs</code> 取视频并提交 <code>website/src/x-media.json</code>：带视频的进 Best practice 自动播放，其他用 X 官方嵌入。加完就从这里删掉。</p><p class="section-note">Ego Lite 每周一 09:00（Asia/Shanghai）搜索最近 7 天、互动数至少 100 的设计视频，把链接和互动数据放进 <code>website/content/x-post-inbox.json</code>。收件箱只供人工筛选；看过原帖并补齐中英文研究笔记后，才能加入公开灵感页。手动运行：<code>website/scripts/run-x-discovery.sh</code>。</p><ul class="task-list"><li class="task" data-owner="no" data-done="no" data-search="x 设计样本收集箱 recent.design 首页的 947 条作品（维护者本地的 `recent-design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 x 帖子加入，条目带 `via` 指回 recent.design。其余按第 3 组的固定流程分批挑选：看过视频再写笔记，同一作者不重复；instagram 的 54 条现在没有对应的展示方式，先不加。">
     <span class="task-state" aria-label="待处理"></span>
-    <div class="task-copy"><h3>recent.design 首页的 947 条作品（维护者本地的 <code>Recent-Design首页作品链接.csv</code>，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入，条目带 <code>via</code> 指回 recent.design。其余按同样做法分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。</h3><span class="task-owner">可继续推进</span></div>
+    <div class="task-copy"><h3>recent.design 首页的 947 条作品（维护者本地的 <code>Recent-Design首页作品链接.csv</code>，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入，条目带 <code>via</code> 指回 recent.design。其余按第 3 组的固定流程分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。</h3><span class="task-owner">可继续推进</span></div>
   </li></ul>
   </section>
-<section class="backlog-section" data-section="6">
-    <header class="section-heading"><span class="section-index">07</span><h2>定期维护</h2><span class="section-count">3 项</span></header>
+<section class="backlog-section" data-section="7">
+    <header class="section-heading"><span class="section-index">08</span><h2>定期维护</h2><span class="section-count">3 项</span></header>
     <ul class="task-list"><li class="task" data-owner="no" data-done="no" data-search="定期维护 每两周按 geo 策略里的 10 个问题测一次 ai 搜索是否提到并引用本站，结果记在 `docs/research/`。">
     <span class="task-state" aria-label="待处理"></span>
     <div class="task-copy"><h3>每两周按 GEO 策略里的 10 个问题测一次 AI 搜索是否提到并引用本站，结果记在 <code>docs/research/</code>。</h3><span class="task-owner">可继续推进</span></div>
