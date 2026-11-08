@@ -239,7 +239,7 @@ test('direction library pages are prerendered, browsable and keep old links work
  expect(await(await request.get('/lab/canvas')).text()).not.toContain('rel="canonical"');
  const sitemap=await(await request.get('/sitemap.xml')).text();
  for(const slug of ['harbor','pulse','variant-site','offscript','forma'])expect(sitemap).toContain(`/d/${slug}</loc>`);
- expect((await(await request.get('/feed.xml')).text()).match(/<item>/g)).toHaveLength(5);
+ const feed=await(await request.get('/feed.xml')).text();for(const slug of ['harbor','pulse','variant-site','offscript','forma'])expect(feed).toContain(`/d/${slug}</link>`);expect(feed).toContain('/inspiration/');expect(feed.match(/<item>/g).length).toBeGreaterThan(5);
  const llms=await request.get('/llms.txt');expect(llms.headers()['content-type']).toContain('text/plain');expect(await llms.text()).toContain('/d/pulse)');
  expect((await request.get('/missing.txt')).status()).toBe(404);
  expect(await(await request.get('/docs')).text()).toContain('"@type":"FAQPage"');
