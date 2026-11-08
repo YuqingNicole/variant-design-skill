@@ -12,6 +12,17 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/variant-favicon-v2.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <title>Variant Design — 第一稿不是答案。</title>
+    <script>
+      // Page-to-page navigation crossfades (@view-transition in src/site-system.css). It must listen here: pagereveal fires before
+      // the deferred module runs. Cards carry `ref-<id>` names for the same-page card-to-detail morph; while a cross-document
+      // transition runs, `vt-cross` drops them so one reference on two pages does not fly across the screen.
+      (function () {
+        var cl = document.documentElement.classList;
+        addEventListener("pageswap", function (e) { if (e.viewTransition) cl.add("vt-cross"); });
+        addEventListener("pagereveal", function (e) { if (e.viewTransition) { cl.add("vt-cross"); e.viewTransition.finished.then(function () { cl.remove("vt-cross"); }, function () { cl.remove("vt-cross"); }); } });
+        addEventListener("pageshow", function (e) { if (e.persisted) cl.remove("vt-cross"); });
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
