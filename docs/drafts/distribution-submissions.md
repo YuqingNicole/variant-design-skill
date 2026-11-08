@@ -32,7 +32,7 @@ The official directory accepts a ZIP package. Uploading creates a draft; a verif
 - Listing name: Variant Design
 - Short description: `Compare, refine, ship UI`
 - Repository: https://github.com/YuqingNicole/variant-design-skill
-- Submission must wait for the remaining release-readiness gates in `plugin/release-readiness.md`: clean installation and discovery through the real plugin manager, the project matrix, cold-start usability, and generic integration/recovery evidence. The archive verifier alone does not satisfy them.
+- Submission must wait for the remaining release-readiness gates in `plugin/release-readiness.md`: clean installation and discovery through the real plugin manager, the project matrix, cold-start usability, generic integration/recovery evidence, and resilience testing for interruptions, snapshot recovery, multi-file conflicts, missing dependencies, and invalid context. The archive verifier alone does not satisfy them.
 
 ## Codex Plugin Marketplace (third-party) — packaging path needed
 
