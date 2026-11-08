@@ -350,6 +350,7 @@ Design principles the routes load when a step needs them. Seven of these files a
 | `references/design-system/color-and-contrast.md` | OKLCH color space, tinted neutrals, 60-30-10 rule, dark mode, WCAG contrast |
 | `references/design-system/spatial-design.md` | 4pt grid, container queries, squint test, hierarchy through multiple dimensions |
 | `references/design-system/motion-design.md` | 100/300/500 rule, ease-out-expo, stagger, reduced motion, perceived performance |
+| `references/design-system/motion-rules.md` | Whether to animate by frequency, 300ms UI budget, press feedback, interruptible transitions, hover gating, reduced motion that keeps feedback |
 | `references/design-system/interaction-design.md` | 8 interactive states, focus-visible, forms, modals, keyboard navigation |
 | `references/design-system/responsive-design.md` | Mobile-first, content-driven breakpoints, input detection, safe areas |
 | `references/design-system/ux-writing.md` | Button labels, error formulas, empty states, voice vs tone, accessibility |

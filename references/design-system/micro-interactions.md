@@ -6,7 +6,7 @@ Small, focused moments that make interfaces feel alive. Use only interactions th
 
 A static UI is a dead UI. Micro-interactions are the difference between "using software" and "having an experience." They provide **feedback** (the system heard you), **guidance** (here's what happened), and **delight** (this feels good to use).
 
-**The rule**: Every user action should produce a visible, immediate reaction. Clicks, hovers, scrolls, typing — none should go unacknowledged.
+**The rule**: Every user action should produce a visible, immediate reaction. Clicks, hovers, scrolls, typing — none should go unacknowledged. An acknowledgement is often only a colour or state change; how much *motion* an action earns depends on how often it happens (`motion-rules.md` → Decide whether to animate). The patterns below are a menu, not a checklist.
 
 ---
 
@@ -24,7 +24,7 @@ The most fundamental micro-interaction. Buttons compress on press, release on li
 ```
 
 ### Ripple Effect — Material-Inspired
-Click creates an expanding circle from the click point. More informative than scale alone.
+Click creates an expanding circle from the click point. More informative than scale alone. It is the one exception to "never start from `scale(0)`": the circle grows from the pointer, a physical origin, so it is not appearing from nothing.
 ```javascript
 function createRipple(e) {
   const btn = e.currentTarget;
@@ -53,9 +53,13 @@ function createRipple(e) {
 ```
 
 ### Submit Button — Loading State
-Button transforms to show progress, then success/error.
+Button transforms to show progress, then success/error. Name the properties that change; `transition: all` would also animate whatever else a later rule touches. Width and radius are layout properties: acceptable for one button on a rare action, not for many elements.
 ```css
-.btn-submit { transition: all 300ms var(--ease-out-expo); min-width: 160px; }
+.btn-submit {
+  transition: width 300ms var(--ease-out-expo), min-width 300ms var(--ease-out-expo),
+              border-radius 300ms var(--ease-out-expo), background-color 200ms var(--ease-out-expo);
+  min-width: 160px;
+}
 .btn-submit.loading {
   width: 48px; min-width: 48px; border-radius: 50%;
   pointer-events: none; color: transparent;
@@ -68,10 +72,11 @@ Button transforms to show progress, then success/error.
 @keyframes spin { to { transform: rotate(360deg); } }
 ```
 
-### Toggle Switch — With Bounce
+### Toggle Switch
+A toggle flips back and forth, so use a transition (it reverses from where it is) and a curve that does not overshoot.
 ```css
 .toggle-thumb {
-  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform var(--dur-base, 200ms) var(--ease-out-quart);
 }
 .toggle.active .toggle-thumb {
   transform: translateX(24px);
@@ -81,9 +86,13 @@ Button transforms to show progress, then success/error.
 }
 ```
 
+**Bouncy variant — playful products only.** `motion-design.md` advises against bounce; use an overshooting curve only when the whole product is playful, and keep it subtle: `cubic-bezier(0.34, 1.56, 0.64, 1)` on the thumb's `transform`. Do not mix it into a product whose other controls are crisp.
+
 ---
 
 ## 2. Hover & Pointer Interactions
+
+Hover effects fire many times a day, so keep them small: a colour, underline or opacity change is enough for most elements, and large movement (lift, tilt, magnetic pull) belongs on a few hero elements, not on every card or button. Wrap every `:hover` rule in this section in `@media (hover: hover) and (pointer: fine) { … }`: a tap on a touch screen fires a false hover, and anything revealed only on hover must be visible when `hover: none`.
 
 ### Card Lift — Elevation Change
 Cards rise toward the user on hover. Use transform, not box-shadow animation.
@@ -92,9 +101,11 @@ Cards rise toward the user on hover. Use transform, not box-shadow animation.
   transition: transform 250ms var(--ease-out-quart),
               box-shadow 250ms var(--ease-out-quart);
 }
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+  }
 }
 ```
 
@@ -345,6 +356,7 @@ async function copyWithFeedback(text, btn) {
 ```
 
 ### Like / Heart Animation — Burst
+A rare, high-emotion moment, so it may be expressive. Do not reuse this scale-up-and-ring pattern for frequent actions such as selecting a row or toggling a filter.
 ```css
 .heart-btn { position: relative; }
 .heart-btn.liked .heart-icon {
