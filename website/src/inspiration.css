@@ -174,7 +174,9 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 
 /* Give search a full row on narrow screens instead of squeezing it between two selects. */
 @media(max-width:650px){.insp-bar>.site-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.insp-pills{grid-column:1/-1}.insp-bar select{width:100%;max-width:none;min-width:0}.insp-search{grid-column:1/-1;grid-row:3;min-width:0}.insp-search input{min-width:0}}
-@media(max-width:650px){.insp-pills{flex-wrap:wrap;overflow:visible}.insp-pills a{height:44px}}
+@media(max-width:650px){.insp-pills a{height:44px}}
+/* Phones: the filters (about 200px) no longer stay pinned over the list, and the six tabs scroll in one row instead of wrapping to an orphan. */
+@media(max-width:650px){.insp-bar{position:static}.insp-pills{flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-x:contain;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);padding-right:28px}.insp-pills a{scroll-snap-align:center}}
 @media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 @media(prefers-reduced-motion:reduce){.insp-thumb-media>img{transition:none}}
 
