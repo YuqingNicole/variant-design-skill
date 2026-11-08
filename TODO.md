@@ -20,7 +20,7 @@
 
 对标对象是 recent.design 公开呈现的内容产品（2026-11-08 按普通访客读首页：分类 Web、Interface、Branding、Motion、Illustration、Posters、Print；浏览入口 Launch Videos、Websites、OG Images、App Screenshots、App Icons；资源 Tools、Skills、Jobs；每条有 `/i/<id>-<slug>` 页和作者署名）。只对标形态和规模，不复制界面、文案和素材（RFC-008 §1）。现状：灵感库约 99 条，其中 60 条来自 recent.design 首页的 947 条；分类以 X 视频（practice 65）为主，landing 20、product 8、flow 4。数字以 `website/src/inspiration-data.ts` 为准，动手前先重数。
 
-- [ ] 【维护者】定内容规模目标和每周上线条数（代理建议：6 周内到 300 条，每周 ≥ 40 条；不是定论）。定了以后写进本条，作为第 7 条指标的基线。
+- [ ] 内容规模目标（维护者 2026-11-08 已定）：灵感库到 300 条，每周上线 40 条。起点以动手前重数的条数为准；按每周 40 条算，从现有约 99 条到 300 条约需 5 周，实际周期以重数结果为准。这是指标条目的基线。
 - [ ] 把“收件箱到上线”写成固定流程并落到 `website/content/`：筛 `x-post-inbox.json` → 看过原视频 → 中英文笔记 → 同一作者不重复 → `x-media.mjs` 取视频 → 上线。每批在 `docs/research/` 记录条数、剔除原因和用时。
 - [ ] 【维护者】决定要不要补齐分类：Interface、Branding、Illustration、Posters、Print。先看现有 99 条在这些类别下各有几条，缺口大的类别再定收录标准；决定“不做”也写明原因。
 - [ ] 【维护者】决定要不要增加浏览入口：Websites、App 图标、OG 图，以及 Instagram 那 54 条的展示方式（现在没有对应形态）。授权规则不变：只给链接、官方嵌入或作者授权的媒体。
