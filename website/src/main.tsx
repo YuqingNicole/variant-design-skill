@@ -9,9 +9,19 @@ const legacy = (path: string) => path === "/canvas" ? "/lab/canvas" : path === "
 const parsed = parseLocale(window.location.pathname.replace(/\/+$/, "") || "/");
 let route = parsed.route;
 const moved = legacy(route);
+// The old `?category=` filter became one page per section; its values map onto the new addresses (`practice` was every video, so it goes to the feed).
+const oldCategory = ({ landing: "web", product: "interface", flow: "interface", motion: "motion", practice: "" } as Record<string, string>)[new URLSearchParams(location.search).get("category") ?? "-"];
+if (oldCategory !== undefined && (route === "/" || route.startsWith("/inspiration/"))) {
+  const query = new URLSearchParams(location.search); query.delete("category");
+  if (route === "/") { const next = oldCategory ? "/browse/" + oldCategory : "/"; route = next; }
+  else if (oldCategory) query.set("in", oldCategory);
+  const base = route === "/" ? "/" : route, prefix = parsed.locale === "en" ? (base === "/" ? "/en" : "/en" + base) : base, rest = query.toString();
+  history.replaceState(null, "", prefix + (rest ? "?" + rest : "") + location.hash);
+}
 if (moved) { history.replaceState(null, "", (parsed.locale === "en" ? (moved === "/" ? "/en" : "/en" + moved) : moved) + (moved.startsWith("/lab/") || route === "/inspiration" ? location.search : "") + location.hash); route = moved; }
 const page: Promise<ReactNode> = route === "/lab/canvas" ? import("./LandingCanvas").then(m => <m.LandingCanvas/>) : route === "/lab/workbench" ? import("./App").then(m => <m.default/>)
   : route === "/lab" ? import("./LabPage").then(m => <m.LabPage/>) : route === "/skills" ? import("./SkillsPage").then(m => <m.SkillsPage/>) : route === "/about" ? import("./PaperLanding").then(m => <m.PaperLanding/>)
+  : route.startsWith("/browse/") ? import("./InspirationPage").then(m => <m.InspirationPage section={route.slice(8)}/>)
   : route === "/" || route.startsWith("/inspiration/") ? import("./InspirationPage").then(m => <m.InspirationPage detail={route === "/" ? undefined : route.slice(13)}/>)
   : route === "/changelog" ? import("./ChangelogPage").then(m => <m.ChangelogPage/>)
   : route === "/guides" || route.startsWith("/guides/") ? import("./GuidesPage").then(m => <m.GuidesPage slug={route === "/guides" ? undefined : route.slice(8)}/>)

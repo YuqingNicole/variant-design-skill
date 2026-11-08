@@ -17,23 +17,23 @@ test('the chronological stream includes every kind, pages and preserves shareabl
  // Paging eventually exposes website previews and X videos in this same list.
  while(await cards.count()<items.length){const before=await cards.count();await cards.last().evaluate(el=>el.scrollIntoView({block:'end'}));await expect.poll(()=>cards.count()).toBeGreaterThan(before);}
  await expect(cards).toHaveCount(items.length);await expect(cards.locator('video').first()).toBeAttached();await expect(cards.locator('.insp-thumb-media').first()).toBeAttached();
- await page.getByRole('button',{name:'Landing',exact:true}).click();await page.getByRole('combobox',{name:'专题',exact:true}).selectOption('saas-home');await page.getByRole('searchbox').fill('Vercel');await page.getByRole('combobox',{name:'排序',exact:true}).selectOption('name');
+ await page.getByRole('link',{name:'网站',exact:true}).click();await expect(page).toHaveURL(/\/browse\/web$/);await page.getByRole('combobox',{name:'专题',exact:true}).selectOption('saas-home');await page.getByRole('searchbox').fill('Vercel');await page.getByRole('combobox',{name:'排序',exact:true}).selectOption('name');
  await expect(cards).toHaveCount(1);await expect(cards.locator('.insp-card-open')).toHaveAttribute('href',/\/v0$/);
- await expect(page).toHaveURL(/sort=name/);const params=new URL(page.url()).searchParams;expect(Object.fromEntries(params)).toEqual({utm_source:'regression',category:'landing',topic:'saas-home',q:'Vercel',sort:'name'});
+ await expect(page).toHaveURL(/sort=name/);const params=new URL(page.url()).searchParams;expect(Object.fromEntries(params)).toEqual({topic:'saas-home',q:'Vercel',sort:'name'});
  await page.reload();await expect(cards).toHaveCount(1);await expect(page.getByRole('searchbox')).toHaveValue('Vercel');await expect(page.getByRole('combobox',{name:'专题',exact:true})).toHaveValue('saas-home');
 });
 
 test('details share an element transition and restore focus, history and the scrolled feed',async({page})=>{
  await page.addInitScript(()=>{window.transitions=[];const start=document.startViewTransition?.bind(document);if(start)document.startViewTransition=update=>{const r={ready:false,error:null};window.transitions.push(r);const vt=start(update);vt.ready.then(()=>r.ready=true,e=>r.error=String(e));return vt};});
- await page.goto('/?category=landing&sort=curated');
+ await page.goto('/browse/web?sort=curated');
  // The prerendered feed has default filters; wait for the requested client state before scrolling it.
  await expect(page.getByRole('combobox',{name:'排序',exact:true})).toHaveValue('curated');
  const opener=page.locator('.insp-feed .insp-card-open').nth(12);await opener.scrollIntoViewIfNeeded();const before=await page.evaluate(()=>scrollY),href=await opener.getAttribute('href');await opener.click();
- const dialog=page.getByRole('dialog');await expect(dialog).toBeVisible();await expect(page).toHaveURL(new RegExp(href+'\\?category=landing&sort=curated$'));
+ const dialog=page.getByRole('dialog');await expect(dialog).toBeVisible();await expect(page).toHaveURL(new RegExp(href+'\\?sort=curated&in=web$'));
  await expect.poll(()=>page.evaluate(()=>window.transitions.some(r=>r.ready))).toBe(true);
  expect(await page.evaluate(()=>{const names=[...document.querySelectorAll('[style*="view-transition-name"]')].map(e=>getComputedStyle(e).viewTransitionName).filter(n=>n!=='none');return names.length===new Set(names).size})).toBe(true);
  await page.keyboard.press('ArrowRight');await expect(page).not.toHaveURL(new RegExp(href+'\\?'));await page.keyboard.press('ArrowLeft');await expect(page).toHaveURL(new RegExp(href+'\\?'));
- await page.keyboard.press('Escape');await expect(dialog).not.toBeVisible();await expect(page).toHaveURL(/\/\?category=landing&sort=curated$/);await expect(opener).toBeFocused();await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(before);
+ await page.keyboard.press('Escape');await expect(dialog).not.toBeVisible();await expect(page).toHaveURL(/\/browse\/web\?sort=curated$/);await expect(opener).toBeFocused();await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(before);
  // Native forward/back restores the dialog rather than leaving the detail URL over a closed list.
  await page.goForward();await expect(dialog).toBeVisible();await page.goBack();await expect(dialog).not.toBeVisible();await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(before);
  expect(await page.evaluate(()=>window.transitions.filter(r=>r.error))).toEqual([]);
@@ -73,12 +73,12 @@ test('direct details support keyboard navigation without the transitions API',as
 // Delay the real update callback so several key events arrive before a transition commits.
 for(const mode of ['modal','page'])test(`rapid detail arrows preserve every navigation intent in ${mode} mode`,async({page})=>{
  await page.addInitScript(()=>{const start=document.startViewTransition?.bind(document);if(start)document.startViewTransition=update=>start(async()=>{await new Promise(resolve=>setTimeout(resolve,100));return update()})});
- const list=items.filter(i=>i.category==='landing');
- if(mode==='modal'){await page.goto('/?category=landing&sort=curated');await page.locator('.insp-card-open').first().click();await expect(page.getByRole('dialog')).toBeVisible();}
- else await page.goto(`/inspiration/${list[0].id}?category=landing&sort=curated`);
+ const list=items.filter(i=>i.category==='landing'||(i.category==='practice'&&!['motion','interaction','branding','brand'].includes(i.tag.toLowerCase())));
+ if(mode==='modal'){await page.goto('/browse/web?sort=curated');await page.locator('.insp-card-open').first().click();await expect(page.getByRole('dialog')).toBeVisible();}
+ else await page.goto(`/inspiration/${list[0].id}?sort=curated&in=web`);
  await page.getByRole('button',{name:'下一个',exact:true}).focus();
  const arrows=async(key,count)=>page.evaluate(({key,count,mode})=>{const target=mode==='modal'?document.querySelector('dialog'):window;for(let i=0;i<count;i++)target.dispatchEvent(new KeyboardEvent('keydown',{key,bubbles:true,cancelable:true}))},{key,count,mode});
  await arrows('ArrowRight',5);await expect(page).toHaveURL(new RegExp(`/inspiration/${list[5].id}\\?`));
  await arrows('ArrowLeft',2);await expect(page).toHaveURL(new RegExp(`/inspiration/${list[3].id}\\?`));
- await page.keyboard.press('Escape');await expect(page).toHaveURL(/\/\?category=landing&sort=curated$/);await expect(page.locator('.insp-feed')).toBeVisible();
+ await page.keyboard.press('Escape');await expect(page).toHaveURL(/\/browse\/web\?sort=curated$/);await expect(page.locator('.insp-feed')).toBeVisible();
 });

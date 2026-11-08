@@ -11,6 +11,7 @@ import { LocaleProvider } from './i18n/LocaleProvider';
 import type { Locale } from './i18n/locales';
 import { InspirationPage } from './InspirationPage';
 import { inspirationItems,authorizedReferences,withdrawnReferences } from './reference-library';
+import { activeSections } from './inspiration-sections';
 import {WithdrawnReferencePage} from './ReferencePermission';
 import { LibraryPage } from './LibraryPage';
 import { categories, entries } from './library-data';
@@ -24,7 +25,7 @@ const standalone: Record<string, ReactNode> = {
   ...Object.fromEntries(authorizedReferences.map(i=>[`/inspiration/${i.id}`,<InspirationPage detail={i.id}/>])),
   ...Object.fromEntries(withdrawnReferences.map(i=>[`/inspiration/${i.id}`,<WithdrawnReferencePage record={i}/>])),
   '/about': <PaperLanding/>, '/pricing': <PricingPage repositoryUrl="https://github.com/YuqingNicole/variant-design-skill"/>,
-  '/skills': <SkillsPage/>, '/submit': <SubmitPage/>, '/sponsor': <SponsorPage/>, '/guides': <GuidesPage/>, '/changelog': <ChangelogPage/>, '/': <InspirationPage/>, '/cases': <LibraryPage view={{ kind: 'feed' }}/>,
+  '/skills': <SkillsPage/>, '/submit': <SubmitPage/>, '/sponsor': <SponsorPage/>, '/guides': <GuidesPage/>, '/changelog': <ChangelogPage/>, '/': <InspirationPage/>, ...Object.fromEntries(activeSections(inspirationItems).map(c=>[`/browse/${c.id}`,<InspirationPage section={c.id}/>])), '/cases': <LibraryPage view={{ kind: 'feed' }}/>,
   ...Object.fromEntries(guides.map(g => [`/guides/${g.slug}`, <GuidesPage slug={g.slug}/>])),
 };
 const library: Record<string, ReactNode> = {

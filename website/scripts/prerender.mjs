@@ -3,6 +3,7 @@
 // canonical link, share card, structured data and readable content, plus sitemap.xml, feed.xml
 // (RFC-002 §7) and llms.txt / llms-full.txt for AI search.
 // The browser still renders with React; createRoot replaces the static content on load.
+import { importTs } from './ts-module.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -58,6 +59,9 @@ export function withoutDrafts(english, drafts) {
 }
 
 // The reference library lives in a TS module of plain JSON literals; read it without a TS loader.
+// Sections that have at least one reference, with how many each language lists (draft English is left out of production).
+const sectionModule = await importTs(path.join(here, '../src/inspiration-sections.ts'));
+export const sectionPages = (references, englishReferences = references) => sectionModule.activeSections(references).map(c => ({ ...c, count: { zh: references.filter(r => sectionModule.sectionOf(r) === c.id).length, en: englishReferences.filter(r => sectionModule.sectionOf(r) === c.id).length } }));
 export const loadReferences=()=>referenceRecords().published;
 export const loadWithdrawnReferences=()=>referenceRecords().withdrawn;
 // Without JavaScript the inspiration page shows only its first tab; this index links every reference page.
@@ -132,13 +136,15 @@ function page(template, { site, route, title, description, image, type = 'websit
   return unlisted.has(route) ? withNoindex(html) : html;
 }
 
-export function renderSite(entries, template, site = defaultSite, references = [], { docs, version = '', guides = [], rendered = {}, english = {}, withdrawn = [] } = {}) {
+export function renderSite(entries, template, site = defaultSite, references = [], { docs, version = '', guides = [], rendered = {}, english = {}, withdrawn = [], sections = [] } = {}) {
   const sorted = order(entries), pages = new Map();
   const zhPage = options => page(template, { site, translated: !!english[options.route], ...options });
   const enPage = options => { if (english[options.route]) pages.set(pathIn(options.route, 'en'), page(template, { site, lang: 'en', translated: true, body: english[options.route], ...options })); };
   const library = 'Variant Design 方向库';
   const homeTitle = 'Variant Design — 互联网上最好的设计灵感', homeDescription = `精选网站、界面和动效作品，每条都附出处和我们写的笔记：研究什么、用在哪里。目前 ${references.length} 条。`;
   pages.set('/', zhPage({ route: '/', data: { '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/`, name: 'Variant Design', description: homeDescription, inLanguage: ['zh-CN', 'en'] }, title: homeTitle, description: homeDescription, body: rendered['/'] ?? '' }));
+  // One page per section: its own address, title, description and only its own references.
+  for (const c of sections) pages.set(`/browse/${c.id}`, zhPage({ route: `/browse/${c.id}`, title: `${c.title.zh} — Variant Design`, description: `${c.intro.zh}目前 ${c.count.zh} 条。`, body: rendered[`/browse/${c.id}`] ?? '' }));
   pages.set('/cases', zhPage({ route: '/cases', title: `A/B/C 案例 — ${library}`, description: '同一个任务的三个方向：每个方向说明优化什么、牺牲什么、适合什么场景。技能产出和概念作品分别标注。', body: rendered['/cases'] ?? '' }));
   for (const category of [...new Set(sorted.map(e => e.category))]) {
     const name = categoryNames[category] ?? category, list = sorted.filter(e => e.category === category);
@@ -163,6 +169,7 @@ export function renderSite(entries, template, site = defaultSite, references = [
   for (const e of sorted) { const { image } = cover(e); enPage({ route: `/d/${e.slug}`, type: 'article', title: `${e.title[1]} — ${enLibrary}`, description: e.summary[1], image: { src: `/media/${e.slug}/${image.file}`, width: image.width, height: image.height, alt: image.alt[1] },
     data: { '@type': 'CreativeWork', name: e.title[1], description: e.summary[1], datePublished: e.publishedAt, url: `${site}/en/d/${e.slug}`, image: site + `/media/${e.slug}/${image.file}`, isPartOf: { '@id': `${site}/#website` } } }); }
   for (const r of references) enPage({ route: `/inspiration/${r.id}`, title: `${r.name} — Inspiration — Variant Design`, description: `${r.name}: ${r.focus.en}. Use it for ${r.application.en}.` });
+  for (const c of sections) enPage({ route: `/browse/${c.id}`, title: `${c.title.en} — Variant Design`, description: `${c.intro.en} ${c.count.en} so far.` });
   for (const [route, [title, description]] of Object.entries(staticPagesEn(references.length))) enPage({ route, title, description, ...(route === '/docs' && docs ? { data: docsData(docs, site, 'en') } : {}), ...(route === '/skills' ? { data: skillData(site, version, 'en') } : {}) });
   for (const g of guides) enPage({ route: `/guides/${g.slug}`, type: 'article', title: `${g.title.en} — Variant Design`, description: g.answer.en, data: guideData(g, site, 'en') });
   for(const r of withdrawn)for(const lang of ['zh','en']){const en=lang==='en',route=`/inspiration/${r.id}`,title=en?'This work has been removed':'这条作品已撤下';const body=(en?english[route]:rendered[route])??`<main><h1>${title}</h1><p>${escape(r.name)}</p><p>${escape(r.withdrawnAt)}</p><p>${escape(r.reason[lang])}</p><a href="${en?'/en':'/'}">${en?'Back to inspiration':'返回灵感作品流'}</a></main>`;pages.set(pathIn(route,lang),withNoindex(page(template,{site,route,lang,translated:true,title:`${r.name} — ${title} — Variant Design`,description:r.reason[lang],body}))) }
@@ -252,7 +259,7 @@ export function rss(entries, site = defaultSite, references = []) {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
-  const { importTs } = await import('./ts-module.mjs'), docs = await importTs(path.join(here, '../src/docs-content.ts'));
+  const docs = await importTs(path.join(here, '../src/docs-content.ts'));
   const { guides } = await importTs(path.join(here, '../src/guides-content.ts')), { renderPages } = await import('../.ssr/ssr-pages.js');
   const { zh: rendered, en: english } = renderPages();
   for (const [route, html] of [...Object.entries(rendered), ...Object.entries(english)]) if (!html.includes('<h1')) throw new Error(`Empty static render for ${route}`);
@@ -268,7 +275,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   // The untouched shell stays available as app.html: the fallback for routes without their own page.
   const shell = path.join(dist, 'app.html');
   if (!fs.existsSync(shell)) fs.copyFileSync(path.join(dist, 'index.html'), shell);
-  const template = fs.readFileSync(shell, 'utf8').replace(`    ${noindexTag}\n`, ''), pages = renderSite(entries, template, site, references, { docs, version, guides, rendered, english: withoutDrafts(english, drafts), withdrawn });
+  const template = fs.readFileSync(shell, 'utf8').replace(`    ${noindexTag}\n`, ''), pages = renderSite(entries, template, site, references, { docs, version, guides, rendered, english: withoutDrafts(english, drafts), withdrawn, sections: sectionPages(references, englishReferences) });
   for (const [route, html] of pages) {
     const file = route === '/' ? path.join(dist, 'index.html') : path.join(dist, route.slice(1), 'index.html');
     fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, html);

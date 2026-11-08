@@ -17,8 +17,8 @@
 .insp-bar>.site-shell{display:flex;align-items:center;gap:var(--space-2);padding-block:var(--space-2)}
 .insp-pills{display:flex;gap:var(--space-1);overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0}
 .insp-pills::-webkit-scrollbar{display:none}
-.insp-pills button{flex:none;height:32px;padding:0 var(--space-4);border:0;border-radius:var(--radius-pill);background:var(--site-surface);color:var(--site-ink);font-size:14px;transition:background var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out)}
-.inspiration-page .insp-pills button[aria-pressed=true]{background:var(--site-brand);color:var(--site-paper)}
+.insp-pills a{display:inline-flex;align-items:center;text-decoration:none;flex:none;height:32px;padding:0 var(--space-4);border:0;border-radius:var(--radius-pill);background:var(--site-surface);color:var(--site-ink);font-size:14px;transition:background var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out)}
+.inspiration-page .insp-pills a[aria-current=page]{background:var(--site-brand);color:var(--site-paper)}
 .insp-bar select,.insp-search{flex:none;height:32px;border:1px solid var(--site-line);border-radius:var(--radius-pill);background:var(--site-card);color:var(--site-ink);font:inherit;font-size:14px}
 .insp-bar select{padding:0 var(--space-3);max-width:180px}
 .insp-search{display:flex;align-items:center;gap:var(--space-2);padding:0 var(--space-3);color:var(--site-muted)}
@@ -36,7 +36,7 @@
 .insp-card-open>.insp-thumb,.insp-card-open>.insp-vcard-media{transform:scale(1);transition:transform .36s var(--ease-out)}
 .insp-card-save[aria-pressed=true]{animation:insp-save-pop .24s var(--ease-out)}
 @keyframes insp-save-pop{0%{transform:scale(.86)}58%{transform:scale(1.12)}100%{transform:scale(1)}}
-@media(hover:hover) and (prefers-reduced-motion:no-preference){.insp-card:is(:hover,:focus-within) .insp-card-open>.insp-thumb,.insp-card:is(:hover,:focus-within) .insp-card-open>.insp-vcard-media{transform:scale(1.025)}.insp-pills button:not([aria-pressed=true]):hover{transform:translateY(-1px)}}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.insp-card:is(:hover,:focus-within) .insp-card-open>.insp-thumb,.insp-card:is(:hover,:focus-within) .insp-card-open>.insp-vcard-media{transform:scale(1.025)}.insp-pills a:not([aria-current=page]):hover{transform:translateY(-1px)}}
 .insp-card-tag,.insp-card-save,.insp-card-out{position:absolute;opacity:0;transition:opacity var(--dur-fast) var(--ease-out)}
 .insp-card:is(:hover,:focus-within) :is(.insp-card-tag,.insp-card-save,.insp-card-out){opacity:1}
 @media(hover:none){.insp-card :is(.insp-card-tag,.insp-card-save,.insp-card-out){opacity:1}}
@@ -174,7 +174,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 
 /* Give search a full row on narrow screens instead of squeezing it between two selects. */
 @media(max-width:650px){.insp-bar>.site-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.insp-pills{grid-column:1/-1}.insp-bar select{width:100%;max-width:none;min-width:0}.insp-search{grid-column:1/-1;grid-row:3;min-width:0}.insp-search input{min-width:0}}
-@media(max-width:650px){.insp-pills{flex-wrap:wrap;overflow:visible}.insp-pills button{height:44px}}
+@media(max-width:650px){.insp-pills{flex-wrap:wrap;overflow:visible}.insp-pills a{height:44px}}
 @media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 @media(prefers-reduced-motion:reduce){.insp-thumb-media>img{transition:none}}
 
