@@ -875,3 +875,37 @@ test('a tab is fetched as soon as the pointer or finger is on it, once', async (
  await expect(page.locator('link[rel=prefetch][href="/browse/motion"]')).toHaveCount(1);
  await expect(page.locator('link[rel=prefetch]')).toHaveCount(1);
 });
+
+test('feed motion stays inside the budget: 200ms card zoom, a fixed-width search box, hover only where hover exists', async ({page,browser})=>{
+ await page.goto('/browse/interaction');
+ expect(await page.locator('.insp-card-open').first().evaluate(a=>{const c=a.querySelector('.insp-thumb,.insp-vcard-media');const s=getComputedStyle(c);return [s.transitionProperty,s.transitionDuration]})).toEqual(['transform','0.2s']);
+ const search=page.locator('.insp-search input'),width=await search.evaluate(e=>e.getBoundingClientRect().width);
+ expect(await search.evaluate(e=>getComputedStyle(e).transitionProperty.includes('width'))).toBe(false);
+ await search.focus();await search.fill('x');expect(await search.evaluate(e=>e.getBoundingClientRect().width)).toBe(width);
+ await page.goto('/cases');
+ const link=page.locator('.library-card a').first();await link.hover();
+ await expect.poll(()=>link.locator('img').first().evaluate(e=>getComputedStyle(e).transform)).toBe('matrix(1.025, 0, 0, 1.025, 0, 0)');
+ const phone=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true}),p=await phone.newPage();
+ await p.goto('/cases');const tap=p.locator('.library-card a').first();await tap.hover();await p.waitForTimeout(400);
+ expect(await tap.locator('img').first().evaluate(e=>getComputedStyle(e).transform)).toBe('none');await phone.close();
+});
+
+test('switching a tab crossfades the page without flying cards, and the reference brief rises into place', async ({page,browser})=>{
+ const watch=()=>{window.__vt={};addEventListener('pagereveal',e=>{if(!e.viewTransition)return;window.__vt.reveal=true;e.viewTransition.ready.then(()=>{const el=document.querySelector('.insp-card-open');window.__vt.cross=document.documentElement.classList.contains('vt-cross');window.__vt.name=el&&getComputedStyle(el).viewTransitionName});e.viewTransition.finished.then(()=>window.__vt.finished=true)})};
+ await page.addInitScript(watch);
+ await page.goto('/browse/web');await page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
+ await page.locator('.insp-pills a',{hasText:'动效'}).click();await expect(page).toHaveURL(/\/browse\/motion$/);
+ await expect.poll(()=>page.evaluate(()=>window.__vt.finished)).toBe(true);
+ expect(await page.evaluate(()=>({reveal:window.__vt.reveal,cross:window.__vt.cross,name:window.__vt.name}))).toEqual({reveal:true,cross:true,name:'none'});
+ // After the transition the cards get their shared names back, and the class is gone.
+ expect(await page.evaluate(()=>[document.documentElement.classList.contains('vt-cross'),getComputedStyle(document.querySelector('.insp-card-open')).viewTransitionName.startsWith('ref-')])).toEqual([false,true]);
+ // Reduced motion: no transition at all.
+ const calm=await browser.newContext({reducedMotion:'reduce'}),q=await calm.newPage();await q.addInitScript(watch);
+ await q.goto('/browse/web');await q.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
+ await q.locator('.insp-pills a',{hasText:'动效'}).click();await expect(q).toHaveURL(/\/browse\/motion$/);
+ expect(await q.evaluate(()=>window.__vt.reveal??false)).toBe(false);
+ await q.goto('/inspiration/linear');await q.getByRole('button',{name:'生成参考指令'}).click();
+ expect(await q.locator('.inspiration-brief').evaluate(e=>getComputedStyle(e).animationName)).toBe('insp-fade');await calm.close();
+ await page.goto('/inspiration/linear');await page.getByRole('button',{name:'生成参考指令'}).click();
+ expect(await page.locator('.inspiration-brief').evaluate(e=>[getComputedStyle(e).animationName,getComputedStyle(e).animationDuration])).toEqual(['insp-rise','0.2s']);
+});
