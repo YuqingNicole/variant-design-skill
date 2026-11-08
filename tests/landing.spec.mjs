@@ -909,3 +909,30 @@ test('switching a tab crossfades the page without flying cards, and the referenc
  await page.goto('/inspiration/linear');await page.getByRole('button',{name:'生成参考指令'}).click();
  expect(await page.locator('.inspiration-brief').evaluate(e=>[getComputedStyle(e).animationName,getComputedStyle(e).animationDuration])).toEqual(['insp-rise','0.2s']);
 });
+
+test('motion tokens, tabs without a hover lift, a save button that answers with colour and press, reduced motion that keeps feedback', async ({page,browser})=>{
+ await page.goto('/browse/interaction');
+ // The tokens resolve on :root (the page transition reads them too); compare computed values, not the minified source text.
+ expect(await page.evaluate(()=>{const e=document.createElement('i');document.body.append(e);const out=['--dur-press','--dur-fast','--dur-base','--dur-slow'].map(k=>{e.style.transitionDuration=`var(${k})`;return getComputedStyle(e).transitionDuration});e.style.transitionTimingFunction='var(--ease-out)';out.push(getComputedStyle(e).transitionTimingFunction);e.remove();return out})).toEqual(['0.16s','0.14s','0.2s','0.34s','cubic-bezier(0.22, 1, 0.36, 1)']);
+ // Tabs change colour only: no lift on hover, and transform is not among their transitions.
+ const tab=page.locator('.insp-pills a:not([aria-current=page])').first();await tab.hover();
+ expect(await tab.evaluate(a=>[getComputedStyle(a).transform,getComputedStyle(a).transitionProperty.includes('transform')])).toEqual(['none',false]);
+ // Saving a card: no keyframes to replay; the fill and the press are transitions that can reverse mid-way.
+ const card=page.locator('.insp-card').first(),save=card.locator('.insp-card-save');await card.hover();
+ const props=await save.evaluate(b=>({name:getComputedStyle(b).animationName,transition:getComputedStyle(b).transitionProperty}));
+ expect(props.name).toBe('none');for(const p of ['background-color','color','transform'])expect(props.transition).toContain(p);
+ await save.click();await expect(save).toHaveAttribute('aria-pressed','true');expect(await save.evaluate(b=>getComputedStyle(b).animationName)).toBe('none');
+ // Reduced motion: movement goes, opacity and colour feedback stay, and the dialog still fades in.
+ const calm=await browser.newContext({reducedMotion:'reduce'}),q=await calm.newPage();await q.goto('/browse/interaction');
+ expect(await q.locator('.insp-card-meta').first().evaluate(m=>{const s=getComputedStyle(m);return [s.transitionProperty.includes('opacity'),s.transitionProperty.includes('transform'),parseFloat(s.transitionDuration)>0]})).toEqual([true,false,true]);
+ expect(await q.locator('.insp-card-save').first().evaluate(b=>getComputedStyle(b).transitionProperty.includes('transform'))).toBe(false);
+ await q.locator('.insp-card-open').first().click();await expect(q.getByRole('dialog')).toBeVisible();
+ expect(await q.getByRole('dialog').evaluate(d=>getComputedStyle(d).animationName)).toBe('insp-fade');await calm.close();
+});
+
+test('the lab preview frame no longer animates layout properties', async ()=>{
+ const css=fs.readFileSync(new URL('../website/src/styles.css',import.meta.url),'utf8');
+ for(const selector of ['.workspace-frame','.workspace-frame .direction-preview','.workspace-live-frame']){
+  const rule=css.split('\n').find(l=>l.startsWith(selector+' {'));expect(rule,selector).toBeTruthy();expect(rule).not.toContain('transition');
+ }
+});
