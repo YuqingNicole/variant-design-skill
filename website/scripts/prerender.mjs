@@ -120,7 +120,7 @@ function page(template, { site, route, title, description, image, type = 'websit
     `<meta property="og:title" content="${escape(title)}">`, `<meta property="og:description" content="${escape(description)}">`, `<meta property="og:url" content="${escape(url)}">`,
     ...(image ? [`<meta property="og:image" content="${escape(site + image.src)}">`, `<meta property="og:image:width" content="${image.width}">`, `<meta property="og:image:height" content="${image.height}">`, `<meta property="og:image:alt" content="${escape(image.alt)}">`] : []),
     `<meta name="twitter:card" content="${image ? 'summary_large_image' : 'summary'}">`,
-    `<link rel="alternate" type="application/rss+xml" title="Variant Design 方向库" href="${site}/feed.xml">`,
+    `<link rel="alternate" type="application/rss+xml" title="Variant Design 灵感与方向库" href="${site}/feed.xml">`,
     ...(data ? [`<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', ...data }).replace(/</g, '\\u003c')}</script>`] : [])].join('\n    ');
   const html = template
     .replace(/<html[^>]*>/, () => `<html lang="${lang === 'en' ? 'en' : 'zh-CN'}">`)
@@ -209,7 +209,7 @@ ${cases}
 ## Optional
 
 - [Full install guide as text](${site}/llms-full.txt)
-- [RSS feed of cases](${site}/feed.xml)
+- [RSS feed of references and cases](${site}/feed.xml)
 `;
 }
 // The whole install guide as Markdown, English then Chinese.
@@ -236,15 +236,19 @@ export function sitemap(routes, site = defaultSite) {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${listed.map(r => `  <url><loc>${abs(r)}</loc>${versions(r)}</url>`).join('\n')}\n</urlset>\n`;
 }
 
-export function rss(entries, site = defaultSite) {
-  const items = [...entries].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || a.slug.localeCompare(b.slug)).map(e => `    <item>
-      <title>${escape(e.title[0])}</title>
-      <link>${site}/d/${e.slug}</link>
-      <guid isPermaLink="true">${site}/d/${e.slug}</guid>
-      <pubDate>${new Date(`${e.publishedAt}T00:00:00Z`).toUTCString()}</pubDate>
-      <description>${escape(e.summary[0])}</description>
-    </item>`).join('\n');
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>Variant Design 方向库</title>\n    <link>${site}/</link>\n    <description>一个任务，三个方向。</description>\n    <language>zh-CN</language>\n${items}\n  </channel>\n</rss>\n`;
+export function rss(entries, site = defaultSite, references = []) {
+  const item = (title, link, date, description) => ({ date, xml: `    <item>
+      <title>${escape(title)}</title>
+      <link>${escape(link)}</link>
+      <guid isPermaLink="true">${escape(link)}</guid>
+      <pubDate>${new Date(date).toUTCString()}</pubDate>
+      <description>${escape(description)}</description>
+    </item>` });
+  const items = [
+    ...entries.map(e => item(e.title[0], `${site}/d/${e.slug}`, `${e.publishedAt}T00:00:00Z`, e.summary[0])),
+    ...references.map(r => item(r.name, `${site}/inspiration/${r.id}`, r.addedAt, `${r.focus.zh}。用在${r.application.zh}。`))
+  ].sort((a, b) => Date.parse(b.date) - Date.parse(a.date) || a.xml.localeCompare(b.xml)).map(i => i.xml).join('\n');
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>Variant Design 灵感与方向库</title>\n    <link>${site}/</link>\n    <description>互联网上最好的设计灵感；一个任务，三个方向。</description>\n    <language>zh-CN</language>\n${items}\n  </channel>\n</rss>\n`;
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
@@ -275,7 +279,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   fs.cpSync(path.join(contentRoot, 'media'), path.join(dist, 'media'), { recursive: true });
   for (const entry of entries) fs.writeFileSync(path.join(dist, 'd', `${entry.slug}.json`), JSON.stringify(toCard(entry, site), null, 2) + '\n');
   fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap(indexableRoutes(pages), site));
-  fs.writeFileSync(path.join(dist, 'feed.xml'), rss(entries, site));
+  fs.writeFileSync(path.join(dist, 'feed.xml'), rss(entries, site, references));
   fs.writeFileSync(path.join(dist, 'llms.txt'), llms(listed.entries, docs, site, englishReferences, listed.guides));
   fs.writeFileSync(path.join(dist, 'llms-full.txt'), llmsFull(listed.entries, docs, site, englishReferences, listed.guides));
   fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site}/sitemap.xml\n`);

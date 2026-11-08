@@ -36,6 +36,10 @@ test('sitemap and RSS list every entry', () => {
   const map = sitemap(pages.keys(), 'https://example.test'), feed = rss(entries, 'https://example.test');
   for (const e of entries) { assert.ok(map.includes(`<loc>https://example.test/d/${e.slug}</loc>`)); assert.ok(feed.includes(`<link>https://example.test/d/${e.slug}</link>`)); }
   assert.equal(feed.match(/<item>/g).length, entries.length);
+  const refs = [{ id: 'a&b', name: 'A & B', addedAt: '2030-01-02T03:04:05+08:00', focus: { zh: '看点' }, application: { zh: '用处' } }], mixed = rss(entries, 'https://example.test', refs);
+  assert.equal(mixed.match(/<item>/g).length, entries.length + 1);
+  assert.ok(mixed.includes('<link>https://example.test/inspiration/a&amp;b</link>') && mixed.includes('<title>A &amp; B</title>'));
+  assert.ok(mixed.indexOf('/inspiration/a&amp;b') < mixed.indexOf('/d/'), 'newest item comes first');
   assert.throws(() => renderSite(entries, '<html></html>', 'https://example.test'), /Could not place metadata/);
 });
 
