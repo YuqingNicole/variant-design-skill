@@ -22,15 +22,15 @@
     <p class="eyebrow">Backlog · Maintainer &amp; agents</p>
     <h1>把下一步，<br>变得清楚。</h1>
     <p class="hero-intro">维护者和编码代理共用的待办清单。做完的条目直接删掉，记录留在 PR 和 git 历史里。较大的工作仍然开 GitHub Issue。<br>排序依据：<code>docs/research/2026-11-02-competitor-comparison.md</code>（竞品对比）和 <code>docs/research/2026-11-02-geo-strategy.md</code>（GEO 策略）。标【维护者】的需要账号、付费、公开发布或措辞确认，代理只能起草。</p>
-    <div class="hero-meta"><span class="meta-pill"><strong>21</strong> 项待处理</span><span class="meta-pill"><strong>11</strong> 项需要维护者</span><span class="meta-pill">来源 <code>TODO.md</code></span></div>
+    <div class="hero-meta"><span class="meta-pill"><strong>27</strong> 项待处理</span><span class="meta-pill"><strong>13</strong> 项需要维护者</span><span class="meta-pill">来源 <code>TODO.md</code></span></div>
   </header>
   <div class="toolbar"><div class="shell toolbar-inner">
     <label><span class="visually-hidden">搜索待办</span><input class="search" type="search" placeholder="搜索 backlog" autocomplete="off"></label>
     <div class="filters" role="group" aria-label="按执行者筛选"><button type="button" data-kind="all" aria-pressed="true">全部</button><button type="button" data-kind="agent" aria-pressed="false">可继续推进</button><button type="button" data-kind="owner" aria-pressed="false">需要维护者</button></div>
-    <label><span class="visually-hidden">筛选分组</span><select class="section-select"><option value="all">所有分组</option><option value="0">1. 先修：诚实和定位</option><option value="1">2. 分发：先让人找得到</option><option value="2">3. 对标 recent.design：灵感内容产品</option><option value="3">4. 内容：选对手还没答好的问题</option><option value="4">5. 产品</option><option value="5">6. 网站维护</option><option value="6">X 设计样本收集箱</option><option value="7">定期维护</option></select></label>
+    <label><span class="visually-hidden">筛选分组</span><select class="section-select"><option value="all">所有分组</option><option value="0">1. 先修：诚实和定位</option><option value="1">2. 分发：先让人找得到</option><option value="2">3. 对标 recent.design：灵感内容产品</option><option value="3">4. 内容：选对手还没答好的问题</option><option value="4">5. 产品</option><option value="5">6. 网站维护</option><option value="6">7. 变现：先把度量做出来</option><option value="7">X 设计样本收集箱</option><option value="8">定期维护</option></select></label>
   </div></div>
   <main class="shell">
-    <p class="result-line" aria-live="polite">显示 <strong class="visible-count">21</strong> / 21 项</p>
+    <p class="result-line" aria-live="polite">显示 <strong class="visible-count">27</strong> / 27 项</p>
     <section class="backlog-section" data-section="0">
     <header class="section-heading"><span class="section-index">01</span><h2>1. 先修：诚实和定位</h2><span class="section-count">0 项</span></header>
     <p class="section-note">（本组已完成，决策记录见 <code>docs/drafts/positioning-and-availability.md</code>。）</p><p class="empty-section">当前没有待办。</p>
@@ -107,14 +107,36 @@
     <p class="section-note">（当前没有等待代理执行的已实现网站维护 PR；定位、定价与发布措辞仍待维护者确认，见第 1 组。）</p><p class="empty-section">当前没有待办。</p>
   </section>
 <section class="backlog-section" data-section="6">
-    <header class="section-heading"><span class="section-index">07</span><h2>X 设计样本收集箱</h2><span class="section-count">1 项</span></header>
+    <header class="section-heading"><span class="section-index">07</span><h2>7. 变现：先把度量做出来</h2><span class="section-count">6 项</span></header>
+    <p class="section-note">目标是让广告主付费买本站的赞助位。现状是仓库里没有任何统计代码，赞助页自己写着&quot;不写数字&quot;和&quot;网站目前还没有赞助位&quot;，所以先做度量，之后才有版位和报价。完整拆解（45 个小闭环、关键路径、需要维护者定的 6 件事）见 <a href="https://github.com/YuqingNicole/variant-design-skill/blob/master/docs/drafts/ads-revenue-loops.md"><code>docs/drafts/ads-revenue-loops.md</code></a>。本组是其中的阶段 B，按顺序做，后一条依赖前一条。版位、成交和交付三个阶段不在这里，等度量有了数字再排。</p><ul class="task-list"><li class="task" data-owner="yes" data-done="no" data-search="7. 变现：先把度量做出来 【维护者】访问量（b1）：先到 vercel 仪表盘核实 web analytics 现在有没有开启（geo 策略假定在用，仓库里没有统计代码）。没开就选一个不用 cookie 的工具并说明选择理由。做完后每周有一份访问量、独立访客和来源的记录，存到 `docs/research/`。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】访问量（B1）：先到 Vercel 仪表盘核实 Web Analytics 现在有没有开启（GEO 策略假定在用，仓库里没有统计代码）。没开就选一个不用 cookie 的工具并说明选择理由。做完后每周有一份访问量、独立访客和来源的记录，存到 <code>docs/research/</code>。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="7. 变现：先把度量做出来 来源归因（b2）：区分 ai 引荐（chatgpt.com、perplexity.ai、claude.ai 等）、搜索、x 和直接访问，约定外链的 utm 写法。完成后能回答&quot;流量从哪来&quot;，并和&quot;定期维护&quot;里的 ai 搜索测量对得上。依赖 b1。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>来源归因（B2）：区分 AI 引荐（chatgpt.com、perplexity.ai、claude.ai 等）、搜索、X 和直接访问，约定外链的 UTM 写法。完成后能回答&quot;流量从哪来&quot;，并和&quot;定期维护&quot;里的 AI 搜索测量对得上。依赖 B1。</h3><span class="task-owner">可继续推进</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="7. 变现：先把度量做出来 真人与爬虫分开（b3）：已知爬虫和 ai 抓取不计入对外报价的数字，口径写明。ai 抓取是我们想要的，但广告主买的是真人访问。依赖 b1。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>真人与爬虫分开（B3）：已知爬虫和 AI 抓取不计入对外报价的数字，口径写明。AI 抓取是我们想要的，但广告主买的是真人访问。依赖 B1。</h3><span class="task-owner">可继续推进</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="7. 变现：先把度量做出来 行为事件（b4）：给卡片点击、详情打开、&quot;访问原站&quot;点击、保存、生成参考指令、安装命令复制定名字和触发条件，每个事件有 playwright 测试。这些是以后赞助位点击率的基线。依赖 b1，且不得破坏赞助页&quot;不给读者数据&quot;的承诺。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>行为事件（B4）：给卡片点击、详情打开、&quot;访问原站&quot;点击、保存、生成参考指令、安装命令复制定名字和触发条件，每个事件有 Playwright 测试。这些是以后赞助位点击率的基线。依赖 B1，且不得破坏赞助页&quot;不给读者数据&quot;的承诺。</h3><span class="task-owner">可继续推进</span></div>
+  </li><li class="task" data-owner="yes" data-done="no" data-search="7. 变现：先把度量做出来 【维护者】隐私一致（b5）：统计工具不识别个人，补一页隐私说明，措辞要能被赞助页的承诺覆盖。法律措辞由维护者核对，代理只起草。依赖 b1。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>【维护者】隐私一致（B5）：统计工具不识别个人，补一页隐私说明，措辞要能被赞助页的承诺覆盖。法律措辞由维护者核对，代理只起草。依赖 B1。</h3><span class="task-owner">需要维护者</span></div>
+  </li><li class="task" data-owner="no" data-done="no" data-search="7. 变现：先把度量做出来 统计口径页（b6）：把&quot;访问量怎么数&quot;写成一页，每个数字写明日期和来源，赞助页再链过去。赞助页现在说&quot;洽谈时提供统计口径&quot;，这一页让它有东西可给。依赖 b1–b3。">
+    <span class="task-state" aria-label="待处理"></span>
+    <div class="task-copy"><h3>统计口径页（B6）：把&quot;访问量怎么数&quot;写成一页，每个数字写明日期和来源，赞助页再链过去。赞助页现在说&quot;洽谈时提供统计口径&quot;，这一页让它有东西可给。依赖 B1–B3。</h3><span class="task-owner">可继续推进</span></div>
+  </li></ul>
+  </section>
+<section class="backlog-section" data-section="7">
+    <header class="section-heading"><span class="section-index">08</span><h2>X 设计样本收集箱</h2><span class="section-count">1 项</span></header>
     <p class="section-note">把链接贴在这里，每条写一句好在哪。代理先把它登记进 <code>website/src/inspiration-data.ts</code>（带 <code>post</code> 字段），再运行 <code>node website/scripts/x-media.mjs</code> 取视频并提交 <code>website/src/x-media.json</code>：带视频的按标签进对应分类页并自动播放（标签对应分类见 RFC-008 §8），其他用 X 官方嵌入。加完就从这里删掉。</p><p class="section-note">Ego Lite 每周一 09:00（Asia/Shanghai）搜索最近 7 天、互动数至少 100 的设计视频，把链接和互动数据放进 <code>website/content/x-post-inbox.json</code>。收件箱只供人工筛选；看过原帖并补齐中英文研究笔记后，才能加入公开灵感页。手动运行：<code>website/scripts/run-x-discovery.sh</code>。</p><ul class="task-list"><li class="task" data-owner="no" data-done="no" data-search="x 设计样本收集箱 recent.design 首页的 947 条作品（维护者本地的 `recent-design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 x 帖子加入，条目带 `via` 指回 recent.design。其余按第 3 组的固定流程分批挑选：看过视频再写笔记，同一作者不重复；instagram 的 54 条现在没有对应的展示方式，先不加。">
     <span class="task-state" aria-label="待处理"></span>
     <div class="task-copy"><h3>recent.design 首页的 947 条作品（维护者本地的 <code>Recent-Design首页作品链接.csv</code>，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入，条目带 <code>via</code> 指回 recent.design。其余按第 3 组的固定流程分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。</h3><span class="task-owner">可继续推进</span></div>
   </li></ul>
   </section>
-<section class="backlog-section" data-section="7">
-    <header class="section-heading"><span class="section-index">08</span><h2>定期维护</h2><span class="section-count">3 项</span></header>
+<section class="backlog-section" data-section="8">
+    <header class="section-heading"><span class="section-index">09</span><h2>定期维护</h2><span class="section-count">3 项</span></header>
     <ul class="task-list"><li class="task" data-owner="no" data-done="no" data-search="定期维护 每两周按 geo 策略里的 10 个问题测一次 ai 搜索是否提到并引用本站，结果记在 `docs/research/`。">
     <span class="task-state" aria-label="待处理"></span>
     <div class="task-copy"><h3>每两周按 GEO 策略里的 10 个问题测一次 AI 搜索是否提到并引用本站，结果记在 <code>docs/research/</code>。</h3><span class="task-owner">可继续推进</span></div>
