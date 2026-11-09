@@ -2874,6 +2874,38 @@ export const inspirationItems = [
       "hasMedia": true
     },
     "addedAt": "2026-11-02T12:30:25+08:00"
+  },
+  {
+    "id": "x-tanglele0318-961255514378",
+    "name": "Hangzhou landmarks in 3D blueprint",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/tanglele0318/status/2119620961255514378",
+    "source": "link-only",
+    "focus": {
+      "zh": "蓝图网格里的六个杭州地标模型，每张卡片都有旋转、平移、复位和展开",
+      "en": "Six Hangzhou landmark models on a blueprint grid, each card with rotate, pan, reset and expand"
+    },
+    "application": {
+      "zh": "做可拖动查看的 3D 模型卡片、产品或建筑展示，以及单色蓝图风格的界面",
+      "en": "Build draggable 3D model cards, product or architecture showcases, and single-colour blueprint-style interfaces"
+    },
+    "publisher": "木渡川 (@tanglele0318)",
+    "kind": "social-post",
+    "designer": "木渡川",
+    "checkedAt": "2026-11-09",
+    "addedAt": "2026-11-09T04:50:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2119620961255514378",
+      "author": "木渡川",
+      "handle": "tanglele0318",
+      "date": "2026-11-09",
+      "lang": "zh",
+      "text": "之前这个风格的代码建模演示视频意外获得了不少关注，这两天得空封装成skill开源出来，欢迎体验😆",
+      "hasMedia": true
+    }
   }
 ];
 
