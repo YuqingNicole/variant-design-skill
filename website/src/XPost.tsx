@@ -29,11 +29,12 @@ export function XPost({post,url,locale,autoload=false}:{post:Post;url:string;loc
    if(el)flushSync(()=>setState('shown')); // the stored text goes in the frame the embed arrives, so the page moves once, not twice
    else{box.current?.replaceChildren();setState('failed')}}catch{if(id===run.current)setState('failed')}}
  const date=formatDate(post.date,locale);
-  // The stored text comes first and the embed below it: when the embed grows, it pushes down only what is under it.
+  // The notice and button come first, then the stored text, then the embed: when the embed grows, nothing a reader can see sits below it.
  return <figure className="x-post">
-  {state!=='shown'&&<blockquote cite={url} lang={post.lang}>{post.text&&<p>{post.text}</p>}<footer><b>{post.author}</b> <span>@{post.handle} · {date}</span></footer></blockquote>}
-  <div ref={box} className="x-post-embed" hidden={state==='idle'||state==='failed'}/>
   <figcaption>{state==='shown'?l('shown')
    :<><button type="button" onClick={show} disabled={state==='loading'}>{state==='loading'?l('loading'):l(post.hasMedia?'loadMedia':'load')}</button>
     <span>{l(state==='failed'?'failed':'notice')}</span>
-    <a href={url} target="_blank" rel="noreferrer">{l('open')}</a></>}</figcaption></figure>}
+    <a href={url} target="_blank" rel="noreferrer">{l('open')}</a></>}</figcaption>
+  {state!=='shown'&&<blockquote cite={url} lang={post.lang}>{post.text&&<p>{post.text}</p>}<footer><b>{post.author}</b> <span>@{post.handle} · {date}</span></footer></blockquote>}
+  <div ref={box} className="x-post-embed" hidden={state==='idle'||state==='failed'}/>
+</figure>}

@@ -1,5 +1,5 @@
 {
   "description": "Open-source agent skill for Codex and Claude Code that turns one design brief into three comparable directions (A/B/C) inside your own project.",
-  "homepage": "https://variant-design-skill.vercel.app/",
+  "homepage": "https://variantdesign.xyz/",
   "topics": ["ai", "claude-code", "design", "generative-design", "skill", "ui-design", "agent-skills", "codex", "design-system"]
 }

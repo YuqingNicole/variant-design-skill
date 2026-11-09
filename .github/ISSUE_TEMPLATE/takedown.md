@@ -5,7 +5,7 @@ title: "[撤下] "
 labels: takedown
 ---
 
-We take the content down first and verify afterwards. See https://variant-design-skill.vercel.app/submit.
+We take the content down first and verify afterwards. See https://variantdesign.xyz/submit.
 
 - 本站页面链接 / Page on this site:
 - 作品原始链接 / Original work:

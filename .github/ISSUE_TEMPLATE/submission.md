@@ -5,7 +5,7 @@ title: "[投稿] "
 labels: submission
 ---
 
-See https://variant-design-skill.vercel.app/submit. You can paste the generated draft here, or fill the fields below. Nothing is accepted automatically.
+See https://variantdesign.xyz/submit. You can paste the generated draft here, or fill the fields below. Nothing is accepted automatically.
 
 投稿及附件会公开。请只提供你有权授权且愿意公开的信息。可以在本编辑器上传图片或视频，然后将 GitHub 生成的地址填入媒体字段；附件一经上传即存放在 GitHub。
 Submissions and attachments are public. Include only information you can authorize and want public. Upload a local image/video in this editor, then put GitHub’s generated URL in the media field; attaching uploads the file to GitHub immediately.

@@ -11,7 +11,7 @@ import {referenceRecords} from './reference-records.mjs';
 import { contentRoot, loadEntries, toCard } from './content.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repository = 'https://github.com/YuqingNicole/variant-design-skill';
-export const defaultSite = 'https://variant-design-skill.vercel.app';
+export const defaultSite = 'https://variantdesign.xyz';
 const categoryNames = { landing: '落地页', product: '产品界面', data: '数据展示', brand: '品牌', component: '组件' };
 const kindLabel = e => e.source === 'own' ? (e.kind === 'verified' ? '技能产出 · 已验证' : '概念作品') : e.source === 'permission' ? '授权投稿' : '外部参考';
 export const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);

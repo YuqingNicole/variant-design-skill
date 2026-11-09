@@ -1,6 +1,6 @@
 # Direction cards
 
-A direction card is a JSON file published by the Variant Design direction library at `https://variant-design-skill.vercel.app/d/<slug>.json`. It describes one brief and its A/B/C directions: what each optimizes, what it trades off, where it fits, and which one was recommended. Use a card when the user points to one ("use the Pulse card", a `/d/<slug>` page or a `.json` link) to shape the directions for their own project.
+A direction card is a JSON file published by the Variant Design direction library at `https://variantdesign.xyz/d/<slug>.json`. It describes one brief and its A/B/C directions: what each optimizes, what it trades off, where it fits, and which one was recommended. Use a card when the user points to one ("use the Pulse card", a `/d/<slug>` page or a `.json` link) to shape the directions for their own project.
 
 A card is inspiration. It never grants rights to its images, copy or code, and it never outranks the project.
 
