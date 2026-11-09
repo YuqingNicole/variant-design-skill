@@ -1,9 +1,9 @@
 // Chinese for CHANGELOG.md, one string per block in the same order (see changelog.ts).
 // Keep code spans identical to the English; scripts/changelog.test.mjs checks both.
 export const changelogZh: Record<string, { title?: string; blocks: string[] }> = {
-  Unreleased: {
-    title: '未发布',
+  '1.2.0': {
     blocks: [
+      '技能可以作为 Claude Code 插件安装，在 `pick B` 之后推导并检查设计系统，并为生成页面的动效增加规则。网站的每个灵感分类都有自己的页面，并且会测量自己的首屏速度。',
       '网站',
       '网站包 `0.1.1` 新增中英双语的编辑式页脚，可直接返回灵感流；更新记录页也会标出当前技能版本。',
       '网站包 `0.2.0`：灵感的每个分类都有自己的页面（`/browse/web`、`/browse/interface`、`/browse/interaction`、`/browse/motion`、`/browse/branding` 和 `/en/browse/...`），有各自的标题、描述和预渲染的列表。一条参考只属于一个分类，所以 tab 之间不会重复；首页仍是完整列表。暂时没有参考的分类（插画、海报、印刷）在收录第一条后才出现 tab。旧的 `?category=` 链接会改写到新地址。',

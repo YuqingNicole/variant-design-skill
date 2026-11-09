@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { bumpVersion, release, replaceManifestVersion, updateVersionRecord } from './release-version.mjs';
 
 test('bumps stable semver and handles release candidates', () => {
@@ -27,8 +28,10 @@ test('updates the recorded current version for each product', () => {
 
 test('previews a skill version bump from the real repository without writing files', async () => {
   const result = await release('skill', 'patch', { dryRun: true });
+  // Read from VERSION so the test does not need an edit at every release.
+  const current = fs.readFileSync(new URL('../VERSION', import.meta.url), 'utf8').trim();
   assert.deepEqual(result, {
-    product: 'skill', current: '1.1.0', next: '1.1.1',
+    product: 'skill', current, next: bumpVersion(current, 'patch'),
     files: ['VERSION', 'plugin/plugin.json', '.claude-plugin/marketplace.json', 'docs/versioning.md'], dryRun: true,
   });
 });

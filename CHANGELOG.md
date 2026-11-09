@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 — 2026-11-09
+
+The skill installs as a Claude Code plugin, derives and checks a design system after `pick B`, and gains rules for motion in generated pages. The website gives every inspiration category its own page and measures its own first-screen speed.
 
 ### Website
 - Website package `0.1.1` adds a bilingual editorial footer with a direct path back to inspiration, and marks the current skill version in the changelog.
