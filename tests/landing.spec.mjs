@@ -615,13 +615,13 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('7 个参考');
 });
 test('reference pack restores locally and reports storage failures', async ({page})=>{
- await page.goto('/');
+ await page.goto('/');await hydrated(page);
  await page.locator('.inspiration-grid .insp-card').first().getByRole('button',{name:'加入参考包'}).click();
  await page.locator('.inspiration-pack').getByLabel('参考什么',{exact:true}).fill('信息层级');
- await page.reload();
+ await page.reload();await hydrated(page);
  await expect(page.locator('.inspiration-pack').getByLabel('参考什么',{exact:true})).toHaveValue('信息层级',{timeout:15000});
  await page.evaluate(()=>localStorage.setItem('variant-inspiration-pack-v1','invalid'));
- await page.reload();
+ await page.reload();await hydrated(page);
  await expect(page.getByRole('alert')).toContainText('无法读取或保存');
  await page.locator('.inspiration-grid .insp-card').first().getByRole('button',{name:'加入参考包'}).click();
  expect(await page.evaluate(()=>localStorage.getItem('variant-inspiration-pack-v1'))).toBe('invalid');
