@@ -77,7 +77,7 @@ function TryIt({ entry, direction, language }: { entry: Entry; direction: Direct
   useEffect(() => setStatus(''), [prompt]);
   async function copy() { try { await navigator.clipboard.writeText(prompt); setStatus(t(m.copiedPasteItInto,language)); } catch { setStatus(t(m.couldNotCopyAutomatically,language)); } }
   return <section className="library-try" aria-labelledby="try-title"><h2 id="try-title">{t(m.tryItInYour,language)}</h2>
-    <p>{t(m.installTheSkillThen,language)} <a href={localePath('/docs',language)}>{t(m.install,language)}</a></p>
+    <p>{t(m.installTheSkillThen,language)} <a href={localePath('/docs/install',language)}>{t(m.install,language)}</a></p>
     <textarea readOnly aria-label={t(m.promptForYourAgent,language)} value={prompt} rows={4} onFocus={e => e.currentTarget.select()}/>
     <div><button onClick={copy}>{t(m.copyPrompt,language)}</button><a href={cardUrl(entry)} target="_blank" rel="noreferrer">{t(m.viewTheCardJson,language)}</a></div>
     <p role="status">{status}</p></section>;

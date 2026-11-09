@@ -14,12 +14,12 @@ test.beforeEach(async({page})=>{
 
 // The inspiration styles load with the page's script chunk: read computed styles only after React has taken over the prerendered page.
 const hydrated=page=>page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
-for(const route of ['/docs','/sponsor'])test(`${route} keeps a consistent type and color scale in both languages`,async({page},info)=>{
+for(const route of ['/docs','/docs/install','/sponsor'])test(`${route} keeps a consistent type and color scale in both languages`,async({page},info)=>{
  await page.emulateMedia({reducedMotion:'reduce'});const samples=[];
  for(const language of ['zh','en'])for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});await page.goto((language==='en'?'/en':'')+route);await expect(page.locator('footer')).toBeAttached();await page.evaluate(()=>document.fonts.ready);
   // Docs keep the third, monospace face in command textareas (the probe excludes code/pre, not textareas).
-  const sample=await page.evaluate(probe),result=grade(sample,{...defaults,families:route==='/docs'?3:2});samples.push({...sample,grade:result});
+  const sample=await page.evaluate(probe),result=grade(sample,{...defaults,families:route==='/docs/install'?3:2});samples.push({...sample,grade:result});
   const screenshot=info.outputPath(`${language}-${width}.png`);await page.screenshot({path:screenshot});await info.attach(`${language}-${width}`,{path:screenshot,contentType:'image/png'});
   expect.soft(result.over,`${language} ${width}: ${JSON.stringify(result.rows)}`).toEqual([]);
   expect.soft(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${language} ${width} overflow`).toBe(true);
@@ -139,7 +139,7 @@ test('canvas homepage opens real directions and preserves the guided handoff acr
   await expect(page.locator('h1')).toContainText('three directions that run.');
   await expect(page.frameLocator('.paper-preview iframe').locator('html')).toHaveAttribute('lang','en');
   await page.locator('.paper-actions a').first().click();
-  await expect(page).toHaveURL(/\/docs$/);
+  await expect(page).toHaveURL(/\/docs\/install$/);
   await expect(page.getByRole('textbox',{name:'First project prompt'})).toContainText('complete Variant Design skill');
   for(const width of [320,390,1440]){
     await page.setViewportSize({width,height:900});
@@ -217,7 +217,7 @@ test('expressive homepage gallery opens distinct complete directions with workin
  await expect(page.locator('.pricing-card').nth(1).getByRole('link')).toHaveText('Discuss the Pro proposal');
  for(const width of [320,390,577,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
  await page.locator('.pricing-card').first().getByRole('link').click();
- await expect(page).toHaveURL(/\/en\/docs$/);
+ await expect(page).toHaveURL(/\/en\/docs\/install$/);
  await expect(page.locator('html')).toHaveAttribute('lang','en');
  await page.locator('.site-footer a[href="/lab"]').click();await page.locator('a[href="/lab/workbench"]').click();
  await expect(page.locator('.site-workbench')).toHaveCSS('background-color','rgb(247, 247, 242)');
@@ -247,7 +247,7 @@ test('direction library pages are prerendered, browsable and keep old links work
  const feed=await(await request.get('/feed.xml')).text();for(const slug of ['harbor','pulse','variant-site','offscript','forma'])expect(feed).toContain(`/d/${slug}</link>`);expect(feed).toContain('/inspiration/');expect(feed.match(/<item>/g).length).toBeGreaterThan(5);
  const llms=await request.get('/llms.txt');expect(llms.headers()['content-type']).toContain('text/plain');expect(await llms.text()).toContain('/d/pulse)');
  expect((await request.get('/missing.txt')).status()).toBe(404);
- expect(await(await request.get('/docs')).text()).toContain('"@type":"FAQPage"');
+ expect(await(await request.get('/docs/install')).text()).toContain('"@type":"FAQPage"');
  await page.goto('/cases');
  const cards=page.locator('.library-grid .library-card');await expect(cards).toHaveCount(5);await expect(cards.first()).toContainText('Harbor');
  // Each card shows all three directions, recommended first; scroll so the lazy images load, then check none is broken.
@@ -288,10 +288,27 @@ test('skills page lists only tried skills with records and a verified install co
  for(const url of ['/skills','/','/d/pulse']){await page.goto(url);for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}}
 });
 
+test('the docs hub lists the install guide, the articles and the quick answers, and each article stands on its own', async ({page,request})=>{
+ await page.goto('/docs');await hydrated(page);
+ await expect(page.getByRole('heading',{level:1})).toHaveText('文档');
+ const links=await page.locator('.guide-list h2 a').evaluateAll(a=>a.map(x=>x.getAttribute('href')));
+ expect(links).toEqual(['/docs/install','/docs/design-exploration-with-ai-coding-agents','/docs/check-ai-generated-ui-before-you-ship','/docs/motion-rules-for-ai-generated-ui','/docs/measure-layout-shift-in-ai-built-pages','/guides']);
+ for(const href of links.slice(1,5)){
+  const html=await(await request.get(href)).text();
+  expect(html,href).toContain(`<link rel="canonical" href="https://variantdesign.xyz${href}">`);
+  expect(html,href).toContain('"@type":"Article"');expect(html,href).toContain('<h1>');
+ }
+ await page.getByRole('link',{name:'给 AI 生成的界面定动效规则'}).click();
+ await expect(page).toHaveURL(/\/docs\/motion-rules-for-ai-generated-ui$/);
+ await expect(page.getByRole('heading',{level:1})).toHaveText('给 AI 生成的界面定动效规则');
+ await page.getByRole('link',{name:'文档'}).first().click();await expect(page).toHaveURL(/\/docs$/);
+ await page.goto('/docs/install');await expect(page.getByRole('button',{name:'复制安装命令'})).toBeVisible();
+});
+
 test('docs recover from clipboard denial', async ({page})=>{
  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:()=>Promise.reject(new Error('denied'))}}));
  await page.goto('/d/harbor');await page.getByRole('button',{name:'复制指令'}).click();await expect(page.locator('.library-try [role="status"]')).toContainText('手动复制');
- await page.goto('/docs');
+ await page.goto('/docs/install');
  await page.getByRole('button',{name:'复制安装命令'}).click();
  await expect(page.getByRole('status')).toContainText('手动复制');
  await expect(page.getByRole('textbox',{name:'安装命令'})).toHaveValue(/git clone.*variant-design/);
@@ -813,7 +830,7 @@ test('home leads with the inspiration feed, cases have their own page, and the s
  await expect(page.locator('h1')).toHaveText('互联网上最好的设计灵感。');
  await expect(page.locator('.insp-title')).toContainText('每条都附出处和我们写的笔记');
  await expect(page.locator('.inspiration-grid .insp-card').first()).toBeInViewport();
- await expect(page.locator('.site-nav-links a')).toHaveText(['灵感','动效视频','案例','技能','指南','投稿']);
+ await expect(page.locator('.site-nav-links a')).toHaveText(['灵感','动效视频','案例','技能','文档','投稿']);
  await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');
  await page.locator('.site-nav-links a',{hasText:'动效视频'}).click();
  await expect(page).toHaveURL(/\/browse\/motion$/);await expect(page.locator('h1')).toHaveText('动效灵感');await expect(page.getByRole('link',{name:'动效',exact:true})).toHaveAttribute('aria-current','page');

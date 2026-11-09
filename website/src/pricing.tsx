@@ -14,7 +14,7 @@ const pricingCopy = {
     navLabel: "价格页导航", navMark: "价格 / 001", home: "返回工作台", github: "GitHub ↗", switchLabel: "切换到英文", switchText: "EN", title: ["本地技能开源免费。", "托管方案仍在计划中。"], lede: "本地技能现在可安装使用。Pro 和 Team 尚未开放购买、开通或生成额度；下列功能和报价都是草案，上线时间未定。",
     billingLabel: "报价周期", plansLabel: "本地版与托管计划", monthly: "月付", annual: "年付", annualNote: "报价草案", perMonth: "/ 月", perSeat: "/ 席位 / 月", billedAnnual: "年付报价草案", freeForever: "永久免费", earlyAccess: "计划中 · 尚未开放", recommended: "计划中", availableNow: "现在可用", proposedPrice: "报价草案", proposedFeatures: "以下为拟提供功能，尚未开放：",
     plans: [
-      { name: "本地版", thesis: "使用你自己的编码 Agent。", priceMonthly: 0, priceAnnual: 0, suffix: "", cta: "免费开始", href: "/docs", tone: "plain", features: ["完整开源 Skill", "使用自己的 Agent 和模型账户", "三个可运行设计方向", "本地版本记录", "HTML 导出", "社区色板与更新"] },
+      { name: "本地版", thesis: "使用你自己的编码 Agent。", priceMonthly: 0, priceAnnual: 0, suffix: "", cta: "免费开始", href: "/docs/install", tone: "plain", features: ["完整开源 Skill", "使用自己的 Agent 和模型账户", "三个可运行设计方向", "本地版本记录", "HTML 导出", "社区色板与更新"] },
       { name: "专业版", thesis: "拟探索托管生成与项目版本。", priceMonthly: 24, priceAnnual: 20, suffix: "", cta: "讨论专业版计划", href: "issues", tone: "accent", features: ["包含本地版全部功能", "托管生成额度", "私有项目与云端版本", "代码库上下文导入", "可分享预览链接", "GitHub PR 导出"] },
       { name: "团队版", thesis: "拟探索共享空间与协作记录。", priceMonthly: 49, priceAnnual: 41, suffix: "seat", cta: "讨论团队版计划", href: "issues", tone: "dark", features: ["包含专业版全部功能", "共享项目空间", "评论与方向决策记录", "角色与用量控制", "团队设计系统约束", "优先支持"] },
     ], principleTitle: "现在可用的是本地技能。", principles: [
@@ -35,7 +35,7 @@ const pricingCopy = {
     navLabel: "Pricing navigation", navMark: "PRICING / 001", home: "Back to studio", github: "GitHub ↗", switchLabel: "Switch to Chinese", switchText: "中文", title: ["The local skill is free.", "Hosted plans are proposals."], lede: "Install and use the local skill today. Pro and Team are not available to buy or activate, and provide no generation allowance. Features and prices below are proposals with no launch date.",
     billingLabel: "Proposed billing period", plansLabel: "Local skill and proposed hosted plans", monthly: "Monthly", annual: "Annual", annualNote: "Proposed prices", perMonth: "/ month", perSeat: "/ seat / month", billedAnnual: "proposed annual price", freeForever: "Free forever", earlyAccess: "Planned · not available", recommended: "Planned", availableNow: "Available now", proposedPrice: "Proposed price", proposedFeatures: "Proposed features, not available yet:",
     plans: [
-      { name: "Local", thesis: "Use your own coding agent.", priceMonthly: 0, priceAnnual: 0, suffix: "", cta: "Start free", href: "/docs", tone: "plain", features: ["Full open-source skill", "Use your own agent and model account", "Three working design directions", "Local version history", "HTML export", "Community palettes and updates"] },
+      { name: "Local", thesis: "Use your own coding agent.", priceMonthly: 0, priceAnnual: 0, suffix: "", cta: "Start free", href: "/docs/install", tone: "plain", features: ["Full open-source skill", "Use your own agent and model account", "Three working design directions", "Local version history", "HTML export", "Community palettes and updates"] },
       { name: "Pro", thesis: "Proposed hosted generation and project history.", priceMonthly: 24, priceAnnual: 20, suffix: "", cta: "Discuss the Pro proposal", href: "issues", tone: "accent", features: ["Everything in Local", "Hosted generation allowance", "Private projects and cloud versions", "Repository context import", "Shareable preview links", "GitHub PR export"] },
       { name: "Team", thesis: "Proposed shared spaces and decision records.", priceMonthly: 49, priceAnnual: 41, suffix: "seat", cta: "Discuss the Team proposal", href: "issues", tone: "dark", features: ["Everything in Pro", "Shared project workspace", "Comments and decision history", "Roles and usage controls", "Team design-system constraints", "Priority support"] },
     ], principleTitle: "The local skill is available now.", principles: [
@@ -97,7 +97,7 @@ export function PricingPage({ repositoryUrl }: PricingPageProps) {
 
     <section className="pricing-faq shell"><h2>{t.faqTitle}</h2><div>{t.faqs.map((faq, index) => <details key={faq.q}><summary>{faq.q}<b><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M8 3v10M3 8h10"/></svg></b></summary><p>{faq.a}</p></details>)}</div></section>
 
-    <section className="pricing-final"><div className="shell"><h2>{t.finalTitle}</h2><p>{t.finalBody}</p><div><a className="pricing-button" href={localePath('/docs',language)}>{t.finalPrimary}</a><a href={repositoryUrl} target="_blank" rel="noreferrer">{t.finalSecondary}</a></div></div></section>
+    <section className="pricing-final"><div className="shell"><h2>{t.finalTitle}</h2><p>{t.finalBody}</p><div><a className="pricing-button" href={localePath('/docs/install',language)}>{t.finalPrimary}</a><a href={repositoryUrl} target="_blank" rel="noreferrer">{t.finalSecondary}</a></div></div></section>
     <SiteFooter language={language}/>
   </main>;
 }
