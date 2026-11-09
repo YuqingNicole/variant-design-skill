@@ -12,6 +12,7 @@ import { tokenMap } from '../scripts/ds-tokens.mjs';
 import { systemIdentity } from '../scripts/variant-history.mjs';
 import { gradePremium } from './premium.mjs';
 import { gradeNativeVite } from './native-vite.mjs';
+import { gradeMotion } from './motion.mjs';
 import { gradePreviewCleanup } from './preview-cleanup.mjs';
 import { gradeSharedDependencies } from './shared-dependencies.mjs';
 import { gradeDeliveryReceipts } from './delivery-receipts.mjs';
@@ -129,6 +130,11 @@ export function grade(project, { fixture = {}, transcript, install } = {}) {
     else if (context.designSystem.file !== fixture.locked.file) problems.push(`locked file recorded as ${context.designSystem.file}, not ${fixture.locked.file}`);
     for (const [file, source] of ownedSources(output, context)) for (const font of declaredFonts(source)) if (!locked.includes(font.toLowerCase())) problems.push(`${file} declares "${font}"`);
     add('brand-kept', problems.length === 0, problems);
+  }
+  if (fixture.motion) {
+    // One entry per direction: everything that direction's files contain, so rules are judged per direction.
+    const directions = Object.entries(context?.variants ?? {}).map(([id, v]) => [id, ownedSources(output, { variants: { [id]: v } }).map(([, source]) => source).join('\n')]);
+    for (const check of gradeMotion(directions, skillReading(transcript, project, install))) checks.push(check);
   }
   const copies = skillCopies(transcript, project, install);
   if (copies) add('skill-under-test', copies.project > 0 && copies.other.length === 0, [`read the copy under test ${copies.project} time(s)`, ...copies.other.map(o => `also referenced ${o}`)]);
