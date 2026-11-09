@@ -190,3 +190,68 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 /* Media that nearly matches the cell fills it; the rest sits whole on a surface mat instead of floating in paper. */
 .insp-vcard-open{background:var(--site-surface)}
 .insp-vcard-open.insp-fills .insp-vcard-media{object-fit:cover}
+/* Atmosphere layer (docs/design-system.md §12): the page sits on a painted sky, inside one frosted panel.
+   Every rule below is presentation only; the markup, the filters and the keyboard paths are unchanged. */
+/* The gap above the panel is a transform, not a margin: the static page that React replaces sits at the top, and a margin would register as a 28px layout shift. */
+html:has(.inspiration-page){background:#78a9d8 url(/sky.jpg) center top/cover fixed no-repeat}
+html:has(.inspiration-page) body{background:transparent}
+.inspiration-page{--glass:rgba(255,255,255,.62);--hair:rgba(20,22,26,.1);--card-g:rgba(255,255,255,.88);--site-muted:#4d525a;--site-line:rgba(20,22,26,.12);--radius-card:16px;--radius-panel:16px;
+ width:min(1240px,calc(100% - 64px));margin:0 auto;transform:translateY(28px);min-height:calc(100vh - 28px);background:var(--glass);-webkit-backdrop-filter:blur(22px) saturate(1.1);backdrop-filter:blur(22px) saturate(1.1);border:1px solid rgba(255,255,255,.7);border-bottom:0;border-radius:16px 16px 0 0;box-shadow:0 0 0 1px var(--hair),0 30px 80px rgba(40,70,110,.18)}
+@supports not (backdrop-filter:blur(1px)){.inspiration-page{background:rgba(255,255,255,.88)}}
+.inspiration-page .site-shell{width:auto;margin-inline:0;padding-inline:32px}
+.inspiration-page .site-nav{height:76px;border-bottom:1px solid var(--hair)}
+.inspiration-page .site-brandmark{width:28px;height:28px}
+.inspiration-page .site-nav-links a{color:var(--site-muted)}
+.inspiration-page .site-nav-links a[aria-current=page]{color:var(--site-ink);text-decoration:none;border-bottom:1px solid var(--site-ink);padding-bottom:4px}
+.inspiration-page .site-language{border-radius:999px;background:rgba(255,255,255,.85);border-color:var(--hair);font-size:14px}
+@media(min-width:651px){.inspiration-page .site-wordmark{font-family:var(--font-display);font-size:20px;letter-spacing:-.02em}}
+.inspiration-page .insp-head{padding-block:64px 32px;gap:var(--space-3)}
+.inspiration-page .insp-title h1{font-size:clamp(34px,5vw,68px);font-weight:400;line-height:1.04;letter-spacing:-.025em}
+.inspiration-page .insp-counts{font-size:12px;letter-spacing:.1em}
+.inspiration-page .insp-bar{background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-color:var(--hair)}
+.inspiration-page .insp-pills a{background:rgba(255,255,255,.75);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-muted)}
+.inspiration-page .insp-pills a[aria-current=page]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}
+.inspiration-page :is(.insp-bar select,.insp-search){background:rgba(255,255,255,.85);border-color:var(--hair)}
+.inspiration-page .inspiration-count{letter-spacing:.1em}
+/* The feed is one horizontal strip of white cards: image first, name and note under it, never overlaid. */
+.inspiration-page .inspiration-grid.insp-feed{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(300px,360px);gap:16px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:32px;padding:4px 32px 18px;margin-inline:-32px;scrollbar-width:thin}
+.inspiration-page .insp-feed>.insp-card{scroll-snap-align:start;background:var(--card-g);border:1px solid var(--hair);border-radius:16px;padding:8px 8px 14px}
+.inspiration-page .insp-feed .insp-card-open{aspect-ratio:auto;overflow:visible}
+.inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){aspect-ratio:4/3;height:auto;border-radius:3px;overflow:hidden}
+.inspiration-page .insp-feed .insp-card-meta{position:static;opacity:1;padding:14px 8px 0;background:none}
+.inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){top:16px;bottom:auto;right:16px}
+.inspiration-page .insp-feed .insp-card-out{right:54px}
+.insp-controls{display:flex;align-items:center;justify-content:space-between;padding-top:18px;border-top:1px solid var(--hair)}
+.insp-progress{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--site-muted);font-variant-numeric:tabular-nums}
+.insp-progress i{display:block;width:160px;height:2px;background:var(--hair);position:relative}
+.insp-progress i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--p,0%);background:var(--site-ink)}
+.insp-arrows{display:flex;gap:8px}
+.insp-arrows button{display:grid;place-items:center;width:42px;height:42px;padding:0;border-radius:50%;border:1px solid var(--hair);background:rgba(255,255,255,.85);color:var(--site-ink);cursor:pointer}
+.insp-arrows button:last-child:not(:disabled){background:var(--site-ink);color:var(--site-paper);border-color:var(--site-ink)}
+.insp-arrows button:disabled{opacity:.4;cursor:default}
+/* Detail: the study and apply notes read as sentences, the labels as small capitals. */
+.inspiration-page .insp-detail :is(h1,h2){font-size:clamp(40px,6vw,88px);font-weight:400;line-height:1;letter-spacing:-.03em}
+.inspiration-page :is(.insp-detail-label,.insp-detail dt){letter-spacing:.1em}
+.inspiration-page .insp-detail dd:nth-of-type(-n+2){font-family:var(--font-display);font-size:24px;line-height:1.25;letter-spacing:-.02em}
+.inspiration-page .insp-detail-media{background:var(--card-g);border:1px solid var(--hair);border-radius:16px;padding:8px}
+.inspiration-page :is(.insp-detail-media,.insp-shot)>.insp-thumb,.inspiration-page .insp-shot img{border-radius:3px}
+/* Radius budget: pill, 16px for panels and cards, 3px for images and sketch lines. */
+.inspiration-page .insp-sketch i{border-radius:3px}
+.inspiration-page :is(.insp-detail-tools :is(a,button),.insp-detail-brief){background:rgba(255,255,255,.85);border-color:var(--hair)}
+.insp-dialog{border-radius:16px;background:rgba(247,247,242,.95)}
+.inspiration-page :is(.inspiration-pack,.inspiration-sources a){background:var(--card-g);border-color:var(--hair);border-radius:16px}
+.inspiration-page .inspiration-brief{background:rgba(225,233,216,.92);border-color:var(--hair);border-radius:16px}
+.inspiration-page .content-button{background:var(--site-ink);border-radius:999px}
+/* The frosted panel carries the footer's links; the green call to action would repeat the closing section above it. */
+.inspiration-page .site-footer-cta{display:none}
+.inspiration-page .site-footer>.site-footer-bottom{border-top:1px solid var(--hair);padding-block:40px 28px}
+@media(max-width:650px){
+ .inspiration-page{width:calc(100% - 16px);transform:translateY(8px);border-radius:16px 16px 0 0}
+ .inspiration-page .site-shell{padding-inline:16px}
+ .inspiration-page .insp-head{padding-block:32px 20px}
+ .inspiration-page .inspiration-grid.insp-feed{grid-template-columns:none;grid-auto-columns:78vw;gap:12px;scroll-padding-inline:16px;padding-inline:16px;margin-inline:-16px}
+ .inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){width:44px;height:44px;top:8px;bottom:auto}
+ .inspiration-page .insp-feed .insp-card-save{right:8px}.inspiration-page .insp-feed .insp-card-out{right:60px;left:auto}
+ .insp-progress i{width:80px}.insp-arrows button{width:44px;height:44px}
+}
+@media(prefers-reduced-motion:reduce){.inspiration-page .inspiration-grid.insp-feed{scroll-behavior:auto}}

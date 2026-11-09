@@ -387,7 +387,7 @@ test('inspiration thumbnails map each link\'s own preview, resized from the sour
  await page.emulateMedia({reducedMotion:'reduce'});
  expect(await page.locator('.insp-card-open').first().evaluate(el=>parseFloat(getComputedStyle(el).transitionDuration))).toBeLessThan(0.001);
  const posterMedia=JSON.parse(fs.readFileSync(new URL('../website/src/x-media.json',import.meta.url),'utf8'));
- const allowed=new Set([...Object.values(previews).flatMap(p=>[p.image,new URL(sized(p.image,640),page.url()).href]),...Object.values(posterMedia).flatMap(m=>[m.poster,m.avatar]).filter(Boolean)]);
+ const allowed=new Set([new URL('/sky.jpg',page.url()).href,...Object.values(previews).flatMap(p=>[p.image,new URL(sized(p.image,640),page.url()).href]),...Object.values(posterMedia).flatMap(m=>[m.poster,m.avatar]).filter(Boolean)]);
  expect(imageRequests.filter(u=>!allowed.has(u))).toEqual([]);
  await expect(page.locator('.insp-card:has(a[href="/inspiration/linear"]) .insp-thumb-media')).toHaveCount(0);
 });
