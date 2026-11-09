@@ -526,5 +526,13 @@
     "height": 1440,
     "avatar": "https://pbs.twimg.com/profile_images/2079518762311864320/wdvXgSli_bigger.jpg",
     "fetchedAt": "2026-11-09"
+  },
+  "x-emilkowalski-406396160540738": {
+    "video": "https://video.twimg.com/amplify_video/2119406265067556864/vid/avc1/720x720/CIJ-QlhwLejE3IOZ.mp4",
+    "poster": "https://pbs.twimg.com/amplify_video_thumb/2119406265067556864/img/lyDjFamJX9NuLIZA.jpg",
+    "width": 2160,
+    "height": 2160,
+    "avatar": "https://pbs.twimg.com/profile_images/1469017066795679751/CjEOyirb_bigger.jpg",
+    "fetchedAt": "2026-11-09"
   }
 }

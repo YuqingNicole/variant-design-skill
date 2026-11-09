@@ -2906,6 +2906,38 @@ export const inspirationItems = [
       "text": "之前这个风格的代码建模演示视频意外获得了不少关注，这两天得空封装成skill开源出来，欢迎体验😆",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-emilkowalski-406396160540738",
+    "name": "/gestures skill: drag, momentum and rubber banding",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/emilkowalski/status/2119406396160540738",
+    "source": "link-only",
+    "focus": {
+      "zh": "手势的手感：拖拽的速度支持、带惯性的滑动、越界时的橡皮筋回弹",
+      "en": "How gestures feel: velocity-aware dragging, drags that carry momentum, rubber banding past the edge"
+    },
+    "application": {
+      "zh": "做抽屉、底部弹层、轮播和可拖动卡片的手势；技能本身我们没有试过，这条只是发布帖",
+      "en": "Build gestures for drawers, bottom sheets, carousels and draggable cards; we have not tried the skill itself, this is its announcement post"
+    },
+    "publisher": "Emil Kowalski (@emilkowalski)",
+    "kind": "social-post",
+    "designer": "Emil Kowalski",
+    "checkedAt": "2026-11-09",
+    "addedAt": "2026-11-09T14:10:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2119406396160540738",
+      "author": "Emil Kowalski",
+      "handle": "emilkowalski",
+      "date": "2026-11-08",
+      "lang": "en",
+      "text": "New skill: /gestures\n\nHelps you build beautiful, intuitive gestures for your app.\n\nAdds rubber banding, velocity support for dragging, drags that carry momentum, everything I learned from building Sonner and Vaul, and more.\n\nI’ve been using it a lot recently, you’ll love it.",
+      "hasMedia": true
+    }
   }
 ];
 
