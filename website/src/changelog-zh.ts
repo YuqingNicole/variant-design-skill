@@ -29,6 +29,7 @@ export const changelogZh: Record<string, { title?: string; blocks: string[] }> =
       '按钮遵循一份规范，参照 Material 3、Apple HIG、Radix、Primer、Atlassian、Polaris 和 Geist 的公开文档制定（`references/ux/component-specs.md` → Button）：品牌是衬线体时，按钮文字也用界面无衬线字体；内边距和圆角随高度按比例取值；每个视图只有一个实心主按钮；悬停和按下状态用 `color-mix` 推导，焦点是单层 2px 的环；危险按钮在确认框之前都只是红字。预览里放真实按钮，不放一排假的悬停状态。',
       '生成的方向避开生成套路（`references/workflow/quality-baseline.md` → Generator habits）：已有页面保持原来的作用、标题和文案，产品页上不放口号和宣传卡片；三个方向先在结构上不同，再谈风格，只换配色不算一个方向。`quality-gate` 把眉标、补零的装饰数字、界面里的方向名列为 `review` 项，要求删掉或说明理由；它们不会让 `--strict` 失败。',
       '动效参考：新增 `references/design-system/motion-rules.md`，按用户遇到这个元素的频率决定要不要动效，界面动效保持在 300ms 内，并覆盖按下反馈、变换原点、可中途反转的过渡、只在能悬停的设备上做悬停动效，以及保留透明度和颜色反馈的减少动效。生成路径会和 `motion-design.md` 一起加载它。`micro-interactions.md` 不再示范 `transition: all`、带弹跳的开关，以及没有频率说明的悬停动效；`style-audit.md` 把 `transition: all` 当作要报告的问题，不再当成惯例。',
+      '`quality-gate.mjs` 不再因 `padStart(2, "0")` 报 `decorative-number`，前提是文件里读取了日期或时间的部分（`getMonth()`、`getHours()`、`toISOString()`、`Intl.DateTimeFormat`）：这种补零是在格式化 `2026-03-07` 或 `09:05`，不是装饰性计数。给步骤编号补零，以及 `>04<` 这样的标记，仍会被报出。',
       '品牌锁定',
       '品牌由项目自己的文件规定时（例如 `app/globals.css`），技能直接登记这个文件，不再把副本锁定在 `variant-output/` 里。',
     ],

@@ -39,7 +39,7 @@ Check the rendered result, not just source code:
 Generated interfaces converge on the same moves whatever the product. Each one below needs a reason that is about this product's task; "it looks designed" is not one. Remove the rest before presenting. `quality-gate.mjs` lists the first three as `review` findings (they never fail `--strict`, because a brand page may use them on purpose): remove each, or say in the report why it stays.
 
 - Uppercase letter-spaced eyebrow labels above headings (`eyebrow-label`).
-- Decorative numbers: zero-padded counts and step numbers (`04`, `01–03`), oversized stats that answer no question, round fake metrics (`decorative-number`).
+- Decorative numbers: zero-padded counts and step numbers (`04`, `01–03`), oversized stats that answer no question, round fake metrics (`decorative-number`); zero-padding that formats a date or time is not counted.
 - A direction's name inside the product UI ("Direction B · Room to grow"); names belong in the comparison page (`direction-label-in-ui`).
 - A slogan or marketing hero on a product page. A settings, admin or tool page keeps its noun title ("Members") and the project's own description; invent no taglines ("Your people. One place.").
 - A promotional card inside a tool ("Grow your team · Good work starts with people").
