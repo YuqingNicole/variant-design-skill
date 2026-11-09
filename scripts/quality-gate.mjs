@@ -115,9 +115,14 @@ export function scanSource(source, file = "<memory>") {
   for (const match of source.matchAll(/className=["'{`][^"'`}]*\buppercase\b[^"'`}]*\btracking-(?:wide|wider|widest|\[0?\.(?:0[6-9]|[1-9]))/g))
     findings.push({ severity: "review", rule: "eyebrow-label", file, line: locationFor(source, match.index),
       message: "Uppercase letter-spaced label: a generated-page habit above headings. Keep it only if the product already uses such labels.", excerpt: match[0].slice(0, 140) });
-  for (const match of source.matchAll(/>\s*0[1-9]\s*<|padStart\(\s*2\s*,\s*["'`]0["'`]\s*\)/g))
+  // padStart(2, "0") also formats dates and times (2026-03-07, 09:05), which is not a decorative count: a file that reads
+  // date or time parts keeps its padding. Markup like >04< is still reported.
+  const formatsDates = /\.(?:get(?:UTC)?(?:FullYear|Month|Date|Hours|Minutes|Seconds)|toISOString)\s*\(|\bIntl\.DateTimeFormat\b/.test(source);
+  for (const match of source.matchAll(/>\s*0[1-9]\s*<|padStart\(\s*2\s*,\s*["'`]0["'`]\s*\)/g)) {
+    if (formatsDates && match[0].startsWith("padStart")) continue;
     findings.push({ severity: "review", rule: "decorative-number", file, line: locationFor(source, match.index),
       message: "Zero-padded number (04): a decorative count. Show a count only where it answers a question, in plain form.", excerpt: match[0] });
+  }
   // Direction names belong in the comparison page (files starting with _), not in the product UI.
   if (!path.basename(file).startsWith("_")) for (const match of source.matchAll(/(?:>|["'`])[^<>"'`\n]{0,40}\b(?:Direction|DIRECTION)\s+[ABC]\b|(?:>|["'`])[^<>"'`\n]{0,20}方向\s*[ABC](?![A-Za-z])/g))
     findings.push({ severity: "review", rule: "direction-label-in-ui", file, line: locationFor(source, match.index),
@@ -186,7 +191,8 @@ function selfTest() {
       button:focus-visible { outline: 2px solid blue; }
       .card { transition: transform 200ms ease; }
       @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
-    </style>`;
+    </style>
+    <script>const pad = (n) => String(n).padStart(2, "0"); const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());</script>`;
   const bad = `
     <img src="cover.jpg">
     <meta name="viewport" content="width=device-width, maximum-scale=1">
@@ -196,10 +202,12 @@ function selfTest() {
       .kicker { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }</style>`;
 
   const goodFindings = scanSource(good);
+  // Padding a step number is a habit; padding a date part is not.
+  const padOnly = scanSource('<script>const label = String(i).padStart(2, "0");</script>').some((finding) => finding.rule === "decorative-number");
   const badRules = new Set(scanSource(bad).map((finding) => finding.rule));
   const expected = ["missing-img-alt", "lorem-ipsum", "generic-error-copy", "focus-outline-removed", "missing-reduced-motion", "pure-black-surface", "zoom-disabled", "transition-all", "paste-blocked", "eyebrow-label", "decorative-number", "direction-label-in-ui"];
 
-  if (goodFindings.length || expected.some((rule) => !badRules.has(rule))) {
+  if (goodFindings.length || !padOnly || expected.some((rule) => !badRules.has(rule))) {
     console.error("quality-gate self-test failed");
     console.error(JSON.stringify({ goodFindings, badRules: [...badRules] }, null, 2));
     process.exit(1);
