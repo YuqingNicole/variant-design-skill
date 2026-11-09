@@ -1,6 +1,6 @@
 # YouTube design video candidates
 
-Status: draft candidate list, 2026-11-09. Nothing here is on the site. Each row needs a maintainer decision.
+Status: draft candidate list, 2026-11-09 (second round added the same day: typography, colour, craft talks, Chinese). Nothing here is on the site. Each row needs a maintainer decision.
 
 ## How this list was made
 
@@ -47,21 +47,49 @@ Status: draft candidate list, 2026-11-09. Nothing here is on the site. Each row 
 | Branding | Brand Identity Design Process Part 1: Client Brief, Research and Strategy | 4 The Creatives | 2026-09-24 | 6.9k | Covers brief, research and strategy, the step before any visual work | https://www.youtube.com/watch?v=SFXyZM31lAs |
 | Branding | I designed a BRAND IDENTITY *full branding process* | Laia \| Brand & Web Designer | 2026-03-29 | 7.3k | A solo designer's end-to-end process; small channel | https://www.youtube.com/watch?v=AI6vJH0svHk |
 
+### Typography and colour
+
+| Section | Title | Channel | Date | Views | Why it is a candidate | Link |
+|---|---|---|---|---|---|---|
+| Web | Simple solutions to responsive typography | Kevin Powell | 2021-09-07 | 201k | Original channel; fluid type in CSS, which generated pages write by hand | https://www.youtube.com/watch?v=wARbgs5Fmuw |
+| Web | Beginner's guide to styling text with CSS | Kevin Powell | 2023-09-05 | 55.3k | Original channel; the text properties that decide hierarchy and measure | https://www.youtube.com/watch?v=Y5TYDo9Qcv4 |
+| Interface | Refactoring UI: Tuple | Steve Schoger (own channel) | 2018-06-13 | 76.7k | Author of the book walks through restyling a real page: hierarchy, spacing, colour, type. Old, but the method has not aged | https://www.youtube.com/watch?v=RC9cYdbQ-_c |
+| Interface | Refactoring UI: WSS | Steve Schoger (own channel) | 2018-05-15 | 70.2k | Same series; table design and scannability | https://www.youtube.com/watch?v=ZJj7uNdzPpM |
+| Web | Accessible Color Standards - Designing in the Browser | Chrome for Developers (official) | 2020-09-08 | 21.5k | Contrast levels explained by the browser team; check it against the current WCAG wording before relying on it | https://www.youtube.com/watch?v=sEDnmNtEaqQ |
+
+### Craft and product design talks
+
+| Section | Title | Channel | Date | Views | Why it is a candidate | Link |
+|---|---|---|---|---|---|---|
+| Interface | Config 2025: Crafting quality that endures (Karri Saarinen, Linear) | Figma (official) | 2025-05-12 | 33.6k | A product founder on quality as a practice; the Linear site is already one of our references | https://www.youtube.com/watch?v=pCil7YNhNCU |
+| Interface | Config 2025: The design decisions of Figma Buzz | Figma (official) | 2025-06-20 | 5.6k | Product designers explain their decisions on a shipped product | https://www.youtube.com/watch?v=FPpzI7z_U-o |
+| Interface | Config 2025: Connecting code with craft (Katie Langerman, Lukas Opperman) | Figma (official) | 2025-06-23 | 3.8k | How GitHub designers work across the design and code line | https://www.youtube.com/watch?v=6l6El4xqIZ4 |
+
+### Chinese-language (weak)
+
+| Section | Title | Channel | Date | Views | Why it is a candidate | Link |
+|---|---|---|---|---|---|---|
+| Web | 網頁前端工程進階：CSS 3 animation 基本動畫特效教學 By 彭彭 | 彭彭的課程 (original author) | 2016-09-13 | 15.4k | The only original-author Chinese candidate with real reach; Traditional Chinese, basic CSS animation, 2016, so it may be dated | https://www.youtube.com/watch?v=yz8pWNNqIDw |
+
 ## Considered and left out
 
 - **Re-uploads of other people's videos:** "CSS Animation Tips and Tricks Kevin Powell" (CodeCollections), "Mastering CSS Height Transitions ... by Kevin Powell" (Haadi Org), "Modern CSS Fundamentals with Kevin Powell \| Preview" (MasterDotDev). Link to the original channel instead.
 - **Odd numbers:** "Re-imagine the web with Scoped View Transitions" (Chrome for Developers, 8.1M views). The view count is far out of line with the other Chrome videos and my page read suggested a very short clip; I could not tell whether it is a talk.
 - **Product news, not craft:** Config India 2026 keynote, "Config 2026, refreshed", and third-party Config recaps.
 - **Third-party AI-skill explainers:** "Make Apps Feel Expensive: Emil Kowalski's AI Design Skills" (The Hype Kevin, 7 minutes, 11k views), and several Shorts about the same skills. Our `motion-rules.md` cites Emil Kowalski's own repository; link to that, not to a summary.
-- **Typography:** none passed. The UI-typography videos found had under 4k views and unclear authority (Santi Villegas, Lennart Nacke), and one had 23 views. This is a gap, not a finding that none exist.
-- **Chinese-language:** none passed. The ones found had between 63 and 432 views and were uploaded in 2019–2022. A better Chinese list probably lives on Bilibili, which this search did not cover.
+- **UI typography tutorials from small or unclear channels** (under 4k views: Santi Villegas, DesignOS, Design With Elwakil; Lennart Nacke's lecture; one with 23 views). The Figma type-system tutorial by Nick Babich (77.8k) is about Figma styles, not about type.
+- **Colour:** a 2020 "UI Principles" colour-theory video by an individual (22k), and 2020–2026 contrast tutorials with under 1k views. Only Chrome's own contrast video is listed.
+- **Chinese-language, other than the one weak entry:** videos found had 9 to 809 views; the CCTV documentary on Chinese designers (809 views) is a film, not craft teaching; the simplified-Chinese CSS animation guide (2025) has 77 views. Several Taiwanese lesson series are platform-course teasers.
+- **A conference recording of Steve Schoger's Laracon talk** (StreamACon channel, 2019, 18.6k): he is the speaker but the channel is a conference's, not his. His own channel's Refactoring UI videos are listed instead.
+- **Config 2025 product sessions** (Figma Draw, Make and Sites, keynotes): product demos.
 - **Old or paid course teasers:** "UI Animation Essentials" (a course promo), the 2020 Jake Pomper motion talk.
 
 ## Gaps and what would fill them
 
-1. Typography and colour: ask the maintainer for names of channels or talks they trust.
-2. Chinese-language video: needs a Bilibili pass, with the maintainer's own picks as seeds.
+1. Colour theory for interfaces: nothing from an original or official channel passed. Seeds from the maintainer would help most here.
+2. Chinese-language video: still one weak entry. A Bilibili pass, with the maintainer's own picks as seeds, is the realistic way to fill it; YouTube search did not reach it.
 3. Interaction design beyond CSS tricks: nothing found from a design-led channel in the last two years.
+4. Typography as design (not CSS): the listed typography videos are CSS and layout; a talk on choosing and pairing type from a type designer or studio was not found.
 
 ## Decisions the maintainer needs to make
 
