@@ -10,9 +10,9 @@
 
 ## 交互式网站
 
-**[在线体验 →](https://variant-design-skill.vercel.app/)** · [网站源码](./website) · [安装 Skill](#安装)
+**[在线体验 →](https://variantdesign.xyz/)** · [网站源码](./website) · [安装 Skill](#安装)
 
-浏览附有出处与核对日期的设计参考，查看 [A/B/C 案例](https://variant-design-skill.vercel.app/cases)，再按[安装指南](https://variant-design-skill.vercel.app/docs)在自己的项目里使用技能。网站的[实验室](https://variant-design-skill.vercel.app/lab)是独立实验，不是付费托管方案。专业版、团队版仍是计划，尚未开放订阅。
+浏览附有出处与核对日期的设计参考，查看 [A/B/C 案例](https://variantdesign.xyz/cases)，再按[安装指南](https://variantdesign.xyz/docs)在自己的项目里使用技能。网站的[实验室](https://variantdesign.xyz/lab)是独立实验，不是付费托管方案。专业版、团队版仍是计划，尚未开放订阅。
 
 在本地运行 [React](https://react.dev/) + [Vite](https://vite.dev/) 网站：
 
@@ -199,10 +199,10 @@ AI agent 工具的落地页 — Dark Indigo 色板，Geist 字体，saas.md 中�
 
 ### 从方向卡开始
 
-[方向库](https://variant-design-skill.vercel.app/)的每件作品都以方向卡的形式发布在 `/d/<slug>.json`，内容是一个任务和它的 A/B/C 三个方向，以及每个方向优化什么、取舍什么、适合什么场景。把方向卡交给技能，就能据此做出你自己的三版：
+[方向库](https://variantdesign.xyz/)的每件作品都以方向卡的形式发布在 `/d/<slug>.json`，内容是一个任务和它的 A/B/C 三个方向，以及每个方向优化什么、取舍什么、适合什么场景。把方向卡交给技能，就能据此做出你自己的三版：
 
 ```
-用 variant-design 技能，参考 https://variant-design-skill.vercel.app/d/pulse.json 里的 A 方向，
+用 variant-design 技能，参考 https://variantdesign.xyz/d/pulse.json 里的 A 方向，
 给我的周报页面出 A/B/C 三版：A 贴近这个方向，B 和 C 作为对照。
 ```
 
@@ -379,7 +379,7 @@ react A                 → 导出 A 为 React，不自动选定
 4. 布局模式
 5. 签名细节
 
-完整案例放在[方向库](https://variant-design-skill.vercel.app/)，不放进参考文件：只收我们自己跑出来的或作者授权的作品，不转录别人作品的文案。`node --test scripts/skill-links.test.mjs` 会检查技能提到的每个文件都存在，且每个参考文件都能从 `SKILL.md` 找到。
+完整案例放在[方向库](https://variantdesign.xyz/)，不放进参考文件：只收我们自己跑出来的或作者授权的作品，不转录别人作品的文案。`node --test scripts/skill-links.test.mjs` 会检查技能提到的每个文件都存在，且每个参考文件都能从 `SKILL.md` 找到。
 
 设计系统参考包含原则、代码示例和反模式。
 

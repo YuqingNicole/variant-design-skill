@@ -107,6 +107,8 @@ div.insp-thumb{position:relative;display:grid;grid-template-rows:auto auto auto 
 .insp-dialog[open]{animation:insp-in var(--dur-base) var(--ease-out)}
 /* A dialog is centred, so when an X embed makes it taller it would move up. For a post, anchor it near the top instead and let it grow downward. */
 .insp-dialog:has(.insp-detail-visual-post){margin-top:var(--space-6)}
+/* The link out sits above the post at every width: the embed is the part that changes height, so nothing a reader can see is left below it. */
+.insp-detail-visual-post .insp-visit{order:-1}
 .insp-dialog[open]::backdrop{animation:insp-fade var(--dur-base) var(--ease-out)}
 @keyframes insp-in{from{opacity:0;transform:scale(.98)}}@keyframes insp-fade{from{opacity:0}}
 
@@ -133,7 +135,7 @@ div.insp-thumb{position:relative;display:grid;grid-template-rows:auto auto auto 
 .inspiration-sources strong{display:block;font-size:14px;font-weight:500}
 .inspiration-sources span{font-size:12px;color:var(--site-muted)}
 
-@media(max-width:1023px){.insp-detail{grid-template-columns:1fr;gap:0}.insp-detail-notes{display:contents}.insp-detail-tools{order:-2}.insp-detail-visual{order:-1;margin-bottom:var(--space-5)}.insp-dialog{width:100%;height:100%;max-height:none;border-radius:0;border:0;padding:var(--space-4)}.insp-detail-tools{margin-bottom:var(--space-4)}.insp-detail-visual-post{order:1;display:flex;flex-direction:column;gap:var(--space-3);margin:var(--space-5) 0 0}.insp-detail-visual-post .insp-visit{order:-1;align-self:flex-start}}
+@media(max-width:1023px){.insp-detail{grid-template-columns:1fr;gap:0}.insp-detail-notes{display:contents}.insp-detail-tools{order:-2}.insp-detail-visual{order:-1;margin-bottom:var(--space-5)}.insp-dialog{width:100%;height:100%;max-height:none;border-radius:0;border:0;padding:var(--space-4)}.insp-detail-tools{margin-bottom:var(--space-4)}.insp-detail-visual-post{order:1;display:flex;flex-direction:column;gap:var(--space-3);margin:var(--space-5) 0 0}}
 @media(max-width:900px){.inspiration-sources>div{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.insp-bar>.site-shell{flex-wrap:wrap}.insp-pills{flex-basis:100%}.insp-search{flex:1}.insp-search input,.insp-search input:focus,.insp-search input:not(:placeholder-shown){width:100%}.inspiration-pack,.inspiration-brief{padding:18px}.inspiration-pack fieldset{grid-template-columns:1fr}:is(.insp-detail-media,.insp-shot)>.insp-thumb{padding:var(--space-4)}}
 @media(prefers-reduced-motion:reduce){.inspiration-page *{transition-property:opacity,color,background-color,border-color!important}.insp-dialog[open]{animation-name:insp-fade}}
@@ -156,7 +158,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .x-post blockquote p{margin:0 0 var(--space-3);font-size:18px;line-height:1.5;white-space:pre-line}
 .x-post blockquote footer{font-size:14px;color:var(--site-muted)}.x-post blockquote b{font-weight:500;color:var(--site-ink)}
 .x-post-embed{display:flex;justify-content:center;min-height:0}.x-post-embed[hidden]{display:none}
-.x-post figcaption{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-3);font-size:12px;color:var(--site-muted)}
+.x-post figcaption{min-height:32px;display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-3);font-size:12px;color:var(--site-muted)}
 .x-post figcaption button{height:32px;padding:0 var(--space-4);border:1px solid var(--site-line);border-radius:var(--radius-pill);background:var(--site-card);color:var(--site-ink);font-size:14px}
 .x-post figcaption a{color:var(--site-brand);text-underline-offset:3px}
 /* Websites and motion share the same image grid; credits appear on hover or focus, and stay visible on touch. */

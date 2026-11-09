@@ -5,7 +5,7 @@ title: "[赞助] "
 labels: sponsorship
 ---
 
-See https://variant-design-skill.vercel.app/sponsor for the rules.
+See https://variantdesign.xyz/sponsor for the rules.
 
 **品牌 / Brand**
 - 名称 / Name:

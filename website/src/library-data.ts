@@ -14,7 +14,7 @@ export type Direction = Text<Localized>;
 export type Entry = Stored<Localized>;
 export const repository = 'https://github.com/YuqingNicole/variant-design-skill';
 // Cards are always referenced on the published site, so a copied prompt works from any agent.
-export const siteUrl = 'https://variant-design-skill.vercel.app';
+export const siteUrl = 'https://variantdesign.xyz';
 export const cardUrl = (entry: Entry) => `${siteUrl}/d/${entry.slug}.json`;
 export const categories: { id: string; name: Localized }[] = [
   { id: 'landing', name: { zh: '落地页', en: 'Landing pages' } }, { id: 'product', name: { zh: '产品界面', en: 'Product UI' } },

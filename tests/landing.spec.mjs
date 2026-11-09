@@ -238,8 +238,8 @@ test('direction library pages are prerendered, browsable and keep old links work
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const raw=await(await request.get('/d/harbor')).text();
  expect(raw).toContain('<title>Harbor：成员与权限的三种管理方式 — Variant Design 方向库</title>');
- expect(raw).toContain('<link rel="canonical" href="https://variant-design-skill.vercel.app/d/harbor">');
- expect(raw).toContain('<meta property="og:image" content="https://variant-design-skill.vercel.app/media/harbor/a.jpg">');
+ expect(raw).toContain('<link rel="canonical" href="https://variantdesign.xyz/d/harbor">');
+ expect(raw).toContain('<meta property="og:image" content="https://variantdesign.xyz/media/harbor/a.jpg">');
  expect(raw).toContain('Access Ledger');expect(raw).toContain('推荐 A');
  expect(await(await request.get('/lab/canvas')).text()).not.toContain('rel="canonical"');
  const sitemap=await(await request.get('/sitemap.xml')).text();
@@ -262,10 +262,10 @@ test('direction library pages are prerendered, browsable and keep old links work
  await page.locator('.library-tabs button').nth(1).click();await expect(page).toHaveURL(/\/d\/pulse\?direction=B$/);await expect(page.locator('.library-figure img')).toHaveAttribute('src','/media/pulse/b.jpg');
  await expect(page.locator('.library-evidence a')).toHaveAttribute('href',/\/tree\/master\/website\/content\/evidence\/pulse\/variant-output$/);
  const prompt=page.getByRole('textbox',{name:'给 agent 的指令'});
- await expect(prompt).toHaveValue(/https:\/\/variant-design-skill\.vercel\.app\/d\/pulse\.json 里的 B 方向/);await expect(prompt).toHaveValue(/不要替我选定/);
+ await expect(prompt).toHaveValue(/https:\/\/variantdesign\.xyz\/d\/pulse\.json 里的 B 方向/);await expect(prompt).toHaveValue(/不要替我选定/);
  await page.locator('.library-tabs button').nth(2).click();await expect(prompt).toHaveValue(/里的 C 方向/);
  const card=await(await request.get('/d/pulse.json')).json();const {validateCard}=await import('../scripts/direction-card.mjs');
- expect(validateCard(card)).toEqual([]);expect(card.url).toBe('https://variant-design-skill.vercel.app/d/pulse.json');expect(card.recommendation.variant).toBe('A');
+ expect(validateCard(card)).toEqual([]);expect(card.url).toBe('https://variantdesign.xyz/d/pulse.json');expect(card.recommendation.variant).toBe('A');
  await page.goto('/d/offscript');await expect(page.locator('.library-source span')).toHaveText('概念作品');await expect(page.locator('.library-evidence')).toContainText('不是技能的产出');await expect(page.locator('.library-evidence a')).toHaveCount(0);
  await expect(page.locator('.library-figure a')).toHaveAttribute('href','/directions?direction=A&language=zh');
  await page.locator('.site-language').click();await expect(page.locator('h1')).toHaveText('offscript: one brand, three personalities');await page.locator('.site-language').click();await expect(page.locator('html')).toHaveAttribute('lang','zh-CN');
@@ -844,7 +844,7 @@ test('each inspiration tab is its own page, and no reference appears on two of t
   expect(ids.length).toBeGreaterThan(0);expect(new Set(ids).size).toBe(ids.length);
   for(const id of ids){expect(seen.has(id),`${id} is on two tabs`).toBe(false);seen.add(id)}
   titles.add(html.match(/<title>([^<]*)/)[1]);headings.add(html.match(/<h1[^>]*>([^<]*)/)[1]);
-  expect(html).toContain(`<link rel="canonical" href="https://variant-design-skill.vercel.app${href}">`);
+  expect(html).toContain(`<link rel="canonical" href="https://variantdesign.xyz${href}">`);
   await page.goto(href);await expect(page.getByRole('link',{name,exact:true})).toHaveAttribute('aria-current','page');
   await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${ids.length} 个参考`);
  }
@@ -1000,6 +1000,23 @@ test('an X post embed arriving does not move the notes above it, on a phone', as
  const after=await notes.boundingBox(),embed=await page.locator('.x-post-embed').boundingBox();
  expect(after.y,'notes moved when the embed arrived').toBe(before.y);
  expect(embed.y,'embed sits under the notes').toBeGreaterThan(after.y+after.height);
+ await context.close();
+});
+
+// On a desktop the embed sits beside the notes. The link out and the notice are above it, so when it arrives nothing a
+// reader can see moves; the embed is the only thing that changes height.
+test('an X post embed arriving does not move the link out or the notice, on a desktop', async ({browser},info)=>{
+ const base=info.project.use.baseURL,context=await browser.newContext({baseURL:base,viewport:{width:1440,height:900}}),page=await context.newPage();
+ await page.route(u=>u.origin!==new URL(base).origin,r=>/^https:\/\/platform\.twitter\.com\/widgets\.js/.test(r.request().url())?r.fulfill({contentType:'text/javascript',body:fakeWidgets}):r.abort());
+ await page.addInitScript(()=>{window.__cls=0;new PerformanceObserver(l=>l.getEntries().forEach(e=>{if(!e.hadRecentInput)window.__cls+=e.value})).observe({type:'layout-shift',buffered:true})});
+ await page.goto('/inspiration/x-tanglele0318-961255514378');await hydrated(page);
+ const visit=page.locator('.insp-visit'),notice=page.locator('.x-post figcaption'),before=[await visit.boundingBox(),await notice.boundingBox()];
+ await page.waitForTimeout(300);
+ await expect(page.locator('.x-post-embed > div')).toHaveCount(1,{timeout:8000});await page.waitForTimeout(500);
+ const after=[await visit.boundingBox(),await notice.boundingBox()];
+ expect(after[0].y,'the link out moved when the embed arrived').toBe(before[0].y);
+ expect(after[1].y,'the notice moved when the embed arrived').toBe(before[1].y);
+ expect(await page.evaluate(()=>window.__cls),'desktop layout shift while the embed arrives').toBeLessThanOrEqual(0.02);
  await context.close();
 });
 
