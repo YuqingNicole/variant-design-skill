@@ -11,6 +11,7 @@ import { exportTokens } from '../scripts/ds-export.mjs';
 import { gradeNativeVite, nativeObservationChecks } from './native-vite.mjs';
 import { gradeDeliveryReceipts, deliveryReceiptGates } from './delivery-receipts.mjs';
 import { gradeRuntimePlans } from './runtime-plans.mjs';
+import { gradeMotion, motionFindings } from './motion.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const evidence = path.join(here, '../website/content/evidence/pulse/variant-output');
@@ -241,3 +242,33 @@ test('Vite runtime grading refuses file-only or missing project/probe observatio
 });
 
 test('HTML handoff grading withholds missing or invented host delivery results',async()=>{const {gradeHTMLDelivery,htmlDeliveryGates}=await import('./html-delivery.mjs');for(const report of [undefined,{}, {source:'host-html-delivery-v1',checks:htmlDeliveryGates.map(id=>({id,pass:false}))}, {source:'Agent assertion',checks:htmlDeliveryGates.map(id=>({id,pass:true}))}])assert(gradeHTMLDelivery(report).every(c=>!c.pass));});
+
+test('motion checks flag transition: all, scale(0) starts, ungated hover movement and a missing reduced-motion rule', () => {
+  const bad = '.a{transition:all .3s}.b:hover{transform:translateY(-4px)}@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}';
+  const f = motionFindings(bad);
+  assert.deepEqual([f.transitionAll, f.scaleZero, f.hoverMoves], [['.a'], ['from'], ['.b:hover']]);
+  assert.equal(f.reducedMotion.length, 1);
+  const good = '.b{transition:transform 160ms,opacity 160ms}@media (hover: hover) and (pointer: fine){.b:hover{transform:translateY(-2px)}}.c:hover{background:red}@media (prefers-reduced-motion:reduce){.b{transition-property:opacity}}';
+  assert.deepEqual(Object.values(motionFindings(good)).slice(1).flat(), []);
+  // A comment that mentions the banned forms is not a finding, and a click ripple may start from a point.
+  assert.deepEqual(motionFindings('/* transition: all */ .ripple{transform:scale(0)} @media (prefers-reduced-motion:reduce){.x{animation:none}}').scaleZero, []);
+});
+
+test('motion grading is per direction, and the reading check needs motion-rules.md', () => {
+  const good = '.b{transition:opacity 160ms}@media (prefers-reduced-motion:reduce){.b{transition:none}}', bad = '.a{transition:all 1s}';
+  const ids = (checks, pass) => checks.filter(c => c.pass === pass).map(c => c.id);
+  const read = { files: ['SKILL.md', 'references/design-system/motion-rules.md'], words: 1 };
+  assert.deepEqual(ids(gradeMotion([['A', good], ['B', good], ['C', good]], read), false), []);
+  const mixed = gradeMotion([['A', good], ['B', bad], ['C', good]], { files: ['SKILL.md', 'references/design-system/motion-design.md'], words: 1 });
+  assert.deepEqual(ids(mixed, false).sort(), ['motion-no-transition-all', 'motion-reduced', 'motion-rules-read']);
+  assert.match(mixed.find(c => c.id === 'motion-no-transition-all').details[0], /^B:/);
+  assert.equal(gradeMotion([['A', 'p{color:red}']], read).find(c => c.id === 'motion-present').pass, false);
+  assert.equal(gradeMotion([['A', good]], null).some(c => c.id === 'motion-rules-read'), false);
+});
+
+test('the motion fixture reuses the bakery project and asks for motion', () => {
+  const fixture = loadFixture('motion');
+  assert.equal(fixture.motion, true);
+  assert.ok(fs.existsSync(path.join(here, 'fixtures', fixture.project, 'project/index.html')));
+  assert.match(fixture.prompt, /动效/);
+});

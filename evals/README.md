@@ -40,6 +40,8 @@ Every run calls a real model: a Claude Code run has cost about $2–3 and 5–15
 | `quality-gate` | `scripts/quality-gate.mjs` finds an error in the variants (generated preview bundles excluded) |
 | `brand-kept` | brand-locked fixtures only: the lock was not recorded, or a variant file declares a font outside the locked fonts |
 | `skill-under-test` | the transcript never reads the installed copy, or also references another copy (another skill folder, or another cached plugin version) |
+| `motion-present`, `motion-no-transition-all`, `motion-no-scale-zero`, `motion-hover-gated`, `motion-reduced` | `motion` fixture only, judged per direction on the CSS it wrote: a direction has no transition or animation; uses `transition: all`; starts anything from `scale(0)` (a rule named `ripple` is exempt); moves an element on `:hover` outside `@media (hover: hover)`; or animates with no `prefers-reduced-motion` rule. Static text checks: they say nothing about how the motion looks or performs |
+| `motion-rules-read` | `motion` fixture only: the transcript never reads `references/design-system/motion-rules.md` |
 
 Each result also reports `reading`: the skill files the agent asked to read (tool inputs and commands, with shell aliases such as `S=.claude/skills/variant-design` expanded) and their total words. It measures progressive disclosure and is not a pass/fail check. The 2026-10-27 baseline is in `docs/research/2026-10-27-eval-baseline.md`.
 
@@ -56,9 +58,10 @@ The checks are deterministic and cover promises, not taste. Whether the three di
 | `premium` | Existing self-authored light-brand HTML catalogue | One B refinement: real before/after style budgets, unchanged brand/task/A/C/selection, one undo |
 | `ledger-pick` | The brand-locked `ledger` project, two turns | Generation and pick preserve brand naming and validate only generated extension layers |
 | `harbor-chain` | The `harbor` project, six turns | The loop after generation: pick, design system, apply, undo, and new work on the confirmed system. See below |
+| `motion` | The `bakery` project again, with a brief that is about motion | The motion path: `references/design-system/motion-rules.md` is read, and every direction keeps its rules (see the motion checks) |
 | `native-vite` | Workshop Ledger: original alias/define, provider, role-aware business hook, global CSS and local asset | Two-turn fixture with host preview/configuration/dependency checks and independent history/integration/rollback replay. Real installed-skill Agent acceptance is separate from harness regressions. |
 
-A fixture is a `project/` folder and a `fixture.json` with `description`, `prompt` and optional `locked: {file, fonts}`. Keep fixtures small and written by us.
+A fixture is a `project/` folder and a `fixture.json` with `description`, `prompt` and optional `locked: {file, fonts}`, `project` (the name of another fixture whose project to reuse), `motion: true` (adds the motion checks). Keep fixtures small and written by us.
 
 ### Multi-turn fixtures
 
