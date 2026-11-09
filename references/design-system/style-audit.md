@@ -330,7 +330,7 @@ When generating new pages for an existing project, the extracted tokens become *
 
 1. **Lock tokens** — All generated code must use `var(--*)` referencing the extracted tokens. No new colors, no new font sizes.
 2. **Match component patterns** — If existing cards use `padding: 24px; border-radius: 8px; border: 1px solid var(--border)`, new cards must match.
-3. **Match interaction patterns** — If existing buttons have `transition: all 200ms ease`, new buttons must too.
+3. **Match interaction patterns** — If existing buttons have `transition: background-color 200ms ease, transform 200ms ease`, new buttons must too. If they use `transition: all`, match it so the page stays consistent, but note it in the report: `all` animates properties nobody meant to animate.
 4. **Match layout grid** — If existing layout uses `max-width: 1280px; margin: 0 auto; padding: 0 24px`, new pages must use the same container.
 5. **Match naming conventions** — If existing CSS uses BEM (`.card__title`), Tailwind classes, or CSS modules, match the convention.
 

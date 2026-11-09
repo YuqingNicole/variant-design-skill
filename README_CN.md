@@ -349,6 +349,7 @@ react A                 → 导出 A 为 React，不自动选定
 | `references/design-system/color-and-contrast.md` | OKLCH 色彩空间、染色中性灰、60-30-10 法则、暗色模式、WCAG 对比度 |
 | `references/design-system/spatial-design.md` | 4pt 网格、容器查询、眯眼测试、多维层级 |
 | `references/design-system/motion-design.md` | 100/300/500 规则、ease-out-expo、错开动画、减弱动效、感知性能 |
+| `references/design-system/motion-rules.md` | 按出现频率决定要不要动效、界面动画 300ms 预算、按下反馈、可中途反转的过渡、悬停限制、保留反馈的减少动效 |
 | `references/design-system/interaction-design.md` | 8 种交互状态、focus-visible、表单、模态框、键盘导航 |
 | `references/design-system/responsive-design.md` | 移动优先、内容驱动断点、输入方式检测、安全区域 |
 | `references/design-system/ux-writing.md` | 按钮标签、错误消息公式、空状态、语气与语调、无障碍 |
