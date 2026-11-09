@@ -68,7 +68,7 @@ test('the install guide, structured data and llms.txt are readable without JavaS
   const { entries } = loadEntries(), references = loadReferences(), site = 'https://example.test';
   const pages = renderSite(entries, template, site, references, { docs, version: '9.9.9' });
   const data = html => [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(m => JSON.parse(m[1]));
-  const guide = pages.get('/docs'), body = guide.replace(/<script[\s\S]*?<\/script>/g, '');
+  const guide = pages.get('/docs/install'), body = guide.replace(/<script[\s\S]*?<\/script>/g, '');
   assert.ok(body.includes(escape(docs.installCommand)) && body.includes(escape(docs.prompts.first.zh)));
   for (const a of docs.agents) assert.ok(body.includes(escape(docs.verify(a.path, true))), a.id);
   for (const [q, a] of docs.faq) assert.ok(body.includes(escape(q.zh)) && body.includes(escape(a.zh)), q.en);
@@ -112,18 +112,21 @@ test('experiments stay out of the sitemap and out of search results', () => {
 });
 
 test('guides get their own pages, are listed for search and read in both languages', async () => {
-  const { guides } = await importTs(new URL('../src/guides-content.ts', import.meta.url).pathname), { entries } = loadEntries();
-  const rendered = Object.fromEntries(guides.map(g => [`/guides/${g.slug}`, `<main><h1>${g.slug}</h1></main>`]));
+  const { guides: answers, guideRoute } = await importTs(new URL('../src/guides-content.ts', import.meta.url).pathname), { docsArticles } = await importTs(new URL('../src/docs-articles.ts', import.meta.url).pathname), { entries } = loadEntries();
+  const guides = [...answers, ...docsArticles];
+  assert.ok(docsArticles.length >= 4 && docsArticles.every(g => g.base === '/docs' && g.translations?.en?.status === 'draft'));
+  const rendered = Object.fromEntries(guides.map(g => [guideRoute(g), `<main><h1>${g.slug}</h1></main>`]));
   const pages = renderSite(entries, template, 'https://example.test', [], { guides, rendered });
   const map = sitemap(pages.keys(), 'https://example.test'), docs = await importTs(new URL('../src/docs-content.ts', import.meta.url).pathname), text = llms(entries, docs, 'https://example.test', [], guides);
   for (const g of guides) {
-    const html = pages.get(`/guides/${g.slug}`);
+    const route = guideRoute(g), html = pages.get(route);
     assert.ok(html.includes(`<main><h1>${g.slug}</h1></main>`) && html.includes('"@type":"Article"'), g.slug);
-    assert.ok(map.includes(`<loc>https://example.test/guides/${g.slug}</loc>`) && text.includes(`/guides/${g.slug})`));
+    assert.ok(map.includes(`<loc>https://example.test${route}</loc>`) && text.includes(`${route})`));
+    assert.ok(html.includes(`<link rel="canonical" href="https://example.test${route}">`) && html.includes(`"url":"https://example.test${route}"`), route);
     const ids = g.sections.map(s => s.id);
     assert.equal(new Set(ids).size, ids.length);
     for (const value of [g.title, g.answer, ...g.sections.flatMap(s => [s.heading, ...s.body, ...(s.list ?? []), ...(s.code ? [s.code] : [])])]) assert.ok(value.zh && value.en, g.slug);
-    for (const s of g.sections) if (s.link && !s.link.href.startsWith('http')) assert.ok(pages.has(s.link.href) || ['/docs', '/inspiration'].includes(s.link.href) , s.link.href);
+    for (const s of g.sections) if (s.link && !s.link.href.startsWith('http')) assert.ok(pages.has(s.link.href) || ['/docs', '/docs/install', '/inspiration'].includes(s.link.href) || /^\/(guides|docs)\//.test(s.link.href) && pages.has(s.link.href) , s.link.href);
   }
 });
 

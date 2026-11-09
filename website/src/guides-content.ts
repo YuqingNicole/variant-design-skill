@@ -6,7 +6,9 @@ import type { Translations } from './i18n/translations';
 import { deliver, installCommand, prompts, repository, refine } from './docs-content';
 
 export type GuideSection = { id: string; heading: Localized; body: Localized[]; list?: Localized[]; code?: Localized; link?: { href: string; label: Localized } };
-export type Guide = { slug: string; title: Localized; answer: Localized; publishedAt: string; sections: GuideSection[]; translations?: Translations };
+// `base` is the route a page lives under: the Q&A answers at /guides, the longer articles at /docs.
+export type Guide = { slug: string; base?: '/guides' | '/docs'; title: Localized; answer: Localized; publishedAt: string; sections: GuideSection[]; translations?: Translations };
+export const guideRoute = (g: Pick<Guide, 'slug' | 'base'>) => `${g.base ?? '/guides'}/${g.slug}`;
 
 const records = `${repository}/blob/master/docs/research`;
 const shorthand = (rows: typeof refine, names: string[]) => names.map(name => {
@@ -28,7 +30,7 @@ export const guides: Guide[] = [
     sections: [
       { id: 'install', heading: { zh: '1. 安装完整技能目录', en: '1. Install the complete directory' },
         body: [{ zh: '需要 Git 和 Node.js 22 或以上。仅复制 SKILL.md 不够。Claude Code 的安装路径不同，见安装指南。', en: 'You need Git and Node.js 22 or later. Copying SKILL.md alone is not enough. Claude Code uses a different path; see the install guide.' }],
-        code: same(installCommand), link: { href: '/docs', label: { zh: '查看完整安装指南', en: 'Read the full install guide' } } },
+        code: same(installCommand), link: { href: '/docs/install', label: { zh: '查看完整安装指南', en: 'Read the full install guide' } } },
       { id: 'brief', heading: { zh: '2. 在项目里发出任务', en: '2. Give the brief inside your project' },
         body: [{ zh: '在 Agent 中打开你的代码项目，粘贴下面的指令。第一次可以只做一个页面或 hero 区域。模型由你的 Agent 提供。', en: 'Open your code project in your agent and paste this prompt. Start with one page or hero. Your agent provides the model.' }],
         code: prompts.first },

@@ -50,7 +50,7 @@ export function PaperLanding() {
     <header className="paper-hero paper-shell hero-copy">
       <h1>{t(m.oneBrief,language)}<br/><span>{t(m.threeDirectionsThatRun,language)}</span></h1>
       <p className="paper-lede">{t(m.exploreThreeConsideredDirections,language)}</p>
-      <div className="paper-actions"><a className="paper-button" href={localePath('/docs',language)}>{t(m.startInMyProject,language)}</a><a href="#canvas">{t(m.exploreTheRealDirections,language)}</a></div>
+      <div className="paper-actions"><a className="paper-button" href={localePath('/docs/install',language)}>{t(m.startInMyProject,language)}</a><a href="#canvas">{t(m.exploreTheRealDirections,language)}</a></div>
     </header>
     <section className="paper-shell paper-product" id="canvas" aria-label={t(m.liveDesignCanvas,language)}>
       <div className="canvas-chrome"><span>forma / growth-overview</span><span className="canvas-live">{t(m.livePreview,language)}</span></div>

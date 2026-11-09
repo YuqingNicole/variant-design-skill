@@ -38,7 +38,7 @@ export function SkillsPage() {
       <p>{t(m.onlyDesignDeliverySkills,language)}</p></header>
     <section className="site-shell library-feed skills-list">{skills.map(s => <article key={s.id} className="skills-entry">
       <h2>{s.name}<small>{s.source}</small></h2><p>{t(s.summary,language)}</p>
-      <dl><dt>{t(m.howWeTriedIt,language)}</dt><dd>{t(s.tried,language)}</dd><dt>{t(m.install,language)}</dt><dd><code>{s.install}</code><span>{t(m.installsIntoThisProjects,language)} <a href={localePath('/docs',language)}>{t(m.theDocs,language)}</a>{t(m.msg,language)}</span></dd>
+      <dl><dt>{t(m.howWeTriedIt,language)}</dt><dd>{t(s.tried,language)}</dd><dt>{t(m.install,language)}</dt><dd><code>{s.install}</code><span>{t(m.installsIntoThisProjects,language)} <a href={localePath('/docs/install',language)}>{t(m.theDocs,language)}</a>{t(m.msg,language)}</span></dd>
         <dt>{t(m.publicRecords,language)}</dt><dd className="skills-records">{s.records.map(r => <a key={r.href} href={r.href} target="_blank" rel="noreferrer">{t(r.label,language)} ↗</a>)}</dd></dl></article>)}
       <p className="library-more"><a href={localePath('/submit',language)}>{t(m.suggestASkillWe,language)}</a></p></section>
     <SiteFooter language={language}/></main>;

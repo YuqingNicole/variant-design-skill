@@ -7,6 +7,7 @@ import { ChangelogPage } from './ChangelogPage';
 import { ContentPages } from './ContentPages';
 import { GuidesPage } from './GuidesPage';
 import { guides } from './guides-content';
+import { docsArticles } from './docs-articles';
 import { LocaleProvider } from './i18n/LocaleProvider';
 import type { Locale } from './i18n/locales';
 import { InspirationPage } from './InspirationPage';
@@ -27,9 +28,10 @@ const standalone: Record<string, ReactNode> = {
   '/about': <PaperLanding/>, '/pricing': <PricingPage repositoryUrl="https://github.com/YuqingNicole/variant-design-skill"/>,
   '/skills': <SkillsPage/>, '/submit': <SubmitPage/>, '/sponsor': <SponsorPage/>, '/guides': <GuidesPage/>, '/changelog': <ChangelogPage/>, '/': <InspirationPage/>, ...Object.fromEntries(activeSections(inspirationItems).map(c=>[`/browse/${c.id}`,<InspirationPage section={c.id}/>])), '/cases': <LibraryPage view={{ kind: 'feed' }}/>,
   ...Object.fromEntries(guides.map(g => [`/guides/${g.slug}`, <GuidesPage slug={g.slug}/>])),
+  '/docs': <GuidesPage base="/docs"/>, ...Object.fromEntries(docsArticles.map(g => [`/docs/${g.slug}`, <GuidesPage base="/docs" slug={g.slug}/>])),
 };
 const library: Record<string, ReactNode> = {
-  '/docs': <ContentPages page="docs"/>,
+  '/docs/install': <ContentPages page="docs"/>,
   ...Object.fromEntries(categories.filter(c => entries.some(e => e.category === c.id)).map(c => [`/c/${c.id}`, <LibraryPage view={{ kind: 'category', id: c.id }}/>])),
   ...Object.fromEntries(entries.map(e => [`/d/${e.slug}`, <LibraryPage view={{ kind: 'entry', slug: e.slug }}/>])),
   ...Object.fromEntries(inspirationItems.map(i => [`/inspiration/${i.id}`, <InspirationPage detail={i.id}/>])),

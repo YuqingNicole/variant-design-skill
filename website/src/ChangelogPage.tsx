@@ -47,6 +47,6 @@ export function ChangelogPage() {
         </section>;
       })}
       <p className="content-link"><a href="https://github.com/YuqingNicole/variant-design-skill/blob/master/CHANGELOG.md" target="_blank" rel="noreferrer">{t(m.source, language)} ↗</a></p></div></div>
-    <section className="content-closing site-shell"><a className="content-button" href={localePath('/docs', language)}>{t(m.start, language)} ↗</a></section>
+    <section className="content-closing site-shell"><a className="content-button" href={localePath('/docs/install', language)}>{t(m.start, language)} ↗</a></section>
     <SiteFooter language={language}/></main>;
 }
