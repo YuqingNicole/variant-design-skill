@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Website
+- Website package `0.2.3`: opening an inspiration post from X no longer shifts the page when X's embed arrives. On a phone the embed sits under the notes instead of above them, the stored text and the embed swap in the same frame, and on a desktop the dialog is anchored near the top instead of centred, so a taller embed grows it downward. The lab now stands in a late, tall embed for X's script; before this change that showed a layout shift of 0.35 on the home page on a phone and 0.18 on desktop, and 0.01 or less after it. Production measured 0.16 on `/browse/interaction` on a phone before the change; it has not been re-measured after it.
+
 ## 1.2.0 — 2026-11-09
 
 The skill installs as a Claude Code plugin, derives and checks a design system after `pick B`, and gains rules for motion in generated pages. The website gives every inspiration category its own page and measures its own first-screen speed.

@@ -154,7 +154,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
     <button type="button" className="insp-detail-brief" onClick={()=>brief(item)}>{l('createBrief')}</button>
     {permissionOf(item)&&<AuthorizationDetails record={permissionOf(item)!}/>}
    </div>
-   <div className="insp-detail-visual"><div className="insp-detail-media" style={{viewTransitionName:`ref-${item.id}`}}>{permissionOf(item)?<AuthorizedMedia key={item.id} record={permissionOf(item)!}/>:post?<XPost key={item.id} post={post} url={item.url} locale={language} autoload/>:preview?<LinkPreview key={item.id} item={item} preview={preview} locale={language}/>:<Thumb key={item.id} item={item} locale={language}/>}</div>
+   <div className={`insp-detail-visual${post&&!permissionOf(item)?' insp-detail-visual-post':''}`}><div className="insp-detail-media" style={{viewTransitionName:`ref-${item.id}`}}>{permissionOf(item)?<AuthorizedMedia key={item.id} record={permissionOf(item)!}/>:post?<XPost key={item.id} post={post} url={item.url} locale={language} autoload/>:preview?<LinkPreview key={item.id} item={item} preview={preview} locale={language}/>:<Thumb key={item.id} item={item} locale={language}/>}</div>
     <a className="content-button insp-visit" href={item.url} target="_blank" rel="noreferrer">{l('visit')}<Icon d={icons.out}/></a></div>
   </article>};
  const tail=<>

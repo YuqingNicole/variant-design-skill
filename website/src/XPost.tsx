@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { formatDate } from './i18n/format';
 import type { Locale } from './i18n/locales';
 import { t, type Localized } from './i18n/localized';
@@ -25,10 +26,13 @@ export function XPost({post,url,locale,autoload=false}:{post:Post;url:string;loc
   try{const t=await Promise.race([loadWidgets(),new Promise<never>((_,no)=>setTimeout(()=>no(new Error('timeout')),8000))]);if(id!==run.current||!box.current)return;box.current.replaceChildren();
    const el=await Promise.race([t.widgets.createTweet(post.id,box.current,{dnt:true,align:'center',conversation:'none',lang:xLang[locale]}),new Promise<undefined>(ok=>setTimeout(()=>ok(undefined),15000))]);
    if(id!==run.current){el?.remove();return}
-   if(el)setState('shown');else{box.current?.replaceChildren();setState('failed')}}catch{if(id===run.current)setState('failed')}}
+   if(el)flushSync(()=>setState('shown')); // the stored text goes in the frame the embed arrives, so the page moves once, not twice
+   else{box.current?.replaceChildren();setState('failed')}}catch{if(id===run.current)setState('failed')}}
  const date=formatDate(post.date,locale);
- return <figure className="x-post"><div ref={box} className="x-post-embed" hidden={state==='idle'||state==='failed'}/>
+  // The stored text comes first and the embed below it: when the embed grows, it pushes down only what is under it.
+ return <figure className="x-post">
   {state!=='shown'&&<blockquote cite={url} lang={post.lang}>{post.text&&<p>{post.text}</p>}<footer><b>{post.author}</b> <span>@{post.handle} · {date}</span></footer></blockquote>}
+  <div ref={box} className="x-post-embed" hidden={state==='idle'||state==='failed'}/>
   <figcaption>{state==='shown'?l('shown')
    :<><button type="button" onClick={show} disabled={state==='loading'}>{state==='loading'?l('loading'):l(post.hasMedia?'loadMedia':'load')}</button>
     <span>{l(state==='failed'?'failed':'notice')}</span>
