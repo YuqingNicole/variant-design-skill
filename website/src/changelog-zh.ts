@@ -1,6 +1,13 @@
 // Chinese for CHANGELOG.md, one string per block in the same order (see changelog.ts).
 // Keep code spans identical to the English; scripts/changelog.test.mjs checks both.
 export const changelogZh: Record<string, { title?: string; blocks: string[] }> = {
+  Unreleased: {
+    title: '未发布',
+    blocks: [
+      '网站',
+      '网站包 `0.2.3`：打开来自 X 的灵感帖子时，X 的嵌入内容到达后页面不再整体移动。手机上嵌入内容排在说明下面而不是上面，先显示的存档正文和嵌入内容在同一帧里替换，桌面上弹层改为靠近顶部对齐而不是居中，所以嵌入内容变高时弹层向下增长。实验室现在用一个来得晚、又很高的嵌入内容代替 X 的脚本；这次改动前，手机上首页的版面位移测得 0.35，桌面 0.18，改动后不超过 0.01。生产环境在改动前测得手机上 `/browse/interaction` 为 0.16，改动后还没有重测。',
+    ],
+  },
   '1.2.0': {
     blocks: [
       '技能可以作为 Claude Code 插件安装，在 `pick B` 之后推导并检查设计系统，并为生成页面的动效增加规则。网站的每个灵感分类都有自己的页面，并且会测量自己的首屏速度。',

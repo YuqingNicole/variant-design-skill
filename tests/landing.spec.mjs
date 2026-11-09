@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import { probe, grade, defaults } from '../scripts/style-budget.mjs';
-import { measure, pages as labPages } from './perf-lab.mjs';
+import { measure, pages as labPages, fakeWidgets } from './perf-lab.mjs';
 import { probeFocus } from './focus-probe.mjs';
 const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
 // The homepage includes X motion now; regressions isolate its media in every scenario.
@@ -979,6 +979,7 @@ test('a path with no page answers 404 with noindex, while every real page and ev
 // scripts and styles. CLS uses the "good" line of 0.1; LCP is held only on pages whose largest element is ours, because the
 // detail page's is a preview image from another site. Bytes are gzip sizes with about 15% headroom over today's.
 test('lab budget: no layout shift past 0.1, a quick first paint on our own pages, and bounded script and style bytes', async ({browser},info)=>{
+ info.setTimeout(90000); // eight page loads, each with a card opened and a search
  const base=info.project.use.baseURL;
  for(const mobile of [true,false])for(const path of labPages){
   const m=await measure(browser,{base,path,mobile});
@@ -986,6 +987,20 @@ test('lab budget: no layout shift past 0.1, a quick first paint on our own pages
   if(path!=='/inspiration/linear')expect(m.lcp,`${path} ${mobile?'phone':'desktop'} LCP`).toBeLessThanOrEqual(2500);
   if(path==='/'&&!mobile){expect(m.kb.js,'home gzip script KB').toBeLessThanOrEqual(145);expect(m.kb.css,'home gzip style KB').toBeLessThanOrEqual(95)}
  }
+});
+
+// The X embed arrives late and is taller than the text it replaces. On a phone it sits below the notes, so it can only
+// push down what is under it; this checks the notes do not move and the embed lands under them.
+test('an X post embed arriving does not move the notes above it, on a phone', async ({browser},info)=>{
+ const base=info.project.use.baseURL,context=await browser.newContext({baseURL:base,viewport:{width:390,height:844},isMobile:true,hasTouch:true}),page=await context.newPage();
+ await page.route(u=>u.origin!==new URL(base).origin,r=>/^https:\/\/platform\.twitter\.com\/widgets\.js/.test(r.request().url())?r.fulfill({contentType:'text/javascript',body:fakeWidgets}):r.abort());
+ await page.goto('/inspiration/x-tanglele0318-961255514378');await hydrated(page);
+ const notes=page.locator('.insp-detail dl'),before=await notes.boundingBox();
+ await expect(page.locator('.x-post-embed > div')).toHaveCount(1,{timeout:8000});
+ const after=await notes.boundingBox(),embed=await page.locator('.x-post-embed').boundingBox();
+ expect(after.y,'notes moved when the embed arrived').toBe(before.y);
+ expect(embed.y,'embed sits under the notes').toBeGreaterThan(after.y+after.height);
+ await context.close();
 });
 
 // One focus ring across the site (the brand green, 2px) that stands out from what is behind it. This checks the ring's colour

@@ -12,10 +12,14 @@ export const median = list => [...list].sort((a, b) => a - b)[Math.floor(list.le
 
 // `stub` answers every third-party image with one pixel and blocks other third-party requests, so the numbers describe our
 // own HTML, scripts and styles instead of other sites' images. Without it (production runs) the real network is used.
+export const fakeWidgets = `window.twttr={widgets:{createTweet:(id,box)=>new Promise(ok=>setTimeout(()=>{const el=document.createElement('div');el.style.cssText='width:100%;height:520px';box.appendChild(el);ok(el)},700))}};`;
 export async function measure(browser, { base, path, mobile = false, stub = true }) {
   const context = await browser.newContext(mobile ? { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true } : { viewport: { width: 1440, height: 900 } });
   const page = await context.newPage(), origin = new URL(base).origin, bytes = { js: 0, css: 0, html: 0 };
-  if (stub) await page.route(url => url.origin !== origin, r => r.request().resourceType() === 'image' ? r.fulfill({ contentType: 'image/png', body: pixel }) : r.abort());
+  // X's embed script is stood in for by one that adds a tall block 700ms after it is asked for (a shift within 500ms of an
+  // input does not count, and the real widget takes longer than that),
+  // so a layout that lets the embed push the page's text down shows up here instead of only on production.
+  if (stub) await page.route(url => url.origin !== origin, r => /^https:\/\/platform\.twitter\.com\/widgets\.js/.test(r.request().url()) ? r.fulfill({ contentType: 'text/javascript', body: fakeWidgets }) : r.request().resourceType() === 'image' ? r.fulfill({ contentType: 'image/png', body: pixel }) : r.abort());
   if (mobile) await (await context.newCDPSession(page)).send('Emulation.setCPUThrottlingRate', { rate: 4 });
   const reads = [];
   page.on('response', r => {
@@ -37,7 +41,7 @@ export async function measure(browser, { base, path, mobile = false, stub = true
   const load = await page.evaluate(() => ({ ...window.__m }));
   // Then use the page the way a reader does: open a card, close it, search.
   const card = page.locator('.insp-card-open').first();
-  if (await card.count()) { await card.click(); await page.waitForTimeout(600); await page.keyboard.press('Escape'); await page.waitForTimeout(300); }
+  if (await card.count()) { await card.click(); await page.waitForTimeout(1400); await page.keyboard.press('Escape'); await page.waitForTimeout(300); }
   const search = page.locator('.insp-search input');
   if (await search.count()) { await search.click(); await page.keyboard.type('a'); await page.waitForTimeout(400); }
   const after = await page.evaluate(() => ({ ...window.__m }));
