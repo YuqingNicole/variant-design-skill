@@ -5,7 +5,7 @@
 .stage-orbit::after { content: ""; position: absolute; inset: 25px; border: 1px dashed #ffffff16; border-radius: 50%; }
 .stage-cross { position: absolute; color: #888b84; font: 1.5rem var(--font-mono); }
 .cross-one { top: 0; right: 8%; }.cross-two { bottom: 40px; left: 4%; }
-.direction-sheet { position: absolute; width: 224px; height: 292px; top: 28px; left: calc(50% - 112px); padding: 19px; border: 1px solid #ffffff38; border-radius: 3px; background: #e9e5da; color: #242820; box-shadow: 0 18px 40px #0006; text-decoration: none; transform-origin: 50% 85%; transition: transform 550ms cubic-bezier(.22,1,.36,1), box-shadow 550ms; }
+.direction-sheet { position: absolute; width: 224px; height: 292px; top: 28px; left: calc(50% - 112px); padding: 19px; border: 1px solid #ffffff38; border-radius: 3px; background: #e9e5da; color: #242820; box-shadow: 0 18px 40px #0006; text-decoration: none; transform-origin: 50% 85%; transition: transform var(--dur-slow) var(--ease-out), box-shadow var(--dur-slow) var(--ease-out); }
 .sheet-A { transform: translate(-95px,25px) rotate(-15deg); z-index: 1; }.sheet-B { background: #bec9b1; transform: translate(0,-8px) rotate(1deg); z-index: 2; }.sheet-C { background: #d4ab91; transform: translate(95px,32px) rotate(15deg); z-index: 3; }
 .direction-sheet.sheet-active { z-index: 4; transform: translate(0,-17px) rotate(-3deg); box-shadow: 0 28px 60px #0009; }
 .stage-canvas[data-active="0"] .sheet-B { transform: translate(60px,18px) rotate(10deg); }
