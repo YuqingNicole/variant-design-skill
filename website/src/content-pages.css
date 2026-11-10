@@ -47,8 +47,7 @@
 .docs-hub article h2{margin:0;font-size:28px;line-height:1.25;word-break:keep-all;overflow-wrap:anywhere}
 .docs-hub article h2 a{text-decoration:none}
 .docs-hub article h2 a::after{content:"";position:absolute;inset:0;border-radius:inherit}
-.docs-hub article h2 a:focus-visible{outline:none}
-.docs-hub article:has(h2 a:focus-visible){outline:2px solid var(--site-brand);outline-offset:3px}
+.docs-hub article:has(h2 a:focus-visible){border-color:var(--site-brand)}
 .docs-hub article p{font-size:14px;line-height:1.7;color:var(--site-muted);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
 .docs-hub .docs-start,.docs-hub .docs-answers{grid-column:1/-1}
 .docs-hub .docs-start{background:var(--site-brand);border-color:var(--site-brand);color:var(--site-paper)}
