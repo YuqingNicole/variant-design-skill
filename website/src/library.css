@@ -75,3 +75,13 @@
 /* Phones: 44px touch targets for standalone links, 12px minimum for labels, and commands that wrap instead of scrolling. */
 @media(max-width:650px){.library-more{gap:0 28px}.library-more a,.home-case-brief>a{display:inline-flex;align-items:center;min-height:44px}
  .library-brief b,.library-tabs button small,.library-comparison dt{font-size:12px}.library-try textarea{font-size:16px}.skills-entry dd code{white-space:pre-wrap;overflow-wrap:anywhere}}
+
+/* Wide screens: the direction and its comparison on the left, "try it" and the recommendation beside them, so the right of the page is not empty. */
+@media(min-width:1100px){
+.library-detail{display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:var(--space-6);align-items:start}
+.library-detail>:is(.library-brief,.library-tabs,.library-figure,.library-comparison){grid-column:1}
+.library-detail>.library-side{grid-column:2;grid-row:1/span 4;position:sticky;top:96px;display:grid;gap:var(--space-4)}
+.library-detail>:is(.library-evidence,.library-related){grid-column:1/-1}
+.library-side .library-try,.library-side .library-recommendation{max-width:none;margin:0}
+.library-side .library-try textarea{font-size:12px;min-height:176px}
+}

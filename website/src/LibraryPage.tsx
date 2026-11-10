@@ -100,8 +100,10 @@ function Detail({ entry, language }: { entry: Entry; language: Language }) {
       <div className="library-tabs" role="group" aria-label={t(m.chooseADirection,language)}>{entry.directions.map(d => <button key={d.id} aria-pressed={d.id === active} onClick={() => choose(d.id)}><b>{d.id}</b>{t(d.name,language)}{entry.recommendation?.variant === d.id && <small>{t(m.recommended,language)}</small>}</button>)}</div>
       <figure className="library-figure"><img key={direction.id} src={mediaUrl(entry, image.file)} width={image.width} height={image.height} alt={t(image.alt,language)}/><figcaption>{direction.id} · {t(direction.name,language)}{direction.preview && <> · <a href={direction.preview + (direction.preview.includes('?') ? '&' : '?') + `language=${language}`} target="_blank" rel="noreferrer">{t(m.openTheInteractiveVersion,language)}</a></>}</figcaption></figure>
       <dl className="library-comparison"><div><dt>{t(m.optimizes,language)}</dt><dd>{t(direction.comparison.optimizes,language)}</dd></div><div><dt>{t(m.tradesOff,language)}</dt><dd>{t(direction.comparison.tradeoff,language)}</dd></div><div><dt>{t(m.bestFor,language)}</dt><dd>{t(direction.comparison.bestFor,language)}</dd></div></dl>
+      <div className="library-side">
       <TryIt entry={entry} direction={direction} language={language}/>
       {entry.recommendation && <aside className="library-recommendation"><b>{t({zh:`推荐 ${entry.recommendation.variant}`,en:`Recommends ${entry.recommendation.variant}`},language)}</b><p>{t(entry.recommendation.reason,language)}</p><small>{t(m.aRecommendationIsNot,language)}</small></aside>}
+      </div>
       <p className="library-evidence">{evidence ? <>{t(m.theDirectionNotesAnd,language)} <a href={evidence} target="_blank" rel="noreferrer">{t(m.viewTheOutputRecord,language)}</a></> : entry.kind === 'concept' ? (t(m.conceptStudyMadeBy,language)) : null}</p>
       {related.length > 0 && <section className="library-related"><h2>{t(m.moreEntries,language)}</h2><div className="library-grid">{related.map(e => <Card key={e.slug} entry={e} language={language}/>)}</div></section>}
     </section></>;
