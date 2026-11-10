@@ -58,7 +58,8 @@
 | 用途 | 选择器 | 大小 | 行高 |
 |---|---|---|---|
 | 首页定位语 | `.insp-title h1` | `clamp(28px, 3.4vw, 46px)` | 1.12 |
-| 内容页主标题 | `.content-hero h1` | `clamp(36px, 4.8vw, 64px)`，手机 36px | 1.18 |
+| 内容页主标题 | `.content-hero h1`、`.pricing-hero h1` | `clamp(36px, 3.4vw, 46px)`，手机 36px；桌面上不超过首页定位语（2026-11-10 从 64px 收回） | 1.18 |
+| 页脚收尾标题 | `.site-footer-cta h2` | 46px，手机 36px；不大于页面自己的 h1 | 1.16 |
 | 区块标题 | 内容页和案例页的 `h2` | `clamp(30px, 3.4vw, 46px)` | — |
 | 引导段落 | `.insp-title p`、`.content-hero p` | 16px | 1.75 |
 | 正文 | 文档与赞助页 16px；其他 `.content-reading p` 保留 15px | 16 / 15px | 1.7–1.9 |
@@ -135,12 +136,12 @@
 |---|---|---|
 | 导航 | `SiteHeader`（`SiteChrome.tsx`） | 品牌字标、6 个链接、语言按钮。当前页用下划线标出，偏移 6px |
 | 页脚 | `SiteFooter` + `FontNote` | 浅绿收尾 CTA（标题 + 一句说明 + 按钮，不加眉标，按钮不带箭头；标题用 `text-wrap: balance` 防止单字孤行，`halt` 让全角逗号收成半宽）+ 品牌和四组站内链接；CTA 回到灵感流。字体授权行必须保留（见第 3 节） |
-| 主按钮 | `.home-action-primary` | 品牌绿底、白字、6px 圆角、内边距 12px 20px、15px 字 |
+| 主按钮 | `.home-action-primary`、`.content-button`、`.paper-button`、`.pricing-button` 等 | 品牌绿底、白字、6px 圆角，悬停变墨色；首页内边距 12px 20px、15px 字，其他页面的内边距和字号还没统一 |
 | 次按钮 | `.home-action-secondary` | 透明底、品牌绿 1px 边框、品牌绿字 |
 | 切换器 | `.home-shelves` | surface 色胶囊底槽，选中项是卡片底色的胶囊块，带唯一阴影。按钮用 `aria-pressed`，标签固定不变 |
 | 展示卡 | `.home-show-card` | 卡片底、细边框、12px 圆角。顺序：标题 → 说明 → 出处一行 → 底部链接组（上方一条细线） |
 | 任务列表 | `.home-tasks` | 两栏列表，每行有顶线：链接 + 一句说明。不编号 |
-| 筛选按钮 | `.content-filters button` | 4px 边框按钮，选中态由 `aria-pressed` 表示（灵感页以外的内容页） |
+| 筛选按钮 | `.content-filters a`（`/cases`） | 和首页筛选胶囊同一种样子：32px 高（650px 以下 44px），`--site-surface` 底，选中品牌绿底、纸色字，由 `aria-current` 表示 |
 | 筛选胶囊 | `.insp-pills button` | 32px 高，`--site-surface` 底，无边框；选中是品牌绿底、纸色字，由 `aria-pressed` 表示 |
 | 缩略图卡片 | `.insp-card` | 静止时只有缩略图，名称和一句研究要点写在链接的 `aria-label` 里。悬停或键盘聚焦时显出：左下名称、来源、权限标记（仅链接 / 作者授权）与已知作者头像、右上"加入参考包"、右下"打开来源"。图标用 16×16 线性 SVG，不用字形符号 |
 | 链接预览 | `Thumb`、`LinkPreview`（`InspirationPage.tsx`） | 网站条目的缩略图就是该网站为分享链接公开的预览图（og:image），详情里再配它自己的标题和描述；X 帖子条目显示帖子原文。图片取自原站、经 Vercel 缩小，缩小失败时直接加载原图，再失败换成分析卡 |

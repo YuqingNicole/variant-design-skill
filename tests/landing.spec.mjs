@@ -736,6 +736,31 @@ test('the footer heading never leaves a lone character on its last line', async 
   }
 });
 
+test('headings, primary buttons and filters share one scale and one look across pages', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const brand = 'rgb(46, 67, 37)';
+  await page.goto('/');
+  const home = await page.locator('h1').first().evaluate(h => parseFloat(getComputedStyle(h).fontSize));
+  for (const route of ['/skills', '/docs', '/lab', '/submit', '/cases', '/pricing', '/guides']) {
+    await page.goto(route);
+    await expect(page.locator('h1').first()).toBeVisible();
+    const [h1, footer] = await page.evaluate(() => [document.querySelector('h1'), document.querySelector('.site-footer-cta h2')].map(e => e ? parseFloat(getComputedStyle(e).fontSize) : 0));
+    expect(h1, `${route} h1`).toBeLessThanOrEqual(home);
+    expect(footer, `${route} footer heading`).toBeGreaterThan(0);
+    expect(footer, `${route} footer heading`).toBeLessThanOrEqual(h1);
+  }
+  for (const [route, selector] of [['/pricing', '.pricing-card.is-accent .pricing-button'], ['/about', '.paper-button'], ['/', '.site-footer-action']]) {
+    await page.goto(route);
+    const style = await page.locator(selector).first().evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius]; });
+    expect(style, `${route} ${selector}`).toEqual([brand, '6px']);
+  }
+  await page.goto('/cases');
+  const pill = await page.locator('.content-filters a[aria-current=page]').evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius, s.height]; });
+  expect(pill).toEqual([brand, '999px', '32px']);
+  await page.goto('/pricing');
+  expect(await page.locator('.billing-switch button[aria-pressed=true]').evaluate(e => getComputedStyle(e).boxShadow)).toBe('rgba(35, 38, 34, 0.14) 0px 1px 2px 0px');
+});
+
 test('X cards whose poster cannot load fall back to the analysis card, not a broken image', async ({ page }) => {
   await page.route(/twimg\.com|platform\.twitter\.com/, r => r.abort());
   await page.goto('/browse/motion');
