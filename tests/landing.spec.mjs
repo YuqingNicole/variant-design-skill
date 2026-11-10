@@ -325,7 +325,7 @@ test('inspiration references filter, create an original brief and recover from c
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('99 个参考');
  // Every tab is its own page with its own references; together they list each reference once.
  for(const [name,count] of [['网站',32],['产品界面',12],['交互',27],['动效',21],['品牌',7]]){
-  await page.getByRole('link',{name,exact:true}).click();
+  await page.locator('.insp-pills').getByRole('link',{name,exact:true}).click();
   await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${count} 个参考`);
  }
  await page.getByRole('link',{name:'产品界面',exact:true}).click();
@@ -548,7 +548,7 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.route(/video\.twimg\.com/,r=>{if(r.request().url()===media['paper-widgets'].video)return r.abort()});
  await page.goto('/browse/interface?sort=curated');await expect(page.locator('.insp-pills a')).toHaveText(['全部','网站','产品界面','交互','动效','品牌']);
  expect(xRequests.filter(u=>new URL(u).hostname==='video.twimg.com')).toEqual([]);
- await page.getByRole('link',{name:'动效',exact:true}).click();await expect(page).toHaveURL(/\/browse\/motion$/);
+ await page.locator('.insp-pills').getByRole('link',{name:'动效',exact:true}).click();await expect(page).toHaveURL(/\/browse\/motion$/);
  // The client render replaces the prerendered feed; wait for it (XVideo adds the referrer meta on mount) before holding a card.
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
  const motion=page.locator('.insp-videos > li');await expect(motion).toHaveCount(21);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
@@ -739,7 +739,7 @@ test('the footer heading never leaves a lone character on its last line', async 
 test('headings, primary buttons and filters share one scale and one look across pages', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   const brand = 'rgb(46, 67, 37)';
-  await page.goto('/');
+  await page.goto('/');await hydrated(page);
   const home = await page.locator('h1').first().evaluate(h => parseFloat(getComputedStyle(h).fontSize));
   for (const route of ['/skills', '/docs', '/lab', '/submit', '/cases', '/pricing', '/guides']) {
     await page.goto(route);
@@ -759,6 +759,32 @@ test('headings, primary buttons and filters share one scale and one look across 
   expect(pill).toEqual([brand, '999px', '32px']);
   await page.goto('/pricing');
   expect(await page.locator('.billing-switch button[aria-pressed=true]').evaluate(e => getComputedStyle(e).boxShadow)).toBe('rgba(35, 38, 34, 0.14) 0px 1px 2px 0px');
+});
+
+test('the header names the motion feed once, keeps the full wordmark on phones and the counts follow the filter', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/browse/motion');
+  await expect(page.locator('.site-nav-links a[aria-current=page]')).toHaveText('动效');
+  await expect(page.locator('.insp-counts [aria-current]')).toHaveText(/21 动效$/);
+  const language = await page.locator('.site-language').evaluate(e => { const s = getComputedStyle(e); return [s.borderTopWidth, parseFloat(s.minHeight)]; });
+  expect(language[0]).toBe('0px'); expect(language[1]).toBeGreaterThanOrEqual(44);
+  for (const width of [320, 390]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto('/');
+    await expect(page.locator('.site-wordmark-light')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${width}px`).toBe(true);
+  }
+});
+
+test('content shares the heading\'s left edge and two-tone headings use the palette grey', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/submit');
+  const [h1, form] = await page.evaluate(() => [document.querySelector('h1'), document.querySelector('.submission-intake')].map(e => Math.round(e.getBoundingClientRect().left)));
+  expect(form).toBe(h1);
+  for (const [route, selector] of [['/pricing', '.pricing-hero h1 em'], ['/about', '.paper-hero h1 span']]) {
+    await page.goto(route);
+    expect(await page.locator(selector).first().evaluate(e => getComputedStyle(e).color), route).toBe('rgb(98, 102, 95)');
+  }
 });
 
 test('X cards whose poster cannot load fall back to the analysis card, not a broken image', async ({ page }) => {
@@ -883,15 +909,15 @@ test('home leads with the inspiration feed, cases have their own page, and the s
  await expect(page.locator('h1')).toHaveText('互联网上最好的设计灵感。');
  await expect(page.locator('.insp-title')).toContainText('每条都附出处和我们写的笔记');
  await expect(page.locator('.inspiration-grid .insp-card').first()).toBeInViewport();
- await expect(page.locator('.site-nav-links a')).toHaveText(['灵感','动效视频','案例','技能','文档','投稿']);
+ await expect(page.locator('.site-nav-links a')).toHaveText(['灵感','动效','案例','技能','文档','投稿']);
  await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');
- await page.locator('.site-nav-links a',{hasText:'动效视频'}).click();
- await expect(page).toHaveURL(/\/browse\/motion$/);await expect(page.locator('h1')).toHaveText('动效灵感');await expect(page.getByRole('link',{name:'动效',exact:true})).toHaveAttribute('aria-current','page');
- await page.getByRole('link',{name:'全部',exact:true}).click();await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a',{hasText:'动效视频'})).not.toHaveAttribute('aria-current','page');
+ await page.locator('.site-nav-links a',{hasText:'动效'}).click();
+ await expect(page).toHaveURL(/\/browse\/motion$/);await expect(page.locator('h1')).toHaveText('动效灵感');await expect(page.locator('.insp-pills').getByRole('link',{name:'动效',exact:true})).toHaveAttribute('aria-current','page');
+ await page.getByRole('link',{name:'全部',exact:true}).click();await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a',{hasText:'动效'})).not.toHaveAttribute('aria-current','page');
  for(const [group,links] of [['Variant Design 技能',['/docs','/about','/pricing','/changelog','/lab']],['资源',['/skills','/guides','/submit']]])
   for(const href of links)await expect(page.getByRole('navigation',{name:group}).locator(`a[href="${href}"]`)).toHaveCount(1);
  await page.goto('/?utm_source=practice');
- await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a',{hasText:'动效视频'})).not.toHaveAttribute('aria-current','page');
+ await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a',{hasText:'动效'})).not.toHaveAttribute('aria-current','page');
  await page.goto('/inspiration?topic=saas-home');
  await expect(page).toHaveURL(/:\d+\/\?topic=saas-home$/);await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(10);
  await page.goto('/inspiration/linear');await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');
@@ -915,7 +941,7 @@ test('each inspiration tab is its own page, and no reference appears on two of t
   for(const id of ids){expect(seen.has(id),`${id} is on two tabs`).toBe(false);seen.add(id)}
   titles.add(html.match(/<title>([^<]*)/)[1]);headings.add(html.match(/<h1[^>]*>([^<]*)/)[1]);
   expect(html).toContain(`<link rel="canonical" href="https://variantdesign.xyz${href}">`);
-  await page.goto(href);await expect(page.getByRole('link',{name,exact:true})).toHaveAttribute('aria-current','page');
+  await page.goto(href);await expect(page.locator('.insp-pills').getByRole('link',{name,exact:true})).toHaveAttribute('aria-current','page');
   await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${ids.length} 个参考`);
  }
  expect(titles.size).toBe(5);expect(headings.size).toBe(5);

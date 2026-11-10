@@ -169,7 +169,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  return <main className="content-page inspiration-page">{header}
   <header className="site-shell insp-head">
    <div className="insp-title"><h1>{sectionInfo?t(sectionInfo.title,language):l('title')}</h1><p>{sectionInfo?t(sectionInfo.intro,language):fl('intro')(total)}</p><a href={localePath('/submit',language)}>{l('submissions')}</a></div>
-   <p className="insp-counts">{tabs.map(c=>`${count(c.id)} ${t(c.name,language)}`).join(' · ')}</p>
+   <p className="insp-counts">{tabs.map((c,i)=><span key={c.id} aria-current={section===c.id?'true':undefined}>{i?' · ':''}{count(c.id)} {t(c.name,language)}</span>)}</p>
    <details className="inspiration-disclosure"><summary>{l('disclosure')}</summary><p>{l('disclosureBody')}</p></details>
   </header>
   <div className="insp-bar"><div className="site-shell">
