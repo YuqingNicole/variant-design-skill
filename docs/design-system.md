@@ -30,7 +30,7 @@
 
 规则：
 
-- 文字至少 4.5:1。新写的颜色只能从上表取，不要再加新的灰绿色。
+- 文字至少 4.5:1。新写的颜色只能从上表取，不要再加新的灰绿色。双色标题（`/about`、`/pricing`、实验室）的第二行用 `--site-muted`，不要用更浅的灰。
 - 品牌绿只用于"可以点的东西"和焦点状态，不用来装饰。
 - 不用渐变，不用纯黑和纯白做大面积底色（主按钮上的白字除外）。
 - 色彩留给内容：浏览页的界面本身只用纸色、墨色和品牌绿，缩略图之间的区别靠分析卡的底色（`--site-card`、`--site-surface`、`--site-accent`、`--site-wash`、`--site-paper`）和结构草图。
@@ -58,7 +58,8 @@
 | 用途 | 选择器 | 大小 | 行高 |
 |---|---|---|---|
 | 首页定位语 | `.insp-title h1` | `clamp(28px, 3.4vw, 46px)` | 1.12 |
-| 内容页主标题 | `.content-hero h1` | `clamp(36px, 4.8vw, 64px)`，手机 36px | 1.18 |
+| 内容页主标题 | `.content-hero h1`、`.pricing-hero h1` | `clamp(36px, 3.4vw, 46px)`，手机 36px；桌面上不超过首页定位语（2026-11-10 从 64px 收回） | 1.18 |
+| 页脚收尾标题 | `.site-footer-cta h2` | 46px，手机 36px；不大于页面自己的 h1 | 1.16 |
 | 区块标题 | 内容页和案例页的 `h2` | `clamp(30px, 3.4vw, 46px)` | — |
 | 引导段落 | `.insp-title p`、`.content-hero p` | 16px | 1.75 |
 | 正文 | 文档与赞助页 16px；其他 `.content-reading p` 保留 15px | 16 / 15px | 1.7–1.9 |
@@ -87,6 +88,7 @@
   - 两栏之间 64–72px。
 - **防溢出**：网格子元素要加 `min-width: 0`，长文本才会换行。每个页面在 320 / 390 / 1440 宽度下都不能横向滚动。`tests/landing.spec.mjs` 只检查了一部分页面，`/pricing`、`/lab`、`/d/<案例>`、`/showcase` 等还没有覆盖，改这些页面时要自己截图检查。
 - **行宽**：正文不超过 68ch，引导段落不超过 46ch。
+- **左边缘**：正文栏（`.content-reading`）和页面标题共用 `.site-shell` 的左边缘，只限制子元素宽度（760px），不把整栏居中。
 - **间距变量**：`--space-1` 到 `--space-7` 依次是 4 / 8 / 12 / 16 / 24 / 32 / 48px。新代码用变量，不再写零散的像素值。
 
 ### 浏览页布局（灵感参考）
@@ -133,14 +135,14 @@
 
 | 组件 | 位置 | 要点 |
 |---|---|---|
-| 导航 | `SiteHeader`（`SiteChrome.tsx`） | 品牌字标、6 个链接、语言按钮。当前页用下划线标出，偏移 6px |
-| 页脚 | `SiteFooter` + `FontNote` | 浅绿收尾 CTA + 品牌和四组站内链接；CTA 回到灵感流。字体授权行必须保留（见第 3 节） |
-| 主按钮 | `.home-action-primary` | 品牌绿底、白字、6px 圆角、内边距 12px 20px、15px 字 |
+| 导航 | `SiteHeader`（`SiteChrome.tsx`） | 品牌字标（手机上也保留完整的 variant design）、6 个链接、语言切换。语言切换是无边框文字，和导航链接同一种样子，点击区域至少 44px 高。导航项和它指向的页面、筛选胶囊用同一个名字（动效 → /browse/motion）。当前页用下划线标出，偏移 6px |
+| 页脚 | `SiteFooter` + `FontNote` | 浅绿收尾 CTA（标题 + 一句说明 + 按钮，不加眉标，按钮不带箭头；标题用 `text-wrap: balance` 防止单字孤行，`halt` 让全角逗号收成半宽）+ 品牌和四组站内链接；CTA 回到灵感流。字体授权行必须保留（见第 3 节） |
+| 主按钮 | `.home-action-primary`、`.content-button`、`.paper-button`、`.pricing-button` 等 | 品牌绿底、白字、6px 圆角，悬停变墨色；首页内边距 12px 20px、15px 字，其他页面的内边距和字号还没统一 |
 | 次按钮 | `.home-action-secondary` | 透明底、品牌绿 1px 边框、品牌绿字 |
 | 切换器 | `.home-shelves` | surface 色胶囊底槽，选中项是卡片底色的胶囊块，带唯一阴影。按钮用 `aria-pressed`，标签固定不变 |
 | 展示卡 | `.home-show-card` | 卡片底、细边框、12px 圆角。顺序：标题 → 说明 → 出处一行 → 底部链接组（上方一条细线） |
 | 任务列表 | `.home-tasks` | 两栏列表，每行有顶线：链接 + 一句说明。不编号 |
-| 筛选按钮 | `.content-filters button` | 4px 边框按钮，选中态由 `aria-pressed` 表示（灵感页以外的内容页） |
+| 筛选按钮 | `.content-filters a`（`/cases`） | 和首页筛选胶囊同一种样子：32px 高（650px 以下 44px），`--site-surface` 底，选中品牌绿底、纸色字，由 `aria-current` 表示 |
 | 筛选胶囊 | `.insp-pills button` | 32px 高，`--site-surface` 底，无边框；选中是品牌绿底、纸色字，由 `aria-pressed` 表示 |
 | 缩略图卡片 | `.insp-card` | 静止时只有缩略图，名称和一句研究要点写在链接的 `aria-label` 里。悬停或键盘聚焦时显出：左下名称、来源、权限标记（仅链接 / 作者授权）与已知作者头像、右上"加入参考包"、右下"打开来源"。图标用 16×16 线性 SVG，不用字形符号 |
 | 链接预览 | `Thumb`、`LinkPreview`（`InspirationPage.tsx`） | 网站条目的缩略图就是该网站为分享链接公开的预览图（og:image），详情里再配它自己的标题和描述；X 帖子条目显示帖子原文。图片取自原站、经 Vercel 缩小，缩小失败时直接加载原图，再失败换成分析卡 |
@@ -159,7 +161,7 @@
 - **数字**：从数据算出来，比如"26 个参考"由 `inspirationItems.length` 得出，不要手写。
 - **诚实**：不知道的事直接写出来，比如"设计者：未知""登录后操作未实测"。没测过的东西不写成"支持"。
 - **第三方内容**：只放链接和我们自己写的研究笔记，不复制对方的文案、商标和截图。
-- **X 帖子（Best practice）**：Ego Lite 每周在已登录的 X 搜索最近一周、至少 100 个赞的设计视频，链接进入 `website/content/x-post-inbox.json`；这只是待筛选候选，不会自动发布。用 `node website/scripts/x-post.mjs <帖子链接> --tag <标签>` 通过 X 官方 oEmbed 生成草稿，只记作者、日期、语言和正文；看过原帖后再手写「研究什么」「用在哪里」，草稿里的 TODO 不能留下（单元测试会查）。草稿记录 `addedAt`（首次收录时间，ISO 时间戳），后续复核只改 `checkedAt`，不要重排历史收录时间。X 帖子进入「全部」作品流，也可在 Best practice 分类单独筛选。卡片就是帖子视频本身：静音、循环，只在可见时播放，减少动效时移除视频源，只保留封面；偏好运行中变化时立即停播、移除源，改回允许动效后按可见状态恢复；切换后台页也暂停；作者头像随署名显示，收藏和来源按钮在悬停、聚焦或触屏时显示。视频地址、封面和头像由 `node website/scripts/x-media.mjs` 从 X 嵌入组件背后的接口（`cdn.syndication.twimg.com`，未公开文档）读出，写进 `website/src/x-media.json`，不下载、不转存，页面直接从 video.twimg.com 播放。video.twimg.com 拒绝带其他网站来源的请求，所以灵感页在播放前把文档的 referrer 策略设为 `no-referrer`。这条路径是维护者 2026-11-01 明确选择的例外，等于绕过 X 的防盗链，X 随时可能堵住；失败时卡片退回封面图。详情页仍用 X 官方嵌入组件，说明里写明 X 可能记录这次访问。嵌入加载完成前先显示存下来的正文；连不上 x.com 时保留正文和「在 X 上打开」。不下载、不托管帖子里的媒体，也不另写演示复刻帖子里的效果。
+- **X 帖子（Best practice）**：Ego Lite 每周在已登录的 X 搜索最近一周、至少 100 个赞的设计视频，链接进入 `website/content/x-post-inbox.json`；这只是待筛选候选，不会自动发布。用 `node website/scripts/x-post.mjs <帖子链接> --tag <标签>` 通过 X 官方 oEmbed 生成草稿，只记作者、日期、语言和正文；看过原帖后再手写「研究什么」「用在哪里」，草稿里的 TODO 不能留下（单元测试会查）。草稿记录 `addedAt`（首次收录时间，ISO 时间戳），后续复核只改 `checkedAt`，不要重排历史收录时间。X 帖子进入「全部」作品流，也可在 Best practice 分类单独筛选。卡片就是帖子视频本身：静音、循环，只在可见时播放，减少动效时移除视频源，只保留封面；偏好运行中变化时立即停播、移除源，改回允许动效后按可见状态恢复；切换后台页也暂停；作者头像随署名显示，收藏和来源按钮在悬停、聚焦或触屏时显示。视频地址、封面和头像由 `node website/scripts/x-media.mjs` 从 X 嵌入组件背后的接口（`cdn.syndication.twimg.com`，未公开文档）读出，写进 `website/src/x-media.json`，不下载、不转存，页面直接从 video.twimg.com 播放。video.twimg.com 拒绝带其他网站来源的请求，所以灵感页在播放前把文档的 referrer 策略设为 `no-referrer`。这条路径是维护者 2026-11-01 明确选择的例外，等于绕过 X 的防盗链，X 随时可能堵住；视频失败时卡片退回封面图，封面也加载不了（例如国内网络访问不到 pbs.twimg.com）时退回该条目的分析卡，头像加载失败则隐藏，不露出破图。详情页仍用 X 官方嵌入组件，说明里写明 X 可能记录这次访问。嵌入加载完成前先显示存下来的正文；连不上 x.com 时保留正文和「在 X 上打开」。不下载、不托管帖子里的媒体，也不另写演示复刻帖子里的效果。
 - **经其他策展站发现的作品**：条目写 `via`（该站这件作品的页面地址），详情的出处后显示「经 某站 发现」并链接过去。只按我们自己看过、写过笔记的条目加入，不整批搬运别人的精选列表。
 - **网站缩略图**：直接用链接自己的内容，不自己再画或再写一遍对方的页面。`node website/scripts/link-preview.mjs` 对每个链接请求一次，读出对方为分享链接公开的 og:/twitter: 预览（图片、标题、描述），写进 `website/src/link-previews.json`；页面只存图片地址，仓库里不下载、不转存、不裁切；显示时经 Vercel 图片服务（`/_vercel/image`，`vercel.json` 的 `images`）按显示尺寸缩小成 WebP 并缓存，卡片 640px、详情 1280px（2026-11-01 维护者为加载速度选定）。缩小失败时直接从原站加载（`referrerPolicy=no-referrer`）。`link-preview.mjs` 会把新图片的域名同步进 `remotePatterns`。没有预览的（2026-11-01：Lovable、Aesop 拒绝脚本访问，Nothing 没有 og:image）和加载失败的显示分析卡。不嵌入整站：多数站点用 X-Frame-Options 或 frame-ancestors 禁止被嵌入。不自己截图或录屏。
 

@@ -1,14 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import xMedia from './x-media.json';
 // The video of a shared X post, streamed from video.twimg.com (address read by scripts/x-media.mjs) and played
-// muted on a loop while on screen. Nothing is hosted here; if X refuses or the file is gone, the poster stays.
+// muted on a loop while on screen. Nothing is hosted here; if X refuses or the file is gone, the poster stays,
+// and if the poster cannot load either (X blocked on this network) the caller's fallback replaces the card.
 export type XMedia={video:string;poster:string;width:number;height:number;avatar:string|null;fetchedAt:string};
 export type VideoMedia=Pick<XMedia,'video'|'poster'|'width'|'height'>;
 export const mediaOf=(id:string):XMedia|undefined=>(xMedia as Record<string,XMedia>)[id];
 // video.twimg.com refuses requests carrying another site's referrer, and <video> has no per-element
 // referrerpolicy, so the document drops it before the first video loads (outbound links already use noreferrer).
 function dropReferrer(){if(document.querySelector('meta[name="referrer"]'))return;const m=document.createElement('meta');m.name='referrer';m.content='no-referrer';document.head.appendChild(m)}
-export function XVideo({media}:{media:VideoMedia}){const ref=useRef<HTMLVideoElement>(null);const [failed,setFailed]=useState(false);
+export function XVideo({media,fallback}:{media:VideoMedia;fallback?:ReactNode}){const ref=useRef<HTMLVideoElement>(null);const [failed,setFailed]=useState(false);const [posterFailed,setPosterFailed]=useState(false);
+ // <video poster> reports no load error, so the poster is probed once on its own (the browser reuses the response).
+ useEffect(()=>{if(!fallback)return;let live=true;const img=new Image();img.referrerPolicy='no-referrer';img.onerror=()=>{if(live)setPosterFailed(true)};img.src=media.poster;return()=>{live=false;img.onerror=null}},[media.poster,Boolean(fallback)]);
  useEffect(()=>{const v=ref.current;if(!v)return;dropReferrer();
   if(typeof IntersectionObserver==='undefined')return;
   const motion=matchMedia('(prefers-reduced-motion: reduce)');let visible=false;
@@ -19,5 +22,6 @@ export function XVideo({media}:{media:VideoMedia}){const ref=useRef<HTMLVideoEle
   const preference=()=>{if(motion.matches){v.pause();v.removeAttribute('src');v.load()}else{near.unobserve(v);near.observe(v);if(visible)attach()}};
   motion.addEventListener('change',preference);document.addEventListener('visibilitychange',play);
   return()=>{near.disconnect();io.disconnect();motion.removeEventListener('change',preference);document.removeEventListener('visibilitychange',play);v.pause();v.removeAttribute('src');v.load()}},[media.video]);
- return failed?<img className="insp-vcard-media" src={media.poster} width={media.width} height={media.height} alt="" referrerPolicy="no-referrer"/>
+ if(posterFailed&&fallback)return <>{fallback}</>;
+ return failed?<img className="insp-vcard-media" src={media.poster} width={media.width} height={media.height} alt="" referrerPolicy="no-referrer" onError={fallback?()=>setPosterFailed(true):undefined}/>
   :<video ref={ref} className="insp-vcard-media" poster={media.poster} width={media.width} height={media.height} muted loop playsInline preload="metadata" onError={()=>setFailed(true)}/>}

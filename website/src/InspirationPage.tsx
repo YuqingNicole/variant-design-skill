@@ -169,7 +169,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  return <main className="content-page inspiration-page">{header}
   <header className="site-shell insp-head">
    <div className="insp-title"><h1>{sectionInfo?t(sectionInfo.title,language):l('title')}</h1><p>{sectionInfo?t(sectionInfo.intro,language):fl('intro')(total)}</p><a href={localePath('/submit',language)}>{l('submissions')}</a></div>
-   <p className="insp-counts">{tabs.map(c=>`${count(c.id)} ${t(c.name,language)}`).join(' · ')}</p>
+   <p className="insp-counts">{tabs.map((c,i)=><span key={c.id} aria-current={section===c.id?'true':undefined}>{i?' · ':''}{count(c.id)} {t(c.name,language)}</span>)}</p>
    <details className="inspiration-disclosure"><summary>{l('disclosure')}</summary><p>{l('disclosureBody')}</p></details>
   </header>
   <div className="insp-bar"><div className="site-shell">
@@ -183,8 +183,8 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
    <ul className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}`}>{shown.map(item=>{const media=mediaFor(item),post=postOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
     <a className={`insp-card-open${media?' insp-vcard-open':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
-     {media?<XVideo media={media}/>:<Thumb item={item} locale={language}/>}
-     <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={media.avatar} width="28" height="28" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer"/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:new URL(item.url).hostname} · {rightsLabel(item,language)}</small></span></span>
+     {media?<XVideo media={media} fallback={<AnalysisCard item={item} locale={language}/>}/>:<Thumb item={item} locale={language}/>}
+     <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={media.avatar} width="28" height="28" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer" onError={e=>{e.currentTarget.style.display='none'}}/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:new URL(item.url).hostname} · {rightsLabel(item,language)}</small></span></span>
     </a>
     <button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${l(selection[item.id]?'removePack':'addPack')}：${item.name}`}><Icon d={icons.save}/></button>
     <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l(post?'openOnX':'openSource')}：${item.name}`}><Icon d={icons.out}/></a>
