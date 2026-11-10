@@ -134,7 +134,7 @@
 | 组件 | 位置 | 要点 |
 |---|---|---|
 | 导航 | `SiteHeader`（`SiteChrome.tsx`） | 品牌字标、6 个链接、语言按钮。当前页用下划线标出，偏移 6px |
-| 页脚 | `SiteFooter` + `FontNote` | 浅绿收尾 CTA + 品牌和四组站内链接；CTA 回到灵感流。字体授权行必须保留（见第 3 节） |
+| 页脚 | `SiteFooter` + `FontNote` | 浅绿收尾 CTA（标题 + 一句说明 + 按钮，不加眉标，按钮不带箭头；标题用 `text-wrap: balance` 防止单字孤行，`halt` 让全角逗号收成半宽）+ 品牌和四组站内链接；CTA 回到灵感流。字体授权行必须保留（见第 3 节） |
 | 主按钮 | `.home-action-primary` | 品牌绿底、白字、6px 圆角、内边距 12px 20px、15px 字 |
 | 次按钮 | `.home-action-secondary` | 透明底、品牌绿 1px 边框、品牌绿字 |
 | 切换器 | `.home-shelves` | surface 色胶囊底槽，选中项是卡片底色的胶囊块，带唯一阴影。按钮用 `aria-pressed`，标签固定不变 |
@@ -159,7 +159,7 @@
 - **数字**：从数据算出来，比如"26 个参考"由 `inspirationItems.length` 得出，不要手写。
 - **诚实**：不知道的事直接写出来，比如"设计者：未知""登录后操作未实测"。没测过的东西不写成"支持"。
 - **第三方内容**：只放链接和我们自己写的研究笔记，不复制对方的文案、商标和截图。
-- **X 帖子（Best practice）**：Ego Lite 每周在已登录的 X 搜索最近一周、至少 100 个赞的设计视频，链接进入 `website/content/x-post-inbox.json`；这只是待筛选候选，不会自动发布。用 `node website/scripts/x-post.mjs <帖子链接> --tag <标签>` 通过 X 官方 oEmbed 生成草稿，只记作者、日期、语言和正文；看过原帖后再手写「研究什么」「用在哪里」，草稿里的 TODO 不能留下（单元测试会查）。草稿记录 `addedAt`（首次收录时间，ISO 时间戳），后续复核只改 `checkedAt`，不要重排历史收录时间。X 帖子进入「全部」作品流，也可在 Best practice 分类单独筛选。卡片就是帖子视频本身：静音、循环，只在可见时播放，减少动效时移除视频源，只保留封面；偏好运行中变化时立即停播、移除源，改回允许动效后按可见状态恢复；切换后台页也暂停；作者头像随署名显示，收藏和来源按钮在悬停、聚焦或触屏时显示。视频地址、封面和头像由 `node website/scripts/x-media.mjs` 从 X 嵌入组件背后的接口（`cdn.syndication.twimg.com`，未公开文档）读出，写进 `website/src/x-media.json`，不下载、不转存，页面直接从 video.twimg.com 播放。video.twimg.com 拒绝带其他网站来源的请求，所以灵感页在播放前把文档的 referrer 策略设为 `no-referrer`。这条路径是维护者 2026-11-01 明确选择的例外，等于绕过 X 的防盗链，X 随时可能堵住；失败时卡片退回封面图。详情页仍用 X 官方嵌入组件，说明里写明 X 可能记录这次访问。嵌入加载完成前先显示存下来的正文；连不上 x.com 时保留正文和「在 X 上打开」。不下载、不托管帖子里的媒体，也不另写演示复刻帖子里的效果。
+- **X 帖子（Best practice）**：Ego Lite 每周在已登录的 X 搜索最近一周、至少 100 个赞的设计视频，链接进入 `website/content/x-post-inbox.json`；这只是待筛选候选，不会自动发布。用 `node website/scripts/x-post.mjs <帖子链接> --tag <标签>` 通过 X 官方 oEmbed 生成草稿，只记作者、日期、语言和正文；看过原帖后再手写「研究什么」「用在哪里」，草稿里的 TODO 不能留下（单元测试会查）。草稿记录 `addedAt`（首次收录时间，ISO 时间戳），后续复核只改 `checkedAt`，不要重排历史收录时间。X 帖子进入「全部」作品流，也可在 Best practice 分类单独筛选。卡片就是帖子视频本身：静音、循环，只在可见时播放，减少动效时移除视频源，只保留封面；偏好运行中变化时立即停播、移除源，改回允许动效后按可见状态恢复；切换后台页也暂停；作者头像随署名显示，收藏和来源按钮在悬停、聚焦或触屏时显示。视频地址、封面和头像由 `node website/scripts/x-media.mjs` 从 X 嵌入组件背后的接口（`cdn.syndication.twimg.com`，未公开文档）读出，写进 `website/src/x-media.json`，不下载、不转存，页面直接从 video.twimg.com 播放。video.twimg.com 拒绝带其他网站来源的请求，所以灵感页在播放前把文档的 referrer 策略设为 `no-referrer`。这条路径是维护者 2026-11-01 明确选择的例外，等于绕过 X 的防盗链，X 随时可能堵住；视频失败时卡片退回封面图，封面也加载不了（例如国内网络访问不到 pbs.twimg.com）时退回该条目的分析卡，头像加载失败则隐藏，不露出破图。详情页仍用 X 官方嵌入组件，说明里写明 X 可能记录这次访问。嵌入加载完成前先显示存下来的正文；连不上 x.com 时保留正文和「在 X 上打开」。不下载、不托管帖子里的媒体，也不另写演示复刻帖子里的效果。
 - **经其他策展站发现的作品**：条目写 `via`（该站这件作品的页面地址），详情的出处后显示「经 某站 发现」并链接过去。只按我们自己看过、写过笔记的条目加入，不整批搬运别人的精选列表。
 - **网站缩略图**：直接用链接自己的内容，不自己再画或再写一遍对方的页面。`node website/scripts/link-preview.mjs` 对每个链接请求一次，读出对方为分享链接公开的 og:/twitter: 预览（图片、标题、描述），写进 `website/src/link-previews.json`；页面只存图片地址，仓库里不下载、不转存、不裁切；显示时经 Vercel 图片服务（`/_vercel/image`，`vercel.json` 的 `images`）按显示尺寸缩小成 WebP 并缓存，卡片 640px、详情 1280px（2026-11-01 维护者为加载速度选定）。缩小失败时直接从原站加载（`referrerPolicy=no-referrer`）。`link-preview.mjs` 会把新图片的域名同步进 `remotePatterns`。没有预览的（2026-11-01：Lovable、Aesop 拒绝脚本访问，Nothing 没有 og:image）和加载失败的显示分析卡。不嵌入整站：多数站点用 X-Frame-Options 或 frame-ancestors 禁止被嵌入。不自己截图或录屏。
 

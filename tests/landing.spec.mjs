@@ -549,6 +549,8 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.goto('/browse/interface?sort=curated');await expect(page.locator('.insp-pills a')).toHaveText(['全部','网站','产品界面','交互','动效','品牌']);
  expect(xRequests.filter(u=>new URL(u).hostname==='video.twimg.com')).toEqual([]);
  await page.getByRole('link',{name:'动效',exact:true}).click();await expect(page).toHaveURL(/\/browse\/motion$/);
+ // The client render replaces the prerendered feed; wait for it (XVideo adds the referrer meta on mount) before holding a card.
+ await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
  const motion=page.locator('.insp-videos > li');await expect(motion).toHaveCount(21);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
  const widgets=motion.filter({has:page.locator('a[href="/inspiration/paper-widgets"]')});
  await widgets.scrollIntoViewIfNeeded(); // videos only start once visible, and a newer card can push this one below the fold
@@ -711,10 +713,36 @@ test('footer invitation is localized and fits a phone viewport', async ({ page }
       await expect(footer.getByRole('heading', { level: 2 })).toHaveText(heading);
       const link = footer.getByRole('link', { name: action });
       await expect(link).toHaveAttribute('href', route.startsWith('/en') ? '/en' : '/');
+      // No eyebrow above the heading and no arrow on an internal link (docs/design-system.md §8, §9).
+      await expect(link).toHaveText(action);
+      await expect(footer.locator('.site-footer-cta p')).toHaveCount(1);
       expect(await link.evaluate(el => el.getBoundingClientRect().height)).toBeGreaterThanOrEqual(44);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${route} ${width}px`).toBe(true);
     }
   }
+});
+
+test('the footer heading never leaves a lone character on its last line', async ({ page }) => {
+  for (const width of [1440, 1024, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/lab');
+    const lines = await page.locator('.site-footer-cta h2').evaluate(h => {
+      const range = document.createRange(); range.selectNodeContents(h);
+      const rows = new Map(); for (const r of range.getClientRects()) rows.set(Math.round(r.top), (rows.get(Math.round(r.top)) ?? 0) + r.width);
+      return [...rows.values()];
+    });
+    const size = await page.locator('.site-footer-cta h2').evaluate(h => parseFloat(getComputedStyle(h).fontSize));
+    expect(Math.min(...lines), `${width}px`).toBeGreaterThan(size * 2.5);
+  }
+});
+
+test('X cards whose poster cannot load fall back to the analysis card, not a broken image', async ({ page }) => {
+  await page.route(/twimg\.com|platform\.twitter\.com/, r => r.abort());
+  await page.goto('/browse/motion');
+  const cards = page.locator('.insp-videos > li');
+  await expect(cards.first().locator('.insp-vcard-open > .insp-thumb')).toBeVisible();
+  await expect(cards.first().locator('.insp-vcard-open > .insp-thumb b')).not.toBeEmpty();
+  await expect.poll(() => page.locator('.insp-feed img').evaluateAll(imgs => imgs.filter(i => i.complete && i.naturalWidth === 0 && getComputedStyle(i).display !== 'none').length)).toBe(0);
 });
 
 test('English has its own addresses: readable without JavaScript, linked both ways and never forced', async ({ browser, page, request }) => {
