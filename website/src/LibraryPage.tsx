@@ -50,8 +50,10 @@ const categoryName = (id: string, language: Language) => { const name = categori
 function Card({ entry, language }: { entry: Entry; language: Language }) {
   // All three directions at a glance: the recommended one large, the other two beside it.
   const cover = coverDirection(entry), trio = [cover, ...entry.directions.filter(d => d !== cover)];
+  // The image area follows the cover screenshot's own shape, kept between 5:4 and 9:5 so a tall phone capture cannot make the card tower over its neighbours. 1440×900 gives 16:10, as before.
+  const shape = cover.media[0], ratio = Math.min(1.8, Math.max(1.25, shape.width / shape.height)).toFixed(3);
   return <article className="library-card"><a href={localePath(`/d/${entry.slug}`,language)}>
-    <span className="library-card-image library-card-trio">{trio.map((d, i) => { const image = d.media[0];
+    <span className="library-card-image library-card-trio" style={{aspectRatio:ratio}}>{trio.map((d, i) => { const image = d.media[0];
       return <span key={d.id} className="library-card-panel"><img src={mediaUrl(entry, image.file)} width={image.width} height={image.height} alt={i ? '' : t(image.alt,language)} loading="lazy" decoding="async"/><small>{d.id}</small></span>; })}</span>
     <span className="library-card-meta">{categoryName(entry.category, language)} · {sourceLabel(entry, language)}</span>
     <strong>{t(entry.title,language)}</strong><span className="library-card-summary">{t(entry.summary,language)}</span>

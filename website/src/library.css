@@ -14,6 +14,8 @@
 .library-card-meta{margin-top:6px;font-size:13px;color:var(--site-muted)}
 .library-card strong{font-size:16px;font-weight:500;line-height:1.35}
 .library-card-summary{font-size:14px;line-height:1.7;color:var(--site-muted)}
+/* Where subgrid exists, each card spans four rows (image, kind, title, summary) so titles and summaries line up across a row whatever their length. The row gap moves to the summary. */
+@supports (grid-template-rows:subgrid){.library-grid:has(.library-card-image){row-gap:0}.library-card:has(.library-card-image),.library-card:has(.library-card-image)>a{display:grid;grid-row:span 4;grid-template-rows:subgrid;row-gap:8px}.library-card:has(.library-card-image) .library-card-summary{margin-bottom:32px}}
 .library-empty{color:var(--site-muted)}
 .library-more{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:56px;font-size:14px}
 .library-more a{color:var(--site-brand,#2e4325);text-underline-offset:4px}
