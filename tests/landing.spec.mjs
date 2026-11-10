@@ -553,7 +553,8 @@ test('best practice shows each X post as its looping video, credits the author a
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
  const motion=page.locator('.insp-videos > li');await expect(motion).toHaveCount(21);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
  const widgets=motion.filter({has:page.locator('a[href="/inspiration/paper-widgets"]')});
- await widgets.scrollIntoViewIfNeeded(); // videos only start once visible, and a newer card can push this one below the fold
+ // Videos only start once visible, and a newer card can push this one below the fold. A re-render can replace the card mid-scroll, so retry that.
+ await expect(async()=>{await widgets.scrollIntoViewIfNeeded()}).toPass();
  await expect(widgets.locator('img.insp-vcard-media')).toHaveAttribute('src',media['paper-widgets'].poster);await expect(widgets.locator('video')).toHaveCount(0);
  await page.getByRole('link',{name:'交互',exact:true}).click();await expect(page).toHaveURL(/\/browse\/interaction$/);
  const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(27);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
@@ -561,7 +562,7 @@ test('best practice shows each X post as its looping video, credits the author a
  const sheep=cards.filter({has:page.locator('a[href="/inspiration/x-areadnemaria-444419"]')});
  // Videos far below the fold attach their file only as they near the screen.
  expect(await cards.last().locator('video').evaluate(v=>v.getAttribute('src'))).toBeNull();
- await sheep.scrollIntoViewIfNeeded();
+ await expect(async()=>{await sheep.scrollIntoViewIfNeeded()}).toPass();
  const video=sheep.locator('video');await expect(video).toHaveAttribute('poster',media['x-areadnemaria-444419'].poster);
  await expect.poll(()=>video.evaluate(v=>v.currentSrc)).toBe(media['x-areadnemaria-444419'].video);
  expect(await video.evaluate(v=>v.muted&&v.loop&&v.playsInline)).toBe(true);
@@ -614,7 +615,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.insp-card-out[href="https://attio.com/"]')).toHaveCount(1);
  await page.goto('/?topic=unknown');
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('99 个参考');
- await page.goto('/');
+ await page.goto('/');await hydrated(page);
  const cards=page.locator('.inspiration-grid .insp-card');
  const topic=page.getByRole('combobox',{name:'专题'});
  await topic.selectOption('saas-home');
