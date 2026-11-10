@@ -37,8 +37,9 @@ export function SkillsPage() {
     <header className="content-hero site-shell"><h1>{t(m.designSkills,language)}</h1>
       <p>{t(m.onlyDesignDeliverySkills,language)}</p></header>
     <section className="site-shell library-feed skills-list">{skills.map(s => <article key={s.id} className="skills-entry">
-      <h2>{s.name}<small>{s.source}</small></h2><p>{t(s.summary,language)}</p>
-      <dl><dt>{t(m.howWeTriedIt,language)}</dt><dd>{t(s.tried,language)}</dd><dt>{t(m.install,language)}</dt><dd><code>{s.install}</code><span>{t(m.installsIntoThisProjects,language)} <a href={localePath('/docs/install',language)}>{t(m.theDocs,language)}</a>{t(m.msg,language)}</span></dd>
+      <div className="skills-main"><h2>{s.name}<small>{s.source}</small></h2><p>{t(s.summary,language)}</p>
+      <dl><dt>{t(m.howWeTriedIt,language)}</dt><dd>{t(s.tried,language)}</dd></dl></div>
+      <dl className="skills-aside"><dt>{t(m.install,language)}</dt><dd><code>{s.install}</code><span>{t(m.installsIntoThisProjects,language)} <a href={localePath('/docs/install',language)}>{t(m.theDocs,language)}</a>{t(m.msg,language)}</span></dd>
         <dt>{t(m.publicRecords,language)}</dt><dd className="skills-records">{s.records.map(r => <a key={r.href} href={r.href} target="_blank" rel="noreferrer">{t(r.label,language)} ↗</a>)}</dd></dl></article>)}
       <p className="library-more"><a href={localePath('/submit',language)}>{t(m.suggestASkillWe,language)}</a></p></section>
     <SiteFooter language={language}/></main>;

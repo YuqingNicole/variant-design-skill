@@ -741,22 +741,30 @@ test('headings, primary buttons and filters share one scale and one look across 
   const brand = 'rgb(46, 67, 37)';
   await page.goto('/');await hydrated(page);
   const home = await page.locator('h1').first().evaluate(h => parseFloat(getComputedStyle(h).fontSize));
-  for (const route of ['/skills', '/docs', '/lab', '/submit', '/cases', '/pricing', '/guides']) {
+  for (const route of ['/skills', '/docs', '/lab', '/submit', '/cases', '/pricing', '/guides', '/about']) {
     await page.goto(route);
     await expect(page.locator('h1').first()).toBeVisible();
     const [h1, footer] = await page.evaluate(() => [document.querySelector('h1'), document.querySelector('.site-footer-cta h2')].map(e => e ? parseFloat(getComputedStyle(e).fontSize) : 0));
     expect(h1, `${route} h1`).toBeLessThanOrEqual(home);
     expect(footer, `${route} footer heading`).toBeGreaterThan(0);
     expect(footer, `${route} footer heading`).toBeLessThanOrEqual(h1);
+    const sections = await page.locator('main h2').evaluateAll(hs => hs.map(h => parseFloat(getComputedStyle(h).fontSize)));
+    expect(Math.max(...sections), `${route} section headings`).toBeLessThanOrEqual(h1);
   }
   for (const [route, selector] of [['/pricing', '.pricing-card.is-accent .pricing-button'], ['/about', '.paper-button'], ['/', '.site-footer-action']]) {
     await page.goto(route);
     const style = await page.locator(selector).first().evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius]; });
     expect(style, `${route} ${selector}`).toEqual([brand, '6px']);
+    const size = await page.locator(selector).first().evaluate(e => [getComputedStyle(e).fontSize, e.getBoundingClientRect().height]);
+    expect(size[0], `${route} ${selector} text`).toBe('14px'); expect(size[1], `${route} ${selector} height`).toBeGreaterThanOrEqual(44);
   }
   await page.goto('/cases');
   const pill = await page.locator('.content-filters a[aria-current=page]').evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius, s.height]; });
   expect(pill).toEqual([brand, '999px', '32px']);
+  await page.goto('/skills');
+  const [main, aside] = await page.evaluate(() => ['.skills-main', '.skills-aside'].map(q => document.querySelector(q).getBoundingClientRect()).map(r => ({ left: r.left, top: r.top })));
+  expect(aside.left).toBeGreaterThan(main.left + 400); expect(Math.abs(aside.top - main.top)).toBeLessThan(40);
+  expect(await page.locator('.skills-entry code').evaluate(c => c.scrollWidth <= c.clientWidth)).toBe(true);
   await page.goto('/pricing');
   expect(await page.locator('.billing-switch button[aria-pressed=true]').evaluate(e => getComputedStyle(e).boxShadow)).toBe('rgba(35, 38, 34, 0.14) 0px 1px 2px 0px');
 });

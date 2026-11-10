@@ -58,9 +58,9 @@
 | 用途 | 选择器 | 大小 | 行高 |
 |---|---|---|---|
 | 首页定位语 | `.insp-title h1` | `clamp(28px, 3.4vw, 46px)` | 1.12 |
-| 内容页主标题 | `.content-hero h1`、`.pricing-hero h1` | `clamp(36px, 3.4vw, 46px)`，手机 36px；桌面上不超过首页定位语（2026-11-10 从 64px 收回） | 1.18 |
+| 内容页主标题 | `.content-hero h1`、`.pricing-hero h1`、`.paper-hero h1`（`/about`）、`.site-workbench h1` | `clamp(36px, 3.4vw, 46px)`，手机 36px；桌面上不超过首页定位语（2026-11-10 从 64–74px 收回） | 1.18 |
 | 页脚收尾标题 | `.site-footer-cta h2` | 46px，手机 36px；不大于页面自己的 h1 | 1.16 |
-| 区块标题 | 内容页和案例页的 `h2` | `clamp(30px, 3.4vw, 46px)` | — |
+| 区块标题 | 内容页、案例页、`/about`、`/pricing` 的 `h2` | `clamp(30px, 3.4vw, 46px)`；不大于本页 h1 | — |
 | 引导段落 | `.insp-title p`、`.content-hero p` | 16px | 1.75 |
 | 正文 | 文档与赞助页 16px；其他 `.content-reading p` 保留 15px | 16 / 15px | 1.7–1.9 |
 | 次要说明、按钮、导航 | `.home-tasks li p`、`.home-actions a`、`.site-language` | 14px | 1.7 |
@@ -88,6 +88,7 @@
   - 两栏之间 64–72px。
 - **防溢出**：网格子元素要加 `min-width: 0`，长文本才会换行。每个页面在 320 / 390 / 1440 宽度下都不能横向滚动。`tests/landing.spec.mjs` 只检查了一部分页面，`/pricing`、`/lab`、`/d/<案例>`、`/showcase` 等还没有覆盖，改这些页面时要自己截图检查。
 - **行宽**：正文不超过 68ch，引导段落不超过 46ch。
+- **技能条目**（`/skills`）：桌面两栏，左边名称、说明和实测方式，右边安装命令和公开记录；900px 以下合成一栏。安装命令自动换行，不横向滚动。
 - **左边缘**：正文栏（`.content-reading`）和页面标题共用 `.site-shell` 的左边缘，只限制子元素宽度（760px），不把整栏居中。
 - **间距变量**：`--space-1` 到 `--space-7` 依次是 4 / 8 / 12 / 16 / 24 / 32 / 48px。新代码用变量，不再写零散的像素值。
 
@@ -137,7 +138,7 @@
 |---|---|---|
 | 导航 | `SiteHeader`（`SiteChrome.tsx`） | 品牌字标（手机上也保留完整的 variant design）、6 个链接、语言切换。语言切换是无边框文字，和导航链接同一种样子，点击区域至少 44px 高。导航项和它指向的页面、筛选胶囊用同一个名字（动效 → /browse/motion）。当前页用下划线标出，偏移 6px |
 | 页脚 | `SiteFooter` + `FontNote` | 浅绿收尾 CTA（标题 + 一句说明 + 按钮，不加眉标，按钮不带箭头；标题用 `text-wrap: balance` 防止单字孤行，`halt` 让全角逗号收成半宽）+ 品牌和四组站内链接；CTA 回到灵感流。字体授权行必须保留（见第 3 节） |
-| 主按钮 | `.home-action-primary`、`.content-button`、`.paper-button`、`.pricing-button` 等 | 品牌绿底、白字、6px 圆角，悬停变墨色；首页内边距 12px 20px、15px 字，其他页面的内边距和字号还没统一 |
+| 主按钮 | `.home-action-primary`、`.content-button`、`.paper-button`、`.pricing-button` 等 | 品牌绿底、白字、6px 圆角，悬停变墨色；内边距 12px 20px、14px 字、至少 44px 高。页脚收尾按钮相同 |
 | 次按钮 | `.home-action-secondary` | 透明底、品牌绿 1px 边框、品牌绿字 |
 | 切换器 | `.home-shelves` | surface 色胶囊底槽，选中项是卡片底色的胶囊块，带唯一阴影。按钮用 `aria-pressed`，标签固定不变 |
 | 展示卡 | `.home-show-card` | 卡片底、细边框、12px 圆角。顺序：标题 → 说明 → 出处一行 → 底部链接组（上方一条细线） |
