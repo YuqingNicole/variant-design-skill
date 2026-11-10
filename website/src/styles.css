@@ -416,8 +416,8 @@ h1 em, main[data-language="zh"] h1 em { margin-left: 0; color: var(--color-ink);
 .palette-archive { gap: 1rem; border: 0; }
 .palette-stage { padding: 0; overflow: hidden; background: var(--color-surface); border: var(--border); border-radius: var(--radius-lg); }
 .palette-stage-image { min-height: clamp(23rem, 40vw, 35rem); border-radius: calc(var(--radius-lg) - 1px) calc(var(--radius-lg) - 1px) 0 0; }
-.palette-stage-image img { filter: saturate(.72) contrast(1.02) brightness(.82); transition: filter .4s ease, transform .6s ease; }
-.palette-stage:hover img { filter: saturate(.92) contrast(1.04) brightness(.9); transform: scale(1.01); }
+.palette-stage-image img { filter: saturate(.72) contrast(1.02) brightness(.82); transition: filter var(--dur-base) var(--ease-out); }
+.palette-stage:hover img { filter: saturate(.92) contrast(1.04) brightness(.9); }
 .palette-stage-image > span { color: #d9dbde; background: rgba(10,11,12,.66); border: var(--border); border-radius: 999px; font-size: .5625rem; font-weight: 500; backdrop-filter: blur(12px); }
 .palette-stage-meta { min-height: 8rem; padding: 1.5rem; }
 .palette-stage-meta h3, .palette-auto-stage h3 { color: var(--color-ink); font-size: clamp(2rem, 4vw, 3.75rem); font-weight: 400; }
