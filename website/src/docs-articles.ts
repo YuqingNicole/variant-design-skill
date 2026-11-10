@@ -1,19 +1,17 @@
 // Long-form articles at /docs/<slug>, in the same shape as the answers at /guides (see guides-content.ts).
 // Plain data only: the prerender imports this file without a TS loader for JSX.
 // Every claim here must trace to a file in this repository (a reference, a script, or a dated record in docs/research/ or CHANGELOG.md).
-// The English is machine-assisted and unreviewed, so it is marked draft: production leaves it out until someone reviews it (RFC-005 §3.5).
+// The English was reviewed against the repository files on 2026-11-10, so these articles ship in both languages.
 import type { Guide } from './guides-content';
 import { repository } from './docs-content';
 
 const blob = `${repository}/blob/master`;
-const draft = { en: { status: 'draft' as const } };
 
 export const docsArticles: Guide[] = [
   {
     slug: 'design-exploration-with-ai-coding-agents',
     base: '/docs',
     publishedAt: '2026-11-09',
-    translations: draft,
     title: { zh: '用 AI 编码 Agent 做设计探索：一个可以撤回的流程', en: 'Design exploration with AI coding agents: a loop you can undo' },
     answer: {
       zh: '让 Agent 在你自己的项目里一次做出三个取舍不同的方向，并排比较，只改你选中的那一个，改坏了能撤回，选定后再接入。关键不是生成得更快，而是每一步都不会覆盖你没看过的改动。下面是这个流程和它保证的边界。',
@@ -59,7 +57,6 @@ export const docsArticles: Guide[] = [
     slug: 'check-ai-generated-ui-before-you-ship',
     base: '/docs',
     publishedAt: '2026-11-09',
-    translations: draft,
     title: { zh: '交付前怎么检查 AI 生成的界面', en: 'How to check AI-generated UI before you ship' },
     answer: {
       zh: '分三层：先跑脚本做机械检查，再看渲染出来的页面，最后用键盘和减弱动效设置真的操作一遍。脚本只能发现已知的缺陷，一个设计是否连贯、有没有个性，要靠看。下面是技能里写明的检查项，以及每一层不能说明什么。',
@@ -102,7 +99,6 @@ export const docsArticles: Guide[] = [
     slug: 'motion-rules-for-ai-generated-ui',
     base: '/docs',
     publishedAt: '2026-11-09',
-    translations: draft,
     title: { zh: '给 AI 生成的界面定动效规则', en: 'Motion rules for AI-generated interfaces' },
     answer: {
       zh: '先问用户多久遇到这个元素一次，再决定要不要动。高频的操作不加动效，只留颜色变化；偶尔出现的弹层用 150–300 毫秒；只有第一次或很少发生的时刻才可以夸张。下面是技能里的动效规则，以及我们对它做过的一次检查和这次检查的局限。',
@@ -142,7 +138,6 @@ export const docsArticles: Guide[] = [
     slug: 'measure-layout-shift-in-ai-built-pages',
     base: '/docs',
     publishedAt: '2026-11-09',
-    translations: draft,
     title: { zh: '测一测 AI 做的页面会不会跳：版面位移实例', en: 'Measure whether an AI-built page jumps: a layout shift case' },
     answer: {
       zh: '看起来没问题的页面，也可能在内容晚到时把读者正在看的东西推走。浏览器的 layout-shift 记录能量出这个位移，预算是 0.1。我们自己的网站就遇到过：一条来自 X 的嵌入内容让桌面端首页在生产环境测得 0.36。下面是怎么量、原因、怎么改，以及这些数字的局限。',
@@ -157,7 +152,7 @@ export const docsArticles: Guide[] = [
       { id: 'cause', heading: { zh: '2. 我们的原因', en: '2. Our cause' },
         body: [
           { zh: '灵感库里有来自 X 的帖子，打开后由 X 的官方嵌入组件加载完整内容。真实的嵌入约 1,270 像素高（含被引用的帖子），比它替换的那段文字高得多。「访问原站」按钮和加载提示排在它下面，嵌入到达时被整体推走。', en: 'The inspiration library includes posts from X, loaded in full by X’s official embed when you open one. The real embed is about 1,270px tall (it includes the quoted post), far taller than the text it replaces. The “visit original” button and the loading notice sat below it, and were pushed away when it arrived.' },
-          { zh: '2026-11-09 在生产环境的实验室测量（三次取中位数）：改动前桌面端首页 0.36，改动后 0.043；手机端 /browse/interaction 先后测得 0.16、0.059、0.085。最后两个手机数字说明真实嵌入的波动不小，所以它离预算并不远。', en: 'Lab runs on production on 2026-11-09 (median of three): the desktop home page measured 0.36 before the change and 0.043 after. The phone /browse/interaction page measured 0.16, then 0.059, then 0.085. The last two show that the real embed varies, so it is not far from the budget.' },
+          { zh: '2026-11-09 在生产环境的实验室测量：改动前桌面端首页 0.36，改动后 0.043；手机端 /browse/interaction 先后测得 0.16、0.059、0.085。最后两个手机数字说明真实嵌入的波动不小，所以它离预算并不远。', en: 'Lab runs on production on 2026-11-09: the desktop home page measured 0.36 before the change and 0.043 after. The phone /browse/interaction page measured 0.16 before the first fix, then 0.059 and later 0.085. The last two show that the real embed varies, so it is not far from the budget.' },
         ],
         link: { href: `${repository}/blob/master/CHANGELOG.md`, label: { zh: '查看更新记录', en: 'Read the changelog' } } },
       { id: 'fix', heading: { zh: '3. 怎么改', en: '3. The fix' },
@@ -167,8 +162,8 @@ export const docsArticles: Guide[] = [
         ] },
       { id: 'guard', heading: { zh: '4. 用测试守住它', en: '4. Guard it with a test' },
         body: [
-          { zh: '我们让测试用一个来得晚、又很高的假嵌入代替 X 的脚本，检查链接和提示的位置在嵌入到达前后没有变，并设了 0.1 的预算。把修复还原后，这个测试会失败，这是我们确认它真的在起作用的方式。', en: 'Our tests replace X’s script with a late, tall stand-in and check that the link and the notice do not move when it arrives, under a 0.1 budget. With the fix reverted the test fails, which is how we confirmed it checks anything.' },
-          { zh: '局限：假嵌入的高度是固定的，真实组件的高度和到达次数会变，所以生产环境的数字还要单独量，上面的数字也只是三次运行的中位数。', en: 'Limits: the stand-in has a fixed height, while the real widget varies in height and in how many times it changes the page, so production still needs its own measurement, and the figures above are medians of three runs.' },
+          { zh: '我们让测试用一个来得晚、又很高的假嵌入代替 X 的脚本，检查链接和提示的位置在嵌入到达前后没有变，桌面端的测试还限定位移不超过 0.02。把修复还原后，这些测试会失败，这是我们确认它们真的在起作用的方式。', en: 'Our tests replace X’s script with a late, tall stand-in and check that the link and the notice do not move when it arrives; the desktop test also caps the shift at 0.02. With the fix reverted these tests fail, which is how we confirmed they check anything.' },
+          { zh: '局限：假嵌入的高度是固定的，真实组件的高度和到达次数会变，所以生产环境的数字还要单独量，上面的生产数字也只是几次实验室运行，不是读者的真实数据。', en: 'Limits: the stand-in has a fixed height, while the real widget varies in height and in how many times it changes the page, so production still needs its own measurement, and the production figures above are a few lab runs, not field data from readers.' },
         ] },
     ],
   },
