@@ -1,0 +1,13 @@
+{
+  "name": "Variant Design",
+  "short_name": "Variant Design",
+  "description": "One brief, three comparable design directions, in your own project.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#f7f7f2",
+  "theme_color": "#f7f7f2",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
