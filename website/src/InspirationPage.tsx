@@ -138,7 +138,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  const pillsRef=useRef<HTMLElement>(null),prefetched=useRef(new Set<string>());
  const prefetch=(e:{currentTarget:HTMLAnchorElement})=>{const href=e.currentTarget.getAttribute('href')??'';if(!href||prefetched.current.has(href))return;prefetched.current.add(href);const link=document.createElement('link');link.rel='prefetch';link.href=href;link.as='document';document.head.append(link)};
  useEffect(()=>{const row=pillsRef.current,tab=row?.querySelector<HTMLElement>('[aria-current=page]');if(row&&tab)row.scrollLeft=tab.offsetLeft-(row.clientWidth-tab.offsetWidth)/2},[section]);
- useEffect(()=>{const onKey=(e:KeyboardEvent)=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();searchRef.current?.focus()}};addEventListener('keydown',onKey);return()=>removeEventListener('keydown',onKey)},[]);
+ useEffect(()=>{const onKey=(e:KeyboardEvent)=>{const k=e.key.toLowerCase(),typing=e.target instanceof HTMLElement&&e.target.closest('input,textarea,select,[contenteditable],dialog[open]');if((e.metaKey||e.ctrlKey)&&k==='k'||k==='/'&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&!typing){e.preventDefault();searchRef.current?.focus()}};addEventListener('keydown',onKey);return()=>removeEventListener('keydown',onKey)},[]);
  const sentinel=useRef<HTMLDivElement>(null);
  useEffect(()=>{const el=sentinel.current;if(!el||typeof IntersectionObserver==='undefined')return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting)setVisible(v=>v+pageSize)},{rootMargin:'400px'});io.observe(el);return()=>io.disconnect()},[results.length,visible]);
  // Independent filter changes must apply immediately; the shared animation queue keeps only its latest update.

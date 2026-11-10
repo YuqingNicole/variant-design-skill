@@ -26,6 +26,12 @@ test('the chronological stream includes every kind, pages and preserves shareabl
  await page.reload();await expect(cards).toHaveCount(1);await expect(page.getByRole('searchbox')).toHaveValue('Vercel');await expect(page.getByRole('combobox',{name:'专题',exact:true})).toHaveValue('saas-home');
 });
 
+test('the slash key focuses the search, except while typing',async({page})=>{
+ await page.goto('/');await expect(page.locator('.insp-search input')).toBeVisible();
+ await expect(async()=>{await page.keyboard.press('/');await expect(page.locator('.insp-search input')).toBeFocused({timeout:500})}).toPass();
+ await page.keyboard.type('a/b');await expect(page.locator('.insp-search input')).toHaveValue('a/b');
+});
+
 test('details share an element transition and restore focus, history and the scrolled feed',async({page})=>{
  await page.addInitScript(()=>{window.transitions=[];const start=document.startViewTransition?.bind(document);if(start)document.startViewTransition=update=>{const r={ready:false,error:null};window.transitions.push(r);const vt=start(update);vt.ready.then(()=>r.ready=true,e=>r.error=String(e));return vt};});
  await page.goto('/browse/web?sort=curated');
