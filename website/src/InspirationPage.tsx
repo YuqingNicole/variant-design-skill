@@ -3,6 +3,7 @@ import { SiteHeader, SiteFooter } from './SiteChrome';
 import { transition } from './view-transition';
 import { XPost, type Post } from './XPost';
 import { XVideo, mediaOf } from './XVideo';
+import { sized, proxied } from './image-proxy';
 import { locales, type Locale } from './i18n/locales';
 import { t, type Localized } from './i18n/localized';
 import { inspirationSources, inspirationTopics } from './inspiration-data';
@@ -30,7 +31,6 @@ const viaOf=(item:Item)=>(item as Item&{via?:string}).via;
 const sketches:Record<string,number[]>={landing:[4,3,5],product:[6,5,7],flow:[3,4,3],motion:[5,4,6]};
 const variantOf=(id:string)=>[...id].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7)%3;
 // Vercel shrinks each preview to the size it is shown at (vercel.json `images`). If that fails the original loads, then the analysis card.
-const sized=(src:string,w:number)=>`/_vercel/image?url=${encodeURIComponent(src)}&w=${w}&q=75`;
 // Interface copy, one entry per message (RFC-005 §3.2). Formatters take the values they interpolate.
 const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdrawnNote:{zh:'这件作品已撤下，不会进入参考指令；你的笔记仍保留在本地。',en:'This work was removed and is excluded from briefs. Your notes remain in this browser.'},authorized:{zh:'作者授权',en:'Author permission'},unknownReuse:{zh:'本站展示以外的使用权限',en:'rights beyond display on this site'},linkOnly:{zh:'仅链接',en:'Link only'},title:{zh:'互联网上最好的设计灵感。',en:'The best design inspiration during the ai area.'},motionNote:{zh:'动效是 Inspiration 里 Best practice 的一个筛选项。',en:'Motion is a filter within Best practice in Inspiration.'},refNav:{zh:'参考导航',en:'Reference navigation'},allRefs:{zh:'全部参考',en:'All references'},close:{zh:'关闭',en:'Close'},
  addPack:{zh:'加入参考包',en:'Add to pack'},removePack:{zh:'移出参考包',en:'Remove from pack'},prev:{zh:'上一个',en:'Previous'},next:{zh:'下一个',en:'Next'},study:{zh:'研究什么',en:'Study'},apply:{zh:'用在哪里',en:'Apply'},
@@ -184,7 +184,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    <ul className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}`}>{shown.map(item=>{const media=mediaFor(item),post=postOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
     <a className={`insp-card-open${media?' insp-vcard-open':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
      {media?<XVideo media={media} fallback={<AnalysisCard item={item} locale={language}/>}/>:<Thumb item={item} locale={language}/>}
-     <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={media.avatar} width="28" height="28" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer" onError={e=>{e.currentTarget.style.display='none'}}/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:new URL(item.url).hostname} · {rightsLabel(item,language)}</small></span></span>
+     <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={proxied(media.avatar,640)} width="28" height="28" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer" onError={e=>{const i=e.currentTarget;if(media.avatar&&i.dataset.direct!==''&&i.getAttribute('src')!==media.avatar){i.dataset.direct='';i.src=media.avatar}else i.style.display='none'}}/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:new URL(item.url).hostname} · {rightsLabel(item,language)}</small></span></span>
     </a>
     <button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${l(selection[item.id]?'removePack':'addPack')}：${item.name}`}><Icon d={icons.save}/></button>
     <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l(post?'openOnX':'openSource')}：${item.name}`}><Icon d={icons.out}/></a>
