@@ -16,6 +16,8 @@ import { useLocale } from './i18n/LocaleProvider';
 import { localePath, parseLocale } from './i18n/locale-route';
 const sources=inspirationSources.filter(s=>s.kind!=='skills');
 type Item=Reference;
+// Media close to the 16:10 cell fills it (a small crop); a tall or very wide capture stays whole on a surface mat. The grid keeps its row order, which the first screen and scroll restoration rely on.
+const fills=(media?:{width?:number;height?:number})=>Boolean(media?.width&&media.height&&media.width/media.height>=.85&&media.width/media.height<=2);
 const mediaFor=(item:Item)=>{const r=permissionOf(item);return r?(r.media.kind==='video'?authorizedVideo(r):undefined):mediaOf(item.id)};
 // Thumbnails map the link itself: an X post shows its own text and embed; a site shows the preview it publishes
 // for shared links (og:image, title, description; scripts/link-preview.mjs), loaded from its own server. A link
@@ -182,7 +184,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
    <ul className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}`}>{shown.map(item=>{const media=mediaFor(item),post=postOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
-    <a className={`insp-card-open${media?' insp-vcard-open':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
+    <a className={`insp-card-open${media?' insp-vcard-open':''}${fills(media)?' insp-fills':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
      {media?<XVideo media={media} fallback={<AnalysisCard item={item} locale={language}/>}/>:<Thumb item={item} locale={language}/>}
      <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={media.avatar} width="28" height="28" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer" onError={e=>{e.currentTarget.style.display='none'}}/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:new URL(item.url).hostname} · {rightsLabel(item,language)}</small></span></span>
     </a>

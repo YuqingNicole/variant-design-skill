@@ -186,3 +186,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 @media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 
 .reference-permission{padding-top:16px;border-top:1px solid var(--site-line);margin-top:24px;font-size:14px}.reference-permission p{margin:8px 0}.reference-permission a{text-underline-offset:3px}.reference-media-unavailable{padding:24px;border:1px solid var(--site-line);color:var(--site-muted)}.insp-detail-media>.insp-thumb-media{height:auto;min-height:160px}.insp-detail-media>.insp-thumb-media>img{height:auto}
+
+/* Media that nearly matches the cell fills it; the rest sits whole on a surface mat instead of floating in paper. */
+.insp-vcard-open{background:var(--site-surface)}
+.insp-vcard-open.insp-fills .insp-vcard-media{object-fit:cover}
