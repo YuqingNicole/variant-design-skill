@@ -39,3 +39,21 @@
 .docs-page .docs-layout summary{font-size:16px}.docs-page .site-footer{font-size:14px}
 .docs-page :is(a,button,textarea,summary):focus-visible{outline-color:var(--site-brand)}
 @media(max-width:600px){.docs-page .content-closing h2{font-size:26px}}
+
+/* Docs hub: one start panel, the articles as a two-column set of cards, then the quick answers. Whole cards are links through the heading's ::after. */
+.docs-hub{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-4);padding-block:var(--space-4) 96px}
+.docs-hub article{position:relative;display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-5);border:1px solid var(--site-line);border-radius:var(--radius-panel);background:var(--site-card)}
+.docs-hub article small{font-size:12px;letter-spacing:.02em;color:var(--site-muted)}
+.docs-hub article h2{margin:0;font-size:28px;line-height:1.25;word-break:keep-all;overflow-wrap:anywhere}
+.docs-hub article h2 a{text-decoration:none}
+.docs-hub article h2 a::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.docs-hub article h2 a:focus-visible{outline:none}
+.docs-hub article:has(h2 a:focus-visible){outline:2px solid var(--site-brand);outline-offset:3px}
+.docs-hub article p{font-size:14px;line-height:1.7;color:var(--site-muted);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+.docs-hub .docs-start,.docs-hub .docs-answers{grid-column:1/-1}
+.docs-hub .docs-start{background:var(--site-brand);border-color:var(--site-brand);color:var(--site-paper)}
+.docs-hub .docs-start small,.docs-hub .docs-start p{color:#dfe7d8}
+.docs-hub .docs-answers{background:transparent}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.docs-hub .docs-card,.docs-hub .docs-answers{transition:border-color var(--dur-fast) var(--ease-out),background-color var(--dur-fast) var(--ease-out)}}
+@media(hover:hover){.docs-hub .docs-card:hover,.docs-hub .docs-answers:hover{border-color:var(--site-brand);background:#fff}}
+@media(max-width:800px){.docs-hub{grid-template-columns:minmax(0,1fr)}}
