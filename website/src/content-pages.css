@@ -50,8 +50,7 @@
 .docs-hub article:has(h2 a:focus-visible){border-color:var(--site-brand)}
 .docs-hub article p{font-size:14px;line-height:1.7;color:var(--site-muted);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
 .docs-hub .docs-start,.docs-hub .docs-answers{grid-column:1/-1}
-.docs-hub .docs-start{background:var(--site-brand);border-color:var(--site-brand);color:var(--site-paper)}
-.docs-hub .docs-start small,.docs-hub .docs-start p{color:#dfe7d8}
+.docs-hub .docs-start{background:var(--site-accent);border-color:var(--site-brand)}
 .docs-hub .docs-answers{background:transparent}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){.docs-hub .docs-card,.docs-hub .docs-answers{transition:border-color var(--dur-fast) var(--ease-out),background-color var(--dur-fast) var(--ease-out)}}
 @media(hover:hover){.docs-hub .docs-card:hover,.docs-hub .docs-answers:hover{border-color:var(--site-brand);background:#fff}}
