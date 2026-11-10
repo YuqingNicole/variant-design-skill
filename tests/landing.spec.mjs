@@ -606,6 +606,14 @@ test('a reference opens as a dialog from the grid and as its own page from a dir
  await page.goto('/inspiration/no-such-reference');await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('99 个参考');
 });
 
+test('the footer links the feed in both languages, and the feed answers', async ({page,request})=>{
+ for(const [route,label] of [['/','订阅 RSS'],['/en','RSS feed']]){
+  await page.goto(route);await hydrated(page);
+  const link=page.locator('.site-footer').getByRole('link',{name:label});await expect(link).toHaveAttribute('href','/feed.xml');
+ }
+ const response=await request.get('/feed.xml');expect(response.ok()).toBe(true);expect(await response.text()).toContain('<rss');
+});
+
 test('a topic narrows the library to its dated references and states what is unknown', async ({page})=>{
  await page.goto('/?topic=saas-home');
  await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(10);
