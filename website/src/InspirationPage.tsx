@@ -139,13 +139,12 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  const prefetch=(e:{currentTarget:HTMLAnchorElement})=>{const href=e.currentTarget.getAttribute('href')??'';if(!href||prefetched.current.has(href))return;prefetched.current.add(href);const link=document.createElement('link');link.rel='prefetch';link.href=href;link.as='document';document.head.append(link)};
  useEffect(()=>{const row=pillsRef.current,tab=row?.querySelector<HTMLElement>('[aria-current=page]');if(row&&tab)row.scrollLeft=tab.offsetLeft-(row.clientWidth-tab.offsetWidth)/2},[section]);
  useEffect(()=>{const onKey=(e:KeyboardEvent)=>{const k=e.key.toLowerCase(),typing=e.target instanceof HTMLElement&&e.target.closest('input,textarea,select,[contenteditable],dialog[open]');if((e.metaKey||e.ctrlKey)&&k==='k'||k==='/'&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&!typing){e.preventDefault();searchRef.current?.focus()}};addEventListener('keydown',onKey);return()=>removeEventListener('keydown',onKey)},[]);
- const sentinel=useRef<HTMLDivElement>(null);
  // The feed is one horizontal strip: arrows and a progress line stand in for the page scrollbar.
  const feedRef=useRef<HTMLUListElement>(null),[feed,setFeed]=useState({at:0,can:false});
- const onFeedScroll=()=>{const el=feedRef.current;if(!el)return;const max=el.scrollWidth-el.clientWidth;setFeed({at:max>0?Math.min(1,el.scrollLeft/max):0,can:max>1})};
+ const onFeedScroll=()=>{const el=feedRef.current;if(!el)return;const max=el.scrollWidth-el.clientWidth;setFeed({at:max>0?Math.min(1,el.scrollLeft/max):0,can:max>1});if(max-el.scrollLeft<el.clientWidth*1.5&&visible<results.length)setVisible(v=>v+pageSize)};
  const scrollFeed=(dir:1|-1)=>{const el=feedRef.current;if(el)el.scrollBy({left:dir*el.clientWidth*.8,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})};
  useEffect(onFeedScroll,[shown.length,section]);
- useEffect(()=>{const el=sentinel.current;if(!el||typeof IntersectionObserver==='undefined')return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting)setVisible(v=>v+pageSize)},{rootMargin:'400px'});io.observe(el);return()=>io.disconnect()},[results.length,visible]);
+ // More cards load when the strip nears its right end (onFeedScroll); a sentinel under a short strip is always in view and would mount every card at once.
  // Independent filter changes must apply immediately; the shared animation queue keeps only its latest update.
  const filter=(update:()=>void)=>{update();setVisible(pageSize)};
  function brief(item:Item){if(open?.mode==='modal'){afterClose.current=()=>useReference(item);close()}else useReference(item)}
@@ -197,7 +196,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
     <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l(post?'openOnX':'openSource')}：${item.name}`}><Icon d={icons.out}/></a>
    </li>})}</ul>
    {results.length>0&&<div className="insp-controls"><div className="insp-progress" aria-hidden="true">{String(Math.min(shown.length,Math.round(feed.at*(shown.length-1))+1)).padStart(2,'0')} / {String(results.length).padStart(2,'0')}<i style={{'--p':`${Math.round(feed.at*100)}%`} as CSSProperties}/></div><div className="insp-arrows"><button type="button" aria-label={l('scrollPrev')} disabled={!feed.can||feed.at<=.001} onClick={()=>scrollFeed(-1)}><Icon d={icons.prev}/></button><button type="button" aria-label={l('scrollNext')} disabled={!feed.can||feed.at>=.999} onClick={()=>scrollFeed(1)}><Icon d={icons.next}/></button></div></div>}
-   {visible<results.length&&<div ref={sentinel} className="insp-more"><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}
+   {visible<results.length&&<div className="insp-more"><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}
    {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setTopic('');setQuery('')})}>{l('clear')}</button></p>}
    {tail}
    <section className="inspiration-sources"><h2>{l('explore')}</h2><p>{l('exploreNote')}</p><div>{sources.map(s=><a key={s.name} href={s.url} target="_blank" rel="noreferrer"><strong>{s.name}</strong><span>{t(s.type,language)}</span></a>)}</div></section><section className="content-closing"><h2>{l('closing')}</h2><a className="content-button" href={localePath('/docs',language)}>{l('install')}</a><a className="content-secondary" href={localePath('/cases',language)}>{l('studies')}</a><p className="inspiration-count">{l('checked')}</p></section>
