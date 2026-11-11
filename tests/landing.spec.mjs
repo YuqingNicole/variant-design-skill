@@ -220,7 +220,7 @@ test('expressive homepage gallery opens distinct complete directions with workin
  await expect(page).toHaveURL(/\/en\/docs\/install$/);
  await expect(page.locator('html')).toHaveAttribute('lang','en');
  await page.locator('.site-footer a[href="/lab"]').click();await page.locator('a[href="/lab/workbench"]').click();
- await expect(page.locator('.site-workbench')).toHaveCSS('background-color','rgb(247, 247, 242)');
+ await expect(page.locator('.site-workbench')).toHaveCSS('background-color','rgb(246, 247, 249)');
  await expect(page.locator('.site-nav')).toBeVisible();
  });
 
@@ -733,7 +733,7 @@ test('the footer heading never leaves a lone character on its last line', async 
 
 test('headings, primary buttons and filters share one scale and one look across pages', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  const brand = 'rgb(46, 67, 37)';
+  const brand = 'rgb(29, 31, 35)';
   await page.goto('/');await hydrated(page);
   const home = await page.locator('h1').first().evaluate(h => parseFloat(getComputedStyle(h).fontSize));
   for (const route of ['/skills', '/docs', '/lab', '/submit', '/cases', '/pricing', '/guides', '/about']) {
@@ -835,7 +835,7 @@ test('English has its own addresses: readable without JavaScript, linked both wa
   await page.reload();
   await expect(page).toHaveURL(/\/docs$/);
   await expect(page.locator('.site-language-notice')).toContainText('available in English');
-  await expect(page.locator('.site-language-notice')).toHaveCSS('background-color', 'rgb(35, 38, 34)');
+  await expect(page.locator('.site-language-notice')).toHaveCSS('background-color', 'rgb(29, 31, 35)');
   await page.locator('.site-language-notice a').click();
   await expect(page).toHaveURL(/\/en\/docs$/);
   await expect(page.locator('.site-language-notice')).toHaveCount(0);
@@ -1121,7 +1121,7 @@ test('an X post embed arriving does not move the link out or the notice, on a de
 
 // One focus ring across the site (the brand green, 2px) that stands out from what is behind it. This checks the ring's colour
 // and its contrast against the background, with the WCAG 2.2 3:1 line; it is not a claim of WCAG conformance.
-test('every public page shows the same brand-green focus ring, at 3:1 or better against its background', async ({browser})=>{
+test('every public page shows the same ink focus ring, at 3:1 or better against its background', async ({browser})=>{
  // A fresh context per page: a stored language preference makes the language notice appear, and that dark bar rightly uses a light ring.
  for(const path of ['/','/browse/web','/inspiration/linear','/cases','/skills','/guides','/docs','/pricing','/about','/sponsor','/submit','/changelog','/lab','/en','/en/cases','/en/docs']){
   const context=await browser.newContext({viewport:{width:1440,height:900}}),page=await context.newPage();await page.route(u=>u.origin!=='http://127.0.0.1:4197',r=>r.abort());
@@ -1129,7 +1129,7 @@ test('every public page shows the same brand-green focus ring, at 3:1 or better 
   // A live preview iframe (the about page's) is a real tab stop whose ring comes from the page inside it, not from this site.
   const rows=(await probeFocus(page,{tabs:16})).filter(r=>r.tag!=='iframe');
   expect(rows.length,`${path} focusable elements`).toBeGreaterThan(5);
-  for(const r of rows){expect(r.ring,`${path} ${r.tag} "${r.label}" has no focus ring`).not.toBeNull();expect(r.ring,`${path} ${r.tag} "${r.label}"`).toEqual([46,67,37]);expect(r.width,`${path} ${r.label}`).toBe('2px');expect(r.ratio,`${path} ${r.label} contrast`).toBeGreaterThanOrEqual(3)}
+  for(const r of rows){expect(r.ring,`${path} ${r.tag} "${r.label}" has no focus ring`).not.toBeNull();expect(r.ring,`${path} ${r.tag} "${r.label}"`).toEqual([29,31,35]);expect(r.width,`${path} ${r.label}`).toBe('2px');expect(r.ratio,`${path} ${r.label} contrast`).toBeGreaterThanOrEqual(3)}
   await context.close();
  }
 });
