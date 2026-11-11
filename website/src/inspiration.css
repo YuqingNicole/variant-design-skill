@@ -241,7 +241,8 @@ html:has(.inspiration-page) body{background:transparent}
 .insp-dialog{border-radius:16px;background:rgba(247,247,242,.95)}
 .inspiration-page :is(.inspiration-pack,.inspiration-sources a){background:var(--card-g);border-color:var(--hair);border-radius:16px}
 .inspiration-page .inspiration-brief{background:rgba(225,233,216,.92);border-color:var(--hair);border-radius:16px}
-.inspiration-page .content-button{background:var(--site-ink);border-radius:999px}
+/* The shared button finish is a 3-class selector through :is(); the extra weight here keeps this page inside the shadow budget. */
+html body .inspiration-page.content-page .content-button,html body .inspiration-page.content-page .content-button:hover,html body .inspiration-page.content-page .content-button:active{background:var(--site-ink);border-radius:999px;box-shadow:none}
 /* The frosted panel carries the footer's links; the green call to action would repeat the closing section above it. */
 .inspiration-page .site-footer-cta{display:none}
 .inspiration-page .site-footer>.site-footer-bottom{border-top:1px solid var(--hair);padding-block:40px 28px}

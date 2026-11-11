@@ -760,7 +760,7 @@ test('headings, primary buttons and filters share one scale and one look across 
     const sections = await page.locator('main h2').evaluateAll(hs => hs.map(h => parseFloat(getComputedStyle(h).fontSize)));
     expect(Math.max(...sections), `${route} section headings`).toBeLessThanOrEqual(h1);
   }
-  for (const [route, selector] of [['/pricing', '.pricing-card.is-accent .pricing-button'], ['/about', '.paper-button'], ['/', '.site-footer-action']]) {
+  for (const [route, selector] of [['/pricing', '.pricing-card.is-accent .pricing-button'], ['/about', '.paper-button'], ['/guides', '.site-footer-action']]) {
     await page.goto(route); await hydrated(page);
     const style = await page.locator(selector).first().evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius]; });
     expect(style, `${route} ${selector}`).toEqual([brand, '6px']);
