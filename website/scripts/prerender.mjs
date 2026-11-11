@@ -268,6 +268,15 @@ export function lastModified({ references = [], entries = [], guides = [], secti
   const docsDate = newest(guides.filter(g => g.base === '/docs').map(g => g.publishedAt)); if (docsDate) dates['/docs'] = docsDate;
   return dates;
 }
+// Crawlers that collect pages to train models are refused. Search engines and the assistants that fetch a page for
+// a person (OAI-SearchBot, ChatGPT-User, Claude-SearchBot, Claude-User, PerplexityBot, ...) stay allowed, so llms.txt and
+// the GEO work in docs/research/2026-11-02-geo-strategy.md keep their purpose. robots.txt is a request, not enforcement.
+export const aiTrainingCrawlers = ['GPTBot', 'ClaudeBot', 'anthropic-ai', 'Claude-Web', 'CCBot', 'Google-Extended', 'Applebot-Extended', 'Bytespider', 'Amazonbot', 'meta-externalagent', 'cohere-ai', 'Diffbot', 'omgili', 'omgilibot', 'ImagesiftBot', 'Timpibot'];
+export function robots(site) {
+  const refused = aiTrainingCrawlers.map(agent => `User-agent: ${agent}\nDisallow: /\n`).join('\n');
+  return `# AI training crawlers are refused; search and user-requested AI access is allowed.\nUser-agent: *\nContent-Signal: search=yes, ai-input=yes, ai-train=no\nAllow: /\n\n${refused}\nSitemap: ${site}/sitemap.xml\n`;
+}
+
 export function sitemap(routes, site = defaultSite, dates = {}) {
   const listed = [...routes].filter(r => !unlisted.has(r)), known = new Set(listed), abs = r => escape(site + (r === '/' ? '/' : r));
   const lastmod = r => { const d = dates[r === '/en' ? '/' : r.startsWith('/en/') ? r.slice(3) : r]; return d ? `<lastmod>${d}</lastmod>` : ''; };
@@ -324,6 +333,6 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   fs.writeFileSync(path.join(dist, 'feed.xml'), rss(entries, site, references));
   fs.writeFileSync(path.join(dist, 'llms.txt'), llms(listed.entries, docs, site, englishReferences, listed.guides));
   fs.writeFileSync(path.join(dist, 'llms-full.txt'), llmsFull(listed.entries, docs, site, englishReferences, listed.guides));
-  fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site}/sitemap.xml\n`);
+  fs.writeFileSync(path.join(dist, 'robots.txt'), robots(site));
   console.log(`Prerendered ${pages.size} routes (including reference details) and ${entries.length} direction cards for ${site}; sitemap.xml, feed.xml, llms.txt and robots.txt written.`);
 }
