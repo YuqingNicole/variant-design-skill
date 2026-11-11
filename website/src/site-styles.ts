@@ -20,3 +20,4 @@ import "./home.css";
 import "./paper-landing.css";
 import "./pricing.css";
 import "./landing-canvas.css";
+import "./atmosphere.css";

@@ -1,0 +1,28 @@
+/* Atmosphere layer (docs/design-system.md §12): the page sits on a painted sky, inside one frosted panel.
+   Every rule below is presentation only; the markup, the filters and the keyboard paths are unchanged. */
+/* The gap above the panel is a transform, not a margin: the static page that React replaces sits at the top, and a margin would register as a 28px layout shift. */
+html:has(:is(.content-page,.pricing-page,.paper-home)){background:#78a9d8 url(/sky.jpg) center top/cover fixed no-repeat}
+html:has(:is(.content-page,.pricing-page,.paper-home)) body{background:transparent}
+:is(.content-page,.pricing-page,.paper-home){--glass:rgba(255,255,255,.62);--hair:rgba(20,22,26,.1);--card-g:rgba(255,255,255,.88);--site-muted:#4d525a;--site-line:rgba(20,22,26,.12);--radius-card:16px;--radius-panel:16px;
+ width:min(1240px,calc(100% - 64px));margin:0 auto;transform:translateY(28px);min-height:calc(100vh - 28px);background:var(--glass);-webkit-backdrop-filter:blur(22px) saturate(1.1);backdrop-filter:blur(22px) saturate(1.1);border:1px solid rgba(255,255,255,.7);border-bottom:0;border-radius:16px 16px 0 0;box-shadow:0 0 0 1px var(--hair),0 30px 80px rgba(40,70,110,.18)}
+@supports not (backdrop-filter:blur(1px)){:is(.content-page,.pricing-page,.paper-home){background:rgba(255,255,255,.88)}}
+:is(.content-page,.pricing-page,.paper-home) .site-shell{width:auto;margin-inline:0;padding-inline:32px}
+:is(.content-page,.pricing-page,.paper-home) .site-nav{height:76px;border-bottom:1px solid var(--hair)}
+:is(.content-page,.pricing-page,.paper-home) .site-brandmark{width:28px;height:28px}
+:is(.content-page,.pricing-page,.paper-home) .site-nav-links a{color:var(--site-muted)}
+:is(.content-page,.pricing-page,.paper-home) .site-nav-links a[aria-current=page]{color:var(--site-ink);text-decoration:none;border-bottom:1px solid var(--site-ink);padding-bottom:4px}
+:is(.content-page,.pricing-page,.paper-home) .site-language{border-radius:999px;background:rgba(255,255,255,.85);border-color:var(--hair);font-size:14px;padding-inline:16px;min-width:48px}
+@media(min-width:651px){:is(.content-page,.pricing-page,.paper-home) .site-wordmark{font-family:var(--font-display);font-size:20px;letter-spacing:-.02em}}
+/* The shared button finish is a 3-class selector through :is(); the extra weight here keeps this page inside the shadow budget. */
+html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing-page,.paper-home) .content-button,html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing-page,.paper-home) .content-button:hover,html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing-page,.paper-home) .content-button:active{background:var(--site-ink);border-radius:999px;box-shadow:none}
+:is(.content-page,.pricing-page,.paper-home) .site-footer>.site-footer-bottom{border-top:1px solid var(--hair);padding-block:40px 28px}
+/* Pricing paints its own paper bands; let the panel show through them. */
+.pricing-page .pricing-hero{background:none}
+.pricing-page .pricing-principles{background:rgba(255,255,255,.4);border-color:var(--hair)}
+.pricing-page .pricing-card{background:var(--card-g);border-color:var(--hair);border-radius:16px}
+.pricing-page .pricing-card.is-accent{border-color:var(--site-ink)}
+.pricing-page .billing-switch{background:rgba(255,255,255,.6);border-radius:999px}.pricing-page .billing-switch button{border-radius:999px}
+@media(max-width:650px){
+ :is(.content-page,.pricing-page,.paper-home){width:calc(100% - 16px);transform:translateY(8px);border-radius:16px 16px 0 0}
+ :is(.content-page,.pricing-page,.paper-home) .site-shell{padding-inline:16px}
+}
