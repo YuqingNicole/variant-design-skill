@@ -4,7 +4,6 @@ import "./site-system.css";
 import "./direction-stage.css";
 import "./landing-introduction.css";
 import "@fontsource/libre-caslon-display/400.css";
-import "./fonts/lxgw-neo-zhisong/index.css";
 import "@fontsource-variable/hanken-grotesk/wght.css";
 import "@fontsource/ibm-plex-mono/400.css";
 import "./design-system.css";

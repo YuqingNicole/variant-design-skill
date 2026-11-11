@@ -40,19 +40,13 @@
 
 | 角色 | 变量 | 字体栈 | 来源 |
 |---|---|---|---|
-| 标题 | `--font-display` | Libre Caslon Display → 霞鹜新致宋 → Songti SC | Caslon 来自 `@fontsource/libre-caslon-display`；新致宋由 `website/scripts/subset-zhisong.py` 切片 |
+| 标题 | `--font-display` | Libre Caslon Display → PingFang SC → Hiragino Sans GB → Microsoft YaHei | Caslon 来自 `@fontsource/libre-caslon-display`；中文用访问者设备的系统字体 |
 | 正文 | `--font-serif`（名字是历史遗留，实际是无衬线） | Hanken Grotesk → PingFang SC → Microsoft YaHei | `@fontsource-variable/hanken-grotesk` |
 | 代码 | `--font-mono` | IBM Plex Mono → SFMono-Regular → Consolas | `@fontsource/ibm-plex-mono` |
 
-所有字体都打包在网站里自己提供，不从 Google Fonts 加载，因为国内访问不到。
+拉丁字体（Caslon、Hanken Grotesk、IBM Plex Mono）都打包在网站里自己提供，不从 Google Fonts 加载，因为国内访问不到。**中文不打包字体**，一律用系统字体：苹果设备上是苹方（PingFang SC），其他设备退到冬青黑体（Hiragino Sans GB）或微软雅黑。所以中文标题是无衬线，英文标题是衬线；在 Windows 和 Android 上中文的样子会和苹果设备不同。
 
-**霞鹜新致宋的授权义务**：它使用 IPA Font License 1.0。每个页面的页脚必须保留：
-
-- 授权说明；
-- "改用 IPA 原版字体"开关；
-- 指向 `/fonts/LICENSES.txt` 的链接。
-
-这些都在 `SiteChrome.tsx` 的 `FontNote` 里，由 `tests/landing.spec.mjs` 和 `website/scripts/fonts.test.mjs` 检查。删掉其中任何一项都会违反授权。
+2026-11-12 起不再使用霞鹜新致宋，页脚的 IPA 授权说明和「改用 IPA 原版字体」开关一并删除。`/fonts/LICENSES.txt` 仍保留，列出打包字体的 OFL 授权。
 
 ### 字号
 
@@ -230,7 +224,7 @@
 
 - 沿用同一套预算，1440 宽实测（`scripts/style-budget.mjs` 的 probe，2026-11-10）：7 个字号（12、13、14、16、20、28、68，已用满上限，再加字号要先合并现有的）、2 种字体、2 种字重（400、500）、4 种文字颜色、3 种圆角（full、16px、3px）、2 种阴影。
 - **没有使用等宽字体做小标签。** gehirn.md 用等宽大写做眉标，但本站预算是每页两种字体、第 3 节也不允许等宽眉标。这里改用正文字体加 `letter-spacing: .1em`。想要等宽眉标，要先改预算和第 3 节。
-- 标题没有用窄身衬线体（如 Instrument Serif），仍是 Caslon 加霞鹜新致宋，因为第 9 节把它列为过度使用的字体。
+- 标题没有用窄身衬线体（如 Instrument Serif），仍是 Caslon（中文走苹方），因为第 9 节把它列为过度使用的字体。
 - 文案没有改，页面标题仍是"互联网上最好的设计灵感。"。
 
 ### 测试变更
