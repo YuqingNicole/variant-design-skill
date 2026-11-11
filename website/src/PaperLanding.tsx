@@ -8,6 +8,7 @@ import { useLandingMotion } from "./useLandingMotion";
 import "./paper-landing.css";
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
+import { Testimonials } from './Testimonials';
 const m={variantDesignOneBrief:{zh:'Variant Design — 一份需求，三个能运行的方向',en:'Variant Design — One brief, three directions that run'},
  compareThreeDesignDirections:{zh:'在真实代码项目中比较三个设计方向，局部打磨、保留历史，再接入你的产品。',en:'Compare three design directions in your code project. Refine locally, preserve history and integrate the result.'},
  oneBrief:{zh:'一份需求，',en:'One brief,'},
@@ -64,6 +65,7 @@ export function PaperLanding() {
       <CapabilityStudies language={language}/>
     </section>
     <GuidedDemo language={language} expressive/>
+    <Testimonials language={language}/>
     <section className="paper-closing paper-shell"><h2>{t(m.tryItInYour,language)}</h2><a className="paper-button" href="#guided-demo">{t(m.exploreMyThreeDirections,language)}</a><p>{t(m.openSourceSkillRuns,language)}</p></section>
     <SiteFooter language={language}/>
   </main>;
