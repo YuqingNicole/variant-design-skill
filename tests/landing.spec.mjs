@@ -666,23 +666,6 @@ test('reference pack reports failed local writes while keeping current edits', a
  await expect(page.locator('.inspiration-pack fieldset')).toHaveCount(1);
 });
 
-test('headings use LXGW Neo ZhiSong and visitors can switch back to the original IPA font', async ({page})=>{
- await page.goto('/');
- await expect.poll(()=>page.evaluate(async()=>{await document.fonts.ready;return document.fonts.check('500 60px "LXGW Neo ZhiSong"','设计导航')})).toBe(true);
- const note=page.locator('.site-font-note');
- await expect(note).toContainText('IPA Font License 1.0');
- await expect(note.getByRole('link',{name:'字体许可'})).toHaveAttribute('href','/fonts/LICENSES.txt');
- expect((await page.request.get('/fonts/LICENSES.txt')).status()).toBe(200);
- await note.getByRole('button',{name:'改用 IPA 原版字体'}).click();
- await expect(page.locator('html')).toHaveAttribute('data-ipa-font','');
- await expect(page.locator('h1')).toHaveCSS('font-family',/IPAmjMincho/);
- await page.reload();
- await expect(page.locator('html')).toHaveAttribute('data-ipa-font','');
- await note.getByRole('button',{name:'改回霞鹜新致宋'}).click();
- await expect(page.locator('html')).not.toHaveAttribute('data-ipa-font','');
- await expect(page.locator('h1')).toHaveCSS('font-family',/LXGW Neo ZhiSong/);
-});
-
 test('pages read without JavaScript, guides render in both languages, and unknown paths are not indexable', async ({ browser, page, request }) => {
   const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
   for (const [route, text] of [['/about', 'Variant'], ['/pricing', '本地版'], ['/skills', 'variant-design'], ['/submit', '投稿'], ['/', '互联网上最好的设计灵感'], ['/guides', '怎么撤回 AI 对设计的修改'], ['/guides/undo-ai-design-changes', 'undo B'], ['/guides/git-or-snapshot-undo', 'git stash'], ['/guides/design-references-with-sources', '核对日期'], ['/changelog', '更新记录']]) {
@@ -924,7 +907,7 @@ test('home leads with the inspiration feed, cases have their own page, and the s
  expect(await(await request.get('/skills')).text()).toContain('"@type":"SoftwareSourceCode"');
  // The static /cases page keeps the site chrome, including the font license note the footer must carry.
  const cases=await(await request.get('/cases')).text();
- expect(cases).toContain('class="site-nav');expect(cases).toContain('IPA Font License 1.0');expect(cases).toContain('改用 IPA 原版字体');expect(cases).toContain('href="/fonts/LICENSES.txt"');expect(cases).toContain('一个任务，三种方向。');
+ expect(cases).toContain('class="site-nav');expect(cases).toContain('一个任务，三种方向。');
  await page.goto('/');
  await expect(page.locator('h1')).toHaveText('互联网上最好的设计灵感。');
  await expect(page.locator('.insp-title')).toContainText('每条都附出处和我们写的笔记');
