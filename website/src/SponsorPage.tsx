@@ -35,7 +35,7 @@ const rules:Row[]=[
 ];
 const steps:Row[]=[
  {title:{zh:'发起咨询',en:'Open an inquiry'},text:{zh:'开一个「赞助咨询」Issue，写明品牌、想介绍的产品和希望的时间。',en:'Open a “Sponsorship inquiry” issue with your brand, the product and the timing you have in mind.'}},
- {title:{zh:'我们回复',en:'We reply'},text:{zh:'附上当时的真实访问数据、可用的位置和方式。网站目前还没有赞助位，位置在洽谈时一起确定。',en:'With current traffic data and the placements and formats available. The site has no sponsor placements yet; they are agreed as part of the conversation.'}},
+ {title:{zh:'我们回复',en:'We reply'},text:{zh:'附上当时的真实访问数据、可用的位置和方式。目前只有案例页里的一个标注位（第三个案例之后），其他位置在洽谈时一起确定。',en:'With current traffic data and the placements and formats available. There is one labelled slot today, in the cases grid after the third case; anything else is agreed as part of the conversation.'}},
 ];
 function Rows({rows,language,className,ordered}:{rows:Row[];language:Language;className?:string;ordered?:boolean}){
  const items=rows.map(r=><li key={r.title.en}><strong>{t(r.title,language)}</strong><p>{t(r.text,language)}{r.code&&<> <code>{r.code}</code>{t(copyText.msg,language)}</>}</p></li>);
