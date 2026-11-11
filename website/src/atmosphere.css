@@ -4,24 +4,24 @@
 html:has(:is(.content-page,.pricing-page,.paper-home)){background:#78a9d8 url(/sky.jpg) center top/cover fixed no-repeat}
 html:has(:is(.content-page,.pricing-page,.paper-home)) body{background:transparent}
 :is(.content-page,.pricing-page,.paper-home){--glass:rgba(255,255,255,.62);--hair:rgba(20,22,26,.1);--card-g:rgba(255,255,255,.88);--site-muted:#4d525a;--site-line:rgba(20,22,26,.12);--radius-card:16px;--radius-panel:16px;
- width:min(1240px,calc(100% - 64px));margin:0 auto;transform:translateY(28px);min-height:calc(100vh - 28px);background:var(--glass);-webkit-backdrop-filter:blur(22px) saturate(1.1);backdrop-filter:blur(22px) saturate(1.1);border:1px solid rgba(255,255,255,.7);border-bottom:0;border-radius:16px 16px 0 0;box-shadow:0 0 0 1px var(--hair),0 30px 80px rgba(40,70,110,.18)}
-@supports not (backdrop-filter:blur(1px)){:is(.content-page,.pricing-page,.paper-home){background:rgba(255,255,255,.88)}}
+ width:min(1240px,calc(100% - 64px));margin:0 auto;transform:translateY(28px);min-height:calc(100vh - 28px);background:var(--glass);-webkit-backdrop-filter:blur(22px) saturate(1.1);backdrop-filter:blur(22px) saturate(1.1);border:1px solid var(--edge);border-bottom:0;border-radius:16px 16px 0 0;box-shadow:0 0 0 1px var(--hair),0 30px 80px rgba(40,70,110,.18)}
+@supports not (backdrop-filter:blur(1px)){:is(.content-page,.pricing-page,.paper-home){background:var(--fill-1)}}
 :is(.content-page,.pricing-page,.paper-home) .site-shell{width:auto;margin-inline:0;padding-inline:32px}
 :is(.content-page,.pricing-page,.paper-home) .site-nav{height:76px;border-bottom:1px solid var(--hair)}
 :is(.content-page,.pricing-page,.paper-home) .site-brandmark{width:28px;height:28px}
 :is(.content-page,.pricing-page,.paper-home) .site-nav-links a{color:var(--site-muted)}
 :is(.content-page,.pricing-page,.paper-home) .site-nav-links a[aria-current=page]{color:var(--site-ink);text-decoration:none;border-bottom:1px solid var(--site-ink);padding-bottom:4px}
-:is(.content-page,.pricing-page,.paper-home) .site-language{border-radius:999px;background:rgba(255,255,255,.85);border-color:var(--hair);font-size:14px;padding-inline:16px;min-width:48px}
+:is(.content-page,.pricing-page,.paper-home) .site-language{border-radius:999px;background:var(--fill-1);border-color:var(--hair);font-size:14px;padding-inline:16px;min-width:48px}
 @media(min-width:651px){:is(.content-page,.pricing-page,.paper-home) .site-wordmark{font-family:var(--font-display);font-size:20px;letter-spacing:-.02em}}
 /* The shared button finish is a 3-class selector through :is(); the extra weight here keeps this page inside the shadow budget. */
 html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing-page,.paper-home) .content-button,html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing-page,.paper-home) .content-button:hover,html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing-page,.paper-home) .content-button:active{background:var(--site-ink);border-radius:999px;box-shadow:none}
 :is(.content-page,.pricing-page,.paper-home) .site-footer>.site-footer-bottom{border-top:1px solid var(--hair);padding-block:40px 28px}
 /* Pricing paints its own paper bands; let the panel show through them. */
 .pricing-page .pricing-hero{background:none}
-.pricing-page .pricing-principles{background:rgba(255,255,255,.4);border-color:var(--hair)}
+.pricing-page .pricing-principles{background:var(--fill-4);border-color:var(--hair)}
 .pricing-page .pricing-card{background:var(--card-g);border-color:var(--hair);border-radius:16px}
 .pricing-page .pricing-card.is-accent{border-color:var(--site-ink)}
-.pricing-page .billing-switch{background:rgba(255,255,255,.6);border-radius:999px}.pricing-page .billing-switch button{border-radius:999px}
+.pricing-page .billing-switch{background:var(--fill-2);border-radius:999px}.pricing-page .billing-switch button{border-radius:999px}
 @media(max-width:650px){
  :is(.content-page,.pricing-page,.paper-home){width:calc(100% - 16px);transform:translateY(8px);border-radius:16px 16px 0 0}
  :is(.content-page,.pricing-page,.paper-home) .site-shell{padding-inline:16px}
@@ -30,10 +30,10 @@ html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing
 /* Phase 3: inner pages take the inspiration scale. One hero (68px light title, 64px of air above), glass instead of green for the closing call to action. */
 .content-page .content-hero{padding-block:64px 32px}
 .content-page .content-hero h1{max-width:1000px;font-size:clamp(34px,5vw,68px);font-weight:400;line-height:1.04;letter-spacing:-.025em;margin-bottom:20px}
-:is(.content-page,.pricing-page,.paper-home) .site-footer-cta{background:rgba(255,255,255,.5);border-block:1px solid var(--hair)}
+:is(.content-page,.pricing-page,.paper-home) .site-footer-cta{background:var(--fill-3);border-block:1px solid var(--hair)}
 :is(.content-page,.pricing-page,.paper-home) .site-footer-cta h2{font-size:46px;font-weight:400;letter-spacing:-.02em}
 @media(max-width:650px){.content-page .content-hero{padding-block:32px 20px}:is(.content-page,.pricing-page,.paper-home) .site-footer-cta h2{font-size:34px}}
-.content-page .docs-start{background:rgba(225,233,216,.7);border-color:var(--hair)}
+.content-page .docs-start{background:var(--fill-2);border-color:var(--hair)}
 
 /* Phase 4: phones wrap the header into two rows, so the fixed 76px height must give way; titles break evenly instead of leaving one orphan character. */
 @media(max-width:650px){:is(.content-page,.pricing-page,.paper-home) .site-nav{height:auto;padding-bottom:4px}}
@@ -43,9 +43,9 @@ html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing
    Chrome's customizable select (appearance: base-select) also gives the open list the same glass; other browsers keep their native list. */
 .content-page select{appearance:none;-webkit-appearance:none;cursor:pointer;color:var(--site-ink);
  background:linear-gradient(rgba(255,255,255,.7),rgba(255,255,255,0) 55%),rgba(255,255,255,.42) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%234d525a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 1.75 6 6.25l4.5-4.5'/%3E%3C/svg%3E") no-repeat right 14px center/12px 8px;
- border:1px solid rgba(255,255,255,.8);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);
+ border:1px solid var(--edge);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);
  padding-right:40px;transition:background-color var(--dur-fast) var(--ease-out)}
-.content-page select:hover{background-color:rgba(255,255,255,.62)}
+.content-page select:hover{background-color:var(--fill-2)}
 .content-page .submission-fields select{min-height:48px;padding-inline:var(--space-3) 40px;border-radius:var(--radius-control)}
 .content-page .insp-bar select{padding-inline:var(--space-4) 36px;background-position:right 13px center}
 @supports (appearance:base-select){
@@ -54,10 +54,25 @@ html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing
  .content-page select::picker-icon{content:"";flex:none;width:12px;height:8px;margin-left:auto;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%234d525a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 1.75 6 6.25l4.5-4.5'/%3E%3C/svg%3E") center/contain no-repeat;transition:none}
  .content-page .insp-bar select{padding-inline:var(--space-4) 13px}
  .content-page .submission-fields select{padding-inline:var(--space-3)}
- .content-page select::picker(select){margin-top:6px;padding:6px;border:1px solid rgba(255,255,255,.85);border-radius:16px;background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(24px) saturate(1.8);backdrop-filter:blur(24px) saturate(1.8);background-image:linear-gradient(rgba(255,255,255,.6),rgba(255,255,255,0) 40%)}
+ .content-page select::picker(select){margin-top:6px;padding:6px;border:1px solid var(--edge);border-radius:16px;background:var(--fill-3);-webkit-backdrop-filter:blur(24px) saturate(1.8);backdrop-filter:blur(24px) saturate(1.8);background-image:linear-gradient(rgba(255,255,255,.6),rgba(255,255,255,0) 40%)}
  .content-page select option{padding:8px 12px;border-radius:10px;color:var(--site-ink)}
- .content-page select option:hover{background:rgba(255,255,255,.7)}
- .content-page select option:checked{background:rgba(255,255,255,.9)}
+ .content-page select option:hover{background:var(--fill-2)}
+ .content-page select option:checked{background:var(--fill-1)}
  .content-page select option::checkmark{display:none}
 }
 @media(prefers-reduced-motion:reduce){.content-page select{transition:none}}
+
+/* Dark: the same panel on a night sky. Colours come from the tokens above, so only the tokens change (docs/design-system.md §12.6). */
+@media(prefers-color-scheme:dark){
+ html:has(:is(.content-page,.pricing-page,.paper-home,.site-workbench)){color-scheme:dark;background:linear-gradient(rgba(6,10,24,.68),rgba(6,10,24,.68)) fixed,url(/sky.jpg) center top/cover fixed no-repeat #0b1426}
+ :is(.paper-home,.pricing-page,.site-workbench,.content-page,.site-language-notice){--site-paper:#14161a;--site-surface:#1d2026;--site-surface-2:#272b33;--site-card:#1b1e24;--site-ink:#f1f2f4;--site-on-ink:#14161a;--site-line:rgba(255,255,255,.16);--site-accent:#23272e;--site-wash:#2c313a;--site-scrim:rgba(0,0,0,.6);--fill-1:rgba(30,34,42,.88);--fill-2:rgba(30,34,42,.7);--fill-3:rgba(255,255,255,.07);--fill-4:rgba(255,255,255,.04);--edge:rgba(255,255,255,.14)}
+ :is(.content-page,.pricing-page,.paper-home){--glass:rgba(16,19,26,.58);--hair:rgba(255,255,255,.12);--card-g:rgba(26,30,38,.84);--site-muted:#a9afb8;box-shadow:0 0 0 1px var(--hair),0 30px 80px rgba(0,0,0,.45)}
+ .content-page ::selection{background:#3a4150;color:#f1f2f4}
+ .content-page select{background-image:linear-gradient(rgba(255,255,255,.1),rgba(255,255,255,0) 55%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23a9afb8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 1.75 6 6.25l4.5-4.5'/%3E%3C/svg%3E");background-color:rgba(255,255,255,.07)}
+ .content-page select:hover{background-color:rgba(255,255,255,.12)}
+ @supports (appearance:base-select){
+  .content-page select{background-image:linear-gradient(rgba(255,255,255,.1),rgba(255,255,255,0) 55%)}
+  .content-page select::picker-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23a9afb8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 1.75 6 6.25l4.5-4.5'/%3E%3C/svg%3E")}
+  .content-page select::picker(select){background-color:rgba(24,28,36,.86);background-image:linear-gradient(rgba(255,255,255,.08),rgba(255,255,255,0) 40%)}
+ }
+}
