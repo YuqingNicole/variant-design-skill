@@ -193,7 +193,8 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .inspiration-page .insp-head{padding-block:64px 32px;gap:var(--space-3)}
 .inspiration-page .insp-title h1{font-size:clamp(34px,5vw,68px);font-weight:400;line-height:1.04;letter-spacing:-.025em}
 .inspiration-page .insp-counts{font-size:12px;letter-spacing:.1em}
-.inspiration-page .insp-bar{background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-color:var(--hair)}
+/* Sticky stays (a tested contract), but the bar is only a faint tint: a blurred white band cut the frosted panel in two. */
+.inspiration-page .insp-bar{background:rgba(255,255,255,.18);border-block:0}
 .inspiration-page .insp-pills a{background:rgba(255,255,255,.75);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-muted)}
 .inspiration-page .insp-pills a[aria-current=page]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}
 .inspiration-page :is(.insp-bar select,.insp-search){background:rgba(255,255,255,.85);border-color:var(--hair)}
@@ -201,11 +202,12 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 /* The feed is one horizontal strip of white cards: image first, name and note under it, never overlaid. */
 .inspiration-page .inspiration-grid.insp-feed{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(300px,360px);gap:16px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:32px;padding:4px 32px 18px;margin-inline:-32px;scrollbar-width:thin}
 .inspiration-page .insp-feed>.insp-card{scroll-snap-align:start;background:var(--card-g);border:1px solid var(--hair);border-radius:16px;padding:8px 8px 14px}
-.inspiration-page .insp-feed .insp-card-open{aspect-ratio:auto;overflow:visible}
+.inspiration-page .insp-feed .insp-card-open{aspect-ratio:auto;overflow:visible;background:none}
+.inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){background:var(--site-surface)}
 .inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){aspect-ratio:4/3;height:auto;border-radius:3px;overflow:hidden}
-.inspiration-page .insp-feed .insp-card-meta{position:static;opacity:1;padding:14px 8px 0;background:none}
-.inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){top:16px;bottom:auto;right:16px}
-.inspiration-page .insp-feed .insp-card-out{right:54px}
+.inspiration-page .insp-feed .insp-card-meta{position:static;opacity:1;padding:14px 80px 0 8px;background:none;min-height:48px}
+.inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){top:auto;bottom:12px;right:12px}
+.inspiration-page .insp-feed .insp-card-out{right:46px}
 .insp-controls{display:flex;align-items:center;justify-content:space-between;padding-top:18px;border-top:1px solid var(--hair)}
 .insp-progress{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--site-muted);font-variant-numeric:tabular-nums}
 .insp-progress i{display:block;width:160px;height:2px;background:var(--hair);position:relative}
@@ -227,10 +229,12 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .inspiration-page :is(.inspiration-pack,.inspiration-sources a){background:var(--card-g);border-color:var(--hair);border-radius:16px}
 .inspiration-page .inspiration-brief{background:rgba(225,233,216,.92);border-color:var(--hair);border-radius:16px}
 @media(max-width:650px){
- .inspiration-page .insp-head{padding-block:32px 20px}
+ .inspiration-page .insp-head{padding-block:20px 8px;gap:var(--space-2)}
+ .inspiration-page .insp-title p{text-wrap:pretty}
  .inspiration-page .inspiration-grid.insp-feed{grid-template-columns:none;grid-auto-columns:78vw;gap:12px;scroll-padding-inline:16px;padding-inline:16px;margin-inline:-16px}
- .inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){width:44px;height:44px;top:8px;bottom:auto}
- .inspiration-page .insp-feed .insp-card-save{right:8px}.inspiration-page .insp-feed .insp-card-out{right:60px;left:auto}
+ .inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){width:44px;height:44px;top:auto;bottom:6px}
+ .inspiration-page .insp-feed .insp-card-meta{padding-right:108px}
+ .inspiration-page .insp-feed .insp-card-save{right:6px}.inspiration-page .insp-feed .insp-card-out{right:56px;left:auto}
  .insp-progress i{width:80px}.insp-arrows button{width:44px;height:44px}
 }
 @media(prefers-reduced-motion:reduce){.inspiration-page .inspiration-grid.insp-feed{scroll-behavior:auto}}
