@@ -20,10 +20,10 @@ test('the chronological stream includes every kind, pages and preserves shareabl
  await page.getByRole('link',{name:'网站',exact:true}).click();await expect(page).toHaveURL(/\/browse\/web$/);
  // A tab is a full page load: act only after React has taken over the prerendered page, or its state replaces the filters.
  await page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
- await page.getByRole('combobox',{name:'专题',exact:true}).selectOption('saas-home');await page.getByRole('searchbox').fill('Vercel');await page.getByRole('combobox',{name:'排序',exact:true}).selectOption('name');
+ await page.goto('/browse/web?topic=saas-home');await page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));await page.getByRole('searchbox').fill('Vercel');await page.getByRole('combobox',{name:'排序',exact:true}).selectOption('name');
  await expect(cards).toHaveCount(1);await expect(cards.locator('.insp-card-open')).toHaveAttribute('href',/\/v0$/);
  await expect(page).toHaveURL(/sort=name/);const params=new URL(page.url()).searchParams;expect(Object.fromEntries(params)).toEqual({topic:'saas-home',q:'Vercel',sort:'name'});
- await page.reload();await expect(cards).toHaveCount(1);await expect(page.getByRole('searchbox')).toHaveValue('Vercel');await expect(page.getByRole('combobox',{name:'专题',exact:true})).toHaveValue('saas-home');
+ await page.reload();await expect(cards).toHaveCount(1);await expect(page.getByRole('searchbox')).toHaveValue('Vercel');await expect(page).toHaveURL(/topic=saas-home/);
 });
 
 test('the slash key focuses the search, except while typing',async({page})=>{

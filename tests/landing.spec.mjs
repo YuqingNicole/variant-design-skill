@@ -621,7 +621,7 @@ test('the footer links the feed in both languages, and the feed answers', async 
 test('a topic narrows the library to its dated references and states what is unknown', async ({page})=>{
  await page.goto('/?topic=saas-home');
  await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(10);
- await expect(page.getByRole('combobox',{name:'专题'})).toHaveValue('saas-home');
+ await expect(page.locator('.inspiration-topic')).toBeVisible();
  await page.goto('/?topic=startup-home');
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('11 个参考');await expect(page.locator('.inspiration-topic')).toContainText('2026-11-01');
  await expect(page.locator('.insp-card-out[href="https://attio.com/"]')).toHaveCount(1);
@@ -629,8 +629,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('129 个参考');
  await page.goto('/');await hydrated(page);
  const cards=page.locator('.inspiration-grid .insp-card');
- const topic=page.getByRole('combobox',{name:'专题'});
- await topic.selectOption('saas-home');
+ await page.goto('/?topic=saas-home');await hydrated(page);
  await expect(cards).toHaveCount(10);
  await expect(page.locator('.inspiration-topic')).toContainText('2026-10-29');
  await expect(cards.locator('.insp-card-open[href="/inspiration/lovable"]')).toHaveCount(0);
@@ -643,7 +642,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await page.goto('/browse/branding?topic=saas-home');
  await expect(cards).toHaveCount(0);
  await page.locator('.inspiration-empty').getByRole('button',{name:'清除筛选'}).click();
- await expect(topic).toHaveValue('');
+ await expect(page).not.toHaveURL(/topic=/);
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('10 个参考');
 });
 test('reference pack restores locally and reports storage failures', async ({page})=>{
