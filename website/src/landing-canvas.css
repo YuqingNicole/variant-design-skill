@@ -12,3 +12,25 @@
 .lc-section-heading>div{flex:1;min-width:0}.lc-section-heading>span{flex:none}
 .lc-app h1,.lc-app h2{max-width:none}
 @media(max-width:760px){.lc-layers{max-height:none}.lc-layer-scroll{flex:none;max-height:220px}}
+
+/* Onboarding: a painted sky, one frosted panel for the brief, and the three directions fanned beside it (docs/design-system.md §12). */
+.lc-app:has(.lc-onboarding){background:#78a9d8 url(/sky.jpg) center top/cover no-repeat}
+.lc-app:has(.lc-onboarding)>header{background:rgba(255,255,255,.55);backdrop-filter:blur(14px);border-bottom-color:rgba(255,255,255,.5)}
+.lc-app .lc-onboarding{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);align-items:center;gap:clamp(24px,4vw,72px);max-width:1280px;width:calc(100% - 64px);margin:0 auto;padding:clamp(24px,5vh,64px) 0;min-height:calc(100% - 8px)}
+.lc-onboarding .lc-intro{padding:clamp(24px,3vw,40px);border-radius:16px;background:rgba(255,255,255,.62);backdrop-filter:blur(18px) saturate(1.2);border:1px solid rgba(255,255,255,.7)}
+.lc-onboarding h1{font-size:clamp(34px,4.6vw,64px);line-height:1.12;margin:16px 0 20px;text-wrap:balance}
+.lc-onboarding .lc-intro>p:not(.lc-eyebrow){color:#4d525a}
+.lc-onboarding .lc-eyebrow{color:#4d525a}
+.lc-onboarding textarea{background:rgba(255,255,255,.8)}
+.lc-onboarding .lc-import input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.lc-onboarding .lc-import:focus-within{outline:2px solid var(--lc-green);outline-offset:3px}
+.lc-fan{position:relative;aspect-ratio:1.18;width:100%}
+.lc-fan figure{position:absolute;margin:0;width:78%;aspect-ratio:1.6;border-radius:16px;overflow:hidden;background:#fff;border:1px solid rgba(255,255,255,.8);box-shadow:0 28px 60px rgba(20,40,70,.3);animation:lc-rise .9s cubic-bezier(.2,.8,.2,1) both}
+.lc-fan figure img{display:block;width:100%;height:100%;object-fit:cover}
+.lc-fan figcaption{position:absolute;left:12px;top:12px;width:28px;height:28px;border-radius:999px;background:rgba(255,255,255,.9);color:var(--lc-green);display:grid;place-items:center;font-weight:500}
+.lc-fan figure:nth-child(1){left:0;top:0;--r:-5deg;animation-delay:.05s}
+.lc-fan figure:nth-child(2){right:0;top:26%;--r:3deg;animation-delay:.2s}
+.lc-fan figure:nth-child(3){left:6%;bottom:0;--r:-2deg;animation-delay:.35s}
+@keyframes lc-rise{from{opacity:0;transform:translateY(40px) rotate(0)}to{opacity:1;transform:rotate(var(--r))}}
+@media(prefers-reduced-motion:reduce){.lc-fan figure{animation:none;transform:rotate(var(--r))}}
+@media(max-width:900px){.lc-app .lc-onboarding{grid-template-columns:1fr;width:calc(100% - 32px);align-content:start}.lc-fan{order:2;aspect-ratio:1.3}}
