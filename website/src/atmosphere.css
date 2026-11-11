@@ -38,3 +38,26 @@ html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing
 /* Phase 4: phones wrap the header into two rows, so the fixed 76px height must give way; titles break evenly instead of leaving one orphan character. */
 @media(max-width:650px){:is(.content-page,.pricing-page,.paper-home) .site-nav{height:auto;padding-bottom:4px}}
 :is(.content-page,.pricing-page,.paper-home) :is(h1,h2){text-wrap:balance}
+
+/* Liquid glass select (docs/design-system.md §12.5): a translucent, blurred control with a bright top edge and a thin chevron.
+   Chrome's customizable select (appearance: base-select) also gives the open list the same glass; other browsers keep their native list. */
+.content-page select{appearance:none;-webkit-appearance:none;cursor:pointer;color:var(--site-ink);
+ background:linear-gradient(rgba(255,255,255,.7),rgba(255,255,255,0) 55%),rgba(255,255,255,.42) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%234d525a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 1.75 6 6.25l4.5-4.5'/%3E%3C/svg%3E") no-repeat right 14px center/12px 8px;
+ border:1px solid rgba(255,255,255,.8);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);
+ padding-right:40px;transition:background-color var(--dur-fast) var(--ease-out)}
+.content-page select:hover{background-color:rgba(255,255,255,.62)}
+.content-page .submission-fields select{min-height:48px;padding-inline:var(--space-3) 40px;border-radius:var(--radius-control)}
+.content-page .insp-bar select{padding-inline:var(--space-4) 36px;background-position:right 13px center}
+@supports (appearance:base-select){
+ .content-page select,.content-page select::picker(select){appearance:base-select}
+ .content-page select{background-image:linear-gradient(rgba(255,255,255,.7),rgba(255,255,255,0) 55%);padding-right:var(--space-3);align-items:center;gap:var(--space-2)}
+ .content-page select::picker-icon{content:"";flex:none;width:12px;height:8px;margin-left:auto;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%234d525a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 1.75 6 6.25l4.5-4.5'/%3E%3C/svg%3E") center/contain no-repeat;transition:none}
+ .content-page .insp-bar select{padding-inline:var(--space-4) 13px}
+ .content-page .submission-fields select{padding-inline:var(--space-3)}
+ .content-page select::picker(select){margin-top:6px;padding:6px;border:1px solid rgba(255,255,255,.85);border-radius:16px;background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(24px) saturate(1.8);backdrop-filter:blur(24px) saturate(1.8);background-image:linear-gradient(rgba(255,255,255,.6),rgba(255,255,255,0) 40%)}
+ .content-page select option{padding:8px 12px;border-radius:10px;color:var(--site-ink)}
+ .content-page select option:hover{background:rgba(255,255,255,.7)}
+ .content-page select option:checked{background:rgba(255,255,255,.9)}
+ .content-page select option::checkmark{display:none}
+}
+@media(prefers-reduced-motion:reduce){.content-page select{transition:none}}
