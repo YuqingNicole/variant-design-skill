@@ -144,6 +144,7 @@
 | 展示卡 | `.home-show-card` | 卡片底、细边框、12px 圆角。顺序：标题 → 说明 → 出处一行 → 底部链接组（上方一条细线） |
 | 任务列表 | `.home-tasks` | 两栏列表，每行有顶线：链接 + 一句说明。不编号 |
 | 筛选按钮 | `.content-filters a`（`/cases`） | 和首页筛选胶囊同一种样子：32px 高（650px 以下 44px），`--site-surface` 底，选中墨色底、纸色字，由 `aria-current` 表示 |
+| 赞助位 | `.library-sponsor`（`/cases` 全部视图） | 和案例卡同一个网格格位，固定排在第三个案例之后，只在「全部」里出现，分类页没有。图片区是虚线框（没有投放时写「赞助位」），署名行以加粗的「赞助」开头，链接带 `rel="sponsored"`。不是 `.library-card`：它不是案例，测试会数它。投放记录在 `website/src/sponsor-slots.json`，带起止日期，由 `scripts/sponsor-slots.test.mjs` 检查双语、https 和日期 |
 | 筛选胶囊 | `.insp-pills button` | 32px 高，`--site-surface` 底，无边框；选中是墨色底、纸色字，由 `aria-pressed` 表示 |
 | 缩略图卡片 | `.insp-card` | 静止时只有缩略图，名称和一句研究要点写在链接的 `aria-label` 里。悬停或键盘聚焦时显出：左下名称、来源、作者授权标记（仅链接是默认，不显示；详情页仍写明）与已知作者头像、右上"加入参考包"、右下"打开来源"。图标用 16×16 线性 SVG，不用字形符号 |
 | 链接预览 | `Thumb`、`LinkPreview`（`InspirationPage.tsx`） | 网站条目的缩略图就是该网站为分享链接公开的预览图（og:image），详情里再配它自己的标题和描述；X 帖子条目显示帖子原文。图片取自原站、经 Vercel 缩小，缩小失败时直接加载原图，再失败换成分析卡 |

@@ -5,6 +5,7 @@ import type { Language } from './direction-engine';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { cardUrl, categories, coverDirection, entries, evidenceUrl, mediaUrl, type Direction, type Entry } from './library-data';
 import { inspirationItems } from './inspiration-data';
+import { activeSponsorSlot } from './sponsor-slots';
 import './content-pages.css';
 import './library.css';
 import { useLocale } from './i18n/LocaleProvider';
@@ -47,6 +48,17 @@ export type LibraryView = { kind: 'feed' } | { kind: 'category'; id: string } | 
 const sourceLabel = (e: Entry, language: Language) => t(e.source === 'own' ? e.kind === 'verified' ? { zh: '技能产出 · 已验证', en: 'Made with the skill · verified' } : { zh: '概念作品', en: 'Concept study' } : e.source === 'permission' ? { zh: '授权投稿', en: 'Licensed submission' } : { zh: '外部参考', en: 'External reference' }, language);
 const categoryName = (id: string, language: Language) => { const name = categories.find(c => c.id === id)?.name; return name ? t(name, language) : id; };
 
+const sponsorCopy={label:{zh:'赞助',en:'Sponsored'},open:{zh:'了解赞助位',en:'About sponsor slots'},houseTitle:{zh:'这个位置可以介绍你的产品',en:'This slot can introduce your product'},houseText:{zh:'赞助内容一律标注，不影响案例的收录和排序。',en:'Sponsored content is always labelled and never changes which cases are listed or in what order.'},houseTile:{zh:'赞助位',en:'Sponsor slot'}} satisfies Record<string,Localized>;
+// The cases grid keeps a fixed place for one labelled placement: after the third case, so it never leads the list. Not a `.library-card`: it is not a case.
+function SponsorCard({ language }: { language: Language }) {
+  const slot = activeSponsorSlot(), c = (k: keyof typeof sponsorCopy) => t(sponsorCopy[k], language);
+  const href = slot ? slot.url : localePath('/sponsor', language), ext = slot ? { target: '_blank', rel: 'sponsored noopener noreferrer' } : {};
+  return <aside className="library-sponsor" aria-label={c('label')}><a href={href} {...ext}>
+    <span className="library-sponsor-tile">{slot?.image ? <img src={slot.image.src} width={slot.image.width} height={slot.image.height} alt={t(slot.image.alt, language)} loading="lazy" decoding="async"/> : <span>{c('houseTile')}</span>}</span>
+    <span className="library-card-meta"><b>{c('label')}</b> · {slot ? slot.brand : c('open')}</span>
+    <strong>{slot ? t(slot.title, language) : c('houseTitle')}</strong><span className="library-card-summary">{slot ? t(slot.text, language) : c('houseText')}</span>
+  </a></aside>;
+}
 function Card({ entry, language }: { entry: Entry; language: Language }) {
   // All three directions at a glance: the recommended one large, the other two beside it.
   const cover = coverDirection(entry), trio = [cover, ...entry.directions.filter(d => d !== cover)];
@@ -67,7 +79,7 @@ function Feed({ category, language }: { category?: string; language: Language })
       <h1>{category ? categoryName(category, language) : t(m.oneBriefThreeDirections,language)}</h1><p>{t(category ? m.compareThreeDirectionsFor : m.exploreOurCasesWith,language)}</p></header>
     <section className="site-shell library-feed" id="works">
       <nav className="content-filters" aria-label={t(m.categories,language)}><a href={localePath('/cases',language)} aria-current={!category ? 'page' : undefined}>{t(m.all,language)}</a>{used.map(c => <a key={c.id} href={localePath(`/c/${c.id}`,language)} aria-current={category === c.id ? 'page' : undefined}>{t(c.name,language)}</a>)}</nav>
-      {shown.length ? <div className="library-grid">{shown.map(e => <Card key={e.slug} entry={e} language={language}/>)}</div> : <p className="library-empty">{t(m.nothingInThisCategory,language)}</p>}
+      {shown.length ? <div className="library-grid">{shown.flatMap((e, i) => { const card = <Card key={e.slug} entry={e} language={language}/>; return !category && i === 2 ? [card, <SponsorCard key="sponsor" language={language}/>] : [card]; })}</div> : <p className="library-empty">{t(m.nothingInThisCategory,language)}</p>}
       <p className="library-more"><a href={localePath('/',language)}>{t({zh:`外部参考：${inspirationItems.length} 个只附链接的公开设计`,en:`External references: ${inspirationItems.length} public designs, linked only`},language)}</a> <a href={localePath('/submit',language)}>{t(m.submissionsPermissions,language)}</a></p>
     </section></>;
 }

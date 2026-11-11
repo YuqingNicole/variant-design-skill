@@ -645,6 +645,16 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page).not.toHaveURL(/topic=/);
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('10 个参考');
 });
+test('the cases grid keeps one labelled sponsor slot after the third case, and it is not a case', async ({page})=>{
+ await page.goto('/cases');await hydrated(page);
+ const grid=page.locator('.library-grid'),slot=grid.locator('.library-sponsor');
+ await expect(slot).toHaveCount(1);await expect(grid.locator('.library-card')).toHaveCount(5);
+ await expect(grid.locator(':scope > *').nth(3)).toHaveClass(/library-sponsor/);
+ await expect(slot).toHaveAttribute('aria-label','赞助');await expect(slot.locator('b')).toHaveText('赞助');
+ await expect(slot.locator('a')).toHaveAttribute('href','/sponsor');
+ await page.goto('/c/landing');await expect(page.locator('.library-sponsor')).toHaveCount(0);
+ await page.goto('/en/cases');await expect(page.locator('.library-sponsor b')).toHaveText('Sponsored');await expect(page.locator('.library-sponsor a')).toHaveAttribute('href','/en/sponsor');
+});
 test('reference pack restores locally and reports storage failures', async ({page})=>{
  await page.goto('/');await hydrated(page);
  await page.locator('.inspiration-grid .insp-card').first().getByRole('button',{name:'加入参考包'}).click();
@@ -753,7 +763,7 @@ test('headings, primary buttons and filters share one scale and one look across 
     const size = await page.locator(selector).first().evaluate(e => [getComputedStyle(e).fontSize, e.getBoundingClientRect().height]);
     expect(size[0], `${route} ${selector} text`).toBe('14px'); expect(size[1], `${route} ${selector} height`).toBeGreaterThanOrEqual(44);
   }
-  await page.goto('/cases');
+  await page.goto('/cases');await hydrated(page);
   const pill = await page.locator('.content-filters a[aria-current=page]').evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius, s.height]; });
   expect(pill).toEqual([brand, '999px', '32px']);
   await page.goto('/skills');
