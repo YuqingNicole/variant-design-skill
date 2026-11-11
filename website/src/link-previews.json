@@ -201,5 +201,75 @@
     "description": "Figma Design supports a variety of export formats and settings. Use this article to determine which format best suits your needs. When you’re ready to export your designs, check out Export from Fig...",
     "lang": "en-US",
     "fetchedAt": "2026-11-01"
+  },
+  "interfere": {
+    "image": "https://interfere.com/og/opengraph-image.png",
+    "title": "Production visibility for teams that ship fast › Interfere",
+    "description": "Interfere empowers engineers, product managers and designers with real-time understanding of previously unseen bugs and issues.",
+    "lang": "en",
+    "fetchedAt": "2026-11-11"
+  },
+  "displace": {
+    "image": "https://displace.agency/opengraph-image?45e30ba1bb32a4c0",
+    "title": "Displace Agency | Stores, websites and platforms",
+    "description": "We design, build and run Shopify stores, websites and custom platforms for design-led brands, from Madrid and Miami. Live on a date we write down.",
+    "lang": "en-US",
+    "fetchedAt": "2026-11-11"
+  },
+  "orior": {
+    "image": "https://www.oriorai.com/opengraph-image?e89efaff61b314ad",
+    "title": "Orior AI | Create Photorealistic UGC Characters & Post Everywhere",
+    "description": "Create an AI character that keeps the same face in every photo and video, copy any pose onto it, and post to Instagram, TikTok, X, Threads and YouTube. Works in ChatGPT, Claude and Grok too.",
+    "lang": "en",
+    "fetchedAt": "2026-11-11"
+  },
+  "nothing-to-watch": {
+    "image": "https://nothing-to-watch.port80.ch/og.jpg",
+    "title": "There's nothing to watch - Interactive Movie Discovery",
+    "description": "Discover movies through an interactive visualization. Explore tens of thousands of films in a unique force-directed voronoi diagram interface.",
+    "lang": "en",
+    "fetchedAt": "2026-11-11"
+  },
+  "shopify-editions-winter-26": {
+    "image": "https://cdn.shopify.com/s/files/1/0951/3130/4218/files/share.png?v=1765212809",
+    "title": "Shopify Editions | Winter '26",
+    "description": "The commerce renaissance is here. Explore 150+ product updates across AI, retail, and more.",
+    "lang": "en",
+    "fetchedAt": "2026-11-11"
+  },
+  "podium": {
+    "image": "https://www.datocms-assets.com/170228/1776225176-podium_socials2.png",
+    "title": "Podium | Creative Studio & Video Production for Sports",
+    "description": "Creative direction, film production and photography for sports brands worldwide.",
+    "lang": "en",
+    "fetchedAt": "2026-11-11"
+  },
+  "gregor-collienne": {
+    "image": "https://gregorcollienne.com/wp-content/themes/fstheme/assets/img/logo-symbole.svg",
+    "title": "Gregor Collienne - Overview",
+    "description": "Photographer working mainly in portrait,lifestyle, and commercial photography, either for advertising agencies ordirect clients of any size.",
+    "lang": "en-US",
+    "fetchedAt": "2026-11-11"
+  },
+  "harry-atkins": {
+    "image": "https://harryjatkins.com/share.jpg",
+    "title": "Harry Atkins",
+    "description": "Independent Developer",
+    "lang": "en",
+    "fetchedAt": "2026-11-11"
+  },
+  "astro-dither": {
+    "image": "https://astrodither.robertborghesi.is/share.jpg",
+    "title": "ASTRODITHER — Robert Borghesi LAB — [SIGNAL. LOST. BEAUTY. FOUND. DIGITAL. CHAOS.]",
+    "description": "[SIGNAL. LOST. BEAUTY. FOUND. DIGITAL. CHAOS.] — AstroDither, an audio reactive Threejs /WebGPU experiment by Robert Borghesi on dithering and fluid simulation with TSL.",
+    "lang": "en",
+    "fetchedAt": "2026-11-11"
+  },
+  "cathy-dolle": {
+    "image": "https://cdn.sanity.io/images/7npwh62g/production/d44a83155905b03cb0ae63b31ddd05041505e594-1440x810.webp",
+    "title": "Cathy DOLLE - Interactive Designer",
+    "description": "Cathy Dolle is a designer and front-end developer who creates simple, thoughtful digital experiences with a minimalist, detail-driven approach. She enjoys shaping quiet, refined identities and occasionally shares her creative process on Twitch",
+    "lang": "en",
+    "fetchedAt": "2026-11-11"
   }
 }

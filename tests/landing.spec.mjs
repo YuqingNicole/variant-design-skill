@@ -322,9 +322,9 @@ test('inspiration references filter, create an original brief and recover from c
  // The prerendered page answers clicks only after React replaces it; its static reference index goes away then.
  await expect(page.locator('nav[aria-label="全部参考"]')).toHaveCount(0);
  const cards=page.locator('.inspiration-grid .insp-card');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('99 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('129 个参考');
  // Every tab is its own page with its own references; together they list each reference once.
- for(const [name,count] of [['网站',32],['产品界面',12],['交互',27],['动效',21],['品牌',7]]){
+ for(const [name,count] of [['网站',46],['产品界面',12],['交互',34],['动效',27],['品牌',10]]){
   await page.locator('.insp-pills').getByRole('link',{name,exact:true}).click();
   await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${count} 个参考`);
  }
@@ -369,11 +369,11 @@ test('inspiration thumbnails map each link\'s own preview, resized from the sour
  await stubPreviews(page,['linear']);
  // A short window keeps the load-more sentinel out of reach, so the first page and the fallback button can be checked.
  await page.setViewportSize({width:1280,height:360});await page.goto('/browse/web?sort=curated');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('32 个参考');// The web page also lists X videos; the thumbnail rules below are about its 20 website cards, which come first.
- const sites=page.locator('.inspiration-grid .insp-card:not(.insp-vcard)');await expect(sites).toHaveCount(20);
- await expect(sites.locator('.insp-card-meta small')).toHaveCount(20);
- await expect(sites.locator('.insp-thumb-post')).toHaveCount(0);await expect(sites.locator('div.insp-thumb')).toHaveCount(20);
- await expect(sites.locator('.insp-thumb-media img')).toHaveCount(16);
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('46 个参考');// The web page also lists X videos; the thumbnail rules below are about its 30 website cards, which come first.
+ const sites=page.locator('.inspiration-grid .insp-card:not(.insp-vcard)');await expect(sites).toHaveCount(30);
+ await expect(sites.locator('.insp-card-meta small')).toHaveCount(30);
+ await expect(sites.locator('.insp-thumb-post')).toHaveCount(0);await expect(sites.locator('div.insp-thumb')).toHaveCount(30);
+ await expect(sites.locator('.insp-thumb-media img')).toHaveCount(26);
  const linear=page.locator('.insp-card').filter({has:page.locator('a[href="/inspiration/linear"]')});await expect(linear.locator('div.insp-thumb-landing b')).toHaveText('Linear');
  for(const [href,src,policy] of await page.locator('.insp-card').evaluateAll(els=>els.flatMap(li=>{const img=li.querySelector('.insp-thumb-media img');return img?[[li.querySelector('.insp-card-open').getAttribute('href'),img.getAttribute('src'),img.getAttribute('referrerpolicy')]]:[]})))
   {expect(src).toBe(sized(previews[href.split('/')[2]].image,640));expect(policy).toBe('no-referrer')}
@@ -551,14 +551,17 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.locator('.insp-pills').getByRole('link',{name:'动效',exact:true}).click();await expect(page).toHaveURL(/\/browse\/motion$/);
  // The client render replaces the prerendered feed; wait for it (XVideo adds the referrer meta on mount) before holding a card.
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
- const motion=page.locator('.insp-videos > li');await expect(motion).toHaveCount(21);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
+ const motion=page.locator('.insp-videos > li');await expect(motion).toHaveCount(27);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
  const widgets=motion.filter({has:page.locator('a[href="/inspiration/paper-widgets"]')});
  // Videos only start once visible, and a newer card can push this one below the fold. A re-render can replace the card mid-scroll, so retry that.
  await expect(async()=>{await widgets.scrollIntoViewIfNeeded()}).toPass();
  await expect(widgets.locator('img.insp-vcard-media')).toHaveAttribute('src',media['paper-widgets'].poster);await expect(widgets.locator('video')).toHaveCount(0);
  await page.getByRole('link',{name:'交互',exact:true}).click();await expect(page).toHaveURL(/\/browse\/interaction$/);
- const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(27);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
+ // The interaction tab lists 34 references; the strip mounts its first 30 and loads the rest as it is scrolled.
+ const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(30);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
+ // Seven newer posts pushed the sheep past the first 30 cards, so load the remaining four before looking for it.
+ await page.locator('.insp-more button').click();await expect(cards).toHaveCount(34);
  const sheep=cards.filter({has:page.locator('a[href="/inspiration/x-areadnemaria-444419"]')});
  // Videos far below the fold attach their file only as they near the screen.
  expect(await cards.last().locator('video').evaluate(v=>v.getAttribute('src'))).toBeNull();
@@ -573,6 +576,7 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.keyboard.press('Escape');
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
  await page.emulateMedia({reducedMotion:'reduce'});await page.reload();
+ await page.locator('.insp-more button').click();await expect(sheep).toBeAttached();
  await page.waitForTimeout(800);expect(await sheep.locator('video').evaluate(v=>v.paused)).toBe(true);
  // A post found through another curator credits it beside the source.
  await page.goto('/inspiration/x-keviduk-'+Object.keys(media).find(k=>k.startsWith('x-keviduk-')).slice(-6));
@@ -602,8 +606,8 @@ test('a reference opens as a dialog from the grid and as its own page from a dir
  await expect(page.locator('h1')).toHaveText('Notion');await expect(page.getByRole('dialog')).toHaveCount(0);
  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/^Notion：/);
  await expect(page.getByRole('link',{name:'访问原站'})).toHaveAttribute('href','https://www.notion.com/');
- await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('99 个参考');
- await page.goto('/inspiration/no-such-reference');await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('99 个参考');
+ await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('129 个参考');
+ await page.goto('/inspiration/no-such-reference');await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('129 个参考');
 });
 
 test('the footer links the feed in both languages, and the feed answers', async ({page,request})=>{
@@ -622,7 +626,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('11 个参考');await expect(page.locator('.inspiration-topic')).toContainText('2026-11-01');
  await expect(page.locator('.insp-card-out[href="https://attio.com/"]')).toHaveCount(1);
  await page.goto('/?topic=unknown');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('99 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('129 个参考');
  await page.goto('/');await hydrated(page);
  const cards=page.locator('.inspiration-grid .insp-card');
  const topic=page.getByRole('combobox',{name:'专题'});
@@ -631,7 +635,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-topic')).toContainText('2026-10-29');
  await expect(cards.locator('.insp-card-open[href="/inspiration/lovable"]')).toHaveCount(0);
  await expect(cards.locator('.insp-card-out[href="https://impeccable.style/"]')).toHaveCount(1);
- await expect(page.locator('.insp-title')).toContainText('目前 99 条');await expect(page.locator('.insp-counts')).toContainText('32 网站');
+ await expect(page.locator('.insp-title')).toContainText('目前 129 条');await expect(page.locator('.insp-counts')).toContainText('46 网站');
  await page.getByRole('searchbox').fill('Vercel');
  await expect(cards).toHaveCount(1);await expect(cards.first().locator('.insp-card-open')).toHaveAttribute('href','/inspiration/v0');
  await page.getByRole('searchbox').fill('');
@@ -640,7 +644,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(cards).toHaveCount(0);
  await page.locator('.inspiration-empty').getByRole('button',{name:'清除筛选'}).click();
  await expect(topic).toHaveValue('');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('7 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('10 个参考');
 });
 test('reference pack restores locally and reports storage failures', async ({page})=>{
  await page.goto('/');await hydrated(page);
@@ -782,7 +786,7 @@ test('the header names the motion feed once, keeps the full wordmark on phones a
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/browse/motion');
   await expect(page.locator('.site-nav-links a[aria-current=page]')).toHaveText('动效');
-  await expect(page.locator('.insp-counts [aria-current]')).toHaveText(/21 动效$/);
+  await expect(page.locator('.insp-counts [aria-current]')).toHaveText(/27 动效$/);
   const language = await page.locator('.site-language').evaluate(e => { const s = getComputedStyle(e); return [s.borderTopWidth, parseFloat(s.minHeight)]; });
   expect(language[0]).toBe('0px'); expect(language[1]).toBeGreaterThanOrEqual(44);
   for (const width of [320, 390]) {
@@ -885,7 +889,7 @@ test('without JavaScript the inspiration page links every reference, and with it
   for (const [route, prefix] of [['/', '/inspiration/'], ['/en', '/en/inspiration/']]) {
     await reader.goto(route);
     const links = await reader.locator(`#root a[href^="${prefix}"]`).evaluateAll(as => [...new Set(as.map(a => a.getAttribute('href').split(/[?#]/)[0]))]);
-    expect(links.length, route).toBe(99);
+    expect(links.length, route).toBe(129);
   }
   await noScript.close();
   await page.goto('/');
