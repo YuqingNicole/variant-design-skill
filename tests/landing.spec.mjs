@@ -655,6 +655,17 @@ test('the cases grid keeps one labelled sponsor slot after the third case, and i
  await page.goto('/c/landing');await expect(page.locator('.library-sponsor')).toHaveCount(0);
  await page.goto('/en/cases');await expect(page.locator('.library-sponsor b')).toHaveText('Sponsored');await expect(page.locator('.library-sponsor a')).toHaveAttribute('href','/en/sponsor');
 });
+test('the about page lists testimonials with a laurelled organisation line and a dated source; drafts are marked', async ({page})=>{
+ // Local builds show draft records, like preview deployments; production leaves them out (same switch as draft translations).
+ const records=JSON.parse(fs.readFileSync(new URL('../website/src/testimonials.json',import.meta.url),'utf8')),drafts=records.filter(r=>r.status==='draft');
+ await page.goto('/about');await hydrated(page);
+ const cards=page.locator('.paper-quote');await expect(cards).toHaveCount(records.length);
+ await expect(page.locator('.paper-quote-draft')).toHaveCount(drafts.length);
+ const first=cards.first();
+ await expect(first.locator('.paper-quote-org svg')).toHaveCount(2);await expect(first.locator('.paper-quote-org')).toContainText(records[0].org.zh);
+ await expect(first.locator('footer a')).toHaveAttribute('rel','noopener noreferrer');await expect(first.locator('footer a')).toContainText(records[0].date);
+ if(drafts.length){await expect(page.locator('.paper-quote-draft').first()).toHaveText('草稿 · 示例内容');await page.goto('/en/about');await expect(page.locator('.paper-quote-draft').first()).toHaveText('Draft · sample content');}
+});
 test('reference pack restores locally and reports storage failures', async ({page})=>{
  await page.goto('/');await hydrated(page);
  await page.locator('.inspiration-grid .insp-card').first().getByRole('button',{name:'加入参考包'}).click();
