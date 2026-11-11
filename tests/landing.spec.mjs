@@ -198,7 +198,7 @@ test('expressive homepage gallery opens distinct complete directions with workin
  const homeFont=await page.locator('h1').evaluate(el=>getComputedStyle(el).fontFamily);
  await page.locator('.site-footer a[href="/pricing"]').click();
  await expect(page.locator('h1')).toHaveCSS('font-family',homeFont);
- await expect(page.locator('.pricing-page')).toHaveCSS('background-color','rgb(247, 247, 242)');
+ await expect(page.locator('.pricing-page')).toHaveCSS('background-color','rgba(255, 255, 255, 0.62)');
  await expect(page.locator('.pricing-card header b')).toHaveText(['计划中','计划中']);
  await expect(page.locator('.pricing-hero-aside')).toContainText('尚未开放购买、开通或生成额度');
  await expect(page.locator('.pricing-card').nth(1)).toContainText('报价草案');
@@ -800,7 +800,7 @@ test('content shares the heading\'s left edge and two-tone headings use the pale
   expect(form).toBe(h1);
   for (const [route, selector] of [['/pricing', '.pricing-hero h1 em'], ['/about', '.paper-hero h1 span']]) {
     await page.goto(route);
-    expect(await page.locator(selector).first().evaluate(e => getComputedStyle(e).color), route).toBe('rgb(98, 102, 95)');
+    expect(await page.locator(selector).first().evaluate(e => getComputedStyle(e).color), route).toBe('rgb(77, 82, 90)');
   }
 });
 
