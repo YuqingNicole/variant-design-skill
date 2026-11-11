@@ -208,5 +208,25 @@
         "hostname": "astrodither.robertborghesi.is"
       }
     ]
-  }
+  },
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(sky.jpg|sample-(.*).png|variant-mark(.*).svg|favicon.svg|favicon.ico|icon-(.*).png|apple-touch-icon.png|variant-favicon-v2.png)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    }
+  ]
 }
