@@ -763,7 +763,7 @@ test('headings, primary buttons and filters share one scale and one look across 
     const size = await page.locator(selector).first().evaluate(e => [getComputedStyle(e).fontSize, e.getBoundingClientRect().height]);
     expect(size[0], `${route} ${selector} text`).toBe('14px'); expect(size[1], `${route} ${selector} height`).toBeGreaterThanOrEqual(44);
   }
-  await page.goto('/cases');
+  await page.goto('/cases');await hydrated(page);
   const pill = await page.locator('.content-filters a[aria-current=page]').evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius, s.height]; });
   expect(pill).toEqual([brand, '999px', '32px']);
   await page.goto('/skills');
