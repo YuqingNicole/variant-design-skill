@@ -166,6 +166,46 @@
       {
         "protocol": "https",
         "hostname": "www.raycast.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "cal.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "cdn.shopify.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "displace.agency"
+      },
+      {
+        "protocol": "https",
+        "hostname": "gregorcollienne.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "harryjatkins.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "interfere.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "nothing-to-watch.port80.ch"
+      },
+      {
+        "protocol": "https",
+        "hostname": "www.datocms-assets.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "www.oriorai.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "astrodither.robertborghesi.is"
       }
     ]
   }

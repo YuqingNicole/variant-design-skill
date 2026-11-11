@@ -20,7 +20,7 @@
 
 对标对象是 recent.design 公开呈现的内容产品（2026-11-08 按普通访客读首页：分类 Web、Interface、Branding、Motion、Illustration、Posters、Print；浏览入口 Launch Videos、Websites、OG Images、App Screenshots、App Icons；资源 Tools、Skills、Jobs；每条有 `/i/<id>-<slug>` 页和作者署名）。只对标形态和规模，不复制界面、文案和素材（RFC-008 §1）。现状：灵感库约 99 条，其中 60 条来自 recent.design 首页的 947 条；分类以 X 视频（practice 65）为主，landing 20、product 8、flow 4。数字以 `website/src/inspiration-data.ts` 为准，动手前先重数。
 
-- [ ] 内容规模目标（维护者 2026-11-08 已定）：灵感库到 300 条，每周上线 40 条。起点以动手前重数的条数为准；按每周 40 条算，从现有约 99 条到 300 条约需 5 周，实际周期以重数结果为准。这是指标条目的基线。
+- [ ] 内容规模目标（维护者 2026-11-08 已定）：灵感库到 300 条，每周上线 40 条。起点以动手前重数的条数为准；按每周 40 条算，从 2026-11-11 的 129 条到 300 条约需 4 周，实际周期以重数结果为准。这是指标条目的基线。
 - [ ] 把“收件箱到上线”写成固定流程并落到 `website/content/`：筛 `x-post-inbox.json` → 看过原视频 → 中英文笔记 → 同一作者不重复 → `x-media.mjs` 取视频 → 上线。每批在 `docs/research/` 记录条数、剔除原因和用时。
 - [ ] 分类页已完成：网站 32、产品界面 12、交互 26、动效 20、品牌 7（互不重叠，各有 `/browse/<分类>`）。插画、海报、印刷还没有内容，所以没有 tab；收录第一条带 `Illustration`、`Poster`、`Print` 标签的参考后会自动出现。剩下的是内容：按第 1 条的节奏补这三类，以及决定要不要给投稿表单加分类选项（见 RFC-008 §8）。
 - [ ] 【维护者】决定要不要增加 Websites 浏览入口，以及 Instagram 那 54 条的展示方式（现在没有对应形态）。App 图标和 OG 图不做（维护者 2026-11-08 决定）。授权规则不变：只给链接、官方嵌入或作者授权的媒体。
@@ -64,7 +64,7 @@ Ego Lite 每周一 09:00（Asia/Shanghai）搜索最近 7 天、互动数至少 
 
 <!-- 格式：- https://x.com/<handle>/status/<id> — 好在哪（可选：分类） -->
 
-- recent.design 首页的 947 条作品（维护者本地的 `Recent-Design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入，条目带 `via` 指回 recent.design。其余按第 3 组的固定流程分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。
+- recent.design 首页的 947 条作品（维护者本地的 `Recent-Design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入；2026-11-11 又加入 20 条 X 帖子和 10 个网站（记录见 `docs/research/2026-11-11-reference-batch.md`），条目带 `via` 指回 recent.design。其余按第 3 组的固定流程分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。
 
 ## 定期维护
 

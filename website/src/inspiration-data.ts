@@ -736,6 +736,236 @@ export const inspirationItems = [
     "addedAt": "2026-10-07T20:39:49+08:00"
   },
   {
+    "id": "interfere",
+    "name": "Interfere",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://interfere.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "主张标题 → 带代码细节的产品界面",
+      "en": "Headline → product UI with code detail"
+    },
+    "application": {
+      "zh": "让开发工具的首屏直接展示真实界面",
+      "en": "Show the real interface on a developer tool’s first screen"
+    },
+    "publisher": "Interfere",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-11",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-11T07:50:00Z"
+  },
+  {
+    "id": "displace",
+    "name": "Displace",
+    "category": "landing",
+    "tag": "Commerce",
+    "url": "https://displace.agency/",
+    "source": "link-only",
+    "focus": {
+      "zh": "主张 → 输入网址的行动框 → 价格与客户证言",
+      "en": "Proposition → a field for your store address → price and testimonials"
+    },
+    "application": {
+      "zh": "服务型业务把报价和承诺放进首屏",
+      "en": "Put the price and the promise on a service business’s first screen"
+    },
+    "publisher": "Displace Agency",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-11",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-11T07:51:00Z"
+  },
+  {
+    "id": "orior",
+    "name": "Orior AI",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://www.oriorai.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "一句话主张 → 一张真实感人像",
+      "en": "One-line proposition → one lifelike portrait"
+    },
+    "application": {
+      "zh": "AI 内容工具用成品图展示效果",
+      "en": "Let an AI content tool show its result instead of describing it"
+    },
+    "publisher": "Orior AI",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-11",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-11T07:52:00Z"
+  },
+  {
+    "id": "nothing-to-watch",
+    "name": "There’s nothing to watch",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://nothing-to-watch.port80.ch/",
+    "source": "link-only",
+    "focus": {
+      "zh": "反话式标题 → 先选设备档位再进入",
+      "en": "An ironic headline → choose a device tier before entering"
+    },
+    "application": {
+      "zh": "重型交互站点在开场前让用户选择性能档位",
+      "en": "Let visitors pick a performance tier before a heavy interactive site loads"
+    },
+    "publisher": "Port80",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-11",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-11T07:53:00Z"
+  },
+  {
+    "id": "shopify-editions-winter-26",
+    "name": "Shopify Editions Winter ’26",
+    "category": "landing",
+    "tag": "Commerce",
+    "url": "https://www.shopify.com/editions/winter2026",
+    "source": "link-only",
+    "focus": {
+      "zh": "纯黑底 → 细线构图 → 发布会主题名",
+      "en": "Pure black → thin-line composition → the edition’s title"
+    },
+    "application": {
+      "zh": "产品发布专题页的氛围营造",
+      "en": "Setting the mood on a product-launch microsite"
+    },
+    "publisher": "Shopify",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-11",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-11T07:54:00Z"
+  },
+  {
+    "id": "podium",
+    "name": "Podium",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://podium.global/",
+    "source": "link-only",
+    "focus": {
+      "zh": "粗体字标 → 流体形状里透出的影像 → 一句话业务说明",
+      "en": "Heavy wordmark → imagery showing through a fluid shape → a one-line service statement"
+    },
+    "application": {
+      "zh": "创意工作室首屏用素材蒙版代替全屏视频",
+      "en": "A studio’s first screen that masks footage with a shape instead of a full-bleed video"
+    },
+    "publisher": "Podium",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-11",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-11T07:55:00Z"
+  },
+  {
+    "id": "gregor-collienne",
+    "name": "Gregor Collienne",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://gregorcollienne.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "居中的名字字标 → 照片散落四周",
+      "en": "Centred name → photographs scattered around it"
+    },
+    "application": {
+      "zh": "摄影作品集首屏让作品围绕名字",
+      "en": "A photography portfolio whose first screen arranges the work around the name"
+    },
+    "publisher": "Gregor Collienne",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-11",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-11T07:56:00Z"
+  },
+  {
+    "id": "harry-atkins",
+    "name": "Harry Atkins",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://harryjatkins.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "两个超大字母 → 带缩略图的项目索引",
+      "en": "Two oversized letters → a project index with thumbnails"
+    },
+    "application": {
+      "zh": "极简个人站用索引表而不是大图列表",
+      "en": "A minimal personal site that uses an index table instead of a gallery of big images"
+    },
+    "publisher": "Harry Atkins",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-11",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-11T07:57:00Z"
+  },
+  {
+    "id": "astro-dither",
+    "name": "Astro Dither",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://astrodither.robertborghesi.is/",
+    "source": "link-only",
+    "focus": {
+      "zh": "黑底上只有一行进入提示和像素图标 → 点击后开启声音",
+      "en": "Black ground with one entry prompt and a pixel icon → click to enter and turn the sound on"
+    },
+    "application": {
+      "zh": "实验性视听站点用一道“进入”门槛开启声音",
+      "en": "An experimental audiovisual site that opens its sound behind an explicit “enter” gate"
+    },
+    "publisher": "Robert Borghesi",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-11",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-11T07:58:00Z"
+  },
+  {
+    "id": "cathy-dolle",
+    "name": "Cathy Dolle",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://www.cathydolle.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "左右两列编号名单 → 中间一条竖向图片带",
+      "en": "Two columns of numbered names → a vertical strip of images between them"
+    },
+    "application": {
+      "zh": "作品集用编号名单加居中图片带，而不是缩略图网格",
+      "en": "A portfolio built on a numbered name list and a central image strip instead of a thumbnail grid"
+    },
+    "publisher": "Cathy Dolle",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-11",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-11T07:59:00Z"
+  },
+  {
     "id": "x-luciebajgart-600400",
     "name": "Butterfly brand concept",
     "category": "practice",
@@ -2936,6 +3166,666 @@ export const inspirationItems = [
       "date": "2026-11-08",
       "lang": "en",
       "text": "New skill: /gestures\n\nHelps you build beautiful, intuitive gestures for your app.\n\nAdds rubber banding, velocity support for dragging, drags that carry momentum, everything I learned from building Sonner and Vaul, and more.\n\nI’ve been using it a lot recently, you’ll love it.",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-pontusab-141433",
+    "name": "Ramp login screen",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/pontusab/status/2119865335990141433",
+    "source": "link-only",
+    "focus": {
+      "zh": "深色登录窗口里，噪点纹理的背景把视线收向居中的一个登录按钮",
+      "en": "A dark login window where a textured backdrop draws the eye to one centred sign-in button"
+    },
+    "application": {
+      "zh": "登录页和欢迎页的第一印象",
+      "en": "The first impression on sign-in and welcome screens"
+    },
+    "publisher": "Pontus Abrahamsson (@pontusab)",
+    "kind": "social-post",
+    "designer": "Pontus Abrahamsson",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:01:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/ukxeowa-ai-workspace-login-screen",
+    "post": {
+      "id": "2119865335990141433",
+      "author": "Pontus Abrahamsson",
+      "handle": "pontusab",
+      "date": "2026-11-09",
+      "lang": "en",
+      "text": "first impressions matter.",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-kaolti-471067",
+    "name": "Liquid stepper",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/kaolti/status/2119797138276471067",
+    "source": "link-only",
+    "focus": {
+      "zh": "Payment、Review、Confirm 三步用胶囊按钮排成一行，作者称之为 liquid（液态）效果",
+      "en": "A Payment / Review / Confirm stepper of pill buttons that the author calls “liquid”"
+    },
+    "application": {
+      "zh": "多步流程的步骤指示器",
+      "en": "Step indicators for multi-step flows"
+    },
+    "publisher": "Zsolt Kacso (@kaolti)",
+    "kind": "social-post",
+    "designer": "Zsolt Kacso",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:02:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/lrtfzrm-liquid-stepper-interaction",
+    "post": {
+      "id": "2119797138276471067",
+      "author": "Zsolt Kacso",
+      "handle": "kaolti",
+      "date": "2026-11-09",
+      "lang": "en",
+      "text": "Keep going back to liquid!\nShould I post the link?",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-nicforey-535604",
+    "name": "Rare disease cluster explorer",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/nicforey/status/2119850582907535604",
+    "source": "link-only",
+    "focus": {
+      "zh": "同心圆围着数据点，光标在其间移动，出自一个罕见病聚类的研究项目",
+      "en": "Concentric rings around data points with a cursor moving between them, from a rare-disease clustering research project"
+    },
+    "application": {
+      "zh": "数据探索和研究型可视化里的光标反馈",
+      "en": "Cursor feedback in data exploration and research visualisations"
+    },
+    "publisher": "nico frey (@nicforey)",
+    "kind": "social-post",
+    "designer": "nico frey",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:03:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/k584efx-rare-disease-cluster-explorer",
+    "post": {
+      "id": "2119850582907535604",
+      "author": "nico frey",
+      "handle": "nicforey",
+      "date": "2026-11-09",
+      "lang": "en",
+      "text": "playing with interactive cursors in my research project about rare disease clusters",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-uxuisavitskiy-903540",
+    "name": "Spending as work hours",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/uxuisavitskiy/status/2119720404960903540",
+    "source": "link-only",
+    "focus": {
+      "zh": "把花费换算成工作小时，用柔和的光而不是红色数字表达，作者称要“诚实但不让人沮丧”",
+      "en": "Spending shown as hours of work, lit softly instead of in red numbers; the author wanted it “honest without being depressing”"
+    },
+    "application": {
+      "zh": "金融和健康类应用里，用不制造焦虑的方式呈现数字",
+      "en": "Presenting numbers in finance and health apps without causing anxiety"
+    },
+    "publisher": "Anton Savitskiy (@uxuisavitskiy)",
+    "kind": "social-post",
+    "designer": "Anton Savitskiy",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:04:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/xj080k0-banking-app-work-hours",
+    "post": {
+      "id": "2119720404960903540",
+      "author": "Anton Savitskiy",
+      "handle": "uxuisavitskiy",
+      "date": "2026-11-09",
+      "lang": "en",
+      "text": "My weekend experiment: what if a banking app showed your spending not only in euros, but in the hours of work it took to earn it?\n\nThe tricky part was making it honest without making it depressing  😅😅😅  So: no guilt, no red numbers. Just your hours, softly lit, one category at",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-raphaelsalaja-775318",
+    "name": "Genie minimise for the web",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/raphaelsalaja/status/2118019816233775318",
+    "source": "link-only",
+    "focus": {
+      "zh": "把 macOS 的 Genie 最小化动画重做到网页上，并说明可配合 Base UI 组件使用",
+      "en": "The macOS Genie minimise rebuilt for the web, which the author says also works with Base UI components"
+    },
+    "application": {
+      "zh": "窗口、面板和弹层的收起与恢复动效",
+      "en": "Collapse and restore motion for windows, panels and overlays"
+    },
+    "publisher": "Raphael Salaja (@raphaelsalaja)",
+    "kind": "social-post",
+    "designer": "Raphael Salaja",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:05:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/nf0rkxb-genie-minimize-for-web",
+    "post": {
+      "id": "2118019816233775318",
+      "author": "Raphael Salaja",
+      "handle": "raphaelsalaja",
+      "date": "2026-11-04",
+      "lang": "en",
+      "text": "I rebuilt the macOS Genie minimise for the web.\n\nIt's as close to the real one as I could get, with a bit of my own taste on top so it looks nicer on the web.\n\nIt also works with Base UI's components.",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-nomandsign-484770",
+    "name": "AI spreadsheet fill",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/Nomandsign/status/2117712985804484770",
+    "source": "link-only",
+    "focus": {
+      "zh": "表格下方的输入框里用一句话描述想要的内容，再点 Generate，让 AI 把表格填好",
+      "en": "A prompt box under a spreadsheet: describe the rows in one sentence, press Generate, and the sheet is filled in"
+    },
+    "application": {
+      "zh": "在已有界面里嵌入 AI 生成，而不是另开一个对话窗口",
+      "en": "Embed AI generation inside an existing interface instead of opening a separate chat"
+    },
+    "publisher": "Noman (@Nomandsign)",
+    "kind": "social-post",
+    "designer": "Noman",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:06:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/1pd6afn-ai-spreadsheet-fill-interaction",
+    "post": {
+      "id": "2117712985804484770",
+      "author": "Noman",
+      "handle": "Nomandsign",
+      "date": "2026-11-03",
+      "lang": "en",
+      "text": "Polishing details took longer so the release moves to tomorrow. Enjoy another demo in the meantime",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-alexabraham-625417",
+    "name": "Stock ticker card",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/alexabraham/status/2117327926580625417",
+    "source": "link-only",
+    "focus": {
+      "zh": "深色背景上的一张行情小卡片：公司名、价格、涨幅和走势线放在同一行",
+      "en": "A small stock card on a dark ground: company name, price, change and a sparkline on one line"
+    },
+    "application": {
+      "zh": "行情、指标和数据卡片的紧凑表达",
+      "en": "Compact treatments for quotes, metrics and data cards"
+    },
+    "publisher": "alex (@alexabraham)",
+    "kind": "social-post",
+    "designer": "alex",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:07:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/1sr9bt9-stock-ticker-card-interaction",
+    "post": {
+      "id": "2117327926580625417",
+      "author": "alex",
+      "handle": "alexabraham",
+      "date": "2026-11-02",
+      "lang": "en",
+      "text": "markets are a conversation,\nthe timeline is an interface",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-mamunrabbe-307719",
+    "name": "Motion inspo 009",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/mamunrabbe/status/2119779316238307719",
+    "source": "link-only",
+    "focus": {
+      "zh": "以涂黑的档案文件为素材的动效习作，是作者系列的第 009 号",
+      "en": "A motion study built on a redacted archive document, number 009 in the author’s series"
+    },
+    "application": {
+      "zh": "编辑感强的动态海报、片头和字幕素材",
+      "en": "Editorial motion posters, titles and caption material"
+    },
+    "publisher": "Mamun (@mamunrabbe)",
+    "kind": "social-post",
+    "designer": "Mamun",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:08:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/gk72os6-kinetic-text-motion-studies",
+    "post": {
+      "id": "2119779316238307719",
+      "author": "Mamun",
+      "handle": "mamunrabbe",
+      "date": "2026-11-09",
+      "lang": "en",
+      "text": "Motion inspo 009",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-hellohex-159441",
+    "name": "HEX website opening",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/helloHEX/status/2119927116083159441",
+    "source": "link-only",
+    "focus": {
+      "zh": "新站的开场帧是纯黑底上的一个红色 H，帖子宣布网站上线",
+      "en": "The opening frame is a single red H on pure black; the post announces the site is live"
+    },
+    "application": {
+      "zh": "品牌网站的开场动画",
+      "en": "Opening animations for brand websites"
+    },
+    "publisher": "HEX (@helloHEX)",
+    "kind": "social-post",
+    "designer": "HEX",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:09:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/0hnbtfz-hex-website-motion",
+    "post": {
+      "id": "2119927116083159441",
+      "author": "HEX",
+      "handle": "helloHEX",
+      "date": "2026-11-09",
+      "lang": "en",
+      "text": "new hex website is live",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-dmitrykurash-352663",
+    "name": "Embossed holo brand card",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/DmitryKurash/status/2119523315207352663",
+    "source": "link-only",
+    "focus": {
+      "zh": "压纹加全息质感的品牌卡片，画面上有光标，字标和三个药丸标签压在暗底上",
+      "en": "An embossed, holographic brand card with a cursor on screen, a wordmark and three pill labels over a dark ground"
+    },
+    "application": {
+      "zh": "品牌卡片、会员卡和登录页上的质感表达",
+      "en": "Material treatments for brand cards, membership cards and sign-in pages"
+    },
+    "publisher": "Dmitry Kurash (@DmitryKurash)",
+    "kind": "social-post",
+    "designer": "Dmitry Kurash",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:10:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/h1p57fb-axiomai-embossed-holo-brand",
+    "post": {
+      "id": "2119523315207352663",
+      "author": "Dmitry Kurash",
+      "handle": "DmitryKurash",
+      "date": "2026-11-08",
+      "lang": "en",
+      "text": "Embossed holo",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-sethihq-774366",
+    "name": "Spider-Verse text reveal",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/sethihq/status/2118550187840774366",
+    "source": "link-only",
+    "focus": {
+      "zh": "文字逐句出现，末尾几个词带 RGB 错位的故障色边，灵感来自《蜘蛛侠：平行宇宙》",
+      "en": "Text appears phrase by phrase and the last words carry an RGB-split glitch, inspired by Spider-Verse"
+    },
+    "application": {
+      "zh": "叙事类页面和引言的文字出场",
+      "en": "Text entrances for narrative pages and pull quotes"
+    },
+    "publisher": "Rajat Sethi (@sethihq)",
+    "kind": "social-post",
+    "designer": "Rajat Sethi",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:11:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/5gqq22v-spider-verse-text-reveal",
+    "post": {
+      "id": "2118550187840774366",
+      "author": "Rajat Sethi",
+      "handle": "sethihq",
+      "date": "2026-11-06",
+      "lang": "en",
+      "text": "spider-verse inspired text reveal",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-alcrego_-022151",
+    "name": "Light motion study",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/ALCrego_/status/2116980955525022151",
+    "source": "link-only",
+    "focus": {
+      "zh": "高反差黑白网点颗粒的人群影像，以光与影而不是色彩做画面",
+      "en": "A high-contrast black-and-white halftone crowd image where light and shadow replace colour"
+    },
+    "application": {
+      "zh": "品牌片头和专题页的影像质感",
+      "en": "Image texture for brand openers and feature pages"
+    },
+    "publisher": "A. L. Crego (@ALCrego_)",
+    "kind": "social-post",
+    "designer": "A. L. Crego",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:12:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/tquycvu-light-motion-study",
+    "post": {
+      "id": "2116980955525022151",
+      "author": "A. L. Crego",
+      "handle": "ALCrego_",
+      "date": "2026-11-01",
+      "lang": "en",
+      "text": "· Light ·",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-jakejfried-273610",
+    "name": "Animated ink drawing",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/jakejfried/status/2119215525662273610",
+    "source": "link-only",
+    "focus": {
+      "zh": "手绘墨线动画：手、烛火和一只眼睛，配高饱和的红黄蓝色块",
+      "en": "A hand-drawn ink animation of hands, candles and an eye, in saturated reds, yellows and blues"
+    },
+    "application": {
+      "zh": "插画驱动的专题页、封面和海报动效",
+      "en": "Motion for illustration-led feature pages, covers and posters"
+    },
+    "publisher": "Jake Fried (@jakejfried)",
+    "kind": "social-post",
+    "designer": "Jake Fried",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:13:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/4ynavz6-animated-ink-drawing-loop",
+    "post": {
+      "id": "2119215525662273610",
+      "author": "Jake Fried",
+      "handle": "jakejfried",
+      "date": "2026-11-07",
+      "lang": "zxx",
+      "text": "",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-shlok776-509637",
+    "name": "Feature section without a screenshot",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/shlok776/status/2118702944694509637",
+    "source": "link-only",
+    "focus": {
+      "zh": "功能介绍区用一块小而精的界面片段代替整屏截图，作者认为这样讲得更清楚",
+      "en": "A feature section that uses one small, well-made UI fragment instead of a full screenshot, which the author argues explains more"
+    },
+    "application": {
+      "zh": "产品落地页的功能介绍区",
+      "en": "Feature sections on product landing pages"
+    },
+    "publisher": "Shlok Negi (@shlok776)",
+    "kind": "social-post",
+    "designer": "Shlok Negi",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:14:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/iw18rhk-doze-feature-section",
+    "post": {
+      "id": "2118702944694509637",
+      "author": "Shlok Negi",
+      "handle": "shlok776",
+      "date": "2026-11-06",
+      "lang": "en",
+      "text": "Feature sections don’t need full screenshots of your app.\n\nA small, well-crafted visual explains more than a full screenshot.",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-eledure-870649",
+    "name": "Physical texture on the web",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/eledure/status/2117567527307870649",
+    "source": "link-only",
+    "focus": {
+      "zh": "大字号标题配正文段落和纸张质感，作者说网页“太光滑了”，想让它更有物理感",
+      "en": "Large headline type over body paragraphs with a paper-like feel; the author says the web has become “too smooth”"
+    },
+    "application": {
+      "zh": "编辑感强的长文页和品牌故事页",
+      "en": "Editorial long reads and brand-story pages"
+    },
+    "publisher": "Emile (@eledure)",
+    "kind": "social-post",
+    "designer": "Emile",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:15:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/o5w1k5q-physical-texture-web-experiments",
+    "post": {
+      "id": "2117567527307870649",
+      "author": "Emile",
+      "handle": "eledure",
+      "date": "2026-11-03",
+      "lang": "en",
+      "text": "The web has become too smooth.\nWhat if we brought some texture back?\n\nI've been experimenting with ways to make web feel more physical - paper, ink, glass, and all their imperfections.\n\nHere's a sneak peak",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-ann_nnng-126157",
+    "name": "Crumple changelog",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/ann_nnng/status/2112494977637126157",
+    "source": "link-only",
+    "focus": {
+      "zh": "把更新日志做成可以揉皱的纸张，每条更新是一张纸",
+      "en": "A changelog turned into sheets of paper you can crumple, one sheet per update"
+    },
+    "application": {
+      "zh": "更新记录和发布说明页",
+      "en": "Changelogs and release-notes pages"
+    },
+    "publisher": "Ann Nguyen (@ann_nnng)",
+    "kind": "social-post",
+    "designer": "Ann Nguyen",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:16:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/94h2ciu-crumple-changelog",
+    "post": {
+      "id": "2112494977637126157",
+      "author": "Ann Nguyen",
+      "handle": "ann_nnng",
+      "date": "2026-10-20",
+      "lang": "en",
+      "text": "i turned a boring changelog into papers you can actually crumple up",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-imharshin-519708",
+    "name": "Ink-drop footer",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/imharshin/status/2118715905815519708",
+    "source": "link-only",
+    "focus": {
+      "zh": "页脚写着“Leave a mark”，提示在页脚区域拖动即可滴下墨迹",
+      "en": "A footer that says “Leave a mark” and invites you to drag across it to drop ink"
+    },
+    "application": {
+      "zh": "产品网站页脚的收尾互动",
+      "en": "A closing interaction in a product site’s footer"
+    },
+    "publisher": "Harsh Sharma (@imharshin)",
+    "kind": "social-post",
+    "designer": "Harsh Sharma",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:17:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/gdt102o-inkwell-ink-drop-footer",
+    "post": {
+      "id": "2118715905815519708",
+      "author": "Harsh Sharma",
+      "handle": "imharshin",
+      "date": "2026-11-06",
+      "lang": "en",
+      "text": "Studying color mixing lately",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-soluna_stensale-941180",
+    "name": "Matcha brand pitch page",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/soluna_stensale/status/2120207360173941180",
+    "source": "link-only",
+    "focus": {
+      "zh": "给客户的提案做成可交互的网页：地球仪代表客户的世界，下方放相关电商案例",
+      "en": "A client pitch built as an interactive page: a globe stands for the client’s world, with relevant e-commerce work below"
+    },
+    "application": {
+      "zh": "代理商或自由职业者的提案页与案例展示",
+      "en": "Pitch pages and case showcases for agencies and freelancers"
+    },
+    "publisher": "Soluna Stensale (@soluna_stensale)",
+    "kind": "social-post",
+    "designer": "Soluna Stensale",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:18:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/ri5f5wg-matcha-brand-pitch-page",
+    "post": {
+      "id": "2120207360173941180",
+      "author": "Soluna Stensale",
+      "handle": "soluna_stensale",
+      "date": "2026-11-10",
+      "lang": "en",
+      "text": "recently, i was talking with an influencer with over a million followers about her upcoming matcha brand. she was looking for an e-commerce shop.\n\nhere's our pitch.\n\nthe interactive globe represents her world and vision. we also included some of our most relevant e-commerce work,",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-driceroland-305252",
+    "name": "Office Commun opening",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/driceroland/status/2109698741607305252",
+    "source": "link-only",
+    "focus": {
+      "zh": "树林实拍画面上只叠一行字标，是一家品牌与动效工作室的开场",
+      "en": "A single wordmark over footage of trees, the opening of a brand and motion studio"
+    },
+    "application": {
+      "zh": "工作室官网和案例的开场",
+      "en": "Openers for studio sites and case studies"
+    },
+    "publisher": "Drice (@driceroland)",
+    "kind": "social-post",
+    "designer": "Drice",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:19:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/f61iezo-office-commun-brand-identity",
+    "post": {
+      "id": "2109698741607305252",
+      "author": "Drice",
+      "handle": "driceroland",
+      "date": "2026-10-12",
+      "lang": "en",
+      "text": "been quietly growing Office Commun over the last few months\n\na brand + motion studio with the most talented team i’ve ever worked with, on the biggest and most exciting projects we’ve done\n\ncase studies otw",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-thenickpattison-111518",
+    "name": "A year in logos",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/thenickpattison/status/2111490729101111518",
+    "source": "link-only",
+    "focus": {
+      "zh": "一年里设计的标志合辑，视频里逐个切换不同品牌的字标，每个都配自己的底色",
+      "en": "A collection of a year’s logo work; the video cycles through different brands’ wordmarks, each on its own ground"
+    },
+    "application": {
+      "zh": "年度作品合辑和品牌案例汇总",
+      "en": "Year-in-review reels and brand case round-ups"
+    },
+    "publisher": "Nick Pattison (@thenickpattison)",
+    "kind": "social-post",
+    "designer": "Nick Pattison",
+    "checkedAt": "2026-11-11",
+    "addedAt": "2026-11-11T08:20:00Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "via": "https://recent.design/i/s21xh1n-x-com",
+    "post": {
+      "id": "2111490729101111518",
+      "author": "Nick Pattison",
+      "handle": "thenickpattison",
+      "date": "2026-10-17",
+      "lang": "en",
+      "text": "A collection of some of the logos we have designed in the last year",
       "hasMedia": true
     }
   }
