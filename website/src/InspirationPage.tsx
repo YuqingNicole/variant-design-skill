@@ -5,7 +5,7 @@ import { XPost, type Post } from './XPost';
 import { XVideo, mediaOf } from './XVideo';
 import { locales, type Locale } from './i18n/locales';
 import { t, type Localized } from './i18n/localized';
-import { inspirationSources, inspirationTopics } from './inspiration-data';
+import { inspirationTopics } from './inspiration-data';
 import { sectionOf, sectionPath, sectionById, activeSections } from './inspiration-sections';
 import { inspirationItems, referencesFor, withdrawnReferences, permissionOf, type Reference } from './reference-library';
 import { AuthorizationDetails, AuthorizedMedia, authorizedVideo, WithdrawnReferencePage } from './ReferencePermission';
@@ -14,7 +14,6 @@ import './content-pages.css';
 import './inspiration.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath, parseLocale } from './i18n/locale-route';
-const sources=inspirationSources.filter(s=>s.kind!=='skills');
 type Item=Reference;
 // Media close to the 16:10 cell fills it (a small crop); a tall or very wide capture stays whole on a surface mat. The grid keeps its row order, which the first screen and scroll restoration rely on.
 const fills=(media?:{width?:number;height?:number})=>Boolean(media?.width&&media.height&&media.width/media.height>=.85&&media.width/media.height<=2);
@@ -47,7 +46,6 @@ disclosureBody:{zh:'作品版权归原作者。标有「作者授权」的媒体
  refType:{zh:'参考类型',en:'Reference type'},all:{zh:'全部',en:'All'},topic:{zh:'专题',en:'Topic'},allTopics:{zh:'全部专题',en:'All topics'},search:{zh:'搜索参考',en:'Search references'},searchHint:{zh:'搜索 ⌘K',en:'Search ⌘K'},
  sort:{zh:'排序',en:'Sort'},curated:{zh:'最近收录',en:'Recently added'},original:{zh:'编辑顺序',en:'Editorial order'},recent:{zh:'最近核对',en:'Recently checked'},byName:{zh:'按名称',en:'By name'},references:{zh:'个参考',en:'references'},openOnX:{zh:'在 X 上打开',en:'Open on X'},
  openSource:{zh:'打开来源',en:'Open source'},noMatches:{zh:'没有匹配结果。试试其他关键词或专题。',en:'No matches. Try another query or topic.'},clear:{zh:'清除筛选',en:'Clear filters'},
- explore:{zh:'继续找素材与代码',en:'Keep exploring references and code'},exploreNote:{zh:'素材和代码是否可复用，需查看具体条目的许可。以下是来源入口，不表示本站拥有其作品。',en:'Check each item’s license before reusing assets or code. These are source directories, not work owned by this site.'},
  closing:{zh:'看过之后，做出自己的版本。',en:'Make your own version.'},install:{zh:'安装并开始',en:'Install & start'},studies:{zh:'查看我们的 A/B/C 案例',en:'See our A/B/C cases'},
  checked:{zh:'公开来源核对：2026-10-07；SaaS 首页专题复核：2026-10-29；初创公司首页专题核对：2026-11-01',en:'Public sources checked: 2026-10-07; SaaS homepages topic rechecked: 2026-10-29; startup homepages topic checked: 2026-11-01'},
  unknownDesignerField:{zh:'设计者',en:'designer'},unknownMobile:{zh:'手机端表现',en:'mobile behavior'},unknownRights:{zh:'链接以外的使用权限',en:'rights beyond linking'},listJoin:{zh:'、',en:', '}} satisfies Record<string,Localized>;
@@ -199,7 +197,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    {visible<results.length&&<div className="insp-more"><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}
    {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setTopic('');setQuery('')})}>{l('clear')}</button></p>}
    {tail}
-   <section className="inspiration-sources"><h2>{l('explore')}</h2><p>{l('exploreNote')}</p><div>{sources.map(s=><a key={s.name} href={s.url} target="_blank" rel="noreferrer"><strong>{s.name}</strong><span>{t(s.type,language)}</span></a>)}</div></section><section className="content-closing"><h2>{l('closing')}</h2><a className="content-button" href={localePath('/docs',language)}>{l('install')}</a><a className="content-secondary" href={localePath('/cases',language)}>{l('studies')}</a><p className="inspiration-count">{l('checked')}</p></section>
+   <section className="content-closing"><h2>{l('closing')}</h2><a className="content-button" href={localePath('/docs',language)}>{l('install')}</a><a className="content-secondary" href={localePath('/cases',language)}>{l('studies')}</a><p className="inspiration-count">{l('checked')}</p></section>
   </section>
   <dialog ref={dialogRef} className="insp-dialog" aria-label={openItem?.name} onCancel={e=>{e.preventDefault();close()}} onKeyDown={e=>{if(e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLInputElement||e.target instanceof HTMLSelectElement)return;if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}if(e.key==='ArrowRight'){e.preventDefault();step(1)}}} onClick={e=>{if(e.target===e.currentTarget)close()}}>{open?.mode==='modal'&&openItem&&detailView(openItem,false)}</dialog>
   <SiteFooter language={language}/></main>
