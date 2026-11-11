@@ -34,3 +34,7 @@ html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing
 :is(.content-page,.pricing-page,.paper-home) .site-footer-cta h2{font-size:46px;font-weight:400;letter-spacing:-.02em}
 @media(max-width:650px){.content-page .content-hero{padding-block:32px 20px}:is(.content-page,.pricing-page,.paper-home) .site-footer-cta h2{font-size:34px}}
 .content-page .docs-start{background:rgba(225,233,216,.7);border-color:var(--hair)}
+
+/* Phase 4: phones wrap the header into two rows, so the fixed 76px height must give way; titles break evenly instead of leaving one orphan character. */
+@media(max-width:650px){:is(.content-page,.pricing-page,.paper-home) .site-nav{height:auto;padding-bottom:4px}}
+:is(.content-page,.pricing-page,.paper-home) :is(h1,h2){text-wrap:balance}
