@@ -1115,6 +1115,20 @@ test('lab budget: no layout shift past 0.1, a quick first paint on our own pages
  }
 });
 
+test('a fine pointer drags a soft light across the panel; reduced motion removes it and touch never turns it on', async ({browser})=>{
+ const desk=await browser.newContext({viewport:{width:1440,height:900}}),page=await desk.newPage();await page.goto('/docs');await hydrated(page);
+ const light=page.locator('.site-spotlight i');await expect(light).toHaveCSS('opacity','0');
+ await page.mouse.move(700,400);await page.mouse.move(720,420);await expect(light).toHaveCSS('opacity','1');
+ expect(await light.evaluate(e=>e.style.transform)).toMatch(/^translate3d\(/);
+ // The layer takes no space and sits under the content: the nav is still at the top of the panel and still clickable.
+ expect((await page.locator('.site-nav').boundingBox()).y).toBeLessThan(120);await page.locator('.site-nav-links a').first().click();await expect(page).not.toHaveURL(/\/docs$/);
+ await desk.close();
+ const still=await browser.newContext({viewport:{width:1440,height:900},reducedMotion:'reduce'}),p2=await still.newPage();await p2.goto('/docs');await hydrated(p2);
+ await p2.mouse.move(700,400);await p2.mouse.move(720,420);await p2.waitForTimeout(200);await expect(p2.locator('.site-spotlight')).toBeHidden();await still.close();
+ const touch=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true}),p3=await touch.newPage();await p3.goto('/docs');await hydrated(p3);
+ await p3.mouse.move(100,300);await p3.mouse.move(120,320);await p3.waitForTimeout(200);await expect(p3.locator('.site-spotlight i')).toHaveCSS('opacity','0');await touch.close();
+});
+
 // The X embed arrives late and is taller than the text it replaces. On a phone it sits below the notes, so it can only
 // push down what is under it; this checks the notes do not move and the embed lands under them.
 test('an X post embed arriving does not move the notes above it, on a phone', async ({browser},info)=>{
