@@ -58,14 +58,15 @@ test('motion preference changes stop video downloads and playback; offscreen vid
  await page.emulateMedia({reducedMotion:'reduce'});await expect(first).not.toHaveAttribute('src');await expect.poll(()=>first.evaluate(v=>v.paused)).toBe(true);
 });
 
-test('both languages meet the visual budget, show two desktop rows and expose credits on touch',async({page})=>{
+test('both languages meet the visual budget, show a strip of three cards on the first desktop screen and keep credits visible',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});
  for(const language of ['zh','en'])for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});await page.goto(language==='en'?'/en':'/');await expect(page.locator('nav[aria-label="全部参考"]')).toHaveCount(0);await expect(page.locator('.insp-card').first()).toBeVisible();await page.evaluate(()=>document.fonts.ready);
   const sample=await page.evaluate(probe);expect(grade(sample).over,`${language} ${width}`).toEqual([]);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  const meta=page.locator('.insp-card-meta').first();if(width<=390){await expect(meta).toHaveCSS('opacity','1');await expect(meta.locator('.insp-vcard-avatar')).toBeVisible();}else{await expect(meta).toHaveCSS('opacity','0');await page.locator('.insp-card-open').first().focus();await expect(meta).toHaveCSS('opacity','1');
-   expect(await page.locator('.insp-card').evaluateAll(cs=>cs.slice(0,8).every(c=>{const r=c.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight}))).toBe(true);
+  const meta=page.locator('.insp-card-meta').first();await expect(meta).toHaveCSS('opacity','1');if(width<=390){await expect(meta.locator('.insp-vcard-avatar')).toBeVisible();}else{
+   // The feed is one horizontal strip: credits sit under each image, and the first screen shows three whole cards.
+   expect(await page.locator('.insp-card').evaluateAll(cs=>cs.slice(0,3).every(c=>{const r=c.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight}))).toBe(true);
   }
  }
 });

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { transition } from './view-transition';
 import { XPost, type Post } from './XPost';
@@ -35,7 +35,7 @@ const variantOf=(id:string)=>[...id].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7)
 const sized=(src:string,w:number)=>`/_vercel/image?url=${encodeURIComponent(src)}&w=${w}&q=75`;
 // Interface copy, one entry per message (RFC-005 §3.2). Formatters take the values they interpolate.
 const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdrawnNote:{zh:'这件作品已撤下，不会进入参考指令；你的笔记仍保留在本地。',en:'This work was removed and is excluded from briefs. Your notes remain in this browser.'},authorized:{zh:'作者授权',en:'Author permission'},unknownReuse:{zh:'本站展示以外的使用权限',en:'rights beyond display on this site'},linkOnly:{zh:'仅链接',en:'Link only'},title:{zh:'互联网上最好的设计灵感。',en:'The best design inspiration during the ai area.'},motionNote:{zh:'动效是 Inspiration 里 Best practice 的一个筛选项。',en:'Motion is a filter within Best practice in Inspiration.'},refNav:{zh:'参考导航',en:'Reference navigation'},allRefs:{zh:'全部参考',en:'All references'},close:{zh:'关闭',en:'Close'},
- addPack:{zh:'加入参考包',en:'Add to pack'},removePack:{zh:'移出参考包',en:'Remove from pack'},prev:{zh:'上一个',en:'Previous'},next:{zh:'下一个',en:'Next'},study:{zh:'研究什么',en:'Study'},apply:{zh:'用在哪里',en:'Apply'},
+ addPack:{zh:'加入参考包',en:'Add to pack'},removePack:{zh:'移出参考包',en:'Remove from pack'},prev:{zh:'上一个',en:'Previous'},next:{zh:'下一个',en:'Next'},scrollPrev:{zh:'向左滚动作品',en:'Scroll references left'},scrollNext:{zh:'向右滚动作品',en:'Scroll references right'},study:{zh:'研究什么',en:'Study'},apply:{zh:'用在哪里',en:'Apply'},
  source:{zh:'出处',en:'Source'},designer:{zh:'设计者',en:'Designer'},unknownDesigner:{zh:'未知',en:'Unknown'},stillUnknown:{zh:'还不知道',en:'Unknown'},createBrief:{zh:'生成参考指令',en:'Create brief'},visit:{zh:'访问原站',en:'Visit source'},
  storageError:{zh:'无法读取或保存本地参考包。本次修改仅在当前页面有效，请复制指令保存。',en:'Unable to read or save the local pack. Changes remain on this page only; copy the brief to keep them.'},
  pack:{zh:'你的参考包',en:'Your reference pack'},packNote:{zh:'保存在当前浏览器；清除浏览器数据后会丢失，不会跨设备同步。',en:'Saved in this browser; clearing browser data removes it. It does not sync across devices.'},
@@ -140,6 +140,11 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  useEffect(()=>{const row=pillsRef.current,tab=row?.querySelector<HTMLElement>('[aria-current=page]');if(row&&tab)row.scrollLeft=tab.offsetLeft-(row.clientWidth-tab.offsetWidth)/2},[section]);
  useEffect(()=>{const onKey=(e:KeyboardEvent)=>{const k=e.key.toLowerCase(),typing=e.target instanceof HTMLElement&&e.target.closest('input,textarea,select,[contenteditable],dialog[open]');if((e.metaKey||e.ctrlKey)&&k==='k'||k==='/'&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&!typing){e.preventDefault();searchRef.current?.focus()}};addEventListener('keydown',onKey);return()=>removeEventListener('keydown',onKey)},[]);
  const sentinel=useRef<HTMLDivElement>(null);
+ // The feed is one horizontal strip: arrows and a progress line stand in for the page scrollbar.
+ const feedRef=useRef<HTMLUListElement>(null),[feed,setFeed]=useState({at:0,can:false});
+ const onFeedScroll=()=>{const el=feedRef.current;if(!el)return;const max=el.scrollWidth-el.clientWidth;setFeed({at:max>0?Math.min(1,el.scrollLeft/max):0,can:max>1})};
+ const scrollFeed=(dir:1|-1)=>{const el=feedRef.current;if(el)el.scrollBy({left:dir*el.clientWidth*.8,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})};
+ useEffect(onFeedScroll,[shown.length,section]);
  useEffect(()=>{const el=sentinel.current;if(!el||typeof IntersectionObserver==='undefined')return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting)setVisible(v=>v+pageSize)},{rootMargin:'400px'});io.observe(el);return()=>io.disconnect()},[results.length,visible]);
  // Independent filter changes must apply immediately; the shared animation queue keeps only its latest update.
  const filter=(update:()=>void)=>{update();setVisible(pageSize)};
@@ -183,7 +188,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   <section className="site-shell insp-body">
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
-   <ul className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}`}>{shown.map(item=>{const media=mediaFor(item),post=postOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
+   <ul ref={feedRef} onScroll={onFeedScroll} className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}`}>{shown.map(item=>{const media=mediaFor(item),post=postOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
     <a className={`insp-card-open${media?' insp-vcard-open':''}${fills(media)?' insp-fills':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
      {media?<XVideo media={media} fallback={<AnalysisCard item={item} locale={language}/>}/>:<Thumb item={item} locale={language}/>}
      <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={media.avatar} width="28" height="28" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer" onError={e=>{e.currentTarget.style.display='none'}}/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:new URL(item.url).hostname}{authorized&&` · ${rightsLabel(item,language)}`}</small></span></span>
@@ -191,6 +196,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
     <button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${l(selection[item.id]?'removePack':'addPack')}：${item.name}`}><Icon d={icons.save}/></button>
     <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l(post?'openOnX':'openSource')}：${item.name}`}><Icon d={icons.out}/></a>
    </li>})}</ul>
+   {results.length>0&&<div className="insp-controls"><div className="insp-progress" aria-hidden="true">{String(Math.min(shown.length,Math.round(feed.at*(shown.length-1))+1)).padStart(2,'0')} / {String(results.length).padStart(2,'0')}<i style={{'--p':`${Math.round(feed.at*100)}%`} as CSSProperties}/></div><div className="insp-arrows"><button type="button" aria-label={l('scrollPrev')} disabled={!feed.can||feed.at<=.001} onClick={()=>scrollFeed(-1)}><Icon d={icons.prev}/></button><button type="button" aria-label={l('scrollNext')} disabled={!feed.can||feed.at>=.999} onClick={()=>scrollFeed(1)}><Icon d={icons.next}/></button></div></div>}
    {visible<results.length&&<div ref={sentinel} className="insp-more"><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}
    {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setTopic('');setQuery('')})}>{l('clear')}</button></p>}
    {tail}
