@@ -127,16 +127,8 @@ div.insp-thumb{position:relative;display:grid;grid-template-rows:auto auto auto 
 @media(prefers-reduced-motion:reduce){.inspiration-brief{animation-name:insp-fade}}
 .inspiration-brief textarea{display:block;margin:20px 0;font:13px/1.8 var(--font-mono)}
 .inspiration-dismiss{margin-left:var(--space-3)}
-.inspiration-sources{margin-top:70px;padding-block:40px;border-top:1px solid var(--site-line)}
-.inspiration-sources h2{font-size:28px}
-.inspiration-sources p{color:var(--site-muted);font-size:14px;max-width:700px}
-.inspiration-sources>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-top:30px}
-.inspiration-sources a{border:1px solid var(--site-line);border-radius:var(--radius-card);padding:16px;text-decoration:none;color:var(--site-ink)}
-.inspiration-sources strong{display:block;font-size:14px;font-weight:500}
-.inspiration-sources span{font-size:12px;color:var(--site-muted)}
 
 @media(max-width:1023px){.insp-detail{grid-template-columns:1fr;gap:0}.insp-detail-notes{display:contents}.insp-detail-tools{order:-2}.insp-detail-visual{order:-1;margin-bottom:var(--space-5)}.insp-dialog{width:100%;height:100%;max-height:none;border-radius:0;border:0;padding:var(--space-4)}.insp-detail-tools{margin-bottom:var(--space-4)}.insp-detail-visual-post{order:1;display:flex;flex-direction:column;gap:var(--space-3);margin:var(--space-5) 0 0}}
-@media(max-width:900px){.inspiration-sources>div{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.insp-bar>.site-shell{flex-wrap:wrap}.insp-pills{flex-basis:100%}.insp-search{flex:1}.insp-search input,.insp-search input:focus,.insp-search input:not(:placeholder-shown){width:100%}.inspiration-pack,.inspiration-brief{padding:18px}.inspiration-pack fieldset{grid-template-columns:1fr}:is(.insp-detail-media,.insp-shot)>.insp-thumb{padding:var(--space-4)}}
 @media(prefers-reduced-motion:reduce){.inspiration-page *{transition-property:opacity,color,background-color,border-color!important}.insp-dialog[open]{animation-name:insp-fade}}
 /* Show the reference note until its remote preview has loaded, then fade the image in. */
@@ -226,7 +218,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .inspiration-page .insp-sketch i{border-radius:3px}
 .inspiration-page :is(.insp-detail-tools :is(a,button),.insp-detail-brief){background:rgba(255,255,255,.85);border-color:var(--hair)}
 .insp-dialog{border-radius:16px;background:rgba(247,247,242,.95)}
-.inspiration-page :is(.inspiration-pack,.inspiration-sources a){background:var(--card-g);border-color:var(--hair);border-radius:16px}
+.inspiration-page .inspiration-pack{background:var(--card-g);border-color:var(--hair);border-radius:16px}
 .inspiration-page .inspiration-brief{background:rgba(225,233,216,.92);border-color:var(--hair);border-radius:16px}
 @media(max-width:650px){
  .inspiration-page .insp-head{padding-block:20px 8px;gap:var(--space-2)}
