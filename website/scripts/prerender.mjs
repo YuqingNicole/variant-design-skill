@@ -155,7 +155,7 @@ export function renderSite(entries, template, site = defaultSite, references = [
   const zhPage = options => page(template, { site, translated: !!english[options.route], ...options });
   const enPage = options => { if (english[options.route]) pages.set(pathIn(options.route, 'en'), page(template, { site, lang: 'en', translated: true, body: english[options.route], ...options })); };
   const library = 'Variant Design 方向库';
-  const homeTitle = 'Variant Design — 互联网上最好的设计灵感', homeDescription = `精选网站、界面和动效作品，每条都附出处和我们写的笔记：研究什么、用在哪里。目前 ${references.length} 条。`;
+  const homeTitle = 'Variant Design — AI 时代最好的设计灵感', homeDescription = `精选网站、界面和动效作品，每条都附出处和我们写的笔记：研究什么、用在哪里。目前 ${references.length} 条。`;
   pages.set('/', zhPage({ route: '/', data: { '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/`, name: 'Variant Design', description: homeDescription, inLanguage: ['zh-CN', 'en'] }, title: homeTitle, description: homeDescription, body: rendered['/'] ?? '' }));
   // One page per section: its own address, title, description and only its own references.
   for (const c of sections) pages.set(`/browse/${c.id}`, zhPage({ route: `/browse/${c.id}`, title: `${c.title.zh} — Variant Design`, description: `${c.intro.zh}目前 ${c.count.zh} 条。`, body: rendered[`/browse/${c.id}`] ?? '' }));
