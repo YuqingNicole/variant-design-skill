@@ -76,3 +76,11 @@ html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing
   .content-page select::picker(select){background-color:rgba(24,28,36,.86);background-image:linear-gradient(rgba(255,255,255,.08),rgba(255,255,255,0) 40%)}
  }
 }
+
+/* Spotlight (docs/design-system.md §12.8): a viewport-tall sticky layer at the top of the panel, under the content (negative z-index
+   inside the panel's own stacking context, above its glass), holding a 1200px disc of colourless light that a fine pointer drags around.
+   It starts transparent; only the pointer script in SiteHeader turns it on. Reduced motion removes the layer entirely. */
+:is(.content-page,.pricing-page,.paper-home) .site-spotlight{position:sticky;top:0;z-index:-1;height:100vh;margin-bottom:-100vh;overflow:hidden;pointer-events:none;border-radius:16px 16px 0 0}
+.site-spotlight i{position:absolute;left:0;top:0;width:1200px;height:1200px;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,rgba(255,255,255,.45),rgba(255,255,255,0));opacity:0;transition:opacity var(--dur-slow) var(--ease-out);will-change:transform}
+@media(prefers-color-scheme:dark){.site-spotlight i{background:radial-gradient(closest-side,rgba(255,255,255,.13),rgba(255,255,255,0))}}
+@media(prefers-reduced-motion:reduce){.site-spotlight{display:none}}
