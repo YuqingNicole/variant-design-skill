@@ -25,3 +25,20 @@ export const inline = (text: string) => text.split(/(``.+?``|`[^`]+`)/).filter(B
 });
 // Anchor ids: "1.1.0" → "v1-1-0", "Unreleased" → "unreleased".
 export const releaseId = (version: string) => /^\d/.test(version) ? `v${version.replace(/\W+/g, '-')}` : version.toLowerCase().replace(/\W+/g, '-');
+
+// Website entries (docs/versioning.md): an item that starts with "Website package `x.y.z`" opens that package version, and the
+// items after it up to the next one belong to it, in the order CHANGELOG.md is written. The page groups the site's own releases on it.
+export const packageVersion = (item: string) => item.match(/^Website package `(\d+\.\d+\.\d+)`/)?.[1] ?? null;
+export function packageGroups<T extends { en: string }>(items: T[]) {
+  const groups: { version: string | null; items: T[] }[] = [];
+  for (const item of items) {
+    const version = packageVersion(item.en);
+    if (version || !groups.length) groups.push({ version, items: [] });
+    groups.at(-1)!.items.push(item);
+  }
+  return groups;
+}
+// Drops the "Website package `x.y.z`:" lead (or "网站包 `x.y.z`：") once a group header shows the version. A lead that runs
+// into its sentence ("… adds a footer") stays, so the sentence still reads.
+export const withoutPackageLead = (text: string) =>
+  text.replace(/^(?:Website package|网站包) `\d+\.\d+\.\d+`[:：]\s*([a-z])?/, (_, first?: string) => first?.toUpperCase() ?? '');

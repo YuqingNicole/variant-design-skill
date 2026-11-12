@@ -17,8 +17,16 @@
 .sponsor-section .home-actions{margin-top:32px}.sponsor-page :is(a,button):focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
 @media(max-width:1000px){.sponsor-section{grid-template-columns:1fr;gap:28px;padding-block:56px}}
 @media(max-width:640px){.sponsor-hero{padding-block:40px 56px}.sponsor-rows li{grid-template-columns:1fr;gap:4px}}
+/* /changelog: one group per skill release, separated by a hairline; inside "Website", the entries sit under their own package
+   version in a two-column row (version left, items right; changelog.ts packageGroups). No new sizes: 12px mono, 15/16px text. */
 .changelog-date{margin-left:12px;font:12px var(--font-mono);letter-spacing:0;color:var(--site-muted)}
-.changelog-heading{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.changelog-current{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--site-line);border-radius:999px;padding:3px 7px;color:var(--site-brand);font:12px/1.3 var(--font-mono);letter-spacing:0}.changelog-current::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--site-brand)}.docs-layout>aside a.changelog-nav-current{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--site-ink);font-weight:500}.changelog-nav-current .changelog-current{font-size:12px;padding:2px 6px}
+.changelog-heading{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.changelog-current{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--site-line);border-radius:999px;padding:3px 7px;color:var(--site-brand);font:12px/1.3 var(--font-mono);letter-spacing:0}.changelog-current::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--site-brand)}
+.changelog-page .docs-layout>aside a{display:grid;gap:2px}.changelog-page .docs-layout>aside a>span{display:inline-flex;align-items:center;gap:8px}.docs-layout>aside a.changelog-nav-current{color:var(--site-ink);font-weight:500}.changelog-nav-current .changelog-current{font-size:12px;padding:2px 6px}.changelog-nav-date{font:12px/1.4 var(--font-mono);letter-spacing:0;color:var(--site-muted)}
+.changelog-release+.changelog-release{padding-top:40px;border-top:1px solid var(--site-line)}.changelog-release+.changelog-release h2{margin-top:0}
+.changelog-lede{font-size:16px;line-height:1.75;color:var(--site-ink);max-width:62ch;margin:0 0 8px}.changelog-note{margin:0 0 8px}
+.changelog-package{display:grid;grid-template-columns:120px minmax(0,1fr);gap:0 24px;margin-top:14px;padding-top:14px;border-top:1px solid var(--site-line)}.changelog-package:first-of-type{margin-top:0;padding-top:0;border-top:0}
+.changelog-package>h4{margin:12px 0 0;font:12px/1.6 var(--font-mono);font-weight:400;letter-spacing:0;color:var(--site-muted)}.changelog-package>h4 b{display:block;font-weight:400;color:var(--site-ink)}.changelog-package>ul{grid-column:2;margin:0}
+@media(max-width:800px){.changelog-page .docs-layout>aside a{display:inline-flex;align-items:center;gap:8px}.changelog-package{grid-template-columns:1fr}.changelog-package>h4{margin-top:0}.changelog-package>h4 b{display:inline;margin-right:8px}.changelog-package>ul{grid-column:auto}}
 /* Phones: standalone links (table of contents, back, secondary, link paragraphs) get 44px touch targets;
    form fields use 16px text so iOS does not zoom the page when they take focus. */
 @media(max-width:650px){.docs-layout>aside{gap:0 18px;padding-block:8px}.docs-layout>aside a{display:inline-flex;align-items:center;min-height:44px;font-size:13px}
@@ -49,9 +57,8 @@
 .docs-hub article h2 a::after{content:"";position:absolute;inset:0;border-radius:inherit}
 .docs-hub article:has(h2 a:focus-visible){border-color:var(--site-brand)}
 .docs-hub article p{font-size:14px;line-height:1.7;color:var(--site-muted);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;text-wrap:pretty}
-.docs-hub .docs-start,.docs-hub .docs-answers{grid-column:1/-1}
-.docs-hub .docs-start{background:var(--site-accent);border-color:var(--site-brand)}
-.docs-hub .docs-answers{background:transparent}
-@media(hover:hover) and (prefers-reduced-motion:no-preference){.docs-hub .docs-card,.docs-hub .docs-answers{transition:border-color var(--dur-fast) var(--ease-out),background-color var(--dur-fast) var(--ease-out)}}
-@media(hover:hover){.docs-hub .docs-card:hover,.docs-hub .docs-answers:hover{border-color:var(--site-brand);background:var(--site-card)}}
+.docs-hub .docs-start{grid-column:1/-1;background:var(--site-accent);border-color:var(--site-brand)}
+.docs-hub :is(.docs-answers,.docs-changelog){background:transparent}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.docs-hub :is(.docs-card,.docs-answers,.docs-changelog){transition:border-color var(--dur-fast) var(--ease-out),background-color var(--dur-fast) var(--ease-out)}}
+@media(hover:hover){.docs-hub :is(.docs-card,.docs-answers,.docs-changelog):hover{border-color:var(--site-brand);background:var(--site-card)}}
 @media(max-width:800px){.docs-hub{grid-template-columns:minmax(0,1fr)}}
