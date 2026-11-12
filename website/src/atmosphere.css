@@ -27,9 +27,10 @@ html body :is(.content-page,.pricing-page,.paper-home):is(.content-page,.pricing
  :is(.content-page,.pricing-page,.paper-home) .site-shell{padding-inline:16px}
 }
 
-/* Phase 3: inner pages take the inspiration scale. One hero (68px light title, 64px of air above), glass instead of green for the closing call to action. */
+/* Phase 3: inner pages take the inspiration scale. One hero (light title, 64px of air above), glass instead of green for the closing call to action.
+   The title tracks the home's (56px since the three-row wall): no inner page's h1 is larger than the home's, a tested rule. */
 .content-page .content-hero{padding-block:64px 32px}
-.content-page .content-hero h1{max-width:1000px;font-size:clamp(34px,5vw,68px);font-weight:400;line-height:1.04;letter-spacing:-.025em;margin-bottom:20px}
+.content-page .content-hero h1{max-width:1000px;font-size:clamp(34px,4.2vw,56px);font-weight:400;line-height:1.04;letter-spacing:-.025em;margin-bottom:20px}
 :is(.content-page,.pricing-page,.paper-home) .site-footer-cta{background:var(--fill-3);border-block:1px solid var(--hair)}
 :is(.content-page,.pricing-page,.paper-home) .site-footer-cta h2{font-size:46px;font-weight:400;letter-spacing:-.02em}
 @media(max-width:650px){.content-page .content-hero{padding-block:32px 20px}:is(.content-page,.pricing-page,.paper-home) .site-footer-cta h2{font-size:34px}}

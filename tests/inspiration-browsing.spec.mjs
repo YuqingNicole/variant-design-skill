@@ -58,17 +58,23 @@ test('motion preference changes stop video downloads and playback; offscreen vid
  await page.emulateMedia({reducedMotion:'reduce'});await expect(first).not.toHaveAttribute('src');await expect.poll(()=>first.evaluate(v=>v.paused)).toBe(true);
 });
 
-test('both languages meet the visual budget, show a strip of three cards on the first desktop screen and keep credits visible',async({page})=>{
+test('both languages meet the visual budget, show a wall three cards high on the first desktop screen and keep credits visible',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});
+ // Rows among the first nine cards, and how many cards sit whole inside both the viewport and the strip's own box (cards past its
+ // right edge are clipped by its overflow, so the viewport alone would overcount).
+ const wall=()=>page.locator('.insp-feed').evaluate(g=>{const b=g.getBoundingClientRect(),rs=[...g.querySelectorAll(':scope>.insp-card')].slice(0,30).map(c=>c.getBoundingClientRect());return {rows:new Set(rs.slice(0,9).map(r=>Math.round(r.top))).size,whole:rs.filter(r=>r.top>=0&&r.bottom<=innerHeight&&r.left>=b.left&&r.right<=b.right).length,width:Math.round(rs[0].width)}});
  for(const language of ['zh','en'])for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});await page.goto(language==='en'?'/en':'/');await expect(page.locator('nav[aria-label="全部参考"]')).toHaveCount(0);await expect(page.locator('.insp-card').first()).toBeVisible();await page.evaluate(()=>document.fonts.ready);
   const sample=await page.evaluate(probe);expect(grade(sample).over,`${language} ${width}`).toEqual([]);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  const meta=page.locator('.insp-card-meta').first();await expect(meta).toHaveCSS('opacity','1');if(width<=390){await expect(meta.locator('.insp-vcard-avatar')).toBeVisible();}else{
-   // The feed is one horizontal strip: credits sit under each image, and the first screen shows three whole cards.
-   expect(await page.locator('.insp-card').evaluateAll(cs=>cs.slice(0,3).every(c=>{const r=c.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight}))).toBe(true);
+  const meta=page.locator('.insp-card-meta').first();await expect(meta).toHaveCSS('opacity','1');if(width<=390){await expect(meta.locator('.insp-vcard-avatar')).toBeVisible();expect((await wall()).rows,`${language} ${width} rows`).toBe(1);}else{
+   // Desktop: three rows at the 220px minimum card width; on a 900px screen the first two rows (five columns) are whole and the third starts above the fold.
+   const w=await wall();expect(w,`${language} ${width}`).toMatchObject({rows:3,width:220});expect(w.whole,`${language} ${width} whole cards`).toBeGreaterThanOrEqual(10);
   }
  }
+ // On a 1080px screen the card width follows the height, so all three rows end above the fold: the first five columns are whole.
+ await page.setViewportSize({width:1920,height:1080});await page.goto('/');await expect(page.locator('.insp-card').first()).toBeVisible();await page.evaluate(()=>document.fonts.ready);
+ const w=await wall();expect(w.rows).toBe(3);expect(w.width).toBeGreaterThan(220);expect(w.whole,'whole cards at 1920×1080').toBeGreaterThanOrEqual(15);
 });
 
 

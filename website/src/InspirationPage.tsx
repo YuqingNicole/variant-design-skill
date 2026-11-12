@@ -76,7 +76,7 @@ function LinkPreview({item,preview,locale}:{item:Item;preview:Preview;locale:Loc
  return <figure className="inspiration-demo insp-shot">{failed?<AnalysisCard item={item} locale={locale}/>:<img src={tries?preview.image:sized(preview.image,1280)} alt={preview.title} lang={lang} referrerPolicy="no-referrer" onError={()=>setTries(t=>t+1)}/>}<figcaption><span lang={lang}><b>{preview.title}</b>{preview.description&&<> — {preview.description}</>}</span><br/>{t(f.caption,locale)(host,preview.fetchedAt,failed)}</figcaption></figure>}
 const Icon=({d}:{d:string})=><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={d}/></svg>;
 const icons={out:'M5 11 11 5M6 5h5v5',save:'M4 2.5h8v11L8 10.5l-4 3z',close:'M4 4l8 8M12 4l-8 8',prev:'M10 3 5 8l5 5',next:'M6 3l5 5-5 5',search:'M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM14 14l-3.5-3.5'};
-// A multiple of the grid's columns (5 at 1440px, 3 at tablet width) so a partial page ends on a full row.
+// Ten columns of the three-row wall (and a multiple of the phone's single row), so a partial page ends on a full column.
 const pageSize=30;
 type Intent={use:string;avoid:string};
 const kinds:Record<string,Localized>={'submitted-work':{zh:'作者投稿',en:'Author submission'},'official-site':{zh:'官网',en:'Official site'},'product-page':{zh:'产品页',en:'Product page'},documentation:{zh:'帮助文档',en:'Documentation'},'social-post':{zh:'社交帖子',en:'Social post'}};
@@ -139,7 +139,9 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  useEffect(()=>{const onKey=(e:KeyboardEvent)=>{const k=e.key.toLowerCase(),typing=e.target instanceof HTMLElement&&e.target.closest('input,textarea,select,[contenteditable],dialog[open]');if((e.metaKey||e.ctrlKey)&&k==='k'||k==='/'&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&!typing){e.preventDefault();searchRef.current?.focus()}};addEventListener('keydown',onKey);return()=>removeEventListener('keydown',onKey)},[]);
  // The feed is one horizontal strip: arrows and a progress line stand in for the page scrollbar.
  const feedRef=useRef<HTMLUListElement>(null),[feed,setFeed]=useState({at:0,can:false});
- const onFeedScroll=()=>{const el=feedRef.current;if(!el)return;const max=el.scrollWidth-el.clientWidth;setFeed({at:max>0?Math.min(1,el.scrollLeft/max):0,can:max>1});if(max-el.scrollLeft<el.clientWidth*1.5&&visible<results.length)setVisible(v=>v+pageSize)};
+ // A page of 30 cards is ten columns of the three-row wall, about two screens wide, so the next page loads within three quarters
+ // of a screen of the end (1.5 screens would fire on mount and mount every page at once).
+ const onFeedScroll=()=>{const el=feedRef.current;if(!el)return;const max=el.scrollWidth-el.clientWidth;setFeed({at:max>0?Math.min(1,el.scrollLeft/max):0,can:max>1});if(max-el.scrollLeft<el.clientWidth*.75&&visible<results.length)setVisible(v=>v+pageSize)};
  const scrollFeed=(dir:1|-1)=>{const el=feedRef.current;if(el)el.scrollBy({left:dir*el.clientWidth*.8,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})};
  useEffect(onFeedScroll,[shown.length,section]);
  // More cards load when the strip nears its right end (onFeedScroll); a sentinel under a short strip is always in view and would mount every card at once.

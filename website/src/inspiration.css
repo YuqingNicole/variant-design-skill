@@ -183,21 +183,27 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 /* Media that nearly matches the cell fills it; the rest sits whole on a surface mat instead of floating in paper. */
 .insp-vcard-open{background:var(--site-surface)}
 .insp-vcard-open.insp-fills .insp-vcard-media{object-fit:cover}
-.inspiration-page .insp-head{padding-block:64px 32px;gap:var(--space-3)}
-.inspiration-page .insp-title h1{font-size:clamp(34px,5vw,68px);font-weight:400;line-height:1.04;letter-spacing:-.025em}
+/* The head is kept short so three rows of cards start about 350px down on a desktop: the title's white space shrank and the
+   count line below the bar is read by screen readers only (the pills and the progress line already show the numbers). */
+.inspiration-page .insp-head{padding-block:32px 16px;gap:var(--space-3)}
+.inspiration-page .insp-title h1{font-size:clamp(34px,4.2vw,56px);font-weight:400;line-height:1.04;letter-spacing:-.025em}
+.inspiration-page .insp-title p{max-width:72ch}
+.inspiration-page .insp-body{padding-top:var(--space-2)}
 /* Sticky stays (a tested contract), but the bar is only a faint tint: a blurred white band cut the frosted panel in two. */
 .inspiration-page .insp-bar{background:var(--fill-4);border-block:0}
 .inspiration-page .insp-pills a{background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-muted)}
 .inspiration-page .insp-pills a[aria-current=page]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}
 .inspiration-page :is(.insp-bar select,.insp-search){background:var(--fill-1);border-color:var(--hair)}
-.inspiration-page .inspiration-count{letter-spacing:.1em}
-/* The feed is one horizontal strip of white cards: image first, name and note under it, never overlaid. */
-.inspiration-page .inspiration-grid.insp-feed{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(300px,360px);gap:16px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:32px;padding:4px 32px 18px;margin-inline:-32px;scrollbar-width:thin}
-.inspiration-page .insp-feed>.insp-card{scroll-snap-align:start;background:var(--card-g);border:1px solid var(--hair);border-radius:16px;padding:8px 8px 14px}
+.inspiration-page .inspiration-count{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* The feed is a horizontal wall three cards high, newest first down each column: image first, name and note under it, never
+   overlaid. The card width follows the viewport height so the three rows end above the fold on a 1080px screen and grow to
+   360px on taller ones; it never drops below 220px, so on a 900px laptop the third row runs under the fold. Phones keep one row. */
+.inspiration-page .inspiration-grid.insp-feed{grid-template-columns:none;grid-template-rows:repeat(3,auto);grid-auto-flow:column;grid-auto-columns:clamp(220px,(100svh - 560px) / 2.25,360px);gap:12px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:32px;padding:4px 32px 8px;margin-inline:-32px;scrollbar-width:thin}
+.inspiration-page .insp-feed>.insp-card{scroll-snap-align:start;background:var(--card-g);border:1px solid var(--hair);border-radius:16px;padding:8px 8px 10px}
 .inspiration-page .insp-feed .insp-card-open{aspect-ratio:auto;overflow:visible;background:none}
 .inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){background:var(--site-surface)}
 .inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){aspect-ratio:4/3;height:auto;border-radius:3px;overflow:hidden}
-.inspiration-page .insp-feed .insp-card-meta{position:static;opacity:1;padding:14px 80px 0 8px;background:none;min-height:48px}
+.inspiration-page .insp-feed .insp-card-meta{position:static;opacity:1;padding:10px 80px 0 8px;background:none;min-height:44px}
 .inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){top:auto;bottom:12px;right:12px}
 .inspiration-page .insp-feed .insp-card-out{right:46px}
 .insp-controls{display:flex;align-items:center;justify-content:space-between;padding-top:18px;border-top:1px solid var(--hair)}
@@ -223,7 +229,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 @media(max-width:650px){
  .inspiration-page .insp-head{padding-block:20px 8px;gap:var(--space-2)}
  .inspiration-page .insp-title p{text-wrap:pretty}
- .inspiration-page .inspiration-grid.insp-feed{grid-template-columns:none;grid-auto-columns:78vw;gap:12px;scroll-padding-inline:16px;padding-inline:16px;margin-inline:-16px}
+ .inspiration-page .inspiration-grid.insp-feed{grid-template-columns:none;grid-template-rows:none;grid-auto-columns:78vw;gap:12px;scroll-padding-inline:16px;padding-inline:16px;margin-inline:-16px}
  .inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){width:44px;height:44px;top:auto;bottom:6px}
  .inspiration-page .insp-feed .insp-card-meta{padding-right:108px}
  .inspiration-page .insp-feed .insp-card-save{right:6px}.inspiration-page .insp-feed .insp-card-out{right:56px;left:auto}
