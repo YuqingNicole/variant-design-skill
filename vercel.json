@@ -209,15 +209,15 @@
       },
       {
         "protocol": "https",
+        "hostname": "cdn.prod.website-files.com"
+      },
+      {
+        "protocol": "https",
         "hostname": "amie.so"
       },
       {
         "protocol": "https",
         "hostname": "buck.co"
-      },
-      {
-        "protocol": "https",
-        "hostname": "cdn.prod.website-files.com"
       },
       {
         "protocol": "https",
@@ -230,6 +230,10 @@
       {
         "protocol": "https",
         "hostname": "darkroom.engineering"
+      },
+      {
+        "protocol": "https",
+        "hostname": "devouringdetails.com"
       },
       {
         "protocol": "https",
@@ -282,30 +286,6 @@
       {
         "protocol": "https",
         "hostname": "www.analogue.co"
-      },
-      {
-        "protocol": "https",
-        "hostname": "www.craft.do"
-      },
-      {
-        "protocol": "https",
-        "hostname": "www.granola.ai"
-      },
-      {
-        "protocol": "https",
-        "hostname": "www.hay.com"
-      },
-      {
-        "protocol": "https",
-        "hostname": "www.warp.dev"
-      },
-      {
-        "protocol": "https",
-        "hostname": "zed.dev"
-      },
-      {
-        "protocol": "https",
-        "hostname": "devouringdetails.com"
       }
     ]
   },

@@ -28,11 +28,16 @@ export function parsePreview(html, base) {
   return image ? { image, title, description, lang } : null;
 }
 
-// The https image hosts of every preview, added to the existing remotePatterns (others are kept).
-export function withImageHosts(config, previews) {
+// The https image hosts of the previews, added to the existing remotePatterns (others are kept). Vercel accepts at most
+// 50 patterns, so once the list is full the hosts used by the most previews come first and the rest are left out: their
+// cards fall back to the original image after the optimizer refuses (InspirationPage `sized`), which costs one request.
+export const imageHostCap = 50;
+export function withImageHosts(config, previews, cap = imageHostCap) {
   const patterns = config.images?.remotePatterns ?? [];
   const known = new Set(patterns.map(p => p.hostname));
-  const added = [...new Set(Object.values(previews).flatMap(p => p.image?.startsWith('https://') ? [new URL(p.image).hostname] : []))].filter(h => !known.has(h)).sort();
+  const uses = {};
+  for (const p of Object.values(previews)) if (p.image?.startsWith('https://')) { const h = new URL(p.image).hostname; uses[h] = (uses[h] ?? 0) + 1; }
+  const added = Object.keys(uses).filter(h => !known.has(h)).sort((a, b) => uses[b] - uses[a] || a.localeCompare(b)).slice(0, Math.max(0, cap - patterns.length));
   return { ...config, images: { ...config.images, remotePatterns: [...patterns, ...added.map(hostname => ({ protocol: 'https', hostname }))] } };
 }
 
