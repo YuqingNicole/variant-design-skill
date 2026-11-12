@@ -597,7 +597,7 @@ test('a reference opens as a dialog from the grid and as its own page from a dir
  await dialog.getByRole('button',{name:'加入参考包'}).click();await expect(cards.first().locator('.insp-card-save')).toHaveAttribute('aria-pressed','true');
  await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);await expect(page).toHaveURL(/:\d+\/\?topic=saas-home&sort=curated$/);
  await expect(page.locator('.inspiration-pack fieldset')).toHaveCount(1);
- await expect(page).toHaveTitle('Variant Design — 互联网上最好的设计灵感');
+ await expect(page).toHaveTitle('Variant Design — AI 时代最好的设计灵感');
  await page.goBack();await expect(page).toHaveURL(/\/about$/);
  await page.goto('/?topic=saas-home&sort=curated');await cards.first().locator('.insp-card-open').click();await expect(dialog).toHaveCount(1);
  await page.goBack();await expect(page).toHaveURL(/:\d+\/\?topic=saas-home&sort=curated$/);await expect(dialog).toHaveCount(0);
@@ -694,7 +694,7 @@ test('reference pack reports failed local writes while keeping current edits', a
 
 test('pages read without JavaScript, guides render in both languages, and unknown paths are not indexable', async ({ browser, page, request }) => {
   const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
-  for (const [route, text] of [['/about', 'Variant'], ['/pricing', '本地版'], ['/skills', 'variant-design'], ['/submit', '投稿'], ['/', '互联网上最好的设计灵感'], ['/guides', '怎么撤回 AI 对设计的修改'], ['/guides/undo-ai-design-changes', 'undo B'], ['/guides/git-or-snapshot-undo', 'git stash'], ['/guides/design-references-with-sources', '核对日期'], ['/changelog', '更新记录']]) {
+  for (const [route, text] of [['/about', 'Variant'], ['/pricing', '本地版'], ['/skills', 'variant-design'], ['/submit', '投稿'], ['/', 'AI 时代最好的设计灵感'], ['/guides', '怎么撤回 AI 对设计的修改'], ['/guides/undo-ai-design-changes', 'undo B'], ['/guides/git-or-snapshot-undo', 'git stash'], ['/guides/design-references-with-sources', '核对日期'], ['/changelog', '更新记录']]) {
     await reader.goto(route);
     await expect(reader.locator('h1').first(), route).toBeVisible();
     await expect(reader.locator('#root'), route).toContainText(text);
@@ -948,14 +948,14 @@ test('on phones, links and fields are big enough to tap and read', async ({ page
 
 test('home leads with the inspiration feed, cases have their own page, and the skill sits under resources', async ({page,request})=>{
  const raw=await(await request.get('/')).text();
- expect(raw).toContain('<title>Variant Design — 互联网上最好的设计灵感</title>');
+ expect(raw).toContain('<title>Variant Design — AI 时代最好的设计灵感</title>');
  expect(raw).toContain('"@type":"WebSite"');expect(raw).not.toContain('"@type":"SoftwareSourceCode"');
  expect(await(await request.get('/skills')).text()).toContain('"@type":"SoftwareSourceCode"');
  // The static /cases page keeps the site chrome, including the font license note the footer must carry.
  const cases=await(await request.get('/cases')).text();
  expect(cases).toContain('class="site-nav');expect(cases).toContain('一个任务，三种方向。');
  await page.goto('/');
- await expect(page.locator('h1')).toHaveText('互联网上最好的设计灵感。');
+ await expect(page.locator('h1')).toHaveText('AI 时代最好的设计灵感。');
  await expect(page.locator('.insp-title')).toContainText('每条附出处和我们的笔记');
  await expect(page.locator('.inspiration-grid .insp-card').first()).toBeInViewport();
  await expect(page.locator('.site-nav-links a')).toHaveText(['灵感','动效','案例','技能','文档','投稿']);
