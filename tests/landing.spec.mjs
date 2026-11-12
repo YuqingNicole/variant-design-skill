@@ -292,7 +292,7 @@ test('the docs hub lists the install guide, the articles and the quick answers, 
  await page.goto('/docs');await hydrated(page);
  await expect(page.getByRole('heading',{level:1})).toHaveText('文档');
  const links=await page.locator('.guide-list h2 a').evaluateAll(a=>a.map(x=>x.getAttribute('href')));
- expect(links).toEqual(['/docs/install','/docs/design-exploration-with-ai-coding-agents','/docs/check-ai-generated-ui-before-you-ship','/docs/motion-rules-for-ai-generated-ui','/docs/measure-layout-shift-in-ai-built-pages','/guides']);
+ expect(links).toEqual(['/docs/install','/docs/design-exploration-with-ai-coding-agents','/docs/check-ai-generated-ui-before-you-ship','/docs/motion-rules-for-ai-generated-ui','/docs/measure-layout-shift-in-ai-built-pages','/guides','/changelog']);
  for(const href of links.slice(1,5)){
   const html=await(await request.get(href)).text();
   expect(html,href).toContain(`<link rel="canonical" href="https://variantdesign.xyz${href}">`);
@@ -716,13 +716,33 @@ test('pages read without JavaScript, guides render in both languages, and unknow
   expect(await (await request.get('/sitemap.xml')).text()).toContain('/guides/undo-ai-design-changes</loc>');
 });
 
-test('changelog marks the current skill version in both languages', async ({ page }) => {
+test('changelog groups the log by version, website entries under their package, and marks the current skill version in both languages', async ({ page }) => {
+  const website = JSON.parse(fs.readFileSync(new URL('../website/package.json', import.meta.url), 'utf8')).version;
   await page.goto('/changelog');
   await expect(page.locator('.changelog-current').first()).toHaveText('当前');
   await expect(page.locator('.changelog-nav-current')).toHaveAttribute('aria-current', 'location');
+  // One group per release in file order, each in the version list; a released one carries its date in both places and opens with its summary.
+  const releases = page.locator('.changelog-release'), nav = page.locator('.docs-layout>aside a');
+  expect(await releases.count()).toBe(await nav.count());
+  await expect(nav.nth(1)).toContainText('1.2.0');await expect(nav.nth(1).locator('.changelog-nav-date')).toHaveText('2026-11-09');
+  await expect(releases.nth(1).locator('h2')).toContainText('1.2.0');await expect(releases.nth(1).locator('.changelog-date')).toHaveText('2026-11-09');
+  await expect(releases.nth(1).locator('.changelog-lede')).toContainText('Claude Code 插件');
+  await expect(releases.nth(1).locator('.changelog-package h4 b')).toHaveText(['0.1.1', '0.2.0', '0.2.1', '0.2.2']);
+  // The unreleased group says its website changes are live, and its last website group is the package version the site runs,
+  // with the "Website package x.y.z:" lead dropped from the entry because the group header shows it.
+  await expect(releases.first().locator('.changelog-note')).toContainText('已经上线');
+  const packages = releases.first().locator('.changelog-package');
+  await expect(packages.last().locator('h4')).toHaveText(`${website}网站包`);
+  await expect(packages.last()).toHaveId(`web-${website.replace(/\./g, '-')}`);
+  await expect(packages.last().locator('li').first()).not.toContainText('网站包');
   await page.locator('.site-language').click();
   await expect(page.locator('.changelog-current').first()).toHaveText('Current');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(packages.last().locator('h4')).toHaveText(`${website}Website package`);
+  await expect(packages.last().locator('li').first()).not.toContainText('Website package');
+  await expect(releases.first().locator('.changelog-note')).toContainText('already live');
+  // The docs hub lists the changelog as one of its pages.
+  await page.goto('/docs');await expect(page.locator('.docs-hub .docs-changelog a[href="/changelog"]')).toHaveCount(1);
 });
 
 test('footer invitation is localized and fits a phone viewport', async ({ page }) => {
