@@ -420,16 +420,9 @@
     "fetchedAt": "2026-11-12"
   },
   "analogue": {
-    "image": "https://www.analogue.co/opengraph-image.png?opengraph-image.0y24ldaxhv2vu.png?dpl=dpl_CFNFPP9JWyiLyDdT83PCMfDCe1YJ",
+    "image": "https://www.analogue.co/opengraph-image.png?opengraph-image.0y24ldaxhv2vu.png?dpl=dpl_5sREW6FoDKK5c2vVERdAeStKwLhd",
     "title": "Analogue",
     "description": "We make products to celebrate and explore the history of video games with the respect it deserves.",
-    "lang": "en",
-    "fetchedAt": "2026-11-12"
-  },
-  "locomotive": {
-    "image": "https://locomotive.ca/uploads/metadata/Open_Graph_Loco_%281%29.png",
-    "title": "Locomotive | Montreal web agency",
-    "description": "Locomotive® offers a wide range of creative and strategic services for remarkable brands, companies and organizations. Over the 15 years, Locomotive® has become a go-to for meaningful, innovative, results-driven digital experiences, web design and branding. Freshness guaranteed.",
     "lang": "en",
     "fetchedAt": "2026-11-12"
   },
@@ -472,6 +465,209 @@
     "image": "https://devouringdetails.com/og/main.png",
     "title": "Devouring Details",
     "description": "An interactive reference manual for interaction-curious designers.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "neon": {
+    "image": "https://neon.com/images/social-previews/index.jpg?updated=2026-05-27",
+    "title": "Neon — Postgres backends for apps and agents",
+    "description": "The backend for apps and agents. Build with Lakebase Postgres, Auth, Functions, Storage, and an AI Gateway: instant, branchable, serverless.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "convex": {
+    "image": "https://www.convex.dev/og-home.png",
+    "title": "Convex | All gas, no breakages",
+    "description": "All gas, no breakages. Convex is the reactive backend platform that keeps up with you and your agents.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "planetscale": {
+    "image": "https://planetscale.com/assets/homepage-social-Yera6DPM.png",
+    "title": "PlanetScale - the world’s fastest and most scalable cloud hosting for Vitess, Neki, and Postgres",
+    "description": "PlanetScale offers the world’s fastest and most scalable cloud hosting for Vitess, Neki, and Postgres.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "bun": {
+    "image": "https://bun.com/share_v4.png",
+    "title": "Bun — A fast all-in-one JavaScript runtime",
+    "description": "Bundle, install, and run JavaScript & TypeScript — all in Bun. Bun is a fast JavaScript runtime & toolkit with a bundler, test runner, and npm-compatible package manager built in.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "tailwind": {
+    "image": "https://tailwindcss.com/opengraph-image.jpg?opengraph-image.0jwfhnd690..4.jpg",
+    "title": "Tailwind CSS - Rapidly build modern websites without ever leaving your HTML.",
+    "description": "Tailwind CSS is a utility-first CSS framework for rapidly building modern websites without ever leaving your HTML.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "trigger": {
+    "image": "https://trigger.dev/assets/og-image-hAiXVmBp.jpg",
+    "title": "Trigger.dev | The open source platform for durable AI agents",
+    "description": "Trigger.dev is the open source platform for durable AI agents and workflows in TypeScript. Long-running tasks with retries, queues, and LLM observability.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "mintlify": {
+    "image": "https://www.mintlify.com/_next/static/media/og.28576e75.png",
+    "title": "Mintlify - The documentation platform for agents",
+    "description": "Self-updating documentation for startups, enterprises, and agents.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "fly": {
+    "image": "https://fly.io/phx/images/og/home-8f51ecc065542ebfe86badc4143a197d.jpg?vsn=d",
+    "title": "Fly.io | Deploy apps and agents on hardware-isolated VMs",
+    "description": "Deploy apps, agents, and databases on hardware-isolated VMs. Pay only for the seconds they run. Sign up free.",
+    "lang": "en-US",
+    "fetchedAt": "2026-11-12"
+  },
+  "mistral": {
+    "image": "https://mistral.ai/cms-media/api/media/file/cover-mistral-sovereign%20copie.webp",
+    "title": "Mistral | #1 in Sovereign AI: Frontier Open Models You Own",
+    "description": "Frontier open-weight models you own and control. Customize with Forge, deploy with Studio, run on-prem, your VPC, or our cloud.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "groq": {
+    "image": "https://groq.com/images/og.png",
+    "title": "Groq is the premier neocloud for fast inference",
+    "description": "Groq is the premier neocloud for fast inference. One fully integrated platform for infrastructure, inference, and control. Millions of developers run trillions of tokens on Groq every week.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "together": {
+    "image": "https://cdn.prod.website-files.com/69654e88dce9154b5f1206dd/69a49f86fc70648ca04854f6_OG-image-home.png",
+    "title": "Together AI | The AI Native Cloud",
+    "description": "Build what's next on the AI Native Cloud. Full-stack AI platform for inference, fine-tuning, and GPU clusters — powered by cutting-edge research.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "arcade": {
+    "image": "https://cdn.prod.website-files.com/61d72a2cda50bc679e28766b/6ad6296fc947c3b5328c13c5_OG%402x.jpg",
+    "title": "Arcade | AI Video Generator for Marketing Teams",
+    "description": "Arcade is the AI video platform for marketing teams. Turn an idea into a polished launch video, tutorial or social clip. Start free.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "spline": {
+    "image": "https://spline.design/_next/static/immutable/media/spline_og.41onuyn8l-00s.png",
+    "title": "Spline - Free 3D Design Tool in Your Browser",
+    "description": "Spline is free 3D design and 3D modeling software in your browser. Animation, textures and real-time collaboration with AI agents for interactive web experiences.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "miro": {
+    "image": "https://framerusercontent.com/assets/Bab0War93Jeq5MpDPwqKFiyI.png",
+    "title": "AI Innovation Workspace | Miro",
+    "description": "Speed up product development from ideation to launch. Align teams, break tool silos, and ship what customers need in one AI-powered visual platform.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "tally": {
+    "image": "https://tally.so/images/og.jpg",
+    "title": "Tally - Create Beautiful Forms for Free | Unlimited Forms & Submissions",
+    "description": "The simplest way to create beautiful, professional forms in seconds. Unlimited forms, unlimited submissions, forever free. Just start typing - no coding needed.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "kagi": {
+    "image": "https://kagi.com/_mkt/img/og-image.png",
+    "title": "Kagi Search - Better search results. No ads.",
+    "description": "Better search results. No ads. We pull from the leading search engines, then re-rank everything and filter out spam.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "knock": {
+    "image": "https://knock.app/assets/og-4.png",
+    "title": "Knock | Agentic customer engagement infrastructure",
+    "description": "Knock is agentic customer engagement infrastructure to grow faster. Ship cross-channel lifecycle and transactional messaging from your favorite agent.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "diabrowser": {
+    "image": "https://cdn.sanity.io/images/e5fj2khm/production/2d41d699e7809faa14b264580c1a371606e4070a-1296x678.png?rect=3,0,1291,678&w=1200&h=630&fm=jpg&q=80&fit=crop",
+    "title": "Dia | A browser you won't dread opening",
+    "description": "Dia is the browser for your best work. Get answers without having to ask, produce beautiful ready-to-share outputs, and stay focused in the best browser for your work day.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "anytype": {
+    "image": "https://anytype.io/ogimage.jpg",
+    "title": "Anytype — A safe haven for digital collaboration",
+    "description": "Create notes, tasks, databases, and chats that only you can access. Your data stays on your device — fully owned, secure, and private. Free to start.",
+    "lang": "",
+    "fetchedAt": "2026-11-12"
+  },
+  "mymind": {
+    "image": "https://mymind.com/assets/uploads/2023/05/Mymind_2023_F-1024x538.jpg",
+    "title": "mymind is the extension for your mind.",
+    "description": "A private place to save your most precious notes, images, quotes and highlights. Enhanced with AI to help you remember without wasting time on categorizing & organizing.",
+    "lang": "en-US",
+    "fetchedAt": "2026-11-12"
+  },
+  "jitter": {
+    "image": "https://jitter.video/assets/homepage-2026-DXrOP74Y.png",
+    "title": "Jitter · A fast and simple motion design tool on the web",
+    "description": "Jitter is a collaborative motion design tool that lets you create professional animations in minutes, no matter your experience with motion.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "sketch": {
+    "image": "https://www.sketch.com/images/metadata/pages/home.jpg",
+    "title": "Sketch · Design, prototype, collaborate and handoff",
+    "description": "Sketch puts the focus back on you and your work. Made by designers, for designers.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "graza": {
+    "image": "https://cdn.shopify.com/s/files/1/0550/0003/9638/files/GRAZA_SG_ILLOCARD.jpg?v=1641577069",
+    "title": "GRAZA | High Quality Olive Oil\n | Graza",
+    "description": "Every kitchen deserves good, fresh olive oil that’s affordable enough to be used every day. Our extra virgin olive oil is just that, and it comes in squeeze bottles + 100% recyclable refill cans that make everything easier and more fun.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "bellroy": {
+    "image": "https://bellroy-cms-images.imgix.net/default-og-image.jpg",
+    "title": "Bellroy | Considered Carry Goods: Wallets, Bags, Phone Cases & More",
+    "description": "Bellroy puts its heart, soul and countless design hours into helping the world carry with simplicity and ease. Every piece has been deeply considered, for the best of life's little moments.",
+    "lang": "",
+    "fetchedAt": "2026-11-12"
+  },
+  "remarkable": {
+    "image": "https://cdn.sanity.io/images/xpujt61d/production/59cad973950c0d1b88516159950dff94e2bf73d4-2400x1260.png",
+    "title": "reMarkable: The Paper Tablets for Focused Work",
+    "description": "Experience the power of focused work. reMarkable’s paper tablets and accessories provide a dedicated space for your notes, documents, and ideas, free from no...",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "metalab": {
+    "image": "https://cdn.sanity.io/images/nuxb3jim/production-july-2025/650536c56eff4fa74f4db66048d36451b2343616-1600x900.png?w=1200&h=630&q=80&fm=webp&fit=clip",
+    "title": "Metalab | We make interfaces",
+    "description": "Metalab helps some of the world's top companies — like Slack and Google \n — design, build, and ship amazing products and services.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "dixonbaxi": {
+    "image": "https://www.datocms-assets.com/160962/1756372926-homepage_thumbnail.webp?auto=format&fit=max&w=1200",
+    "title": "DixonBaxi",
+    "description": "Brave brands change the world. We help create them.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "cuberto": {
+    "image": "https://cuberto.com/cover.png",
+    "title": "Digital Design & Development Agency",
+    "description": "Cuberto is a UI/UX design agency based in USA. We specialise in UI/UX design, branding, web, and mobile development.",
+    "lang": "en",
+    "fetchedAt": "2026-11-12"
+  },
+  "lemonsqueezy": {
+    "image": "https://cdn.prod.website-files.com/6347244ba8d63489ba51c08e/6358e59c97dcbfdc770e1ff8_og2.jpg",
+    "title": "Payments, Tax & Subscriptions for SaaS",
+    "description": "Sell digital products and SaaS software the easy peasy way with Lemon Squeezy. As your merchant of record, we handle the tax compliance burden so you can focus on more revenue and less headache.",
     "lang": "en",
     "fetchedAt": "2026-11-12"
   }
