@@ -3828,6 +3828,1025 @@ export const inspirationItems = [
       "text": "A collection of some of the logos we have designed in the last year",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-jakubkrehel-379386",
+    "name": "Interfere charts",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/jakubkrehel/status/2118030760800379386",
+    "source": "link-only",
+    "focus": {
+      "zh": "应用详情页的图表：悬停时弹出黑色提示框，列出时间、时长和与平均值的倍数；图例按系列筛选，堆叠面积图下方用彩色短条和百分比汇总各来源占比",
+      "en": "Charts on an app details page: hovering opens a dark tooltip with the time, the duration and the ratio to the average; the legend filters by series, and under the stacked area chart short coloured bars with percentages sum up each source"
+    },
+    "application": {
+      "zh": "监控面板和分析页里的图表悬停、系列筛选与占比汇总",
+      "en": "Hover states, series filters and share summaries for monitoring and analytics charts"
+    },
+    "publisher": "Jakub Krehel (@jakubkrehel)",
+    "kind": "social-post",
+    "designer": "Jakub Krehel",
+    "checkedAt": "2026-11-12",
+    "addedAt": "2026-11-12T10:59:00+08:00",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2118030760800379386",
+      "author": "Jakub Krehel",
+      "handle": "jakubkrehel",
+      "date": "2026-11-04",
+      "lang": "en",
+      "text": "Been spending a decent amount of time on charts recently for our new app details page.  \n\nIt's quickly becoming one of my favorite parts of Interfere. https://t.co/68IJqPVfUn",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-raunofreiberg-797178",
+    "name": "Devouring Details mantras",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/raunofreiberg/status/2119856840003797178",
+    "source": "link-only",
+    "focus": {
+      "zh": "灰底上一条斜向的白色长带，字母沿带子排成一列列；带子局部凸出一块，露出一句短句（如 Focus means saying no），句子逐条更换，整页只有这一个元素",
+      "en": "A tilted white band across a grey ground, letters laid along it in columns; one stretch of the band bulges out to reveal a short line (such as “Focus means saying no”), the lines change one by one, and the page holds nothing else"
+    },
+    "application": {
+      "zh": "宣言、格言或关于页的字体化呈现，一句话一屏",
+      "en": "Typographic treatments for manifesto, mantra or about pages, one line at a time"
+    },
+    "publisher": "rauno (@raunofreiberg)",
+    "kind": "social-post",
+    "designer": "Rauno Freiberg",
+    "checkedAt": "2026-11-12",
+    "addedAt": "2026-11-12T10:55:00+08:00",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2119856840003797178",
+      "author": "rauno",
+      "handle": "raunofreiberg",
+      "date": "2026-11-09",
+      "lang": "en",
+      "text": "Some things you perhaps needed to hear\n\nhttps://t.co/PYdVj75eEX https://t.co/1sjBmjzHI2",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-elayadesigns-175174",
+    "name": "Illustrated landing heroes",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/elayadesigns/status/2114049200749175174",
+    "source": "link-only",
+    "focus": {
+      "zh": "六个不同行业的首屏都用一整张叙事插画铺底（青花瓷色的海岸、灯塔照向人群、牵线木偶、飞机驾驶舱），标题、一句说明和一个按钮压在画面上，导航极简；作者说明图像用 Higgsfield、Claude 和 Cursor 生成",
+      "en": "Six first screens in different industries each sit on one full-bleed narrative illustration (a blue-and-white coast, a lighthouse over a crowd, a marionette, a cockpit) with a headline, one line and one button over the image and a minimal nav; the author says the imagery was made with Higgsfield, Claude and Cursor"
+    },
+    "application": {
+      "zh": "用生成图像承担首屏时的构图、文字层级和按钮位置",
+      "en": "Composition, text hierarchy and button placement when a generated image carries the first screen"
+    },
+    "publisher": "Elaya (@elayadesigns)",
+    "kind": "social-post",
+    "designer": "Elaya",
+    "checkedAt": "2026-11-12",
+    "addedAt": "2026-11-12T10:51:00+08:00",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2114049200749175174",
+      "author": "Elaya",
+      "handle": "elayadesigns",
+      "date": "2026-10-24",
+      "lang": "en",
+      "text": "I designed all of these landing pages in the last two months, using @higgsfield , Claude, and Cursor with my custom AI designer skill.\n\nThe skill is open source: https://t.co/Gs1RT1BZxi https://t.co/XhWtFFoLNu",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-rebrandgallery-609336",
+    "name": "Onest identity",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/rebrandgallery/status/2117580278608609336",
+    "source": "link-only",
+    "focus": {
+      "zh": "饮料品牌的识别系统：粗圆黑体字标配水果剪影，每种口味一组颜色，字标、瓶身、社交帖和图标在同一网格里逐格切换",
+      "en": "A drinks brand identity: a chunky rounded wordmark with fruit silhouettes, one colour set per flavour, and wordmark, bottle, social post and icon cycling cell by cell inside the same grid"
+    },
+    "application": {
+      "zh": "快消品牌的口味色彩系统和社交媒体模板",
+      "en": "Flavour colour systems and social templates for consumer brands"
+    },
+    "publisher": "Rebrand Gallery (@rebrandgallery)",
+    "kind": "social-post",
+    "designer": "BR*Studio",
+    "checkedAt": "2026-11-12",
+    "addedAt": "2026-11-12T10:47:00+08:00",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2117580278608609336",
+      "author": "Rebrand",
+      "handle": "rebrandgallery",
+      "date": "2026-11-03",
+      "lang": "en",
+      "text": "Onest Visual Identity by BR*Studio 🍐 https://t.co/S8yCpj5Jk2",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-sajon_co-125123",
+    "name": "Kyron identity",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/sajon_co/status/2120547427858125123",
+    "source": "link-only",
+    "focus": {
+      "zh": "金融品牌借古典币制讲故事：蜡封印章、邮票、神庙拱门和编号手册，米色、灰蓝与深橄榄三色贯穿整张网格拼贴",
+      "en": "A finance brand told through ancient coinage: wax seals, stamps, temple arches and numbered booklets, with beige, grey-blue and dark olive carried across one grid collage"
+    },
+    "application": {
+      "zh": "需要历史感与可信感的金融或加密品牌",
+      "en": "Finance or crypto brands that want heritage and credibility"
+    },
+    "publisher": "Sajon (@sajon_co)",
+    "kind": "social-post",
+    "designer": "Sajon",
+    "checkedAt": "2026-11-12",
+    "addedAt": "2026-11-12T10:43:00+08:00",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2120547427858125123",
+      "author": "Sajon",
+      "handle": "sajon_co",
+      "date": "2026-11-11",
+      "lang": "en",
+      "text": "Kyron - Brand Identity https://t.co/xF3sZseQuu",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-praveenisomer-310062",
+    "name": "Coronal brand exploration",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/praveenisomer/status/2117942434705310062",
+    "source": "link-only",
+    "focus": {
+      "zh": "医疗科技品牌探索：淡蓝水墨状的体积数据图像做主视觉，白底细字标，手机界面只剩一条曲线、一个数字区间和两个按钮",
+      "en": "A health-tech brand exploration: pale blue ink-like volumetric data imagery as the key visual, a thin wordmark on white, and a phone screen reduced to one curve, one number range and two buttons"
+    },
+    "application": {
+      "zh": "医疗、科研类品牌的主视觉与界面配色",
+      "en": "Key visuals and interface palettes for medical and research brands"
+    },
+    "publisher": "Praveen Kumar (@praveenisomer)",
+    "kind": "social-post",
+    "designer": "Praveen Kumar",
+    "checkedAt": "2026-11-12",
+    "addedAt": "2026-11-12T10:39:00+08:00",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2117942434705310062",
+      "author": "Praveen Kumar",
+      "handle": "praveenisomer",
+      "date": "2026-11-04",
+      "lang": "en",
+      "text": "New Health Tech Branding Exploration https://t.co/H4wxc7Hv20",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-stackedlol-625690",
+    "name": "Bane research lab concept",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/stackedlol/status/2118198633602625690",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究实验室的概念首页：黑底上一个白色网格状的 3D 形体在旋转，导航词沿圆弧排列，背景穿插代码片段和荧光色块，整页套在彩色流体外框里",
+      "en": "A concept homepage for a research lab: a white lattice form rotating on black, nav words set along an arc, code fragments and neon blocks drifting behind, the whole page inside a fluid colour frame"
+    },
+    "application": {
+      "zh": "科研、AI 实验室的概念型首页",
+      "en": "Concept homepages for research and AI labs"
+    },
+    "publisher": "stacked (@stackedlol)",
+    "kind": "social-post",
+    "designer": "stacked",
+    "checkedAt": "2026-11-12",
+    "addedAt": "2026-11-12T10:35:00+08:00",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2118198633602625690",
+      "author": "stacked",
+      "handle": "stackedlol",
+      "date": "2026-11-05",
+      "lang": "en",
+      "text": "landing page concept demo for research lab https://t.co/TuM48rrCfG",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-kirtanlb-639231",
+    "name": "Rebuilt interactions reel",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/kirtanlb/status/2117571888398639231",
+    "source": "link-only",
+    "focus": {
+      "zh": "作者重做过的界面动效合辑：输入框、勾选、按钮、价格提交、工具条等几十个小片段拼成网格，一屏对比各种节奏",
+      "en": "A reel of interface motions the author rebuilt: dozens of short clips of inputs, checks, buttons, checkout and toolbars tiled in a grid so their rhythms can be compared on one screen"
+    },
+    "application": {
+      "zh": "练习和对比微交互的节奏",
+      "en": "Practising and comparing micro-interaction timing"
+    },
+    "publisher": "Kirtan Limbani (@kirtanlb)",
+    "kind": "social-post",
+    "designer": "Kirtan Limbani",
+    "checkedAt": "2026-11-12",
+    "addedAt": "2026-11-12T10:31:00+08:00",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2117571888398639231",
+      "author": "Kirtan Limbani",
+      "handle": "kirtanlb",
+      "date": "2026-11-03",
+      "lang": "en",
+      "text": "I didn’t get good at motion design by watching tutorials.\n\nmost of what I know came from rebuilding things over and over.\n\nnow you can open the exact files and skip the guessing.\n\nproject files link in the comments ↓ https://t.co/xCDbEdSDzR",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-abduzeedo-262917",
+    "name": "Kinetic type spiral",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/abduzeedo/status/2116971583487262917",
+    "source": "link-only",
+    "focus": {
+      "zh": "竖版画布上一行白字沿螺旋旋入黑色漩涡，两侧是生成这段动态字体的参数面板",
+      "en": "On a portrait canvas a line of white type spirals into a black vortex, with the parameter panels that generated the kinetic type on either side"
+    },
+    "application": {
+      "zh": "动态字体海报与短视频开场",
+      "en": "Kinetic type posters and short video openers"
+    },
+    "publisher": "Fabio - abduzeedo (@abduzeedo)",
+    "kind": "social-post",
+    "designer": "Fabio Sasso",
+    "checkedAt": "2026-11-12",
+    "addedAt": "2026-11-12T10:27:00+08:00",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2116971583487262917",
+      "author": "Fabio - abduzeedo",
+      "handle": "abduzeedo",
+      "date": "2026-11-01",
+      "lang": "en",
+      "text": "Fun effects created in just a few clicks with https://t.co/mbr7KhrzqS. I love typography and kinetic type, so why not make them easy to build? https://t.co/WPNJUApd4r",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-mengto-495303",
+    "name": "Apartment as a three.js scene",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/MengTo/status/2119746949121495303",
+    "source": "link-only",
+    "focus": {
+      "zh": "把自己的公寓做成可浏览的 three.js 场景：顶部一排开关切换步行、线框、低角度阳光、傍晚等模式，书架、桌面和显示器都能走近看",
+      "en": "The author’s apartment rebuilt as a browsable three.js scene: a row of toggles at the top switches walk, wireframe, low sun and evening modes, and the bookshelf, desk and monitor can be approached"
+    },
+    "application": {
+      "zh": "用 3D 场景做教程背景或作品展示",
+      "en": "3D scenes as tutorial backdrops or portfolio stages"
+    },
+    "publisher": "Meng To (@MengTo)",
+    "kind": "social-post",
+    "designer": "Meng To",
+    "checkedAt": "2026-11-12",
+    "addedAt": "2026-11-12T10:23:00+08:00",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2119746949121495303",
+      "author": "Meng To",
+      "handle": "MengTo",
+      "date": "2026-11-09",
+      "lang": "en",
+      "text": "I turned my apartment into a three.js scene with Opus 5.5 so I can record videos for my tutorials.\n\nIt's fully interactive and you can walk through it in the browser. You can change the lighting and set different render styles. All objects are code using the scoring system. https://t.co/kX575vSOHt",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-kevserctk-462879",
+    "name": "Prompted feature section",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/kevserctk/status/2118595554674462879",
+    "source": "link-only",
+    "focus": {
+      "zh": "一段用提示词生成的功能区块：左侧两行标题、右侧一段说明和按钮，下面三张同样暖色调的界面截图配编号小标题",
+      "en": "A feature section generated from a prompt: a two-line headline left, a paragraph and button right, and three matching warm-toned interface shots below with numbered subheads"
+    },
+    "application": {
+      "zh": "功能介绍区块的基础版式",
+      "en": "A baseline layout for feature sections"
+    },
+    "publisher": "Kevser (@kevserctk)",
+    "kind": "social-post",
+    "designer": "Kevser",
+    "checkedAt": "2026-11-12",
+    "addedAt": "2026-11-12T10:20:00+08:00",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2118595554674462879",
+      "author": "Kevser",
+      "handle": "kevserctk",
+      "date": "2026-11-06",
+      "lang": "en",
+      "text": "I Prompted. UI Animation. https://t.co/B32ltAkozR",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "category": "landing",
+    "tag": "Developer",
+    "url": "https://vercel.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "两行超大标题 + 黑色三角标志 + 右侧三类受众各一行 → 客户标志 → 每个客户案例配一句带数字的说明、一张界面截图和功能清单",
+      "en": "A two-line giant headline, the black triangle mark and three audience lines on the right → customer logos → each customer story gets one line with a number, one interface shot and a feature list"
+    },
+    "application": {
+      "zh": "基础设施类产品用客户案例代替功能清单的首页",
+      "en": "Infrastructure homepages that lead with customer stories instead of feature lists"
+    },
+    "publisher": "Vercel",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:58:00+08:00"
+  },
+  {
+    "id": "supabase",
+    "name": "Supabase",
+    "category": "landing",
+    "tag": "Developer",
+    "url": "https://supabase.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "两行标题（第二行绿色）+ 右侧一段说明 → 七张产品卡拼成的便当格，每张一幅线描插图 → 标志墙 → 带标签页的后台演示",
+      "en": "A two-line headline with the second line in green and a paragraph on the right → a bento grid of seven product cards, each with a line illustration → logo wall → a tabbed dashboard demo"
+    },
+    "application": {
+      "zh": "多模块开发平台的便当格产品总览",
+      "en": "Bento overviews for multi-module developer platforms"
+    },
+    "publisher": "Supabase",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:57:00+08:00"
+  },
+  {
+    "id": "clerk",
+    "name": "Clerk",
+    "category": "landing",
+    "tag": "Developer",
+    "url": "https://clerk.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "标题下直接嵌入可切换的真实登录组件（用户认证、多租户、企业、代理四个标签）→ 客户标志 → 转入黑色区块的功能卡",
+      "en": "A live, tabbed sign-up component sits right under the headline (user, multi-tenant, enterprise and agent auth) → customer logos → feature cards in a black section"
+    },
+    "application": {
+      "zh": "把真实组件当首屏演示的开发者产品",
+      "en": "Developer products that demo the real component in the first screen"
+    },
+    "publisher": "Clerk",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:56:00+08:00"
+  },
+  {
+    "id": "liveblocks",
+    "name": "Liveblocks",
+    "category": "landing",
+    "tag": "Developer",
+    "url": "https://liveblocks.io/",
+    "source": "link-only",
+    "focus": {
+      "zh": "黑底居中两行标题 + 一个新功能胶囊 → 客户标志 → 「像 Copilot 的 AI 助手、像 Google Docs 的批注、像 Linear 的收件箱」三张对照卡",
+      "en": "A centred two-line headline on black with a new-feature pill → customer logos → three cards framed as “AI companion like Copilot, annotations like Google Docs, inbox like Linear”"
+    },
+    "application": {
+      "zh": "用熟悉产品做类比来解释底层能力",
+      "en": "Explaining infrastructure through analogies to familiar products"
+    },
+    "publisher": "Liveblocks",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:54:00+08:00"
+  },
+  {
+    "id": "railway",
+    "name": "Railway",
+    "category": "landing",
+    "tag": "Developer",
+    "url": "https://railway.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "手绘风的夜空、山脉和新干线做整页背景，衬线标题压在上面，产品界面嵌在画中 → 标志格 → 左侧时间轴串起功能段落",
+      "en": "A hand-drawn night sky, mountains and a bullet train as the full-page backdrop, a serif headline on top and the product UI set into the scene → logo grid → a left-hand timeline threading the feature sections"
+    },
+    "application": {
+      "zh": "想用插画氛围区别于同类的开发者工具",
+      "en": "Developer tools that want an illustrated mood instead of the usual dark grid"
+    },
+    "publisher": "Railway",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:53:00+08:00"
+  },
+  {
+    "id": "warp",
+    "name": "Warp",
+    "category": "landing",
+    "tag": "Developer",
+    "url": "https://www.warp.dev/",
+    "source": "link-only",
+    "focus": {
+      "zh": "等宽字体大标题 → 「fig. 1 — the factory」实时任务格：小方块按排队、工作、等待、完成四种状态变色并附图例 → 带文件树的 YAML 配置 → 01–08 编号功能",
+      "en": "A monospace headline → “fig. 1 — the factory”, a live grid of small squares coloured by queued, working, waiting and shipped with a legend → a YAML config with its file tree → features numbered 01–08"
+    },
+    "application": {
+      "zh": "把系统状态做成图表式首屏的开发者产品",
+      "en": "Developer products that turn system state into a figure on the first screen"
+    },
+    "publisher": "Warp",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:52:00+08:00"
+  },
+  {
+    "id": "zed",
+    "name": "Zed",
+    "category": "landing",
+    "tag": "Developer",
+    "url": "https://zed.dev/",
+    "source": "link-only",
+    "focus": {
+      "zh": "像公司年报：衬线「Zed Industries」+ 一句使命 → 两张并排产品卡（各带成立年份、一句话和下载按钮）→ 编辑器截图",
+      "en": "Laid out like a company report: a serif “Zed Industries” and a mission line → two product cards side by side, each with an “Est.” year, one line and a download button → an editor screenshot"
+    },
+    "application": {
+      "zh": "一家公司两个产品的并列首页",
+      "en": "Homepages that present two products from one company side by side"
+    },
+    "publisher": "Zed Industries",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:50:00+08:00"
+  },
+  {
+    "id": "granola",
+    "name": "Granola",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://www.granola.ai/",
+    "source": "link-only",
+    "focus": {
+      "zh": "衬线大标题占左半屏，右侧是会议窗口和视频通话的拼贴 → 三条带线描图标的功能行 → 一整行巨字「For the doers」→ 深色标志墙",
+      "en": "A serif headline fills the left half, a collage of the meeting window and a video call on the right → three feature rows with line icons → one giant line “For the doers” → a dark logo wall"
+    },
+    "application": {
+      "zh": "想显得有编辑感的生产力工具",
+      "en": "Productivity tools that want an editorial feel"
+    },
+    "publisher": "Granola",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:49:00+08:00"
+  },
+  {
+    "id": "clay",
+    "name": "Clay",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://www.clay.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "3D 玩具景观（漏斗、放大镜、跷跷板）铺满首屏 → 标题与两个按钮 → 客户标志、引言和数字混排在一块圆角面板里 → 用例标签切换表格演示",
+      "en": "A 3D toy landscape (funnel, magnifier, seesaw) fills the first screen → headline and two buttons → logos, quotes and numbers mixed inside one rounded panel → use-case tabs switching a spreadsheet demo"
+    },
+    "application": {
+      "zh": "销售与数据类 SaaS 的证据面板",
+      "en": "Proof panels for sales and data SaaS"
+    },
+    "publisher": "Clay",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:48:00+08:00"
+  },
+  {
+    "id": "mercury",
+    "name": "Mercury",
+    "category": "landing",
+    "tag": "Fintech",
+    "url": "https://mercury.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "山谷晨雾中一张办公桌的照片做首屏，标题下是邮箱输入和两个按钮，底部一行监管声明 → 深色区块里左侧功能列表、右侧账户界面",
+      "en": "A desk standing in a misty valley as the first screen, an email field with two buttons under the headline and a regulatory line at the bottom → a dark section with a feature list on the left and the accounts UI on the right"
+    },
+    "application": {
+      "zh": "金融产品的首屏和合规声明摆放",
+      "en": "First screens and compliance lines for finance products"
+    },
+    "publisher": "Mercury",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:46:00+08:00"
+  },
+  {
+    "id": "family",
+    "name": "Family",
+    "category": "landing",
+    "tag": "Fintech",
+    "url": "https://family.co/",
+    "source": "link-only",
+    "focus": {
+      "zh": "两侧散落的卡通角色和贴纸围着居中标题 → 3×2 功能格，每格一个迷你界面（发送、备份、状态时间线）→ 三部手机分别演示发送、接收、兑换",
+      "en": "Cartoon characters and stickers scattered on both sides of a centred headline → a 3×2 feature grid with one mini interface per cell (send, back-up, status timeline) → three phones demonstrating send, receive and swap"
+    },
+    "application": {
+      "zh": "想显得友好的钱包或消费金融 App 官网",
+      "en": "Wallet and consumer-finance sites that want to feel friendly"
+    },
+    "publisher": "Family",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:45:00+08:00"
+  },
+  {
+    "id": "craft",
+    "name": "Craft",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://www.craft.do/",
+    "source": "link-only",
+    "focus": {
+      "zh": "蓝天、剪纸云和拼贴元素做首屏，衬线标题下是一个圆角产品窗口 → 五个线描图标的用途行 → 「How people use Craft」真人照片卡，每张写职业和用途",
+      "en": "Blue sky, paper-cut clouds and collage pieces as the first screen with a rounded product window under the serif headline → five line-icon use cases → “How people use Craft” portrait cards, each with a role and what they use it for"
+    },
+    "application": {
+      "zh": "笔记和个人工具的用户故事区块",
+      "en": "User-story blocks for note-taking and personal tools"
+    },
+    "publisher": "Craft Docs",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:44:00+08:00"
+  },
+  {
+    "id": "amie",
+    "name": "Amie",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://amie.so/",
+    "source": "link-only",
+    "focus": {
+      "zh": "Product Hunt 和 App Store 徽章 → 标题 → 一张完整的会议笔记界面 → 「Within 47 seconds:」高亮的一句承诺 → 「Replaces: Fireflies, Otter, Fathom」和一段自问自答的 Why Amie",
+      "en": "Product Hunt and App Store badges → headline → one complete meeting-notes screen → a promise with “Within 47 seconds:” highlighted → “Replaces: Fireflies, Otter, Fathom” and a self-questioning “Why Amie?” paragraph"
+    },
+    "application": {
+      "zh": "小团队产品用坦白语气写首页",
+      "en": "Small-team products that write the homepage in a candid voice"
+    },
+    "publisher": "Amie",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:42:00+08:00"
+  },
+  {
+    "id": "superhuman",
+    "name": "Superhuman",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://superhuman.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "紫色晚霞里一个人的背影做首屏，标题和一个按钮 → 标志格 → 「Superhuman Go」小节：标题、一句、两个按钮，再是深绿和深红两张功能卡",
+      "en": "A person's back against a purple dusk as the first screen with the headline and one button → logo grid → a “Superhuman Go” section: title, one line, two buttons, then deep-green and deep-red feature cards"
+    },
+    "application": {
+      "zh": "多产品套件的首页",
+      "en": "Homepages for multi-product suites"
+    },
+    "publisher": "Superhuman",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:41:00+08:00"
+  },
+  {
+    "id": "elevenlabs",
+    "name": "ElevenLabs",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://elevenlabs.io/",
+    "source": "link-only",
+    "focus": {
+      "zh": "标题「Bringing technology to life」→ 三个标签页（Creative、Agents、API）里是彩色球体轮播，每个球代表一种声音 → 灰度标志墙 → 两平台并排截图",
+      "en": "The headline “Bringing technology to life” → three tabs (Creative, Agents, API) holding a carousel of coloured spheres, one per voice → a greyscale logo wall → two platforms shown side by side"
+    },
+    "application": {
+      "zh": "声音或无形产品的可视化首屏",
+      "en": "Visual first screens for voice and other intangible products"
+    },
+    "publisher": "ElevenLabs",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:40:00+08:00"
+  },
+  {
+    "id": "runway",
+    "name": "Runway",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://runwayml.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "深色影像首屏 → 「Three platforms built on-top of the same models」三栏，每栏一张照片、一段说明和两三个按钮 → 下方用标签页切换三平台",
+      "en": "A dark film still as the first screen → “Three platforms built on-top of the same models” in three columns, each with a photo, a paragraph and two or three buttons → tabs below switch between the three"
+    },
+    "application": {
+      "zh": "一家公司多条产品线的分栏介绍",
+      "en": "Column layouts for a company with several product lines"
+    },
+    "publisher": "Runway",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:38:00+08:00"
+  },
+  {
+    "id": "fal",
+    "name": "fal",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://fal.ai/",
+    "source": "link-only",
+    "focus": {
+      "zh": "橄榄绿底、青色标题、荧光绿按钮，像素碎片和撕纸贴图散在四周 → 标志行 → 三个彩色标签页切换 Model APIs / Serverless / Compute",
+      "en": "Olive ground, cyan headline, neon-green buttons, with pixel fragments and torn-paper cut-outs around → logo row → three coloured tabs switching Model APIs / Serverless / Compute"
+    },
+    "application": {
+      "zh": "想用粗粝配色区别于黑白科技风的 AI 平台",
+      "en": "AI platforms that want a rough palette instead of black-and-white tech"
+    },
+    "publisher": "fal",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:37:00+08:00"
+  },
+  {
+    "id": "rapha",
+    "name": "Rapha",
+    "category": "landing",
+    "tag": "Commerce",
+    "url": "https://www.rapha.cc/",
+    "source": "link-only",
+    "focus": {
+      "zh": "顶部滚动促销条 → 一张产品堆叠的静物大图 → 全大写粗体「THE GIFT EDIT」和两个方形按钮 → 带色卡和价格的商品轮播 → 三张竖图按品类分流",
+      "en": "A scrolling promo bar → one large still life of stacked products → bold caps “THE GIFT EDIT” with two square buttons → a product carousel with colour chips and prices → three tall images splitting by category"
+    },
+    "application": {
+      "zh": "节日礼品导购页",
+      "en": "Seasonal gift-guide pages"
+    },
+    "publisher": "Rapha",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:36:00+08:00"
+  },
+  {
+    "id": "hay",
+    "name": "HAY",
+    "category": "landing",
+    "tag": "Commerce",
+    "url": "https://www.hay.dk/",
+    "source": "link-only",
+    "focus": {
+      "zh": "细字导航 + 居中标志 → 一张大图配衬线大写说明「LIVING ROOM UPDATE /」→ 三张同高的小图，各带设计师署名 → 两张并排",
+      "en": "A thin nav with a centred logo → one large image captioned in serif caps “LIVING ROOM UPDATE /” → three equal images, each crediting its designer → two side by side"
+    },
+    "application": {
+      "zh": "家具与生活方式品牌的编辑式首页",
+      "en": "Editorial homepages for furniture and lifestyle brands"
+    },
+    "publisher": "HAY",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:34:00+08:00"
+  },
+  {
+    "id": "oura",
+    "name": "Oura",
+    "category": "landing",
+    "tag": "Commerce",
+    "url": "https://ouraring.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "衬线标题「Wear your best life」在左，戴着戒指的手从右上伸进来 → 居中一句衬线主张 → 带类别胶囊的照片卡横向排开 → 「86% of Oura Members」衬线大数字",
+      "en": "The serif headline “Wear your best life” on the left, a ringed hand reaching in from the top right → a centred serif claim → photo cards with category pills in a horizontal row → “86% of Oura Members” as a serif statistic"
+    },
+    "application": {
+      "zh": "健康硬件的温和、有证据的首页",
+      "en": "Calm, evidence-led homepages for health hardware"
+    },
+    "publisher": "Oura",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:33:00+08:00"
+  },
+  {
+    "id": "playdate",
+    "name": "Playdate",
+    "category": "landing",
+    "tag": "Commerce",
+    "url": "https://play.date/",
+    "source": "link-only",
+    "focus": {
+      "zh": "灰底上一台黄色掌机的大图和「Season 3」贴纸 → 三行口语化说明 → 一整屏的黄色巨字「play date」和紫色「Shop Now!!」→ 黄底的「The System.」「The Design.」分段",
+      "en": "A yellow handheld on grey with a “Season 3” sticker → three lines of chatty copy → a full-screen yellow wordmark “play date” and a purple “Shop Now!!” → “The System.” and “The Design.” sections on yellow"
+    },
+    "application": {
+      "zh": "单一硬件产品的玩味官网",
+      "en": "Playful single-product hardware sites"
+    },
+    "publisher": "Panic",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:32:00+08:00"
+  },
+  {
+    "id": "analogue",
+    "name": "Analogue",
+    "category": "landing",
+    "tag": "Commerce",
+    "url": "https://www.analogue.co/",
+    "source": "link-only",
+    "focus": {
+      "zh": "一屏一个产品：浅灰底居中产品照 + 小标题 + 黑色「Buy Now」胶囊，中间一条滚动公告，接着「Pocket in stock now」同样结构，再到蓝黑对角的两款机器",
+      "en": "One product per screen: a centred product photo on pale grey with a small title and a black “Buy Now” pill, a scrolling announcement, then “Pocket in stock now” in the same structure, then two consoles on a blue-black diagonal"
+    },
+    "application": {
+      "zh": "多款硬件的逐屏展示",
+      "en": "Screen-by-screen showcases for a hardware line"
+    },
+    "publisher": "Analogue",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:30:00+08:00"
+  },
+  {
+    "id": "locomotive",
+    "name": "Locomotive",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://locomotive.ca/",
+    "source": "link-only",
+    "focus": {
+      "zh": "红色像素化人像铺满首屏，青色衬线与黑色无衬线混排标题 → 一枚冠军戒指照片配「Seven Years Running」→ 「Featured work」用整行的巨大衬线客户名做列表",
+      "en": "A red pixelated portrait fills the first screen with a headline mixing cyan serif and black sans → a championship ring photo captioned “Seven Years Running” → “Featured work” as a list of giant serif client names"
+    },
+    "application": {
+      "zh": "想靠字体和一张图撑住首屏的工作室",
+      "en": "Studios that carry the first screen with type and one image"
+    },
+    "publisher": "Locomotive",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:29:00+08:00"
+  },
+  {
+    "id": "buck",
+    "name": "BUCK",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://buck.co/",
+    "source": "link-only",
+    "focus": {
+      "zh": "左上标志、右侧一段自我介绍做页头 → 作品以不等宽的两列排布，每件下面是「Work」+ 项目名 + 一句话",
+      "en": "The logo top left and a one-paragraph introduction as the header → work laid out in two uneven columns, each piece captioned “Work” + project name + one line"
+    },
+    "application": {
+      "zh": "动画与品牌工作室的作品首页",
+      "en": "Work-first homepages for animation and brand studios"
+    },
+    "publisher": "BUCK",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:28:00+08:00"
+  },
+  {
+    "id": "collins",
+    "name": "COLLINS",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://www.wearecollins.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "衬线一句「Rewrite your worth.」居中，大片留白 → 一张圆角影片 → 「Programs」：Brand Refresh、Reposition 等每行一个名字配一句口号",
+      "en": "A single serif line “Rewrite your worth.” centred in white space → one rounded video → “Programs”: Brand Refresh, Reposition and more, one name and one slogan per row"
+    },
+    "application": {
+      "zh": "以服务项目为结构的咨询型工作室",
+      "en": "Consultancy-style studios structured by programme"
+    },
+    "publisher": "COLLINS",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:26:00+08:00"
+  },
+  {
+    "id": "ordinary-folk",
+    "name": "Ordinary Folk",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://ordinaryfolk.co/",
+    "source": "link-only",
+    "focus": {
+      "zh": "三组两行的导航 → 「Hi. We are Ordinary Folk. We love good work.」带播放按钮 → 作品按不同尺寸错落排列，每件标客户名和项目名",
+      "en": "Three two-line nav groups → “Hi. We are Ordinary Folk. We love good work.” with a play button → work staggered in different sizes, each labelled with client and project"
+    },
+    "application": {
+      "zh": "动效工作室的错落作品墙",
+      "en": "Staggered work walls for motion studios"
+    },
+    "publisher": "Ordinary Folk",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:25:00+08:00"
+  },
+  {
+    "id": "darkroom",
+    "name": "Darkroom",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://darkroom.engineering/",
+    "source": "link-only",
+    "focus": {
+      "zh": "红色像素字体的「WHERE THINGS GET DEVELOPED」横贯黑底，下面是词典式的两条释义和一段等宽说明 → 第一件作品的霓虹街景影片占满宽度",
+      "en": "“WHERE THINGS GET DEVELOPED” in red pixel type across black, two dictionary-style definitions and a monospace paragraph beneath → the first project's neon street film at full width"
+    },
+    "application": {
+      "zh": "工程型工作室的硬核首页",
+      "en": "Hard-edged homepages for engineering-led studios"
+    },
+    "publisher": "Darkroom",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:24:00+08:00"
+  },
+  {
+    "id": "koto",
+    "name": "Koto",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://koto.studio/",
+    "source": "link-only",
+    "focus": {
+      "zh": "首屏是整屏影片，左下角两行「We're Koto / The Creative Company」，右上角显示当地时间 → 往下是客户项目的影片卡片",
+      "en": "A full-screen film as the first screen, two lines “We're Koto / The Creative Company” bottom left and the local time top right → client project films as cards below"
+    },
+    "application": {
+      "zh": "用影片而不是文字开场的品牌工作室",
+      "en": "Brand studios that open with film instead of copy"
+    },
+    "publisher": "Koto",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:22:00+08:00"
+  },
+  {
+    "id": "devouring-details",
+    "name": "Devouring Details",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://devouringdetails.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "左侧一把细刻度尺贯穿页面，顶部一条橙线和「Register now」小标 → 两栏引言（左边提问、右边定义）→ 一段径向时间轴的影片，注明全部影像录自 React 组件 → 正文 → 平台截图",
+      "en": "A thin ruler runs down the left edge, an orange line and a small “Register now” tag at the top → a two-column opening (a question on the left, a definition on the right) → a radial-timeline film captioned as recorded from React components → body text → a screenshot of the platform"
+    },
+    "application": {
+      "zh": "课程或手册类产品的长文首页",
+      "en": "Long-form homepages for courses and reference manuals"
+    },
+    "publisher": "Rauno Freiberg",
+    "kind": "official-site",
+    "designer": "Rauno Freiberg",
+    "checkedAt": "2026-11-12",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "addedAt": "2026-11-12T10:21:00+08:00"
   }
 ];
 

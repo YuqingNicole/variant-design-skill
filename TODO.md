@@ -20,9 +20,9 @@
 
 对标对象是 recent.design 公开呈现的内容产品（2026-11-08 按普通访客读首页：分类 Web、Interface、Branding、Motion、Illustration、Posters、Print；浏览入口 Launch Videos、Websites、OG Images、App Screenshots、App Icons；资源 Tools、Skills、Jobs；每条有 `/i/<id>-<slug>` 页和作者署名）。只对标形态和规模，不复制界面、文案和素材（RFC-008 §1）。现状：灵感库约 99 条，其中 60 条来自 recent.design 首页的 947 条；分类以 X 视频（practice 65）为主，landing 20、product 8、flow 4。数字以 `website/src/inspiration-data.ts` 为准，动手前先重数。
 
-- [ ] 内容规模目标（维护者 2026-11-08 已定）：灵感库到 300 条，每周上线 40 条。起点以动手前重数的条数为准；按每周 40 条算，从 2026-11-11 的 129 条到 300 条约需 4 周，实际周期以重数结果为准。这是指标条目的基线。
-- [ ] 把“收件箱到上线”写成固定流程并落到 `website/content/`：筛 `x-post-inbox.json` → 看过原视频 → 中英文笔记 → 同一作者不重复 → `x-media.mjs` 取视频 → 上线。每批在 `docs/research/` 记录条数、剔除原因和用时。
-- [ ] 分类页已完成：网站 32、产品界面 12、交互 26、动效 20、品牌 7（互不重叠，各有 `/browse/<分类>`）。插画、海报、印刷还没有内容，所以没有 tab；收录第一条带 `Illustration`、`Poster`、`Print` 标签的参考后会自动出现。剩下的是内容：按第 1 条的节奏补这三类，以及决定要不要给投稿表单加分类选项（见 RFC-008 §8）。
+- [ ] 内容规模目标（维护者 2026-11-08 已定）：灵感库到 300 条，每周上线 40 条。2026-11-12 第四批加了 40 条（11 条 X、29 个网站），现在 169 条；按每周 40 条算还需约 4 周，实际以动手前重数为准。这是指标条目的基线。
+- [ ] “收件箱到上线”的流程已跑过一轮（记录见 `docs/research/2026-11-12-reference-batch.md`）：筛 `x-post-inbox.json` → 看帧或原视频 → 中英文笔记 → 同一作者不重复 → `x-media.mjs` 取视频 → 上线；每条候选处理完把 `status` 改成 `published`（带 `entry`）或 `rejected`（带 `reason`）并写 `reviewedAt`，收件箱里不留 `pending`。还差：每周发现只有一组关键词，补插画、海报、品牌时要另搜；这次的加搜脚本是临时的，常态化要给 `x-discovery.mjs` 加可配置查询。
+- [ ] 分类页已完成：网站 79、产品界面 12、交互 36、动效 29、品牌 13（2026-11-12 重数；互不重叠，各有 `/browse/<分类>`）。插画、海报、印刷还没有内容，所以没有 tab；收录第一条带 `Illustration`、`Poster`、`Print` 标签的参考后会自动出现。2026-11-12 按这三类关键词搜 X，返回的几乎都是教程录屏和 AI 工具清单，没有可收的作品帖；下次换数据源（设计师账号名单），或者接受这三类暂时没有 tab。还要决定要不要给投稿表单加分类选项（见 RFC-008 §8）。
 - [ ] 【维护者】决定要不要增加 Websites 浏览入口，以及 Instagram 那 54 条的展示方式（现在没有对应形态）。App 图标和 OG 图不做（维护者 2026-11-08 决定）。授权规则不变：只给链接、官方嵌入或作者授权的媒体。
 - [ ] 决定 `/tools` 要不要做，再动手。`/skills` 只有我们 1 条，与“只收实际跑过的技能”的评测条目放在第 4 组；这里只定 Tools 页的收录范围和是否值得做。
 - [ ] 回访机制：RSS 已完成（`feed.xml` 含灵感与案例，页头有自动发现，页脚有可见的“订阅 RSS”链接）。剩下一件：【维护者】决定要不要做每周精选邮件或“本周新增页”（邮件涉及收集地址，先确认隐私说明）。
@@ -43,7 +43,9 @@
 
 ## 6. 网站维护
 
-（当前没有等待代理执行的已实现网站维护 PR；定位、定价与发布措辞仍待维护者确认，见第 1 组。）
+（定位、定价与发布措辞仍待维护者确认，见第 1 组。）
+
+- [ ] 首页脚本随灵感库线性增长：参考数据整体打进首页的脚本（2026-11-12 为 169 条、45 KB gzip，约每 5 条多 1 KB），`tests/landing.spec.mjs` 的首页脚本上限已从 145 KB 提到 160 KB。到 300 条前要把参考数据拆开：首屏只带第一页，其余按分类或滚动再取；拆完把上限降回去。
 
 ## 7. 变现：先把度量做出来
 
@@ -60,11 +62,11 @@
 
 把链接贴在这里，每条写一句好在哪。代理先把它登记进 `website/src/inspiration-data.ts`（带 `post` 字段），再运行 `node website/scripts/x-media.mjs` 取视频并提交 `website/src/x-media.json`：带视频的按标签进对应分类页并自动播放（标签对应分类见 RFC-008 §8），其他用 X 官方嵌入。加完就从这里删掉。
 
-Ego Lite 每周一 09:00（Asia/Shanghai）搜索最近 7 天、互动数至少 100 的设计视频，把链接和互动数据放进 `website/content/x-post-inbox.json`。收件箱只供人工筛选；看过原帖并补齐中英文研究笔记后，才能加入公开灵感页。手动运行：`website/scripts/run-x-discovery.sh`。
+Ego Lite 每周一 09:00（Asia/Shanghai）搜索最近 7 天、互动数至少 100 的设计视频，把链接和互动数据放进 `website/content/x-post-inbox.json`。收件箱只供人工筛选；看过原帖并补齐中英文研究笔记后，才能加入公开灵感页。每条处理完要在收件箱里写明 `published`（带 `entry`）或 `rejected`（带 `reason`）和 `reviewedAt`。手动运行：`website/scripts/run-x-discovery.sh`（用 `PATH` 里的 `ego-browser`，或设 `EGO_BROWSER` 指向它）。
 
 <!-- 格式：- https://x.com/<handle>/status/<id> — 好在哪（可选：分类） -->
 
-- recent.design 首页的 947 条作品（维护者本地的 `Recent-Design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入；2026-11-11 又加入 20 条 X 帖子和 10 个网站（记录见 `docs/research/2026-11-11-reference-batch.md`），条目带 `via` 指回 recent.design。其余按第 3 组的固定流程分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。
+- recent.design 首页的 947 条作品（维护者本地的 `Recent-Design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入；2026-11-11 又加入 20 条 X 帖子和 10 个网站（记录见 `docs/research/2026-11-11-reference-batch.md`），条目带 `via` 指回 recent.design。2026-11-12 的第四批没有用这个来源（收件箱 + 关键词加搜 + 手选网站，见 `docs/research/2026-11-12-reference-batch.md`）。其余按第 3 组的固定流程分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。
 
 ## 定期维护
 
