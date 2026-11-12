@@ -292,7 +292,7 @@ test('the docs hub lists the install guide, the articles and the quick answers, 
  await page.goto('/docs');await hydrated(page);
  await expect(page.getByRole('heading',{level:1})).toHaveText('文档');
  const links=await page.locator('.guide-list h2 a').evaluateAll(a=>a.map(x=>x.getAttribute('href')));
- expect(links).toEqual(['/docs/install','/docs/design-exploration-with-ai-coding-agents','/docs/check-ai-generated-ui-before-you-ship','/docs/motion-rules-for-ai-generated-ui','/docs/measure-layout-shift-in-ai-built-pages','/guides']);
+ expect(links).toEqual(['/docs/install','/docs/design-exploration-with-ai-coding-agents','/docs/check-ai-generated-ui-before-you-ship','/docs/motion-rules-for-ai-generated-ui','/docs/measure-layout-shift-in-ai-built-pages','/guides','/changelog']);
  for(const href of links.slice(1,5)){
   const html=await(await request.get(href)).text();
   expect(html,href).toContain(`<link rel="canonical" href="https://variantdesign.xyz${href}">`);
