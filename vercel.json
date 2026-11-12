@@ -206,6 +206,86 @@
       {
         "protocol": "https",
         "hostname": "astrodither.robertborghesi.is"
+      },
+      {
+        "protocol": "https",
+        "hostname": "cdn.prod.website-files.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "amie.so"
+      },
+      {
+        "protocol": "https",
+        "hostname": "buck.co"
+      },
+      {
+        "protocol": "https",
+        "hostname": "clerk.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "d3phaj0sisr2ct.cloudfront.net"
+      },
+      {
+        "protocol": "https",
+        "hostname": "darkroom.engineering"
+      },
+      {
+        "protocol": "https",
+        "hostname": "devouringdetails.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "elevenlabs.io"
+      },
+      {
+        "protocol": "https",
+        "hostname": "family.co"
+      },
+      {
+        "protocol": "https",
+        "hostname": "lishhsx6kmthaacj.public.blob.vercel-storage.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "liveblocks.io"
+      },
+      {
+        "protocol": "https",
+        "hostname": "locomotive.ca"
+      },
+      {
+        "protocol": "https",
+        "hostname": "media.ordinary.co"
+      },
+      {
+        "protocol": "https",
+        "hostname": "media.rapha.cc"
+      },
+      {
+        "protocol": "https",
+        "hostname": "ouraring.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "play.date"
+      },
+      {
+        "protocol": "https",
+        "hostname": "railway.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "supabase.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "superhumanstatic.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "www.analogue.co"
       }
     ]
   },
