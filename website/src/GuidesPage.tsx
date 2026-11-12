@@ -3,7 +3,6 @@ import type { Language } from './direction-engine';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { guides, guideRoute } from './guides-content';
 import { docsArticles } from './docs-articles';
-import currentVersionFile from '../../VERSION?raw';
 import { t, type Localized } from './i18n/localized';
 import './content-pages.css';
 import { useLocale } from './i18n/LocaleProvider';
@@ -33,7 +32,6 @@ const hub = {
   changelog: { zh: '每个版本改了什么', en: 'What changed in each version' },
   changelogBody: { zh: '技能和网站的改动按版本分组，标出当前版本和日期。', en: 'Skill and website changes grouped by version, with the current version and dates.' },
 } satisfies Record<string, Localized>;
-const currentVersion = currentVersionFile.trim();
 
 export function GuidesPage({ slug, base = '/guides' }: { slug?: string; base?: '/guides' | '/docs' }) {
   const language = useLocale();
@@ -61,7 +59,7 @@ export function GuidesPage({ slug, base = '/guides' }: { slug?: string; base?: '
         {base === '/docs' && <article className="docs-start"><small>{t(hub.startLabel, language)}</small><h2><a href={localePath('/docs/install',language)}>{t(hub.installTitle, language)}</a></h2><p>{t(hub.installBody, language)}</p></article>}
         {visible.map(g => <article key={g.slug} className={base === '/docs' ? 'docs-card' : undefined}>{base === '/docs' && <small>{t(hub.articleLabel, language)} · {g.publishedAt}</small>}<h2><a href={localePath(guideRoute(g),language)}>{t(g.title, language)}</a></h2><p>{t(g.answer, language)}</p></article>)}
         {base === '/docs' && <article className="docs-answers"><small>{t(hub.answersLabel, language)}</small><h2><a href={localePath('/guides',language)}>{t(hub.answers, language)}</a></h2><p>{t(hub.answersBody, language)}</p></article>}
-        {base === '/docs' && <article className="docs-changelog"><small>{t(hub.changelogLabel, language)} · {currentVersion}</small><h2><a href={localePath('/changelog',language)}>{t(hub.changelog, language)}</a></h2><p>{t(hub.changelogBody, language)}</p></article>}
+        {base === '/docs' && <article className="docs-changelog"><small>{t(hub.changelogLabel, language)}</small><h2><a href={localePath('/changelog',language)}>{t(hub.changelog, language)}</a></h2><p>{t(hub.changelogBody, language)}</p></article>}
       </section>}
     </>}
     <SiteFooter language={language}/></main>;
