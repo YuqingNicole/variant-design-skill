@@ -12,7 +12,9 @@ const m={submissionsPermissionsVariantDesign:{zh:'投稿与授权 — Variant De
  aPermissionIncludes:{zh:'授权需要包含',en:'A permission includes'},
  howToSubmit:{zh:'如何投稿',en:'How to submit'},
  takedownRequests:{zh:'撤下请求',en:'Takedown requests'},
- submitOnGithub:{zh:'在 GitHub 提交 ↗',en:'Submit on GitHub ↗'}} satisfies Record<string,Localized>;
+ submitOnGithub:{zh:'在 GitHub 提交 ↗',en:'Submit on GitHub ↗'},
+ display:{zh:'展示方式与数据来源',en:'How media is shown and where data comes from'},
+ displayBody:{zh:'作品版权归原作者。标有「作者授权」的媒体按授权记录直接从作者地址加载，仅限本站展示；其他条目是仅链接参考。本站不在仓库里保存对方的截图或素材：网站条目显示该网站为分享链接公开的预览图、标题和描述，图片取自原站，经本站托管方 Vercel 的图片服务按显示尺寸缩小并缓存；如果 Vercel 图片请求失败，浏览器会直接从来源地址重试。X 帖子与网站在同一作品流中，卡片直接从 X 的服务器播放帖子视频（静音循环），详情用 X 官方嵌入，X 可能记录这次访问。没有公开预览的条目显示我们写的分析卡。登录后操作和手机体验未实测。',en:'The work belongs to its owners. Media labeled “Author permission” loads from the author’s URL for display here under its recorded permission; other entries are link-only references. This site keeps none of their screenshots or assets in its repository: a website entry shows the preview image, title and description the site publishes for shared links, taken from the site and resized and cached by our host Vercel’s image service. If that image request fails, the browser retries directly from the source. X posts and websites share one feed, where each X card streams the post’s video from X (muted, looping) and the detail uses X’s official embed; X may record the visit. Entries without a public preview show our own analysis card. Authenticated flows and mobile behavior not tested.'},} satisfies Record<string,Localized>;
 const repo='https://github.com/YuqingNicole/variant-design-skill';
 // Public content policy for the direction library (RFC-002 §5). Keep in step with docs/rfc/002-direction-library.md.
 const sources:{id:string;name:Localized;rule:Localized;images:Localized}[]=[
@@ -45,6 +47,7 @@ export function SubmitPage(){
    <SubmissionForm/>
    <h2>{t(m.threeKindsOfEntries,language)}</h2>
    <ul className="submit-sources">{sources.map(s=><li key={s.id} data-source={s.id}><strong>{t(s.name,language)}</strong> — {t(s.rule,language)} <em>{t(s.images,language)}</em></li>)}</ul>
+   <h2 id="display">{t(m.display,language)}</h2><p>{t(m.displayBody,language)}</p>
    <h2>{t(m.aPermissionIncludes,language)}</h2><ul>{permission.map((p,i)=><li key={i}>{t(p,language)}</li>)}</ul>
    <h2>{t(m.howToSubmit,language)}</h2><ol>{steps.map((p,i)=><li key={i}>{t(p,language)}</li>)}</ol>
    <h2>{t(m.takedownRequests,language)}</h2><ul>{takedown.map((p,i)=><li key={i}>{t(p,language)}</li>)}</ul>

@@ -1,0 +1,70 @@
+/* 半山面包 · 三个方向共用的基础层：重置、控件、表单状态。品牌锁定下组件在 A/B/C 之间保持一致。 */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--space-8); }
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { line-height: var(--leading-tight); font-weight: 600; margin: 0; overflow-wrap: anywhere; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+a { color: var(--color-primary); text-underline-offset: 0.18em; }
+a:hover { color: var(--color-primary-hover); }
+:focus-visible { outline: var(--border-focus); outline-offset: 2px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* 按钮 */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: var(--control-height); padding: 0 var(--space-5);
+  border: 1px solid transparent; border-radius: var(--radius-control);
+  font: inherit; font-weight: 600; font-size: var(--text-md); line-height: 1; text-decoration: none; cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--color-primary); color: var(--color-on-primary); }
+.btn-primary:hover { background: var(--color-primary-hover); color: var(--color-on-primary); }
+.btn-primary:active { background: var(--color-primary-active); }
+.btn-primary:disabled { background: var(--color-border-strong); cursor: progress; transform: none; }
+.btn-secondary { background: transparent; color: var(--color-primary); border-color: var(--color-primary); }
+.btn-secondary:hover { background: var(--color-primary-soft); }
+.btn-quiet { background: transparent; color: var(--color-text); border-color: var(--color-border); }
+.btn-quiet:hover { border-color: var(--color-border-strong); }
+.btn-quiet:disabled { color: var(--color-text-muted); border-color: var(--color-border); cursor: not-allowed; transform: none; }
+
+/* 表单 */
+form { display: block; max-width: none; }
+.field { display: grid; gap: var(--space-2); }
+.field > span:first-child, .field-label { font-size: var(--text-sm); font-weight: 600; }
+.field input {
+  width: 100%; min-height: var(--control-height); padding: 0 var(--space-4);
+  border: 1px solid var(--color-border-strong); border-radius: var(--radius-control);
+  background: var(--color-surface-raised); color: var(--color-text);
+  font: inherit; font-size: var(--text-md);
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+}
+.field input:hover { border-color: var(--color-text-muted); }
+.field input:focus-visible { outline: var(--border-focus); outline-offset: 0; border-color: var(--color-primary); }
+.field input[aria-invalid="true"] { border-color: var(--color-error); box-shadow: inset 0 0 0 1px var(--color-error); }
+.field-hint { font-size: var(--text-xs); color: var(--color-text-muted); }
+.field-error { font-size: var(--text-sm); color: var(--color-error); font-weight: 600; min-height: 1.4em; }
+.field-error:empty { display: none; }
+.form-status { font-size: var(--text-sm); color: var(--color-error); font-weight: 600; }
+.form-status:empty { display: none; }
+
+/* 成功态 */
+.success { background: var(--color-success-soft); border-left: 4px solid var(--color-primary); padding: var(--space-5); display: grid; gap: var(--space-3); }
+.success h3 { font-size: var(--text-lg); }
+.success p { color: var(--color-text); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}

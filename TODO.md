@@ -15,17 +15,19 @@
 - [ ] 【维护者】Search Console：为 `https://variantdesign.xyz/` 前缀完成站点验证并提交 sitemap，检查 `/en/...` 的索引和 `hreflang` 报告（不以 HTTP 200 为准）。静态核对已完成；Search Console 属性还未建立，原因与证据见 `docs/research/2026-11-07-search-console-readiness.md`。
 - [ ] 【维护者】投稿到 claudemarketplaces.com 与 Codex 插件目录。skills.sh 已自动收录，不需要投稿；其余渠道的准备状态、文案与发布门槛见[投稿材料](docs/drafts/distribution-submissions.md)。
 - [ ] 【维护者】第一次做 AI 搜索基线测量（GEO 策略里的 10 个问题），之后每两周一次，见“定期维护”。已准备 10 题 × 4 引擎方案；单次实时采集预估 $2.95 / 2,950 credits，需维护者批准后再运行，见 `docs/research/2026-11-08-geo-baseline-prep.md`。
+- [ ] 【维护者】流量渠道：相近产品的渠道调研见 `docs/research/2026-11-13-traffic-channels.md`（对标站第一渠道都是直接访问 56%–72%，信息流型的第二渠道是社交，参考库型的第二渠道是搜索）。要定的三件事：要不要开站点的 X 和 Threads 账号并日更一条（代理可生成发帖队列；先补详情页的 `og:image`，见第 3 组）；要不要做每周精选邮件（第 3 组已有）；技能生成的比较页和导出 HTML 要不要带一行可去掉的 "Made with Variant Design" 链接。都以 B1 和 Search Console 建立为前提。
 
 ## 3. 对标 recent.design：灵感内容产品
 
 对标对象是 recent.design 公开呈现的内容产品（2026-11-08 按普通访客读首页：分类 Web、Interface、Branding、Motion、Illustration、Posters、Print；浏览入口 Launch Videos、Websites、OG Images、App Screenshots、App Icons；资源 Tools、Skills、Jobs；每条有 `/i/<id>-<slug>` 页和作者署名）。只对标形态和规模，不复制界面、文案和素材（RFC-008 §1）。现状：灵感库约 99 条，其中 60 条来自 recent.design 首页的 947 条；分类以 X 视频（practice 65）为主，landing 20、product 8、flow 4。数字以 `website/src/inspiration-data.ts` 为准，动手前先重数。
 
-- [ ] 内容规模目标（维护者 2026-11-08 已定）：灵感库到 300 条，每周上线 40 条。起点以动手前重数的条数为准；按每周 40 条算，从现有约 99 条到 300 条约需 5 周，实际周期以重数结果为准。这是指标条目的基线。
-- [ ] 把“收件箱到上线”写成固定流程并落到 `website/content/`：筛 `x-post-inbox.json` → 看过原视频 → 中英文笔记 → 同一作者不重复 → `x-media.mjs` 取视频 → 上线。每批在 `docs/research/` 记录条数、剔除原因和用时。
-- [ ] 分类页已完成：网站 32、产品界面 12、交互 26、动效 20、品牌 7（互不重叠，各有 `/browse/<分类>`）。插画、海报、印刷还没有内容，所以没有 tab；收录第一条带 `Illustration`、`Poster`、`Print` 标签的参考后会自动出现。剩下的是内容：按第 1 条的节奏补这三类，以及决定要不要给投稿表单加分类选项（见 RFC-008 §8）。
+- [ ] 内容规模目标（维护者 2026-11-08 已定）：灵感库到 300 条，每周上线 40 条。2026-11-12 第四批、2026-11-13 第五批各加了 40 条（均为 11 条 X、29 个网站），现在 209 条；按每周 40 条算还需约 3 周，实际以动手前重数为准。这是指标条目的基线。
+- [ ] “收件箱到上线”的流程已跑过两轮（记录见 `docs/research/2026-11-12-reference-batch.md`、`2026-11-13-reference-batch.md`）：筛 `x-post-inbox.json` → 看帧或原视频 → 中英文笔记 → 同一作者不重复 → `x-media.mjs` 取视频 → 上线；每条候选处理完把 `status` 改成 `published`（带 `entry`）或 `rejected`（带 `reason`）并写 `reviewedAt`，收件箱里不留 `pending`。还差：每周发现只有一组关键词，补插画、海报、品牌时要另搜；两次加搜脚本都是临时的，常态化要给 `x-discovery.mjs` 加可配置的查询组和账号组（第五批的 15 个插画、字体、海报账号里只有 5 个读出了帖子，列进脚本前要先在浏览器里核对账号名）。
+- [ ] 分类页已完成：网站 109、产品界面 12、交互 38、动效 31、品牌 14、插画 3、海报 2（2026-11-13 重数；互不重叠，各有 `/browse/<分类>`）。插画和海报的 tab 在第五批后自动出现；印刷还没有内容，所以没有 tab，收录第一条带 `Print` 标签的参考后会出现。印刷类的候选来源还没找到：关键词搜索返回的是教程、清单和周边开箱，第五批试的设计师账号名单只对插画和海报有效。还要决定要不要给投稿表单加分类选项（见 RFC-008 §8）。
 - [ ] 【维护者】决定要不要增加 Websites 浏览入口，以及 Instagram 那 54 条的展示方式（现在没有对应形态）。App 图标和 OG 图不做（维护者 2026-11-08 决定）。授权规则不变：只给链接、官方嵌入或作者授权的媒体。
 - [ ] 决定 `/tools` 要不要做，再动手。`/skills` 只有我们 1 条，与“只收实际跑过的技能”的评测条目放在第 4 组；这里只定 Tools 页的收录范围和是否值得做。
-- [ ] 回访机制：RSS 已完成（`feed.xml` 含灵感与案例，页头有自动发现；页面上还没有可见的订阅入口）。剩下两件：在页脚或灵感页加一个可见的订阅链接；【维护者】决定要不要做每周精选邮件或“本周新增页”（邮件涉及收集地址，先确认隐私说明）。
+- [ ] 回访机制：RSS 已完成（`feed.xml` 含灵感与案例，页头有自动发现，页脚有可见的“订阅 RSS”链接）。剩下一件：【维护者】决定要不要做每周精选邮件或“本周新增页”（邮件涉及收集地址，先确认隐私说明）。
+- [ ] 【维护者】订阅源付费墙：维护者 2026-11-11 选了“真的把 feed 锁起来”，方案在 `docs/rfc/019-feed-paywall.md`（每人一条私有地址、供应商托管结账、公开 feed 只剩说明项、网页不锁）。开工前要定 RFC 第 7 节的六项：收款主体和供应商、价格和周期、退款规则、隐私说明与条款（代理起草，维护者核对）、要不要先量两三周需求、存储。第 3.5 节的量需求可以先做，不依赖其他决定。
 - [ ] 详情页分享卡片：2026-11-08 核对 97 个预渲染详情页，标题、描述、`canonical`、`hreflang`、`og:title/description/url` 都有，但全部缺 `og:image`，分享时只出文字卡。原因是仓库不存对方截图（授权规则）；要不要用站点预览图、作者授权媒体或我们自己画的分析卡做分享图，需要【维护者】定。作者署名还没在详情页的 HTML 里核对。
 - [ ] 【维护者】定对标指标并建基线：收录条数、每周新增、详情页被搜索收录数（Search Console）、回访或订阅数。没有指标，“对标”无法验证；指标取不到的（如对方的流量）不编，写“无法获得”。
 
@@ -34,16 +36,21 @@
 - [ ] 【维护者】审阅 `/guides` 的英文（5 篇）。2026-11-04 代理已做事实和语言初审：修正 Git、旧快照和授权说明，改写的 3 篇英文标为 `draft`，生产模式的列表与直达页面也遵守该状态；2 篇未改的旧英文保留原状态。均不算人工审定，审完改成 `complete` 并写 `reviewedAt`。审阅包见 `docs/research/2026-11-04-content-review.md`。
 - [ ] 【维护者】确认对比页草稿 `docs/drafts/compare-page.md`（Impeccable、Taste Skill、frontend-design，2026-11-04 已重新核对公开文档和源码许可证；不算实际运行），决定放在 `/compare` 还是 `/guides`，确认后由代理做成页面。涉及 Anthropic 的发布条款仍待确认。
 - [ ] `/skills` 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 `evals/run.mjs` 在一次性项目里跑 Impeccable、Taste Skill、UI UX Pro Max，公开记录后收录。发布涉及 Anthropic 技能的对比前，先由【维护者】确认条款。
+- [ ] 案例系列（维护者 2026-11-13 定目标"展现 AI design 的全部实力和一些教程性内容"，选先做案例）：第一批 3 个已验证案例 `bakery`、`motion`、`ledger` 来自评测夹具上的真实运行，案例页有了「怎么做出来的」，记录见 `docs/research/2026-11-13-case-series.md`（每个运行约 $6–9、13–18 分钟，只跑了 Claude Code）。下一批：`harbor-chain` 和 `native-vite` 两个多轮夹具，展示 pick、设计系统、apply、undo 和接入回滚；再找两三个外部的真实小 brief 做夹具。首页更显眼的案例区等第 6 组的数据拆分。教程套件（第二条路）还没开始。
 
 ## 5. 产品
 
 - [ ] 决定要不要做“在比较页上直接选某个区域”：Impeccable 的 Live Mode、Subframe 和 Claude Design 都让用户在页面上点选。先决定做还是明确不做，再动手。
 - [ ] 完善账号体系：先定匿名使用与登录账号的边界，再规划注册/登录、个人资料、收藏与灵感同步、数据导出和删除；实现前明确认证服务、隐私说明和账号数据归属。
 - [ ] 【维护者】决定要不要做公开的界面代码检查页。评估见 `docs/research/2026-11-02-antipattern-catalog-evaluation.md`：建议做成一页、先把规则改成共用数据，不仿 `/slop` 做视觉目录。
+- [ ] 技能的三处记录问题（2026-11-13 案例运行里发现，见 `docs/research/2026-11-13-case-series.md`）：`.variant-context.json` 的 `recommendation.reason` 应跟随对话语言（ledger 运行里对话和方向说明都是中文，理由记成了英文，中文案例页只能原样显示）；每个方向应记录名字（ledger 的 context 没有 `name`，bakery 有）；`evals/README.md` 要写明运行器隔离不了机器上已有的 node 模块（bakery 运行借用了本机另一个项目里的 Playwright 做自检）。
 
 ## 6. 网站维护
 
-（当前没有等待代理执行的已实现网站维护 PR；定位、定价与发布措辞仍待维护者确认，见第 1 组。）
+（定位、定价与发布措辞仍待维护者确认，见第 1 组。）
+
+- [ ] 网站缩略图依赖 Vercel 图片优化器，而 `images.remotePatterns` 最多 50 个域名，2026-11-12 已满：之后新收的网站只能回退加载原图（`link-preview.mjs` 按引用次数排进名单，进不了的走原图）；第五批的 29 个网站全部走原图。300 条前要定方案：按域名合并、换不经优化器的缩略方式，或自己存缩略图（涉及授权）。
+- [ ] 首页数据已拆（2026-11-13，网站包 0.6.0）：首页脚本只带每条参考的一行轻数据和第一页的完整记录，其余按分类拆成带哈希的块按需取（`website/scripts/inspiration-split.mjs`，预渲染 HTML 不变）。首页脚本从 173 KB gzip 降到 113.8，`tests/landing.spec.mjs` 的上限从 180 降回 130；之后的参考批次不该再动这条线，动了就是拆分漏了。还没做：按地址打开的参考页取的是整个分类（网站分类 41.6 KB），可以改成逐条的小块；各分类块重复了第一页那 30 条。
 
 ## 7. 变现：先把度量做出来
 
@@ -60,11 +67,11 @@
 
 把链接贴在这里，每条写一句好在哪。代理先把它登记进 `website/src/inspiration-data.ts`（带 `post` 字段），再运行 `node website/scripts/x-media.mjs` 取视频并提交 `website/src/x-media.json`：带视频的按标签进对应分类页并自动播放（标签对应分类见 RFC-008 §8），其他用 X 官方嵌入。加完就从这里删掉。
 
-Ego Lite 每周一 09:00（Asia/Shanghai）搜索最近 7 天、互动数至少 100 的设计视频，把链接和互动数据放进 `website/content/x-post-inbox.json`。收件箱只供人工筛选；看过原帖并补齐中英文研究笔记后，才能加入公开灵感页。手动运行：`website/scripts/run-x-discovery.sh`。
+Ego Lite 每周一 09:00（Asia/Shanghai）搜索最近 7 天、互动数至少 100 的设计视频，把链接和互动数据放进 `website/content/x-post-inbox.json`。收件箱只供人工筛选；看过原帖并补齐中英文研究笔记后，才能加入公开灵感页。每条处理完要在收件箱里写明 `published`（带 `entry`）或 `rejected`（带 `reason`）和 `reviewedAt`。手动运行：`website/scripts/run-x-discovery.sh`（用 `PATH` 里的 `ego-browser`，或设 `EGO_BROWSER` 指向它）。
 
 <!-- 格式：- https://x.com/<handle>/status/<id> — 好在哪（可选：分类） -->
 
-- recent.design 首页的 947 条作品（维护者本地的 `Recent-Design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入，条目带 `via` 指回 recent.design。其余按第 3 组的固定流程分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。
+- recent.design 首页的 947 条作品（维护者本地的 `Recent-Design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入；2026-11-11 又加入 20 条 X 帖子和 10 个网站（记录见 `docs/research/2026-11-11-reference-batch.md`），条目带 `via` 指回 recent.design。2026-11-12 的第四批没有用这个来源（收件箱 + 关键词加搜 + 手选网站，见 `docs/research/2026-11-12-reference-batch.md`）。其余按第 3 组的固定流程分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。
 
 ## 定期维护
 

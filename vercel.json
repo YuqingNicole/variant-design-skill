@@ -170,7 +170,260 @@
       {
         "protocol": "https",
         "hostname": "www.raycast.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "cal.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "cdn.shopify.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "displace.agency"
+      },
+      {
+        "protocol": "https",
+        "hostname": "gregorcollienne.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "harryjatkins.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "interfere.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "nothing-to-watch.port80.ch"
+      },
+      {
+        "protocol": "https",
+        "hostname": "www.datocms-assets.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "www.oriorai.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "astrodither.robertborghesi.is"
+      },
+      {
+        "protocol": "https",
+        "hostname": "cdn.prod.website-files.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "amie.so"
+      },
+      {
+        "protocol": "https",
+        "hostname": "buck.co"
+      },
+      {
+        "protocol": "https",
+        "hostname": "clerk.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "d3phaj0sisr2ct.cloudfront.net"
+      },
+      {
+        "protocol": "https",
+        "hostname": "darkroom.engineering"
+      },
+      {
+        "protocol": "https",
+        "hostname": "devouringdetails.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "elevenlabs.io"
+      },
+      {
+        "protocol": "https",
+        "hostname": "family.co"
+      },
+      {
+        "protocol": "https",
+        "hostname": "lishhsx6kmthaacj.public.blob.vercel-storage.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "liveblocks.io"
+      },
+      {
+        "protocol": "https",
+        "hostname": "media.ordinary.co"
+      },
+      {
+        "protocol": "https",
+        "hostname": "media.rapha.cc"
+      },
+      {
+        "protocol": "https",
+        "hostname": "ouraring.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "play.date"
+      },
+      {
+        "protocol": "https",
+        "hostname": "railway.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "supabase.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "superhumanstatic.com"
+      },
+      {
+        "protocol": "https",
+        "hostname": "www.analogue.co"
       }
     ]
-  }
+  },
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/apple-touch-icon.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/favicon.ico",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/favicon.svg",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/icon-192.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/icon-48.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/icon-512.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/sample-A-editorial.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/sample-B-dashboard.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/sample-C-saas.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/sky.jpg",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/variant-favicon-v2.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/variant-mark-ink.svg",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/variant-mark-light.svg",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/variant-mark.svg",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    }
+  ]
 }

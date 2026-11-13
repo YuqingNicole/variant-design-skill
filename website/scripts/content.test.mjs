@@ -21,6 +21,8 @@ test('every published entry is valid', () => {
   const { entries, problems } = loadEntries();
   assert.deepEqual(problems, []);
   assert.ok(entries.some(e => e.kind === 'verified'));
+  // The validator checks only the shape of run.record (the Vercel build has no docs/); the file must exist in this repository.
+  for (const e of entries) if (e.run?.record) assert.ok(fs.existsSync(path.join(contentRoot, '../..', e.run.record)), `${e.slug}: ${e.run.record} is missing`);
 });
 
 test('image sizes come from the file headers', () => {
@@ -67,6 +69,19 @@ test('images must exist, match their recorded size and stay small', () => {
   assert.ok(check(big, bigRoot).some(e => e.includes('image c.jpg is') && e.includes('limit')));
   const escape = real('forma'); escape.directions[0].media[0].file = '../a.jpg';
   assert.ok(check(escape).some(e => e.includes('must be a plain')));
+});
+
+test('a run record belongs to verified entries and carries plain figures', () => {
+  const run = { agent: 'Claude Code 2.1.323', date: '2026-11-13', durationSec: 612, costUsd: 2.41, turns: 44, prompt: ['中文指令', 'The prompt'], commands: ['node .claude/skills/variant-design/scripts/variant-history.mjs prepare'] };
+  const errors = (patch, base = real('variant-site')) => check({ ...base, run: { ...run, ...patch } }).filter(e => e.startsWith('run'));
+  assert.deepEqual(errors({}), []);
+  assert.deepEqual(errors({ record: 'docs/research/2026-10-27-direction-library-dogfood.md' }), []);
+  assert.equal(errors({ date: '13 Nov' }).length, 1);
+  assert.equal(errors({ costUsd: '2.41' }).length, 1);
+  assert.equal(errors({ prompt: 'one language only' }).length, 1);
+  assert.equal(errors({ commands: Array.from({ length: 21 }, () => 'x') }).length, 1);
+  assert.equal(errors({ record: '../outside.md' }).length, 1);
+  assert.ok(check({ ...real('offscript'), run }).some(e => e.includes('run applies only to verified')));
 });
 
 test('translation status is complete or draft, never for the source language', () => {

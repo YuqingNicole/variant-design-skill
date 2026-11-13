@@ -1,0 +1,77 @@
+/* Direction C — Terms first. Brand tokens from app/globals.css; layers from shared/ledger-extensions.css. */
+.variant-c {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: var(--space-8) clamp(16px, 4vw, 48px) var(--space-9);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--color-ink);
+}
+.variant-c h1, .variant-c h2, .variant-c h3 { font-family: var(--font-serif); font-weight: 600; line-height: var(--leading-tight); margin: 0; }
+.variant-c p, .variant-c ul, .variant-c ol, .variant-c dl { margin: 0; }
+
+/* zone:header:start */
+.variant-c .page-head { max-width: var(--width-measure); }
+.variant-c .page-head h1 { font-size: var(--text-4xl); letter-spacing: -0.01em; }
+.variant-c .intro { margin-top: var(--space-3); font-size: var(--text-lg); color: var(--color-text-secondary); }
+.variant-c .controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); margin-top: var(--space-5); }
+.variant-c .page-head .note { margin-top: var(--space-3); }
+/* zone:header:end */
+
+/* zone:plans:start */
+.variant-c .plans { margin-top: var(--space-6); border-top: 1px solid var(--color-line-strong); }
+.variant-c .plan { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: var(--space-5) var(--space-7); padding: var(--space-6) 0; border-bottom: 1px solid var(--color-line); }
+.variant-c .plan-about h3 { font-size: var(--text-2xl); }
+.variant-c .plan-seats { margin-top: var(--space-1); font-size: var(--text-sm); color: var(--color-text-secondary); }
+.variant-c .plan-features { list-style: none; padding: 0; margin-top: var(--space-4); display: grid; gap: var(--space-2); }
+.variant-c .plan-features li { position: relative; padding-left: var(--space-5); }
+.variant-c .plan-features li::before { content: ''; position: absolute; left: 0; top: 0.55em; width: var(--space-3); height: var(--space-1); background: var(--color-accent); border-radius: var(--radius-pill); }
+.variant-c .plan-terms { display: grid; gap: var(--space-4); align-content: start; }
+.variant-c .rates { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+.variant-c .rate { padding: var(--space-3); border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-surface); transition: border-color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard); }
+.variant-c .rate.chosen { border-color: var(--color-accent); background: var(--color-accent-soft); box-shadow: inset 0 0 0 1px var(--color-accent); }
+.variant-c .rate dt { font-size: var(--text-xs); font-weight: 600; color: var(--color-text-secondary); }
+.variant-c .rate.chosen dt { color: var(--color-accent); }
+.variant-c .rate dd { margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary); }
+.variant-c .rate .amount { font-family: var(--font-serif); font-size: var(--text-xl); font-weight: 600; color: var(--color-ink); }
+.variant-c .rate .sub { display: block; margin-top: var(--space-1); }
+.variant-c .charge { font-size: var(--text-sm); color: var(--color-text-secondary); }
+.variant-c .charge strong { color: var(--color-ink); }
+.variant-c .plan-terms .btn { width: 100%; }
+/* zone:plans:end */
+
+/* zone:terms:start */
+.variant-c .terms { margin-top: var(--space-7); }
+.variant-c .terms h2 { font-size: var(--text-2xl); margin-bottom: var(--space-5); }
+.variant-c .timeline { list-style: none; padding: 0; display: grid; gap: 0; }
+.variant-c .timeline li { position: relative; display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: var(--space-4); padding: 0 0 var(--space-5) var(--space-6); }
+.variant-c .timeline li::before { content: ''; position: absolute; left: 5px; top: 0.7em; bottom: calc(-1 * var(--space-1)); border-left: 2px solid var(--color-line); }
+.variant-c .timeline li:last-child::before { display: none; }
+.variant-c .timeline li::after { content: ''; position: absolute; left: 0; top: 0.45em; width: var(--space-3); height: var(--space-3); border-radius: var(--radius-pill); background: var(--color-accent); box-shadow: 0 0 0 3px var(--color-paper); }
+.variant-c .timeline .when { font-weight: 600; font-variant-numeric: tabular-nums; }
+.variant-c .timeline .what { color: var(--color-text-secondary); }
+/* zone:terms:end */
+
+/* zone:faq:start */
+.variant-c .faq { margin-top: var(--space-7); }
+.variant-c .faq h2 { font-size: var(--text-2xl); margin-bottom: var(--space-4); }
+.variant-c .faq dl > div { padding: var(--space-4) 0; border-top: 1px solid var(--color-line); }
+.variant-c .faq dt { font-weight: 600; margin-bottom: var(--space-1); }
+.variant-c .faq dd { margin: 0; color: var(--color-text-secondary); }
+/* zone:faq:end */
+
+@media (max-width: 1023px) {
+  .variant-c .plan { grid-template-columns: minmax(0, 1fr) 280px; gap: var(--space-5); }
+}
+@media (max-width: 639px) {
+  .variant-c { padding-top: var(--space-6); padding-bottom: var(--space-7); }
+  .variant-c .page-head h1 { font-size: var(--text-3xl); }
+  .variant-c .controls .segmented { display: flex; width: 100%; }
+  .variant-c .controls .segmented label { flex: 1; justify-content: center; }
+  .variant-c .plan { grid-template-columns: 1fr; padding: var(--space-5) 0; }
+  .variant-c .timeline li { grid-template-columns: 1fr; gap: var(--space-1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .variant-c .rate { transition: none; }
+}

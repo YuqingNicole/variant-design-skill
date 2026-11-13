@@ -1,5 +1,5 @@
 /* Primary and secondary call-to-action buttons, shared by content pages such as /sponsor. */
 .home-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
-.home-actions a{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box;text-decoration:none;padding:12px 20px;border:1px solid #2e4325;border-radius:6px;font-size:14px}
-.content-page .home-actions .home-action-primary{background:#2e4325;color:#fff}
-.content-page .home-actions .home-action-secondary{color:#2e4325}
+.home-actions a{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box;text-decoration:none;padding:12px 20px;border:1px solid var(--site-ink);border-radius:6px;font-size:14px}
+.content-page .home-actions .home-action-primary{background:var(--site-ink);color:var(--site-on-ink)}
+.content-page .home-actions .home-action-secondary{color:var(--site-ink)}

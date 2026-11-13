@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { parsePreview, withImageHosts } from './link-preview.mjs';
+import { parsePreview, withImageHosts, imageHostCap } from './link-preview.mjs';
 
 test('reads og tags in either attribute order and resolves relative images', () => {
   const html = `<html lang="en-US"><title>Fallback</title><meta content="/og.png" property="og:image"><meta property="og:title" content="Acme &amp; Co"><meta name="description" content="Plain">`;
@@ -29,11 +29,15 @@ test('stored previews belong to existing link entries and point at https images'
   }
 });
 
-test('every preview image host may be resized by Vercel, and syncing keeps existing hosts', () => {
+test('preview image hosts are listed for Vercel up to its cap of 50, and syncing keeps existing hosts', () => {
   const config = JSON.parse(fs.readFileSync(new URL('../../vercel.json', import.meta.url), 'utf8'));
   const previews = JSON.parse(fs.readFileSync(new URL('../src/link-previews.json', import.meta.url), 'utf8'));
   assert.deepEqual(withImageHosts(config, previews), config);
+  assert.ok(config.images.remotePatterns.length <= imageHostCap, 'vercel.json lists more image hosts than Vercel accepts');
   assert.deepEqual(config.images.sizes, [640, 1280]);
   const next = withImageHosts({ images: { sizes: [640], remotePatterns: [{ protocol: 'https', hostname: 'old.example' }] } }, { a: { image: 'https://new.example/og.png' }, b: { image: 'http://plain.example/og.png' }, c: {} });
   assert.deepEqual(next.images, { sizes: [640], remotePatterns: [{ protocol: 'https', hostname: 'old.example' }, { protocol: 'https', hostname: 'new.example' }] });
+  // Past the cap, the host that serves the most previews wins the last slot; existing hosts are never dropped.
+  const full = withImageHosts({ images: { remotePatterns: [{ protocol: 'https', hostname: 'kept.example' }] } }, { a: { image: 'https://z.example/1.png' }, b: { image: 'https://shared.example/1.png' }, c: { image: 'https://shared.example/2.png' }, d: { image: 'https://a.example/1.png' } }, 3);
+  assert.deepEqual(full.images.remotePatterns.map(p => p.hostname), ['kept.example', 'shared.example', 'a.example']);
 });

@@ -21,8 +21,9 @@ if (oldCategory !== undefined && (route === "/" || route.startsWith("/inspiratio
 if (moved) { history.replaceState(null, "", (parsed.locale === "en" ? (moved === "/" ? "/en" : "/en" + moved) : moved) + (moved.startsWith("/lab/") || route === "/inspiration" ? location.search : "") + location.hash); route = moved; }
 const page: Promise<ReactNode> = route === "/lab/canvas" ? import("./LandingCanvas").then(m => <m.LandingCanvas/>) : route === "/lab/workbench" ? import("./App").then(m => <m.default/>)
   : route === "/lab" ? import("./LabPage").then(m => <m.LabPage/>) : route === "/skills" ? import("./SkillsPage").then(m => <m.SkillsPage/>) : route === "/about" ? import("./PaperLanding").then(m => <m.PaperLanding/>)
-  : route.startsWith("/browse/") ? import("./InspirationPage").then(m => <m.InspirationPage section={route.slice(8)}/>)
-  : route === "/" || route.startsWith("/inspiration/") ? import("./InspirationPage").then(m => <m.InspirationPage detail={route === "/" ? undefined : route.slice(13)}/>)
+  // The inspiration pages wait for the records their first render shows (reference-library.ts), so the prerendered cards are never replaced by a gap.
+  : route.startsWith("/browse/") ? import("./InspirationPage").then(m => m.prepare(route).then(() => <m.InspirationPage section={route.slice(8)}/>))
+  : route === "/" || route.startsWith("/inspiration/") ? import("./InspirationPage").then(m => m.prepare(route).then(() => <m.InspirationPage detail={route === "/" ? undefined : route.slice(13)}/>))
   : route === "/changelog" ? import("./ChangelogPage").then(m => <m.ChangelogPage/>)
   : route === "/docs" || route.startsWith("/docs/") && route !== "/docs/install" ? import("./GuidesPage").then(m => <m.GuidesPage base="/docs" slug={route === "/docs" ? undefined : route.slice(6)}/>)
   : route === "/guides" || route.startsWith("/guides/") ? import("./GuidesPage").then(m => <m.GuidesPage slug={route === "/guides" ? undefined : route.slice(8)}/>)

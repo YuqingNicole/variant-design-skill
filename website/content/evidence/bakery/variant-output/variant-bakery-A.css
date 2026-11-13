@@ -1,0 +1,91 @@
+/* 方向 A · 柜台黑板：先看今天还剩什么，预订栏固定在旁边 */
+.site-header {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+.site-brand { font-size: var(--text-lg); font-weight: 700; color: var(--color-text); text-decoration: none; }
+.site-nav { display: flex; gap: var(--space-4); }
+.site-nav a { font-size: var(--text-sm); color: var(--color-primary); text-decoration: none; padding: var(--space-2) 0; }
+.site-nav a:hover { text-decoration: underline; }
+
+.page { max-width: var(--width-page); margin: 0 auto; padding: 0 var(--space-5) var(--space-9); }
+
+/* zone:hero:start */
+.strip {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2) var(--space-5);
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.strip h1 { font-size: var(--text-xl); }
+.strip p { color: var(--color-text-muted); font-size: var(--text-sm); }
+/* zone:hero:end */
+
+.board-layout { display: grid; gap: var(--space-7); padding-top: var(--space-6); }
+
+/* zone:menu:start */
+.board-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-4); }
+.board-head h2 { font-size: var(--text-2xl); }
+.board-head .updated { font-size: var(--text-sm); color: var(--color-text-muted); }
+.board { border-top: 2px solid var(--color-text); }
+.board li {
+  display: grid; grid-template-columns: 1fr auto; grid-template-areas: "name price" "desc stock" "pieces pieces";
+  gap: var(--space-1) var(--space-5); align-items: baseline;
+  padding: var(--space-5) 0; border-bottom: 1px solid var(--color-border);
+}
+.board .name { grid-area: name; font-size: var(--text-xl); font-weight: 600; }
+.board .price { grid-area: price; font-size: var(--text-xl); font-variant-numeric: tabular-nums; }
+.board .desc { grid-area: desc; color: var(--color-text-muted); font-size: var(--text-sm); }
+.board .stock { grid-area: stock; font-size: var(--text-sm); font-weight: 600; text-align: right; white-space: nowrap; }
+.board .pieces { grid-area: pieces; display: flex; gap: var(--space-1); margin-top: var(--space-2); }
+.board .piece { width: var(--space-4); height: var(--space-2); background: var(--color-primary); }
+.board .is-out .name, .board .is-out .price { color: var(--color-text-muted); text-decoration: line-through; text-decoration-thickness: 1px; }
+.board .is-out .stock { color: var(--color-text-muted); }
+.board .is-low .stock { color: var(--color-primary); }
+.board .is-out .tomorrow { grid-area: pieces; font-size: var(--text-sm); color: var(--color-primary); }
+.board-note { margin-top: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted); }
+/* zone:menu:end */
+
+/* zone:order:start */
+.side { display: grid; gap: var(--space-6); align-self: start; }
+.order-panel {
+  background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-card);
+  padding: var(--space-5); display: grid; gap: var(--space-4);
+}
+.order-panel h2 { font-size: var(--text-lg); }
+.order-panel .lead { font-size: var(--text-sm); color: var(--color-text-muted); }
+.order-panel form { display: grid; gap: var(--space-4); }
+.order-panel .btn { width: 100%; }
+/* zone:order:end */
+
+/* zone:visit:start */
+.visit h2 { font-size: var(--text-lg); margin-bottom: var(--space-3); }
+.visit dl { display: grid; grid-template-columns: auto 1fr; gap: var(--space-2) var(--space-4); margin: 0; font-size: var(--text-sm); }
+.visit dt { color: var(--color-text-muted); }
+.visit dd { margin: 0; }
+/* zone:visit:end */
+
+.site-footer { padding: var(--space-6) var(--space-5); border-top: 1px solid var(--color-border); font-size: var(--text-xs); color: var(--color-text-muted); }
+
+/* 手机：底部固定预订条，只在表单不在视野内时有意义，所以滚到表单时无需隐藏——它链接到同一表单 */
+.mobile-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-inverse); color: var(--color-on-inverse);
+  font-size: var(--text-sm);
+}
+.mobile-bar .btn { padding: 0 var(--space-4); }
+body { padding-bottom: var(--space-8); }
+
+@media (min-width: 640px) {
+  .board li { grid-template-columns: 1fr auto auto; grid-template-areas: "name price stock" "desc desc desc" "pieces pieces pieces"; }
+  .board .stock { font-size: var(--text-md); }
+}
+@media (min-width: 1024px) {
+  .board-layout { grid-template-columns: minmax(0, 1fr) 360px; gap: var(--space-8); }
+  .side { position: sticky; top: var(--space-5); }
+  .mobile-bar { display: none; }
+  body { padding-bottom: 0; }
+  .strip h1 { font-size: var(--text-2xl); }
+}

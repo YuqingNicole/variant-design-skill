@@ -14,16 +14,23 @@ test('the chronological stream includes every kind, pages and preserves shareabl
  const cards=page.locator('.insp-feed>.insp-card');await expect(cards).toHaveCount(30);
  const expected=[...items].sort((a,b)=>Date.parse(b.addedAt)-Date.parse(a.addedAt));
  expect(await cards.locator('.insp-card-open').evaluateAll(as=>as.map(a=>a.pathname.split('/').pop()))).toEqual(expected.slice(0,30).map(i=>i.id));
- // Paging eventually exposes website previews and X videos in this same list.
- while(await cards.count()<items.length){const before=await cards.count();await cards.last().evaluate(el=>el.scrollIntoView({block:'end'}));await expect.poll(()=>cards.count()).toBeGreaterThan(before);}
+ // Paging eventually exposes website previews and X videos in this same list. A page's cards arrive as their section chunks
+ // land (reference-library.ts), so each round reads the count once and waits for it to grow past that reading.
+ for(let count=await cards.count();count<items.length;count=await cards.count()){await cards.last().evaluate(el=>el.scrollIntoView({block:'end'}));await expect.poll(()=>cards.count()).toBeGreaterThan(count);}
  await expect(cards).toHaveCount(items.length);await expect(cards.locator('video').first()).toBeAttached();await expect(cards.locator('.insp-thumb-media').first()).toBeAttached();
  await page.getByRole('link',{name:'网站',exact:true}).click();await expect(page).toHaveURL(/\/browse\/web$/);
  // A tab is a full page load: act only after React has taken over the prerendered page, or its state replaces the filters.
  await page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
- await page.getByRole('combobox',{name:'专题',exact:true}).selectOption('saas-home');await page.getByRole('searchbox').fill('Vercel');await page.getByRole('combobox',{name:'排序',exact:true}).selectOption('name');
+ await page.goto('/browse/web?topic=saas-home');await page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));await page.getByRole('searchbox').fill('Vercel');await page.getByRole('combobox',{name:'排序',exact:true}).selectOption('name');
  await expect(cards).toHaveCount(1);await expect(cards.locator('.insp-card-open')).toHaveAttribute('href',/\/v0$/);
  await expect(page).toHaveURL(/sort=name/);const params=new URL(page.url()).searchParams;expect(Object.fromEntries(params)).toEqual({topic:'saas-home',q:'Vercel',sort:'name'});
- await page.reload();await expect(cards).toHaveCount(1);await expect(page.getByRole('searchbox')).toHaveValue('Vercel');await expect(page.getByRole('combobox',{name:'专题',exact:true})).toHaveValue('saas-home');
+ await page.reload();await expect(cards).toHaveCount(1);await expect(page.getByRole('searchbox')).toHaveValue('Vercel');await expect(page).toHaveURL(/topic=saas-home/);
+});
+
+test('the slash key focuses the search, except while typing',async({page})=>{
+ await page.goto('/');await expect(page.locator('.insp-search input')).toBeVisible();
+ await expect(async()=>{await page.keyboard.press('/');await expect(page.locator('.insp-search input')).toBeFocused({timeout:500})}).toPass();
+ await page.keyboard.type('a/b');await expect(page.locator('.insp-search input')).toHaveValue('a/b');
 });
 
 test('details share an element transition and restore focus, history and the scrolled feed',async({page})=>{
@@ -52,16 +59,23 @@ test('motion preference changes stop video downloads and playback; offscreen vid
  await page.emulateMedia({reducedMotion:'reduce'});await expect(first).not.toHaveAttribute('src');await expect.poll(()=>first.evaluate(v=>v.paused)).toBe(true);
 });
 
-test('both languages meet the visual budget, show two desktop rows and expose credits on touch',async({page})=>{
+test('both languages meet the visual budget, show a wall three cards high on the first desktop screen and keep credits visible',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});
+ // Rows among the first nine cards, and how many cards sit whole inside both the viewport and the strip's own box (cards past its
+ // right edge are clipped by its overflow, so the viewport alone would overcount).
+ const wall=()=>page.locator('.insp-feed').evaluate(g=>{const b=g.getBoundingClientRect(),rs=[...g.querySelectorAll(':scope>.insp-card')].slice(0,30).map(c=>c.getBoundingClientRect());return {rows:new Set(rs.slice(0,9).map(r=>Math.round(r.top))).size,whole:rs.filter(r=>r.top>=0&&r.bottom<=innerHeight&&r.left>=b.left&&r.right<=b.right).length,width:Math.round(rs[0].width)}});
  for(const language of ['zh','en'])for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});await page.goto(language==='en'?'/en':'/');await expect(page.locator('nav[aria-label="全部参考"]')).toHaveCount(0);await expect(page.locator('.insp-card').first()).toBeVisible();await page.evaluate(()=>document.fonts.ready);
   const sample=await page.evaluate(probe);expect(grade(sample).over,`${language} ${width}`).toEqual([]);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  const meta=page.locator('.insp-card-meta').first();if(width<=390){await expect(meta).toHaveCSS('opacity','1');await expect(meta.locator('.insp-vcard-avatar')).toBeVisible();}else{await expect(meta).toHaveCSS('opacity','0');await page.locator('.insp-card-open').first().focus();await expect(meta).toHaveCSS('opacity','1');
-   expect(await page.locator('.insp-card').evaluateAll(cs=>cs.slice(0,8).every(c=>{const r=c.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight}))).toBe(true);
+  const meta=page.locator('.insp-card-meta').first();await expect(meta).toHaveCSS('opacity','1');if(width<=390){await expect(meta.locator('.insp-vcard-avatar')).toBeVisible();expect((await wall()).rows,`${language} ${width} rows`).toBe(1);}else{
+   // Desktop: three rows at the 220px minimum card width; on a 900px screen the first two rows (five columns) are whole and the third starts above the fold.
+   const w=await wall();expect(w,`${language} ${width}`).toMatchObject({rows:3,width:220});expect(w.whole,`${language} ${width} whole cards`).toBeGreaterThanOrEqual(10);
   }
  }
+ // On a 1080px screen the card width follows the height, so all three rows end above the fold: the first five columns are whole.
+ await page.setViewportSize({width:1920,height:1080});await page.goto('/');await expect(page.locator('.insp-card').first()).toBeVisible();await page.evaluate(()=>document.fonts.ready);
+ const w=await wall();expect(w.rows).toBe(3);expect(w.width).toBeGreaterThan(220);expect(w.whole,'whole cards at 1920×1080').toBeGreaterThanOrEqual(15);
 });
 
 

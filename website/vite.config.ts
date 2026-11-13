@@ -3,6 +3,7 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import { variantApiPlugin } from "./server/api-handler.mjs";
 import { contentPlugin } from "./scripts/content.mjs";
+import { inspirationPlugin } from "./scripts/inspiration-split.mjs";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
@@ -15,7 +16,7 @@ export default defineConfig(({ mode }) => {
     if (env[key]) process.env[key] = env[key];
   }
   return {
-    plugins: [react(), variantApiPlugin(), contentPlugin()],
+    plugins: [react(), variantApiPlugin(), contentPlugin(), inspirationPlugin()],
     // RFC-005 §3.5: draft translations stay out of production and show everywhere else.
     define: { __SHOW_TRANSLATION_DRAFTS__: JSON.stringify(process.env.VERCEL_ENV !== 'production') },
     build: { rollupOptions: { input: {

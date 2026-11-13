@@ -20,5 +20,6 @@
 | [016 · HTML 交付闭环与逐条失败比较](016-html-handoff-and-diagnostic-comparison.md) | 已实现；实际 Codex 43/43 与独立审计通过，完整 issue 验收待审 | Issue #18、#19 |
 | [017 · 接入和回滚中断恢复](017-interrupted-integration-recovery.md) | 已实现；真实 Codex 43/43 与中断后的拒绝/恢复流程通过 | Issue #19 I10 |
 | [018 · 线上与 CLI 的共享静态判定策略](018-shared-static-gate-policy.md) | 已实现；真实 CLI/线上七组对照、实际 Codex 43/43 与独立审计通过 | Issue #18 V8 |
+| [019 · 订阅源付费墙：把 feed 真的锁起来](019-feed-paywall.md) | 提案，待维护者决定收款主体、价格、退款规则、条款与隐私说明；未实现 | PRD-000、005；RFC-006 §8.3；TODO 第 3 组回访机制、第 6 组 B5 |
 
 RFC 记录设计决策与约束，PRD 记录验收要求；实现状态以对应 Issue 和验证证据为准。
