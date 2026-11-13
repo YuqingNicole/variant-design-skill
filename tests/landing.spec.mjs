@@ -804,11 +804,13 @@ test('headings, primary buttons and filters share one scale and one look across 
   await page.goto('/cases');await hydrated(page);
   const pill = await page.locator('.content-filters a[aria-current=page]').evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius, s.height]; });
   expect(pill).toEqual([brand, '999px', '32px']);
-  await page.goto('/skills');
+  await page.goto('/skills');await hydrated(page);
   const [main, aside] = await page.evaluate(() => ['.skills-main', '.skills-aside'].map(q => document.querySelector(q).getBoundingClientRect()).map(r => ({ left: r.left, top: r.top })));
   expect(aside.left).toBeGreaterThan(main.left + 400); expect(Math.abs(aside.top - main.top)).toBeLessThan(40);
   expect(await page.locator('.skills-entry code').evaluate(c => c.scrollWidth <= c.clientWidth)).toBe(true);
-  await page.goto('/pricing');
+  // Wait for hydration before reading styles through an element handle: before it, React can replace the prerendered
+  // node under the handle and getComputedStyle on the detached element returns '' (seen once in CI on 2026-11-13).
+  await page.goto('/pricing');await hydrated(page);
   expect(await page.locator('.billing-switch button[aria-pressed=true]').evaluate(e => getComputedStyle(e).boxShadow)).toBe('rgba(35, 38, 34, 0.14) 0px 1px 2px 0px');
 });
 
