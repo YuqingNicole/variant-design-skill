@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import type { Language } from './direction-engine';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { cardUrl, categories, coverDirection, entries, evidenceUrl, mediaUrl, repository, type Direction, type Entry } from './library-data';
-import { inspirationItems } from './inspiration-data';
+import { references } from './reference-library';
 import { activeSponsorSlot } from './sponsor-slots';
 import './content-pages.css';
 import './library.css';
@@ -86,7 +86,7 @@ function Feed({ category, language }: { category?: string; language: Language })
     <section className="site-shell library-feed" id="works">
       <nav className="content-filters" aria-label={t(m.categories,language)}><a href={localePath('/cases',language)} aria-current={!category ? 'page' : undefined}>{t(m.all,language)}</a>{used.map(c => <a key={c.id} href={localePath(`/c/${c.id}`,language)} aria-current={category === c.id ? 'page' : undefined}>{t(c.name,language)}</a>)}</nav>
       {shown.length ? <div className="library-grid">{shown.flatMap((e, i) => { const card = <Card key={e.slug} entry={e} language={language}/>; return !category && i === 2 ? [card, <SponsorCard key="sponsor" language={language}/>] : [card]; })}</div> : <p className="library-empty">{t(m.nothingInThisCategory,language)}</p>}
-      <p className="library-more"><a href={localePath('/',language)}>{t({zh:`外部参考：${inspirationItems.length} 个只附链接的公开设计`,en:`External references: ${inspirationItems.length} public designs, linked only`},language)}</a> <a href={localePath('/submit',language)}>{t(m.submissionsPermissions,language)}</a></p>
+      <p className="library-more"><a href={localePath('/',language)}>{t({zh:`外部参考：${references.length} 个只附链接的公开设计`,en:`External references: ${references.length} public designs, linked only`},language)}</a> <a href={localePath('/submit',language)}>{t(m.submissionsPermissions,language)}</a></p>
     </section></>;
 }
 

@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react';
-import xMedia from './x-media.json';
-// The video of a shared X post, streamed from video.twimg.com (address read by scripts/x-media.mjs) and played
+// The video of a shared X post, streamed from video.twimg.com (address read by scripts/x-media.mjs; reference-library.ts
+// hands each card its record) and played
 // muted on a loop while on screen. Nothing is hosted here; if X refuses or the file is gone, the poster stays,
 // and if the poster cannot load either (X blocked on this network) the caller's fallback replaces the card.
 export type XMedia={video:string;poster:string;width:number;height:number;avatar:string|null;fetchedAt:string};
@@ -8,7 +8,6 @@ export type VideoMedia=Pick<XMedia,'video'|'poster'|'width'|'height'>;
 // Feed cards are about 300px wide, so X's small size (680px) is enough even at 2x; as WebP it is about a third of the original JPEG.
 // Only X's own image host understands the size and format parameters; any other poster address is used as it is.
 export const sizedPoster=(url:string)=>{try{const u=new URL(url);return u.hostname==='pbs.twimg.com'&&!u.search?`${url}?format=webp&name=small`:url}catch{return url}};
-export const mediaOf=(id:string):XMedia|undefined=>(xMedia as Record<string,XMedia>)[id];
 // video.twimg.com refuses requests carrying another site's referrer, and <video> has no per-element
 // referrerpolicy, so the document drops it before the first video loads (outbound links already use noreferrer).
 function dropReferrer(){if(document.querySelector('meta[name="referrer"]'))return;const m=document.createElement('meta');m.name='referrer';m.content='no-referrer';document.head.appendChild(m)}

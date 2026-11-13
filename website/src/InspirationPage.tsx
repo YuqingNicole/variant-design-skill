@@ -1,15 +1,13 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { transition } from './view-transition';
 import { XPost, type Post } from './XPost';
-import { XVideo, mediaOf } from './XVideo';
+import { XVideo } from './XVideo';
 import { locales, type Locale } from './i18n/locales';
 import { t, type Localized } from './i18n/localized';
-import { inspirationTopics } from './inspiration-data';
 import { sectionOf, sectionPath, sectionById, activeSections } from './inspiration-sections';
-import { inspirationItems, referencesFor, withdrawnReferences, permissionOf, type Reference } from './reference-library';
+import { references, referencesFor, withdrawnReferences, permissionOf, referenceOf, previewOf, mediaOf, ensure, ensureAll, loaded, subscribe, snapshot, inspirationTopics, type Reference, type Row, type Preview } from './reference-library';
 import { AuthorizationDetails, AuthorizedMedia, authorizedVideo, WithdrawnReferencePage } from './ReferencePermission';
-import linkPreviews from './link-previews.json';
 import './content-pages.css';
 import './inspiration.css';
 import { useLocale } from './i18n/LocaleProvider';
@@ -21,8 +19,6 @@ const mediaFor=(item:Item)=>{const r=permissionOf(item);return r?(r.media.kind==
 // Thumbnails map the link itself: an X post shows its own text and embed; a site shows the preview it publishes
 // for shared links (og:image, title, description; scripts/link-preview.mjs), loaded from its own server. A link
 // without a preview, or whose image fails to load, falls back to our analysis card.
-type Preview={image:string;title:string;description:string;lang:string;fetchedAt:string};
-const previewOf=(item:Item):Preview|undefined=>(linkPreviews as Record<string,Preview>)[item.id];
 const labels:Record<string,Localized>={landing:{zh:'Landing',en:'Landing'},product:{zh:'产品界面',en:'Product'},flow:{zh:'关键流程',en:'Flow'},motion:{zh:'动效',en:'Motion'},practice:{zh:'Best practice',en:'Best practice'}};
 const postOf=(item:Item)=>(item as Item&{post?:Post}).post;
 // Where we found the work, when another curator surfaced it first; credited beside the source.
@@ -65,7 +61,7 @@ const f={
  loadMore:{zh:(n:number)=>`加载更多（还有 ${n} 个）`,en:(n:number)=>`Load more (${n} left)`}};
 const rightsLabel=(item:Item,locale:Locale)=>t(m[permissionOf(item)?'authorized':'linkOnly'],locale);
 const rights=(item:Item,locale:Locale)=><em className="inspiration-link-only">{rightsLabel(item,locale)}</em>;
-function Thumb({item,locale}:{item:Item;locale:Locale}){const preview=previewOf(item);const post=postOf(item);const [tries,setTries]=useState(0),[loaded,setLoaded]=useState(false);
+function Thumb({item,locale}:{item:Item;locale:Locale}){const preview=previewOf(item.id);const post=postOf(item);const [tries,setTries]=useState(0),[loaded,setLoaded]=useState(false);
  const authorized=permissionOf(item);if(authorized)return <AuthorizedMedia key={item.id} record={authorized} thumbnail fallback={<AnalysisCard item={item} locale={locale}/>}/>;
  if(post)return <div className="insp-thumb insp-thumb-post" aria-hidden="true"><small className="insp-thumb-tag">{post.author} @{post.handle} · {post.date}</small><b lang={post.lang}>{post.text}</b></div>;
  if(preview&&tries<2)return <div className="insp-thumb insp-thumb-media" data-loaded={loaded} aria-hidden="true"><AnalysisCard item={item} locale={locale} embedded/><img src={tries?preview.image:sized(preview.image,640)} alt="" loading="lazy" referrerPolicy="no-referrer" onLoad={()=>setLoaded(true)} onError={()=>setTries(t=>t+1)}/></div>;
@@ -83,50 +79,63 @@ const kinds:Record<string,Localized>={'submitted-work':{zh:'作者投稿',en:'Au
 // Everything the record does not establish goes into the brief as an explicit unknown (RFC-003 §3).
 const unknowns=(item:Item,locale:Locale)=>[...(item.designer?[]:[m.unknownDesignerField]),...(item.mobile==='not-tested'?[m.unknownMobile]:[]),permissionOf(item)?m.unknownReuse:m.unknownRights].map(v=>t(v,locale)).join(t(m.listJoin,locale));
 const packKey='variant-inspiration-pack-v1';
-function loadPack():{selection:Record<string,Intent>;error:boolean}{try{const raw=localStorage.getItem(packKey);if(!raw)return {selection:{},error:false};const parsed:unknown=JSON.parse(raw);if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error();const selection:Record<string,Intent>={};for(const [id,value] of Object.entries(parsed)){if(!(inspirationItems.some(item=>item.id===id)||withdrawnReferences.some(item=>item.id===id))||!value||typeof value!=='object'||typeof value.use!=='string'||typeof value.avoid!=='string')throw new Error();selection[id]={use:value.use,avoid:value.avoid}}return {selection,error:false}}catch{return {selection:{},error:true}}}
+function loadPack():{selection:Record<string,Intent>;error:boolean}{try{const raw=localStorage.getItem(packKey);if(!raw)return {selection:{},error:false};const parsed:unknown=JSON.parse(raw);if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error();const selection:Record<string,Intent>={};for(const [id,value] of Object.entries(parsed)){if(!(references.some(item=>item.id===id)||withdrawnReferences.some(item=>item.id===id))||!value||typeof value!=='object'||typeof value.use!=='string'||typeof value.avoid!=='string')throw new Error();selection[id]={use:value.use,avoid:value.avoid}}return {selection,error:false}}catch{return {selection:{},error:true}}}
+// Before the first render: the records that render shows (main.tsx waits for it). The home's first page is in the script; a
+// section page, a reference opened by address, and a sort, topic or query in the address load their records first.
+export function prepare(route:string){const p=new URLSearchParams(location.search);if(p.get('sort')||p.get('topic')||p.get('q'))return ensureAll();
+ if(route.startsWith('/browse/'))return ensure(references.filter(r=>sectionOf(r)===route.slice(8)).map(r=>r.id));if(route.startsWith('/inspiration/'))return ensure([route.slice(13)]);return Promise.resolve()}
 export function InspirationPage({detail='',section:sectionProp=''}:{detail?:string;section?:string}){
- const language = useLocale(),inspirationItems=referencesFor(language),total=inspirationItems.length,count=(c:string)=>inspirationItems.filter(i=>sectionOf(i)===c).length,tabs=activeSections(inspirationItems),withdrawn=withdrawnReferences.find(r=>r.id===detail);const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);// A section is the page's own address (/browse/<id>); a detail opened from one keeps it in `in` so Esc and the arrows stay inside it.
+ const language = useLocale();useSyncExternalStore(subscribe,snapshot,snapshot);// re-renders as section chunks arrive
+ const rows=referencesFor(language),total=rows.length,count=(c:string)=>rows.filter(i=>sectionOf(i)===c).length,tabs=activeSections(rows),withdrawn=withdrawnReferences.find(r=>r.id===detail);const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);// A section is the page's own address (/browse/<id>); a detail opened from one keeps it in `in` so Esc and the arrows stay inside it.
  const [section]=useState(()=>{const id=sectionProp||(detail?new URLSearchParams(location.search).get('in')??'':'');return tabs.some(s=>s.id===id)?id:''});const sectionInfo=sectionById(section);const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('q')??'');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [sort,setSort]=useState(()=>{const s=new URLSearchParams(location.search).get('sort');return s==='name'||s==='checked'||s==='curated'?s:'default'});const [visible,setVisible]=useState(()=>typeof IntersectionObserver==='undefined'?Infinity:pageSize);
  // `page` is a detail opened by its own address; `modal` is one opened from the grid over it.
- const [open,setOpen]=useState<{id:string;mode:'page'|'modal'}|null>(()=>inspirationItems.some(i=>i.id===detail)?{id:detail,mode:'page'}:null);
+ const [open,setOpen]=useState<{id:string;mode:'page'|'modal'}|null>(()=>rows.some(i=>i.id===detail)?{id:detail,mode:'page'}:null);
  const requestedOpen=useRef(open);
- const openItem=inspirationItems.find(i=>i.id===open?.id);
+ const openItem=open?referenceOf(open.id):undefined;
  useEffect(()=>{if(withdrawn)return;document.title=openItem||!sectionInfo?t(f.docTitle,language)(openItem?.name):`${t(sectionInfo.title,language)} — Variant Design`;document.documentElement.lang=locales[language].htmlLang;document.querySelector('meta[name="description"]')?.setAttribute('content',openItem?t(f.itemDescription,language)(openItem):sectionInfo?t(sectionInfo.intro,language):t(f.pageDescription,language)(total))},[language,openItem]);
  const [initialPack]=useState(loadPack);const [selection,setSelection]=useState<Record<string,Intent>>(initialPack.selection);const [storageError,setStorageError]=useState(initialPack.error);
  function saveSelection(next:Record<string,Intent>){setSelection(next);try{if(initialPack.error)throw new Error();localStorage.setItem(packKey,JSON.stringify(next));setStorageError(false)}catch{setStorageError(true)}}
- const selected=inspirationItems.filter(item=>selection[item.id]),unavailable=withdrawnReferences.filter(item=>selection[item.id]);
+ const selected=rows.filter(item=>selection[item.id]),unavailable=withdrawnReferences.filter(item=>selection[item.id]);
  function toggleSelection(id:string){const next={...selection};if(next[id])delete next[id];else next[id]={use:'',avoid:''};saveSelection(next)}
  function updateIntent(id:string,field:'use'|'avoid',value:string){saveSelection({...selection,[id]:{...selection[id],[field]:value}})}
- function createPack(){setNotice('');setPrompt(fl('packHead').concat(selected.map(item=>fl('packItem')(item,selection[item.id],unknowns(item,language)))).join('\n'))}
+ // The pack brief quotes each record, so the selected ones are fetched first.
+ function createPack(){setNotice('');ensure(selected.map(r=>r.id)).then(()=>setPrompt(fl('packHead').concat(selected.flatMap(r=>{const item=referenceOf(r.id);return item?[fl('packItem')(item,selection[item.id],unknowns(item,language))]:[]})).join('\n')))}
  const briefRef=useRef<HTMLElement>(null);
  useEffect(()=>{if(prompt){briefRef.current?.focus({preventScroll:true});briefRef.current?.scrollIntoView({block:'center',behavior:'instant'});}},[prompt]);
  // One stream, sorted by the commit that first collected each reference, not its later review date.
- const matches=inspirationItems.filter(r=>(!section||sectionOf(r)===section)&&(!activeTopic||activeTopic.items.includes(r.id))&&[r.name,r.tag,r.publisher,...Object.values(r.focus),...Object.values(r.application)].join(' ').toLowerCase().includes(query.trim().toLowerCase()));
+ // A query matches the notes too, so it asks for every record; until they arrive only the name and tag of an unfetched reference count.
+ const q=query.trim().toLowerCase(),text=(r:Row)=>{const full=referenceOf(r.id);return (full?[full.name,full.tag,full.publisher,...Object.values(full.focus),...Object.values(full.application)]:[r.name,r.tag]).join(' ').toLowerCase()};
+ const matches=rows.filter(r=>(!section||sectionOf(r)===section)&&(!activeTopic||activeTopic.items.includes(r.id))&&(!q||text(r).includes(q)));
  const results=sort==='checked'?[...matches].sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt)):sort==='name'?[...matches].sort((a,b)=>a.name.localeCompare(b.name)):sort==='curated'?matches:[...matches].sort((a,b)=>Date.parse(b.addedAt)-Date.parse(a.addedAt));
- const shown=results.slice(0,visible);
+ // Cards render from records; the rows on screen whose section has not been fetched ask for it, and the store re-renders the page when it lands.
+ const shown=results.slice(0,visible),cards=shown.flatMap(r=>referenceOf(r.id)??[]),missing=shown.filter(r=>!referenceOf(r.id)).map(r=>r.id).join(' ');
+ useEffect(()=>{if(missing)ensure(missing.split(' '))},[missing]);
+ useEffect(()=>{if(q)ensureAll()},[q]);
  function useReference(item:Item){setNotice('');setPrompt(fl('useReference')(item))}
  async function copy(){try{await navigator.clipboard.writeText(prompt);setNotice(l('copied'))}catch{setNotice(l('copyManually'))}}
- useEffect(()=>{if(detail&&!withdrawn&&!inspirationItems.some(i=>i.id===detail))history.replaceState(null,'',localePath('/',language)+location.search)},[detail]);
+ useEffect(()=>{if(detail&&!withdrawn&&!rows.some(i=>i.id===detail))history.replaceState(null,'',localePath('/',language)+location.search)},[detail]);
  // A section with no reference has no page; its address falls back to the feed instead of showing the feed twice.
  useEffect(()=>{if(sectionProp&&!tabs.some(s=>s.id===sectionProp))history.replaceState(null,'',localePath('/',language)+location.search)},[]);
  const pushed=useRef(false),returnTo=useRef<{x:number;y:number;opener:HTMLElement|null}|null>(null),afterClose=useRef<(()=>void)|null>(null);
  const fromGrid=useRef(!detail),dialogRef=useRef<HTMLDialogElement>(null);
  const remember=()=>{returnTo.current={x:scrollX,y:scrollY,opener:document.activeElement instanceof HTMLElement?document.activeElement:null}};
  useEffect(()=>{const onPop=()=>{const id=parseLocale(location.pathname).route.split('/')[2]??'';pushed.current=false;
-  const valid=inspirationItems.some(i=>i.id===id);if(valid&&fromGrid.current&&!returnTo.current)remember();
+  const valid=rows.some(i=>i.id===id);if(valid&&fromGrid.current&&!returnTo.current)remember();
   const next=valid?{id,mode:fromGrid.current?'modal' as const:'page' as const}:null;requestedOpen.current=next;
-  transition(()=>{setOpen(next);
+  const apply=()=>transition(()=>{setOpen(next);
    const params=new URLSearchParams(location.search),s=params.get('sort');setTopic(params.get('topic')??'');setQuery(params.get('q')??'');setSort(s==='name'||s==='checked'||s==='curated'?s:'default')});
+  if(next&&!loaded([next.id]))ensure([next.id]).then(()=>{if(requestedOpen.current===next)apply()});else apply();
  };addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
  useEffect(()=>{const url=new URL(location.href);for(const [key,value] of Object.entries({topic,q:query,sort:sort==='default'?'':sort})){if(value)url.searchParams.set(key,value);else url.searchParams.delete(key)}history.replaceState(history.state,'',url.pathname+url.search+url.hash)},[topic,query,sort]);
  const inQuery=(drop=false)=>{const p=new URLSearchParams(location.search);if(drop||!section)p.delete('in');else p.set('in',section);const q=p.toString();return q?'?'+q:''};
- function show(id:string,mode:'page'|'modal'){if(!requestedOpen.current&&mode==='modal')remember();requestedOpen.current={id,mode};transition(()=>{
+ // A reference outside the fetched sections is shown once its record is here; a newer request in the meantime wins.
+ function show(id:string,mode:'page'|'modal'){if(!requestedOpen.current&&mode==='modal')remember();const request={id,mode};requestedOpen.current=request;const go=()=>transition(()=>{
   if(parseLocale(location.pathname).route!==`/inspiration/${id}`){if(open)history.replaceState(null,'',localePath(`/inspiration/${id}`,language)+inQuery());else{history.pushState(null,'',localePath(`/inspiration/${id}`,language)+inQuery());pushed.current=true}}
   setOpen({id,mode});if(dialogRef.current)dialogRef.current.scrollTop=0;
- })}
+ });if(loaded([id]))go();else ensure([id]).then(()=>{if(requestedOpen.current===request)go()})}
  function close(){requestedOpen.current=null;if(pushed.current){pushed.current=false;history.back()}else transition(()=>{history.replaceState(null,'',localePath(sectionPath(section),language)+inQuery(true));setOpen(null)})}
  // Track requested navigation immediately: transition callbacks may lag behind several key presses.
- function step(by:number){const current=requestedOpen.current;if(!current)return;const list=results.some(r=>r.id===current.id)?results:inspirationItems;const at=list.findIndex(r=>r.id===current.id);if(at<0)return;show(list[(at+by+list.length)%list.length].id,current.mode)}
+ function step(by:number){const current=requestedOpen.current;if(!current)return;const list=results.some(r=>r.id===current.id)?results:rows;const at=list.findIndex(r=>r.id===current.id);if(at<0)return;show(list[(at+by+list.length)%list.length].id,current.mode)}
  useLayoutEffect(()=>{const d=dialogRef.current;if(!d)return;if(open?.mode==='modal'&&!d.open)d.showModal();if(open?.mode!=='modal'&&d.open)d.close();
   if(!open&&returnTo.current){const saved=returnTo.current;returnTo.current=null;saved.opener?.focus({preventScroll:true});scrollTo({left:saved.x,top:saved.y,behavior:'instant'});const next=afterClose.current;afterClose.current=null;next?.()}
  },[open]);
@@ -143,12 +152,12 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  // of a screen of the end (1.5 screens would fire on mount and mount every page at once).
  const onFeedScroll=()=>{const el=feedRef.current;if(!el)return;const max=el.scrollWidth-el.clientWidth;setFeed({at:max>0?Math.min(1,el.scrollLeft/max):0,can:max>1});if(max-el.scrollLeft<el.clientWidth*.75&&visible<results.length)setVisible(v=>v+pageSize)};
  const scrollFeed=(dir:1|-1)=>{const el=feedRef.current;if(el)el.scrollBy({left:dir*el.clientWidth*.8,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})};
- useEffect(onFeedScroll,[shown.length,section]);
+ useEffect(onFeedScroll,[cards.length,section]);
  // More cards load when the strip nears its right end (onFeedScroll); a sentinel under a short strip is always in view and would mount every card at once.
  // Independent filter changes must apply immediately; the shared animation queue keeps only its latest update.
  const filter=(update:()=>void)=>{update();setVisible(pageSize)};
  function brief(item:Item){if(open?.mode==='modal'){afterClose.current=()=>useReference(item);close()}else useReference(item)}
- const detailView=(item:Item,asPage:boolean)=>{const H=asPage?'h1':'h2';const post=postOf(item);const preview=previewOf(item);
+ const detailView=(item:Item,asPage:boolean)=>{const H=asPage?'h1':'h2';const post=postOf(item);const preview=previewOf(item.id);
   return <article className="insp-detail" aria-labelledby={`detail-${item.id}`}>
    <div className="insp-detail-notes">
     <nav className="insp-detail-tools" aria-label={l('refNav')}>{asPage?<a href={localePath('/',language)} onClick={e=>{e.preventDefault();close()}}><Icon d={icons.prev}/>{l('allRefs')}</a>:<button type="button" onClick={close} aria-label={l('close')}><Icon d={icons.close}/></button>}
@@ -186,7 +195,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   <section className="site-shell insp-body">
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
-   <ul ref={feedRef} onScroll={onFeedScroll} className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}`}>{shown.map(item=>{const media=mediaFor(item),post=postOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
+   <ul ref={feedRef} onScroll={onFeedScroll} className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}`}>{cards.map(item=>{const media=mediaFor(item),post=postOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
     <a className={`insp-card-open${media?' insp-vcard-open':''}${fills(media)?' insp-fills':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
      {media?<XVideo media={media} fallback={<AnalysisCard item={item} locale={language}/>}/>:<Thumb item={item} locale={language}/>}
      <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={media.avatar} width="28" height="28" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer" onError={e=>{e.currentTarget.style.display='none'}}/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:new URL(item.url).hostname}{authorized&&` · ${rightsLabel(item,language)}`}</small></span></span>
@@ -194,7 +203,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
     <button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${l(selection[item.id]?'removePack':'addPack')}：${item.name}`}><Icon d={icons.save}/></button>
     <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l(post?'openOnX':'openSource')}：${item.name}`}><Icon d={icons.out}/></a>
    </li>})}</ul>
-   {results.length>0&&<div className="insp-controls"><div className="insp-progress" aria-hidden="true">{String(Math.min(shown.length,Math.round(feed.at*(shown.length-1))+1)).padStart(2,'0')} / {String(results.length).padStart(2,'0')}<i style={{'--p':`${Math.round(feed.at*100)}%`} as CSSProperties}/></div><div className="insp-arrows"><button type="button" aria-label={l('scrollPrev')} disabled={!feed.can||feed.at<=.001} onClick={()=>scrollFeed(-1)}><Icon d={icons.prev}/></button><button type="button" aria-label={l('scrollNext')} disabled={!feed.can||feed.at>=.999} onClick={()=>scrollFeed(1)}><Icon d={icons.next}/></button></div></div>}
+   {results.length>0&&<div className="insp-controls"><div className="insp-progress" aria-hidden="true">{String(Math.min(cards.length,Math.round(feed.at*(cards.length-1))+1)).padStart(2,'0')} / {String(results.length).padStart(2,'0')}<i style={{'--p':`${Math.round(feed.at*100)}%`} as CSSProperties}/></div><div className="insp-arrows"><button type="button" aria-label={l('scrollPrev')} disabled={!feed.can||feed.at<=.001} onClick={()=>scrollFeed(-1)}><Icon d={icons.prev}/></button><button type="button" aria-label={l('scrollNext')} disabled={!feed.can||feed.at>=.999} onClick={()=>scrollFeed(1)}><Icon d={icons.next}/></button></div></div>}
    {visible<results.length&&<div className="insp-more"><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}
    {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setTopic('');setQuery('')})}>{l('clear')}</button></p>}
    {tail}
