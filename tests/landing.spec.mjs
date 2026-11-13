@@ -3,6 +3,10 @@ import fs from 'node:fs';
 import { probe, grade, defaults } from '../scripts/style-budget.mjs';
 import { measure, pages as labPages, fakeWidgets } from './perf-lab.mjs';
 import { probeFocus } from './focus-probe.mjs';
+import { importTs } from '../website/scripts/ts-module.mjs';
+import { readLibrary, splitReferences } from '../website/scripts/inspiration-split.mjs';
+// The sections the home has to fetch once a reader reaches past its first page (a section whose references are all on that page is never fetched).
+const beyondFirstPage=await (async()=>{const library=readLibrary(),{sectionOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname),split=splitReferences(library.items,sectionOf,library);return new Set(Object.entries(split.sections).filter(([,part])=>part.items.some(r=>!split.first.items.includes(r))).map(([id])=>id))})();
 const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
 // The homepage includes X motion now; regressions isolate its media in every scenario.
 // Individual media tests override these routes with their own playback/failure fixture.
@@ -1141,12 +1145,35 @@ test('lab budget: no layout shift past 0.1, a quick first paint on our own pages
   const m=await measure(browser,{base,path,mobile});
   expect(m.cls,`${path} ${mobile?'phone':'desktop'} CLS`).toBeLessThanOrEqual(0.1);
   if(path!=='/inspiration/linear')expect(m.lcp,`${path} ${mobile?'phone':'desktop'} LCP`).toBeLessThanOrEqual(2500);
-  // The home feed ships the whole reference library in its script: the data chunk was 44 KB gzip at 169 entries and is 60 KB
-  // at 209 (the 2026-11-13 batch wrote longer notes, about 0.4 KB per entry), and the page chunk carries the previews too.
-  // The cap moved from 145 to 160 with the 2026-11-12 batch and to 180 with the 2026-11-13 one (measured 173). Splitting that
-  // data is TODO §6; the next batch of 40 would pass the cap, so the split is due before that batch, not after.
-  if(path==='/'&&!mobile){expect(m.kb.js,'home gzip script KB').toBeLessThanOrEqual(180);expect(m.kb.css,'home gzip style KB').toBeLessThanOrEqual(95)}
+  // `kb` is what the home loads to render: a light row per reference and the records of its first page (reference-library.ts).
+  // The rest of the library arrives per section when the reader scrolls, sorts, searches or opens one, and counts in `kbAfter`,
+  // not here. The cap followed the library while the whole of it shipped in the script (145 → 160 → 180 KB, measured 173 at 209
+  // entries); with the split (2026-11-13) the home measured 113.8 KB, so the line is back under the first one, and a batch of
+  // references should not move it: if it does, the split leaks.
+  if(path==='/'&&!mobile){expect(m.kb.js,'home gzip script KB').toBeLessThanOrEqual(130);expect(m.kb.css,'home gzip style KB').toBeLessThanOrEqual(95)}
  }
+});
+
+// The home script carries a light row per reference and the records of its first page; the rest of the library arrives one
+// section chunk at a time, each fetched once, only when the reader asks for it (TODO §6, 2026-11-13). The prerendered HTML is
+// unchanged, and a page whose first render needs more waits for it rather than replacing that HTML with a gap.
+test('the home fetches the rest of the library per section, once, only when scrolled, searched, sorted or opened',async({page})=>{
+ const chunks=[];page.on('request',r=>{const m=new URL(r.url()).pathname.match(/\/assets\/section-([a-z]+)-/);if(m)chunks.push(m[1])});
+ await page.goto('/');await hydrated(page);
+ const cards=page.locator('.inspiration-grid .insp-card');await expect(cards).toHaveCount(30);expect(chunks).toEqual([]);
+ await page.locator('.insp-more button').click();await expect(cards).toHaveCount(60);expect(chunks.length).toBeGreaterThan(0);
+ // A query matches the notes, so it asks for every section it does not have yet; a section is never fetched twice.
+ await page.getByRole('searchbox').fill('linear');await expect.poll(()=>new Set(chunks)).toEqual(beyondFirstPage);
+ await expect(cards.filter({has:page.locator('a[href="/inspiration/linear"]')})).toHaveCount(1);expect(chunks.length).toBe(beyondFirstPage.size);
+ // Opened by address, a reference outside the first page fetches only its own section, and the prerendered page stays until it is here.
+ chunks.length=0;await page.route(/\/assets\/section-web-/,async r=>{await new Promise(f=>setTimeout(f,1500));await r.continue()});
+ await page.goto('/inspiration/linear');await expect(page.locator('h1')).toHaveText('Linear');
+ expect(await page.evaluate(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')))).toBe(false);
+ await hydrated(page);await expect(page.locator('h1')).toHaveText('Linear');await expect(page.getByRole('button',{name:'加入参考包'})).toBeVisible();expect(chunks).toEqual(['web']);
+ await page.unroute(/\/assets\/section-web-/);
+ // A sort in the address reaches past the first page, so its records are fetched before the first render.
+ chunks.length=0;await page.goto('/?sort=name');await hydrated(page);await expect(cards).toHaveCount(30);
+ await expect(cards.first().locator('.insp-card-meta b')).not.toHaveText('');expect(new Set(chunks)).toEqual(beyondFirstPage);
 });
 
 test('a fine pointer drags a soft light across the panel; reduced motion removes it and touch never turns it on', async ({browser})=>{
