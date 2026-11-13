@@ -845,7 +845,8 @@ test('content shares the heading\'s left edge and two-tone headings use the pale
   const [h1, form] = await page.evaluate(() => [document.querySelector('h1'), document.querySelector('.submission-intake')].map(e => Math.round(e.getBoundingClientRect().left)));
   expect(form).toBe(h1);
   for (const [route, selector] of [['/pricing', '.pricing-hero h1 em'], ['/about', '.paper-hero h1 span']]) {
-    await page.goto(route);
+    // React replaces the prerendered heading on load; a style read on the old node comes back empty, so wait for the hand-over.
+    await page.goto(route); await hydrated(page);
     expect(await page.locator(selector).first().evaluate(e => getComputedStyle(e).color), route).toBe('rgb(77, 82, 90)');
   }
 });

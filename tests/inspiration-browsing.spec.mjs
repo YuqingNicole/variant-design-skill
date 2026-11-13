@@ -14,8 +14,9 @@ test('the chronological stream includes every kind, pages and preserves shareabl
  const cards=page.locator('.insp-feed>.insp-card');await expect(cards).toHaveCount(30);
  const expected=[...items].sort((a,b)=>Date.parse(b.addedAt)-Date.parse(a.addedAt));
  expect(await cards.locator('.insp-card-open').evaluateAll(as=>as.map(a=>a.pathname.split('/').pop()))).toEqual(expected.slice(0,30).map(i=>i.id));
- // Paging eventually exposes website previews and X videos in this same list.
- while(await cards.count()<items.length){const before=await cards.count();await cards.last().evaluate(el=>el.scrollIntoView({block:'end'}));await expect.poll(()=>cards.count()).toBeGreaterThan(before);}
+ // Paging eventually exposes website previews and X videos in this same list. A page's cards arrive as their section chunks
+ // land (reference-library.ts), so each round reads the count once and waits for it to grow past that reading.
+ for(let count=await cards.count();count<items.length;count=await cards.count()){await cards.last().evaluate(el=>el.scrollIntoView({block:'end'}));await expect.poll(()=>cards.count()).toBeGreaterThan(count);}
  await expect(cards).toHaveCount(items.length);await expect(cards.locator('video').first()).toBeAttached();await expect(cards.locator('.insp-thumb-media').first()).toBeAttached();
  await page.getByRole('link',{name:'网站',exact:true}).click();await expect(page).toHaveURL(/\/browse\/web$/);
  // A tab is a full page load: act only after React has taken over the prerendered page, or its state replaces the filters.
