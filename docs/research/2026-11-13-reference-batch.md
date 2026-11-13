@@ -66,4 +66,4 @@
 - 本地预览里 neon.com、convex.dev、groq.com 三张卡片显示为无图的文字卡：它们的预览图由 Vercel 托管，对本机的请求一律回 403（`x-vercel-mitigated: challenge`，本机 IP 今天已被 Vercel 的自动防护盯上，见 `docs/research` 之外的运维记录），无头浏览器和 curl 都一样，所以无法从本机核实这三张图在别的访客那里是否正常；上线后换一个网络看一眼。
 - `link-preview.mjs` 重抓全部网站时，locomotive.ca 这次没有返回分享预览（用浏览器 UA 再请求一次也没有 og 标签），按脚本的规则它存着的记录被去掉，卡片暂时没有缩略图；lovable.dev 和 aesop.com 返回 403，之前也没有记录，不变。
 - 新条目的 `addedAt` 按"一条视频、三个网站"交错排列，首张卡是视频；这是排序用的收录时间，不是逐条的真实写入时刻。
-- Ego Lite 提示有更新（当前 0.6.2.9）；没有升级，升级要维护者同意。
+- Ego Lite 提示有更新：这批是在 0.6.2.9 上跑的；维护者同日说「升级」后升到了 0.6.2.10（Chromium 不变，156.0.8078.74），`x-discovery.mjs` 用到的 `taskSpace`、`page.goto/waitForSelector/evaluate`、`task.finish` 在新版用法指南里都还在。
