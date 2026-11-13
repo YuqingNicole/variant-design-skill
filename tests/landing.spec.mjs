@@ -728,30 +728,48 @@ test('pages read without JavaScript, guides render in both languages, and unknow
   expect(await (await request.get('/sitemap.xml')).text()).toContain('/guides/undo-ai-design-changes</loc>');
 });
 
-test('changelog groups the log by version, website entries under their package, and marks the current skill version in both languages', async ({ page }) => {
+test('changelog runs on a month timeline with filters, titled items and the current skill version, in both languages', async ({ page }) => {
   const website = JSON.parse(fs.readFileSync(new URL('../website/package.json', import.meta.url), 'utf8')).version;
-  await page.goto('/changelog');
+  await page.goto('/changelog');await hydrated(page);
   await expect(page.locator('.changelog-current').first()).toHaveText('当前');
-  await expect(page.locator('.changelog-nav-current')).toHaveAttribute('aria-current', 'location');
-  // One group per release in file order, each in the version list; a released one carries its date in both places and opens with its summary.
-  const releases = page.locator('.changelog-release'), nav = page.locator('.docs-layout>aside a');
-  expect(await releases.count()).toBe(await nav.count());
-  await expect(nav.nth(1)).toContainText('1.2.0');await expect(nav.nth(1).locator('.changelog-nav-date')).toHaveText('2026-11-09');
-  await expect(releases.nth(1).locator('h2')).toContainText('1.2.0');await expect(releases.nth(1).locator('.changelog-date')).toHaveText('2026-11-09');
-  await expect(releases.nth(1).locator('.changelog-lede')).toContainText('Claude Code 插件');
-  await expect(releases.nth(1).locator('.changelog-package h4 b')).toHaveText(['0.1.1', '0.2.0', '0.2.1', '0.2.2']);
-  // The unreleased group says its website changes are live, and its last website group is the package version the site runs,
-  // with the "Website package x.y.z:" lead dropped from the entry because the group header shows it.
+  // The timeline lists the unreleased group and each month with a release under its year; the first entry is current until the reader scrolls.
+  const nav = page.locator('.docs-layout>aside a'), releases = page.locator('.changelog-release');
+  await expect(page.locator('.changelog-year>b').first()).toHaveText('2026');
+  await expect(nav).toHaveText(['未发布', '11 月', '10 月']);
+  await expect(nav.first()).toHaveAttribute('aria-current', 'location');
+  await expect(releases).toHaveCount(3);
+  // A dated release: the date written out, the version as the headline, a product pill, the summary, then a grid of titled items
+  // tagged with their package version or area; the "Website package x.y.z:" lead is not repeated in the body.
+  const release = releases.nth(1), items = release.locator('.changelog-item');
+  await expect(release.locator('.changelog-date time')).toHaveText('2026 年 11 月 9 日');
+  await expect(release.locator('.changelog-date time')).toHaveAttribute('datetime', '2026-11-09');
+  await expect(release.locator('h2')).toHaveText('1.2.0');
+  await expect(release.locator('.changelog-pill')).toHaveText('技能');
+  await expect(release.locator('.changelog-lede')).toContainText('Claude Code 插件');
+  await expect(items.first().locator('h3')).toHaveText('编辑式页脚');
+  await expect(items.first().locator('small')).toHaveText('网站包 0.1.1');
+  await expect(items.first().locator('p')).not.toContainText('网站包');
+  await expect(items.nth(7).locator('h3')).toHaveText('Claude Code 插件市场');
+  await expect(items.nth(7).locator('small')).toHaveText('安装');
+  // The unreleased group says its website changes are live, and its last item carries the package version the site runs.
   await expect(releases.first().locator('.changelog-note')).toContainText('已经上线');
-  const packages = releases.first().locator('.changelog-package');
-  await expect(packages.last().locator('h4')).toHaveText(`${website}网站包`);
-  await expect(packages.last()).toHaveId(`web-${website.replace(/\./g, '-')}`);
-  await expect(packages.last().locator('li').first()).not.toContainText('网站包');
+  await expect(releases.first().locator('.changelog-item small').last()).toHaveText(`网站包 ${website}`);
+  // Filters keep one product's items and drop releases left with none; scrolling moves the timeline's current month.
+  await page.getByRole('button', { name: '技能' }).click();
+  await expect(releases.first().locator('h2')).toHaveText('1.2.0');
+  await expect(releases.first().locator('.changelog-item small').first()).toHaveText('安装');
+  await page.getByRole('button', { name: '全部' }).click();
+  await expect(releases.first().locator('h2')).toHaveText('未发布');
+  await page.locator('#v1-1-0').scrollIntoViewIfNeeded();
+  await expect(nav.nth(2)).toHaveAttribute('aria-current', 'location');
   await page.locator('.site-language').click();
   await expect(page.locator('.changelog-current').first()).toHaveText('Current');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(packages.last().locator('h4')).toHaveText(`${website}Website package`);
-  await expect(packages.last().locator('li').first()).not.toContainText('Website package');
+  await expect(nav).toHaveText(['Unreleased', 'November', 'October']);
+  await expect(release.locator('.changelog-date time')).toHaveText('November 9, 2026');
+  await expect(items.first().locator('h3')).toHaveText('Editorial footer');
+  await expect(items.first().locator('small')).toHaveText('Website package 0.1.1');
+  await expect(items.first().locator('p')).not.toContainText('Website package');
   await expect(releases.first().locator('.changelog-note')).toContainText('already live');
   // The docs hub lists the changelog as one of its pages.
   await page.goto('/docs');await expect(page.locator('.docs-hub .docs-changelog a[href="/changelog"]')).toHaveCount(1);

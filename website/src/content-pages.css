@@ -17,16 +17,28 @@
 .sponsor-section .home-actions{margin-top:32px}.sponsor-page :is(a,button):focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
 @media(max-width:1000px){.sponsor-section{grid-template-columns:1fr;gap:28px;padding-block:56px}}
 @media(max-width:640px){.sponsor-hero{padding-block:40px 56px}.sponsor-rows li{grid-template-columns:1fr;gap:4px}}
-/* /changelog: one group per skill release, separated by a hairline; inside "Website", the entries sit under their own package
-   version in a two-column row (version left, items right; changelog.ts packageGroups). No new sizes: 12px mono, 15/16px text. */
-.changelog-date{margin-left:12px;font:12px var(--font-mono);letter-spacing:0;color:var(--site-muted)}
-.changelog-heading{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.changelog-current{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--site-line);border-radius:999px;padding:3px 7px;color:var(--site-brand);font:12px/1.3 var(--font-mono);letter-spacing:0}.changelog-current::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--site-brand)}
-.changelog-page .docs-layout>aside a{display:grid;gap:2px}.changelog-page .docs-layout>aside a>span{display:inline-flex;align-items:center;gap:8px}.docs-layout>aside a.changelog-nav-current{color:var(--site-ink);font-weight:500}.changelog-nav-current .changelog-current{font-size:12px;padding:2px 6px}.changelog-nav-date{font:12px/1.4 var(--font-mono);letter-spacing:0;color:var(--site-muted)}
-.changelog-release+.changelog-release{padding-top:40px;border-top:1px solid var(--site-line)}.changelog-release+.changelog-release h2{margin-top:0}
-.changelog-lede{font-size:16px;line-height:1.75;color:var(--site-ink);max-width:62ch;margin:0 0 8px}.changelog-note{margin:0 0 8px}
-.changelog-package{display:grid;grid-template-columns:120px minmax(0,1fr);gap:0 24px;margin-top:14px;padding-top:14px;border-top:1px solid var(--site-line)}.changelog-package:first-of-type{margin-top:0;padding-top:0;border-top:0}
-.changelog-package>h4{margin:12px 0 0;font:12px/1.6 var(--font-mono);font-weight:400;letter-spacing:0;color:var(--site-muted)}.changelog-package>h4 b{display:block;font-weight:400;color:var(--site-ink)}.changelog-package>ul{grid-column:2;margin:0}
-@media(max-width:800px){.changelog-page .docs-layout>aside a{display:inline-flex;align-items:center;gap:8px}.changelog-package{grid-template-columns:1fr}.changelog-package>h4{margin-top:0}.changelog-package>h4 b{display:inline;margin-right:8px}.changelog-package>ul{grid-column:auto}}
+/* /changelog, a month-grouped product log (after Dia's changelog, 2026-11-13): a sticky timeline of years and months on the left,
+   a filter row (all / skill / website), then one block per release: mono date, the version as the display headline, pills, a
+   500-weight summary and a two-column grid of items, each a 20px sans title, 15px body and a 12px mono tag (package version or area).
+   Seven sizes at 1440 (docs/design-system.md §3): 56px h1, 46px headline, 20px titles (the docs h3 size), 16/15px text, 14px links
+   and pills (the header's size), 12px mono. */
+.changelog-page .docs-layout>aside{gap:22px}.changelog-page .docs-layout .content-reading{max-width:960px}
+.changelog-year{display:grid}.changelog-year>b{font:12px/1.6 var(--font-mono);font-weight:400;letter-spacing:0;color:var(--site-ink);margin-bottom:8px}
+.changelog-page .docs-layout>aside a{display:flex;align-items:center;gap:10px;min-height:30px;font-size:14px;color:var(--site-muted)}
+.changelog-page .docs-layout>aside a::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--site-line)}
+.changelog-page .docs-layout>aside a.changelog-nav-current{color:var(--site-ink);font-weight:500}.changelog-nav-current::before{background:var(--site-ink);width:8px;height:8px;margin:0 -1px}
+.changelog-filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 40px}.changelog-filters button{border:1px solid var(--site-line);border-radius:999px;background:transparent;color:var(--site-muted);padding:0 14px;min-height:36px;font-size:14px}.changelog-filters button[aria-pressed=true]{color:var(--site-ink);border-color:var(--site-ink)}
+@media(hover:hover){.changelog-filters button:hover{color:var(--site-ink)}}
+.changelog-release{margin-bottom:64px}.changelog-release+.changelog-release{padding-top:48px;border-top:1px solid var(--site-line)}
+.content-reading .changelog-date{margin:0 0 12px;font:12px/1.5 var(--font-mono);letter-spacing:0;color:var(--site-muted)}
+.changelog-release h2{font-size:clamp(36px,3.4vw,46px);line-height:1.1;margin:0 0 16px}
+.changelog-tags{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px}.changelog-pill,.changelog-current{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--site-line);border-radius:999px;padding:3px 9px;color:var(--site-muted);font:12px/1.3 var(--font-mono);letter-spacing:0}
+.changelog-current{color:var(--site-brand)}.changelog-current::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--site-brand)}
+.content-reading .changelog-lede{font-size:16px;font-weight:500;line-height:1.65;color:var(--site-ink);max-width:62ch;margin:0 0 8px}.changelog-note{margin:0 0 8px}
+.changelog-grid{list-style:none;margin:40px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 44px;max-width:none}
+.changelog-item{margin:0;display:grid;gap:8px;align-content:start}.changelog-item h3{margin:0;font:500 20px/1.3 var(--font-serif);letter-spacing:0;color:var(--site-ink)}.changelog-item p{margin:0;line-height:1.75}.changelog-item small{font:12px/1.5 var(--font-mono);color:var(--site-muted)}
+@media(max-width:800px){.changelog-page .docs-layout>aside{display:grid;gap:12px}.changelog-year{display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px}.changelog-year>b{margin:0;width:100%}.changelog-grid{grid-template-columns:1fr;gap:28px}}
+@media(max-width:650px){.changelog-page .docs-layout>aside a{min-height:44px;font-size:14px}}
 /* Phones: standalone links (table of contents, back, secondary, link paragraphs) get 44px touch targets;
    form fields use 16px text so iOS does not zoom the page when they take focus. */
 @media(max-width:650px){.docs-layout>aside{gap:0 18px;padding-block:8px}.docs-layout>aside a{display:inline-flex;align-items:center;min-height:44px;font-size:13px}
