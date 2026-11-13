@@ -1162,8 +1162,10 @@ test('lab budget: no layout shift past 0.1, a quick first paint on our own pages
  const base=info.project.use.baseURL;
  for(const mobile of [true,false])for(const path of labPages){
   const m=await measure(browser,{base,path,mobile});
+  // One line per page in the test output, so a CI run that passes still shows what the figures were and which element the LCP was.
+  console.log(`lab: ${path} ${mobile?'phone':'desktop'} lcp=${m.lcp} (${m.lcpElement}) cls=${m.cls} kb=${m.kb.js}`);
   expect(m.cls,`${path} ${mobile?'phone':'desktop'} CLS`).toBeLessThanOrEqual(0.1);
-  if(path!=='/inspiration/linear')expect(m.lcp,`${path} ${mobile?'phone':'desktop'} LCP`).toBeLessThanOrEqual(2500);
+  if(path!=='/inspiration/linear')expect(m.lcp,`${path} ${mobile?'phone':'desktop'} LCP (${m.lcpElement})`).toBeLessThanOrEqual(2500);
   // `kb` is what the home loads to render: a light row per reference and the records of its first page (reference-library.ts).
   // The rest of the library arrives per section when the reader scrolls, sorts, searches or opens one, and counts in `kbAfter`,
   // not here. The cap followed the library while the whole of it shipped in the script (145 → 160 → 180 KB, measured 173 at 209

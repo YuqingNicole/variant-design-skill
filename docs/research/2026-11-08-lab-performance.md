@@ -7,7 +7,7 @@
 ## 方法
 
 - 脚本：`tests/perf-lab.mjs`（`cd tests && node perf-lab.mjs [--base URL] [--runs 5] [--out 文件]`）。真实 Chrome，每个配置每页跑若干次，取中位数。
-- 指标：LCP、FCP、CLS（Chrome 的 PerformanceObserver）、长任务超出 50ms 的部分之和、最慢的一次交互耗时（Event Timing）、页面加载的脚本和样式的 gzip 体积。
+- 指标：LCP、FCP、CLS（Chrome 的 PerformanceObserver）、长任务超出 50ms 的部分之和、最慢的一次交互耗时（Event Timing）、页面加载的脚本和样式的 gzip 体积。2026-11-13 起还记 LCP 对应的元素（标签、id 或第一个类名，加图片地址或开头几个字，`lcpElement`），预算测试在 LCP 超线时把它写进失败信息；之前只有时间，CI 上失败时不知道慢的是什么。
 - 每次加载后用页面：打开第一张卡片、按 Esc 关闭、在搜索框输入。**CLS 包含这几步。** "最慢交互"也来自这几步，只有有卡片的页面才有。
 - 手机配置：390×844，倍率 2，触屏，CPU 降速 4 倍。**没有限制网络。**
 - 本地数据：用本站的 `dist` 在本机服务，第三方图片换成 1 像素占位图，其他第三方请求拦截。所以它反映的是我们自己的 HTML、脚本和样式，不含别的网站的图片。
