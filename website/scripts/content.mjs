@@ -75,7 +75,9 @@ export function validateEntry(entry, { root = contentRoot, repo = repoRoot, file
       for (const key of ['durationSec', 'costUsd', 'turns']) if (!number(r[key])) fail(`run.${key} must be a non-negative number`);
       if (r.prompt !== undefined && !pair(r.prompt)) fail('run.prompt needs [zh, en] text');
       if (r.commands !== undefined && (!Array.isArray(r.commands) || r.commands.length > 20 || !r.commands.every(c => text(c) && c.length <= 300))) fail('run.commands must be up to 20 commands of at most 300 characters');
-      if (r.record !== undefined && !(text(r.record) && r.record.endsWith('.md') && inside(repo, r.record))) fail('run.record must point to a markdown file in this repository');
+      // A repo-relative markdown path under docs/ or website/. Its presence is checked only where those folders are checked out:
+      // Vercel builds from website/ without docs/ (seen on 2026-11-13), while local and CI builds have the whole repository.
+      if (r.record !== undefined && !(text(r.record) && /^(docs|website)\/[\w.-]+(\/[\w.-]+)*\.md$/.test(r.record) && !r.record.split('/').includes('..') && (!fs.existsSync(path.join(repo, 'docs')) || inside(repo, r.record)))) fail('run.record must be a markdown file under docs/ or website/ in this repository');
     }
   }
 
