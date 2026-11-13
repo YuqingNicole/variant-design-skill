@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>半山面包 · 每天早上七点出炉</title>
+<style>
+:root{
+  /* 品牌原始色，来自项目 style.css */
+  --flour:#f7f1e6;
+  --crust:#8a4b22;
+  --ink:#2b2118;
+
+  /* 语义层 */
+  --color-bg:var(--flour);
+  --color-text:var(--ink);
+  --color-primary:var(--crust);
+  --color-on-primary:#ffffff;
+  --color-primary-pressed:color-mix(in oklch, var(--crust) 84%, var(--ink));
+  --color-done:var(--ink);
+  --color-on-done:var(--flour);
+  --color-muted:color-mix(in oklch, var(--ink) 66%, var(--flour));
+  --color-rule:color-mix(in oklch, var(--ink) 18%, var(--flour));
+  --color-row-hover:color-mix(in oklch, var(--crust) 8%, var(--flour));
+  --color-row-selected:color-mix(in oklch, var(--crust) 14%, var(--flour));
+  --color-flash:color-mix(in oklch, var(--crust) 28%, var(--flour));
+  --color-error:#9b2f1f;
+  --color-disabled:color-mix(in oklch, var(--ink) 45%, var(--flour));
+
+  --font-serif:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  --font-ui:"PingFang SC","Hiragino Sans GB","Noto Sans SC",sans-serif;
+
+  /* 动效令牌：C 的动效跟着任务走——悬停露出动作，按钮本身变成确认 */
+  --ease-out:cubic-bezier(.22,1,.36,1);
+  --ease-in:cubic-bezier(.7,0,.84,0);
+  --dur-press:120ms;
+  --dur-fast:140ms;
+  --dur-base:260ms;
+  --dur-draw:300ms;
+  --dur-flash:600ms;
+
+  --space-1:8px;
+  --space-2:16px;
+  --space-3:24px;
+  --space-4:40px;
+  --space-5:64px;
+  --radius-control:4px;
+  --measure:46rem;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:72px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-serif);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2{font-weight:600}
+h2{font-size:1.35rem;margin:0 0 var(--space-2)}
+p{margin:0}
+:is(a,button,input,summary):focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);max-width:var(--measure);margin:0 auto}
+.brand{font-size:1.1rem}
+.top nav{display:flex;gap:var(--space-2)}
+.top nav a{color:var(--color-primary);text-decoration:none;padding:10px 2px;font-family:var(--font-ui);font-size:.95rem;border-bottom:1px solid transparent;transition:border-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){.top nav a:hover{border-bottom-color:currentColor}}
+
+main{max-width:var(--measure);margin:0 auto;padding:0 var(--space-3) var(--space-5)}
+section{padding:var(--space-4) 0;border-top:1px solid var(--color-rule)}
+
+/* 主按钮：按压 = 颜色加深 + 3% 缩小；成功后按钮自己变成确认（深色 + 勾） */
+.btn{position:relative;font:500 1rem/1 var(--font-ui);color:var(--color-on-primary);background:var(--color-primary);border:0;border-radius:var(--radius-control);padding:0 20px;min-height:48px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;transition:background-color var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out)}
+.btn:active:not(:disabled){background:var(--color-primary-pressed)}
+.btn:disabled{cursor:default}
+.btn:disabled:not(.is-done){background:var(--color-disabled)}
+.btn[aria-busy="true"]{background:var(--color-primary-pressed);cursor:progress}
+.btn.is-done{background:var(--color-done);color:var(--color-on-done);transition-duration:var(--dur-base)}
+.btn .check{display:none;width:20px;height:20px;flex:none}
+.btn.is-done .check{display:block}
+.btn .check path{stroke-dasharray:22;stroke-dashoffset:0}
+@media (prefers-reduced-motion:no-preference){
+  .btn{transition:background-color var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out),transform var(--dur-press) var(--ease-out)}
+  .btn:active:not(:disabled){transform:scale(.97)}
+  .btn.is-done .check path{animation:draw var(--dur-draw) var(--ease-out) both}
+}
+@keyframes draw{from{stroke-dashoffset:22}to{stroke-dashoffset:0}}
+.link{font:500 .95rem/1 var(--font-ui);color:var(--color-primary);background:none;border:0;padding:12px 4px;min-height:44px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+/* zone:hero:start */
+.hero{padding:var(--space-4) 0 var(--space-3);border-top:0}
+.hero h1{font-size:clamp(1.8rem,5vw,2.4rem);line-height:1.2;margin:0 0 var(--space-1)}
+.hero p{max-width:30em;color:var(--color-muted)}
+/* zone:hero:end */
+
+/* zone:menu:start */
+.menu h2{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-2)}
+.menu h2 small{font-family:var(--font-ui);font-size:.9rem;font-weight:400;color:var(--color-muted)}
+.menu ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--color-rule)}
+.bread{display:grid;grid-template-columns:1fr auto auto;grid-template-areas:"main stock pick";align-items:center;gap:var(--space-2);padding:12px 12px;margin:0 -12px;border-bottom:1px solid var(--color-rule);border-radius:3px;transition:background-color var(--dur-fast) var(--ease-out)}
+.bread-main{grid-area:main;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.bread-main b{font-size:1.1rem}
+.price{font-family:var(--font-ui);font-variant-numeric:tabular-nums}
+.stock{grid-area:stock;font-family:var(--font-ui);font-size:.9rem;color:var(--color-muted);text-align:right;min-width:4.5em}
+.bread.is-low .stock{color:var(--color-primary)}
+.bread.is-out{color:var(--color-muted)}
+.bread.is-out .price{text-decoration:line-through}
+.bread.is-selected{background:var(--color-row-selected)}
+.booked{grid-area:stock;justify-self:end;font-family:var(--font-ui);font-size:.9rem;color:var(--color-text);padding:2px 8px;border-radius:3px;background:transparent}
+.bread.is-booked .stock{display:none}
+.bread.is-booked .booked{animation:flash var(--dur-flash) var(--ease-out)}
+@keyframes flash{from{background:var(--color-flash)}to{background:transparent}}
+
+/* 每行的动作按钮：精准指针下静止时半透明、悬停时实化并归位，触屏和键盘下始终完整可见 */
+.pick{grid-area:pick;font:500 .95rem/1 var(--font-ui);min-height:44px;padding:0 14px;border:1px solid var(--color-primary);background:transparent;color:var(--color-primary);border-radius:var(--radius-control);cursor:pointer;transition:background-color var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out),border-color var(--dur-press) var(--ease-out),opacity var(--dur-fast) var(--ease-out)}
+.pick:active{background:var(--color-row-selected)}
+.pick[aria-pressed="true"]{background:var(--color-primary);color:var(--color-on-primary)}
+.pick[aria-pressed="true"]:active{background:var(--color-primary-pressed)}
+.bread.is-out .pick{display:none}
+@media (hover:hover) and (pointer:fine){
+  .bread:not(.is-out):hover{background:var(--color-row-hover)}
+  .bread.is-selected:hover{background:var(--color-row-selected)}
+  .bread .pick:not([aria-pressed="true"]){opacity:.55}
+  .bread:hover .pick,.bread:focus-within .pick{opacity:1}
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .bread .pick:not([aria-pressed="true"]){transform:translateX(4px);transition:background-color var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out),border-color var(--dur-press) var(--ease-out),opacity var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out)}
+  .bread:hover .pick,.bread:focus-within .pick{transform:none}
+  .pick:active{transform:scale(.97)}
+}
+.menu .note{margin-top:var(--space-2);font-family:var(--font-ui);font-size:.9rem;color:var(--color-muted)}
+@media (max-width:639px){
+  .bread{grid-template-columns:1fr auto;grid-template-areas:"main pick" "stock pick";row-gap:4px}
+  .stock,.booked{text-align:left;justify-self:start;min-width:0}
+}
+/* zone:menu:end */
+
+/* zone:visit:start */
+.visit p{max-width:30em}
+/* zone:visit:end */
+
+/* zone:order:start */
+form{display:grid;gap:var(--space-2);max-width:360px}
+.item-line{font-family:var(--font-ui);font-size:.95rem;padding:10px 12px;border:1px dashed var(--color-rule);border-radius:var(--radius-control);display:flex;justify-content:space-between;gap:var(--space-2);align-items:center;transition:border-color var(--dur-fast) var(--ease-out),background-color var(--dur-fast) var(--ease-out)}
+.item-line.has-item{border-style:solid;border-color:var(--color-primary);background:#fff}
+.item-line .clear{font:500 .9rem/1 var(--font-ui);color:var(--color-primary);background:none;border:0;min-height:44px;padding:0 8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.field{display:grid;gap:6px}
+.field label{font-family:var(--font-ui);font-size:.95rem}
+.field input{font:1rem var(--font-ui);padding:0 12px;min-height:44px;border:1px solid var(--color-muted);border-radius:var(--radius-control);background:#fff;color:var(--color-text);transition:border-color var(--dur-fast) var(--ease-out)}
+.field input[aria-invalid="true"]{border-color:var(--color-error)}
+.err{font-family:var(--font-ui);font-size:.9rem;color:var(--color-error)}
+.actions{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap}
+/* 确认详情：按钮变色后，详情用 grid 行高从 0 展开；“减少动效”下直接出现 */
+.confirm{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--dur-base) var(--ease-out)}
+.confirm.is-open{grid-template-rows:1fr}
+.confirm-inner{overflow:hidden}
+.confirm p{font-family:var(--font-ui);font-size:.95rem;padding-top:4px}
+/* zone:order:end */
+
+footer{max-width:var(--measure);margin:0 auto;padding:var(--space-3);font-family:var(--font-ui);font-size:.9rem;color:var(--color-muted)}
+
+@media (prefers-reduced-motion:reduce){
+  .page *{transition-property:opacity,color,background-color,border-color !important}
+  .confirm{transition:none}
+}
+</style>
+</head>
+<body class="page">
+<header class="top">
+  <strong class="brand">半山面包</strong>
+  <nav aria-label="页面导航"><a href="#menu">今日面包</a><a href="#visit">到店</a><a href="#order">预订</a></nav>
+</header>
+<main>
+  <!-- zone:hero:start -->
+  <section class="hero" data-zone="hero">
+    <h1>每天早上七点出炉</h1>
+    <p>天然酵种、本地小麦，杭州西溪路 128 号。卖完即止。先挑一款，再留下手机号。</p>
+  </section>
+  <!-- zone:hero:end -->
+
+  <!-- zone:menu:start -->
+  <section id="menu" class="menu" data-zone="menu">
+    <h2>今日面包 <small>点“预订这款”会带到下方表单</small></h2>
+    <ul id="bread-list" aria-label="今日面包与余量"></ul>
+    <p class="note">余量是当前柜台数字，卖完即止。不选品项也可以预订，到店再挑。</p>
+  </section>
+  <!-- zone:menu:end -->
+
+  <!-- zone:visit:start -->
+  <section id="visit" class="visit" data-zone="visit">
+    <h2>到店</h2>
+    <p>周二至周日 7:00–14:00 · 周一休息</p>
+    <p>杭州西溪路 128 号</p>
+  </section>
+  <!-- zone:visit:end -->
+
+  <!-- zone:order:start -->
+  <section id="order" class="order" data-zone="order">
+    <h2>预订</h2>
+    <form id="order-form" novalidate>
+      <p class="item-line" id="item-line"><span id="item-text">品项：未选择（可到店再挑）</span><button type="button" class="clear" id="item-clear" hidden>取消选择</button></p>
+      <input type="hidden" name="bread" id="bread-input" value="">
+      <div class="field">
+        <label for="phone">手机号</label>
+        <input id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="11" required aria-describedby="phone-err">
+        <small class="err" id="phone-err" hidden></small>
+      </div>
+      <div class="field">
+        <label for="date">取货日期</label>
+        <input id="date" name="date" type="date" required aria-describedby="date-err">
+        <small class="err" id="date-err" hidden></small>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit" id="submit">
+          <svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="submit-label">提交预订</span>
+        </button>
+        <button class="link" type="button" id="again" hidden>再订一份</button>
+      </div>
+      <div class="confirm" id="confirm">
+        <div class="confirm-inner">
+          <p id="ok" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </form>
+  </section>
+  <!-- zone:order:end -->
+</main>
+<footer>© 半山面包</footer>
+
+<script src="shared/bakery-data.js"></script>
+<script>
+(function () {
+  const data = window.BAKERY;
+  const list = document.getElementById("bread-list");
+  const form = document.getElementById("order-form");
+  const itemLine = document.getElementById("item-line");
+  const itemText = document.getElementById("item-text");
+  const itemClear = document.getElementById("item-clear");
+  const breadInput = document.getElementById("bread-input");
+  const phone = document.getElementById("phone");
+  const date = document.getElementById("date");
+  const phoneErr = document.getElementById("phone-err");
+  const dateErr = document.getElementById("date-err");
+  const submit = document.getElementById("submit");
+  const submitLabel = document.getElementById("submit-label");
+  const again = document.getElementById("again");
+  const confirm = document.getElementById("confirm");
+  const ok = document.getElementById("ok");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const rows = {};
+  let selected = null;
+  let busy = false;
+  let pending = 0;
+
+  data.breads.forEach(function (bread) {
+    const li = document.createElement("li");
+    li.className = "bread " + (bread.stock === 0 ? "is-out" : (bread.stock <= 2 ? "is-low" : ""));
+    li.dataset.id = bread.id;
+
+    const main = document.createElement("div");
+    main.className = "bread-main";
+    const name = document.createElement("b");
+    name.textContent = bread.name;
+    const price = document.createElement("span");
+    price.className = "price";
+    price.textContent = data.yuan.format(bread.price);
+    main.append(name, price);
+
+    const stock = document.createElement("small");
+    stock.className = "stock";
+    stock.textContent = data.stockLabel(bread.stock);
+
+    const booked = document.createElement("span");
+    booked.className = "booked";
+    booked.hidden = true;
+
+    li.append(main, stock, booked);
+
+    if (bread.stock > 0) {
+      const pick = document.createElement("button");
+      pick.type = "button";
+      pick.className = "pick";
+      pick.setAttribute("aria-pressed", "false");
+      pick.setAttribute("aria-label", "预订" + bread.name);
+      pick.textContent = "预订这款";
+      pick.addEventListener("click", function () { choose(bread, li, pick); });
+      li.appendChild(pick);
+    }
+    rows[bread.id] = li;
+    list.appendChild(li);
+  });
+
+  function choose(bread, li, pick) {
+    if (busy || submit.classList.contains("is-done")) return;
+    if (selected && selected.id === bread.id) { clearChoice(); return; }
+    clearChoice();
+    selected = bread;
+    li.classList.add("is-selected");
+    pick.setAttribute("aria-pressed", "true");
+    pick.textContent = "已选";
+    breadInput.value = bread.id;
+    itemText.textContent = "品项：" + bread.name + " ×1 · " + data.yuan.format(bread.price);
+    itemLine.classList.add("has-item");
+    itemClear.hidden = false;
+    form.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
+    phone.focus({ preventScroll: true });
+  }
+
+  function clearChoice() {
+    if (!selected) return;
+    const li = rows[selected.id];
+    const pick = li.querySelector(".pick");
+    li.classList.remove("is-selected");
+    pick.setAttribute("aria-pressed", "false");
+    pick.textContent = "预订这款";
+    selected = null;
+    breadInput.value = "";
+    itemText.textContent = "品项：未选择（可到店再挑）";
+    itemLine.classList.remove("has-item");
+    itemClear.hidden = true;
+  }
+  itemClear.addEventListener("click", clearChoice);
+
+  const min = data.isoDate(data.tomorrow());
+  date.min = min;
+  date.value = min;
+
+  function setError(input, el, message) {
+    if (message) {
+      el.textContent = message;
+      el.hidden = false;
+      input.setAttribute("aria-invalid", "true");
+    } else {
+      el.textContent = "";
+      el.hidden = true;
+      input.removeAttribute("aria-invalid");
+    }
+  }
+
+  phone.addEventListener("input", function () { setError(phone, phoneErr, ""); });
+  date.addEventListener("input", function () { setError(date, dateErr, ""); });
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    if (busy) return;
+    const phoneOk = data.validPhone(phone.value);
+    const dateOk = Boolean(date.value) && date.value >= min;
+    setError(phone, phoneErr, phoneOk ? "" : data.messages.phoneError);
+    setError(date, dateErr, dateOk ? "" : data.messages.dateError);
+    if (!phoneOk) { phone.focus(); return; }
+    if (!dateOk) { date.focus(); return; }
+
+    busy = true;
+    submit.setAttribute("aria-busy", "true");
+    submitLabel.textContent = data.messages.submitting;
+    pending = window.setTimeout(finish, data.requestDelayMs);
+  });
+
+  function finish() {
+    busy = false;
+    submit.removeAttribute("aria-busy");
+    submit.classList.add("is-done");
+    submitLabel.textContent = "已收到";
+    submit.disabled = true;
+    again.hidden = false;
+
+    const item = selected ? selected.name + " ×1，" : "";
+    ok.textContent = item + data.formatDay(date.value) + "取货。我们会短信确认到 " + data.maskPhone(phone.value) + "。";
+    confirm.classList.add("is-open");
+
+    if (selected) {
+      const li = rows[selected.id];
+      const booked = li.querySelector(".booked");
+      booked.textContent = "已为你预订 1 个";
+      booked.hidden = false;
+      li.classList.add("is-booked");
+      itemClear.hidden = true;
+    }
+  }
+
+  again.addEventListener("click", function () {
+    window.clearTimeout(pending);
+    busy = false;
+    confirm.classList.remove("is-open");
+    ok.textContent = "";
+    submit.classList.remove("is-done");
+    submit.disabled = false;
+    submit.removeAttribute("aria-busy");
+    submitLabel.textContent = "提交预订";
+    again.hidden = true;
+    if (selected) {
+      const li = rows[selected.id];
+      li.classList.remove("is-booked");
+      const booked = li.querySelector(".booked");
+      booked.hidden = true;
+      booked.textContent = "";
+      clearChoice();
+    }
+    phone.value = "";
+    phone.focus();
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+/* Preview only. The brand names Source Sans 3 and Source Serif 4 but the project does not load them and they are not
+   installed here, so the static preview fetches them. Offline, the brand's own fallbacks (Helvetica Neue, Georgia) render. */
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap");

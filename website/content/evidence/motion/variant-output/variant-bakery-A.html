@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>半山面包 · 每天早上七点出炉</title>
+<style>
+:root{
+  /* 品牌原始色，来自项目 style.css */
+  --flour:#f7f1e6;
+  --crust:#8a4b22;
+  --ink:#2b2118;
+
+  /* 语义层 */
+  --color-bg:var(--flour);
+  --color-text:var(--ink);
+  --color-primary:var(--crust);
+  --color-on-primary:#ffffff;
+  --color-primary-pressed:color-mix(in oklch, var(--crust) 84%, var(--ink));
+  --color-muted:color-mix(in oklch, var(--ink) 66%, var(--flour));
+  --color-rule:color-mix(in oklch, var(--ink) 18%, var(--flour));
+  --color-row-hover:color-mix(in oklch, var(--crust) 8%, var(--flour));
+  --color-error:#9b2f1f;
+  --color-disabled:color-mix(in oklch, var(--ink) 45%, var(--flour));
+
+  --font-serif:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  --font-ui:"PingFang SC","Hiragino Sans GB","Noto Sans SC",sans-serif;
+
+  /* 动效令牌：A 只用颜色与透明度，按压允许 2% 缩放 */
+  --ease-out:cubic-bezier(.25,1,.5,1);
+  --ease-in:cubic-bezier(.7,0,.84,0);
+  --dur-press:120ms;
+  --dur-fast:140ms;
+  --dur-base:200ms;
+
+  --space-1:8px;
+  --space-2:16px;
+  --space-3:24px;
+  --space-4:40px;
+  --space-5:64px;
+  --radius-control:4px;
+  --measure:42rem;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:72px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-serif);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2{font-weight:600;letter-spacing:0}
+h2{font-size:1.35rem;margin:0 0 var(--space-2)}
+p{margin:0}
+:is(a,button,input,summary):focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);max-width:var(--measure);margin:0 auto}
+.brand{font-size:1.1rem}
+.top nav{display:flex;gap:var(--space-2)}
+.top nav a{color:var(--color-primary);text-decoration:none;padding:10px 2px;font-family:var(--font-ui);font-size:.95rem;border-bottom:1px solid transparent;transition:border-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){.top nav a:hover{border-bottom-color:currentColor}}
+
+main{max-width:var(--measure);margin:0 auto;padding:0 var(--space-3) var(--space-5)}
+section{padding:var(--space-4) 0;border-top:1px solid var(--color-rule)}
+
+/* 按钮：按压 = 颜色加深 + 2% 缩小；“减少动效”下只保留颜色 */
+.btn{font:500 1rem/1 var(--font-ui);color:var(--color-on-primary);background:var(--color-primary);border:0;border-radius:var(--radius-control);padding:0 20px;min-height:44px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;transition:background-color var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out)}
+.btn:active:not(:disabled){background:var(--color-primary-pressed)}
+.btn:disabled{background:var(--color-disabled);cursor:default}
+.btn[aria-busy="true"]{background:var(--color-primary-pressed);cursor:progress}
+@media (prefers-reduced-motion:no-preference){
+  .btn{transition:background-color var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out),transform var(--dur-press) var(--ease-out)}
+  .btn:active:not(:disabled){transform:scale(.98)}
+}
+.link{font:500 .95rem/1 var(--font-ui);color:var(--color-primary);background:none;border:0;padding:12px 4px;min-height:44px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+/* zone:hero:start */
+.hero{padding:var(--space-5) 0 var(--space-4);border-top:0}
+.hero h1{font-size:clamp(2rem,6vw,3rem);line-height:1.15;margin:0 0 var(--space-2)}
+.hero p{max-width:30em;margin-bottom:var(--space-3)}
+/* zone:hero:end */
+
+/* zone:menu:start */
+.menu ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--color-rule)}
+.menu li{display:grid;grid-template-columns:auto 1fr auto auto;align-items:baseline;gap:12px;padding:14px 8px;margin:0 -8px;border-bottom:1px solid var(--color-rule);border-radius:3px;transition:background-color var(--dur-fast) var(--ease-out)}
+.menu .leader{border-bottom:1px dotted var(--color-rule);align-self:end;margin-bottom:.45em}
+.menu .price{font-family:var(--font-ui);font-variant-numeric:tabular-nums;min-width:3.5em;text-align:right}
+.menu .stock{font-family:var(--font-ui);font-size:.9rem;color:var(--color-muted);min-width:4.5em;text-align:right}
+.menu li.is-low .stock{color:var(--color-primary)}
+.menu li.is-out{color:var(--color-muted)}
+.menu li.is-out .price{text-decoration:line-through}
+/* 悬停只做整行底色，帮助对齐名称、价格和余量；触屏没有 hover，不显示 */
+@media (hover:hover) and (pointer:fine){
+  .menu li:not(.is-out):hover{background:var(--color-row-hover)}
+}
+.menu .note{margin-top:var(--space-2);font-family:var(--font-ui);font-size:.9rem;color:var(--color-muted)}
+@media (max-width:639px){
+  .menu li{grid-template-columns:1fr auto}
+  .menu .leader{display:none}
+  .menu .stock{grid-column:1 / -1;text-align:left;min-width:0}
+}
+/* zone:menu:end */
+
+/* zone:visit:start */
+.visit p{max-width:30em}
+/* zone:visit:end */
+
+/* zone:order:start */
+form{display:grid;gap:var(--space-2);max-width:340px}
+.field{display:grid;gap:6px}
+.field label{font-family:var(--font-ui);font-size:.95rem}
+.field input{font:1rem var(--font-ui);padding:0 12px;min-height:44px;border:1px solid var(--color-muted);border-radius:var(--radius-control);background:#fff;color:var(--color-text);transition:border-color var(--dur-fast) var(--ease-out)}
+.field input[aria-invalid="true"]{border-color:var(--color-error)}
+.err{font-family:var(--font-ui);font-size:.9rem;color:var(--color-error)}
+.actions{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap}
+/* 成功提示：原地淡入，不移动；位置固定在按钮下方，避免布局跳动 */
+.notice{font-family:var(--font-ui);font-size:.95rem;min-height:1.6em;opacity:0;transition:opacity var(--dur-base) var(--ease-out)}
+.notice.is-shown{opacity:1}
+/* zone:order:end */
+
+footer{max-width:var(--measure);margin:0 auto;padding:var(--space-3);font-family:var(--font-ui);font-size:.9rem;color:var(--color-muted)}
+
+@media (prefers-reduced-motion:reduce){
+  .page *{transition-property:opacity,color,background-color,border-color !important}
+}
+</style>
+</head>
+<body class="page">
+<header class="top">
+  <strong class="brand">半山面包</strong>
+  <nav aria-label="页面导航"><a href="#menu">今日面包</a><a href="#visit">到店</a><a href="#order">预订</a></nav>
+</header>
+<main>
+  <!-- zone:hero:start -->
+  <section class="hero" data-zone="hero">
+    <h1>每天早上七点出炉</h1>
+    <p>天然酵种、本地小麦，杭州西溪路 128 号。卖完即止。</p>
+    <a class="btn" href="#order">预订明早的面包</a>
+  </section>
+  <!-- zone:hero:end -->
+
+  <!-- zone:menu:start -->
+  <section id="menu" class="menu" data-zone="menu">
+    <h2>今日面包</h2>
+    <ul id="bread-list" aria-label="今日面包与余量"></ul>
+    <p class="note">余量是当前柜台数字，卖完即止。</p>
+  </section>
+  <!-- zone:menu:end -->
+
+  <!-- zone:visit:start -->
+  <section id="visit" class="visit" data-zone="visit">
+    <h2>到店</h2>
+    <p>周二至周日 7:00–14:00 · 周一休息</p>
+    <p>杭州西溪路 128 号</p>
+  </section>
+  <!-- zone:visit:end -->
+
+  <!-- zone:order:start -->
+  <section id="order" class="order" data-zone="order">
+    <h2>预订</h2>
+    <form id="order-form" novalidate>
+      <div class="field">
+        <label for="phone">手机号</label>
+        <input id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="11" required aria-describedby="phone-err">
+        <small class="err" id="phone-err" hidden></small>
+      </div>
+      <div class="field">
+        <label for="date">取货日期</label>
+        <input id="date" name="date" type="date" required aria-describedby="date-err">
+        <small class="err" id="date-err" hidden></small>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit" id="submit">提交预订</button>
+        <button class="link" type="button" id="again" hidden>再订一份</button>
+      </div>
+      <p class="notice" id="ok" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+  <!-- zone:order:end -->
+</main>
+<footer>© 半山面包</footer>
+
+<script src="shared/bakery-data.js"></script>
+<script>
+(function () {
+  const data = window.BAKERY;
+  const list = document.getElementById("bread-list");
+  const form = document.getElementById("order-form");
+  const phone = document.getElementById("phone");
+  const date = document.getElementById("date");
+  const phoneErr = document.getElementById("phone-err");
+  const dateErr = document.getElementById("date-err");
+  const submit = document.getElementById("submit");
+  const again = document.getElementById("again");
+  const ok = document.getElementById("ok");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let busy = false;
+  let pending = 0;
+
+  data.breads.forEach(function (bread) {
+    const li = document.createElement("li");
+    li.className = bread.stock === 0 ? "is-out" : (bread.stock <= 2 ? "is-low" : "");
+    const name = document.createElement("b");
+    name.textContent = bread.name;
+    const leader = document.createElement("span");
+    leader.className = "leader";
+    leader.setAttribute("aria-hidden", "true");
+    const price = document.createElement("span");
+    price.className = "price";
+    price.textContent = data.yuan.format(bread.price);
+    const stock = document.createElement("small");
+    stock.className = "stock";
+    stock.textContent = data.stockLabel(bread.stock);
+    li.append(name, leader, price, stock);
+    list.appendChild(li);
+  });
+
+  const min = data.isoDate(data.tomorrow());
+  date.min = min;
+  date.value = min;
+
+  function setError(input, el, message) {
+    if (message) {
+      el.textContent = message;
+      el.hidden = false;
+      input.setAttribute("aria-invalid", "true");
+    } else {
+      el.textContent = "";
+      el.hidden = true;
+      input.removeAttribute("aria-invalid");
+    }
+  }
+
+  phone.addEventListener("input", function () { setError(phone, phoneErr, ""); });
+  date.addEventListener("input", function () { setError(date, dateErr, ""); });
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    if (busy) return;
+    const phoneOk = data.validPhone(phone.value);
+    const dateOk = Boolean(date.value) && date.value >= min;
+    setError(phone, phoneErr, phoneOk ? "" : data.messages.phoneError);
+    setError(date, dateErr, dateOk ? "" : data.messages.dateError);
+    if (!phoneOk) { phone.focus(); return; }
+    if (!dateOk) { date.focus(); return; }
+
+    busy = true;
+    submit.setAttribute("aria-busy", "true");
+    submit.textContent = data.messages.submitting;
+    pending = window.setTimeout(finish, data.requestDelayMs);
+  });
+
+  function finish() {
+    busy = false;
+    submit.removeAttribute("aria-busy");
+    submit.textContent = data.messages.submitted;
+    submit.disabled = true;
+    again.hidden = false;
+    ok.textContent = "已收到。" + data.formatDay(date.value) + "取货，我们会短信确认到 " + data.maskPhone(phone.value) + "。";
+    /* 减少动效：直接显示；否则等一帧让 200ms 的透明度过渡生效 */
+    if (reduceMotion.matches) {
+      ok.classList.add("is-shown");
+    } else {
+      requestAnimationFrame(function () { ok.classList.add("is-shown"); });
+    }
+  }
+
+  again.addEventListener("click", function () {
+    window.clearTimeout(pending);
+    busy = false;
+    ok.classList.remove("is-shown");
+    ok.textContent = "";
+    submit.disabled = false;
+    submit.removeAttribute("aria-busy");
+    submit.textContent = "提交预订";
+    again.hidden = true;
+    phone.value = "";
+    phone.focus();
+  });
+})();
+</script>
+</body>
+</html>

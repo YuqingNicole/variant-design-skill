@@ -1,0 +1,62 @@
+/* 半山面包 · 品牌扩展层
+   品牌本体在 ../../style.css（--flour / --crust / --ink，Songti SC）。
+   本文件只补品牌没有定义的层：语义色、间距、字号、圆角、控件尺寸、动效。
+   所有颜色由品牌变量派生，不重新定义任何品牌变量。 */
+:root {
+  /* 语义色 */
+  --color-surface: var(--flour);
+  --color-surface-raised: color-mix(in oklab, var(--flour) 70%, white); /* contrast: non-text */
+  --color-surface-sunken: color-mix(in oklab, var(--flour) 94%, var(--ink)); /* contrast: non-text */
+  --color-inverse: var(--ink);
+  --color-on-inverse: var(--flour); /* on: --color-inverse */
+  --color-text: var(--ink); /* on: --color-surface */
+  --color-text-muted: color-mix(in oklab, var(--ink) 72%, var(--flour)); /* on: --color-surface */
+  --color-primary: var(--crust);
+  --color-on-primary: #fff; /* on: --color-primary */
+  --color-primary-hover: color-mix(in oklab, var(--crust) 88%, var(--ink)); /* on: --color-on-primary */
+  --color-primary-active: color-mix(in oklab, var(--crust) 78%, var(--ink)); /* on: --color-on-primary */
+  --color-primary-soft: color-mix(in oklab, var(--crust) 12%, var(--flour)); /* contrast: non-text */
+  --color-border: color-mix(in oklab, var(--ink) 20%, var(--flour)); /* contrast: non-text */
+  --color-border-strong: color-mix(in oklab, var(--ink) 45%, var(--flour)); /* contrast: non-text */
+  --color-rule: color-mix(in oklab, var(--crust) 40%, var(--flour)); /* contrast: non-text */
+  --color-error: var(--crust); /* on: --color-surface */
+  --color-success-soft: color-mix(in oklab, var(--crust) 8%, var(--flour)); /* contrast: non-text */
+
+  /* 字体：沿用品牌字体 */
+  --font-body: "Songti SC", serif;
+
+  /* 字号 */
+  --text-xs: 13px;
+  --text-sm: 15px;
+  --text-md: 17px;
+  --text-lg: 20px;
+  --text-xl: 26px;
+  --text-2xl: 34px;
+  --text-3xl: 48px;
+  --text-display: clamp(44px, 8vw, 96px);
+  --leading-tight: 1.15;
+  --leading-body: 1.65;
+
+  /* 间距 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* 形状与控件 */
+  --radius-control: 4px;
+  --radius-card: 8px;
+  --control-height: 48px;
+  --width-page: 1120px;
+  --width-measure: 640px;
+
+  /* 动效 */
+  --duration-fast: 150ms;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --border-focus: 2px solid var(--color-primary);
+}

@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 2,
+  "scenario": "bakery-storefront",
+  "framework": "html",
+  "language": "zh",
+  "activeVariant": null,
+  "selectedVariant": null,
+  "taskContract": {
+    "primaryJob": "看今日面包与余量，留下手机号和取货日期预订明早的面包",
+    "data": "shared/bakery-data.js（三款面包、价格、余量、营业时间、地址，均来自项目 index.html）",
+    "requiredFunctions": [
+      "浏览今日面包、价格与余量（含售罄）",
+      "查看营业时间与地址",
+      "填写手机号与取货日期并提交预订",
+      "看到预订成功提示",
+      "无效手机号或日期时看到可恢复的错误提示"
+    ],
+    "successCriteria": [
+      "按钮按压在 100–160ms 内给出反馈，触屏同样有效",
+      "面包列表项的悬停只在精准指针设备生效，触屏不依赖悬停",
+      "预订成功提示在 300ms 内出现且由 aria-live 播报",
+      "prefers-reduced-motion: reduce 下去掉位移、缩放、描边动画，保留颜色与透明度反馈"
+    ]
+  },
+  "recommendation": {
+    "variant": "C",
+    "reason": "面包店页面的多数访问来自手机，C 把成功确认放在用户刚按下的按钮上，触屏与桌面体验一致，悬停动效也有实际用途（露出“预订这款”）而不是装饰。这是基于动效规则的假设，没有做过用户测试；B 的提示条在手机键盘弹出时可能被遮挡，A 则是最省心、最不依赖 JS 的底线方案。若不想增加“先选品项”这一功能，可以保留 C 的按钮确认但去掉行内动作。"
+  },
+  "designSystem": {
+    "confirmed": false,
+    "brandSource": "style.css",
+    "brandTokens": {
+      "--flour": "#f7f1e6",
+      "--crust": "#8a4b22",
+      "--ink": "#2b2118"
+    },
+    "fonts": [
+      "Songti SC"
+    ],
+    "note": "未确认设计系统；三个方向都沿用项目现有品牌色与宋体，控件与数字补了一套中文无衬线栈。"
+  },
+  "variants": {
+    "A": {
+      "name": "纸面",
+      "entry": "variant-bakery-A.html",
+      "files": [
+        "variant-bakery-A.html"
+      ],
+      "tokens": {
+        "palette": "半山品牌色：flour #f7f1e6 / crust #8a4b22 / ink #2b2118",
+        "fonts": [
+          "Songti SC",
+          "PingFang SC（控件与数字）"
+        ],
+        "motion": {
+          "ease-out": "cubic-bezier(.25,1,.5,1)",
+          "dur-press": "120ms",
+          "dur-fast": "140ms",
+          "dur-base": "200ms"
+        }
+      },
+      "comparison": {
+        "optimizes": "最低打扰：按压只加深颜色并缩小 2%，列表悬停只换整行底色帮助对齐，成功提示在按钮下方原地淡入，不移动任何东西。",
+        "tradeoff": "确认感最弱，提示离视线焦点稍远；悬停只是扫读辅助，没有附带动作，对触屏用户等于没有。",
+        "bestFor": "想保持原页面单栏阅读感、维护成本最低、访客以手机为主又不想加交互的店主。"
+      },
+      "version": 1,
+      "history": [],
+      "undo": []
+    },
+    "B": {
+      "name": "柜台",
+      "entry": "variant-bakery-B.html",
+      "files": [
+        "variant-bakery-B.html"
+      ],
+      "tokens": {
+        "palette": "半山品牌色：flour #f7f1e6 / crust #8a4b22 / ink #2b2118；提示条用 ink 底 flour 字",
+        "fonts": [
+          "Songti SC",
+          "PingFang SC（控件与数字）"
+        ],
+        "motion": {
+          "ease-out": "cubic-bezier(.16,1,.3,1)",
+          "dur-press": "120ms",
+          "dur-fast": "160ms",
+          "dur-base": "240ms",
+          "dur-exit": "160ms"
+        }
+      },
+      "comparison": {
+        "optimizes": "实体反馈：按钮有 2px 底边，按下时下沉并压扁到 98%，提交中有进度线；列表悬停长出左侧标记并把价格变品牌色；成功提示条从底部上浮 16px，6 秒后退场，可关闭。桌面端预订面板固定在右侧。",
+        "tradeoff": "动效最多、JS 最多；提示条在手机上可能被软键盘或拇指遮挡，所以表单下方还要保留一行静态确认；下沉效果依赖阴影，减少动效下只剩颜色变化。",
+        "bestFor": "桌面访客较多、希望预订入口始终可见（比如公司团购或门店自用的平板点单），以及想要明显“按下去了”手感的场景。"
+      },
+      "version": 1,
+      "history": [],
+      "undo": []
+    },
+    "C": {
+      "name": "先选面包",
+      "entry": "variant-bakery-C.html",
+      "files": [
+        "variant-bakery-C.html"
+      ],
+      "tokens": {
+        "palette": "半山品牌色：flour #f7f1e6 / crust #8a4b22 / ink #2b2118；完成态用 ink 底 flour 字",
+        "fonts": [
+          "Songti SC",
+          "PingFang SC（控件与数字）"
+        ],
+        "motion": {
+          "ease-out": "cubic-bezier(.22,1,.36,1)",
+          "dur-press": "120ms",
+          "dur-fast": "140ms",
+          "dur-base": "260ms",
+          "dur-draw": "300ms",
+          "dur-flash": "600ms"
+        }
+      },
+      "comparison": {
+        "optimizes": "动效跟着任务走：列表行悬停露出“预订这款”（触屏和键盘下始终可见），点选后带到表单；提交按钮按下缩小 3%，成功后按钮自己变成深色确认并画出对勾，详情从 0 高度展开，被订的那一行闪一次“已为你预订 1 个”。",
+        "tradeoff": "在原任务上加了“选品项”这一步和对应状态，JS 分支最多；按钮变成确认后需要“再订一份”才能重来；对勾描边和展开在减少动效下会退化为直接出现。",
+        "bestFor": "访客以手机为主、面包款式少但余量紧张（需要先抢指定款）的店，以及希望确认信息出现在手指刚按过的位置的场景。"
+      },
+      "version": 1,
+      "history": [],
+      "undo": []
+    }
+  },
+  "notes": [
+    "品牌色与宋体沿用项目 style.css，未新增色相；成功/完成态用 ink，错误用 #9b2f1f。",
+    "三个方向共用 shared/bakery-data.js，提交延迟 500ms 是占位，真实项目由请求返回时间决定。",
+    "悬停动效都包在 (hover:hover) and (pointer:fine) 内；减少动效下 transition 只允许 opacity/color/background-color/border-color。"
+  ],
+  "shared": {
+    "files": [
+      "shared/bakery-data.js"
+    ],
+    "note": "三个方向共用的数据与工具，只读"
+  }
+}

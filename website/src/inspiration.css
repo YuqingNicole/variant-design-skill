@@ -8,6 +8,7 @@
 .insp-title p{margin:0;color:var(--site-muted);font-size:16px;line-height:1.7;max-width:52ch}
 @media(max-width:650px){.insp-title{grid-template-columns:minmax(0,1fr)}}
 .insp-title a{color:var(--site-brand);font-size:14px;text-underline-offset:4px}
+.insp-title .insp-links{display:flex;flex-wrap:wrap;gap:4px 24px;font-size:14px;max-width:none}
 .insp-rights{margin:0;padding-top:var(--space-2);border-top:1px solid var(--site-line);font-size:13px;line-height:1.6;color:var(--site-muted);text-wrap:pretty}.insp-rights a{color:inherit;text-underline-offset:3px;white-space:nowrap}
 .insp-pills a small{font-size:12px;margin-left:6px;color:var(--site-muted);font-variant-numeric:tabular-nums}.insp-pills a[aria-current=page] small{color:inherit;opacity:.75}
 .inspiration-page .inspiration-disclosure{font-size:12px;color:var(--site-muted);max-width:none}
@@ -169,7 +170,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 @media(max-width:650px){.inspiration-page .site-nav-links{font-size:12px}.insp-feed{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-5) var(--space-3)}.insp-card-open{overflow:visible;aspect-ratio:auto}.insp-card-open>.insp-thumb,.insp-card-open>.insp-vcard-media{aspect-ratio:16/10;height:auto;overflow:hidden}.insp-card-meta{position:static;opacity:1;padding:var(--space-2) 0 0;background:none}.insp-card-save,.insp-card-out{width:44px;height:44px}.insp-card-out{bottom:auto;top:var(--space-2);left:var(--space-2);right:auto}.insp-card-meta small{font-size:12px}}
 @media(max-width:360px){.insp-feed{grid-template-columns:minmax(0,1fr)}}
 /* Phones: a 44px search field and filters with 16px text (iOS zooms smaller fields on focus), and a 44px header link. */
-@media(max-width:650px){.insp-search,.insp-bar select{height:44px;font-size:16px}.insp-search input{font-size:16px}.insp-title>a{display:inline-flex;align-items:center;min-height:44px}}
+@media(max-width:650px){.insp-search,.insp-bar select{height:44px;font-size:16px}.insp-search input{font-size:16px}.insp-title>a,.insp-title .insp-links a{display:inline-flex;align-items:center;min-height:44px}}
 
 /* Give search a full row on narrow screens instead of squeezing it between two selects. */
 @media(max-width:650px){.insp-bar>.site-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.insp-pills{grid-column:1/-1}.insp-bar select{width:100%;max-width:none;min-width:0}.insp-search{grid-column:1/-1;grid-row:3;min-width:0}.insp-search input{min-width:0}}

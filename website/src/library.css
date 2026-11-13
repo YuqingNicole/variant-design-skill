@@ -54,6 +54,18 @@
 .library-recommendation small{color:var(--site-muted)}
 .library-evidence{margin:24px 0 0;font-size:14px;color:var(--site-muted);max-width:860px;line-height:1.8}
 .library-evidence a{color:var(--site-brand,var(--site-ink))}
+/* How a verified case was made: facts in a row, the prompt as given, the commands the agent ran. Same box as "try it", same mono blocks as the skills page. */
+.library-run{border:1px solid var(--site-line);border-radius:6px;padding:22px 24px;margin:32px 0 0;max-width:860px;background:var(--site-card)}
+.library-run h2{font-size:20px;font-weight:500;margin:0 0 14px}
+.library-run dl{display:flex;flex-wrap:wrap;gap:12px 32px;margin:0 0 18px}
+.library-run dt{font:11px var(--font-mono);letter-spacing:.1em;color:var(--site-muted);margin-bottom:4px}
+.library-run dd{margin:0;font-size:14px}
+.library-run p{line-height:1.8;color:var(--site-muted);margin:0 0 10px;font-size:14px}
+.library-run textarea{width:100%;box-sizing:border-box;font:13px/1.7 var(--font-mono);border:1px solid var(--site-line);border-radius:4px;padding:12px;background:var(--site-card);color:var(--site-ink);resize:vertical;margin-bottom:18px}
+.library-run ol{margin:0 0 18px;padding-left:22px;display:grid;gap:8px}
+.library-run code{display:block;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--site-surface);border:1px solid var(--site-line);border-radius:var(--radius-control);padding:8px 12px;font:13px/1.6 var(--font-mono)}
+.library-run small{display:block;font-size:13px;line-height:1.7;color:var(--site-muted)}
+.library-run small a{color:var(--site-brand,var(--site-ink))}
 .library-related{margin-top:72px}
 .library-related h2{font-size:24px;font-weight:500;margin-bottom:24px}
 @media(max-width:900px){.library-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.library-comparison{grid-template-columns:1fr;gap:18px}}
@@ -74,12 +86,12 @@
 .home-case{padding-block:80px 70px;border-bottom:1px solid var(--site-line)}.home-case-header{display:flex;justify-content:space-between;align-items:end;gap:32px;margin-bottom:28px}.home-case-header h2{font-size:clamp(30px,3.4vw,46px);line-height:1.18;letter-spacing:-.01em;font-weight:500;margin:12px 0 0}.home-case-header>p{max-width:30ch;color:var(--site-muted);font-size:14px;margin:0}.home-case-brief{display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:20px;align-items:center;padding:20px 0;border-top:1px solid var(--site-line);border-bottom:1px solid var(--site-line)}.home-case-brief span,.home-case-index,.home-case-notes dt{font-size:13px;color:var(--site-muted)}.home-case-brief p{font-size:14px;line-height:1.7;margin:0}.home-case-brief a,.home-case-notes a{font-size:13px;color:var(--site-brand,var(--site-ink));text-underline-offset:4px}.home-case-stage{padding-top:24px}.home-case-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:16px}.home-case-controls button{display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--site-line);border-radius:6px;background:transparent;padding:13px 16px;color:var(--site-ink);font:inherit;cursor:pointer}.home-case-controls button span{font-size:13px;font-weight:500;color:var(--site-muted)}.home-case-controls button strong{font-size:13px;font-weight:500}.home-case-controls button[aria-pressed=true]{background:var(--site-ink);border-color:var(--site-ink);color:var(--site-on-ink)}.home-case-controls button[aria-pressed=true] span{color:inherit;opacity:.75}.home-case-controls button:focus-visible{outline:2px solid var(--site-brand);outline-offset:3px}.home-case-display{display:grid;grid-template-columns:minmax(0,2fr) minmax(240px,1fr);gap:28px}.home-case-display figure{margin:0}.home-case-display img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top;border:1px solid var(--site-line);border-radius:var(--radius-control,6px);background:var(--site-surface)}.home-case-display figcaption,.home-case-disclosure{font-size:13px;line-height:1.7;color:var(--site-muted);margin-top:9px}.home-case-notes{padding:4px 0}.home-case-notes dl{margin:18px 0}.home-case-notes dl div{border-top:1px solid var(--site-line);padding:14px 0}.home-case-notes dd{font-size:13px;line-height:1.75;margin:6px 0 0}.home-case-index{margin:0}.home-case-disclosure{margin-top:20px}@media(max-width:800px){.home-case-header{display:block}.home-case-header>p{margin-top:14px;max-width:60ch}.home-case-brief{grid-template-columns:1fr;gap:6px}.home-case-display{grid-template-columns:1fr}.home-case-notes dl{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}}@media(max-width:550px){.home-case{padding-block:48px}.home-case-controls button{padding:10px;display:block}.home-case-controls button span{display:block;margin-bottom:5px}.home-case-notes dl{grid-template-columns:1fr;gap:0}}
 /* Phones: 44px touch targets for standalone links, 12px minimum for labels, and commands that wrap instead of scrolling. */
 @media(max-width:650px){.library-more{gap:0 28px}.library-more a,.home-case-brief>a{display:inline-flex;align-items:center;min-height:44px}
- .library-brief b,.library-tabs button small,.library-comparison dt{font-size:12px}.library-try textarea{font-size:16px}.skills-entry dd code{white-space:pre-wrap;overflow-wrap:anywhere}}
+ .library-brief b,.library-tabs button small,.library-comparison dt,.library-run dt{font-size:12px}.library-try textarea,.library-run textarea{font-size:16px}.skills-entry dd code{white-space:pre-wrap;overflow-wrap:anywhere}}
 
 /* Wide screens: the direction and its comparison on the left, "try it" and the recommendation beside them, so the right of the page is not empty. */
 @media(min-width:1100px){
 .library-detail{display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:var(--space-6);align-items:start}
-.library-detail>:is(.library-brief,.library-tabs,.library-figure,.library-comparison){grid-column:1}
+.library-detail>:is(.library-brief,.library-tabs,.library-figure,.library-comparison,.library-run,.library-evidence){grid-column:1}
 .library-detail>.library-side{grid-column:2;grid-row:1/span 4;position:sticky;top:96px;display:grid;gap:var(--space-4)}
 .library-detail>:is(.library-evidence,.library-related){grid-column:1/-1}
 .library-side .library-try,.library-side .library-recommendation{max-width:none;margin:0}

@@ -249,12 +249,13 @@ test('direction library pages are prerendered, browsable and keep old links work
  expect((await request.get('/missing.txt')).status()).toBe(404);
  expect(await(await request.get('/docs/install')).text()).toContain('"@type":"FAQPage"');
  await page.goto('/cases');
- const cards=page.locator('.library-grid .library-card');await expect(cards).toHaveCount(5);await expect(cards.first()).toContainText('Harbor');
+ // Featured cases first, newest among them first: the 2026-11-13 series (bakery, ledger, motion by slug) leads, then Harbor and Pulse.
+ const cards=page.locator('.library-grid .library-card');await expect(cards).toHaveCount(8);await expect(cards.first()).toContainText('半山面包');
  // Each card shows all three directions, recommended first; scroll so the lazy images load, then check none is broken.
  await expect(cards.filter({hasText:'Pulse'}).locator('.library-card-panel small')).toHaveText(['A','B','C']);
  await expect(cards.filter({hasText:'Pulse'}).locator('img')).toHaveCount(3);
  for(const card of await cards.all())await card.scrollIntoViewIfNeeded();
- await expect.poll(()=>page.locator('.library-card img').evaluateAll(images=>images.length===15&&images.every(img=>img.complete&&img.naturalWidth>0))).toBe(true);
+ await expect.poll(()=>page.locator('.library-card img').evaluateAll(images=>images.length===24&&images.every(img=>img.complete&&img.naturalWidth>0))).toBe(true);
  await page.locator('.content-filters a[href="/c/data"]').click();await expect(page).toHaveURL(/\/c\/data$/);await expect(cards).toHaveCount(2);
  await cards.filter({hasText:'Pulse'}).locator('a').click();await expect(page).toHaveURL(/\/d\/pulse$/);
  await expect(page.locator('.library-tabs button').first()).toHaveAttribute('aria-pressed','true');await expect(page.locator('.library-recommendation')).toContainText('推荐 A');
@@ -271,7 +272,12 @@ test('direction library pages are prerendered, browsable and keep old links work
  await page.locator('.site-language').click();await expect(page.locator('h1')).toHaveText('offscript: one brand, three personalities');await page.locator('.site-language').click();await expect(page.locator('html')).toHaveAttribute('lang','zh-CN');
  for(const url of ['/','/d/harbor','/c/product']){await page.goto(url);for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}}
  await page.goto('/showcase/forma');await expect(page).toHaveURL(/\/d\/forma$/);await expect(page.locator('h1')).toContainText('Forma');
- await page.goto('/showcase');await expect(page).toHaveURL(/\/cases$/);await expect(cards).toHaveCount(5);
+ await page.goto('/showcase');await expect(page).toHaveURL(/\/cases$/);await expect(cards).toHaveCount(8);
+ // A verified case with a run record shows how it was made, in Chinese and English; a concept case does not.
+ await page.goto('/d/bakery');await expect(page.locator('.library-run h2')).toHaveText('怎么做出来的');await expect(page.locator('.library-run dl')).toContainText('Claude Code 2.1.323');await expect(page.locator('.library-run dl')).toContainText('$5.89');await expect(page.locator('.library-run ol li')).toHaveCount(5);
+ expect(await(await request.get('/d/bakery')).text()).toContain('<h2>怎么做出来的</h2>');
+ await page.goto('/en/d/bakery');await expect(page.locator('.library-run h2')).toHaveText('How it was made');await expect(page.locator('.library-run textarea')).toHaveValue(/^Use the full Variant Design skill/);
+ await page.goto('/d/offscript');await expect(page.locator('.library-run')).toHaveCount(0);
  await page.goto('/showcase?direction=B');await expect(page.locator('[data-showcase-direction]')).toHaveAttribute('data-showcase-direction','B');
  await page.goto('/canvas?new=1');await expect(page).toHaveURL(/\/lab\/canvas\?new=1$/);
  await page.goto('/d/missing-entry');await expect(page.locator('h1')).toHaveText('页面不存在');
@@ -650,7 +656,7 @@ test('a topic narrows the library to its dated references and states what is unk
 test('the cases grid keeps one labelled sponsor slot after the third case, and it is not a case', async ({page})=>{
  await page.goto('/cases');await hydrated(page);
  const grid=page.locator('.library-grid'),slot=grid.locator('.library-sponsor');
- await expect(slot).toHaveCount(1);await expect(grid.locator('.library-card')).toHaveCount(5);
+ await expect(slot).toHaveCount(1);await expect(grid.locator('.library-card')).toHaveCount(8);
  await expect(grid.locator(':scope > *').nth(3)).toHaveClass(/library-sponsor/);
  await expect(slot).toHaveAttribute('aria-label','赞助');await expect(slot.locator('b')).toHaveText('赞助');
  await expect(slot.locator('a')).toHaveAttribute('href','/sponsor');
@@ -933,7 +939,7 @@ test('without JavaScript the inspiration page links every reference, and with it
 test('on phones, links and fields are big enough to tap and read', async ({ page }) => {
   // 44px follows Apple and Material touch guidance (WCAG 2.5.8 only asks 24px); 16px fields stop iOS zooming on focus.
   await page.setViewportSize({ width: 375, height: 800 });
-  const targets = '.site-nav-links a, .site-footer > div a, .site-footer-action, .docs-layout > aside a, .content-back a, .content-link a, .content-secondary, .library-more a, .home-show-links a, .home-practice-head a, .home-case-brief > a, .insp-title > a, .insp-search, .paper-actions > a, .canvas-label > a';
+  const targets = '.site-nav-links a, .site-footer > div a, .site-footer-action, .docs-layout > aside a, .content-back a, .content-link a, .content-secondary, .library-more a, .home-show-links a, .home-practice-head a, .home-case-brief > a, .insp-title .insp-links a, .insp-search, .paper-actions > a, .canvas-label > a';
   for (const route of ['/', '/en/docs', '/guides/git-or-snapshot-undo', '/inspiration', '/about', '/en/skills', '/d/pulse', '/changelog']) {
     await page.goto(route, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('h1').first()).toBeVisible();
@@ -975,7 +981,7 @@ test('home leads with the inspiration feed, cases have their own page, and the s
  await expect(page).toHaveURL(/:\d+\/\?topic=saas-home$/);await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(10);
  await page.goto('/inspiration/linear');await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');
  await page.goto('/cases');await expect(page).toHaveTitle('A/B/C 案例 — Variant Design 方向库');
- await expect(page.locator('h1')).toHaveText('一个任务，三种方向。');await expect(page.locator('.library-grid .library-card')).toHaveCount(5);
+ await expect(page.locator('h1')).toHaveText('一个任务，三种方向。');await expect(page.locator('.library-grid .library-card')).toHaveCount(8);
  await expect(page.locator('.site-nav-links a',{hasText:'案例'})).toHaveAttribute('aria-current','page');
  await page.goto('/d/pulse');await page.locator('.content-back a').first().click();await expect(page).toHaveURL(/\/cases$/);
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await page.goto('/');await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
