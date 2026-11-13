@@ -27,7 +27,10 @@ test('a section with no reference has no tab and no page until one exists', () =
   const only = [{ category: 'practice', tag: 'Motion' }];
   assert.deepEqual(activeSections(only).map(s => s.id), ['motion']);
   const refs = loadReferences(), active = activeSections(refs).map(s => s.id);
-  for (const id of ['illustration', 'posters', 'print']) assert.ok(!active.includes(id));
+  // Data-driven: a section is active exactly when a reference maps to it. Illustration and posters got their first
+  // entries in the 2026-11-13 batch; print is still empty, so it is the one pinned as absent.
+  for (const s of sections) assert.equal(active.includes(s.id), refs.some(r => sectionOf(r) === s.id), s.id);
+  assert.ok(!active.includes('print'));
   assert.ok(sectionPages(refs).every(s => s.count.zh > 0));
 });
 
