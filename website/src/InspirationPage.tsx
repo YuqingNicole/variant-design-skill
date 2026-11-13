@@ -40,7 +40,7 @@ const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdra
  pack:{zh:'你的参考包',en:'Your reference pack'},packNote:{zh:'保存在当前浏览器；清除浏览器数据后会丢失，不会跨设备同步。',en:'Saved in this browser; clearing browser data removes it. It does not sync across devices.'},
  useFor:{zh:'参考什么',en:'Use for'},avoid:{zh:'不参考什么',en:'Avoid'},remove:{zh:'移除',en:'Remove'},packBrief:{zh:'生成参考包指令',en:'Create pack brief'},takeIt:{zh:'带进你的项目',en:'Take it into your project'},
  briefLabel:{zh:'参考设计指令',en:'Reference brief'},copyBrief:{zh:'复制指令',en:'Copy brief'},dismiss:{zh:'收起',en:'Dismiss'},copied:{zh:'已复制，粘贴到你的项目 Agent 中继续。',en:'Copied. Continue in your project agent.'},
- copyManually:{zh:'请在文本框中选择并手动复制。',en:'Select the text and copy it manually.'},submissions:{zh:'投稿与授权规则',en:'Submissions & permissions'},
+ copyManually:{zh:'请在文本框中选择并手动复制。',en:'Select the text and copy it manually.'},submissions:{zh:'投稿与授权规则',en:'Submissions & permissions'},casesEntry:{zh:'案例：一个任务出三版 →',en:'Cases: one brief, three directions →'},
  rights:{zh:'作品版权归原作者；仅链接的参考与作者授权的媒体分别注明来源和权限。',en:'The work belongs to its owners; link-only references and author-permission media each state their source and rights.'},rightsMore:{zh:'展示方式与数据来源',en:'How media is shown and where data comes from'},
 
  refType:{zh:'参考类型',en:'Reference type'},all:{zh:'全部',en:'All'},search:{zh:'搜索参考',en:'Search references'},searchHint:{zh:'搜索 ⌘K',en:'Search ⌘K'},
@@ -174,7 +174,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  if(open?.mode==='page'&&openItem)return <main className="content-page inspiration-page">{header}<div className="site-shell insp-page-detail">{detailView(openItem,true)}{tail}</div><SiteFooter language={language}/></main>;
  return <main className="content-page inspiration-page">{header}
   <header className="site-shell insp-head">
-   <div className="insp-title"><h1>{sectionInfo?t(sectionInfo.title,language):l('title')}</h1><p>{sectionInfo?t(sectionInfo.intro,language):l('intro')}</p><a href={localePath('/submit',language)}>{l('submissions')}</a></div>
+   <div className="insp-title"><h1>{sectionInfo?t(sectionInfo.title,language):l('title')}</h1><p>{sectionInfo?t(sectionInfo.intro,language):l('intro')}</p><p className="insp-links"><a href={localePath('/cases',language)}>{l('casesEntry')}</a><a href={localePath('/submit',language)}>{l('submissions')}</a></p></div>
    <p className="insp-rights">{l('rights')} <a href={localePath('/submit',language)+'#display'}>{l('rightsMore')}</a></p>
   </header>
   <div className="insp-bar"><div className="site-shell">

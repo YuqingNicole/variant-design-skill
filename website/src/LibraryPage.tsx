@@ -3,7 +3,7 @@ import { locales } from './i18n/locales';
 import { useEffect, useState } from 'react';
 import type { Language } from './direction-engine';
 import { SiteHeader, SiteFooter } from './SiteChrome';
-import { cardUrl, categories, coverDirection, entries, evidenceUrl, mediaUrl, type Direction, type Entry } from './library-data';
+import { cardUrl, categories, coverDirection, entries, evidenceUrl, mediaUrl, repository, type Direction, type Entry } from './library-data';
 import { inspirationItems } from './inspiration-data';
 import { activeSponsorSlot } from './sponsor-slots';
 import './content-pages.css';
@@ -39,6 +39,12 @@ const m={compareThreeDirectionsFor:{zh:'同一个任务，比较三个方向的�
  viewTheOutputRecord:{zh:'查看产出记录 ↗',en:'View the output record ↗'},
  conceptStudyMadeBy:{zh:'概念作品：由我们手工制作，用于展示风格跨度，不是技能的产出。',en:'Concept study: made by hand to show stylistic range, not produced by the skill.'},
  moreEntries:{zh:'更多作品',en:'More entries'},
+ howItWasMade:{zh:'怎么做出来的',en:'How it was made'},
+ runAgent:{zh:'运行环境',en:'Agent'},runDate:{zh:'日期',en:'Date'},runTime:{zh:'用时',en:'Time'},runCost:{zh:'费用',en:'Cost'},runTurns:{zh:'轮次',en:'Turns'},
+ runPrompt:{zh:'给 agent 的原话，一次无人值守运行：',en:'The prompt, verbatim, in one unattended run:'},
+ runCommands:{zh:'运行中调用的技能命令，按先后：',en:'Skill commands the agent ran, in order:'},
+ runNote:{zh:'数字来自运行记录；截图取自 agent 自己生成的预览文件。',en:'Figures come from the run transcript; the screenshots are of the preview files the agent generated.'},
+ readTheRunRecord:{zh:'阅读运行记录 ↗',en:'Read the run record ↗'},
  variantDesignDirectionLibrary:{zh:'Variant Design 方向库',en:'Variant Design direction library'},
  variantDesignADesign:{zh:'A/B/C 案例 — Variant Design 方向库',en:'A/B/C cases — Variant Design'},
  notFoundVariantDesign:{zh:'页面不存在 — Variant Design',en:'Not found — Variant Design'},
@@ -97,6 +103,18 @@ function TryIt({ entry, direction, language }: { entry: Entry; direction: Direct
     <p role="status">{status}</p></section>;
 }
 
+// The making of a verified case: who ran it, what it cost, the prompt as given and the skill commands it called. Read-only facts from the entry; nothing is computed here beyond formatting.
+function HowItWasMade({ run, language }: { run: NonNullable<Entry['run']>; language: Language }) {
+  const minutes = run.durationSec === undefined ? null : `${Math.floor(run.durationSec / 60)} min ${run.durationSec % 60} s`;
+  const facts: [Localized, string | null][] = [[m.runAgent, run.model ? `${run.agent} · ${run.model}` : run.agent], [m.runDate, run.date], [m.runTime, minutes], [m.runCost, run.costUsd === undefined ? null : `$${run.costUsd.toFixed(2)}`], [m.runTurns, run.turns === undefined ? null : String(run.turns)]];
+  return <section className="library-run" aria-labelledby="run-title"><h2 id="run-title">{t(m.howItWasMade,language)}</h2>
+    <dl>{facts.filter(f => f[1] !== null).map(([label, value]) => <div key={label.en}><dt>{t(label,language)}</dt><dd>{value}</dd></div>)}</dl>
+    {run.prompt && <><p>{t(m.runPrompt,language)}</p><textarea readOnly aria-label={t(m.runPrompt,language)} value={t(run.prompt,language)} rows={4} onFocus={e => e.currentTarget.select()}/></>}
+    {run.commands && run.commands.length > 0 && <><p>{t(m.runCommands,language)}</p><ol>{run.commands.map((c, i) => <li key={i}><code>{c}</code></li>)}</ol></>}
+    <small>{t(m.runNote,language)}{run.record && <> <a href={`${repository}/blob/master/${run.record}`} target="_blank" rel="noreferrer">{t(m.readTheRunRecord,language)}</a></>}</small>
+  </section>;
+}
+
 function Detail({ entry, language }: { entry: Entry; language: Language }) {
   const initial = new URLSearchParams(location.search).get('direction');
   const [active, setActive] = useState(() => entry.directions.find(d => d.id === initial)?.id ?? coverDirection(entry).id);
@@ -116,6 +134,7 @@ function Detail({ entry, language }: { entry: Entry; language: Language }) {
       <TryIt entry={entry} direction={direction} language={language}/>
       {entry.recommendation && <aside className="library-recommendation"><b>{t({zh:`推荐 ${entry.recommendation.variant}`,en:`Recommends ${entry.recommendation.variant}`},language)}</b><p>{t(entry.recommendation.reason,language)}</p><small>{t(m.aRecommendationIsNot,language)}</small></aside>}
       </div>
+      {entry.run && <HowItWasMade run={entry.run} language={language}/>}
       <p className="library-evidence">{evidence ? <>{t(m.theDirectionNotesAnd,language)} <a href={evidence} target="_blank" rel="noreferrer">{t(m.viewTheOutputRecord,language)}</a></> : entry.kind === 'concept' ? (t(m.conceptStudyMadeBy,language)) : null}</p>
       {related.length > 0 && <section className="library-related"><h2>{t(m.moreEntries,language)}</h2><div className="library-grid">{related.map(e => <Card key={e.slug} entry={e} language={language}/>)}</div></section>}
     </section></>;

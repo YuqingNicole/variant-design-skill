@@ -1,0 +1,86 @@
+/* Direction B — Compare by feature. Brand tokens from app/globals.css; layers from shared/ledger-extensions.css. */
+.variant-b {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--space-7) clamp(16px, 4vw, 48px) var(--space-9);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--color-ink);
+}
+.variant-b h1, .variant-b h2 { font-family: var(--font-serif); font-weight: 600; line-height: var(--leading-tight); margin: 0; }
+.variant-b p, .variant-b dl { margin: 0; }
+
+/* zone:header:start */
+.variant-b .page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4) var(--space-6); padding-bottom: var(--space-5); border-bottom: 1px solid var(--color-line-strong); }
+.variant-b .title { max-width: var(--width-measure); }
+.variant-b .page-head h1 { font-size: var(--text-3xl); letter-spacing: -0.01em; }
+.variant-b .intro { margin-top: var(--space-2); font-size: var(--text-md); color: var(--color-text-secondary); }
+.variant-b .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); }
+.variant-b .check { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--control-height); font-size: var(--text-sm); font-weight: 600; color: var(--color-text-secondary); cursor: pointer; }
+.variant-b .check input { width: 18px; height: 18px; margin: 0; accent-color: var(--color-accent); }
+.variant-b .page-head .note { flex-basis: 100%; }
+/* zone:header:end */
+
+/* zone:matrix:start */
+.variant-b .compare { margin-top: var(--space-4); }
+.variant-b .plan-picker { display: none; }
+.variant-b .matrix { width: 100%; border-collapse: separate; border-spacing: 0; font-variant-numeric: tabular-nums; }
+.variant-b .matrix th, .variant-b .matrix td { text-align: left; vertical-align: top; }
+.variant-b thead th { position: sticky; top: 0; z-index: 1; background: var(--color-paper); padding: var(--space-4) var(--space-3) var(--space-4) 0; border-bottom: 1px solid var(--color-line-strong); }
+.variant-b thead .col-feature { width: 31%; }
+.variant-b thead .col-plan { width: 23%; padding-left: var(--space-3); padding-right: var(--space-4); }
+.variant-b .plan-head { display: grid; gap: var(--space-1); padding: var(--space-3); margin-inline: calc(-1 * var(--space-3)); border-radius: var(--radius-md); }
+.variant-b .col-lead .plan-head { background: var(--color-surface); box-shadow: var(--shadow-1), 0 0 0 1px var(--color-line); }
+.variant-b .plan-name { font-family: var(--font-serif); font-size: var(--text-xl); font-weight: 600; }
+.variant-b .plan-seats { font-size: var(--text-sm); font-weight: 400; color: var(--color-text-secondary); }
+.variant-b .plan-price { margin-top: var(--space-2); font-size: var(--text-2xl); font-weight: 600; line-height: 1; }
+.variant-b .plan-price small { font-size: var(--text-sm); font-weight: 400; color: var(--color-text-secondary); }
+.variant-b .plan-billed { font-size: var(--text-sm); font-weight: 400; color: var(--color-text-secondary); }
+.variant-b .plan-head .btn { margin-top: var(--space-3); width: 100%; min-height: 40px; padding: 0 var(--space-3); font-size: var(--text-sm); }
+.variant-b tbody .group th { padding: var(--space-5) 0 var(--space-2); font-size: var(--text-sm); font-weight: 600; color: var(--color-accent); border-bottom: 1px solid var(--color-line); }
+.variant-b tbody tr:not(.group) th, .variant-b tbody td { padding: var(--space-3) var(--space-3) var(--space-3) 0; border-bottom: 1px solid var(--color-line); font-weight: 400; transition: background-color var(--duration-fast) var(--ease-standard); }
+.variant-b tbody td { padding-left: var(--space-3); }
+.variant-b tbody tr:not(.group):hover > * { background: var(--color-accent-soft); }
+.variant-b td.yes { color: var(--color-accent); font-weight: 600; }
+.variant-b td.no { color: var(--color-muted); }
+.variant-b tfoot th, .variant-b tfoot td { padding: var(--space-5) var(--space-4) 0 0; font-weight: 400; }
+.variant-b tfoot td { padding-left: var(--space-3); }
+.variant-b tfoot .btn { width: 100%; min-height: 40px; padding: 0 var(--space-3); font-size: var(--text-sm); }
+.variant-b tfoot .trial { display: block; margin-top: var(--space-2); font-size: var(--text-xs); color: var(--color-text-secondary); }
+/* zone:matrix:end */
+
+/* zone:faq:start */
+.variant-b .faq { margin-top: var(--space-8); max-width: var(--width-measure); }
+.variant-b .faq h2 { font-size: var(--text-2xl); margin-bottom: var(--space-4); }
+.variant-b .faq dl > div { padding: var(--space-4) 0; border-top: 1px solid var(--color-line); }
+.variant-b .faq dt { font-weight: 600; margin-bottom: var(--space-1); }
+.variant-b .faq dd { margin: 0; color: var(--color-text-secondary); }
+/* zone:faq:end */
+
+@media (max-width: 1023px) {
+  .variant-b thead .col-feature { width: 28%; }
+  .variant-b thead .col-plan { width: 24%; }
+  .variant-b .plan-price { font-size: var(--text-xl); }
+}
+@media (max-width: 639px) {
+  .variant-b { padding-top: var(--space-5); padding-bottom: var(--space-7); }
+  .variant-b .page-head h1 { font-size: var(--text-2xl); }
+  .variant-b .toolbar { width: 100%; }
+  .variant-b .toolbar .segmented { display: flex; width: 100%; }
+  .variant-b .toolbar .segmented label { flex: 1; justify-content: center; }
+  /* Recomposed: a plan picker shows one plan column at a time next to the feature names. */
+  .variant-b .plan-picker { display: flex; width: 100%; margin-bottom: var(--space-3); }
+  .variant-b .plan-picker label { flex: 1; justify-content: center; }
+  .variant-b thead .col-feature { width: 50%; }
+  .variant-b thead .col-plan { width: 50%; }
+  .variant-b thead th { position: static; }
+  .variant-b .matrix-wrap[data-mobile-plan="solo"] [data-plan]:not([data-plan="solo"]),
+  .variant-b .matrix-wrap[data-mobile-plan="studio"] [data-plan]:not([data-plan="studio"]),
+  .variant-b .matrix-wrap[data-mobile-plan="firm"] [data-plan]:not([data-plan="firm"]) { display: none; }
+  .variant-b .col-lead .plan-head { box-shadow: none; background: transparent; }
+  .variant-b .plan-head { margin-inline: 0; padding-inline: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .variant-b tbody tr:not(.group) th, .variant-b tbody td { transition: none; }
+}

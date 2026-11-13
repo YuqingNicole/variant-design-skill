@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 2,
+  "scenario": "bakery",
+  "framework": "html",
+  "language": "zh",
+  "activeVariant": null,
+  "selectedVariant": null,
+  "taskContract": {
+    "primaryJob": "访客查看半山面包今天还剩哪些面包、什么时候能到店，并留下手机号和取货日期预订明早的面包",
+    "data": "variant-output/shared/bakery-data.js：品牌与标语、三款面包（名称、价格、今日剩余）、营业时间与地址、预订确认文案",
+    "requiredFunctions": [
+      "页内导航：今日面包 / 到店 / 预订",
+      "今日面包列表：名称、价格、剩余数量或售罄",
+      "到店信息：营业时间与地址",
+      "预订表单：手机号 + 取货日期，行内校验，提交中与成功态"
+    ],
+    "successCriteria": [
+      "首屏能判断今天有没有面包可买，或者明早能不能订",
+      "手机号 / 日期填错时给出具体的修正提示，不出现泛化错误文案",
+      "提交后出现确认信息，并可以再订一份"
+    ]
+  },
+  "recommendation": {
+    "variant": "A",
+    "reason": "原页面的信息里最会变、最被反复查看的是‘剩几个 / 已售罄’，A 把它做成首屏主体，预订栏常驻一旁，老客户在手机上一屏能完成‘看库存—订明早’。这是基于页面已有信息结构的推断；A 是否真的提高预订量、B 的逐款预订是否被店里接受，都还没有测试。"
+  },
+  "variants": {
+    "A": {
+      "name": "柜台黑板",
+      "entry": "variant-bakery-A.html",
+      "files": ["variant-bakery-A.html", "variant-bakery-A.css"],
+      "tokens": {
+        "palette": "品牌锁定：flour / crust / ink",
+        "colors": { "surface": "var(--flour)", "primary": "var(--crust)", "text": "var(--ink)" },
+        "fonts": ["Songti SC"],
+        "extensions": "variant-output/shared/brand-extensions.css"
+      },
+      "comparison": {
+        "optimizes": "库存先行：首屏就是今日面包板，剩余数量用大字和小方块显示，售罄项划掉并直接给出‘明早可预订’；预订栏在桌面端常驻右侧，手机端有固定底栏跳转。",
+        "tradeoff": "品牌故事和标语被压成一行，第一次来的访客对这家店的了解最少；底部固定条占用手机屏幕空间。",
+        "bestFor": "老客户上午在手机上反复查看‘还有没有’，并在售罄后立刻改订明早。"
+      },
+      "version": 1,
+      "history": [],
+      "undo": []
+    },
+    "B": {
+      "name": "预订台",
+      "entry": "variant-bakery-B.html",
+      "files": ["variant-bakery-B.html", "variant-bakery-B.css"],
+      "tokens": {
+        "palette": "品牌锁定：flour / crust / ink",
+        "colors": { "surface": "var(--flour)", "primary": "var(--crust)", "text": "var(--ink)" },
+        "fonts": ["Songti SC"],
+        "extensions": "variant-output/shared/brand-extensions.css"
+      },
+      "comparison": {
+        "optimizes": "预订转化：单栏一张表单，先选明早要的面包和数量（今日剩余作为括号内的参考信息），再填手机号和日期，底部实时汇总‘明早取 × 共 ¥’。",
+        "tradeoff": "表单从两个字段变成按款预订，店里要按单备货、核对数量，运营成本上升；到店信息被推到页面末尾。",
+        "bestFor": "供不应求、希望把当天的产量尽量提前订掉的阶段，或者准备上线按款预订流程时。"
+      },
+      "version": 1,
+      "history": [],
+      "undo": []
+    },
+    "C": {
+      "name": "山前小报",
+      "entry": "variant-bakery-C.html",
+      "files": ["variant-bakery-C.html", "variant-bakery-C.css"],
+      "tokens": {
+        "palette": "品牌锁定：flour / crust / ink",
+        "colors": { "surface": "var(--flour)", "primary": "var(--crust)", "text": "var(--ink)" },
+        "fonts": ["Songti SC"],
+        "extensions": "variant-output/shared/brand-extensions.css"
+      },
+      "comparison": {
+        "optimizes": "到店与品牌印象：大字标题和两段店铺叙事放在前面，地址可点开地图，营业时间做成七天表并标出今天，面包用点线菜单排版，预订收尾。",
+        "tradeoff": "库存和预订都在首屏之下，手机上要滚两三屏才能下单；页面更长，信息密度最低。",
+        "bestFor": "新店宣传、被分享到社交媒体时的落地页，或者访客大多是第一次来、想先知道这是一家什么店。"
+      },
+      "version": 1,
+      "history": [],
+      "undo": []
+    }
+  },
+  "shared": ["shared/bakery-data.js", "shared/base.css", "shared/brand-extensions.css"],
+  "notes": [
+    "品牌锁定来源：项目根目录 style.css（--flour #f7f1e6 / --crust #8a4b22 / --ink #2b2118，Songti SC）。三个方向通过 ../style.css 引用品牌，不复制 token。",
+    "按钮沿用品牌衬线字体而不是界面无衬线：品牌只定义了一种字体，锁定优先于风格建议。",
+    "B 的按款预订是功能扩展，不是原表单的要求；是否接受由店里决定。"
+  ],
+  "designSystem": {
+    "confirmed": true,
+    "file": "style.css",
+    "fonts": ["Songti SC"],
+    "extensions": ["variant-output/shared/brand-extensions.css"],
+    "confirmedAt": "2026-11-13T03:45:00.000Z",
+    "source": null
+  }
+}

@@ -3,7 +3,7 @@
 The repository has two versioned products. Keep their versions independent:
 
 - **Variant Design skill and plugin: `1.2.0`** — the canonical value is `VERSION`. The Codex manifest at `plugin/plugin.json` and Claude marketplace entry in `.claude-plugin/marketplace.json` must match it. See [CHANGELOG.md](../CHANGELOG.md) for this release's notes.
-- **Website package: `0.4.1`** — recorded in `website/package.json`. This is package metadata, not a separate public release tag.
+- **Website package: `0.5.0`** — recorded in `website/package.json`. This is package metadata, not a separate public release tag.
 
 ## When to bump
 

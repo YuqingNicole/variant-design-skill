@@ -123,7 +123,10 @@ function card(e) {
 function entryBody(e) {
   const directions = e.directions.map(d => `<section><h2>${d.id} · ${escape(d.name[0])}</h2><img src="/media/${e.slug}/${escape(d.media[0].file)}" width="${d.media[0].width}" height="${d.media[0].height}" alt="${escape(d.media[0].alt[0])}"><dl><dt>优化</dt><dd>${escape(d.comparison.optimizes[0])}</dd><dt>取舍</dt><dd>${escape(d.comparison.tradeoff[0])}</dd><dt>适合</dt><dd>${escape(d.comparison.bestFor[0])}</dd></dl></section>`).join('');
   const recommendation = e.recommendation ? `<aside><h2>推荐 ${e.recommendation.variant}</h2><p>${escape(e.recommendation.reason[0])}</p></aside>` : '';
-  return `<main><p><a href="/">作品</a> / <a href="/c/${e.category}">${escape(categoryNames[e.category] ?? e.category)}</a></p><h1>${escape(e.title[0])}</h1><p>${escape(e.summary[0])}</p><p>${escape(kindLabel(e))} · ${escape(e.credit.name)} · ${e.publishedAt}</p><p>任务：${escape(e.brief[0])}</p>${directions}${recommendation}</main>`;
+  // How a verified case was made, the same facts the client renders (LibraryPage HowItWasMade).
+  const r = e.run, facts = r ? [['运行环境', r.model ? `${r.agent} · ${r.model}` : r.agent], ['日期', r.date], ['用时', r.durationSec === undefined ? null : `${Math.floor(r.durationSec / 60)} min ${r.durationSec % 60} s`], ['费用', r.costUsd === undefined ? null : `$${r.costUsd.toFixed(2)}`], ['轮次', r.turns === undefined ? null : String(r.turns)]].filter(f => f[1] !== null) : [];
+  const run = r ? `<section><h2>怎么做出来的</h2><dl>${facts.map(([k, v]) => `<dt>${k}</dt><dd>${escape(v)}</dd>`).join('')}</dl>${r.prompt ? `<p>给 agent 的原话，一次无人值守运行：</p><pre>${escape(r.prompt[0])}</pre>` : ''}${r.commands?.length ? `<p>运行中调用的技能命令，按先后：</p><ol>${r.commands.map(c => `<li><code>${escape(c)}</code></li>`).join('')}</ol>` : ''}<p>数字来自运行记录；截图取自 agent 自己生成的预览文件。${r.record ? ` <a href="${repository}/blob/master/${escape(r.record)}">阅读运行记录</a>` : ''}</p></section>` : '';
+  return `<main><p><a href="/cases">案例</a> / <a href="/c/${e.category}">${escape(categoryNames[e.category] ?? e.category)}</a></p><h1>${escape(e.title[0])}</h1><p>${escape(e.summary[0])}</p><p>${escape(kindLabel(e))} · ${escape(e.credit.name)} · ${e.publishedAt}</p><p>任务：${escape(e.brief[0])}</p>${directions}${recommendation}${run}</main>`;
 }
 
 function guideData(g, site, lang = 'zh') {

@@ -1,0 +1,158 @@
+{
+  "slug": "motion",
+  "title": [
+    "半山面包：同一页面的三套动效",
+    "Banshan Bakery: three motion treatments for one page"
+  ],
+  "summary": [
+    "同一个面包店页面和品牌，分别用最低打扰、实体反馈和跟着任务走的动效处理按压、悬停和成功确认。",
+    "The same bakery page and brand, with press, hover and success handled three ways: least disturbance, physical feedback, and motion that follows the task."
+  ],
+  "brief": [
+    "给面包店的单页加克制而有用的动效：按钮按压、今日面包列表项的悬停、预订成功提示的出现，在触屏和“减少动效”设置下也要好用。页面是纯 HTML，品牌沿用 style.css。",
+    "Add restrained, useful motion to the bakery's one-page site: the button press, hover on today's bread list items, and the appearance of the order confirmation, working on touch screens and under the reduce-motion setting too. Plain HTML; the brand comes from style.css."
+  ],
+  "category": "component",
+  "tags": [
+    "motion",
+    "bakery",
+    "plain-html",
+    "reduced-motion"
+  ],
+  "source": "own",
+  "kind": "verified",
+  "credit": {
+    "name": "Variant Design",
+    "url": "https://github.com/YuqingNicole/variant-design-skill"
+  },
+  "directions": [
+    {
+      "id": "A",
+      "name": [
+        "纸面",
+        "Paper"
+      ],
+      "comparison": {
+        "optimizes": [
+          "最低打扰：按压只加深颜色并缩小 2%，列表悬停只换整行底色帮助对齐，成功提示在按钮下方原地淡入，不移动任何东西。",
+          "Least disturbance: a press only darkens the colour and shrinks by 2%, list hover only changes the whole row's background to help alignment, and the success notice fades in below the button in place without moving anything."
+        ],
+        "tradeoff": [
+          "确认感最弱，提示离视线焦点稍远；悬停只是扫读辅助，没有附带动作，对触屏用户等于没有。",
+          "The weakest sense of confirmation, with the notice a little away from the point of focus; hover is only a scanning aid with no action attached, so for touch users it is as if it were not there."
+        ],
+        "bestFor": [
+          "想保持原页面单栏阅读感、维护成本最低、访客以手机为主又不想加交互的店主。",
+          "A shop owner who wants to keep the original single-column reading feel, the lowest maintenance, mostly phone visitors and no added interaction."
+        ]
+      },
+      "media": [
+        {
+          "file": "a.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "单栏页面，按钮和列表行只用颜色变化，成功提示在按钮下方",
+            "A single-column page where the button and list rows change only colour, with the success notice below the button"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": [
+        "柜台",
+        "Counter"
+      ],
+      "comparison": {
+        "optimizes": [
+          "实体反馈：按钮有 2px 底边，按下时下沉并压扁到 98%，提交中有进度线；列表悬停长出左侧标记并把价格变品牌色；成功提示条从底部上浮 16px，6 秒后退场，可关闭。桌面端预订面板固定在右侧。",
+          "Physical feedback: buttons have a 2px bottom edge, sink and squash to 98% when pressed, and show a progress line while submitting; list hover grows a marker on the left and turns the price brand-coloured; the success bar floats up 16px from the bottom, leaves after 6 seconds and can be dismissed. On desktop the order panel stays fixed on the right."
+        ],
+        "tradeoff": [
+          "动效最多、JS 最多；提示条在手机上可能被软键盘或拇指遮挡，所以表单下方还要保留一行静态确认；下沉效果依赖阴影，减少动效下只剩颜色变化。",
+          "The most motion and the most JavaScript; on phones the bar may be hidden by the soft keyboard or a thumb, so a static confirmation line stays under the form; the sinking effect relies on shadow, and under reduced motion only the colour change remains."
+        ],
+        "bestFor": [
+          "桌面访客较多、希望预订入口始终可见（比如公司团购或门店自用的平板点单），以及想要明显“按下去了”手感的场景。",
+          "Mostly desktop visitors who want the order entry always in view (a company's group order, or a tablet the shop uses itself), and anywhere a clear 'pressed' feel matters."
+        ]
+      },
+      "media": [
+        {
+          "file": "b.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "桌面双栏，右侧固定预订面板，按钮带底边",
+            "Two desktop columns with the order panel fixed on the right and buttons with a bottom edge"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": [
+        "先选面包",
+        "Pick the Loaf First"
+      ],
+      "comparison": {
+        "optimizes": [
+          "动效跟着任务走：列表行悬停露出“预订这款”（触屏和键盘下始终可见），点选后带到表单；提交按钮按下缩小 3%，成功后按钮自己变成深色确认并画出对勾，详情从 0 高度展开，被订的那一行闪一次“已为你预订 1 个”。",
+          "Motion follows the task: hovering a list row reveals 'order this one' (always visible on touch and keyboard), and choosing it leads to the form; the submit button shrinks 3% when pressed, and on success the button itself turns into a dark confirmation and draws a tick, the details expand from zero height, and the ordered row flashes 'reserved 1 for you' once."
+        ],
+        "tradeoff": [
+          "在原任务上加了“选品项”这一步和对应状态，JS 分支最多；按钮变成确认后需要“再订一份”才能重来；对勾描边和展开在减少动效下会退化为直接出现。",
+          "Adds a 'choose an item' step and its states to the original task, with the most JavaScript branches; once the button has become the confirmation, 'order another' is needed to start again; the tick stroke and the expansion degrade to appearing at once under reduced motion."
+        ],
+        "bestFor": [
+          "访客以手机为主、面包款式少但余量紧张（需要先抢指定款）的店，以及希望确认信息出现在手指刚按过的位置的场景。",
+          "Shops with mostly phone visitors, few kinds of bread and tight stock (customers need to claim a specific loaf first), and anywhere the confirmation should appear where the finger just pressed."
+        ]
+      },
+      "media": [
+        {
+          "file": "c.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "菜单在前，每行带“预订这款”按钮，表单里多一行品项",
+            "The menu first, each row with an 'order this one' button, and an extra item line in the form"
+          ]
+        }
+      ]
+    }
+  ],
+  "recommendation": {
+    "variant": "C",
+    "reason": [
+      "面包店页面的多数访问来自手机，C 把成功确认放在用户刚按下的按钮上，触屏与桌面体验一致，悬停动效也有实际用途（露出“预订这款”）而不是装饰。这是基于动效规则的假设，没有做过用户测试；B 的提示条在手机键盘弹出时可能被遮挡，A 则是最省心、最不依赖 JS 的底线方案。若不想增加“先选品项”这一功能，可以保留 C 的按钮确认但去掉行内动作。",
+      "Most visits to a bakery page come from phones. C puts the success confirmation on the button the user just pressed, so touch and desktop behave the same, and its hover motion has a real use (revealing 'order this one') rather than being decoration. This is an assumption based on the motion rules, not user-tested; B's bar may be covered when the phone keyboard opens, and A is the easiest, least JavaScript-dependent baseline. If the 'choose an item first' feature is unwanted, keep C's button confirmation and drop the inline action."
+    ]
+  },
+  "evidence": {
+    "context": "website/content/evidence/motion/variant-output/.variant-context.json"
+  },
+  "run": {
+    "agent": "Claude Code 2.1.323",
+    "model": "claude-fable-5-1",
+    "date": "2026-11-13",
+    "durationSec": 1011,
+    "costUsd": 7,
+    "turns": 39,
+    "commands": [
+      "node <skill>/scripts/project-profile.mjs scan . index.html",
+      "node <skill>/scripts/quality-gate.mjs variant-output --strict",
+      "node <skill>/scripts/delivery-check.mjs variant-output --project .",
+      "node <skill>/scripts/build-preview.mjs variant-output .",
+      "node <skill>/scripts/open-preview.mjs variant-output/_compare.html"
+    ],
+    "record": "docs/research/2026-11-13-case-series.md",
+    "prompt": [
+      "使用完整 Variant Design 技能。在当前项目中先检查页面结构和设计系统，再生成保留核心任务的 A/B/C 三个设计方向。这次的重点是动效：三个方向都要为按钮按压、今日面包列表项的悬停、以及预订成功提示出现加上克制而有用的动效，在触屏和“减少动效”设置下也要好用。打开三版预览，说明各方向动效的取舍与适用场景，并给出有理由的推荐，但先不要替我选定最终方案。（这是无人值守运行：不要启动常驻服务器，生成可直接打开的预览文件即可。）",
+      "Use the full Variant Design skill. In this project, first check the page structure and design system, then generate three design directions A/B/C that keep the core task. This time the focus is motion: all three directions must add restrained, useful motion to the button press, the hover on today's bread list items, and the appearance of the order confirmation, and it must work on touch screens and under the reduce-motion setting. Open the three previews, explain each direction's motion tradeoffs and where it fits, and recommend one with reasons, but do not choose the final direction for me yet. (This is an unattended run: do not start a long-running server; preview files that open directly are enough.)"
+    ]
+  },
+  "featured": true,
+  "publishedAt": "2026-11-13"
+}

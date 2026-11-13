@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 2,
+  "scenario": "pricing",
+  "framework": "next",
+  "language": "zh",
+  "activeVariant": null,
+  "selectedVariant": null,
+  "taskContract": {
+    "primaryJob": "Let a studio owner (1–20 people) compare Solo, Studio and Firm and start a 30-day trial with the right plan and billing cadence",
+    "data": "variant-output/shared/pricing-data.ts, which re-exports components/plans.ts (plans, annualDiscount, faqs) and the CurrencyProvider context",
+    "requiredFunctions": [
+      "toggle yearly/monthly billing with the 20% annual discount",
+      "switch display currency USD/EUR/GBP through useCurrency",
+      "see price, seats and features for each plan",
+      "follow each plan's call to action to /signup?plan=<id>&billing=<annual|monthly>",
+      "read the three FAQs"
+    ],
+    "successCriteria": "The visitor can tell which plan fits, what each charge is and when it lands, before clicking the call to action"
+  },
+  "designDeclaration": {
+    "user_context": "Owner of a 1–20 person studio comparing plans before a trial",
+    "primary_job": "Choose the plan that fits the team and start the trial with the intended billing cadence",
+    "success_moment": "Clicking the plan's call to action knowing the seat limit, the exact amount billed and that nothing is charged for 30 days",
+    "trust_boundary": "Prices are the project's USD list prices; EUR/GBP amounts are labelled as approximate conversions; the first-charge date is computed from the visitor's clock and labelled 'on or after'",
+    "hierarchy": [
+      "plan fit (seats, features)",
+      "price with billing cadence and the amount actually charged",
+      "call to action with trial terms"
+    ],
+    "chosen_tension": "clarity > persuasion",
+    "non_negotiables": [
+      "never hide that yearly pricing is billed once a year",
+      "never round a billed amount",
+      "no invented social proof, metrics or testimonials",
+      "keep the project's own copy; no taglines"
+    ],
+    "evidence_status": "real"
+  },
+  "recommendation": {
+    "variant": "A",
+    "reason": "Seat limits are the one dimension that separates the plans for this audience, and A answers 'which plan fits' before asking the visitor to read anything. Hypotheses, untested: A shortens time-to-choice for visitors who know their team size; B wins when the decision is Studio vs Firm on a specific capability; C reduces billing surprises. Tested so far: all three keep the same data, controls and links, pass the static gates and render at 1200px and 390px."
+  },
+  "variants": {
+    "A": {
+      "entry": "VariantA.tsx",
+      "files": [
+        "VariantA.tsx",
+        "VariantA.css"
+      ],
+      "tokens": {
+        "palette": "Ledger brand (app/globals.css)",
+        "fonts": [
+          "Source Sans 3",
+          "Source Serif 4"
+        ],
+        "colors": {
+          "ink": "#1d2a24",
+          "paper": "#f6f4ee",
+          "accent": "#2f6f4f",
+          "muted": "#6b746e"
+        },
+        "radius": "var(--radius) 6px; extensions --radius-sm/lg/pill"
+      },
+      "comparison": {
+        "optimizes": "先回答“哪个方案适合我”：输入团队人数后，适配的方案被标出，并说明距离下一档还剩多少席位；三张卡片并列，主按钮只落在适配方案上。",
+        "tradeoff": "比较之前多了一步输入；把席位数当作首要决策维度，对关心具体功能（审批流、多币种）的访客帮助有限；功能仍以“Everything in Solo”的累加写法呈现。",
+        "bestFor": "清楚自己团队规模、想快速得到答案的工作室负责人；首次访问定价页的流量。"
+      },
+      "version": 1,
+      "history": [],
+      "undo": []
+    },
+    "B": {
+      "entry": "VariantB.tsx",
+      "files": [
+        "VariantB.tsx",
+        "VariantB.css"
+      ],
+      "tokens": {
+        "palette": "Ledger brand (app/globals.css)",
+        "fonts": [
+          "Source Sans 3",
+          "Source Serif 4"
+        ],
+        "colors": {
+          "ink": "#1d2a24",
+          "paper": "#f6f4ee",
+          "accent": "#2f6f4f",
+          "muted": "#6b746e"
+        },
+        "radius": "var(--radius) 6px; extensions --radius-sm/lg/pill"
+      },
+      "comparison": {
+        "optimizes": "跨方案逐项比较：一张功能×方案矩阵，“Everything in Solo”被展开成真实行并按首次出现的方案分组，“只看差异”开关隐藏三档都有的行，价格和按钮固定在表头随滚动可见。",
+        "tradeoff": "信息密度最高，首屏阅读慢，价格不如卡片醒目；默认突出 Studio 列是未经验证的假设；窄屏需用方案切换器一次只看一列。",
+        "bestFor": "在 Studio 与 Firm 之间犹豫、看重某项具体能力的团队；需要把页面转给会计或合伙人逐项核对的场景。"
+      },
+      "version": 1,
+      "history": [],
+      "undo": []
+    },
+    "C": {
+      "entry": "VariantC.tsx",
+      "files": [
+        "VariantC.tsx",
+        "VariantC.css"
+      ],
+      "tokens": {
+        "palette": "Ledger brand (app/globals.css)",
+        "fonts": [
+          "Source Sans 3",
+          "Source Serif 4"
+        ],
+        "colors": {
+          "ink": "#1d2a24",
+          "paper": "#f6f4ee",
+          "accent": "#2f6f4f",
+          "muted": "#6b746e"
+        },
+        "radius": "var(--radius) 6px; extensions --radius-sm/lg/pill"
+      },
+      "comparison": {
+        "optimizes": "先讲清钱怎么扣：单栏阅读式排版，每个方案同时显示年付与月付两套价格和全年总额，按钮上方写明首笔扣款金额与日期，页面末尾用时间线交代 Day 0 / Day 30 / 首次扣款。",
+        "tradeoff": "页面最长、视觉冲击最弱，没有突出任何一档，三个主按钮纵向排列；不回答“哪档适合我”，仍需访客自己对照席位。",
+        "bestFor": "谨慎型买家、要向会计或合伙人解释费用的人、以及 Firm 这类走“Talk to us”路径的大团队；也适合作为结账前的条款确认页。"
+      },
+      "version": 1,
+      "history": [],
+      "undo": []
+    }
+  },
+  "notes": [
+    "Brand-locked exploration: fonts, colors and controls identical across A/B/C; layout, hierarchy and density differ.",
+    "Billed amounts are shown exactly (e.g. $9.60) instead of the current page's rounding, because this is a money page.",
+    "Default exports wrap the page in CurrencyProvider for the standalone preview; integrate the named PricingPageX export because app/layout.tsx already provides the context.",
+    "shared/preview-fonts.css loads the brand fonts from Google Fonts for the preview only; the project itself does not load them."
+  ],
+  "designSystem": {
+    "confirmed": true,
+    "file": "app/globals.css",
+    "fonts": [
+      "Source Sans 3",
+      "Source Serif 4"
+    ],
+    "extensions": [
+      "variant-output/shared/ledger-extensions.css"
+    ],
+    "confirmedAt": "2026-11-13T03:50:00.000Z",
+    "source": null
+  },
+  "shared": [
+    "shared/pricing-data.ts",
+    "shared/Controls.tsx",
+    "shared/ledger-extensions.css",
+    "shared/ledger-controls.css",
+    "shared/preview-fonts.css"
+  ],
+  "verification": {
+    "static": {
+      "qualityGateStrict": "pass (12 files, 0 errors, 0 warnings)",
+      "deliveryCheck": "pass with 4 warnings: color-mix pairs the static checker cannot compute; --color-text-secondary measured in Chrome as rgb(78,89,83) = 6.63:1 on paper",
+      "typecheck": "tsc --noEmit -p .variant-work/tsconfig.preview.json exit 0"
+    },
+    "browser": {
+      "tool": "Google Chrome headless (new) via file://, .variant-work/probe-*.html",
+      "viewports": [
+        1200,
+        390
+      ],
+      "observed": [
+        "React mounted for A/B/C at both widths",
+        "fonts rendered: Source Sans 3 body, Source Serif 4 headings (Google Fonts, preview only)",
+        "no horizontal overflow at 390px after box-sizing fix",
+        "focus-visible outline measured: solid 2px rgb(47,111,79) on first button",
+        "primary button white on accent 5.99:1; segmented checked paper on ink 13.55:1",
+        "signup links carry plan id and billing cadence"
+      ],
+      "unverified": [
+        "keyboard tab order and screen-reader output",
+        "prefers-reduced-motion emulation (CSS-only transitions, reviewed in source)",
+        "hover states",
+        "Next.js server rendering of the named exports",
+        "Safari/Firefox"
+      ]
+    },
+    "screenshots": ".variant-work/shots/",
+    "checkedAt": "2026-11-13T05:00:00.000Z"
+  }
+}

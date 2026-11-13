@@ -36,12 +36,14 @@
 - [ ] 【维护者】审阅 `/guides` 的英文（5 篇）。2026-11-04 代理已做事实和语言初审：修正 Git、旧快照和授权说明，改写的 3 篇英文标为 `draft`，生产模式的列表与直达页面也遵守该状态；2 篇未改的旧英文保留原状态。均不算人工审定，审完改成 `complete` 并写 `reviewedAt`。审阅包见 `docs/research/2026-11-04-content-review.md`。
 - [ ] 【维护者】确认对比页草稿 `docs/drafts/compare-page.md`（Impeccable、Taste Skill、frontend-design，2026-11-04 已重新核对公开文档和源码许可证；不算实际运行），决定放在 `/compare` 还是 `/guides`，确认后由代理做成页面。涉及 Anthropic 的发布条款仍待确认。
 - [ ] `/skills` 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 `evals/run.mjs` 在一次性项目里跑 Impeccable、Taste Skill、UI UX Pro Max，公开记录后收录。发布涉及 Anthropic 技能的对比前，先由【维护者】确认条款。
+- [ ] 案例系列（维护者 2026-11-13 定目标"展现 AI design 的全部实力和一些教程性内容"，选先做案例）：第一批 3 个已验证案例 `bakery`、`motion`、`ledger` 来自评测夹具上的真实运行，案例页有了「怎么做出来的」，记录见 `docs/research/2026-11-13-case-series.md`（每个运行约 $6–9、13–18 分钟，只跑了 Claude Code）。下一批：`harbor-chain` 和 `native-vite` 两个多轮夹具，展示 pick、设计系统、apply、undo 和接入回滚；再找两三个外部的真实小 brief 做夹具。首页更显眼的案例区等第 6 组的数据拆分。教程套件（第二条路）还没开始。
 
 ## 5. 产品
 
 - [ ] 决定要不要做“在比较页上直接选某个区域”：Impeccable 的 Live Mode、Subframe 和 Claude Design 都让用户在页面上点选。先决定做还是明确不做，再动手。
 - [ ] 完善账号体系：先定匿名使用与登录账号的边界，再规划注册/登录、个人资料、收藏与灵感同步、数据导出和删除；实现前明确认证服务、隐私说明和账号数据归属。
 - [ ] 【维护者】决定要不要做公开的界面代码检查页。评估见 `docs/research/2026-11-02-antipattern-catalog-evaluation.md`：建议做成一页、先把规则改成共用数据，不仿 `/slop` 做视觉目录。
+- [ ] 技能的三处记录问题（2026-11-13 案例运行里发现，见 `docs/research/2026-11-13-case-series.md`）：`.variant-context.json` 的 `recommendation.reason` 应跟随对话语言（ledger 运行里对话和方向说明都是中文，理由记成了英文，中文案例页只能原样显示）；每个方向应记录名字（ledger 的 context 没有 `name`，bakery 有）；`evals/README.md` 要写明运行器隔离不了机器上已有的 node 模块（bakery 运行借用了本机另一个项目里的 Playwright 做自检）。
 
 ## 6. 网站维护
 

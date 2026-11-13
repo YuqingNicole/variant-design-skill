@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>半山面包 · 每天早上七点出炉</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="shared/brand-extensions.css">
+<link rel="stylesheet" href="shared/base.css">
+<link rel="stylesheet" href="variant-bakery-C.css">
+</head>
+<body>
+<header class="site-header" data-zone="header">
+  <a class="site-brand" href="#top">半山面包</a>
+  <nav class="site-nav" aria-label="页面导航"><a href="#menu">今日面包</a><a href="#visit">到店</a><a href="#order">预订</a></nav>
+</header>
+
+<main class="page" id="top">
+  <!-- zone:hero:start -->
+  <section class="masthead" data-zone="hero">
+    <p class="date" data-today></p>
+    <h1>每天早上七点出炉</h1>
+    <p class="deck">天然酵种、本地小麦，杭州西溪路 128 号。卖完即止。</p>
+  </section>
+  <!-- zone:hero:end -->
+
+  <!-- zone:story:start -->
+  <section class="story" data-zone="story" aria-label="关于这家店">
+    <p data-story="0"></p>
+    <p data-story="1"></p>
+  </section>
+  <!-- zone:story:end -->
+
+  <div class="two-up">
+    <!-- zone:visit:start -->
+    <section id="visit" class="visit" data-zone="visit" aria-labelledby="visit-title">
+      <h2 id="visit-title">到店</h2>
+      <p class="address"><a href="https://uri.amap.com/search?keyword=%E6%9D%AD%E5%B7%9E%E8%A5%BF%E6%BA%AA%E8%B7%AF128%E5%8F%B7" rel="noopener" target="_blank">杭州西溪路 128 号<span class="visually-hidden">（在高德地图中打开，新窗口）</span></a></p>
+      <table class="week" aria-label="每周营业时间">
+        <tbody data-week></tbody>
+      </table>
+      <p class="note">十点以后品种会少，想挑的话早些来。</p>
+    </section>
+    <!-- zone:visit:end -->
+
+    <!-- zone:menu:start -->
+    <section id="menu" class="menu" data-zone="menu" aria-labelledby="menu-title">
+      <h2 id="menu-title">今日面包</h2>
+      <ul class="menu-list" data-breads></ul>
+      <p class="note">柜台今早 <span class="num" data-updated></span> 更新。售罄的可以预订明早。</p>
+    </section>
+    <!-- zone:menu:end -->
+  </div>
+
+  <!-- zone:order:start -->
+  <section id="order" class="order" data-zone="order" aria-labelledby="order-title">
+    <h2 id="order-title">预订</h2>
+    <p class="lead">留个手机号和日期，明早出炉后为你留到十点。</p>
+    <form novalidate>
+      <div class="row">
+        <label class="field">
+          <span>手机号</span>
+          <input name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="11 位手机号" required>
+          <span class="field-error" data-error-for="phone" aria-live="polite"></span>
+        </label>
+        <label class="field">
+          <span>取货日期</span>
+          <input name="date" type="date" required>
+          <span class="field-hint">最早明天（<span data-earliest></span>），周一休息。</span>
+          <span class="field-error" data-error-for="date" aria-live="polite"></span>
+        </label>
+      </div>
+      <p class="form-status" data-status aria-live="polite"></p>
+      <button class="btn btn-primary" type="submit">提交预订</button>
+    </form>
+    <div class="success" data-success hidden role="status">
+      <h3>已收到，我们会短信确认。</h3>
+      <p data-success-detail></p>
+      <p><button class="btn btn-quiet" type="button" data-again>再订一份</button></p>
+    </div>
+  </section>
+  <!-- zone:order:end -->
+</main>
+
+<footer class="site-footer" data-zone="footer"><span>© 半山面包</span><span>周二至周日 7:00–14:00 · 周一休息</span></footer>
+
+<script src="shared/bakery-data.js"></script>
+<script>
+(function () {
+  var B = window.BANSHAN, d = B.data;
+  document.querySelector('[data-today]').textContent = '今天是 ' + B.todayLabel();
+  document.querySelector('[data-updated]').textContent = d.stockUpdatedAt;
+  document.querySelector('[data-earliest]').textContent = B.describeEarliest();
+  document.querySelectorAll('[data-story]').forEach(function (p) { p.textContent = d.story[Number(p.getAttribute('data-story'))]; });
+  var todayIndex = (new Date().getDay() + 6) % 7; /* 周一为 0 */
+  document.querySelector('[data-week]').innerHTML = d.week.map(function (w, i) {
+    var cls = [];
+    if (!w.open) cls.push('closed');
+    if (i === todayIndex) cls.push('today');
+    return '<tr class="' + cls.join(' ') + '"><th scope="row">' + w.day + (i === todayIndex ? '（今天）' : '') + '</th><td>' + (w.open || '休息') + '</td></tr>';
+  }).join('');
+  B.renderBreads(document.querySelector('[data-breads]'), function (bread) {
+    return '<li class="' + (bread.stock === 0 ? 'is-out' : '') + '">' +
+      '<span class="line"><span class="name">' + bread.name + '</span><span class="leader" aria-hidden="true"></span></span>' +
+      '<span class="price num">' + B.formatPrice(bread.price) + '</span>' +
+      '<span class="desc">' + bread.desc + '</span>' +
+      '<span class="stock">' + B.stockLabel(bread.stock) + (bread.stock === 0 ? '，明早可预订' : '') + '</span></li>';
+  });
+  B.setupOrderForm(document.querySelector('#order form'));
+})();
+</script>
+</body>
+</html>

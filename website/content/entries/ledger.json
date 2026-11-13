@@ -1,0 +1,160 @@
+{
+  "slug": "ledger",
+  "title": [
+    "Ledger：定价页的三种问法",
+    "Ledger: three ways a pricing page can ask"
+  ],
+  "summary": [
+    "同一份方案数据和锁定的品牌，分别先问团队人数、逐项比较功能，或先讲清钱怎么扣。",
+    "The same plan data under a locked brand, leading with team size, a feature-by-feature comparison, or how the charge works."
+  ],
+  "brief": [
+    "为一个 Next.js 项目的定价页出三版：工作室负责人（1–20 人）比较 Solo、Studio、Firm 三档，切换年付或月付与币种，进入对应方案的注册链接。方案数据来自共享模块，品牌字体和颜色在 app/globals.css 里锁定。",
+    "Three directions for a Next.js pricing page: studio owners (1–20 people) compare Solo, Studio and Firm, switch annual or monthly billing and currency, and follow each plan's sign-up link. Plan data comes from a shared module; brand fonts and colours are locked in app/globals.css."
+  ],
+  "category": "landing",
+  "tags": [
+    "pricing",
+    "nextjs",
+    "brand-locked",
+    "saas"
+  ],
+  "source": "own",
+  "kind": "verified",
+  "credit": {
+    "name": "Variant Design",
+    "url": "https://github.com/YuqingNicole/variant-design-skill"
+  },
+  "directions": [
+    {
+      "id": "A",
+      "name": [
+        "先问人数",
+        "Fit First"
+      ],
+      "comparison": {
+        "optimizes": [
+          "先回答“哪个方案适合我”：输入团队人数后，适配的方案被标出，并说明距离下一档还剩多少席位；三张卡片并列，主按钮只落在适配方案上。",
+          "Answers 'which plan fits me' first: after the team size is entered, the fitting plan is marked with how many seats remain before the next tier; three cards side by side, and the primary button lands only on the fitting plan."
+        ],
+        "tradeoff": [
+          "比较之前多了一步输入；把席位数当作首要决策维度，对关心具体功能（审批流、多币种）的访客帮助有限；功能仍以“Everything in Solo”的累加写法呈现。",
+          "One more input before comparing; treating seat count as the primary decision dimension helps little for visitors who care about specific capabilities (approval flows, multi-currency); features are still written cumulatively as 'Everything in Solo'."
+        ],
+        "bestFor": [
+          "清楚自己团队规模、想快速得到答案的工作室负责人；首次访问定价页的流量。",
+          "Studio owners who know their team size and want a quick answer; first-time traffic to the pricing page."
+        ]
+      },
+      "media": [
+        {
+          "file": "a.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "顶部是人数步进器和计费、币种开关，下面三张方案卡片，适配的一张被标出",
+            "A team-size stepper with billing and currency switches on top, three plan cards below with the fitting one marked"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": [
+        "逐项比较",
+        "Compare by Feature"
+      ],
+      "comparison": {
+        "optimizes": [
+          "跨方案逐项比较：一张功能×方案矩阵，“Everything in Solo”被展开成真实行并按首次出现的方案分组，“只看差异”开关隐藏三档都有的行，价格和按钮固定在表头随滚动可见。",
+          "Item-by-item comparison across plans: one feature-by-plan matrix, 'Everything in Solo' expanded into real rows grouped by the plan where each first appears, a 'differences only' switch that hides rows all three tiers share, and prices and buttons fixed in the header while scrolling."
+        ],
+        "tradeoff": [
+          "信息密度最高，首屏阅读慢，价格不如卡片醒目；默认突出 Studio 列是未经验证的假设；窄屏需用方案切换器一次只看一列。",
+          "The highest density and the slowest first screen, with prices less prominent than on cards; highlighting the Studio column by default is an unverified assumption; narrow screens use a plan switcher to see one column at a time."
+        ],
+        "bestFor": [
+          "在 Studio 与 Firm 之间犹豫、看重某项具体能力的团队；需要把页面转给会计或合伙人逐项核对的场景。",
+          "Teams torn between Studio and Firm over one specific capability; pages forwarded to an accountant or partner to check line by line."
+        ]
+      },
+      "media": [
+        {
+          "file": "b.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "功能与方案的矩阵表，表头固定显示价格和按钮",
+            "A feature-by-plan matrix with prices and buttons fixed in the header"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": [
+        "先讲扣款",
+        "Terms First"
+      ],
+      "comparison": {
+        "optimizes": [
+          "先讲清钱怎么扣：单栏阅读式排版，每个方案同时显示年付与月付两套价格和全年总额，按钮上方写明首笔扣款金额与日期，页面末尾用时间线交代 Day 0 / Day 30 / 首次扣款。",
+          "Explains how the money is charged first: a single-column reading layout, each plan showing both annual and monthly prices and the yearly total, the first charge's amount and date written above the button, and a timeline at the end of the page for Day 0, Day 30 and the first charge."
+        ],
+        "tradeoff": [
+          "页面最长、视觉冲击最弱，没有突出任何一档，三个主按钮纵向排列；不回答“哪档适合我”，仍需访客自己对照席位。",
+          "The longest page and the weakest visual impact, with no tier highlighted and three primary buttons stacked vertically; it does not answer 'which tier fits me', so visitors still match seats themselves."
+        ],
+        "bestFor": [
+          "谨慎型买家、要向会计或合伙人解释费用的人、以及 Firm 这类走“Talk to us”路径的大团队；也适合作为结账前的条款确认页。",
+          "Cautious buyers, people who have to explain the cost to an accountant or partner, and large teams on Firm's 'Talk to us' path; also usable as a terms confirmation page before checkout."
+        ]
+      },
+      "media": [
+        {
+          "file": "c.jpg",
+          "width": 1440,
+          "height": 900,
+          "alt": [
+            "单栏排版，每个方案同时显示年付和月付价格，按钮上方写明首笔扣款",
+            "A single column where each plan shows annual and monthly prices, with the first charge written above the button"
+          ]
+        }
+      ]
+    }
+  ],
+  "recommendation": {
+    "variant": "A",
+    "reason": [
+      "Seat limits are the one dimension that separates the plans for this audience, and A answers 'which plan fits' before asking the visitor to read anything. Hypotheses, untested: A shortens time-to-choice for visitors who know their team size; B wins when the decision is Studio vs Firm on a specific capability; C reduces billing surprises. Tested so far: all three keep the same data, controls and links, pass the static gates and render at 1200px and 390px.",
+      "Seat limits are the one dimension that separates the plans for this audience, and A answers 'which plan fits' before asking the visitor to read anything. Hypotheses, untested: A shortens time-to-choice for visitors who know their team size; B wins when the decision is Studio vs Firm on a specific capability; C reduces billing surprises. Tested so far: all three keep the same data, controls and links, pass the static gates and render at 1200px and 390px."
+    ]
+  },
+  "evidence": {
+    "context": "website/content/evidence/ledger/variant-output/.variant-context.json"
+  },
+  "run": {
+    "agent": "Claude Code 2.1.323",
+    "model": "claude-fable-5-1",
+    "date": "2026-11-13",
+    "durationSec": 1078,
+    "costUsd": 8.61,
+    "turns": 85,
+    "commands": [
+      "node <skill>/scripts/project-profile.mjs scan . app/pricing/page.tsx > .variant-work/project-profile.json",
+      "node <skill>/scripts/design-task.mjs create .variant-work/project-profile.json .variant-work/task-brief.json > .variant-work/task.json",
+      "node <skill>/scripts/quality-gate.mjs variant-output --strict",
+      "node <skill>/scripts/delivery-check.mjs variant-output --project .",
+      "node <skill>/scripts/react-preview.mjs . variant-output --static --vite-root .variant-work/preview-harness",
+      "node <skill>/scripts/ds-tokens.mjs",
+      "node <skill>/scripts/open-preview.mjs variant-output/_static/_compare.html"
+    ],
+    "record": "docs/research/2026-11-13-case-series.md",
+    "prompt": [
+      "使用完整 Variant Design 技能。在当前项目中先检查页面结构和设计系统，再生成保留核心任务的 A/B/C 三个设计方向。已有品牌保持字体与 tokens；没有品牌约束时探索三种鲜明风格。打开三版预览，说明优化、取舍与适用场景，并给出有理由的推荐，但先不要替我选定最终方案。（这是无人值守运行：不要启动常驻服务器；需要预览时生成可直接打开的文件，做不到就说明原因和用户自己运行的命令。）",
+      "Use the full Variant Design skill. In this project, first check the page structure and design system, then generate three design directions A/B/C that keep the core task. Keep the fonts and tokens of an existing brand; without brand constraints, explore three distinct styles. Open the three previews, explain what each optimizes, trades off and suits, and recommend one with reasons, but do not choose the final direction for me yet. (This is an unattended run: do not start a long-running server; when a preview is needed, generate files that open directly, and if that cannot be done, explain why and give the command for the user to run.)"
+    ]
+  },
+  "featured": true,
+  "publishedAt": "2026-11-13"
+}
