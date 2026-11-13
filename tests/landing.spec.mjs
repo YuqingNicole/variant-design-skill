@@ -740,7 +740,7 @@ test('changelog runs on a month timeline with filters, titled items and the curr
   await expect(releases).toHaveCount(3);
   // A dated release: the date written out, the version as the headline, a product pill, the summary, then a grid of titled items
   // tagged with their package version or area; the "Website package x.y.z:" lead is not repeated in the body.
-  const release = releases.nth(1), items = release.locator('.changelog-item');
+  const release = page.locator('#v1-2-0'), items = release.locator('.changelog-item');
   await expect(release.locator('.changelog-date time')).toHaveText('2026 年 11 月 9 日');
   await expect(release.locator('.changelog-date time')).toHaveAttribute('datetime', '2026-11-09');
   await expect(release.locator('h2')).toHaveText('1.2.0');
@@ -751,15 +751,19 @@ test('changelog runs on a month timeline with filters, titled items and the curr
   await expect(items.first().locator('p')).not.toContainText('网站包');
   await expect(items.nth(7).locator('h3')).toHaveText('Claude Code 插件市场');
   await expect(items.nth(7).locator('small')).toHaveText('安装');
-  // The unreleased group says its website changes are live, and its last item carries the package version the site runs.
-  await expect(releases.first().locator('.changelog-note')).toContainText('已经上线');
-  await expect(releases.first().locator('.changelog-item small').last()).toHaveText(`网站包 ${website}`);
-  // Filters keep one product's items and drop releases left with none; scrolling moves the timeline's current month.
+  // The unreleased group says its website changes are live, and its last website item carries the package version the site runs.
+  const unreleased = page.locator('#unreleased'), tags = page.locator('.changelog-item small');
+  await expect(unreleased.locator('.changelog-note')).toContainText('已经上线');
+  await expect(unreleased.locator('.changelog-item small').filter({ hasText: /^网站包/ }).last()).toHaveText(`网站包 ${website}`);
+  // Filters keep one product's items (a release left with none is not shown); scrolling moves the timeline's current month.
   await page.getByRole('button', { name: '技能' }).click();
-  await expect(releases.first().locator('h2')).toHaveText('1.2.0');
-  await expect(releases.first().locator('.changelog-item small').first()).toHaveText('安装');
+  await expect(tags.filter({ hasText: /^网站包/ })).toHaveCount(0);
+  await expect(items.first().locator('small')).toHaveText('安装');
+  await page.getByRole('button', { name: '网站' }).click();
+  await expect(tags.filter({ hasText: /^(?!网站包)/ })).toHaveCount(0);
+  await expect(items.last().locator('small')).toHaveText('网站包 0.2.2');
   await page.getByRole('button', { name: '全部' }).click();
-  await expect(releases.first().locator('h2')).toHaveText('未发布');
+  await expect(releases).toHaveCount(3);
   await page.locator('#v1-1-0').scrollIntoViewIfNeeded();
   await expect(nav.nth(2)).toHaveAttribute('aria-current', 'location');
   await page.locator('.site-language').click();
