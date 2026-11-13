@@ -21,6 +21,8 @@ test('every published entry is valid', () => {
   const { entries, problems } = loadEntries();
   assert.deepEqual(problems, []);
   assert.ok(entries.some(e => e.kind === 'verified'));
+  // The validator checks only the shape of run.record (the Vercel build has no docs/); the file must exist in this repository.
+  for (const e of entries) if (e.run?.record) assert.ok(fs.existsSync(path.join(contentRoot, '../..', e.run.record)), `${e.slug}: ${e.run.record} is missing`);
 });
 
 test('image sizes come from the file headers', () => {
