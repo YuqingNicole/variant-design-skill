@@ -28,8 +28,11 @@ export async function measure(browser, { base, path, mobile = false, stub = true
     reads.push(r.body().then(body => { bytes[key] += zlib.gzipSync(body).length; }, () => { /* a response replaced mid-navigation has no body */ }));
   });
   await page.addInitScript(() => {
-    const m = window.__m = { lcp: 0, cls: 0, fcp: 0, longMs: 0, slowest: 0 }, watch = (type, fn, extra = {}) => { try { new PerformanceObserver(l => l.getEntries().forEach(fn)).observe({ type, buffered: true, ...extra }); } catch { /* unsupported entry type */ } };
-    watch('largest-contentful-paint', e => { m.lcp = e.startTime; });
+    const m = window.__m = { lcp: 0, lcpElement: '', cls: 0, fcp: 0, longMs: 0, slowest: 0 }, watch = (type, fn, extra = {}) => { try { new PerformanceObserver(l => l.getEntries().forEach(fn)).observe({ type, buffered: true, ...extra }); } catch { /* unsupported entry type */ } };
+    // The element behind the LCP reading (tag, id or first class, then the image address or the first words), so a slow reading
+    // says what was slow: a heading waiting for its font, an image, a block that only React renders.
+    const name = el => el ? el.tagName.toLowerCase() + (el.id ? `#${el.id}` : el.classList[0] ? `.${el.classList[0]}` : '') : '(element gone)';
+    watch('largest-contentful-paint', e => { m.lcp = e.startTime; m.lcpElement = `${name(e.element)} ${e.url || (e.element?.textContent || '').trim().slice(0, 40)}`.trim(); });
     watch('layout-shift', e => { if (!e.hadRecentInput) m.cls += e.value; });
     watch('paint', e => { if (e.name === 'first-contentful-paint') m.fcp = e.startTime; });
     watch('longtask', e => { m.longMs += Math.max(0, e.duration - 50); });
@@ -51,7 +54,7 @@ export async function measure(browser, { base, path, mobile = false, stub = true
   const after = await page.evaluate(() => ({ ...window.__m }));
   const kbAfter = await kb();
   await context.close();
-  return { lcp: Math.round(load.lcp), fcp: Math.round(load.fcp), cls: +after.cls.toFixed(4), longMs: Math.round(load.longMs), slowest: Math.round(after.slowest), kb: loaded, kbAfter };
+  return { lcp: Math.round(load.lcp), lcpElement: load.lcpElement, fcp: Math.round(load.fcp), cls: +after.cls.toFixed(4), longMs: Math.round(load.longMs), slowest: Math.round(after.slowest), kb: loaded, kbAfter };
 }
 
 if (process.argv[1] && import.meta.url === new URL(process.argv[1], 'file:').href) {
@@ -62,8 +65,8 @@ if (process.argv[1] && import.meta.url === new URL(process.argv[1], 'file:').hre
   const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || undefined }), out = [];
   for (const mobile of [false, true]) for (const path of pages) {
     const samples = []; for (let i = 0; i < runs; i++) samples.push(await measure(browser, { base, path, mobile, stub: !remote }));
-    const pick = f => median(samples.map(f));
-    const row = { path, profile: mobile ? 'phone, 4x CPU slowdown' : 'desktop', runs, lcp: pick(s => s.lcp), fcp: pick(s => s.fcp), cls: pick(s => s.cls), longMs: pick(s => s.longMs), slowest: pick(s => s.slowest), kb: samples[0].kb, kbAfter: samples[0].kbAfter };
+    const pick = f => median(samples.map(f)), mid = [...samples].sort((a, b) => a.lcp - b.lcp)[Math.floor(samples.length / 2)];
+    const row = { path, profile: mobile ? 'phone, 4x CPU slowdown' : 'desktop', runs, lcp: pick(s => s.lcp), lcpElement: mid.lcpElement, fcp: pick(s => s.fcp), cls: pick(s => s.cls), longMs: pick(s => s.longMs), slowest: pick(s => s.slowest), kb: samples[0].kb, kbAfter: samples[0].kbAfter };
     out.push(row); console.log(JSON.stringify(row));
   }
   await browser.close(); server?.kill();
