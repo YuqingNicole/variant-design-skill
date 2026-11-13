@@ -13,6 +13,8 @@ const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR
 test.beforeEach(async({page})=>{
  await page.route(/^https:\/\/(?:pbs|video)\.twimg\.com\//,r=>r.request().resourceType()==='media'?r.abort():r.fulfill({contentType:'image/png',body:pixel}));
  await page.route(/^https:\/\/platform\.twitter\.com\//,r=>r.abort());
+ // Vercel's image service: locally a redirect to the source, which routes cannot follow, so it is stubbed too.
+ await page.route(/\/_vercel\/image\?/,r=>r.fulfill({contentType:'image/png',body:pixel}));
 });
 
 
@@ -397,7 +399,7 @@ test('inspiration thumbnails map each link\'s own preview, resized from the sour
  await page.emulateMedia({reducedMotion:'reduce'});
  expect(await page.locator('.insp-card-open').first().evaluate(el=>parseFloat(getComputedStyle(el).transitionDuration))).toBeLessThan(0.001);
  const posterMedia=JSON.parse(fs.readFileSync(new URL('../website/src/x-media.json',import.meta.url),'utf8'));
- const allowed=new Set([new URL('/sky.jpg',page.url()).href,...Object.values(previews).flatMap(p=>[p.image,new URL(sized(p.image,640),page.url()).href]),...Object.values(posterMedia).flatMap(m=>[m.poster,`${m.poster}?format=webp&name=small`,m.avatar]).filter(Boolean)]);
+ const allowed=new Set([new URL('/sky.jpg',page.url()).href,...Object.values(previews).flatMap(p=>[p.image,new URL(sized(p.image,640),page.url()).href]),...Object.values(posterMedia).flatMap(m=>[m.poster,`${m.poster}?format=webp&name=small`,m.avatar]).filter(Boolean).flatMap(u=>[u,new URL(sized(u,640),page.url()).href])]);
  expect(imageRequests.filter(u=>!allowed.has(u))).toEqual([]);
  await expect(page.locator('.insp-card:has(a[href="/inspiration/linear"]) .insp-thumb-media')).toHaveCount(0);
 });
@@ -567,7 +569,7 @@ test('best practice shows each X post as its looping video, credits the author a
  const widgets=motion.filter({has:page.locator('a[href="/inspiration/paper-widgets"]')});
  // Videos only start once visible, and a newer card can push this one below the fold. A re-render can replace the card mid-scroll, so retry that.
  await expect(async()=>{await widgets.scrollIntoViewIfNeeded()}).toPass();
- await expect(widgets.locator('img.insp-vcard-media')).toHaveAttribute('src',media['paper-widgets'].poster+'?format=webp&name=small');await expect(widgets.locator('video')).toHaveCount(0);
+ await expect(widgets.locator('img.insp-vcard-media')).toHaveAttribute('src',sized(media['paper-widgets'].poster,640));await expect(widgets.locator('video')).toHaveCount(0);
  await page.getByRole('link',{name:'交互',exact:true}).click();await expect(page).toHaveURL(/\/browse\/interaction$/);
  // The interaction tab lists 38 references; the strip mounts its first 30 and loads the rest as it is scrolled.
  const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(30);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
@@ -578,7 +580,7 @@ test('best practice shows each X post as its looping video, credits the author a
  // Videos far below the fold attach their file only as they near the screen.
  expect(await cards.last().locator('video').evaluate(v=>v.getAttribute('src'))).toBeNull();
  await expect(async()=>{await sheep.scrollIntoViewIfNeeded()}).toPass();
- const video=sheep.locator('video');await expect(video).toHaveAttribute('poster',media['x-areadnemaria-444419'].poster+'?format=webp&name=small');
+ const video=sheep.locator('video');await expect(video).toHaveAttribute('poster',sized(media['x-areadnemaria-444419'].poster,640));
  await expect.poll(()=>video.evaluate(v=>v.currentSrc)).toBe(media['x-areadnemaria-444419'].video);
  expect(await video.evaluate(v=>v.muted&&v.loop&&v.playsInline)).toBe(true);
  await expect(sheep.locator('.insp-vcard-avatar')).toHaveAttribute('alt','areadne @AreadneMaria');
@@ -871,6 +873,19 @@ test('content shares the heading\'s left edge and two-tone headings use the pale
     await page.goto(route); await hydrated(page);
     expect(await page.locator(selector).first().evaluate(e => getComputedStyle(e).color), route).toBe('rgb(77, 82, 90)');
   }
+});
+
+test('X posters and avatars fall back to X directly when the image service fails', async ({ page }) => {
+  const xMedia = JSON.parse(fs.readFileSync(new URL('../website/src/x-media.json', import.meta.url), 'utf8'));
+  await page.route(/\/_vercel\/image\?/, r => r.abort());
+  await page.goto('/browse/motion');
+  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content', 'no-referrer');
+  const card = page.locator('.insp-videos > li').first();
+  const id = (await card.locator('.insp-card-open').getAttribute('href')).split('/').pop();
+  // The card may switch from <video poster> to <img src> when the video fails, so read whichever is shown.
+  await expect.poll(() => card.locator('.insp-vcard-media').evaluate(e => e.getAttribute(e.tagName === 'VIDEO' ? 'poster' : 'src'))).toBe(`${xMedia[id].poster}?format=webp&name=small`);
+  if (xMedia[id].avatar) await expect(card.locator('.insp-vcard-avatar')).toHaveAttribute('src', xMedia[id].avatar);
+  // The service path itself is checked in the best-practice video test, where the poster is the sized URL.
 });
 
 test('X cards whose poster cannot load fall back to the analysis card, not a broken image', async ({ page }) => {

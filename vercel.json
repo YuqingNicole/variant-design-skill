@@ -137,6 +137,10 @@
       },
       {
         "protocol": "https",
+        "hostname": "pbs.twimg.com"
+      },
+      {
+        "protocol": "https",
         "hostname": "plausible.io"
       },
       {
@@ -250,10 +254,6 @@
       {
         "protocol": "https",
         "hostname": "liveblocks.io"
-      },
-      {
-        "protocol": "https",
-        "hostname": "locomotive.ca"
       },
       {
         "protocol": "https",
