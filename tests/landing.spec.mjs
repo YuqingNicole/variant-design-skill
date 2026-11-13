@@ -332,9 +332,9 @@ test('inspiration references filter, create an original brief and recover from c
  // The prerendered page answers clicks only after React replaces it; its static reference index goes away then.
  await expect(page.locator('nav[aria-label="全部参考"]')).toHaveCount(0);
  const cards=page.locator('.inspiration-grid .insp-card');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('209 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('248 个参考');
  // Every tab is its own page with its own references; together they list each reference once.
- for(const [name,count] of [['网站',109],['产品界面',12],['交互',38],['动效',31],['品牌',14],['插画',3],['海报',2]]){
+ for(const [name,count] of [['网站',140],['产品界面',12],['交互',42],['动效',31],['品牌',16],['插画',3],['海报',2],['印刷',2]]){
   await page.locator('.insp-pills').getByRole('link',{name,exact:true}).click();
   await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${count} 个参考`);
  }
@@ -379,7 +379,7 @@ test('inspiration thumbnails map each link\'s own preview, resized from the sour
  await stubPreviews(page,['linear']);
  // A short window keeps the load-more sentinel out of reach, so the first page and the fallback button can be checked.
  await page.setViewportSize({width:1280,height:360});await page.goto('/browse/web?sort=curated');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('109 个参考');// The web page also lists X videos; the thumbnail rules below are about its 30 website cards, which come first.
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('140 个参考');// The web page also lists X videos; the thumbnail rules below are about its 30 website cards, which come first.
  const sites=page.locator('.inspiration-grid .insp-card:not(.insp-vcard)');await expect(sites).toHaveCount(30);
  await expect(sites.locator('.insp-card-meta small')).toHaveCount(30);
  await expect(sites.locator('.insp-thumb-post')).toHaveCount(0);await expect(sites.locator('div.insp-thumb')).toHaveCount(30);
@@ -556,7 +556,7 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.route(/platform\.twitter\.com/,r=>r.abort());await page.route(/pbs\.twimg\.com/,r=>r.fulfill({contentType:'image/png',body:pixel}));
  // The widgets video fails; the sheep video stays pending, so the suite never streams from X.
  await page.route(/video\.twimg\.com/,r=>{if(r.request().url()===media['paper-widgets'].video)return r.abort()});
- await page.goto('/browse/interface?sort=curated');await expect(page.locator('.insp-pills a')).toHaveText([/^全部\s*\d+$/,/^网站\s*\d+$/,/^产品界面\s*\d+$/,/^交互\s*\d+$/,/^动效\s*\d+$/,/^品牌\s*\d+$/,/^插画\s*\d+$/,/^海报\s*\d+$/]);
+ await page.goto('/browse/interface?sort=curated');await expect(page.locator('.insp-pills a')).toHaveText([/^全部\s*\d+$/,/^网站\s*\d+$/,/^产品界面\s*\d+$/,/^交互\s*\d+$/,/^动效\s*\d+$/,/^品牌\s*\d+$/,/^插画\s*\d+$/,/^海报\s*\d+$/,/^印刷\s*\d+$/]);
  expect(xRequests.filter(u=>new URL(u).hostname==='video.twimg.com')).toEqual([]);
  await page.locator('.insp-pills').getByRole('link',{name:'动效',exact:true}).click();await expect(page).toHaveURL(/\/browse\/motion$/);
  // The client render replaces the prerendered feed; wait for it (XVideo adds the referrer meta on mount) before holding a card.
@@ -569,11 +569,11 @@ test('best practice shows each X post as its looping video, credits the author a
  await expect(async()=>{await widgets.scrollIntoViewIfNeeded()}).toPass();
  await expect(widgets.locator('img.insp-vcard-media')).toHaveAttribute('src',media['paper-widgets'].poster+'?format=webp&name=small');await expect(widgets.locator('video')).toHaveCount(0);
  await page.getByRole('link',{name:'交互',exact:true}).click();await expect(page).toHaveURL(/\/browse\/interaction$/);
- // The interaction tab lists 38 references; the strip mounts its first 30 and loads the rest as it is scrolled.
+ // The interaction tab lists 42 references; the strip mounts its first 30 and loads the rest as it is scrolled.
  const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(30);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
  // Newer posts pushed the sheep past the first 30 cards, so load the remaining eight before looking for it.
- await page.locator('.insp-more button').click();await expect(cards).toHaveCount(38);
+ await page.locator('.insp-more button').click();await expect(cards).toHaveCount(42);
  const sheep=cards.filter({has:page.locator('a[href="/inspiration/x-areadnemaria-444419"]')});
  // Videos far below the fold attach their file only as they near the screen.
  expect(await cards.last().locator('video').evaluate(v=>v.getAttribute('src'))).toBeNull();
@@ -618,8 +618,8 @@ test('a reference opens as a dialog from the grid and as its own page from a dir
  await expect(page.locator('h1')).toHaveText('Notion');await expect(page.getByRole('dialog')).toHaveCount(0);
  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/^Notion：/);
  await expect(page.getByRole('link',{name:'访问原站'})).toHaveAttribute('href','https://www.notion.com/');
- await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('209 个参考');
- await page.goto('/inspiration/no-such-reference');await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('209 个参考');
+ await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('248 个参考');
+ await page.goto('/inspiration/no-such-reference');await expect(page).toHaveURL(/:\d+\/$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('248 个参考');
 });
 
 test('the footer links the feed in both languages, and the feed answers', async ({page,request})=>{
@@ -638,7 +638,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('11 个参考');await expect(page.locator('.inspiration-topic')).toContainText('2026-11-01');
  await expect(page.locator('.insp-card-out[href="https://attio.com/"]')).toHaveCount(1);
  await page.goto('/?topic=unknown');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('209 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('248 个参考');
  await page.goto('/');await hydrated(page);
  const cards=page.locator('.inspiration-grid .insp-card');
  await page.goto('/?topic=saas-home');await hydrated(page);
@@ -646,7 +646,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-topic')).toContainText('2026-10-29');
  await expect(cards.locator('.insp-card-open[href="/inspiration/lovable"]')).toHaveCount(0);
  await expect(cards.locator('.insp-card-out[href="https://impeccable.style/"]')).toHaveCount(1);
- await expect(page.locator('.insp-pills a[aria-current=page]')).toHaveText(/^全部\s*209$/);await expect(page.locator('.insp-pills')).toContainText('网站 109');
+ await expect(page.locator('.insp-pills a[aria-current=page]')).toHaveText(/^全部\s*248$/);await expect(page.locator('.insp-pills')).toContainText('网站 140');
  await page.getByRole('searchbox').fill('Vercel');
  await expect(cards).toHaveCount(1);await expect(cards.first().locator('.insp-card-open')).toHaveAttribute('href','/inspiration/v0');
  await page.getByRole('searchbox').fill('');
@@ -655,7 +655,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(cards).toHaveCount(0);
  await page.locator('.inspiration-empty').getByRole('button',{name:'清除筛选'}).click();
  await expect(page).not.toHaveURL(/topic=/);
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('14 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText('16 个参考');
 });
 test('the cases grid keeps one labelled sponsor slot after the third case, and it is not a case', async ({page})=>{
  await page.goto('/cases');await hydrated(page);
@@ -954,7 +954,7 @@ test('without JavaScript the inspiration page links every reference, and with it
   for (const [route, prefix] of [['/', '/inspiration/'], ['/en', '/en/inspiration/']]) {
     await reader.goto(route);
     const links = await reader.locator(`#root a[href^="${prefix}"]`).evaluateAll(as => [...new Set(as.map(a => a.getAttribute('href').split(/[?#]/)[0]))]);
-    expect(links.length, route).toBe(209);
+    expect(links.length, route).toBe(248);
   }
   await noScript.close();
   await page.goto('/');
@@ -1018,7 +1018,7 @@ test('each inspiration tab is its own page, and no reference appears on two of t
  await page.goto('/');
  // The count after each name is aria-hidden, so the accessible name is the name alone.
  const tabs=await page.locator('.insp-pills a').evaluateAll(as=>as.map(a=>[a.textContent.replace(/\s*\d+\s*$/,'').trim(),a.getAttribute('href')]));
- expect(tabs.map(t=>t[1])).toEqual(['/','/browse/web','/browse/interface','/browse/interaction','/browse/motion','/browse/branding','/browse/illustration','/browse/posters']);
+ expect(tabs.map(t=>t[1])).toEqual(['/','/browse/web','/browse/interface','/browse/interaction','/browse/motion','/browse/branding','/browse/illustration','/browse/posters','/browse/print']);
  // Read the prerendered pages as a crawler does: every reference of the page is in the HTML, with no scrolling.
  const idsOf=async href=>{const html=await(await request.get(href)).text();return {html,ids:[...html.matchAll(/class="insp-card-open[^"]*" href="\/inspiration\/([^"]+)"/g)].map(m=>m[1])}};
  const home=await idsOf('/'),seen=new Set(),titles=new Set(),headings=new Set();
@@ -1031,7 +1031,7 @@ test('each inspiration tab is its own page, and no reference appears on two of t
   await page.goto(href);await expect(page.locator('.insp-pills').getByRole('link',{name,exact:true})).toHaveAttribute('aria-current','page');
   await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${ids.length} 个参考`);
  }
- expect(titles.size).toBe(7);expect(headings.size).toBe(7);
+ expect(titles.size).toBe(8);expect(headings.size).toBe(8);
  expect([...seen].sort()).toEqual([...home.ids].sort());
 });
 
@@ -1043,13 +1043,13 @@ test('old category links and empty sections land on the right page', async ({pag
  await go('/?category=practice&sort=name','/?sort=name');
  await go('/en?category=motion','/en/browse/motion');
  await go('/inspiration/linear?category=landing','/inspiration/linear?in=web');
- await go('/browse/print','/'); // print is the section with no reference yet; illustration and posters have had pages since the 2026-11-13 batch
+ await go('/browse/zzz','/'); // a section that does not exist goes home; print got its first references in the second 2026-11-13 batch, so every section has a page now
 });
 
 test('on a phone the tabs stay in one row with the current one in view, and the filters no longer pin over the list', async ({page})=>{
  await page.setViewportSize({width:390,height:844});await page.goto('/browse/branding');await hydrated(page);
  const row=page.locator('.insp-pills');
- await expect(row.locator('a')).toHaveCount(8);
+ await expect(row.locator('a')).toHaveCount(9);
  const m=await row.evaluate(r=>{const cur=r.querySelector('[aria-current=page]').getBoundingClientRect();return{h:r.getBoundingClientRect().height,wrap:getComputedStyle(r).flexWrap,inView:cur.left>=0&&cur.right<=innerWidth,overflow:document.documentElement.scrollWidth>innerWidth}});
  expect(m).toEqual({h:44,wrap:'nowrap',inView:true,overflow:false});
  expect(await page.locator('.insp-bar').evaluate(b=>getComputedStyle(b).position)).toBe('static');
@@ -1143,7 +1143,7 @@ test('the lab preview frame no longer animates layout properties', async ()=>{
 });
 
 test('a path with no page answers 404 with noindex, while every real page and every sitemap address answers 200', async ({page,request})=>{
- for(const path of ['/nope','/en/nope','/inspiration/does-not-exist','/d/nope','/c/nope','/guides/nope','/browse/zzz','/browse/print','/missing.txt']){
+ for(const path of ['/nope','/en/nope','/inspiration/does-not-exist','/d/nope','/c/nope','/guides/nope','/browse/zzz','/missing.txt']){
   const r=await request.get(path);expect(r.status(),path).toBe(404);
   if(!path.endsWith('.txt')){const html=await r.text();expect(html,path).toContain('<title>页面不存在 — Variant Design</title>');expect(html,path).toContain('name="robots" content="noindex"');expect(html,path).not.toContain('rel="canonical"')}
  }

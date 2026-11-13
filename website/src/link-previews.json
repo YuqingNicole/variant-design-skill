@@ -4,671 +4,888 @@
     "title": "Linear – The system for product development",
     "description": "Purpose-built for planning and building products with AI agents.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "notion": {
     "image": "https://www.notion.com/front-static/meta/teams-and-agents.jpg",
     "title": "The AI workspace that works for you. | Notion",
     "description": "Build Custom Agents, search across all your apps, and automate busywork. The AI workspace where teams get more done, faster.",
     "lang": "en-us",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "raycast": {
     "image": "https://www.raycast.com/opengraph-image-pwu6ef.png?opengraph-image.1f-98etzkaz5s.png",
     "title": "Raycast - Your shortcut to everything",
     "description": "A collection of powerful productivity tools all within an extendable launcher.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "resend": {
     "image": "https://resend.com/static/cover.jpg",
     "title": "Resend · Email for developers",
     "description": "The best way to reach humans instead of spam folders. Deliver transactional and marketing emails at scale.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "cursor": {
     "image": "https://ptht05hbb1ssoooe.public.blob.vercel-storage.com/assets/og/opengraph-default.png",
     "title": "AI Coding Agent for Building Ambitious Software | Cursor",
     "description": "Built to make you extraordinarily productive, agents turn ideas into code. Accelerate development by handing off tasks to Cursor.",
     "lang": "en-US",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "v0": {
     "image": "https://v0.app/chat/api/og",
     "title": "v0 by Vercel - Build Full-Stack Web Apps with AI",
     "description": "Your collaborative AI assistant to design, iterate, and scale full-stack applications for the web.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "impeccable": {
     "image": "https://impeccable.style/og-image-v6.png",
     "title": "The missing design vocabulary for agents.",
     "description": "Turn AI slop into interfaces you’re proud to ship. Impeccable gives your agent the design expertise to build from scratch, improve what you have, and stay true to your design system.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "teenage": {
     "image": "https://assets.teenage.engineering/_img/6ac7e2a34e770874f80da65c_1024.webp",
     "title": "teenage engineering",
     "description": "teenage engineering creates high quality, well designed, electronic products for all people who love sound and music.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "instrument": {
     "image": "https://a-us.storyblok.com/f/1004432/1200x630/e7ff102c87/000.png/m/1200x630/filters:format(png)/",
     "title": "Instrument | Redefining brands and experiences | Instrument",
     "description": "We are a multidisciplinary creative company that redefines brands and experiences.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "pentagram": {
     "image": "https://www.pentagram.com/pentagram_social.png",
     "title": "Pentagram — The world’s largest independent design consultancy",
     "description": "Pentagram is the world’s largest independent design consultancy. The firm is owned and run by 24 partners, each of whom are leaders in their individual fields.",
     "lang": "en-US",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "basic": {
     "image": "https://cdn.sanity.io/images/8nn8fua5/production/d300e3dee1aa4ff7768bbaa9be1df0fd07986ad7-1200x630.png",
     "title": "BASIC/DEPT® | Digital Branding & Product Design Agency",
     "description": "We design digital products, services, and eCommerce experiences for brands like Google, Airbnb, Patagonia, Apple, Beats by Dre and other category leaders.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "attio": {
     "image": "https://a.storyblok.com/f/234930/1200x630/df480627b4/attio-og-image.jpg",
     "title": "Attio: The CRM for agentic revenue",
     "description": "The system for revenue teams to build pipeline, accelerate deals, and grow accounts around the clock.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "ramp": {
     "image": "https://next.ramp.com/assets/images/default-og-image.jpg",
     "title": "Spend Management, Corporate Cards & Accounts Payable Solutions | Ramp",
     "description": "Make expense management easy with Ramp's spend management platform. Combine global corporate cards, travel, expenses and accounts payable to automate finance operations and improve efficiency.",
     "lang": "en-us",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "cal-com": {
     "image": "https://cal.com/og/index.png",
     "title": "Cal.com | Scheduling Software for Online Bookings",
     "description": "The highest-rated scheduling system that helps you grow your business and better find time.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "rive": {
     "image": "https://framerusercontent.com/assets/DkWNj6EOquY1ZxbQbIDUXP3BZE.jpg",
     "title": "Rive: agent-native 2D and 3D engine for games, apps, and UI",
     "description": "Behind Duolingo and Spotify Wrapped. Build 2D and 3D games, apps, and interactive UI with your coding agent and pro design and animation tools.",
     "lang": "en-US",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "tldraw": {
     "image": "https://cdn.sanity.io/images/ij3ytvrl/production/9bbdab1656512165d2426e787a553be0a8fd60a6-512x256.webp?w=1200&fit=max",
     "title": "tldraw: Infinite Canvas SDK for React",
     "description": "The tldraw SDK provides tools, services, and APIs to build beautiful whiteboards and infinite canvas applications with real-time collaboration and a powerful React-based canvas.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "pitch": {
     "image": "https://framerusercontent.com/assets/WJrArV3ktU515VCNK75vEu7SjNg.jpg",
     "title": "The AI presentation workspace",
     "description": "Pitch is the collaborative presentation platform for teams that want to create, share, and deliver better work.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "figma": {
     "image": "https://cdn.sanity.io/images/599r6htc/regionalized/135d2170e6a27e5d4249b3e4029bc9cd1e512457-2400x1260.jpg?w=1200&q=70&fit=max&auto=format",
     "title": "Free Design Tool for Websites, Product Design & More | Figma",
     "description": "Our free, website design software allows you to create, collaborate & streamline your workflow. Bring together powerful design features built for the future of web.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "framer": {
     "image": "https://framerusercontent.com/images/vt65Mbfi3w8ymfTyRfbmgM4Tyo.png",
     "title": "Framer: Free website builder and AI design agent",
     "description": "The free website builder with a design agent that takes you from idea to launch. Changes stay editable, with hosting, CMS, analytics, SEO, and AEO built in.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "wiki": {
     "image": "https://www.notion.com/front-static/meta/global-evergreen-02.png",
     "title": "Your connected workspace for wiki, docs & projects | Notion",
     "description": "It’s hard to move fast if you’ve got a clunky and disorganized workspace. Centralize all your knowledge in Notion instead.",
     "lang": "en-us",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "obsidian": {
     "image": "https://obsidian.md/images/banner.png",
     "title": "Obsidian - Sharpen your thinking",
     "description": "The free and flexible app for your private thoughts.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "linear-features": {
     "image": "https://linear.app/api/og/generic?title=Features&v=5",
     "title": "Features – Linear",
     "description": "Linear is the system for modern product development. Streamline work across the entire development cycle, from roadmap to release.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "asana": {
     "image": "https://assets.asana.biz/transform/8f92fea7-093e-47f7-a498-cbf1122f79df/CN24-web-product-ui-overlay-goals",
     "title": "Asana Work Management - Features, Uses & Product • Asana",
     "description": "What is Asana? Read about features, how to use it, and signing up for an account. Asana has business features for your projects, workflows, goals, and team!",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "posthog": {
     "image": "https://res.cloudinary.com/dmukukwp6/image/upload/product_analytics_d5ab5a02cb.jpg",
     "title": "Product Analytics – Funnels, retention, and paths | PostHog",
     "description": "Track funnels, retention, user paths, and feature adoption with Product Analytics. Autocapture events, query with SQL, and get 1M events free monthly.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "plausible": {
     "image": "https://plausible.io/assets/images/plausible_promo.jpg",
     "title": "Plausible Analytics",
     "description": "Plausible is a lightweight and open-source Google Analytics alternative. Your website data is 100% yours and the privacy of your visitors is respected.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "first-page": {
     "image": "https://images.ctfassets.net/spoqsaf9291f/3NOGXxdVV5dIdTht2gwssh/ba46b20f8bdf31aad2957d2905c74656/creating-a-page.png",
     "title": "Creating a page",
     "description": "New to Notion? Learn how to get started by adding a new page to your Notion workspace.",
     "lang": "en-us",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "new-project": {
     "image": "https://linear.app/api/og/docs?title=Projects",
     "title": "Projects – Linear Docs",
     "description": "Create Projects for features or large units of work.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "history": {
     "image": "https://help.figma.com/hc/theming_assets/01HZFG1N1QJPKABHT3PHQQ0J9J",
     "title": "View a file's version history",
-    "description": "Before you start\nWho can use this feature\n\n\nAll plans\n\n\n\n\nKeep track of changes you've made to your files with version history. Explore a timeline of events dating back to the file's creation.\n\nVie...",
+    "description": "Before you start\nWho can use this feature\n\n\nAll plans\n\n\n\n\nKeep track of changes you've made to your files with version history. Explore a timeline of events dating back to the file's creati...",
     "lang": "en-US",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "export": {
     "image": "https://help.figma.com/hc/theming_assets/01HZFG1N1QJPKABHT3PHQQ0J9J",
     "title": "Export formats and settings for static designs",
     "description": "Figma Design supports a variety of export formats and settings. Use this article to determine which format best suits your needs. When you’re ready to export your designs, check out Export from Fig...",
     "lang": "en-US",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "interfere": {
     "image": "https://interfere.com/og/opengraph-image.png",
     "title": "Production visibility for teams that ship fast › Interfere",
     "description": "Interfere empowers engineers, product managers and designers with real-time understanding of previously unseen bugs and issues.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "displace": {
     "image": "https://displace.agency/opengraph-image?45e30ba1bb32a4c0",
     "title": "Displace Agency | Stores, websites and platforms",
     "description": "We design, build and run Shopify stores, websites and custom platforms for design-led brands, from Madrid and Miami. Live on a date we write down.",
     "lang": "en-US",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "orior": {
     "image": "https://www.oriorai.com/opengraph-image?e89efaff61b314ad",
     "title": "Orior AI | Create Photorealistic UGC Characters & Post Everywhere",
     "description": "Create an AI character that keeps the same face in every photo and video, copy any pose onto it, and post to Instagram, TikTok, X, Threads and YouTube. Works in ChatGPT, Claude and Grok too.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "nothing-to-watch": {
     "image": "https://nothing-to-watch.port80.ch/og.jpg",
     "title": "There's nothing to watch - Interactive Movie Discovery",
     "description": "Discover movies through an interactive visualization. Explore tens of thousands of films in a unique force-directed voronoi diagram interface.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "shopify-editions-winter-26": {
     "image": "https://cdn.shopify.com/s/files/1/0951/3130/4218/files/share.png?v=1765212809",
     "title": "Shopify Editions | Winter '26",
     "description": "The commerce renaissance is here. Explore 150+ product updates across AI, retail, and more.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "podium": {
     "image": "https://www.datocms-assets.com/170228/1776225176-podium_socials2.png",
     "title": "Podium | Creative Studio & Video Production for Sports",
     "description": "Creative direction, film production and photography for sports brands worldwide.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "gregor-collienne": {
     "image": "https://gregorcollienne.com/wp-content/themes/fstheme/assets/img/logo-symbole.svg",
     "title": "Gregor Collienne - Overview",
     "description": "Photographer working mainly in portrait,lifestyle, and commercial photography, either for advertising agencies ordirect clients of any size.",
     "lang": "en-US",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "harry-atkins": {
     "image": "https://harryjatkins.com/share.jpg",
     "title": "Harry Atkins",
     "description": "Independent Developer",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "astro-dither": {
     "image": "https://astrodither.robertborghesi.is/share.jpg",
     "title": "ASTRODITHER — Robert Borghesi LAB — [SIGNAL. LOST. BEAUTY. FOUND. DIGITAL. CHAOS.]",
     "description": "[SIGNAL. LOST. BEAUTY. FOUND. DIGITAL. CHAOS.] — AstroDither, an audio reactive Threejs /WebGPU experiment by Robert Borghesi on dithering and fluid simulation with TSL.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "cathy-dolle": {
     "image": "https://cdn.sanity.io/images/7npwh62g/production/d44a83155905b03cb0ae63b31ddd05041505e594-1440x810.webp",
     "title": "Cathy DOLLE - Interactive Designer",
     "description": "Cathy Dolle is a designer and front-end developer who creates simple, thoughtful digital experiences with a minimalist, detail-driven approach. She enjoys shaping quiet, refined identities and occasionally shares her creative process on Twitch",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "vercel": {
     "image": "https://lishhsx6kmthaacj.public.blob.vercel-storage.com/og-home-not-x.png",
     "title": "Agentic Infrastructure - Vercel",
     "description": "The autonomous stack for every app and agent.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "supabase": {
     "image": "https://supabase.com/images/og/supabase-og.png",
     "title": "Supabase | The Postgres Development Platform",
     "description": "Build production-grade applications with a Postgres database, Authentication, instant APIs, Realtime, Functions, Storage and Vector embeddings. Start for free.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "clerk": {
     "image": "https://clerk.com/opengraph-image.jpg?opengraph-image.17r31whircaqh.jpg",
     "title": "Clerk | Authentication and User Management",
     "description": "The easiest way to add authentication and user management to your application. Purpose-built for React, Next.js, Remix, and “The Modern Web”.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "liveblocks": {
     "image": "https://liveblocks.io/images/social-images/social-image.png",
     "title": "Liveblocks | Realtime and sync for the agentic web",
     "description": "Liveblocks provides the infrastructure to handle concurrent edits on shared data, so people and AI agents can collaborate without breaking your app.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "railway": {
     "image": "https://railway.com/og.png?v=2",
     "title": "Railway | The all-in-one intelligent cloud provider",
     "description": "Railway is a full-stack cloud for deploying web apps, servers, databases, and more with automatic scaling, monitoring, and security.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "warp": {
     "image": "https://www.warp.dev/og/default.png",
     "title": "Warp — Open Infrastructure for Cloud Software Factories",
     "description": "Build your software factory on Warp: factories as code, any model or harness, with evals, benchmarks, and self-improvement built in.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "zed": {
     "image": "https://zed.dev/img/home/og.webp",
     "title": "Zed — Your last next editor",
     "description": "Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "granola": {
     "image": "https://www.granola.ai/og-image.png",
     "title": "Granola — The AI Notepad for back-to-back meetings",
     "description": "The AI notepad for back-to-back meetings. Notes, actions and memory. Without a meeting bot.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "clay": {
     "image": "https://cdn.prod.website-files.com/61477f2c24a826836f969afe/6a3ab15061812432ead96f56_Clay_Homepage_og-image%201000.png",
     "title": "Clay | Build systems to grow revenue",
     "description": "Infrastructure to get any data, run agentic workflows, and launch GTM plays.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "mercury": {
     "image": "https://www.datocms-assets.com/115132/1746056008-2025-04-30_fem_homepage-social_1200x630.webp?auto=format&fit=crop&w=1200",
     "title": "Online Business Banking For Startups, Small Businesses & Scaling Companies",
     "description": "Everything you do with money. All in one place. Apply in 10 minutes for business banking that transforms how you operate.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "family": {
     "image": "https://family.co/preview.png",
     "title": "Family",
     "description": "Your favorite crypto wallet.",
     "lang": "",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "craft": {
     "image": "https://www.craft.do/craft_og.png",
     "title": "Craft — Productivity App for Notes, Tasks, and Docs",
     "description": "A free notes and productivity app that follows you across all your devices. Premium features available.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "amie": {
     "image": "https://amie.so/images/meta.png",
     "title": "Amie - AI Note Taker",
     "description": "Turn meeting notes into automated workflows. Handle meetings, summaries, todos and emails (soon) with your AI personal assistant.",
     "lang": "",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "superhuman": {
     "image": "https://superhumanstatic.com/vwfkeyj6n9ac/70d5WBekIRRrA200BtyOob/7ecef93df6ed744b4e7df600140732e1/HP-Meta-Image-8-12-2026__1_.gif",
     "title": "Superhuman: Docs, Mail, and AI That Work Everywhere",
     "description": "Superhuman is the AI productivity suite that gives you superpowers everywhere you work. So you can be more creative, strategic, and impactful.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "elevenlabs": {
     "image": "https://elevenlabs.io/cover.png",
     "title": "Free AI Voice Generator & Voice Agents Platform | ElevenLabs",
     "description": "Create lifelike speech with our AI voice generator and voice agents platform. Access 17,500+ voices in 90+ languages with secure APIs and SDKs.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "runway": {
     "image": "https://d3phaj0sisr2ct.cloudfront.net/site/assets/homepage-og-card-v3.webp",
     "title": "Runway | Intelligent tools for scaling content and teams.",
     "description": "Runway is building foundational Real-World Intelligence that is changing how the world’s top brands, companies, agencies and studios are able to tell their stories.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "fal": {
     "image": "https://cdn.prod.website-files.com/6a72ef21c470312422dea9b3/6adaf88699e6546368a8ed62_fal-opengraph-full-stack-cyan-pink-1200x630.png",
     "title": "fal, your full stack for generative media",
     "description": "Access 1,500+ AI models for image, video, and audio generation. Deploy with serverless GPUs, 10x faster inference, and 99.99% uptime. Trusted by 2.5M+ devs.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "rapha": {
     "image": "https://media.rapha.cc/image/upload/w_1200,q_auto,f_auto/default-seo.jpg",
     "title": "The World's Finest Cycling Clothing and Accessories | Rapha",
     "description": "We exist to inspire the world to live life by bike, because it’s never just a ride. Shop the world’s finest riding apparel, made by cyclists, for cyclists.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "hay": {
     "image": "https://www.hay.com/Frontend/Graphics/fallback/logo-hay-1-1.png",
     "title": "HAY.com – latest products, designer news and retailer info",
     "description": "View HAY.com’s range of designer furniture, find local dealers, learn more about the designers’ backgrounds and be updated on the latest design news here.",
     "lang": "en-US",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "oura": {
     "image": "https://ouraring.com/assets/icons/opengraph-400x400.png",
     "title": "Oura Ring. Smart Ring for Fitness, Stress, Sleep & Health.",
     "description": "Enhance your health journey with Oura. The Oura Ring provides round-the-clock insights into sleep, fitness, and stress for wellness. Now HSA/FSA eligible.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "playdate": {
     "image": "https://play.date/static/images/social-card-3.d239ab818725.jpg",
     "title": "Playdate.  The little yellow game system with a crank.",
     "description": "It’s yellow. It fits in your pocket. There’s a crank. It comes with 24 free games to get you started. Say hi to Playdate from Panic.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "analogue": {
     "image": "https://www.analogue.co/opengraph-image.png?opengraph-image.0y24ldaxhv2vu.png?dpl=dpl_5sREW6FoDKK5c2vVERdAeStKwLhd",
     "title": "Analogue",
     "description": "We make products to celebrate and explore the history of video games with the respect it deserves.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
+  },
+  "locomotive": {
+    "image": "https://locomotive.ca/uploads/metadata/Open_Graph_Loco_%281%29.png",
+    "title": "Locomotive | Montreal web agency",
+    "description": "Locomotive® offers a wide range of creative and strategic services for remarkable brands, companies and organizations. Over the 15 years, Locomotive® has become a go-to for meaningful, innovative, results-driven digital experiences, web design and branding. Freshness guaranteed.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
   },
   "buck": {
     "image": "https://buck.co/social.png",
     "title": "BUCK",
     "description": "BUCK is a global creative company that brings brands, stories, and experiences to life through art, design, and technology.",
     "lang": "",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "collins": {
     "image": "https://cdn.sanity.io/images/fmzd4n68/production/e2ee60a94e1ccaae172c0c8304c59572d6316bb2-1200x630.png",
     "title": "COLLINS",
     "description": "Make your company as valuable as it is unignorable.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "ordinary-folk": {
     "image": "https://media.ordinary.co/wf/63fd47110890ceb28d955f1d_open-graph-image.jpg",
     "title": "Ordinary Folk – Motion Design & Animation Studio, Vancouver",
     "description": "Vancouver motion design studio making motion graphics, explainer animation, brand videos, 2D and character animation for Google, Webflow and TED.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "darkroom": {
     "image": "https://darkroom.engineering/_next/static/immutable/media/opengraph-image.1k8toaqiviy56.png",
     "title": "where things get developed - darkroom.engineering",
     "description": "We're a global design and development studio shipping fast, motion-rich, and scalable digital work. WebGL, headless builds, and open source tools.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "koto": {
     "image": "https://cdn.sanity.io/images/sbsn7wuy/production/5ca8fb4194fcd82fbe6b83b6d701f1f8cfc7f163-1200x630.png",
     "title": "Koto, an international creative agency building impactful brands",
     "description": "​​Meet Koto — a creative studio that partners with brands to shape the future with optimism, collaboration, and craft. Come see what we’re building.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "devouring-details": {
     "image": "https://devouringdetails.com/og/main.png",
     "title": "Devouring Details",
     "description": "An interactive reference manual for interaction-curious designers.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "neon": {
     "image": "https://neon.com/images/social-previews/index.jpg?updated=2026-05-27",
     "title": "Neon — Postgres backends for apps and agents",
     "description": "The backend for apps and agents. Build with Lakebase Postgres, Auth, Functions, Storage, and an AI Gateway: instant, branchable, serverless.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "convex": {
     "image": "https://www.convex.dev/og-home.png",
     "title": "Convex | All gas, no breakages",
     "description": "All gas, no breakages. Convex is the reactive backend platform that keeps up with you and your agents.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "planetscale": {
     "image": "https://planetscale.com/assets/homepage-social-Yera6DPM.png",
     "title": "PlanetScale - the world’s fastest and most scalable cloud hosting for Vitess, Neki, and Postgres",
     "description": "PlanetScale offers the world’s fastest and most scalable cloud hosting for Vitess, Neki, and Postgres.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "bun": {
     "image": "https://bun.com/share_v4.png",
     "title": "Bun — A fast all-in-one JavaScript runtime",
     "description": "Bundle, install, and run JavaScript & TypeScript — all in Bun. Bun is a fast JavaScript runtime & toolkit with a bundler, test runner, and npm-compatible package manager built in.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "tailwind": {
     "image": "https://tailwindcss.com/opengraph-image.jpg?opengraph-image.0jwfhnd690..4.jpg",
     "title": "Tailwind CSS - Rapidly build modern websites without ever leaving your HTML.",
     "description": "Tailwind CSS is a utility-first CSS framework for rapidly building modern websites without ever leaving your HTML.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "trigger": {
     "image": "https://trigger.dev/assets/og-image-hAiXVmBp.jpg",
     "title": "Trigger.dev | The open source platform for durable AI agents",
     "description": "Trigger.dev is the open source platform for durable AI agents and workflows in TypeScript. Long-running tasks with retries, queues, and LLM observability.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "mintlify": {
     "image": "https://www.mintlify.com/_next/static/media/og.28576e75.png",
     "title": "Mintlify - The documentation platform for agents",
     "description": "Self-updating documentation for startups, enterprises, and agents.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "fly": {
     "image": "https://fly.io/phx/images/og/home-8f51ecc065542ebfe86badc4143a197d.jpg?vsn=d",
     "title": "Fly.io | Deploy apps and agents on hardware-isolated VMs",
     "description": "Deploy apps, agents, and databases on hardware-isolated VMs. Pay only for the seconds they run. Sign up free.",
     "lang": "en-US",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "mistral": {
     "image": "https://mistral.ai/cms-media/api/media/file/cover-mistral-sovereign%20copie.webp",
     "title": "Mistral | #1 in Sovereign AI: Frontier Open Models You Own",
     "description": "Frontier open-weight models you own and control. Customize with Forge, deploy with Studio, run on-prem, your VPC, or our cloud.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "groq": {
     "image": "https://groq.com/images/og.png",
     "title": "Groq is the premier neocloud for fast inference",
     "description": "Groq is the premier neocloud for fast inference. One fully integrated platform for infrastructure, inference, and control. Millions of developers run trillions of tokens on Groq every week.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "together": {
     "image": "https://cdn.prod.website-files.com/69654e88dce9154b5f1206dd/69a49f86fc70648ca04854f6_OG-image-home.png",
     "title": "Together AI | The AI Native Cloud",
     "description": "Build what's next on the AI Native Cloud. Full-stack AI platform for inference, fine-tuning, and GPU clusters — powered by cutting-edge research.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "arcade": {
     "image": "https://cdn.prod.website-files.com/61d72a2cda50bc679e28766b/6ad6296fc947c3b5328c13c5_OG%402x.jpg",
     "title": "Arcade | AI Video Generator for Marketing Teams",
     "description": "Arcade is the AI video platform for marketing teams. Turn an idea into a polished launch video, tutorial or social clip. Start free.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "spline": {
     "image": "https://spline.design/_next/static/immutable/media/spline_og.41onuyn8l-00s.png",
     "title": "Spline - Free 3D Design Tool in Your Browser",
     "description": "Spline is free 3D design and 3D modeling software in your browser. Animation, textures and real-time collaboration with AI agents for interactive web experiences.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "miro": {
     "image": "https://framerusercontent.com/assets/Bab0War93Jeq5MpDPwqKFiyI.png",
     "title": "AI Innovation Workspace | Miro",
     "description": "Speed up product development from ideation to launch. Align teams, break tool silos, and ship what customers need in one AI-powered visual platform.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "tally": {
     "image": "https://tally.so/images/og.jpg",
     "title": "Tally - Create Beautiful Forms for Free | Unlimited Forms & Submissions",
     "description": "The simplest way to create beautiful, professional forms in seconds. Unlimited forms, unlimited submissions, forever free. Just start typing - no coding needed.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "kagi": {
     "image": "https://kagi.com/_mkt/img/og-image.png",
     "title": "Kagi Search - Better search results. No ads.",
     "description": "Better search results. No ads. We pull from the leading search engines, then re-rank everything and filter out spam.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "knock": {
     "image": "https://knock.app/assets/og-4.png",
     "title": "Knock | Agentic customer engagement infrastructure",
     "description": "Knock is agentic customer engagement infrastructure to grow faster. Ship cross-channel lifecycle and transactional messaging from your favorite agent.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "diabrowser": {
     "image": "https://cdn.sanity.io/images/e5fj2khm/production/2d41d699e7809faa14b264580c1a371606e4070a-1296x678.png?rect=3,0,1291,678&w=1200&h=630&fm=jpg&q=80&fit=crop",
     "title": "Dia | A browser you won't dread opening",
     "description": "Dia is the browser for your best work. Get answers without having to ask, produce beautiful ready-to-share outputs, and stay focused in the best browser for your work day.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "anytype": {
     "image": "https://anytype.io/ogimage.jpg",
     "title": "Anytype — A safe haven for digital collaboration",
     "description": "Create notes, tasks, databases, and chats that only you can access. Your data stays on your device — fully owned, secure, and private. Free to start.",
     "lang": "",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "mymind": {
     "image": "https://mymind.com/assets/uploads/2023/05/Mymind_2023_F-1024x538.jpg",
     "title": "mymind is the extension for your mind.",
     "description": "A private place to save your most precious notes, images, quotes and highlights. Enhanced with AI to help you remember without wasting time on categorizing & organizing.",
     "lang": "en-US",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "jitter": {
     "image": "https://jitter.video/assets/homepage-2026-DXrOP74Y.png",
     "title": "Jitter · A fast and simple motion design tool on the web",
     "description": "Jitter is a collaborative motion design tool that lets you create professional animations in minutes, no matter your experience with motion.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "sketch": {
     "image": "https://www.sketch.com/images/metadata/pages/home.jpg",
     "title": "Sketch · Design, prototype, collaborate and handoff",
     "description": "Sketch puts the focus back on you and your work. Made by designers, for designers.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "graza": {
     "image": "https://cdn.shopify.com/s/files/1/0550/0003/9638/files/GRAZA_SG_ILLOCARD.jpg?v=1641577069",
     "title": "GRAZA | High Quality Olive Oil\n | Graza",
     "description": "Every kitchen deserves good, fresh olive oil that’s affordable enough to be used every day. Our extra virgin olive oil is just that, and it comes in squeeze bottles + 100% recyclable refill cans that make everything easier and more fun.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "bellroy": {
     "image": "https://bellroy-cms-images.imgix.net/default-og-image.jpg",
     "title": "Bellroy | Considered Carry Goods: Wallets, Bags, Phone Cases & More",
     "description": "Bellroy puts its heart, soul and countless design hours into helping the world carry with simplicity and ease. Every piece has been deeply considered, for the best of life's little moments.",
     "lang": "",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "remarkable": {
     "image": "https://cdn.sanity.io/images/xpujt61d/production/59cad973950c0d1b88516159950dff94e2bf73d4-2400x1260.png",
     "title": "reMarkable: The Paper Tablets for Focused Work",
     "description": "Experience the power of focused work. reMarkable’s paper tablets and accessories provide a dedicated space for your notes, documents, and ideas, free from no...",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "metalab": {
     "image": "https://cdn.sanity.io/images/nuxb3jim/production-july-2025/650536c56eff4fa74f4db66048d36451b2343616-1600x900.png?w=1200&h=630&q=80&fm=webp&fit=clip",
     "title": "Metalab | We make interfaces",
     "description": "Metalab helps some of the world's top companies — like Slack and Google \n — design, build, and ship amazing products and services.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "dixonbaxi": {
     "image": "https://www.datocms-assets.com/160962/1756372926-homepage_thumbnail.webp?auto=format&fit=max&w=1200",
     "title": "DixonBaxi",
     "description": "Brave brands change the world. We help create them.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "cuberto": {
     "image": "https://cuberto.com/cover.png",
     "title": "Digital Design & Development Agency",
     "description": "Cuberto is a UI/UX design agency based in USA. We specialise in UI/UX design, branding, web, and mobile development.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
   },
   "lemonsqueezy": {
     "image": "https://cdn.prod.website-files.com/6347244ba8d63489ba51c08e/6358e59c97dcbfdc770e1ff8_og2.jpg",
     "title": "Payments, Tax & Subscriptions for SaaS",
     "description": "Sell digital products and SaaS software the easy peasy way with Lemon Squeezy. As your merchant of record, we handle the tax compliance burden so you can focus on more revenue and less headache.",
     "lang": "en",
-    "fetchedAt": "2026-11-12"
+    "fetchedAt": "2026-11-13"
+  },
+  "render": {
+    "image": "https://cdn.sanity.io/images/hvk0tap5/production/5a3d09340caee8e7a85e7daa6eef416b4197581e-1200x630.png?fit=max&auto=format",
+    "title": "Render | The cloud for builders",
+    "description": "Deploy and scale any app or agent from your first user to your billionth. Build faster on intuitive cloud infrastructure for the modern web.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "turso": {
+    "image": "https://turso.tech/opengraph-image.png?8abb64b5fd9d7c60",
+    "title": "Turso - Millions of Databases. One Architecture.",
+    "description": "Turso is the SQLite-based database architecture for millions of databases. Spin up a database for every user, agent, and tenant, with embedded replication, per-database encryption, and economics that scale with you.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "upstash": {
+    "image": "https://upstash.com/og-home.jpg",
+    "title": "Upstash: Serverless Data Platform - Redis, Vector, Search",
+    "description": "Serverless Redis, Vector and Search databases with low latency and pay-as-you-go pricing. Upstash is the data platform for modern and AI applications — create a Redis database in seconds.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "workos": {
+    "image": "https://cdn.prod.website-files.com/621f54116cab10f6e9215d8b/627321b887917b110d342e2b_homepage.png",
+    "title": "WorkOS — Your app, Enterprise Ready.",
+    "description": "Developer APIs/SDKs for Enterprise Ready features like Single Sign-On, Directory Sync, Audit Logging, and more. Get started for free.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "inngest": {
+    "image": "https://www.inngest.com/assets/homepage/open-graph-2026.png",
+    "title": "Inngest - Durable Execution for Workflows & AI",
+    "description": "Build reliable background jobs, workflows, and AI agents without extra infrastructure. Automatic retries, flow control, and step-level observability.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "temporal": {
+    "image": "https://temporal.io/images/open-graph/shiny.png",
+    "title": "Durable Execution Solutions",
+    "description": "Build invincible apps with Temporal's open source durable execution platform. Eliminate complexity and ship features faster. Talk to an expert today!",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "fern": {
+    "image": "https://buildwithfern.com/og-default.jpg",
+    "title": "Fern: Docs, SDKs, and CLIs for your API",
+    "description": "Start with OpenAPI. Generate SDKs in multiple languages, interactive API documentation, and an agent-first CLI.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "speakeasy": {
+    "image": "https://www.speakeasy.com/api/og?title=Govern%20and%20secure%20enterprise%20AI",
+    "title": "Govern and secure enterprise AI — Speakeasy",
+    "description": "The AI control plane for discovering, securing, and governing AI agents, MCP servers, and AI applications across your enterprise.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "sentry": {
+    "image": "https://sentry.io/_astro/home-hero-meta.DJDejDMD.webp",
+    "title": "Application Performance Monitoring & Error Tracking Software",
+    "description": "Application performance monitoring for developers & software teams to see errors clearer, solve issues faster & continue learning continuously. Get started at sentry.io.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "axiom": {
+    "image": "https://axiom.co/opengraph-image?6ebaa6990827af23",
+    "title": "Axiom - The modern machine data platform",
+    "description": "The modern machine data platform — Petabyte-scale, schema-less ingest on a fully managed event store, so you keep every byte without the operational cost of running it yourself.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "honeycomb": {
+    "image": "https://cdn.sanity.io/images/927dxq0h/production/006bedf3086d9e1697baebf6a8b9a88b1fd08c08-2880x1590.png?rect=0,43,2880,1505&w=1200&h=627&fit=crop",
+    "title": "Honeycomb: AI-Ready Observability Platform",
+    "description": "Honeycomb is the observability platform built for AI-era software. Fast queries, unified telemetry, and LLM observability. Used by Slack, Intercom, and Dropbox.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "pinecone": {
+    "image": "https://www.pinecone.io/api/og/?title=Trusted+knowledge+for&highlight=AI+in+production&alignment=center",
+    "title": "The trusted AI knowledge company | Pinecone",
+    "description": "Pinecone is the trusted AI knowledge company. Its AI knowledge platform—Database, Nexus, and Marketplace—powers accurate, fast, cost-effective AI for 10,000+ customers and 1M developers worldwide.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "hume": {
+    "image": "https://www.hume.ai/opengraph-image.jpg",
+    "title": "Measure and improve real-world voice AI performance",
+    "description": "Hume helps frontier labs and enterprises build more emotionally intelligent voice AI through voice-native evaluation, human judgment, and evidence that guides improvement.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "folk": {
+    "image": "https://cdn.prod.website-files.com/626be00c396339c5a816353b/6ac36f507774a775e9d11ef9_Open-graph.webp",
+    "title": "The AI CRM for your entire sales motion",
+    "description": "One platform for your entire sales motion. Prospect, engage, and close deals with the only AI CRM your team needs. Trusted by 5,000+ companies.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "tana": {
+    "image": "https://tana.inc/og?type=landing&page=%2F&v=151yg6a",
+    "title": "Tana - Do work in the meeting",
+    "description": "Tana is the agentic meeting platform for teams. Bring your own Claude or ChatGPT into the meeting: it gets the live transcript and the shared screen, and the work gets done while you talk. No bot joins the call.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "hey": {
+    "image": "https://www.hey.com/assets/images/opengraph/hey.png?v=1.1.12",
+    "title": "A delightfully fresh take on email + calendar, from 37signals",
+    "description": "Gmail, Outlook, and Apple got complacent and took their eye off the ball. Then along came HEY.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "basecamp": {
+    "image": "https://basecamp.com/assets/images/opengraph/basecamp.png?v=1.6.44",
+    "title": "Basecamp",
+    "description": "Trusted by millions, Basecamp puts everything you need to get work done in one place. It’s the calm, organized way to manage projects, work with clients, and communicate company-wide.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "descript": {
+    "image": "https://cdn.sanity.io/images/lsw4j9eq/production/126b70d12a747eb60c81bad5b72942f7d75041dd-1200x630.jpg?fit=max&auto=format",
+    "title": "Descript: AI Video & Audio Text-based Editor — Try Free",
+    "description": "Descript is the AI video and audio editor that makes editing as easy as editing text. Record, transcribe, edit, and publish in one tool. Try it free.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "lottiefiles": {
+    "image": "https://stp-v4-cdn.lottiefiles.com/ogimage_Homepage_b5840ac00c.png",
+    "title": "LottieFiles: Download Free lightweight animations for website & apps.",
+    "description": "Effortlessly bring the smallest, free, ready-to-use motion graphics for the web, app, social, and designs. Create, edit, test, collaborate, and ship Lottie animations in no time!",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "fillout": {
+    "image": "https://static.fillout.com/fillout-og-image.png",
+    "title": "Fillout | Forms that do it all",
+    "description": "Create powerful forms, surveys and quizzes your audience will answer. Store responses directly where you need them.",
+    "lang": "en-US",
+    "fetchedAt": "2026-11-13"
+  },
+  "brex": {
+    "image": "https://www.brex.com/api/proxy-image?url=https%3A%2F%2Fbrand.brex.com%2Ftransform%2F7b10bdf8-ed31-4a40-8429-c9fe54f83aa5%2FHomepage-preview%3Fio%3Dtransform%3Afit%2Cwidth%3A1200",
+    "title": "Brex: The Modern Finance Software Platform | Spend Smarter",
+    "description": "Simplify expense management with Brex's finance platform. From company cards to banking, Brex helps you drive growth, automate processes, & earn more.",
+    "lang": "en-US",
+    "fetchedAt": "2026-11-13"
+  },
+  "wise": {
+    "image": "https://wise.com/public-resources/assets/icons/wise-personal/share_landscape.png",
+    "title": "Wise: The international account | Money without borders | Wise Japan",
+    "description": "150+ countries, 40 currencies, one account. Save when you send, spend and manage your money internationally.",
+    "lang": "en-GB",
+    "fetchedAt": "2026-11-13"
+  },
+  "arena": {
+    "image": "https://www.are.na/og-image.png",
+    "title": "Are.na",
+    "description": "Are.na is a platform for connecting ideas and building knowledge.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "readwise": {
+    "image": "https://d34adp677peecb.cloudfront.net/static/images/landing2/share-card.2874a5b7ba41.jpg",
+    "title": "Readwise: Get the most out of what you read",
+    "description": "Easily revisit and learn from your highlights and annotations.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "ladybird": {
+    "image": "https://ladybird.org/assets/img/ladybird-purple-on-black.png",
+    "title": "Ladybird",
+    "description": "Ladybird is a truly independent web browser, backed by a non-profit.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "wispr": {
+    "image": "https://cdn.prod.website-files.com/682f84b3838c89f8ff7667db/6a724a4fff322698a57a7d97_dictation-og%20(1).jpg",
+    "title": "Wispr Flow | Voice to Text Dictation & AI Notetaker",
+    "description": "Flow makes writing quick and clear with seamless voice dictation. It is the fastest, smartest way to type with your voice.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "magicspoon": {
+    "image": "https://magicspoon.com/cdn/shop/t/667/assets/og-image.jpg?v=227282",
+    "title": "High Protein, Keto-Friendly, 0g Sugar Cereal | Magic Spoon Cereal",
+    "description": "Magic Spoon is high-protein, keto-friendly, gluten-free cereal with 0g of sugar. Available in Cocoa, Frosted, Blueberry, Peanut Butter and Cinnamon.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "olipop": {
+    "image": "https://cdn.shopify.com/s/files/1/0034/6610/0806/files/Website_-_Social_-_Share_-_V1.png?v=1639521624",
+    "title": "OLIPOP | Healthy Prebiotic Soda",
+    "description": "Discover a new kind of soda made with plant fiber and prebiotics. Non-GMO, gluten-free, paleo, and vegan, with high fiber and 2-5g of sugar. Enjoy a variety of delicious, refreshing and classic flavors.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "fellow": {
+    "image": "https://fellowproducts.com/cdn/shop/files/Fellow-Web-Share-v2.jpg?v=1773786600",
+    "title": "Fellow - Everyday Magic.™",
+    "description": "Greetings fellow coffee lovers. What happens when a love for coffee and a passion for product design meet up for a romantic candlelit dinner? Fellow happens. Makers of the award winning Stagg EKG Electric Pour-Over Kettle.",
+    "lang": "en",
+    "fetchedAt": "2026-11-13"
+  },
+  "poppi": {
+    "image": "https://assets.decovostatic.com/static-images/poppi/poppi/favicon.png",
+    "title": "poppi",
+    "description": "poppi — the prebiotic soda. Bold, bubbly flavor with just a touch of fruit juice and prebiotics to support a healthy gut. Find your flavor and get it delivered.",
+    "lang": "en-US",
+    "fetchedAt": "2026-11-13"
   }
 }
