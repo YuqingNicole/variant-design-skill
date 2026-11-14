@@ -9,7 +9,9 @@ type Text<S> = { id: 'A' | 'B' | 'C'; name: S; preview?: string;
 type Stored<S> = { slug: string; title: S; summary: S; brief: S; category: string; tags: string[];
   source: 'own' | 'permission' | 'link-only'; kind?: 'verified' | 'concept'; credit: { name: string; url: string };
   directions: Text<S>[]; recommendation?: { variant: 'A' | 'B' | 'C'; reason: S };
-  evidence?: { context: string }; featured: boolean; publishedAt: string; translations?: Translations };
+  evidence?: { context: string }; featured: boolean; publishedAt: string; translations?: Translations;
+  // How a verified entry was made (scripts/content.mjs): figures copied from the run transcript, the prompt as given, the skill commands the agent ran.
+  run?: { agent: string; model?: string; date: string; durationSec?: number; costUsd?: number; turns?: number; prompt?: S; commands?: string[]; record?: string } };
 export type Direction = Text<Localized>;
 export type Entry = Stored<Localized>;
 export const repository = 'https://github.com/YuqingNicole/variant-design-skill';
@@ -24,6 +26,7 @@ const modules = import.meta.glob<Stored<Pair>>('../content/entries/*.json', { ea
 // Entry files and published direction cards keep their [zh, en] pairs (RFC-005 §3.3); pages read keyed values.
 const keyed = (e: Stored<Pair>): Entry => ({ ...e, title: fromPair(e.title), summary: fromPair(e.summary), brief: fromPair(e.brief),
   recommendation: e.recommendation && { ...e.recommendation, reason: fromPair(e.recommendation.reason) },
+  run: e.run && { ...e.run, prompt: e.run.prompt && fromPair(e.run.prompt) },
   directions: e.directions.map(d => ({ ...d, name: fromPair(d.name), media: d.media.map(i => ({ ...i, alt: fromPair(i.alt) })),
     comparison: { optimizes: fromPair(d.comparison.optimizes), tradeoff: fromPair(d.comparison.tradeoff), bestFor: fromPair(d.comparison.bestFor) } })) });
 // Featured first, then newest; the slug keeps the order stable.

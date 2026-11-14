@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>半山面包 · 预订明早的面包</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="shared/brand-extensions.css">
+<link rel="stylesheet" href="shared/base.css">
+<link rel="stylesheet" href="variant-bakery-B.css">
+</head>
+<body>
+<header class="site-header" data-zone="header">
+  <a class="site-brand" href="#top">半山面包</a>
+  <nav class="site-nav" aria-label="页面导航"><a href="#menu">今日面包</a><a href="#visit">到店</a><a href="#order">预订</a></nav>
+</header>
+
+<main class="page" id="top">
+  <!-- zone:hero:start -->
+  <section class="intro" data-zone="hero">
+    <h1>每天早上七点出炉</h1>
+    <p>天然酵种、本地小麦，杭州西溪路 128 号。卖完即止，所以明早想吃哪款，今天先订下。</p>
+  </section>
+  <!-- zone:hero:end -->
+
+  <!-- zone:order:start -->
+  <section id="order" data-zone="order" aria-labelledby="order-title">
+    <h2 id="order-title" class="visually-hidden">预订</h2>
+    <form class="order-form" novalidate>
+      <!-- zone:menu:start -->
+      <fieldset class="step" id="menu" data-zone="menu">
+        <legend class="step-head">
+          <span class="field-label"><span class="visually-hidden">第一步，</span>选明早要的面包</span>
+          <span class="muted">每款最多 <span data-max></span> 个 · 括号内为今日柜台剩余</span>
+        </legend>
+        <ul class="picker" data-breads></ul>
+        <p class="field-error" data-error-for="items" aria-live="polite"></p>
+      </fieldset>
+      <!-- zone:menu:end -->
+
+      <fieldset class="step">
+        <legend class="step-head"><span class="field-label"><span class="visually-hidden">第二步，</span>取货信息</span></legend>
+        <div class="contact">
+          <label class="field">
+            <span>手机号</span>
+            <input name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="11 位手机号" required>
+            <span class="field-error" data-error-for="phone" aria-live="polite"></span>
+          </label>
+          <label class="field">
+            <span>取货日期</span>
+            <input name="date" type="date" required>
+            <span class="field-hint">最早明天（<span data-earliest></span>），周一休息。</span>
+            <span class="field-error" data-error-for="date" aria-live="polite"></span>
+          </label>
+          <p class="form-status" data-status aria-live="polite"></p>
+        </div>
+      </fieldset>
+
+      <div class="summary" aria-live="polite">
+        <div class="summary-line">
+          <span data-summary-text class="empty">还没选面包</span>
+          <span class="total" data-summary-total></span>
+        </div>
+        <button class="btn btn-primary" type="submit">提交预订</button>
+        <p class="fine">到店付款。七点出炉后为你留到十点，过时放回柜台售卖。</p>
+      </div>
+    </form>
+    <div class="success" data-success hidden role="status">
+      <h3>已收到，我们会短信确认。</h3>
+      <p data-success-detail></p>
+      <p><button class="btn btn-quiet" type="button" data-again>再订一份</button></p>
+    </div>
+  </section>
+  <!-- zone:order:end -->
+
+  <!-- zone:visit:start -->
+  <section id="visit" class="visit" data-zone="visit" aria-labelledby="visit-title">
+    <h2 id="visit-title">到店</h2>
+    <p>周二至周日 7:00–14:00 · 周一休息</p>
+    <p>杭州西溪路 128 号</p>
+  </section>
+  <!-- zone:visit:end -->
+</main>
+
+<footer class="site-footer" data-zone="footer">© 半山面包</footer>
+
+<script src="shared/bakery-data.js"></script>
+<script>
+(function () {
+  var B = window.BANSHAN, d = B.data;
+  document.querySelector('[data-max]').textContent = d.maxPerBread;
+  document.querySelector('[data-earliest]').textContent = B.describeEarliest();
+  var list = document.querySelector('[data-breads]');
+  B.renderBreads(list, function (bread) {
+    var todayClass = bread.stock === 0 ? 'today is-out' : 'today';
+    return '<li data-qty="' + bread.id + '">' +
+      '<span class="info">' +
+        '<span class="name" id="name-' + bread.id + '">' + bread.name + '</span>' +
+        '<span class="price num">' + B.formatPrice(bread.price) + '</span>' +
+        '<span class="' + todayClass + '">（今日' + B.stockLabel(bread.stock) + '）</span>' +
+      '</span>' +
+      '<span class="desc">' + bread.desc + '</span>' +
+      '<span class="qty" role="group" aria-labelledby="name-' + bread.id + '">' +
+        '<button type="button" data-step="-1" aria-label="减少' + bread.name + '数量">−</button>' +
+        '<input type="number" name="qty-' + bread.id + '" value="0" min="0" max="' + d.maxPerBread + '" aria-label="' + bread.name + '数量">' +
+        '<button type="button" data-step="1" aria-label="增加' + bread.name + '数量">+</button>' +
+      '</span></li>';
+  });
+  var text = document.querySelector('[data-summary-text]');
+  var total = document.querySelector('[data-summary-total]');
+  function refresh() {
+    var s = B.summarize(B.chosenItems(list));
+    if (!s.text) { text.textContent = '还没选面包'; text.classList.add('empty'); total.textContent = ''; return; }
+    text.textContent = '明早取 ' + s.text;
+    text.classList.remove('empty');
+    total.textContent = B.formatPrice(s.total);
+  }
+  B.setupQuantityPickers(list, refresh);
+  B.setupOrderForm(document.querySelector('#order form'), {
+    items: function () { return B.chosenItems(list); },
+    reset: function () { B.setupQuantityPickers(list, refresh); refresh(); }
+  });
+})();
+</script>
+</body>
+</html>

@@ -123,7 +123,10 @@ function card(e) {
 function entryBody(e) {
   const directions = e.directions.map(d => `<section><h2>${d.id} · ${escape(d.name[0])}</h2><img src="/media/${e.slug}/${escape(d.media[0].file)}" width="${d.media[0].width}" height="${d.media[0].height}" alt="${escape(d.media[0].alt[0])}"><dl><dt>优化</dt><dd>${escape(d.comparison.optimizes[0])}</dd><dt>取舍</dt><dd>${escape(d.comparison.tradeoff[0])}</dd><dt>适合</dt><dd>${escape(d.comparison.bestFor[0])}</dd></dl></section>`).join('');
   const recommendation = e.recommendation ? `<aside><h2>推荐 ${e.recommendation.variant}</h2><p>${escape(e.recommendation.reason[0])}</p></aside>` : '';
-  return `<main><p><a href="/">作品</a> / <a href="/c/${e.category}">${escape(categoryNames[e.category] ?? e.category)}</a></p><h1>${escape(e.title[0])}</h1><p>${escape(e.summary[0])}</p><p>${escape(kindLabel(e))} · ${escape(e.credit.name)} · ${e.publishedAt}</p><p>任务：${escape(e.brief[0])}</p>${directions}${recommendation}</main>`;
+  // How a verified case was made, the same facts the client renders (LibraryPage HowItWasMade).
+  const r = e.run, facts = r ? [['运行环境', r.model ? `${r.agent} · ${r.model}` : r.agent], ['日期', r.date], ['用时', r.durationSec === undefined ? null : `${Math.floor(r.durationSec / 60)} min ${r.durationSec % 60} s`], ['费用', r.costUsd === undefined ? null : `$${r.costUsd.toFixed(2)}`], ['轮次', r.turns === undefined ? null : String(r.turns)]].filter(f => f[1] !== null) : [];
+  const run = r ? `<section><h2>怎么做出来的</h2><dl>${facts.map(([k, v]) => `<dt>${k}</dt><dd>${escape(v)}</dd>`).join('')}</dl>${r.prompt ? `<p>给 agent 的原话，一次无人值守运行：</p><pre>${escape(r.prompt[0])}</pre>` : ''}${r.commands?.length ? `<p>运行中调用的技能命令，按先后：</p><ol>${r.commands.map(c => `<li><code>${escape(c)}</code></li>`).join('')}</ol>` : ''}<p>数字来自运行记录；截图取自 agent 自己生成的预览文件。${r.record ? ` <a href="${repository}/blob/master/${escape(r.record)}">阅读运行记录</a>` : ''}</p></section>` : '';
+  return `<main><p><a href="/cases">案例</a> / <a href="/c/${e.category}">${escape(categoryNames[e.category] ?? e.category)}</a></p><h1>${escape(e.title[0])}</h1><p>${escape(e.summary[0])}</p><p>${escape(kindLabel(e))} · ${escape(e.credit.name)} · ${e.publishedAt}</p><p>任务：${escape(e.brief[0])}</p>${directions}${recommendation}${run}</main>`;
 }
 
 function guideData(g, site, lang = 'zh') {
@@ -155,7 +158,7 @@ export function renderSite(entries, template, site = defaultSite, references = [
   const zhPage = options => page(template, { site, translated: !!english[options.route], ...options });
   const enPage = options => { if (english[options.route]) pages.set(pathIn(options.route, 'en'), page(template, { site, lang: 'en', translated: true, body: english[options.route], ...options })); };
   const library = 'Variant Design 方向库';
-  const homeTitle = 'Variant Design — 互联网上最好的设计灵感', homeDescription = `精选网站、界面和动效作品，每条都附出处和我们写的笔记：研究什么、用在哪里。目前 ${references.length} 条。`;
+  const homeTitle = 'Variant Design — AI 时代最好的设计灵感', homeDescription = `精选网站、界面和动效作品，每条都附出处和我们写的笔记：研究什么、用在哪里。目前 ${references.length} 条。`;
   pages.set('/', zhPage({ route: '/', data: { '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/`, name: 'Variant Design', description: homeDescription, inLanguage: ['zh-CN', 'en'] }, title: homeTitle, description: homeDescription, body: rendered['/'] ?? '' }));
   // One page per section: its own address, title, description and only its own references.
   for (const c of sections) pages.set(`/browse/${c.id}`, zhPage({ route: `/browse/${c.id}`, title: `${c.title.zh} — Variant Design`, description: `${c.intro.zh}目前 ${c.count.zh} 条。`, body: rendered[`/browse/${c.id}`] ?? '' }));
@@ -177,7 +180,7 @@ export function renderSite(entries, template, site = defaultSite, references = [
   const enLibrary = 'Variant Design direction library', enCategories = { landing: 'Landing pages', product: 'Product UI', data: 'Data', brand: 'Brand', component: 'Components' };
   const englishReferences=references.filter(r=>english[`/inspiration/${r.id}`]);
   const enHomeDescription = `Curated websites, interfaces and motion work, each with its source and our own notes on what to study and where to use it. ${englishReferences.length} so far.`;
-  enPage({ route: '/', title: 'Variant Design — The best design inspiration during the ai area', description: enHomeDescription, data: { '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/en`, name: 'Variant Design', description: enHomeDescription, inLanguage: ['zh-CN', 'en'] } });
+  enPage({ route: '/', title: 'Variant Design — The best design inspiration in the AI era', description: enHomeDescription, data: { '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/en`, name: 'Variant Design', description: enHomeDescription, inLanguage: ['zh-CN', 'en'] } });
   enPage({ route: '/cases', title: `A/B/C cases — ${enLibrary}`, description: 'Three directions for one brief: what each optimizes, what it gives up and where it fits. Skill outputs and concept studies are labeled separately.' });
   for (const category of new Set(sorted.map(e => e.category))) { const name = enCategories[category] ?? category, count = sorted.filter(e => e.category === category).length; enPage({ route: `/c/${category}`, title: `${name} — ${enLibrary}`, description: `${name}: ${count} ${count === 1 ? 'entry' : 'entries'}, each with three directions for the same brief.` }); }
   for (const e of sorted) { const { image } = cover(e); enPage({ route: `/d/${e.slug}`, type: 'article', title: `${e.title[1]} — ${enLibrary}`, description: e.summary[1], image: { src: `/media/${e.slug}/${image.file}`, width: image.width, height: image.height, alt: image.alt[1] },
@@ -268,6 +271,15 @@ export function lastModified({ references = [], entries = [], guides = [], secti
   const docsDate = newest(guides.filter(g => g.base === '/docs').map(g => g.publishedAt)); if (docsDate) dates['/docs'] = docsDate;
   return dates;
 }
+// Crawlers that collect pages to train models are refused. Search engines and the assistants that fetch a page for
+// a person (OAI-SearchBot, ChatGPT-User, Claude-SearchBot, Claude-User, PerplexityBot, ...) stay allowed, so llms.txt and
+// the GEO work in docs/research/2026-11-02-geo-strategy.md keep their purpose. robots.txt is a request, not enforcement.
+export const aiTrainingCrawlers = ['GPTBot', 'ClaudeBot', 'anthropic-ai', 'Claude-Web', 'CCBot', 'Google-Extended', 'Applebot-Extended', 'Bytespider', 'Amazonbot', 'meta-externalagent', 'cohere-ai', 'Diffbot', 'omgili', 'omgilibot', 'ImagesiftBot', 'Timpibot'];
+export function robots(site) {
+  const refused = aiTrainingCrawlers.map(agent => `User-agent: ${agent}\nDisallow: /\n`).join('\n');
+  return `# AI training crawlers are refused; search and user-requested AI access is allowed.\nUser-agent: *\nContent-Signal: search=yes, ai-input=yes, ai-train=no\nAllow: /\n\n${refused}\nSitemap: ${site}/sitemap.xml\n`;
+}
+
 export function sitemap(routes, site = defaultSite, dates = {}) {
   const listed = [...routes].filter(r => !unlisted.has(r)), known = new Set(listed), abs = r => escape(site + (r === '/' ? '/' : r));
   const lastmod = r => { const d = dates[r === '/en' ? '/' : r.startsWith('/en/') ? r.slice(3) : r]; return d ? `<lastmod>${d}</lastmod>` : ''; };
@@ -324,6 +336,6 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   fs.writeFileSync(path.join(dist, 'feed.xml'), rss(entries, site, references));
   fs.writeFileSync(path.join(dist, 'llms.txt'), llms(listed.entries, docs, site, englishReferences, listed.guides));
   fs.writeFileSync(path.join(dist, 'llms-full.txt'), llmsFull(listed.entries, docs, site, englishReferences, listed.guides));
-  fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site}/sitemap.xml\n`);
+  fs.writeFileSync(path.join(dist, 'robots.txt'), robots(site));
   console.log(`Prerendered ${pages.size} routes (including reference details) and ${entries.length} direction cards for ${site}; sitemap.xml, feed.xml, llms.txt and robots.txt written.`);
 }

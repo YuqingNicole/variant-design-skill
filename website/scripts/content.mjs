@@ -64,6 +64,22 @@ export function validateEntry(entry, { root = contentRoot, repo = repoRoot, file
   } else if ('permission' in entry) fail('permission applies only to permission entries');
   if (entry.source === 'link-only' && !url(entry.url)) fail('link-only entries need the source url');
   if (entry.recommendation !== undefined && (!['A', 'B', 'C'].includes(entry.recommendation?.variant) || !pair(entry.recommendation?.reason))) fail('recommendation needs a variant A/B/C and a [zh, en] reason');
+  // How a verified entry was made: the agent, the day, what the run cost, the prompt as given and the skill commands it ran.
+  // Figures are copied from the run transcript; the page shows them as they are, so they must be plain numbers.
+  if (entry.run !== undefined) {
+    const r = entry.run, number = v => v === undefined || (typeof v === 'number' && Number.isFinite(v) && v >= 0);
+    if (entry.kind !== 'verified') fail('run applies only to verified entries');
+    if (!r || typeof r !== 'object' || !text(r.agent) || !/^\d{4}-\d{2}-\d{2}$/.test(r.date ?? '')) fail('run needs an agent and a date YYYY-MM-DD');
+    else {
+      if (r.model !== undefined && !text(r.model)) fail('run.model must be text');
+      for (const key of ['durationSec', 'costUsd', 'turns']) if (!number(r[key])) fail(`run.${key} must be a non-negative number`);
+      if (r.prompt !== undefined && !pair(r.prompt)) fail('run.prompt needs [zh, en] text');
+      if (r.commands !== undefined && (!Array.isArray(r.commands) || r.commands.length > 20 || !r.commands.every(c => text(c) && c.length <= 300))) fail('run.commands must be up to 20 commands of at most 300 characters');
+      // A repo-relative markdown path under docs/ or website/. Only the shape is checked here: the Vercel build does not have
+      // docs/ (2026-11-13), so content.test.mjs checks that the file exists, where the whole repository is checked out.
+      if (r.record !== undefined && !(text(r.record) && /^(docs|website)\/[\w.-]+(\/[\w.-]+)*\.md$/.test(r.record) && !r.record.split('/').includes('..'))) fail('run.record must be a markdown path under docs/ or website/ in this repository');
+    }
+  }
 
   const directions = Array.isArray(entry.directions) ? entry.directions : [];
   if (directions.map(d => d?.id).join('') !== 'ABC') fail('directions must be A, B and C in order');

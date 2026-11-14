@@ -8,7 +8,9 @@
 .insp-title p{margin:0;color:var(--site-muted);font-size:16px;line-height:1.7;max-width:52ch}
 @media(max-width:650px){.insp-title{grid-template-columns:minmax(0,1fr)}}
 .insp-title a{color:var(--site-brand);font-size:14px;text-underline-offset:4px}
-.insp-counts{margin:0;padding-top:var(--space-2);border-top:1px solid var(--site-line);font-size:14px;color:var(--site-muted);font-variant-numeric:tabular-nums}.insp-counts [aria-current]{color:var(--site-ink)}
+.insp-title .insp-links{display:flex;flex-wrap:wrap;gap:4px 24px;font-size:14px;max-width:none}
+.insp-rights{margin:0;padding-top:var(--space-2);border-top:1px solid var(--site-line);font-size:13px;line-height:1.6;color:var(--site-muted);text-wrap:pretty}.insp-rights a{color:inherit;text-underline-offset:3px;white-space:nowrap}
+.insp-pills a small{font-size:12px;margin-left:6px;color:var(--site-muted);font-variant-numeric:tabular-nums}.insp-pills a[aria-current=page] small{color:inherit;opacity:.75}
 .inspiration-page .inspiration-disclosure{font-size:12px;color:var(--site-muted);max-width:none}
 .inspiration-disclosure summary{cursor:pointer;width:fit-content;padding-block:var(--space-1)}
 .inspiration-disclosure p{margin:var(--space-1) 0 0;max-width:820px;line-height:1.7}
@@ -54,9 +56,9 @@ div.insp-thumb{position:relative;display:grid;grid-template-rows:auto auto auto 
 .insp-thumb b{font-family:var(--font-display);font-weight:500;font-size:20px;line-height:1.1;letter-spacing:-.01em}
 .insp-thumb span{font-size:12px;line-height:1.45;color:var(--site-muted);max-width:30ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .insp-sketch{align-self:end;display:grid;gap:5px;height:44%;min-height:42px}
-.insp-sketch i{display:block;border:1px solid rgba(35,38,34,.28);border-radius:3px;background:rgba(253,253,249,.55)}
+.insp-sketch i{display:block;border:1px solid var(--site-line);border-radius:3px;background:var(--fill-3)}
 .insp-thumb-landing.insp-tint-1{background:var(--site-surface)}.insp-thumb-flow.insp-tint-1{background:var(--site-paper)}.insp-thumb-product.insp-tint-1{background:var(--site-card)}.insp-thumb-motion.insp-tint-1{background:var(--site-accent)}
-.insp-sketch i.insp-rule,.insp-sk-landing-0 i:first-child,.insp-sk-landing-1 i:first-child,.insp-sk-landing-2 i:first-child{border:0;border-top:1px solid rgba(35,38,34,.28);border-radius:0;background:none}
+.insp-sketch i.insp-rule,.insp-sk-landing-0 i:first-child,.insp-sk-landing-1 i:first-child,.insp-sk-landing-2 i:first-child{border:0;border-top:1px solid var(--site-line);border-radius:0;background:none}
 /* Landing: split hero / centred claim over a wide product frame / claim over three features. */
 .insp-sk-landing-0{grid-template-columns:1fr 1fr;grid-template-rows:6px 1fr 1fr}.insp-sk-landing-0 i:first-child{grid-column:1/-1}.insp-sk-landing-0 i:nth-child(2){grid-row:2/4}
 .insp-sk-landing-1{grid-template-columns:1fr 3fr 1fr;grid-template-rows:6px 10px 1fr}.insp-sk-landing-1 i:first-child{grid-column:1/-1}.insp-sk-landing-1 i:nth-child(2){grid-column:2;border-radius:6px}.insp-sk-landing-1 i:nth-child(3){grid-column:1/-1}
@@ -66,7 +68,7 @@ div.insp-thumb{position:relative;display:grid;grid-template-rows:auto auto auto 
 .insp-sk-product-1{grid-template-rows:9px repeat(4,1fr)}.insp-sk-product-1 i{border-radius:2px}.insp-sk-product-1 i:first-child{background:rgba(35,38,34,.12);border:0}
 .insp-sk-product-2{grid-template-columns:14% 1fr 24%;grid-template-rows:9px repeat(5,1fr)}.insp-sk-product-2 i:first-child{grid-column:1/-1}.insp-sk-product-2 i:nth-child(2){grid-row:2/-1}.insp-sk-product-2 i:nth-child(3){grid-row:2/-1;border-style:dashed}.insp-sk-product-2 i:nth-child(n+4){grid-column:3}.insp-sk-product-2 i:nth-child(4){grid-row:2/4}.insp-sk-product-2 i:nth-child(5){grid-row:4/5}.insp-sk-product-2 i:nth-child(6){grid-row:5/6}.insp-sk-product-2 i:nth-child(7){grid-row:6/7}
 /* Flow: steps in a row / a vertical checklist / a form beside its summary. */
-.insp-sk-flow-0{grid-template-columns:repeat(3,1fr);align-items:center;height:auto}.insp-sk-flow-0 i{height:34px;position:relative}.insp-sk-flow-0 i+i::before{content:"";position:absolute;right:100%;top:50%;width:5px;border-top:1px solid rgba(35,38,34,.4)}
+.insp-sk-flow-0{grid-template-columns:repeat(3,1fr);align-items:center;height:auto}.insp-sk-flow-0 i{height:34px;position:relative}.insp-sk-flow-0 i+i::before{content:"";position:absolute;right:100%;top:50%;width:5px;border-top:1px solid var(--site-line)}
 .insp-sk-flow-1{grid-template-columns:10px 1fr;grid-auto-rows:1fr;column-gap:8px}.insp-sk-flow-1 i:nth-child(odd){border-radius:50%;aspect-ratio:1;align-self:center}.insp-sk-flow-1 i:nth-child(even){height:7px;align-self:center;border:0;background:rgba(35,38,34,.18)}
 .insp-sk-flow-2{grid-template-columns:2fr 1fr;grid-template-rows:repeat(3,1fr)}.insp-sk-flow-2 i:nth-child(3){grid-column:2;grid-row:1/-1;background:rgba(35,38,34,.06)}.insp-sk-flow-2 i:first-child{border-top-width:1px}
 /* Motion: bento tiles in three arrangements. */
@@ -127,16 +129,8 @@ div.insp-thumb{position:relative;display:grid;grid-template-rows:auto auto auto 
 @media(prefers-reduced-motion:reduce){.inspiration-brief{animation-name:insp-fade}}
 .inspiration-brief textarea{display:block;margin:20px 0;font:13px/1.8 var(--font-mono)}
 .inspiration-dismiss{margin-left:var(--space-3)}
-.inspiration-sources{margin-top:70px;padding-block:40px;border-top:1px solid var(--site-line)}
-.inspiration-sources h2{font-size:28px}
-.inspiration-sources p{color:var(--site-muted);font-size:14px;max-width:700px}
-.inspiration-sources>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-top:30px}
-.inspiration-sources a{border:1px solid var(--site-line);border-radius:var(--radius-card);padding:16px;text-decoration:none;color:var(--site-ink)}
-.inspiration-sources strong{display:block;font-size:14px;font-weight:500}
-.inspiration-sources span{font-size:12px;color:var(--site-muted)}
 
 @media(max-width:1023px){.insp-detail{grid-template-columns:1fr;gap:0}.insp-detail-notes{display:contents}.insp-detail-tools{order:-2}.insp-detail-visual{order:-1;margin-bottom:var(--space-5)}.insp-dialog{width:100%;height:100%;max-height:none;border-radius:0;border:0;padding:var(--space-4)}.insp-detail-tools{margin-bottom:var(--space-4)}.insp-detail-visual-post{order:1;display:flex;flex-direction:column;gap:var(--space-3);margin:var(--space-5) 0 0}}
-@media(max-width:900px){.inspiration-sources>div{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.insp-bar>.site-shell{flex-wrap:wrap}.insp-pills{flex-basis:100%}.insp-search{flex:1}.insp-search input,.insp-search input:focus,.insp-search input:not(:placeholder-shown){width:100%}.inspiration-pack,.inspiration-brief{padding:18px}.inspiration-pack fieldset{grid-template-columns:1fr}:is(.insp-detail-media,.insp-shot)>.insp-thumb{padding:var(--space-4)}}
 @media(prefers-reduced-motion:reduce){.inspiration-page *{transition-property:opacity,color,background-color,border-color!important}.insp-dialog[open]{animation-name:insp-fade}}
 /* Show the reference note until its remote preview has loaded, then fade the image in. */
@@ -176,7 +170,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 @media(max-width:650px){.inspiration-page .site-nav-links{font-size:12px}.insp-feed{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-5) var(--space-3)}.insp-card-open{overflow:visible;aspect-ratio:auto}.insp-card-open>.insp-thumb,.insp-card-open>.insp-vcard-media{aspect-ratio:16/10;height:auto;overflow:hidden}.insp-card-meta{position:static;opacity:1;padding:var(--space-2) 0 0;background:none}.insp-card-save,.insp-card-out{width:44px;height:44px}.insp-card-out{bottom:auto;top:var(--space-2);left:var(--space-2);right:auto}.insp-card-meta small{font-size:12px}}
 @media(max-width:360px){.insp-feed{grid-template-columns:minmax(0,1fr)}}
 /* Phones: a 44px search field and filters with 16px text (iOS zooms smaller fields on focus), and a 44px header link. */
-@media(max-width:650px){.insp-search,.insp-bar select{height:44px;font-size:16px}.insp-search input{font-size:16px}.insp-title>a{display:inline-flex;align-items:center;min-height:44px}}
+@media(max-width:650px){.insp-search,.insp-bar select{height:44px;font-size:16px}.insp-search input{font-size:16px}.insp-title>a,.insp-title .insp-links a{display:inline-flex;align-items:center;min-height:44px}}
 
 /* Give search a full row on narrow screens instead of squeezing it between two selects. */
 @media(max-width:650px){.insp-bar>.site-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.insp-pills{grid-column:1/-1}.insp-bar select{width:100%;max-width:none;min-width:0}.insp-search{grid-column:1/-1;grid-row:3;min-width:0}.insp-search input{min-width:0}}
@@ -190,3 +184,58 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 /* Media that nearly matches the cell fills it; the rest sits whole on a surface mat instead of floating in paper. */
 .insp-vcard-open{background:var(--site-surface)}
 .insp-vcard-open.insp-fills .insp-vcard-media{object-fit:cover}
+/* The head is kept short so three rows of cards start about 350px down on a desktop: the title's white space shrank and the
+   count line below the bar is read by screen readers only (the pills and the progress line already show the numbers). */
+.inspiration-page .insp-head{padding-block:32px 16px;gap:var(--space-3)}
+.inspiration-page .insp-title h1{font-size:clamp(34px,4.2vw,56px);font-weight:400;line-height:1.04;letter-spacing:-.025em}
+.inspiration-page .insp-title p{max-width:72ch}
+.inspiration-page .insp-body{padding-top:var(--space-2)}
+/* Sticky stays (a tested contract), but the bar is only a faint tint: a blurred white band cut the frosted panel in two. */
+.inspiration-page .insp-bar{background:var(--fill-4);border-block:0}
+.inspiration-page .insp-pills a{background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-muted)}
+.inspiration-page .insp-pills a[aria-current=page]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}
+.inspiration-page :is(.insp-bar select,.insp-search){background:var(--fill-1);border-color:var(--hair)}
+.inspiration-page .inspiration-count{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* The feed is a horizontal wall three cards high, newest first down each column: image first, name and note under it, never
+   overlaid. The card width follows the viewport height so the three rows end above the fold on a 1080px screen and grow to
+   360px on taller ones; it never drops below 220px, so on a 900px laptop the third row runs under the fold. Phones keep one row. */
+.inspiration-page .inspiration-grid.insp-feed{grid-template-columns:none;grid-template-rows:repeat(3,auto);grid-auto-flow:column;grid-auto-columns:clamp(220px,(100svh - 560px) / 2.25,360px);gap:12px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:32px;padding:4px 32px 8px;margin-inline:-32px;scrollbar-width:thin}
+.inspiration-page .insp-feed>.insp-card{scroll-snap-align:start;background:var(--card-g);border:1px solid var(--hair);border-radius:16px;padding:8px 8px 10px}
+.inspiration-page .insp-feed .insp-card-open{aspect-ratio:auto;overflow:visible;background:none}
+.inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){background:var(--site-surface)}
+.inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){aspect-ratio:4/3;height:auto;border-radius:3px;overflow:hidden}
+.inspiration-page .insp-feed .insp-card-meta{position:static;opacity:1;padding:10px 80px 0 8px;background:none;min-height:44px}
+.inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){top:auto;bottom:12px;right:12px}
+.inspiration-page .insp-feed .insp-card-out{right:46px}
+.insp-controls{display:flex;align-items:center;justify-content:space-between;padding-top:18px;border-top:1px solid var(--hair)}
+.insp-progress{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--site-muted);font-variant-numeric:tabular-nums}
+.insp-progress i{display:block;width:160px;height:2px;background:var(--hair);position:relative}
+.insp-progress i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--p,0%);background:var(--site-ink)}
+.insp-arrows{display:flex;gap:8px}
+.insp-arrows button{display:grid;place-items:center;width:42px;height:42px;padding:0;border-radius:50%;border:1px solid var(--hair);background:var(--fill-1);color:var(--site-ink);cursor:pointer}
+.insp-arrows button:last-child:not(:disabled){background:var(--site-ink);color:var(--site-paper);border-color:var(--site-ink)}
+.insp-arrows button:disabled{opacity:.4;cursor:default}
+/* Detail: the study and apply notes read as sentences, the labels as small capitals. */
+.inspiration-page .insp-detail :is(h1,h2){font-size:clamp(40px,6vw,88px);font-weight:400;line-height:1;letter-spacing:-.03em}
+.inspiration-page :is(.insp-detail-label,.insp-detail dt){letter-spacing:.1em}
+.inspiration-page .insp-detail dd:nth-of-type(-n+2){font-family:var(--font-display);font-size:24px;line-height:1.25;letter-spacing:-.02em}
+.inspiration-page .insp-detail-media{background:var(--card-g);border:1px solid var(--hair);border-radius:16px;padding:8px}
+.inspiration-page :is(.insp-detail-media,.insp-shot)>.insp-thumb,.inspiration-page .insp-shot img{border-radius:3px}
+/* Radius budget: pill, 16px for panels and cards, 3px for images and sketch lines. */
+.inspiration-page .insp-sketch i{border-radius:3px}
+.inspiration-page :is(.insp-detail-tools :is(a,button),.insp-detail-brief){background:var(--fill-1);border-color:var(--hair)}
+.insp-dialog{border-radius:16px;background:var(--fill-1)}
+.inspiration-page .inspiration-pack{background:var(--card-g);border-color:var(--hair);border-radius:16px}
+.inspiration-page .inspiration-brief{background:var(--fill-1);border-color:var(--hair);border-radius:16px}
+@media(max-width:650px){
+ .inspiration-page .insp-head{padding-block:20px 8px;gap:var(--space-2)}
+ .inspiration-page .insp-title p{text-wrap:pretty}
+ .inspiration-page .inspiration-grid.insp-feed{grid-template-columns:none;grid-template-rows:none;grid-auto-columns:78vw;gap:12px;scroll-padding-inline:16px;padding-inline:16px;margin-inline:-16px}
+ .inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){width:44px;height:44px;top:auto;bottom:6px}
+ .inspiration-page .insp-feed .insp-card-meta{padding-right:108px}
+ .inspiration-page .insp-feed .insp-card-save{right:6px}.inspiration-page .insp-feed .insp-card-out{right:56px;left:auto}
+ .insp-progress i{width:80px}.insp-arrows button{width:44px;height:44px}
+}
+@media(prefers-reduced-motion:reduce){.inspiration-page .inspiration-grid.insp-feed{scroll-behavior:auto}}
+/* The frosted panel carries the footer's links; the green call to action would repeat the closing section above it. */
+.inspiration-page .site-footer-cta{display:none}

@@ -28,6 +28,9 @@ const hub = {
   answersLabel: { zh: '速查', en: 'Quick reference' },
   answers: { zh: '常见问题的回答', en: 'Quick answers' },
   answersBody: { zh: '比较方向、撤回修改、避免千篇一律、选择 Git 还是快照、给参考标明来源。', en: 'Comparing directions, undoing changes, avoiding generic results, Git or snapshots, and sourcing references.' },
+  changelogLabel: { zh: '更新记录', en: 'Changelog' },
+  changelog: { zh: '每个版本改了什么', en: 'What changed in each version' },
+  changelogBody: { zh: '技能和网站的改动按版本分组，标出当前版本和日期。', en: 'Skill and website changes grouped by version, with the current version and dates.' },
 } satisfies Record<string, Localized>;
 
 export function GuidesPage({ slug, base = '/guides' }: { slug?: string; base?: '/guides' | '/docs' }) {
@@ -56,6 +59,7 @@ export function GuidesPage({ slug, base = '/guides' }: { slug?: string; base?: '
         {base === '/docs' && <article className="docs-start"><small>{t(hub.startLabel, language)}</small><h2><a href={localePath('/docs/install',language)}>{t(hub.installTitle, language)}</a></h2><p>{t(hub.installBody, language)}</p></article>}
         {visible.map(g => <article key={g.slug} className={base === '/docs' ? 'docs-card' : undefined}>{base === '/docs' && <small>{t(hub.articleLabel, language)} · {g.publishedAt}</small>}<h2><a href={localePath(guideRoute(g),language)}>{t(g.title, language)}</a></h2><p>{t(g.answer, language)}</p></article>)}
         {base === '/docs' && <article className="docs-answers"><small>{t(hub.answersLabel, language)}</small><h2><a href={localePath('/guides',language)}>{t(hub.answers, language)}</a></h2><p>{t(hub.answersBody, language)}</p></article>}
+        {base === '/docs' && <article className="docs-changelog"><small>{t(hub.changelogLabel, language)}</small><h2><a href={localePath('/changelog',language)}>{t(hub.changelog, language)}</a></h2><p>{t(hub.changelogBody, language)}</p></article>}
       </section>}
     </>}
     <SiteFooter language={language}/></main>;

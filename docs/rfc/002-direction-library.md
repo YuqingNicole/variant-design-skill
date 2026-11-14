@@ -168,6 +168,10 @@ flowchart LR
 4. 第一批 `own` 作品：落地页、产品界面、数据展示各两件。P1 实施时调整为：一条作品就包含三个方向，所以每类先做一到两条；没有技能产出证据的作品标为概念，不算作已验证。
 
 
+### 2026-11-13：运行记录字段
+
+已验证作品可以带 `run`：`agent`、`model`（可选）、`date`、`durationSec`、`costUsd`、`turns`（三者可选，来自运行记录）、`prompt`（`[zh, en]`，给 agent 的原话）、`commands`（运行中调用的技能命令，最多 20 条）、`record`（仓库内的 markdown 记录）。校验在 `website/scripts/content.mjs`；页面上渲染为"怎么做出来的"，中文预渲染页也带同样的段落。概念作品不能带 `run`。第一批带该字段的作例见 `docs/research/2026-11-13-case-series.md`。
+
 ### 2026-11-04：灵感投稿补充
 
 RFC-008 §4 为灵感作品流补上了图片/视频地址、署名、授权和撤下流程；它使用独立的 `authorized-references.json` 登记，不要求投稿者为了一个参考作品编造 A/B/C 三版。上述方向案例的来源与托管契约仍适用于 `website/content/`。当前灵感投稿选择作者提供的 HTTPS 媒体地址，经人工核对后才显示「作者授权」；不自动转存或取得下载/复用权。操作与证据见 `website/SUBMISSIONS.md` 和 `docs/research/2026-11-04-submission-intake.md`。

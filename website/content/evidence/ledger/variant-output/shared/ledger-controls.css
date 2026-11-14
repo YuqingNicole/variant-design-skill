@@ -1,0 +1,40 @@
+/* Shared controls for A, B and C. Under the brand lock, components do not change between directions. */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+.ledger, .ledger *, .ledger *::before, .ledger *::after { box-sizing: border-box; }
+
+:where(.ledger) :focus-visible { outline: var(--border-focus); outline-offset: 2px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: var(--control-height); padding: 0 var(--space-5);
+  font-family: var(--font-sans); font-size: var(--text-md); font-weight: 600; line-height: 1; text-decoration: none;
+  border-radius: var(--radius-md); border: 1px solid var(--color-accent); cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard);
+}
+.btn-primary { background: var(--color-accent); color: var(--color-on-accent); }
+.btn-primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
+.btn-primary:active { background: var(--color-accent-active); border-color: var(--color-accent-active); }
+.btn-secondary { background: transparent; color: var(--color-accent); }
+.btn-secondary:hover { background: var(--color-accent-soft); }
+.btn-secondary:active { background: color-mix(in oklab, var(--color-accent) 18%, var(--color-paper)); }
+
+/* Segmented control built on native radios: arrow keys move between options. */
+.segmented { display: inline-flex; padding: var(--space-1); gap: var(--space-1); border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-surface); margin: 0; }
+.segmented legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+.segmented label { position: relative; display: inline-flex; align-items: center; gap: var(--space-2); min-height: 36px; padding: 0 var(--space-4); border-radius: var(--radius-sm); font-size: var(--text-sm); font-weight: 600; color: var(--color-text-secondary); cursor: pointer; transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard); }
+.segmented input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.segmented label:has(input:checked) { background: var(--color-ink); color: var(--color-paper); }
+.segmented label:has(input:focus-visible) { outline: var(--border-focus); outline-offset: 2px; }
+.segmented .save { font-weight: 400; font-size: var(--text-xs); opacity: 0.85; }
+
+.field { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); font-weight: 600; color: var(--color-text-secondary); }
+.select { min-height: var(--control-height); padding: 0 var(--space-3); font: inherit; font-size: var(--text-sm); font-weight: 600; color: var(--color-ink); background: var(--color-surface); border: 1px solid var(--color-line); border-radius: var(--radius-md); }
+.select:hover { border-color: var(--color-line-strong); }
+
+.note { font-size: var(--text-sm); color: var(--color-text-secondary); margin: 0; }
+.tabular { font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn, .segmented label { transition: none; }
+}

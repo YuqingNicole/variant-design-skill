@@ -1,0 +1,73 @@
+/* 方向 C · 山前小报：字排版主导，先讲店与到店，再看面包与预订 */
+.site-header {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4);
+  max-width: var(--width-page); margin: 0 auto; padding: var(--space-5);
+  border-bottom: 2px solid var(--color-text);
+}
+.site-brand { font-size: var(--text-xl); font-weight: 700; color: var(--color-text); text-decoration: none; letter-spacing: 0.04em; }
+.site-nav { display: flex; gap: var(--space-5); }
+.site-nav a { font-size: var(--text-sm); color: var(--color-text); text-decoration: none; padding: var(--space-2) 0; }
+.site-nav a:hover { color: var(--color-primary); text-decoration: underline; }
+
+.page { max-width: var(--width-page); margin: 0 auto; padding: 0 var(--space-5) var(--space-9); }
+
+/* zone:hero:start */
+.masthead { padding: var(--space-8) 0 var(--space-7); border-bottom: 1px solid var(--color-border); }
+.masthead .date { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-4); }
+.masthead h1 { font-size: var(--text-display); font-weight: 500; letter-spacing: -0.01em; max-width: 10em; }
+.masthead .deck { margin-top: var(--space-5); font-size: var(--text-lg); max-width: 26em; }
+/* zone:hero:end */
+
+/* zone:story:start */
+.story { display: grid; gap: var(--space-5); padding: var(--space-7) 0; border-bottom: 1px solid var(--color-border); }
+.story p { font-size: var(--text-md); max-width: 36em; }
+.story p:first-of-type::first-letter { font-size: var(--text-3xl); float: left; line-height: 0.9; padding-right: var(--space-2); color: var(--color-primary); }
+/* zone:story:end */
+
+.two-up { display: grid; gap: var(--space-7); padding: var(--space-7) 0; border-bottom: 1px solid var(--color-border); }
+
+/* zone:visit:start */
+.visit h2, .menu h2, .order h2 { font-size: var(--text-xs); font-weight: 600; color: var(--color-text-muted); margin-bottom: var(--space-4); }
+.visit .address { font-size: var(--text-2xl); line-height: var(--leading-tight); margin-bottom: var(--space-5); }
+.visit .address a { color: inherit; text-decoration-color: var(--color-rule); }
+.visit .address a:hover { color: var(--color-primary); }
+.week { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.week th, .week td { text-align: left; padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border); font-weight: 400; }
+.week th { color: var(--color-text-muted); width: 7em; white-space: nowrap; }
+.week .closed td { color: var(--color-text-muted); font-style: italic; }
+.week .today th, .week .today td { font-weight: 600; color: var(--color-primary); }
+.visit .note { margin-top: var(--space-4); font-size: var(--text-sm); color: var(--color-text-muted); }
+/* zone:visit:end */
+
+/* zone:menu:start */
+.menu-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-1) var(--space-3); padding: var(--space-3) 0; align-items: baseline; }
+.menu-list .line { display: flex; align-items: baseline; gap: var(--space-2); min-width: 0; }
+.menu-list .name { font-size: var(--text-lg); white-space: nowrap; }
+.menu-list .leader { flex: 1; border-bottom: 1px dotted var(--color-border-strong); transform: translateY(-0.35em); min-width: var(--space-5); }
+.menu-list .price { font-size: var(--text-lg); font-variant-numeric: tabular-nums; }
+.menu-list .desc { grid-column: 1 / -1; font-size: var(--text-sm); color: var(--color-text-muted); max-width: 32em; }
+.menu-list .stock { grid-column: 1 / -1; font-size: var(--text-xs); color: var(--color-text-muted); }
+.menu-list .is-out .name { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--color-text-muted); }
+.menu-list .is-out .stock { color: var(--color-primary); }
+.menu .note { margin-top: var(--space-4); font-size: var(--text-sm); color: var(--color-text-muted); }
+/* zone:menu:end */
+
+/* zone:order:start */
+.order { padding: var(--space-7) 0; }
+.order .lead { font-size: var(--text-xl); max-width: 22em; margin-bottom: var(--space-5); }
+.order form { display: grid; gap: var(--space-4); max-width: var(--width-measure); }
+.order .row { display: grid; gap: var(--space-4); }
+.order .btn { justify-self: start; }
+.order .success { max-width: var(--width-measure); }
+/* zone:order:end */
+
+.site-footer { max-width: var(--width-page); margin: 0 auto; padding: var(--space-6) var(--space-5); border-top: 2px solid var(--color-text); font-size: var(--text-xs); color: var(--color-text-muted); display: flex; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }
+
+@media (min-width: 640px) {
+  .story { grid-template-columns: 1fr 1fr; }
+  .order .row { grid-template-columns: 1fr 1fr; align-items: start; }
+}
+@media (min-width: 1024px) {
+  .two-up { grid-template-columns: 1.1fr 0.9fr; gap: var(--space-9); }
+  .masthead { padding: var(--space-9) 0 var(--space-8); }
+}

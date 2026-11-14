@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
-import { draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, rss, sitemap, withNoindex, withoutDrafts } from './prerender.mjs';
+import { aiTrainingCrawlers, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, withNoindex, withoutDrafts } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 
@@ -186,4 +186,12 @@ test('draft English stays out of the English pages, hreflang and sitemap, and th
   const map = sitemap(pages.keys(), 'https://example.test');
   assert.ok(!map.includes(`/en/guides/${draft.slug}<`) && !map.includes('/en/d/pulse<') && map.includes(`/en/guides/${kept.slug}<`));
   assert.equal(Object.keys(english).length, routes.length, 'withoutDrafts leaves its input unchanged');
+});
+
+test('robots.txt refuses AI training crawlers but keeps search engines and user-requested AI access', () => {
+  const text = robots('https://example.test'), groups = text.split(/\n\s*\n/);
+  for (const agent of aiTrainingCrawlers) assert.ok(groups.some(g => g.trim().startsWith(`User-agent: ${agent}\nDisallow: /`)), agent);
+  for (const agent of ['OAI-SearchBot', 'ChatGPT-User', 'Claude-User', 'Claude-SearchBot', 'PerplexityBot', 'Googlebot']) assert.ok(!text.includes(`User-agent: ${agent}`), `${agent} stays allowed`);
+  assert.match(text, /User-agent: \*\nContent-Signal: search=yes, ai-input=yes, ai-train=no\nAllow: \//);
+  assert.ok(text.trimEnd().endsWith('Sitemap: https://example.test/sitemap.xml'));
 });

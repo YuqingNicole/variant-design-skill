@@ -3,8 +3,9 @@ import { locales } from './i18n/locales';
 import { useEffect, useState } from 'react';
 import type { Language } from './direction-engine';
 import { SiteHeader, SiteFooter } from './SiteChrome';
-import { cardUrl, categories, coverDirection, entries, evidenceUrl, mediaUrl, type Direction, type Entry } from './library-data';
-import { inspirationItems } from './inspiration-data';
+import { cardUrl, categories, coverDirection, entries, evidenceUrl, mediaUrl, repository, type Direction, type Entry } from './library-data';
+import { references } from './reference-library';
+import { activeSponsorSlot } from './sponsor-slots';
 import './content-pages.css';
 import './library.css';
 import { useLocale } from './i18n/LocaleProvider';
@@ -38,6 +39,12 @@ const m={compareThreeDirectionsFor:{zh:'同一个任务，比较三个方向的�
  viewTheOutputRecord:{zh:'查看产出记录 ↗',en:'View the output record ↗'},
  conceptStudyMadeBy:{zh:'概念作品：由我们手工制作，用于展示风格跨度，不是技能的产出。',en:'Concept study: made by hand to show stylistic range, not produced by the skill.'},
  moreEntries:{zh:'更多作品',en:'More entries'},
+ howItWasMade:{zh:'怎么做出来的',en:'How it was made'},
+ runAgent:{zh:'运行环境',en:'Agent'},runDate:{zh:'日期',en:'Date'},runTime:{zh:'用时',en:'Time'},runCost:{zh:'费用',en:'Cost'},runTurns:{zh:'轮次',en:'Turns'},
+ runPrompt:{zh:'给 agent 的原话，一次无人值守运行：',en:'The prompt, verbatim, in one unattended run:'},
+ runCommands:{zh:'运行中调用的技能命令，按先后：',en:'Skill commands the agent ran, in order:'},
+ runNote:{zh:'数字来自运行记录；截图取自 agent 自己生成的预览文件。',en:'Figures come from the run transcript; the screenshots are of the preview files the agent generated.'},
+ readTheRunRecord:{zh:'阅读运行记录 ↗',en:'Read the run record ↗'},
  variantDesignDirectionLibrary:{zh:'Variant Design 方向库',en:'Variant Design direction library'},
  variantDesignADesign:{zh:'A/B/C 案例 — Variant Design 方向库',en:'A/B/C cases — Variant Design'},
  notFoundVariantDesign:{zh:'页面不存在 — Variant Design',en:'Not found — Variant Design'},
@@ -47,6 +54,17 @@ export type LibraryView = { kind: 'feed' } | { kind: 'category'; id: string } | 
 const sourceLabel = (e: Entry, language: Language) => t(e.source === 'own' ? e.kind === 'verified' ? { zh: '技能产出 · 已验证', en: 'Made with the skill · verified' } : { zh: '概念作品', en: 'Concept study' } : e.source === 'permission' ? { zh: '授权投稿', en: 'Licensed submission' } : { zh: '外部参考', en: 'External reference' }, language);
 const categoryName = (id: string, language: Language) => { const name = categories.find(c => c.id === id)?.name; return name ? t(name, language) : id; };
 
+const sponsorCopy={label:{zh:'赞助',en:'Sponsored'},open:{zh:'了解赞助位',en:'About sponsor slots'},houseTitle:{zh:'这个位置可以介绍你的产品',en:'This slot can introduce your product'},houseText:{zh:'赞助内容一律标注，不影响案例的收录和排序。',en:'Sponsored content is always labelled and never changes which cases are listed or in what order.'},houseTile:{zh:'赞助位',en:'Sponsor slot'}} satisfies Record<string,Localized>;
+// The cases grid keeps a fixed place for one labelled placement: after the third case, so it never leads the list. Not a `.library-card`: it is not a case.
+function SponsorCard({ language }: { language: Language }) {
+  const slot = activeSponsorSlot(), c = (k: keyof typeof sponsorCopy) => t(sponsorCopy[k], language);
+  const href = slot ? slot.url : localePath('/sponsor', language), ext = slot ? { target: '_blank', rel: 'sponsored noopener noreferrer' } : {};
+  return <aside className="library-sponsor" aria-label={c('label')}><a href={href} {...ext}>
+    <span className="library-sponsor-tile">{slot?.image ? <img src={slot.image.src} width={slot.image.width} height={slot.image.height} alt={t(slot.image.alt, language)} loading="lazy" decoding="async"/> : <span>{c('houseTile')}</span>}</span>
+    <span className="library-card-meta"><b>{c('label')}</b> · {slot ? slot.brand : c('open')}</span>
+    <strong>{slot ? t(slot.title, language) : c('houseTitle')}</strong><span className="library-card-summary">{slot ? t(slot.text, language) : c('houseText')}</span>
+  </a></aside>;
+}
 function Card({ entry, language }: { entry: Entry; language: Language }) {
   // All three directions at a glance: the recommended one large, the other two beside it.
   const cover = coverDirection(entry), trio = [cover, ...entry.directions.filter(d => d !== cover)];
@@ -67,8 +85,8 @@ function Feed({ category, language }: { category?: string; language: Language })
       <h1>{category ? categoryName(category, language) : t(m.oneBriefThreeDirections,language)}</h1><p>{t(category ? m.compareThreeDirectionsFor : m.exploreOurCasesWith,language)}</p></header>
     <section className="site-shell library-feed" id="works">
       <nav className="content-filters" aria-label={t(m.categories,language)}><a href={localePath('/cases',language)} aria-current={!category ? 'page' : undefined}>{t(m.all,language)}</a>{used.map(c => <a key={c.id} href={localePath(`/c/${c.id}`,language)} aria-current={category === c.id ? 'page' : undefined}>{t(c.name,language)}</a>)}</nav>
-      {shown.length ? <div className="library-grid">{shown.map(e => <Card key={e.slug} entry={e} language={language}/>)}</div> : <p className="library-empty">{t(m.nothingInThisCategory,language)}</p>}
-      <p className="library-more"><a href={localePath('/',language)}>{t({zh:`外部参考：${inspirationItems.length} 个只附链接的公开设计`,en:`External references: ${inspirationItems.length} public designs, linked only`},language)}</a> <a href={localePath('/submit',language)}>{t(m.submissionsPermissions,language)}</a></p>
+      {shown.length ? <div className="library-grid">{shown.flatMap((e, i) => { const card = <Card key={e.slug} entry={e} language={language}/>; return !category && i === 2 ? [card, <SponsorCard key="sponsor" language={language}/>] : [card]; })}</div> : <p className="library-empty">{t(m.nothingInThisCategory,language)}</p>}
+      <p className="library-more"><a href={localePath('/',language)}>{t({zh:`外部参考：${references.length} 个只附链接的公开设计`,en:`External references: ${references.length} public designs, linked only`},language)}</a> <a href={localePath('/submit',language)}>{t(m.submissionsPermissions,language)}</a></p>
     </section></>;
 }
 
@@ -83,6 +101,18 @@ function TryIt({ entry, direction, language }: { entry: Entry; direction: Direct
     <textarea readOnly aria-label={t(m.promptForYourAgent,language)} value={prompt} rows={4} onFocus={e => e.currentTarget.select()}/>
     <div><button onClick={copy}>{t(m.copyPrompt,language)}</button><a href={cardUrl(entry)} target="_blank" rel="noreferrer">{t(m.viewTheCardJson,language)}</a></div>
     <p role="status">{status}</p></section>;
+}
+
+// The making of a verified case: who ran it, what it cost, the prompt as given and the skill commands it called. Read-only facts from the entry; nothing is computed here beyond formatting.
+function HowItWasMade({ run, language }: { run: NonNullable<Entry['run']>; language: Language }) {
+  const minutes = run.durationSec === undefined ? null : `${Math.floor(run.durationSec / 60)} min ${run.durationSec % 60} s`;
+  const facts: [Localized, string | null][] = [[m.runAgent, run.model ? `${run.agent} · ${run.model}` : run.agent], [m.runDate, run.date], [m.runTime, minutes], [m.runCost, run.costUsd === undefined ? null : `$${run.costUsd.toFixed(2)}`], [m.runTurns, run.turns === undefined ? null : String(run.turns)]];
+  return <section className="library-run" aria-labelledby="run-title"><h2 id="run-title">{t(m.howItWasMade,language)}</h2>
+    <dl>{facts.filter(f => f[1] !== null).map(([label, value]) => <div key={label.en}><dt>{t(label,language)}</dt><dd>{value}</dd></div>)}</dl>
+    {run.prompt && <><p>{t(m.runPrompt,language)}</p><textarea readOnly aria-label={t(m.runPrompt,language)} value={t(run.prompt,language)} rows={4} onFocus={e => e.currentTarget.select()}/></>}
+    {run.commands && run.commands.length > 0 && <><p>{t(m.runCommands,language)}</p><ol>{run.commands.map((c, i) => <li key={i}><code>{c}</code></li>)}</ol></>}
+    <small>{t(m.runNote,language)}{run.record && <> <a href={`${repository}/blob/master/${run.record}`} target="_blank" rel="noreferrer">{t(m.readTheRunRecord,language)}</a></>}</small>
+  </section>;
 }
 
 function Detail({ entry, language }: { entry: Entry; language: Language }) {
@@ -104,6 +134,7 @@ function Detail({ entry, language }: { entry: Entry; language: Language }) {
       <TryIt entry={entry} direction={direction} language={language}/>
       {entry.recommendation && <aside className="library-recommendation"><b>{t({zh:`推荐 ${entry.recommendation.variant}`,en:`Recommends ${entry.recommendation.variant}`},language)}</b><p>{t(entry.recommendation.reason,language)}</p><small>{t(m.aRecommendationIsNot,language)}</small></aside>}
       </div>
+      {entry.run && <HowItWasMade run={entry.run} language={language}/>}
       <p className="library-evidence">{evidence ? <>{t(m.theDirectionNotesAnd,language)} <a href={evidence} target="_blank" rel="noreferrer">{t(m.viewTheOutputRecord,language)}</a></> : entry.kind === 'concept' ? (t(m.conceptStudyMadeBy,language)) : null}</p>
       {related.length > 0 && <section className="library-related"><h2>{t(m.moreEntries,language)}</h2><div className="library-grid">{related.map(e => <Card key={e.slug} entry={e} language={language}/>)}</div></section>}
     </section></>;

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "sample-company",
+    "status": "draft",
+    "name": { "zh": "示例姓名", "en": "Sample Name" },
+    "role": { "zh": "设计负责人", "en": "Head of Design" },
+    "org": { "zh": "某科技公司", "en": "A technology company" },
+    "quote": { "zh": "（示例文字）这里放一段对方同意公开的原话，说明技能在一个真实项目里起了什么作用。", "en": "(Sample text) A sentence the person agreed to publish, about what the skill did in one real project." },
+    "date": "2026-01-01",
+    "source": { "url": "https://example.com/", "label": { "zh": "示例出处", "en": "Sample source" } }
+  },
+  {
+    "id": "sample-school",
+    "status": "draft",
+    "name": { "zh": "示例姓名", "en": "Sample Name" },
+    "role": { "zh": "设计学院教师", "en": "Design faculty" },
+    "org": { "zh": "某大学", "en": "A university" },
+    "quote": { "zh": "（示例文字）教学里怎么用它比较方向、让学生看到取舍，由对方自己说。", "en": "(Sample text) How it is used in teaching to compare directions and show trade-offs, in the person's own words." },
+    "date": "2026-01-01",
+    "source": { "url": "https://example.com/", "label": { "zh": "示例出处", "en": "Sample source" } }
+  },
+  {
+    "id": "sample-founder",
+    "status": "draft",
+    "name": { "zh": "示例姓名", "en": "Sample Name" },
+    "role": { "zh": "创始人", "en": "Founder" },
+    "org": { "zh": "某创业公司", "en": "A startup" },
+    "quote": { "zh": "（示例文字）从需求到三个能跑的方向用了多久、最后选了哪个，由对方自己说。", "en": "(Sample text) How long it took from brief to three running directions and which one shipped, in the person's own words." },
+    "date": "2026-01-01",
+    "source": { "url": "https://example.com/", "label": { "zh": "示例出处", "en": "Sample source" } }
+  }
+]
