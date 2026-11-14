@@ -604,7 +604,7 @@ test('a reference opens as a dialog from the grid and as its own page from a dir
  await cards.first().locator('.insp-card-open').click();
  const dialog=page.getByRole('dialog');
  await expect(dialog.getByRole('heading',{name:'Linear'})).toBeVisible();await expect(page).toHaveURL(/\/inspiration\/linear\?topic=saas-home&sort=curated$/);
- await expect(page).toHaveTitle('Linear — 灵感参考 — Variant Design');
+ await expect(page).toHaveTitle('Linear — 网站设计灵感 — Variant Design');
  await expect(dialog.locator('dd').filter({hasText:'设计者、手机端表现'})).toHaveCount(1);
  await page.keyboard.press('ArrowRight');await expect(page).toHaveURL(/\/inspiration\/notion\?topic=saas-home&sort=curated$/);await expect(dialog.getByRole('heading',{name:'Notion'})).toBeVisible();
  await page.keyboard.press('ArrowLeft');await expect(page).toHaveURL(/\/inspiration\/linear\?topic=saas-home&sort=curated$/);
@@ -616,7 +616,7 @@ test('a reference opens as a dialog from the grid and as its own page from a dir
  await page.goto('/?topic=saas-home&sort=curated');await cards.first().locator('.insp-card-open').click();await expect(dialog).toHaveCount(1);
  await page.goBack();await expect(page).toHaveURL(/:\d+\/\?topic=saas-home&sort=curated$/);await expect(dialog).toHaveCount(0);
  const response=await page.goto('/inspiration/notion');
- expect(await response.text()).toContain('<title>Notion — 灵感参考 — Variant Design</title>');
+ expect(await response.text()).toContain('<title>Notion — 网站设计灵感 — Variant Design</title>');
  await expect(page.locator('h1')).toHaveText('Notion');await expect(page.getByRole('dialog')).toHaveCount(0);
  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/^Notion：/);
  await expect(page.getByRole('link',{name:'访问原站'})).toHaveAttribute('href','https://www.notion.com/');
