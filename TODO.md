@@ -12,7 +12,7 @@
 
 （2026-11-09 起使用自有域名 `https://variantdesign.xyz/`；原 `variant-design-skill.vercel.app` 仍可访问。）
 
-- [ ] 【维护者】Search Console：为 `https://variantdesign.xyz/` 前缀完成站点验证并提交 sitemap，检查 `/en/...` 的索引和 `hreflang` 报告（不以 HTTP 200 为准）。静态核对已完成；Search Console 属性还未建立，原因与证据见 `docs/research/2026-11-07-search-console-readiness.md`。
+- [ ] 【维护者】Search Console：为 `https://variantdesign.xyz/` 前缀完成站点验证并提交 sitemap，检查 `/en/...` 的索引和 `hreflang` 报告（不以 HTTP 200 为准）。静态核对已完成；Search Console 属性还未建立，原因与证据见 `docs/research/2026-11-07-search-console-readiness.md`。 2026-11-14 修了 `www.variantdesign.xyz` 的证书错误（加进 Vercel 项目并 308 到主域名）；Google 的 HTTPS 提示是否因它而起还没确认，要看报告里的非 HTTPS 条数和示例网址，见 `docs/research/2026-11-14-www-https.md`。
 - [ ] 【维护者】投稿到 claudemarketplaces.com 与 Codex 插件目录。skills.sh 已自动收录，不需要投稿；其余渠道的准备状态、文案与发布门槛见[投稿材料](docs/drafts/distribution-submissions.md)。
 - [ ] 【维护者】第一次做 AI 搜索基线测量（GEO 策略里的 10 个问题），之后每两周一次，见“定期维护”。已准备 10 题 × 4 引擎方案；单次实时采集预估 $2.95 / 2,950 credits，需维护者批准后再运行，见 `docs/research/2026-11-08-geo-baseline-prep.md`。
 - [ ] 【维护者】流量渠道：相近产品的渠道调研见 `docs/research/2026-11-13-traffic-channels.md`（对标站第一渠道都是直接访问 56%–72%，信息流型的第二渠道是社交，参考库型的第二渠道是搜索）。要定的三件事：要不要开站点的 X 和 Threads 账号并日更一条（代理可生成发帖队列；先补详情页的 `og:image`，见第 3 组）；要不要做每周精选邮件（第 3 组已有）；技能生成的比较页和导出 HTML 要不要带一行可去掉的 "Made with Variant Design" 链接。都以 B1 和 Search Console 建立为前提。
