@@ -7,19 +7,21 @@ import { DocsGuide } from './DocsGuide';
 import './content-pages.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
+// `installDocTitle` is the browser title and must match the '/docs/install' title in scripts/prerender.mjs; the heading stays short.
 const m={installGetStarted:{zh:'安装与开始使用',en:'Install & get started'},
+ installDocTitle:{zh:'在 Claude Code 和 Codex 里安装设计技能',en:'Install the design skill in Claude Code and Codex'},
  installConfirmItWorks:{zh:'安装、确认可用，然后在你的项目里走完一次：生成、比较、试改、撤回、接入。',en:'Install, confirm it works, then go through one full loop in your project: generate, compare, refine, undo, integrate.'},
  yourProjectCouldBe:{zh:'下一个案例，可以是你的项目。',en:'Your project could be next.'},
  exploreTheLibrary:{zh:'先看 A/B/C 案例',en:'See the A/B/C cases'},
  explorePlansPricing:{zh:'了解价格与计划',en:'Explore plans & pricing'}} satisfies Record<string,Localized>;
-function PageFrame({children,title,language}:{children:React.ReactNode;title:string;language:Language}){
- useEffect(()=>{document.title=`${title} — Variant Design`;document.documentElement.lang=locales[language].htmlLang;document.querySelector('meta[name="description"]')?.setAttribute('content',title)},[title,language]);
+function PageFrame({children,title,docTitle=title,language}:{children:React.ReactNode;title:string;docTitle?:string;language:Language}){
+ useEffect(()=>{document.title=`${docTitle} — Variant Design`;document.documentElement.lang=locales[language].htmlLang;document.querySelector('meta[name="description"]')?.setAttribute('content',title)},[title,docTitle,language]);
  return <main className="content-page docs-page"><SiteHeader language={language}/>{children}<SiteFooter language={language}/></main>
 }
 // Docs page. The former study library and case pages became the direction library (LibraryPage).
 export function ContentPages({page}:{page:'docs'}){
  const language = useLocale();const title=t(m.installGetStarted,language);
- return <PageFrame title={title} language={language}>
+ return <PageFrame title={title} docTitle={t(m.installDocTitle,language)} language={language}>
  <header className="content-hero site-shell"><h1>{title}</h1><p>{t(m.installConfirmItWorks,language)}</p></header>
  {page==='docs'&&<DocsGuide language={language}/>}
  <section className="content-closing site-shell"><h2>{t(m.yourProjectCouldBe,language)}</h2><a className="content-button" href={localePath('/cases',language)}>{t(m.exploreTheLibrary,language)} ↗</a><a className="content-secondary" href={localePath('/pricing',language)}>{t(m.explorePlansPricing,language)} →</a></section>

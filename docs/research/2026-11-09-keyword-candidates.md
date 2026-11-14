@@ -80,7 +80,7 @@
 ## 6. 下一步（用真实数据验证）
 
 1. 建好 Search Console 属性后，看哪些词已经有展示，再调整本清单。
-2. 用 Google Keyword Planner 或 Ahrefs、Semrush 免费版查 A、B、C 三类词的搜索量，把数字补进上表，标明来源和日期。
+2. 用 Google Keyword Planner 或 Ahrefs、Semrush 免费版查 A、B、C 三类词的搜索量，把数字补进上表，标明来源和日期。（2026-11-14 补充：维护者提供了另外六个英文词的搜索量和难度，记在 `2026-11-14-keyword-candidates.md`；上表的词仍然没有数字；第 4 节说的首页标题后来已改为主打设计灵感，技能类的词由 `/skills` 和 `/docs/install` 的标题承接，见那份记录第 4 节。）
 3. 用 Google Trends 比较 "claude code design skill" 与 "codex design skill" 的相对热度。
 4. 按 `2026-11-02-geo-strategy.md` 第 3 节的 10 个问题做第一次基线测量，记录在本目录。
 
