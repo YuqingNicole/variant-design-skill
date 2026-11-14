@@ -1,0 +1,102 @@
+{
+  "groups": [
+    {
+      "id": "weekly",
+      "weekly": true,
+      "days": 7,
+      "queries": [
+        { "terms": "(design OR UI OR interaction OR motion)", "minLikes": 100, "required": true }
+      ],
+      "accounts": [
+        { "handle": "raunofreiberg", "minLikes": 300 },
+        { "handle": "jakubkrehel", "minLikes": 100 },
+        { "handle": "jh3yy", "minLikes": 300 },
+        { "handle": "mattgperry", "minLikes": 100 },
+        { "handle": "lochieaxon", "minLikes": 50 },
+        { "handle": "ibelick", "minLikes": 50 },
+        { "handle": "steveruizok", "minLikes": 200 }
+      ]
+    },
+    {
+      "id": "apps",
+      "days": 30,
+      "screens": 3,
+      "queries": [
+        { "terms": "(\"app design\" OR \"mobile app\" OR \"ios app\" OR \"app concept\") (ui OR interface OR animation) -tutorial -course -free -prompt -template", "minLikes": 150 }
+      ]
+    },
+    {
+      "id": "dashboards",
+      "days": 30,
+      "screens": 3,
+      "queries": [
+        { "terms": "(dashboard OR \"design system\" OR \"data visualization\" OR dataviz OR \"product design\") (ui OR interface) -tutorial -course -free -prompt -template", "minLikes": 150 }
+      ]
+    },
+    {
+      "id": "type",
+      "days": 30,
+      "screens": 3,
+      "queries": [
+        { "terms": "(typography OR \"variable font\" OR lettering OR \"type design\") (animation OR animated OR process OR specimen) -tutorial -course -free -prompt", "minLikes": 150 }
+      ]
+    },
+    {
+      "id": "poster",
+      "days": 30,
+      "screens": 3,
+      "queries": [
+        { "terms": "(\"motion poster\" OR \"kinetic poster\" OR \"kinetic type\" OR \"kinetic typography\" OR \"type specimen\" OR typeface) -tutorial -course -free", "minLikes": 150 }
+      ]
+    },
+    {
+      "id": "motion-3d",
+      "days": 30,
+      "screens": 3,
+      "queries": [
+        { "terms": "(spline OR rive OR lottie OR \"3d web\" OR \"scroll animation\" OR scrolltrigger OR gsap) -tutorial -course -free -prompt -template", "minLikes": 150 }
+      ]
+    },
+    {
+      "id": "print",
+      "days": 30,
+      "screens": 3,
+      "queries": [
+        { "terms": "(\"packaging design\" OR \"print design\" OR risograph OR letterpress OR zine OR \"book cover\" OR \"book design\") -tutorial -course -free -prompt", "minLikes": 150 }
+      ]
+    },
+    {
+      "id": "identity",
+      "days": 30,
+      "screens": 3,
+      "queries": [
+        { "terms": "(\"brand identity\" OR rebrand OR \"logo animation\" OR \"motion identity\") -tutorial -course -free -prompt -\"ai tools\"", "minLikes": 150 }
+      ]
+    },
+    {
+      "id": "illustration",
+      "days": 30,
+      "screens": 3,
+      "queries": [
+        { "terms": "(illustration OR \"character design\" OR \"editorial illustration\") (process OR timelapse OR speedpaint) -tutorial -course -free -prompt", "minLikes": 150 }
+      ]
+    },
+    {
+      "id": "designers",
+      "days": 30,
+      "screens": 3,
+      "accounts": [
+        { "handle": "JamesJeanArt", "minLikes": 100 },
+        { "handle": "Kuvshinov_Ilya", "minLikes": 100 },
+        { "handle": "itsnicethat", "minLikes": 50 },
+        { "handle": "motionographer", "minLikes": 50 },
+        { "handle": "posterlad", "minLikes": 50 },
+        { "handle": "nitishkmrk", "minLikes": 100 },
+        { "handle": "mrncst", "minLikes": 100 },
+        { "handle": "jsngr", "minLikes": 200 },
+        { "handle": "bruno_simon", "minLikes": 100 },
+        { "handle": "akella", "minLikes": 100 }
+      ]
+    }
+  ]
+}
