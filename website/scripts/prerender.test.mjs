@@ -133,7 +133,9 @@ test('experiments stay out of the sitemap and out of search results', () => {
 test('guides get their own pages, are listed for search and read in both languages', async () => {
   const { guides: answers, guideRoute } = await importTs(new URL('../src/guides-content.ts', import.meta.url).pathname), { docsArticles } = await importTs(new URL('../src/docs-articles.ts', import.meta.url).pathname), { entries } = loadEntries();
   const guides = [...answers, ...docsArticles];
-  assert.ok(docsArticles.length >= 4 && docsArticles.every(g => g.base === '/docs' && g.translations === undefined));
+  // The Codex article's English has not been reviewed, so it is the one article marked draft.
+  assert.ok(docsArticles.length >= 5 && docsArticles.every(g => g.base === '/docs'));
+  assert.deepEqual(docsArticles.filter(g => g.translations).map(g => [g.slug, g.translations]), [['frontend-design-in-codex', { en: { status: 'draft' } }]]);
   const rendered = Object.fromEntries(guides.map(g => [guideRoute(g), `<main><h1>${g.slug}</h1></main>`]));
   const pages = renderSite(entries, template, 'https://example.test', [], { guides, rendered });
   const map = sitemap(pages.keys(), 'https://example.test'), docs = await importTs(new URL('../src/docs-content.ts', import.meta.url).pathname), text = llms(entries, docs, 'https://example.test', [], guides);

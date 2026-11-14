@@ -82,8 +82,8 @@ export const guides: Guide[] = [
     publishedAt: '2026-11-02',
     title: { zh: '怎么让 AI 生成的界面不千篇一律', en: 'How to keep AI-generated interfaces from looking the same' },
     answer: {
-      zh: '不要只让 AI 出一版。先写清真实任务和不能变的约束，再让它做几个在取舍上真正不同的方向，比较后由你决定。下面是我们的做法，用 Pulse 案例说明。它来自实际运行记录，但我们没有做过用户对照实验，不能证明它一定更好。',
-      en: 'Do not ask AI for one version. State the real task and the constraints that cannot change, have it build directions that differ in their tradeoffs, then compare them and decide yourself. Below is how we do it, using the Pulse case. It comes from recorded runs, but we have not run a controlled user study, so it does not prove the result is better.',
+      zh: '如果用 AI 直接写出来的界面（vibe coding）看起来千篇一律，不要只让 AI 出一版。先写清真实任务和不能变的约束，再让它做几个在取舍上真正不同的方向，比较后由你决定。下面是我们的做法，用 Pulse 案例说明。它来自实际运行记录，但我们没有做过用户对照实验，不能证明它一定更好。',
+      en: 'If a vibe-coded UI looks like every other AI-built interface, do not ask AI for one version. State the real task and the constraints that cannot change, have it build directions that differ in their tradeoffs, then compare them and decide yourself. Below is how we do it, using the Pulse case. It comes from recorded runs, but we have not run a controlled user study, so it does not prove the result is better.',
     },
     sections: [
       { id: 'task', heading: { zh: '1. 写清读者和任务', en: '1. Name the reader and the task' },

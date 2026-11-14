@@ -7,7 +7,7 @@ import './content-pages.css';
 import './library.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
-const m={designSkillsVariantDesign:{zh:'设计技能 — Variant Design',en:'Design skills — Variant Design'},
+const m={designSkillsVariantDesign:{zh:'Claude Code 和 Codex 的前端设计技能 — Variant Design',en:'Frontend design skills for Claude Code and Codex — Variant Design'},
  designSkills:{zh:'设计技能',en:'Design skills'},
  onlyDesignDeliverySkills:{zh:'只收录我们在一次性项目里实际跑过、并公开了记录的设计交付技能。目前只有一个通过。没试过的技能，不会因为热门就列在这里。',en:'Only design-delivery skills we have actually run in throwaway projects, with public records. One qualifies so far. Popularity alone does not get a skill listed here.'},
  howWeTriedIt:{zh:'我们怎么试的',en:'How we tried it'},

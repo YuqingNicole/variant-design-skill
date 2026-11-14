@@ -21,25 +21,25 @@ const order = entries => [...entries].sort((a, b) => Number(b.featured) - Number
 const staticPages = {
   '/about': ['关于 Variant Design', '一份需求，在你的项目里做出三个能运行的方向：任务、数据和功能相同，取舍不同。局部修改先存快照，可以撤回，不会覆盖你没看过的改动。'],
   '/docs': ['文档 — Variant Design', '怎样用 AI 做出高质量的界面：安装技能，比较方向，检查结果，定动效规则，测量页面。每篇都来自实际跑过的记录。'],
-  '/docs/install': ['安装与开始使用 — Variant Design', '安装技能，确认可用，然后在你的项目里走完一次：生成、比较、试改、撤回、接入。'],
+  '/docs/install': ['在 Claude Code 和 Codex 里安装设计技能 — Variant Design', '安装技能，确认可用，然后在你的项目里走完一次：生成、比较、试改、撤回、接入。'],
   '/submit': ['投稿与授权 — Variant Design', 'Variant Design 方向库的收录、授权与撤下规则。'],
   '/pricing': ['价格 — Variant Design', '本地开源技能免费可用；托管专业版和团队版仍是计划，尚未开放。'],
   '/sponsor': ['赞助 — Variant Design', '品牌赞助 Variant Design 的方式与规则：明确标注，与编辑精选分开。'],
   '/lab': ['实验室 — Variant Design', '工作台和画布等实验功能。'],
   '/guides': ['指南 — Variant Design', '用 AI 做界面时常见问题的回答：怎么比较方向、怎么撤回修改、怎么避免千篇一律。'],
   '/changelog': ['更新记录 — Variant Design', 'Variant Design 技能每个版本的改动，来自仓库里的 CHANGELOG.md。'],
-  '/skills': ['设计技能 — Variant Design', '只收录在一次性项目里实际跑过、并公开了记录的设计交付技能。'],
+  '/skills': ['Claude Code 和 Codex 的前端设计技能 — Variant Design', 'Claude Code 和 Codex 里能用的前端设计技能，只收录我们在一次性项目里实际跑过、并公开了记录的。'],
 };
 
 const staticPagesEn = references => ({
   '/about': ['About Variant Design', 'One brief becomes three runnable directions in your own project: the same task, data and functions, different tradeoffs. Scoped edits are snapshotted first, can be undone and never overwrite changes you have not seen.'],
   '/docs': ['Docs — Variant Design', 'How to make good interfaces with AI: install the skill, compare directions, check the result, set motion rules and measure the page. Each article comes from runs we actually did.'],
-  '/docs/install': ['Install & get started — Variant Design', 'Install the skill, confirm it works, then go through one full loop in your project: generate, compare, refine, undo, integrate.'],
+  '/docs/install': ['Install the design skill in Claude Code and Codex — Variant Design', 'Install the skill, confirm it works, then go through one full loop in your project: generate, compare, refine, undo, integrate.'],
   '/submit': ['Submissions & permissions — Variant Design', 'How the Variant Design direction library handles submissions, permissions and takedowns.'],
   '/sponsor': ['Sponsor Variant Design', 'How brands can sponsor Variant Design: clearly labeled and kept separate from editorial picks.'],
   '/pricing': ['Pricing — Variant Design', 'The local open-source skill is available; hosted Pro and Team plans are proposals, not available subscriptions.'],
   '/changelog': ['Changelog — Variant Design', 'What changed in each version of the Variant Design skill, from CHANGELOG.md in the repository.'],
-  '/skills': ['Design skills — Variant Design', 'Only design delivery skills we ran in throwaway projects, with public records.'],
+  '/skills': ['Frontend design skills for Claude Code and Codex — Variant Design', 'Frontend design skills for Claude Code and Codex: only the ones we ran in throwaway projects, with public records.'],
   '/guides': ['Guides — Variant Design', 'Answers to common questions about designing interfaces with AI: comparing directions, undoing changes and avoiding generic results.'],
 });
 

@@ -1,9 +1,10 @@
 // Long-form articles at /docs/<slug>, in the same shape as the answers at /guides (see guides-content.ts).
 // Plain data only: the prerender imports this file without a TS loader for JSX.
 // Every claim here must trace to a file in this repository (a reference, a script, or a dated record in docs/research/ or CHANGELOG.md).
-// The English was reviewed against the repository files on 2026-11-10, so these articles ship in both languages.
+// The English of the first four was reviewed against the repository files on 2026-11-10, so they ship in both languages.
+// The Codex article's English is unreviewed and marked draft: production leaves that English page out until someone reviews it.
 import type { Guide } from './guides-content';
-import { repository } from './docs-content';
+import { installCommand, prompts, repository } from './docs-content';
 
 const blob = `${repository}/blob/master`;
 
@@ -14,8 +15,8 @@ export const docsArticles: Guide[] = [
     publishedAt: '2026-11-09',
     title: { zh: '用 AI 编码 Agent 做设计探索：一个可以撤回的流程', en: 'Design exploration with AI coding agents: a loop you can undo' },
     answer: {
-      zh: '让 Agent 在你自己的项目里一次做出三个取舍不同的方向，并排比较，只改你选中的那一个，改坏了能撤回，选定后再接入。关键不是生成得更快，而是每一步都不会覆盖你没看过的改动。下面是这个流程和它保证的边界。',
-      en: 'Have the agent build three directions with different tradeoffs inside your own project, compare them side by side, edit only the one you choose, and undo what goes wrong. Integrate only after you pick. The point is not faster generation; it is that no step overwrites work you have not seen. Below are the loop and the limits of what it promises.',
+      zh: '在 Claude Code 或 Codex 里，让 Agent 在你自己的项目里一次做出三个取舍不同的方向，并排比较，只改你选中的那一个，改坏了能撤回，选定后再接入。关键不是生成得更快，而是每一步都不会覆盖你没看过的改动。下面是这个流程和它保证的边界。',
+      en: 'In Claude Code or Codex, have the agent build three directions with different tradeoffs inside your own project, compare them side by side, edit only the one you choose, and undo what goes wrong. Integrate only after you pick. The point is not faster generation; it is that no step overwrites work you have not seen. Below are the loop and the limits of what it promises.',
     },
     sections: [
       { id: 'why', heading: { zh: '为什么一版不够', en: 'Why one version is not enough' },
@@ -57,7 +58,7 @@ export const docsArticles: Guide[] = [
     slug: 'check-ai-generated-ui-before-you-ship',
     base: '/docs',
     publishedAt: '2026-11-09',
-    title: { zh: '交付前怎么检查 AI 生成的界面', en: 'How to check AI-generated UI before you ship' },
+    title: { zh: '交付前怎么检查 AI 生成的界面：三层设计审查', en: 'How to check AI-generated UI before you ship: a three-layer design audit' },
     answer: {
       zh: '分三层：先跑脚本做机械检查，再看渲染出来的页面，最后用键盘和减弱动效设置真的操作一遍。脚本只能发现已知的缺陷，一个设计是否连贯、有没有个性，要靠看。下面是技能里写明的检查项，以及每一层不能说明什么。',
       en: 'Check in three layers: run the scanner, look at the rendered page, then actually operate it with a keyboard and with reduced motion on. The scanner only finds known defects; whether a design is coherent and has a point of view takes a look. Below are the checks the skill states, and what each layer cannot tell you.',
@@ -165,6 +166,54 @@ export const docsArticles: Guide[] = [
           { zh: '我们让测试用一个来得晚、又很高的假嵌入代替 X 的脚本，检查链接和提示的位置在嵌入到达前后没有变，桌面端的测试还限定位移不超过 0.02。把修复还原后，这些测试会失败，这是我们确认它们真的在起作用的方式。', en: 'Our tests replace X’s script with a late, tall stand-in and check that the link and the notice do not move when it arrives; the desktop test also caps the shift at 0.02. With the fix reverted these tests fail, which is how we confirmed they check anything.' },
           { zh: '局限：假嵌入的高度是固定的，真实组件的高度和到达次数会变，所以生产环境的数字还要单独量，上面的生产数字也只是几次实验室运行，不是读者的真实数据。', en: 'Limits: the stand-in has a fixed height, while the real widget varies in height and in how many times it changes the page, so production still needs its own measurement, and the production figures above are a few lab runs, not field data from readers.' },
         ] },
+    ],
+  },
+  {
+    slug: 'frontend-design-in-codex',
+    base: '/docs',
+    publishedAt: '2026-11-14',
+    translations: { en: { status: 'draft' } },
+    title: { zh: '在 Codex 里做前端设计：安装技能、比较三个方向、在沙箱里预览', en: 'Frontend design in Codex: install the skill, compare three directions, preview in the sandbox' },
+    answer: {
+      zh: '把 Variant Design 克隆到 Codex 的技能目录，重新打开会话，再把任务发给它：它在你的项目里做出 A/B/C 三个方向并给出推荐，但不替你选定。Codex 的沙箱不能监听端口，所以预览是一份可以直接双击打开的静态快照。下面的步骤和结论来自 2026-10-26、10-27 用 Codex CLI 0.163.0 做的实测，之后没有用 Codex 重跑过。',
+      en: 'Clone Variant Design into Codex’s skills folder, reopen the session and give it the brief: it builds three directions, A/B/C, inside your project and recommends one without selecting it for you. The Codex sandbox cannot bind a port, so the preview is a static snapshot you open by double-click. The steps and findings below come from runs with Codex CLI 0.163.0 on 2026-10-26 and 2026-10-27; we have not rerun them with Codex since.',
+    },
+    sections: [
+      { id: 'install', heading: { zh: '1. 安装', en: '1. Install' },
+        body: [
+          { zh: '需要 Git 和 Node.js 22 或以上。把完整仓库克隆到 Codex 的技能目录；如果你自定义了技能目录，换成自己的路径。只想装到一个项目里，可以在项目目录运行 npx skills add YuqingNicole/variant-design-skill -a codex。安装后重新打开 Codex 会话。', en: 'You need Git and Node.js 22 or later. Clone the complete repository into Codex’s skills folder; use your own path if you configured a different one. To install it for one project only, run npx skills add YuqingNicole/variant-design-skill -a codex inside that project. Reopen the Codex session afterwards.' },
+          { zh: 'Codex 应该只列出一个技能：variant-design。2026-10-27 我们发现它会递归扫描目录，把五个子流程也注册成独立技能；之后去掉了子流程文件头部的技能声明，重新探测时只识别出这一个，并加了打包测试守住。', en: 'Codex should list one skill: variant-design. On 2026-10-27 we found that it scans the folder recursively and had registered five sub-routes as skills of their own; we removed their skill headers, a new probe then found only the one, and a package test now guards it.' },
+        ],
+        code: { zh: installCommand, en: installCommand },
+        link: { href: `${blob}/docs/research/2026-10-27-skill-distribution.md`, label: { zh: '阅读安装方式的实测记录', en: 'Read the record of the install checks' } } },
+      { id: 'brief', heading: { zh: '2. 把任务发给它', en: '2. Give it the brief' },
+        body: [
+          { zh: '在项目目录里把下面这段发给 Codex。它先检查页面结构和设计系统，再生成三个取舍不同的方向。在 2026-10-27 的三个测试项目上，Codex 的首次生成用了 309 到 513 秒，三次都没有替用户选定，也没有改动业务代码；其中 Pulse 项目注明了品牌锁定，变体文件没有声明其他字体。', en: 'Send Codex the prompt below from your project folder. It inspects the page structure and design system first, then builds three directions with different tradeoffs. On the three test projects of 2026-10-27, Codex took 309 to 513 seconds for the first generation; in all three it selected nothing for the user and left the application code alone, and in Pulse, which marks its brand as locked, the variant files declared no other fonts.' },
+        ],
+        code: prompts.first,
+        link: { href: `${blob}/docs/research/2026-10-27-eval-baseline.md`, label: { zh: '阅读这三次运行的记录', en: 'Read the record of those three runs' } } },
+      { id: 'preview', heading: { zh: '3. 在沙箱里预览', en: '3. Preview inside the sandbox' },
+        body: [
+          { zh: '这是 Codex 和别的 Agent 差别最大的一步。codex exec 的 workspace-write 沙箱不能监听端口，而 React 的 ES 模块又不能从 file:// 加载，所以起不了预览服务。第一轮实测里，Codex 为此自己写了一个离线打包脚本。', en: 'This is where Codex differs most from other agents. The workspace-write sandbox of codex exec cannot bind a port, and React’s ES modules do not load from file://, so no preview server can start. In our first round Codex wrote an offline bundling script of its own to get around it.' },
+          { zh: '现在技能自带这一步：用项目自己的 Vite 打一份静态快照，脚本和样式都内联，写到 variant-output/_static/，比较页和 A/B/C 三页都能直接双击打开。第三轮复测里 Codex 自动走了这条路。每次修改、撤回或选定之后要重新生成快照。纯 HTML 的项目不需要这一步，文件本来就能直接打开。', en: 'The skill now ships this step: it bundles a static snapshot with the project’s own Vite, inlines scripts and styles, and writes it to variant-output/_static/, where the comparison page and the A/B/C pages open by double-click. In the third round Codex took this path on its own. Rebuild the snapshot after every edit, undo or selection. A plain HTML project does not need it; its files open directly.' },
+          { zh: '你也可以在自己的终端里运行预览命令，看实时预览。', en: 'You can also run the preview command in your own terminal for a live preview.' },
+        ],
+        code: { zh: 'node <skill-root>/scripts/react-preview.mjs <项目目录> <项目目录>/variant-output --static', en: 'node <skill-root>/scripts/react-preview.mjs <project-root> <project-root>/variant-output --static' },
+        link: { href: `${blob}/references/workflow/preview.md`, label: { zh: '阅读预览的完整说明', en: 'Read the full preview instructions' } } },
+      { id: 'refine', heading: { zh: '4. 试改、撤回、接入', en: '4. Refine, undo, integrate' },
+        body: [{ zh: '后面的步骤和其他 Agent 相同。第三轮复测里，Codex 在这几项上都通过了：', en: 'The later steps are the same as in other agents. In the third round Codex passed each of these:' }],
+        list: [
+          { zh: 'B vary subtle — hero：只改 B 的 hero，一个请求只产生一个版本；', en: 'B vary subtle — hero: changes only B’s hero, and one request makes one revision;' },
+          { zh: 'undo B：回到修改前的版本；', en: 'undo B: returns to the version before the edit;' },
+          { zh: 'pick B：只有你说了这句，才会记为最终选择；', en: 'pick B: only this records a final choice;' },
+          { zh: '接入用统一的脚本，覆盖前先备份；在项目副本上回滚后，源码与原始提交逐字节一致，项目仍能构建。', en: 'integration uses one helper that backs up before overwriting; after a rollback on a copy of the project, the source matched the original commit byte for byte and the project still built.' },
+        ] },
+      { id: 'limits', heading: { zh: '5. 我们检查过什么，没检查什么', en: '5. What we checked and what we did not' },
+        body: [
+          { zh: '实测用的是 Codex CLI 0.163.0，非交互方式（codex exec），日期是 2026-10-26 和 10-27，项目是我们自己的测试项目。之后技能改过很多次，没有再用 Codex 重跑；写这篇文章时本机没有安装 Codex。', en: 'The runs used Codex CLI 0.163.0, non-interactively (codex exec), on 2026-10-26 and 2026-10-27, on our own test projects. The skill has changed many times since and has not been rerun with Codex; Codex was not installed on the machine when this article was written.' },
+          { zh: 'Codex 在沙箱里打不开预览，所以每次都把视觉检查标为“未验证”：它交付了能打开的静态快照，但没有看过渲染结果。页面好不好看、在手机宽度下是否正常，要你自己打开看。交互式的 Codex 可以申请权限来启动服务，这一点我们没有实测。', en: 'Codex could not open the preview inside the sandbox, so it marked the visual check as “unverified” every time: it delivered a snapshot that opens, but it never saw the rendered result. Whether the page looks right, or holds up at phone width, is for you to open and see. Interactive Codex can ask for permission to start a server; we have not tested that.' },
+        ],
+        link: { href: `${blob}/docs/research/2026-10-26-cli-dogfood.md`, label: { zh: '阅读 Codex 和 Claude Code 的实测记录', en: 'Read the record of the Codex and Claude Code runs' } } },
     ],
   },
 ];

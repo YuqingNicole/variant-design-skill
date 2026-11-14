@@ -291,7 +291,9 @@ test('direction library pages are prerendered, browsable and keep old links work
 });
 
 test('skills page lists only tried skills with records and a verified install command', async ({page,request})=>{
- expect(await(await request.get('/skills')).text()).toContain('<title>设计技能 — Variant Design</title>');
+ expect(await(await request.get('/skills')).text()).toContain('<title>Claude Code 和 Codex 的前端设计技能 — Variant Design</title>');
+ // The title set in the browser must be the prerendered one, in both languages, on the two pages whose titles name the agents.
+ for(const [route,title] of [['/skills','Claude Code 和 Codex 的前端设计技能 — Variant Design'],['/en/skills','Frontend design skills for Claude Code and Codex — Variant Design'],['/docs/install','在 Claude Code 和 Codex 里安装设计技能 — Variant Design'],['/en/docs/install','Install the design skill in Claude Code and Codex — Variant Design']]){expect(await(await request.get(route)).text(),route).toContain(`<title>${title}</title>`);await page.goto(route);await expect(page,route).toHaveTitle(title);}
  await page.goto('/');await page.locator('.site-nav a[href="/skills"]').click();await expect(page).toHaveURL(/\/skills$/);
  await expect(page.locator('.skills-entry')).toHaveCount(1);await expect(page.locator('.skills-entry h2')).toContainText('variant-design');
  await expect(page.locator('.skills-entry code')).toHaveText('npx skills add YuqingNicole/variant-design-skill -a claude-code -a codex');
@@ -304,7 +306,7 @@ test('the docs hub lists the install guide, the articles and the quick answers, 
  await page.goto('/docs');await hydrated(page);
  await expect(page.getByRole('heading',{level:1})).toHaveText('文档');
  const links=await page.locator('.guide-list h2 a').evaluateAll(a=>a.map(x=>x.getAttribute('href')));
- expect(links).toEqual(['/docs/install','/docs/design-exploration-with-ai-coding-agents','/docs/check-ai-generated-ui-before-you-ship','/docs/motion-rules-for-ai-generated-ui','/docs/measure-layout-shift-in-ai-built-pages','/guides','/changelog']);
+ expect(links).toEqual(['/docs/install','/docs/design-exploration-with-ai-coding-agents','/docs/check-ai-generated-ui-before-you-ship','/docs/motion-rules-for-ai-generated-ui','/docs/measure-layout-shift-in-ai-built-pages','/docs/frontend-design-in-codex','/guides','/changelog']);
  for(const href of links.slice(1,5)){
   const html=await(await request.get(href)).text();
   expect(html,href).toContain(`<link rel="canonical" href="https://variantdesign.xyz${href}">`);
