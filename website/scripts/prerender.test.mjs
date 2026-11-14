@@ -4,6 +4,7 @@ import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
 import { aiTrainingCrawlers, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, withNoindex, withoutDrafts } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
+const { detailTitle, sectionOf, sections } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 
 test('every entry and category gets its own page with metadata and readable content', () => {
@@ -53,12 +54,30 @@ test('published direction cards pass the skill\'s own validator', () => {
   }
 });
 
+// The kind of work each section's detail titles name, in Chinese and English. Pinned here so a change to either language is a deliberate one.
+const work = {
+  web: ['网站设计', 'Website design'], interface: ['产品界面设计', 'Product interface design'], interaction: ['交互设计', 'Interaction design'], motion: ['动效设计', 'Motion design'],
+  branding: ['品牌设计', 'Brand identity'], illustration: ['插画', 'Illustration'], posters: ['海报设计', 'Poster design'], print: ['印刷设计', 'Print design'],
+};
+
+test('a detail title names the work after the reference, in both languages, for every section', () => {
+  assert.deepEqual(sections.map(s => [s.id, [s.work.zh, s.work.en]]), Object.entries(work));
+  assert.equal(detailTitle({ name: 'Linear', category: 'landing', tag: 'SaaS' }, 'zh'), 'Linear — 网站设计灵感 — Variant Design');
+  assert.equal(detailTitle({ name: 'Linear', category: 'landing', tag: 'SaaS' }, 'en'), 'Linear — Website design inspiration — Variant Design');
+  assert.equal(detailTitle({ name: 'Blue cat zine', category: 'practice', tag: 'Print' }, 'zh'), 'Blue cat zine — 印刷设计灵感 — Variant Design');
+  assert.equal(detailTitle({ name: 'Figma · Export', category: 'flow', tag: 'Delivery' }, 'en'), 'Figma · Export — Product interface design inspiration — Variant Design');
+  assert.equal(detailTitle({ name: 'Pencil portrait timelapse', category: 'practice', tag: 'Illustration' }, 'zh'), 'Pencil portrait timelapse — 插画灵感 — Variant Design');
+});
+
 test('every reference gets its own detail page with an escaped title and a link back to the library', () => {
-  const references = loadReferences(), pages = renderSite([], template, 'https://example.test', references);
+  const references = loadReferences(), english = Object.fromEntries(references.map(r => [`/inspiration/${r.id}`, '<main><h1>English body</h1></main>']));
+  const pages = renderSite([], template, 'https://example.test', references, { english });
   for (const r of references) {
     const html = pages.get(`/inspiration/${r.id}`);
     assert.ok(html, r.id);
-    assert.match(html, new RegExp(`<title>${escape(r.name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} — 灵感参考`));
+    assert.ok(html.includes(`<title>${escape(r.name)} — ${work[sectionOf(r)][0]}灵感 — Variant Design</title>`), `${r.id}: ${html.match(/<title>[^<]*/)?.[0]}`);
+    const en = pages.get(`/en/inspiration/${r.id}`);
+    assert.ok(en.includes(`<title>${escape(r.name)} — ${work[sectionOf(r)][1]} inspiration — Variant Design</title>`), `${r.id}: ${en.match(/<title>[^<]*/)?.[0]}`);
     assert.ok(html.includes('href="/"') && html.includes(`href="${escape(r.url)}"`), r.id);
   }
 });
