@@ -210,7 +210,7 @@ test('expressive homepage gallery opens distinct complete directions with workin
  const homeFont=await page.locator('h1').evaluate(el=>getComputedStyle(el).fontFamily);
  await page.locator('.site-footer a[href="/pricing"]').click();
  await expect(page.locator('h1')).toHaveCSS('font-family',homeFont);
- await expect(page.locator('.pricing-page')).toHaveCSS('background-color','rgba(255, 255, 255, 0.62)');
+ await expect(page.locator('.pricing-page')).toHaveCSS('background-color','rgba(247, 250, 254, 0.64)');
  await expect(page.locator('.pricing-card header b')).toHaveText(['计划中','计划中']);
  await expect(page.locator('.pricing-hero-aside')).toContainText('尚未开放购买、开通或生成额度');
  await expect(page.locator('.pricing-card').nth(1)).toContainText('报价草案');
