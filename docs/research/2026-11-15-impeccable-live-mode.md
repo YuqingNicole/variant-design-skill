@@ -1,6 +1,6 @@
 # Impeccable 的 Live Mode 怎么实现，对我们有什么启发（2026-11-15）
 
-维护者让调研 <https://impeccable.style/designing/> 讲的工作流程，特别是“在页面上点选一个元素、出几个版本、选一个写回代码”是怎么做到的。来源只有两个：官网公开页面（`/designing/`、`/live-mode`、`/docs/generate`），以及 GitHub `pbakaus/impeccable` 仓库里写给 agent 的说明 `.claude/skills/impeccable/reference/live.md` 和 `live-setup.md`。仓库是 Apache-2.0 许可的公开源码，读的是 2026-11-15 的 `HEAD`。没有运行它，也没有读 Rust 源码本身，所以下面写的是它的说明文件怎么描述机制，不是我们验证过的行为。
+维护者让调研 <https://impeccable.style/designing/> 讲的工作流程，特别是“在页面上点选一个元素、出几个版本、选一个写回代码”是怎么做到的。来源只有两个：官网公开页面（`/designing/`、`/live-mode`、`/docs/generate`），以及 GitHub `pbakaus/impeccable` 仓库里写给 agent 的说明 `.claude/skills/impeccable/reference/live.md` 和 `live-setup.md`。仓库是 Apache-2.0 许可的公开源码，读到的两个文件与 commit [`1d0d782`](https://github.com/pbakaus/impeccable/tree/1d0d78228a7f4df69e9b35feeb2277a2d6671ada/.claude/skills/impeccable/reference) 中的版本逐字节一致（按文件哈希核对）。没有运行它，也没有读 Rust 源码本身，所以下面写的是它的说明文件怎么描述机制，不是我们验证过的行为。
 
 ## 机制
 
