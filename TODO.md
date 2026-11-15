@@ -61,7 +61,8 @@
 - [ ] 【维护者】Codex 实测：本机安装 Codex 后，用同样的夹具跑一遍。最近所有运行都只有 Claude Code。
 - [ ] 【维护者】换掉安装页主句。“Tell it what you want to make better…”和 Impeccable `/designing/` 的介绍语几乎一样，中文是对应的翻译，应换成我们自己的说法，比如落在“一次出三个方向、并排比较”上。改时同步改 `website/src/docs-content.ts` 的 `pitch` 和 `tests/landing.spec.mjs`。
 
-- [ ] 完善账号体系：先定匿名使用与登录账号的边界，再规划注册/登录、个人资料、收藏与灵感同步、数据导出和删除；实现前明确认证服务、隐私说明和账号数据归属。
+- [ ] 【维护者】开通账号：按 `docs/accounts.md` 建 Supabase 项目、运行迁移、配 Google 和发信服务、把两个变量加到 Vercel，再在预览部署上实测 Google 和邮箱两种登录。登录、收藏同步、首次导入和删除账号已在 2026-11-15 做好，但只用假模块测过。
+- [ ] 账号的后续：个人资料页、收藏导出；同一账号多个标签页同时编辑时的冲突合并。
 - [ ] 【维护者】决定要不要做公开的界面代码检查页。评估见 `docs/research/2026-11-02-antipattern-catalog-evaluation.md`：建议做成一页、先把规则改成共用数据，不仿 `/slop` 做视觉目录。
 
 ## 6. 网站维护

@@ -1,0 +1,31 @@
+/* Sign-in dialog and header account control (src/AccountDialog.tsx). Existing tokens only: the pill radius, the 16px panel
+   radius, the page's ink, paper, hairline and fill colours, and the type sizes already on the page (12, 14, 16, 20px). */
+.account-dialog{width:min(420px,calc(100% - 32px));padding:28px;border:1px solid var(--site-line);border-radius:16px;background:var(--site-paper);color:var(--site-ink);font-family:inherit}
+.account-dialog::backdrop{background:var(--site-scrim);backdrop-filter:blur(6px)}
+.account-dialog h2{margin:0 40px 8px 0;font-size:20px;font-weight:500;line-height:1.3}
+.account-dialog p{margin:0 0 16px;font-size:14px;line-height:1.6;color:var(--site-muted)}
+.account-close{position:absolute;top:16px;right:16px;display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:999px;background:transparent;color:var(--site-ink);cursor:pointer}
+.account-close:hover{background:var(--fill-2)}
+.account-dialog button,.account-dialog input{font:inherit}
+.account-primary,.account-secondary{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;border-radius:999px;font-size:14px;cursor:pointer}
+.account-primary{border:0;background:var(--site-ink);color:var(--site-paper)}
+.account-secondary{border:1px solid var(--site-line);background:var(--fill-1);color:var(--site-ink);margin-top:8px}
+.account-primary:disabled,.account-secondary:disabled{opacity:.6;cursor:progress}
+.account-dialog .account-or{margin:16px 0 12px;text-align:center;font-size:12px}
+.account-dialog label{display:block;margin-bottom:4px;font-size:12px;color:var(--site-muted)}
+.account-dialog input{display:block;width:100%;min-height:44px;padding:0 16px;border:1px solid var(--site-line);border-radius:999px;background:var(--fill-1);color:var(--site-ink);font-size:16px;box-sizing:border-box}
+.account-dialog .account-sent{color:var(--site-ink)}
+.account-link{border:0;padding:0;background:none;color:var(--site-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.account-dialog .account-error,.site-account-panel .account-error{color:var(--site-ink);margin:12px 0 0}
+.account-dialog .account-privacy{margin:20px 0 0;padding-top:16px;border-top:1px solid var(--site-line);font-size:12px}
+.site-nav-end{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.site-nav .site-nav-end .site-language{margin-left:0}
+@media(max-width:650px){.site-nav .site-nav-end{margin-left:auto}}
+.site-account img{display:block;width:24px;height:24px;border-radius:999px}
+.site-account[aria-busy]{opacity:.6}
+.site-account-menu{position:relative}
+.site-account-panel{position:absolute;right:0;top:calc(100% + 8px);z-index:40;width:240px;padding:12px;border:1px solid var(--site-line);border-radius:16px;background:var(--site-paper);color:var(--site-ink)}
+.site-account-panel p{margin:4px 8px 8px;font-size:12px;color:var(--site-muted);overflow-wrap:anywhere}
+.site-account-panel button{display:block;width:100%;min-height:44px;padding:0 8px;border:0;border-radius:999px;background:transparent;color:var(--site-ink);font:inherit;font-size:14px;text-align:left;cursor:pointer}
+.site-account-panel button:hover{background:var(--fill-2)}
+.site-account-panel .account-danger{font-weight:500}

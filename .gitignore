@@ -26,4 +26,5 @@ website/.canvas-data/
 **/.variant-work/
 
 /tests/.submission-site/
+/tests/.accounts-site/
 /tests/.premium-eval/

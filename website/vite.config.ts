@@ -18,7 +18,9 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), variantApiPlugin(), contentPlugin(), inspirationPlugin()],
     // RFC-005 §3.5: draft translations stay out of production and show everywhere else.
-    define: { __SHOW_TRANSLATION_DRAFTS__: JSON.stringify(process.env.VERCEL_ENV !== 'production'), __SHOW_CASES__: JSON.stringify(process.env.VERCEL_ENV !== 'production') },
+    define: { __SHOW_TRANSLATION_DRAFTS__: JSON.stringify(process.env.VERCEL_ENV !== 'production'), __SHOW_CASES__: JSON.stringify(process.env.VERCEL_ENV !== 'production'),
+      // Accounts (src/account.ts, docs/accounts.md): on only when both values are set; the key is Supabase's public anon key.
+      __SUPABASE__: JSON.stringify({ url: env.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL || '', key: env.VITE_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '' }) },
     build: { rollupOptions: { input: {
       main: path.resolve("index.html"),
       compare: path.resolve("variant-output/_compare.html"),

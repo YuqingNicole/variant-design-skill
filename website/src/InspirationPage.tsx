@@ -14,6 +14,8 @@ import './inspiration.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath, parseLocale } from './i18n/locale-route';
 import { showCases } from './case-visibility';
+import { packKey, parsePack, mergePacks, createPackWriter, type Intent, type Pack } from './pack';
+import { useAccount, openSignIn, readPack, writePack, rememberPending, takePending } from './account';
 type Item=Reference;
 // Media close to the 16:10 cell fills it (a small crop); a tall or very wide capture stays whole on a surface mat. The grid keeps its row order, which the first screen and scroll restoration rely on.
 const fills=(media?:{width?:number;height?:number})=>Boolean(media?.width&&media.height&&media.width/media.height>=.85&&media.width/media.height<=2);
@@ -34,7 +36,7 @@ const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdra
  addPack:{zh:'加入参考包',en:'Add to pack'},removePack:{zh:'移出参考包',en:'Remove from pack'},prev:{zh:'上一个',en:'Previous'},next:{zh:'下一个',en:'Next'},scrollPrev:{zh:'向左滚动作品',en:'Scroll references left'},scrollNext:{zh:'向右滚动作品',en:'Scroll references right'},study:{zh:'研究什么',en:'Study'},apply:{zh:'用在哪里',en:'Apply'},
  source:{zh:'出处',en:'Source'},designer:{zh:'设计者',en:'Designer'},unknownDesigner:{zh:'未知',en:'Unknown'},stillUnknown:{zh:'还不知道',en:'Unknown'},createBrief:{zh:'生成参考指令',en:'Create brief'},visit:{zh:'访问原站',en:'Visit source'},
  storageError:{zh:'无法读取或保存本地参考包。本次修改仅在当前页面有效，请复制指令保存。',en:'Unable to read or save the local pack. Changes remain on this page only; copy the brief to keep them.'},
- pack:{zh:'你的参考包',en:'Your reference pack'},packNote:{zh:'保存在当前浏览器；清除浏览器数据后会丢失，不会跨设备同步。',en:'Saved in this browser; clearing browser data removes it. It does not sync across devices.'},
+ pack:{zh:'你的参考包',en:'Your reference pack'},packNote:{zh:'保存在当前浏览器；清除浏览器数据后会丢失，不会跨设备同步。',en:'Saved in this browser; clearing browser data removes it. It does not sync across devices.'},packNoteAccount:{zh:'保存在你的账号里，换一台设备登录也在。',en:'Saved to your account, on any device you sign in on.'},syncError:{zh:'没能把收藏保存到账号。请检查网络，之后的修改会再试一次。',en:'Could not save to your account. Check your connection; the next change tries again.'},
  useFor:{zh:'参考什么',en:'Use for'},avoid:{zh:'不参考什么',en:'Avoid'},remove:{zh:'移除',en:'Remove'},packBrief:{zh:'生成参考包指令',en:'Create pack brief'},takeIt:{zh:'带进你的项目',en:'Take it into your project'},
  briefLabel:{zh:'参考设计指令',en:'Reference brief'},copyBrief:{zh:'复制指令',en:'Copy brief'},dismiss:{zh:'收起',en:'Dismiss'},copied:{zh:'已复制，粘贴到你的项目 Agent 中继续。',en:'Copied. Continue in your project agent.'},
  copyManually:{zh:'请在文本框中选择并手动复制。',en:'Select the text and copy it manually.'},submissions:{zh:'投稿与授权规则',en:'Submissions & permissions'},casesEntry:{zh:'案例：一个任务出三版 →',en:'Cases: one brief, three directions →'},
@@ -75,12 +77,13 @@ const Icon=({d}:{d:string})=><svg viewBox="0 0 16 16" width="14" height="14" ari
 const icons={out:'M5 11 11 5M6 5h5v5',save:'M4 2.5h8v11L8 10.5l-4 3z',close:'M4 4l8 8M12 4l-8 8',prev:'M10 3 5 8l5 5',next:'M6 3l5 5-5 5',search:'M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM14 14l-3.5-3.5'};
 // Ten columns of the three-row wall (and a multiple of the phone's single row), so a partial page ends on a full column.
 const pageSize=30;
-type Intent={use:string;avoid:string};
 const kinds:Record<string,Localized>={'submitted-work':{zh:'作者投稿',en:'Author submission'},'official-site':{zh:'官网',en:'Official site'},'product-page':{zh:'产品页',en:'Product page'},documentation:{zh:'帮助文档',en:'Documentation'},'social-post':{zh:'社交帖子',en:'Social post'}};
 // Everything the record does not establish goes into the brief as an explicit unknown (RFC-003 §3).
 const unknowns=(item:Item,locale:Locale)=>[...(item.designer?[]:[m.unknownDesignerField]),...(item.mobile==='not-tested'?[m.unknownMobile]:[]),permissionOf(item)?m.unknownReuse:m.unknownRights].map(v=>t(v,locale)).join(t(m.listJoin,locale));
-const packKey='variant-inspiration-pack-v1';
-function loadPack():{selection:Record<string,Intent>;error:boolean}{try{const raw=localStorage.getItem(packKey);if(!raw)return {selection:{},error:false};const parsed:unknown=JSON.parse(raw);if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error();const selection:Record<string,Intent>={};for(const [id,value] of Object.entries(parsed)){if(!(references.some(item=>item.id===id)||withdrawnReferences.some(item=>item.id===id))||!value||typeof value!=='object'||typeof value.use!=='string'||typeof value.avoid!=='string')throw new Error();selection[id]={use:value.use,avoid:value.avoid}}return {selection,error:false}}catch{return {selection:{},error:true}}}
+const known=(id:string)=>references.some(item=>item.id===id)||withdrawnReferences.some(item=>item.id===id);
+function loadPack():{selection:Pack;error:boolean}{try{const raw=localStorage.getItem(packKey);if(!raw)return {selection:{},error:false};return {selection:parsePack(JSON.parse(raw),known),error:false}}catch{return {selection:{},error:true}}}
+// An account's pack may name a reference since taken off the site; those entries are dropped, not the whole pack.
+const knownOnly=(raw:unknown)=>raw&&typeof raw==='object'&&!Array.isArray(raw)?Object.fromEntries(Object.entries(raw).filter(([id])=>known(id))):{};
 // Before the first render: the records that render shows (main.tsx waits for it). The home's first page is in the script; a
 // section page, a reference opened by address, and a sort, topic or query in the address load their records first.
 export function prepare(route:string){const p=new URLSearchParams(location.search);if(p.get('sort')||p.get('topic')||p.get('q'))return ensureAll();
@@ -94,13 +97,34 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  const requestedOpen=useRef(open);
  const openItem=open?referenceOf(open.id):undefined;
  useEffect(()=>{if(withdrawn)return;document.title=openItem?detailTitle(openItem,language):sectionInfo?`${t(sectionInfo.title,language)} — Variant Design`:t(f.docTitle,language);document.documentElement.lang=locales[language].htmlLang;document.querySelector('meta[name="description"]')?.setAttribute('content',openItem?t(f.itemDescription,language)(openItem):sectionInfo?t(sectionInfo.intro,language):t(f.pageDescription,language)(total))},[language,openItem]);
- const [initialPack]=useState(loadPack);const [selection,setSelection]=useState<Record<string,Intent>>(initialPack.selection);const [storageError,setStorageError]=useState(initialPack.error);
- function saveSelection(next:Record<string,Intent>){setSelection(next);try{if(initialPack.error)throw new Error();localStorage.setItem(packKey,JSON.stringify(next));setStorageError(false)}catch{setStorageError(true)}}
+ // With accounts on (src/account.ts) the pack is the signed-in user's; signed out it is empty and saving asks for sign-in.
+ // The browser's old pack is imported on the first sign-in (mergePacks), then removed from this browser.
+ const account=useAccount(),accounts=account.status!=='off',userId=account.status==='signed-in'?account.user!.id:'';
+ const [initialPack]=useState(loadPack);const [selection,setSelection]=useState<Pack>(accounts?{}:initialPack.selection);const [storageError,setStorageError]=useState(accounts?false:initialPack.error);
+ const [syncError,setSyncError]=useState(false);const synced=useRef('');const pendingWrite=useRef<ReturnType<typeof setTimeout>>(undefined);
+ // `current` is the pack the visitor sees; edits made while the account's pack is still loading wait in `queued` and are
+ // applied on top of it, so nothing done in that moment is lost.
+ const current=useRef<Pack>(selection),queued=useRef<((p:Pack)=>Pack)[]>([]);
+ const forgetLocal=()=>{try{localStorage.removeItem(packKey)}catch{/* nothing left to import */}};
+ const [writer]=useState(()=>createPackWriter(writePack,ok=>setSyncError(!ok),forgetLocal));
+ useEffect(()=>{if(!accounts)return;synced.current='';queued.current=[];clearTimeout(pendingWrite.current);if(!userId){current.current={};setSelection({});return}let live=true;
+  readPack(userId).then(raw=>{if(!live)return;let mine:Pack={};try{mine=parsePack(knownOnly(raw),known)}catch{mine={}}
+   const local=loadPack(),hadLocal=!local.error&&Object.keys(local.selection).length>0,{pack,changed}=mergePacks(mine,local.error?{}:local.selection);
+   const pending=takePending(),resumed=Boolean(pending&&known(pending)&&!pack[pending]);if(resumed)pack[pending!]={use:'',avoid:''};
+   const edits=queued.current;queued.current=[];const next=edits.reduce((p,fn)=>fn(p),pack);
+   current.current=next;setSelection(next);synced.current=userId;setSyncError(false);
+   if(changed||resumed||edits.length)writer.push(userId,next,hadLocal&&changed);if(hadLocal&&!changed)forgetLocal()}).catch(()=>{if(live)setSyncError(true)});
+  return()=>{live=false}},[userId]);
+ function edit(fn:(p:Pack)=>Pack){const next=fn(current.current);current.current=next;setSelection(next);
+  if(accounts){if(!userId)return;if(synced.current!==userId){queued.current.push(fn);return}clearTimeout(pendingWrite.current);pendingWrite.current=setTimeout(()=>writer.push(userId,current.current),400);return}
+  try{if(initialPack.error)throw new Error();localStorage.setItem(packKey,JSON.stringify(next));setStorageError(false)}catch{setStorageError(true)}}
+ // Saving and briefs need an account when accounts are on; the reference asked for is saved once the visitor is back signed in.
+ const needAccount=(reason:'save'|'brief',id?:string)=>{if(!accounts||userId)return false;if(id)rememberPending(id);openSignIn(reason);return true};
  const selected=rows.filter(item=>selection[item.id]),unavailable=withdrawnReferences.filter(item=>selection[item.id]);
- function toggleSelection(id:string){const next={...selection};if(next[id])delete next[id];else next[id]={use:'',avoid:''};saveSelection(next)}
- function updateIntent(id:string,field:'use'|'avoid',value:string){saveSelection({...selection,[id]:{...selection[id],[field]:value}})}
+ function toggleSelection(id:string){if(needAccount('save',selection[id]?undefined:id))return;edit(p=>{const next={...p};if(next[id])delete next[id];else next[id]={use:'',avoid:''};return next})}
+ function updateIntent(id:string,field:'use'|'avoid',value:string){edit(p=>p[id]?{...p,[id]:{...p[id],[field]:value}}:p)}
  // The pack brief quotes each record, so the selected ones are fetched first.
- function createPack(){setNotice('');ensure(selected.map(r=>r.id)).then(()=>setPrompt(fl('packHead').concat(selected.flatMap(r=>{const item=referenceOf(r.id);return item?[fl('packItem')(item,selection[item.id],unknowns(item,language))]:[]})).join('\n')))}
+ function createPack(){if(needAccount('brief'))return;setNotice('');ensure(selected.map(r=>r.id)).then(()=>setPrompt(fl('packHead').concat(selected.flatMap(r=>{const item=referenceOf(r.id);return item?[fl('packItem')(item,selection[item.id],unknowns(item,language))]:[]})).join('\n')))}
  const briefRef=useRef<HTMLElement>(null);
  useEffect(()=>{if(prompt){briefRef.current?.focus({preventScroll:true});briefRef.current?.scrollIntoView({block:'center',behavior:'instant'});}},[prompt]);
  // One stream, sorted by the commit that first collected each reference, not its later review date.
@@ -157,7 +181,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  // More cards load when the strip nears its right end (onFeedScroll); a sentinel under a short strip is always in view and would mount every card at once.
  // Independent filter changes must apply immediately; the shared animation queue keeps only its latest update.
  const filter=(update:()=>void)=>{update();setVisible(pageSize)};
- function brief(item:Item){if(open?.mode==='modal'){afterClose.current=()=>useReference(item);close()}else useReference(item)}
+ function brief(item:Item){if(needAccount('brief'))return;if(open?.mode==='modal'){afterClose.current=()=>useReference(item);close()}else useReference(item)}
  const detailView=(item:Item,asPage:boolean)=>{const H=asPage?'h1':'h2';const post=postOf(item);const preview=previewOf(item.id);
   return <article className="insp-detail" aria-labelledby={`detail-${item.id}`}>
    <div className="insp-detail-notes">
@@ -175,8 +199,8 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   </article>};
  const tail=<>
   {unavailable.length>0&&<section className="inspiration-pack reference-removed-pack"><h2>{l('withdrawnPack')}</h2>{unavailable.map(r=><div key={r.id}><h3>{r.name}</h3><p>{l('withdrawnNote')}</p><p>{selection[r.id].use}</p><p>{selection[r.id].avoid}</p><button onClick={()=>toggleSelection(r.id)}>{l('remove')}</button></div>)}</section>}
-  {storageError&&<p role="alert" className="inspiration-count">{l('storageError')}</p>}
-  {selected.length>0&&<section className="inspiration-pack" aria-labelledby="pack-title"><h2 id="pack-title">{l('pack')} ({selected.length})</h2><p>{l('packNote')}</p>{selected.map(item=><fieldset key={item.id}><legend>{item.name}</legend><label>{l('useFor')}<textarea aria-label={l('useFor')} value={selection[item.id].use} onChange={e=>updateIntent(item.id,'use',e.target.value)}/></label><label>{l('avoid')}<textarea aria-label={l('avoid')} value={selection[item.id].avoid} onChange={e=>updateIntent(item.id,'avoid',e.target.value)}/></label><button type="button" onClick={()=>toggleSelection(item.id)}>{l('remove')}</button></fieldset>)}<button className="content-button" onClick={createPack}>{l('packBrief')}</button></section>}
+  {storageError&&<p role="alert" className="inspiration-count">{l('storageError')}</p>}{syncError&&<p role="alert" className="inspiration-count">{l('syncError')}</p>}
+  {selected.length>0&&<section className="inspiration-pack" aria-labelledby="pack-title"><h2 id="pack-title">{l('pack')} ({selected.length})</h2><p>{l(accounts?'packNoteAccount':'packNote')}</p>{selected.map(item=><fieldset key={item.id}><legend>{item.name}</legend><label>{l('useFor')}<textarea aria-label={l('useFor')} value={selection[item.id].use} onChange={e=>updateIntent(item.id,'use',e.target.value)}/></label><label>{l('avoid')}<textarea aria-label={l('avoid')} value={selection[item.id].avoid} onChange={e=>updateIntent(item.id,'avoid',e.target.value)}/></label><button type="button" onClick={()=>toggleSelection(item.id)}>{l('remove')}</button></fieldset>)}<button className="content-button" onClick={createPack}>{l('packBrief')}</button></section>}
   {prompt&&<section ref={briefRef} tabIndex={-1} className="inspiration-brief" aria-labelledby="reference-brief-title"><h2 id="reference-brief-title">{l('takeIt')}</h2><textarea aria-label={l('briefLabel')} readOnly value={prompt} rows={6}/><button className="content-button" onClick={copy}>{l('copyBrief')}</button><button className="inspiration-dismiss" onClick={()=>{setPrompt('');setNotice('')}}>{l('dismiss')}</button><p role="status">{notice}</p></section>}
  </>;
  const header=<SiteHeader language={language} page="inspiration" inspirationCategory={section}/>;
