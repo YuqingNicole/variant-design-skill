@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
-import { aiTrainingCrawlers, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, withNoindex, withoutDrafts } from './prerender.mjs';
+import { aiTrainingCrawlers, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
 const { detailTitle, sectionOf, sections } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
@@ -215,4 +215,14 @@ test('robots.txt refuses AI training crawlers but keeps search engines and user-
   for (const agent of ['OAI-SearchBot', 'ChatGPT-User', 'Claude-User', 'Claude-SearchBot', 'PerplexityBot', 'Googlebot']) assert.ok(!text.includes(`User-agent: ${agent}`), `${agent} stays allowed`);
   assert.match(text, /User-agent: \*\nContent-Signal: search=yes, ai-input=yes, ai-train=no\nAllow: \//);
   assert.ok(text.trimEnd().endsWith('Sitemap: https://example.test/sitemap.xml'));
+});
+
+test('production can leave the A/B/C cases out while keeping every other page', async () => {
+  for (const route of ['/cases', '/en/cases', '/c/landing', '/en/c/landing', '/d/pulse', '/en/d/pulse']) assert.equal(isCaseRoute(route), true, route);
+  for (const route of ['/', '/en', '/docs/install', '/cases-study', '/changelog', '/browse/motion', '/inspiration/linear', '/docs']) assert.equal(isCaseRoute(route), false, route);
+  const pages = withoutCases(new Map([['/', 'a'], ['/cases', 'b'], ['/en/d/pulse', 'c'], ['/c/landing', 'd'], ['/skills', 'e']]));
+  assert.deepEqual([...pages.keys()], ['/', '/skills']);
+  const docs = await importTs(new URL('../src/docs-content.ts', import.meta.url).pathname), text = llms([], docs, 'https://example.test');
+  assert.ok(!text.includes('## Cases') && !text.includes('/d/'), 'llms.txt has no case section without entries');
+  assert.ok(text.includes('## Library'));
 });
