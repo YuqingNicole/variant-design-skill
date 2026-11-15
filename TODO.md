@@ -45,12 +45,24 @@
 - [ ] `/skills` 只有我们自己 1 条，和“只收实际跑过的技能”的承诺不相称。用 `evals/run.mjs` 在一次性项目里跑 Impeccable、Taste Skill、UI UX Pro Max，公开记录后收录。发布涉及 Anthropic 技能的对比前，先由【维护者】确认条款。
 - [ ] 案例系列（维护者 2026-11-13 定目标"展现 AI design 的全部实力和一些教程性内容"，选先做案例）：第一批 3 个已验证案例 `bakery`、`motion`、`ledger` 来自评测夹具上的真实运行，案例页有了「怎么做出来的」，记录见 `docs/research/2026-11-13-case-series.md`（每个运行约 $6–9、13–18 分钟，只跑了 Claude Code）。下一批：`harbor-chain` 和 `native-vite` 两个多轮夹具，展示 pick、设计系统、apply、undo 和接入回滚；再找两三个外部的真实小 brief 做夹具。首页更显眼的案例区等第 6 组的数据拆分。教程套件（第二条路）还没开始。
 
-## 5. 产品
+## 5. 产品与技能打磨
 
-- [ ] 决定要不要做“在比较页上直接选某个区域”：Impeccable 的 Live Mode、Subframe 和 Claude Design 都让用户在页面上点选。先决定做还是明确不做，再动手。
+技能打磨按下面的顺序做（2026-11-15 定）。每一条都用同一个 eval 夹具量改前改后的用时、费用和轮次，结果记进 `docs/research/`。启发来自 `docs/research/2026-11-15-impeccable-live-mode.md`。
+
+- [ ] 拆一次运行记录，找出时间花在哪里。2026-11-13 的三次运行（bakery 13 分钟、$5.89、50 轮；motion 17 分钟、$7.00、39 轮；ledger 18 分钟、$8.61、85 轮，见 `docs/research/2026-11-13-case-series.md`）都超过 `evals/README.md` 写的约 $2–3、5–15 分钟。找回或重跑 bakery，按阶段统计用时、轮次和读了哪些文件：读参考、生成、自检、预览、写 context。后面几条都以这次为基线。
+- [ ] 生成时只做轻检查，严格检查留给选定的方向。三版生成后只查能打开、品牌没丢、手机宽度不溢出；strict 质量门禁和浏览器行为检查放到 `pick` 或接入时。比较页要写明哪些检查还没跑。同步改质量检查相关的 references、`skills/variant-generate/ROUTE.md` 和用户文档。验收：bakery 的用时和轮次下降，eval 仍然全部通过。
+- [ ] 辅助脚本的 JSON 输出带 `next`：写明下一步做什么，填好真实路径和 id，skill 文本说明以它为准，agent 不用再翻文档判断流程。先从 `variant-history.mjs` 的 `prepare`、`apply`、`select` 做起。验收：轮次和读取的 skill 文件数下降。
+- [ ] 不在对话里复述：skill 文本写明不复述、不写教程式总结，交付时只报告结果、没做到的检查和下一步命令。
+- [ ] 三版必须在不同方向上变化。生成前从项目的 tokens 写一句品牌锁定：主色和强调色的真实值、字体、布局、质感、语气。每版声明一个主变化方向：层级、布局、字体、用色、密度或结构，三版各不相同。交付前做一次“眯眼测试”：太像或偏离品牌就重做。`.variant-context.json` 给每个方向记 `axis`，评分器加检查。
+- [ ] 技能的三处记录问题（2026-11-13 案例运行里发现，见 `docs/research/2026-11-13-case-series.md`）：`.variant-context.json` 的 `recommendation.reason` 应跟随对话语言（ledger 运行里对话和方向说明都是中文，理由记成了英文，中文案例页只能原样显示）；每个方向应记录名字（ledger 的 context 没有 `name`，bakery 有）；`evals/README.md` 要写明运行器隔离不了机器上已有的 node 模块（bakery 运行借用了本机另一个项目里的 Playwright 做自检）。
+- [ ] 真实跑一次技能后半程：用 `harbor-chain` 和 `native-vite` 两个多轮夹具跑 `pick`、设计系统、`apply`、`undo`、接入和回滚，这些步骤最近的案例都没覆盖到。
+- [ ] 比较页加旋钮：每版声明 0–4 个驱动 CSS 变量的参数（密度、强调色用量、圆角等），比较页给出滑块，调整不用重新生成；`pick` 或接入时把值写死。先写 RFC，再动手。
+- [ ] 【维护者】确认“在比较页上直接选某个区域”的做法。建议：做，但只在我们生成的比较页和预览页里，不往用户项目注入脚本，不依赖本地端口（Codex 沙箱绑不了端口）。第一版点选一个区域后生成一句可复制的命令（如 `B vary subtle — hero`），对应已有的 zone；Claude Code 里点完自动开始留到第二版。Impeccable 的 Live Mode 会在预览期间往用户源码写临时标记，和我们“接入之前不碰用户文件”冲突，不照搬。
+- [ ] 【维护者】Codex 实测：本机安装 Codex 后，用同样的夹具跑一遍。最近所有运行都只有 Claude Code。
+- [ ] 【维护者】换掉安装页主句。“Tell it what you want to make better…”和 Impeccable `/designing/` 的介绍语几乎一样，中文是对应的翻译，应换成我们自己的说法，比如落在“一次出三个方向、并排比较”上。改时同步改 `website/src/docs-content.ts` 的 `pitch` 和 `tests/landing.spec.mjs`。
+
 - [ ] 完善账号体系：先定匿名使用与登录账号的边界，再规划注册/登录、个人资料、收藏与灵感同步、数据导出和删除；实现前明确认证服务、隐私说明和账号数据归属。
 - [ ] 【维护者】决定要不要做公开的界面代码检查页。评估见 `docs/research/2026-11-02-antipattern-catalog-evaluation.md`：建议做成一页、先把规则改成共用数据，不仿 `/slop` 做视觉目录。
-- [ ] 技能的三处记录问题（2026-11-13 案例运行里发现，见 `docs/research/2026-11-13-case-series.md`）：`.variant-context.json` 的 `recommendation.reason` 应跟随对话语言（ledger 运行里对话和方向说明都是中文，理由记成了英文，中文案例页只能原样显示）；每个方向应记录名字（ledger 的 context 没有 `name`，bakery 有）；`evals/README.md` 要写明运行器隔离不了机器上已有的 node 模块（bakery 运行借用了本机另一个项目里的 Playwright 做自检）。
 
 ## 6. 网站维护
 
