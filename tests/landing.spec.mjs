@@ -20,6 +20,12 @@ test.beforeEach(async({page})=>{
 
 // The inspiration styles load with the page's script chunk: read computed styles only after React has taken over the prerendered page.
 const hydrated=page=>page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
+test('the install page opens with what the skill does and that every step can be undone',async({page,request})=>{
+ for(const [route,lines] of [['/docs/install',['说出你想改进的地方。它和你一起把设计想清楚，再一路落到代码里。','只改你选中的部分，每一步都能撤回。']],['/en/docs/install',['Tell it what you want to make better. It works out the design with you, then carries it through to code.','Changes only what you pick, and every step can be undone.']]]){
+  const html=await(await request.get(route)).text();for(const line of lines)expect(html,route).toContain(line);
+  await page.goto(route);await expect(page.locator('.docs-pitch p'),route).toHaveText(lines);
+ }
+});
 for(const route of ['/docs','/docs/install','/sponsor'])test(`${route} keeps a consistent type and color scale in both languages`,async({page},info)=>{
  await page.emulateMedia({reducedMotion:'reduce'});const samples=[];
  for(const language of ['zh','en'])for(const width of [320,390,1440]){

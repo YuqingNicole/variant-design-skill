@@ -92,7 +92,7 @@ function docsBody(d, lang = 'zh') {
   const list = rows => `<ul>${rows.map(r => `<li>${escape(r[lang])}</li>`).join('')}</ul>`, code = c => `<pre><code>${escape(c)}</code></pre>`;
   const commands = rows => `<dl>${rows.map(([c, t]) => `<dt><code>${escape(typeof c === 'string' ? c : c[lang])}</code></dt><dd>${escape(t[lang])}</dd>`).join('')}</dl>`;
   const x = k => escape(d.text[k][lang]);
-  return `<main><h1>${lang === 'en' ? 'Install and get started' : '安装与开始使用'}</h1>`
+  return `<main><h1>${lang === 'en' ? 'Install and get started' : '安装与开始使用'}</h1><p>${x('pitch')}</p><p>${x('pitchNote')}</p>`
     + `<section id="before"><h2>${x('before')}</h2>${list(d.prerequisites)}</section>`
     + `<section id="install"><h2>${x('install')}</h2><p>${x('installIntro')}</p>${d.agents.map(a => `<h3>${escape(a.label || (lang === 'en' ? 'Other agents' : '其他 Agent'))}</h3>${code(a.id === 'codex' ? d.installCommand : d.clone(a.path))}<p>${escape(a.note[lang])}</p>`).join('')}`
     + `<h3>${x('confirm')}</h3><p>${x('confirmNode')}</p>${d.agents.map(a => code(d.verify(a.path, lang === 'zh'))).join('')}<p>${x('confirmPrompt')}</p>${code(d.prompts.check[lang])}</section>`

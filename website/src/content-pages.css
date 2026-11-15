@@ -74,3 +74,4 @@
 @media(hover:hover) and (prefers-reduced-motion:no-preference){.docs-hub :is(.docs-card,.docs-answers,.docs-changelog){transition:border-color var(--dur-fast) var(--ease-out),background-color var(--dur-fast) var(--ease-out)}}
 @media(hover:hover){.docs-hub :is(.docs-card,.docs-answers,.docs-changelog):hover{border-color:var(--site-brand);background:var(--site-card)}}
 @media(max-width:800px){.docs-hub{grid-template-columns:minmax(0,1fr)}}
+.docs-pitch{max-width:680px;margin:0 0 18px}.docs-pitch p{margin:0;color:var(--site-ink);font-size:20px;line-height:1.55}.docs-pitch p+p{margin-top:10px;font-size:16px}@media(max-width:600px){.docs-pitch p{font-size:18px}}
