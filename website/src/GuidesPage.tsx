@@ -8,6 +8,7 @@ import './content-pages.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
 import { isDraft, showDrafts } from './i18n/translations';
+import { linkShown } from './case-visibility';
 
 const m = {
   title: { zh: '指南', en: 'Guides' },
@@ -50,7 +51,7 @@ export function GuidesPage({ slug, base = '/guides' }: { slug?: string; base?: '
           {s.body.map(p => <p key={p.zh}>{t(p, language)}</p>)}
           {s.list && <ul>{s.list.map(item => <li key={item.zh}>{t(item, language)}</li>)}</ul>}
           {s.code && <pre className="guide-code"><code>{t(s.code, language)}</code></pre>}
-          {s.link && <p className="content-link"><a href={localePath(s.link.href,language)}>{t(s.link.label, language)} →</a></p>}
+          {s.link && linkShown(s.link.href) && <p className="content-link"><a href={localePath(s.link.href,language)}>{t(s.link.label, language)} →</a></p>}
         </section>)}</div></div>
       <section className="content-closing site-shell"><a className="content-button" href={localePath('/docs/install',language)}>{t(m.start, language)} ↗</a><a className="content-secondary" href={localePath(base,language)}>{t(base === '/docs' ? hub.title : m.back, language)} →</a></section>
     </> : <>

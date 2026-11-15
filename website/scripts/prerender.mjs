@@ -66,6 +66,13 @@ export const draftRoutes = ({ guides = [], entries = [], references = [] }, loca
   ...guides.filter(g => g.translations?.[locale]?.status === 'draft').map(guideRoute),
   ...entries.filter(e => e.translations?.[locale]?.status === 'draft').map(e => `/d/${e.slug}`),
   ...references.filter(r=>r.translations?.[locale]?.status==='draft').map(r=>`/inspiration/${r.id}`)];
+// The A/B/C cases are not public yet (maintainer, 2026-11-15): production leaves out /cases, /c/* and /d/* in both languages, with their
+// sitemap, feed and llms.txt lines; previews and dev keep them (src/case-visibility.ts). The /d/<slug>.json cards stay, because the skill reads them.
+export const isCaseRoute = route => /^(?:\/en)?\/(?:cases$|c\/|d\/)/.test(route);
+export function withoutCases(pages) {
+  for (const route of [...pages.keys()]) if (isCaseRoute(route)) pages.delete(route);
+  return pages;
+}
 export function withoutDrafts(english, drafts) {
   const kept = { ...english };
   for (const route of drafts) delete kept[route];
@@ -223,11 +230,7 @@ export function llms(entries, docs, site = defaultSite, references = [], guides 
 - [Install and get started](${site}/en/docs/install): prerequisites, install and verify, the first A/B/C run, compare/refine/undo commands, picking and integrating, FAQ.
 - [Repository and README](${repository}): source, skill files and helper scripts.
 ${articles ? `${articles}\n` : ''}
-${answers ? `## Guides\n\n${answers}\n\n` : ''}## Cases
-
-${cases}
-
-## Library
+${answers ? `## Guides\n\n${answers}\n\n` : ''}${cases ? `## Cases\n\n${cases}\n\n` : ''}## Library
 
 - [Design inspiration](${site}/en): ${references.length} curated external references, each with our own notes on what to study and where to use it, the source and the date it was checked.
 - [Design skills](${site}/en/skills): design delivery skills that were run in a throwaway project, with public records.
@@ -317,11 +320,14 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   if (drafts.length) console.log(`Draft English left out of production: ${drafts.join(', ')}`);
   const englishReferences=references.filter(r=>!drafts.includes(`/inspiration/${r.id}`));
   rendered['/']+=referenceIndex(references);english['/']+=referenceIndex(englishReferences,'en');
-  const listed = { guides: guides.filter(g => !drafts.includes(guideRoute(g))), entries: entries.filter(e => !drafts.includes(`/d/${e.slug}`)) };
+  const hideCases = process.env.VERCEL_ENV === 'production';
+  if (hideCases) console.log('Cases left out of production (src/case-visibility.ts).');
+  const listed = { guides: guides.filter(g => !drafts.includes(guideRoute(g))), entries: hideCases ? [] : entries.filter(e => !drafts.includes(`/d/${e.slug}`)) };
   // The untouched shell stays available as app.html: the fallback for routes without their own page.
   const shell = path.join(dist, 'app.html');
   if (!fs.existsSync(shell)) fs.copyFileSync(path.join(dist, 'index.html'), shell);
   const template = fs.readFileSync(shell, 'utf8').replace(`    ${noindexTag}\n`, ''), pages = renderSite(entries, template, site, references, { docs, version, guides, rendered, english: withoutDrafts(english, drafts), withdrawn, sections: sectionPages(references, englishReferences) });
+  if (hideCases) withoutCases(pages);
   for (const [route, html] of pages) {
     const file = route === '/' ? path.join(dist, 'index.html') : path.join(dist, route.slice(1), 'index.html');
     fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, html);
@@ -330,10 +336,11 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   const htmlIn = dir => fs.readdirSync(dir, { withFileTypes: true }).flatMap(f => f.isDirectory() ? htmlIn(path.join(dir, f.name)) : f.name.endsWith('.html') ? [path.join(dir, f.name)] : []);
   for (const file of [shell, ...htmlIn(path.join(dist, 'variant-output')), ...htmlIn(path.join(dist, 'lab'))]) fs.writeFileSync(file, withNoindex(fs.readFileSync(file, 'utf8')));
   fs.cpSync(path.join(contentRoot, 'media'), path.join(dist, 'media'), { recursive: true });
+  fs.mkdirSync(path.join(dist, 'd'), { recursive: true });
   for (const entry of entries) fs.writeFileSync(path.join(dist, 'd', `${entry.slug}.json`), JSON.stringify(toCard(entry, site), null, 2) + '\n');
   fs.writeFileSync(path.join(dist, '404.html'), notFoundPage(template));
   fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap(indexableRoutes(pages), site, lastModified({ references, entries: listed.entries, guides: listed.guides, sectionOf: sectionModule.sectionOf })));
-  fs.writeFileSync(path.join(dist, 'feed.xml'), rss(entries, site, references));
+  fs.writeFileSync(path.join(dist, 'feed.xml'), rss(hideCases ? [] : entries, site, references));
   fs.writeFileSync(path.join(dist, 'llms.txt'), llms(listed.entries, docs, site, englishReferences, listed.guides));
   fs.writeFileSync(path.join(dist, 'llms-full.txt'), llmsFull(listed.entries, docs, site, englishReferences, listed.guides));
   fs.writeFileSync(path.join(dist, 'robots.txt'), robots(site));

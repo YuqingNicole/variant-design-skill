@@ -7,6 +7,7 @@ import { DocsGuide } from './DocsGuide';
 import './content-pages.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
+import { showCases } from './case-visibility';
 // `installDocTitle` is the browser title and must match the '/docs/install' title in scripts/prerender.mjs; the heading stays short.
 const m={installGetStarted:{zh:'安装与开始使用',en:'Install & get started'},
  installDocTitle:{zh:'在 Claude Code 和 Codex 里安装设计技能',en:'Install the design skill in Claude Code and Codex'},
@@ -24,6 +25,6 @@ export function ContentPages({page}:{page:'docs'}){
  return <PageFrame title={title} docTitle={t(m.installDocTitle,language)} language={language}>
  <header className="content-hero site-shell"><h1>{title}</h1><p>{t(m.installConfirmItWorks,language)}</p></header>
  {page==='docs'&&<DocsGuide language={language}/>}
- <section className="content-closing site-shell"><h2>{t(m.yourProjectCouldBe,language)}</h2><a className="content-button" href={localePath('/cases',language)}>{t(m.exploreTheLibrary,language)} ↗</a><a className="content-secondary" href={localePath('/pricing',language)}>{t(m.explorePlansPricing,language)} →</a></section>
+ <section className="content-closing site-shell"><h2>{t(m.yourProjectCouldBe,language)}</h2>{showCases&&<a className="content-button" href={localePath('/cases',language)}>{t(m.exploreTheLibrary,language)} ↗</a>}<a className={showCases?'content-secondary':'content-button'} href={localePath('/pricing',language)}>{t(m.explorePlansPricing,language)} →</a></section>
  </PageFrame>
 }

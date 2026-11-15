@@ -13,6 +13,7 @@ import './content-pages.css';
 import './inspiration.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath, parseLocale } from './i18n/locale-route';
+import { showCases } from './case-visibility';
 type Item=Reference;
 // Media close to the 16:10 cell fills it (a small crop); a tall or very wide capture stays whole on a surface mat. The grid keeps its row order, which the first screen and scroll restoration rely on.
 const fills=(media?:{width?:number;height?:number})=>Boolean(media?.width&&media.height&&media.width/media.height>=.85&&media.width/media.height<=2);
@@ -183,7 +184,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  if(open?.mode==='page'&&openItem)return <main className="content-page inspiration-page">{header}<div className="site-shell insp-page-detail">{detailView(openItem,true)}{tail}</div><SiteFooter language={language}/></main>;
  return <main className="content-page inspiration-page">{header}
   <header className="site-shell insp-head">
-   <div className="insp-title"><h1>{sectionInfo?t(sectionInfo.title,language):l('title')}</h1><p>{sectionInfo?t(sectionInfo.intro,language):l('intro')}</p><p className="insp-links"><a href={localePath('/cases',language)}>{l('casesEntry')}</a><a href={localePath('/submit',language)}>{l('submissions')}</a></p></div>
+   <div className="insp-title"><h1>{sectionInfo?t(sectionInfo.title,language):l('title')}</h1><p>{sectionInfo?t(sectionInfo.intro,language):l('intro')}</p><p className="insp-links">{showCases&&<a href={localePath('/cases',language)}>{l('casesEntry')}</a>}<a href={localePath('/submit',language)}>{l('submissions')}</a></p></div>
    <p className="insp-rights">{l('rights')} <a href={localePath('/submit',language)+'#display'}>{l('rightsMore')}</a></p>
   </header>
   <div className="insp-bar"><div className="site-shell">
@@ -207,7 +208,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    {visible<results.length&&<div className="insp-more"><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}
    {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setTopic('');setQuery('')})}>{l('clear')}</button></p>}
    {tail}
-   <section className="content-closing"><h2>{l('closing')}</h2><a className="content-button" href={localePath('/docs',language)}>{l('install')}</a><a className="content-secondary" href={localePath('/cases',language)}>{l('studies')}</a><p className="inspiration-count">{l('checked')}</p></section>
+   <section className="content-closing"><h2>{l('closing')}</h2><a className="content-button" href={localePath('/docs',language)}>{l('install')}</a>{showCases&&<a className="content-secondary" href={localePath('/cases',language)}>{l('studies')}</a>}<p className="inspiration-count">{l('checked')}</p></section>
   </section>
   <dialog ref={dialogRef} className="insp-dialog" aria-label={openItem?.name} onCancel={e=>{e.preventDefault();close()}} onKeyDown={e=>{if(e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLInputElement||e.target instanceof HTMLSelectElement)return;if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}if(e.key==='ArrowRight'){e.preventDefault();step(1)}}} onClick={e=>{if(e.target===e.currentTarget)close()}}>{open?.mode==='modal'&&openItem&&detailView(openItem,false)}</dialog>
   <SiteFooter language={language}/></main>

@@ -12,7 +12,7 @@ test.beforeAll(async()=>{const dir=fixtureDir;fs.rmSync(dir,{recursive:true,forc
  const reviewed=(kind,id,complete=true)=>model.reviewSubmission(draft(kind),editorial(id,complete),'2099-01-01T00:00:00Z');const removed=model.withdrawReference(reviewed('image','removed-author-work'),{date:'2026-11-04',reason:{zh:'测试作者撤回',en:'Test author withdrew permission'}});fs.writeFileSync(path.join(dir,'src/authorized-references.json'),JSON.stringify([reviewed('image','authorized-image'),reviewed('video','authorized-video'),reviewed('image','draft-english',false),removed]));
  fs.writeFileSync(path.join(dir,'index.html'),'<html><head><meta name="description" content="Fixture"></head><body style="margin:0"><div id="root"></div><script type="module" src="/main.tsx"></script></body></html>');fs.writeFileSync(path.join(dir,'main.tsx'),`import {createRoot} from 'react-dom/client';import './src/site-styles';import {InspirationPage} from './src/InspirationPage';import {GuidesPage} from './src/GuidesPage';import {LocaleProvider} from './src/i18n/LocaleProvider';import {parseLocale} from './src/i18n/locale-route';const p=parseLocale(location.pathname);createRoot(document.getElementById('root')!).render(<LocaleProvider locale={p.locale} route={p.route}>{p.route.startsWith('/guides')?<GuidesPage slug={p.route==='/guides'?undefined:p.route.slice(8)}/>:<InspirationPage detail={p.route==='/'?undefined:p.route.split('/')[2]}/>}</LocaleProvider>);`);
  // The reference library reaches the page through the split plugin (links from the real data file, the registry from this copy).
- server=await createServer({root:dir,configFile:false,plugins:[inspirationPlugin()],esbuild:{jsx:'automatic'},define:{__SHOW_TRANSLATION_DRAFTS__:'false'},server:{host:'127.0.0.1',port:0,fs:{allow:[dir,path.resolve('../website/node_modules')]}}});await server.listen();const address=server.httpServer.address();base=`http://127.0.0.1:${address.port}`;
+ server=await createServer({root:dir,configFile:false,plugins:[inspirationPlugin()],esbuild:{jsx:'automatic'},define:{__SHOW_TRANSLATION_DRAFTS__:'false',__SHOW_CASES__:'false'},server:{host:'127.0.0.1',port:0,fs:{allow:[dir,path.resolve('../website/node_modules')]}}});await server.listen();const address=server.httpServer.address();base=`http://127.0.0.1:${address.port}`;
 });
 test.afterAll(async()=>{await server?.close();fs.rmSync(fixtureDir,{recursive:true,force:true})});
 test.beforeEach(async({page})=>{await page.route(/^https:\/\//,r=>r.request().resourceType()==='image'?r.fulfill({contentType:'image/png',body:pixel}):r.request().resourceType()==='media'?r.fulfill({contentType:'video/webm',path:new URL('./fixtures/inspiration-motion.webm',import.meta.url).pathname}):r.abort());});
@@ -52,3 +52,9 @@ test('production guide lists and direct client routes respect draft English whil
  await page.goto(base+'/guides');await expect(page.locator('.guide-list article')).toHaveCount(5);
  for(const slug of draftSlugs){await page.goto(base+'/guides/'+slug);await expect(page.locator('.content-reading')).toBeVisible();await expect(page.locator('h1')).not.toHaveText('页面不存在')}
 });
+
+test('production hides every link to the A/B/C cases',async({page})=>{
+ const caseLinks='a[href$="/cases"],a[href*="/d/"],a[href*="/c/"]';
+ for(const route of ['/','/en','/guides/avoid-generic-ai-ui','/en/guides/avoid-generic-ai-ui']){await page.goto(base+route);await expect(page.locator('h1').first()).toBeVisible();await expect(page.locator('.site-nav-links a').first()).toBeVisible();await expect(page.locator(caseLinks),route).toHaveCount(0)}
+});
+
