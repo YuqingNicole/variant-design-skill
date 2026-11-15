@@ -1250,6 +1250,16 @@ test('an X post detail loads no X widget until the visitor asks for one', async 
  await page.waitForTimeout(1500);expect(widget,'X widget requests before any click').toEqual([]);
 });
 
+// Reduced motion stops the detail video from playing by itself, but its controls still have a file to play.
+test('an X post detail video under reduced motion keeps its file for the controls and does not autoplay', async ({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});await page.route(u=>/twitter\.com/.test(u.hostname),r=>r.abort());
+ // X's file host is not always reachable from test machines; a local clip stands in so the <video> stays a video.
+ await page.route(u=>u.hostname==='video.twimg.com',r=>r.fulfill({contentType:'video/webm',path:new URL('./fixtures/inspiration-motion.webm',import.meta.url).pathname}));
+ await page.goto('/inspiration/x-raphaelschaad-757747');await hydrated(page);
+ const video=page.locator('.x-post-video video');await expect(video).toHaveAttribute('src',/video\.twimg\.com/);
+ await page.waitForTimeout(800);expect(await video.evaluate(v=>v.paused&&v.controls)).toBe(true);
+});
+
 // The X embed (loaded when the visitor asks) arrives late and is taller than the text it replaces. On a phone it sits below the notes, so it can only
 // push down what is under it; this checks the notes do not move and the embed lands under them.
 test('an X post embed arriving does not move the notes above it, on a phone', async ({browser},info)=>{

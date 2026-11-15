@@ -25,13 +25,16 @@ export function XVideo({media,fallback,controls=false}:{media:VideoMedia;fallbac
  useEffect(()=>{const v=ref.current;if(!v)return;dropReferrer();
   if(typeof IntersectionObserver==='undefined')return;
   const motion=matchMedia('(prefers-reduced-motion: reduce)');let visible=false;
-  const play=()=>{if(visible&&!motion.matches&&!document.hidden&&v.getAttribute('src'))v.play().catch(()=>{});else v.pause()};
+  // Reduced motion stops automatic playback only: with controls the file is still attached, so the visitor can press play.
+  if(controls&&motion.matches)v.src=media.video;
+  // Under reduced motion a video with controls is the visitor's to start and stop; the observers leave it alone.
+  const play=()=>{if(controls&&motion.matches)return;if(visible&&!motion.matches&&!document.hidden&&v.getAttribute('src'))v.play().catch(()=>{});else v.pause()};
   const attach=()=>{if(!motion.matches&&!v.getAttribute('src'))v.src=media.video;play()};
   const near=new IntersectionObserver(([e])=>{if(e.isIntersecting&&!motion.matches)attach()},{rootMargin:'600px 0px'});near.observe(v);
   const io=new IntersectionObserver(([e])=>{visible=e.isIntersecting&&e.intersectionRatio>=.25;if(visible)attach();else play()},{threshold:[0,.25]});io.observe(v);
-  const preference=()=>{if(motion.matches){v.pause();v.removeAttribute('src');v.load()}else{near.unobserve(v);near.observe(v);if(visible)attach()}};
+  const preference=()=>{if(motion.matches){v.pause();if(!controls){v.removeAttribute('src');v.load()}}else{near.unobserve(v);near.observe(v);if(visible)attach()}};
   motion.addEventListener('change',preference);document.addEventListener('visibilitychange',play);
-  return()=>{near.disconnect();io.disconnect();motion.removeEventListener('change',preference);document.removeEventListener('visibilitychange',play);v.pause();v.removeAttribute('src');v.load()}},[media.video]);
+  return()=>{near.disconnect();io.disconnect();motion.removeEventListener('change',preference);document.removeEventListener('visibilitychange',play);v.pause();v.removeAttribute('src');v.load()}},[media.video,controls]);
  if(posterFailed&&fallback)return <>{fallback}</>;
  return failed?<img className="insp-vcard-media" src={poster} width={media.width} height={media.height} alt="" referrerPolicy="no-referrer" onError={next}/>
   :<video ref={ref} className="insp-vcard-media" poster={poster} width={media.width} height={media.height} muted loop playsInline controls={controls} preload="metadata" onError={()=>setFailed(true)}/>}
