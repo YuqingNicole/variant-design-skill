@@ -11,6 +11,9 @@ const fake=`
 const db=()=>JSON.parse(localStorage.getItem('fake-db')||'{}'),saveDb=d=>localStorage.setItem('fake-db',JSON.stringify(d));
 const token='sb-fake-auth-token',user={id:'user-1',email:'reader@example.test',user_metadata:{full_name:'Reader'}};
 const session=()=>localStorage.getItem(token)?{user}:null;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+// Test controls: 'fake-read-delay' (ms), 'fake-write-delays' (ms per write, in order), 'fake-fail-writes' (how many writes fail).
+const take=key=>{const list=JSON.parse(localStorage.getItem(key)||'[]');const v=list.shift();localStorage.setItem(key,JSON.stringify(list));return v||0};
 export function createClient(url,key){
   if(!url||!key)throw new Error('not configured');
   const listeners=[];const emit=()=>listeners.forEach(fn=>fn('SIGNED_IN',session()));
@@ -23,8 +26,8 @@ export function createClient(url,key){
       signOut:async()=>{localStorage.removeItem(token);listeners.forEach(fn=>fn('SIGNED_OUT',null));return {error:null}},
     },
     from:()=>({
-      select:()=>({eq:(_c,id)=>({maybeSingle:async()=>({data:db()[id]?{selection:db()[id]}:null,error:null})})}),
-      upsert:async row=>{if(localStorage.getItem('fake-fail-writes'))return {error:{message:'offline'}};const d=db();d[row.user_id]=row.selection;saveDb(d);return {error:null}},
+      select:()=>({eq:(_c,id)=>({maybeSingle:async()=>{await sleep(+(localStorage.getItem('fake-read-delay')||0));return {data:db()[id]?{selection:db()[id]}:null,error:null}}})}),
+      upsert:async row=>{const wait=take('fake-write-delays');const fails=+(localStorage.getItem('fake-fail-writes')||0);if(fails>0){localStorage.setItem('fake-fail-writes',String(fails-1));return {error:{message:'offline'}}}await sleep(wait);const d=db();d[row.user_id]=row.selection;saveDb(d);localStorage.setItem('fake-writes',String(+(localStorage.getItem('fake-writes')||0)+1));return {error:null}},
     }),
     rpc:async name=>{localStorage.setItem('fake-rpc',name);const d=db();delete d[user.id];saveDb(d);return {error:null}},
   };
@@ -80,7 +83,7 @@ test('signed in, changes are written to the account and a failed write says so',
  await page.goto(base+'/');await page.evaluate(()=>localStorage.setItem('sb-fake-auth-token','1'));await page.reload();
  const id=await cardId(page);await firstCard(page).locator('.insp-card-save').click();
  await expect.poll(async()=>JSON.parse(await store(page,'fake-db')||'{}')['user-1']).toEqual({[id]:{use:'',avoid:''}});
- await page.evaluate(()=>localStorage.setItem('fake-fail-writes','1'));
+ await page.evaluate(()=>localStorage.setItem('fake-fail-writes','99'));
  await page.locator('.inspiration-pack textarea').first().fill('A note');
  await expect(page.getByRole('alert').filter({hasText:'没能把收藏保存到账号'})).toBeVisible();
 });
@@ -107,3 +110,34 @@ test('the account menu signs out and deletes the account', async ({page})=>{
  await page.getByRole('button',{name:'确认删除账号和全部收藏'}).click();
  await expect(page.locator('.site-nav .site-account')).toHaveText('登录');expect(await store(page,'fake-rpc')).toBe('delete_my_account');
 });
+
+test('a save made while the account pack is still loading is kept and written', async ({page})=>{
+ await page.goto(base+'/');const id=await cardId(page);
+ await page.evaluate(id=>{localStorage.setItem('fake-db',JSON.stringify({'user-1':{}}));localStorage.setItem('fake-read-delay','1500');localStorage.setItem('sb-fake-auth-token','1')},id);
+ await page.reload();await expect(page.locator('.site-nav .site-account')).toHaveAttribute('aria-label',/reader@example\.test/);
+ await firstCard(page).locator('.insp-card-save').click();
+ await expect(firstCard(page).locator('.insp-card-save')).toHaveAttribute('aria-pressed','true');
+ await expect.poll(async()=>JSON.parse(await store(page,'fake-db'))['user-1'],{timeout:6000}).toEqual({[id]:{use:'',avoid:''}});
+ await expect(firstCard(page).locator('.insp-card-save')).toHaveAttribute('aria-pressed','true');
+});
+
+test('a slow earlier write never overwrites a newer note', async ({page})=>{
+ await page.goto(base+'/');await page.evaluate(()=>localStorage.setItem('sb-fake-auth-token','1'));await page.reload();
+ const id=await cardId(page);await page.evaluate(()=>localStorage.setItem('fake-write-delays',JSON.stringify([1200,0])));
+ await firstCard(page).locator('.insp-card-save').click();
+ const note=page.locator('.inspiration-pack textarea').first();await page.waitForTimeout(600);await note.fill('Newest note');
+ await expect.poll(async()=>JSON.parse(await store(page,'fake-db')||'{}')['user-1']?.[id]?.use,{timeout:6000}).toBe('Newest note');
+ await page.waitForTimeout(1500);expect(JSON.parse(await store(page,'fake-db'))['user-1'][id].use).toBe('Newest note');
+});
+
+test('an import whose first write failed is cleared after the next write succeeds, so a removed reference stays removed', async ({page})=>{
+ await page.goto(base+'/');const id=await cardId(page);
+ await page.evaluate(id=>{localStorage.setItem('variant-inspiration-pack-v1',JSON.stringify({[id]:{use:'',avoid:''}}));localStorage.setItem('fake-fail-writes','1');localStorage.setItem('sb-fake-auth-token','1')},id);
+ await page.reload();await expect(page.getByRole('alert').filter({hasText:'没能把收藏保存到账号'})).toBeVisible();
+ expect(await store(page,'variant-inspiration-pack-v1'),'a failed import keeps the browser copy').not.toBeNull();
+ await firstCard(page).locator('.insp-card-save').click();await expect(firstCard(page).locator('.insp-card-save')).toHaveAttribute('aria-pressed','false');
+ await expect.poll(()=>store(page,'variant-inspiration-pack-v1')).toBeNull();
+ await page.reload();await expect(page.locator('.site-nav .site-account')).toHaveAttribute('aria-label',/reader@example\.test/);await page.waitForTimeout(500);
+ await expect(firstCard(page).locator('.insp-card-save')).toHaveAttribute('aria-pressed','false');
+});
+

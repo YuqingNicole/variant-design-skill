@@ -30,3 +30,23 @@ export function mergePacks(account: Pack, local: Pack): { pack: Pack; changed: b
   }
   return { pack, changed };
 }
+
+// Account writes, one at a time and newest first: a whole-pack write that finished late must never overwrite a newer one,
+// so while a write is in flight only the latest pack waits, and it is sent when the flight lands. An import (the browser's
+// old pack merged in) marks the queue; the browser copy is forgotten after the first successful write, which by then
+// includes the import and every change made since.
+export function createPackWriter(write: (userId: string, pack: Pack) => Promise<void>, report: (ok: boolean) => void, afterImport: () => void) {
+  let running = false, importing = false, next: { userId: string; pack: Pack } | null = null;
+  async function drain() {
+    running = true;
+    while (next) {
+      const job = next; next = null;
+      try { await write(job.userId, job.pack); report(true); if (importing) { importing = false; afterImport(); } }
+      catch { report(false); }
+    }
+    running = false;
+  }
+  return {
+    push(userId: string, pack: Pack, imported = false) { if (imported) importing = true; next = { userId, pack }; if (!running) void drain(); },
+  };
+}

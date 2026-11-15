@@ -14,7 +14,7 @@ import './inspiration.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath, parseLocale } from './i18n/locale-route';
 import { showCases } from './case-visibility';
-import { packKey, parsePack, mergePacks, type Intent, type Pack } from './pack';
+import { packKey, parsePack, mergePacks, createPackWriter, type Intent, type Pack } from './pack';
 import { useAccount, openSignIn, readPack, writePack, rememberPending, takePending } from './account';
 type Item=Reference;
 // Media close to the 16:10 cell fills it (a small crop); a tall or very wide capture stays whole on a surface mat. The grid keeps its row order, which the first screen and scroll restoration rely on.
@@ -102,21 +102,27 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  const account=useAccount(),accounts=account.status!=='off',userId=account.status==='signed-in'?account.user!.id:'';
  const [initialPack]=useState(loadPack);const [selection,setSelection]=useState<Pack>(accounts?{}:initialPack.selection);const [storageError,setStorageError]=useState(accounts?false:initialPack.error);
  const [syncError,setSyncError]=useState(false);const synced=useRef('');const pendingWrite=useRef<ReturnType<typeof setTimeout>>(undefined);
- useEffect(()=>{if(!accounts)return;synced.current='';if(!userId){setSelection({});return}let live=true;
-  readPack(userId).then(raw=>{let mine:Pack={};try{mine=parsePack(knownOnly(raw),known)}catch{mine={}}
-   const local=loadPack(),{pack,changed}=mergePacks(mine,local.error?{}:local.selection),pending=takePending(),resumed=Boolean(pending&&known(pending)&&!pack[pending]);
-   if(resumed)pack[pending!]={use:'',avoid:''};if(!live)return;setSelection(pack);synced.current=userId;setSyncError(false);
-   const forget=()=>{try{localStorage.removeItem(packKey)}catch{/* nothing left to import */}};
-   if(changed||resumed)return writePack(userId,pack).then(forget);if(Object.keys(local.selection).length)forget()}).catch(()=>{if(live)setSyncError(true)});
+ // `current` is the pack the visitor sees; edits made while the account's pack is still loading wait in `queued` and are
+ // applied on top of it, so nothing done in that moment is lost.
+ const current=useRef<Pack>(selection),queued=useRef<((p:Pack)=>Pack)[]>([]);
+ const forgetLocal=()=>{try{localStorage.removeItem(packKey)}catch{/* nothing left to import */}};
+ const [writer]=useState(()=>createPackWriter(writePack,ok=>setSyncError(!ok),forgetLocal));
+ useEffect(()=>{if(!accounts)return;synced.current='';queued.current=[];clearTimeout(pendingWrite.current);if(!userId){current.current={};setSelection({});return}let live=true;
+  readPack(userId).then(raw=>{if(!live)return;let mine:Pack={};try{mine=parsePack(knownOnly(raw),known)}catch{mine={}}
+   const local=loadPack(),hadLocal=!local.error&&Object.keys(local.selection).length>0,{pack,changed}=mergePacks(mine,local.error?{}:local.selection);
+   const pending=takePending(),resumed=Boolean(pending&&known(pending)&&!pack[pending]);if(resumed)pack[pending!]={use:'',avoid:''};
+   const edits=queued.current;queued.current=[];const next=edits.reduce((p,fn)=>fn(p),pack);
+   current.current=next;setSelection(next);synced.current=userId;setSyncError(false);
+   if(changed||resumed||edits.length)writer.push(userId,next,hadLocal&&changed);if(hadLocal&&!changed)forgetLocal()}).catch(()=>{if(live)setSyncError(true)});
   return()=>{live=false}},[userId]);
- function saveSelection(next:Pack){setSelection(next);
-  if(accounts){if(!userId||synced.current!==userId)return;clearTimeout(pendingWrite.current);pendingWrite.current=setTimeout(()=>writePack(userId,next).then(()=>setSyncError(false),()=>setSyncError(true)),400);return}
+ function edit(fn:(p:Pack)=>Pack){const next=fn(current.current);current.current=next;setSelection(next);
+  if(accounts){if(!userId)return;if(synced.current!==userId){queued.current.push(fn);return}clearTimeout(pendingWrite.current);pendingWrite.current=setTimeout(()=>writer.push(userId,current.current),400);return}
   try{if(initialPack.error)throw new Error();localStorage.setItem(packKey,JSON.stringify(next));setStorageError(false)}catch{setStorageError(true)}}
  // Saving and briefs need an account when accounts are on; the reference asked for is saved once the visitor is back signed in.
  const needAccount=(reason:'save'|'brief',id?:string)=>{if(!accounts||userId)return false;if(id)rememberPending(id);openSignIn(reason);return true};
  const selected=rows.filter(item=>selection[item.id]),unavailable=withdrawnReferences.filter(item=>selection[item.id]);
- function toggleSelection(id:string){if(needAccount('save',selection[id]?undefined:id))return;const next={...selection};if(next[id])delete next[id];else next[id]={use:'',avoid:''};saveSelection(next)}
- function updateIntent(id:string,field:'use'|'avoid',value:string){saveSelection({...selection,[id]:{...selection[id],[field]:value}})}
+ function toggleSelection(id:string){if(needAccount('save',selection[id]?undefined:id))return;edit(p=>{const next={...p};if(next[id])delete next[id];else next[id]={use:'',avoid:''};return next})}
+ function updateIntent(id:string,field:'use'|'avoid',value:string){edit(p=>p[id]?{...p,[id]:{...p[id],[field]:value}}:p)}
  // The pack brief quotes each record, so the selected ones are fetched first.
  function createPack(){if(needAccount('brief'))return;setNotice('');ensure(selected.map(r=>r.id)).then(()=>setPrompt(fl('packHead').concat(selected.flatMap(r=>{const item=referenceOf(r.id);return item?[fl('packItem')(item,selection[item.id],unknowns(item,language))]:[]})).join('\n')))}
  const briefRef=useRef<HTMLElement>(null);
