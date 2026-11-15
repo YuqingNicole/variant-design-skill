@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import type { Language } from './direction-engine';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { DocsGuide } from './DocsGuide';
+import { text as docsText } from './docs-content';
 import './content-pages.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
@@ -22,7 +23,7 @@ function PageFrame({children,title,docTitle=title,language}:{children:React.Reac
 export function ContentPages({page}:{page:'docs'}){
  const language = useLocale();const title=t(m.installGetStarted,language);
  return <PageFrame title={title} docTitle={t(m.installDocTitle,language)} language={language}>
- <header className="content-hero site-shell"><h1>{title}</h1><p>{t(m.installConfirmItWorks,language)}</p></header>
+ <header className="content-hero site-shell"><h1>{title}</h1><div className="docs-pitch"><p>{t(docsText.pitch,language)}</p><p>{t(docsText.pitchNote,language)}</p></div><p>{t(m.installConfirmItWorks,language)}</p></header>
  {page==='docs'&&<DocsGuide language={language}/>}
  <section className="content-closing site-shell"><h2>{t(m.yourProjectCouldBe,language)}</h2><a className="content-button" href={localePath('/cases',language)}>{t(m.exploreTheLibrary,language)} ↗</a><a className="content-secondary" href={localePath('/pricing',language)}>{t(m.explorePlansPricing,language)} →</a></section>
  </PageFrame>
