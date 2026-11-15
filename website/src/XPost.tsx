@@ -3,9 +3,11 @@ import { flushSync } from 'react-dom';
 import { formatDate } from './i18n/format';
 import type { Locale } from './i18n/locales';
 import { t, type Localized } from './i18n/localized';
+import { XVideo, type VideoMedia } from './XVideo';
 // A shared X post. The text, author and date (from X's oEmbed, stored with the entry) render first, so the post
 // reads even where x.com is unreachable. The full post, with its video, loads through X's own embed widget, on
-// open with `autoload` or when the visitor asks: nothing from the post is hosted here.
+// open with `autoload` or when the visitor asks: nothing from the post is hosted here. When the post's video is known
+// (`media`, from scripts/x-media.mjs), it plays from video.twimg.com above the stored text, so the detail needs no widget at all.
 export type Post={id:string;author:string;handle:string;date:string;lang:string;text:string;hasMedia:boolean};
 type Twttr={widgets:{createTweet:(id:string,el:HTMLElement,opts:Record<string,unknown>)=>Promise<HTMLElement|undefined>}};
 let widgets:Promise<Twttr>|null=null;
@@ -17,7 +19,7 @@ const xLang:Record<Locale,string>={zh:'zh-cn',en:'en'};
 function loadWidgets(){const w=window as Window&{twttr?:Twttr};if(w.twttr?.widgets)return Promise.resolve(w.twttr);
  return widgets??=new Promise<Twttr>((resolve,reject)=>{const s=document.createElement('script');s.src='https://platform.twitter.com/widgets.js';s.async=true;s.charset='utf-8';
   s.onload=()=>{const t=(window as Window&{twttr?:Twttr}).twttr;if(t?.widgets)resolve(t);else{widgets=null;reject(new Error('no widgets'))}};s.onerror=()=>{widgets=null;reject(new Error('blocked'))};document.head.appendChild(s)})}
-export function XPost({post,url,locale,autoload=false}:{post:Post;url:string;locale:Locale;autoload?:boolean}){const l=(k:keyof typeof m)=>t(m[k],locale);const box=useRef<HTMLDivElement>(null);const [state,setState]=useState<'idle'|'loading'|'shown'|'failed'>('idle');
+export function XPost({post,url,locale,autoload=false,media}:{post:Post;url:string;locale:Locale;autoload?:boolean;media?:VideoMedia}){const l=(k:keyof typeof m)=>t(m[k],locale);const box=useRef<HTMLDivElement>(null);const [state,setState]=useState<'idle'|'loading'|'shown'|'failed'>('idle');
  // `run` is bumped on every load and unmount, so an embed that resolves late (React re-running effects, a fast
  // switch to another post) is discarded instead of stacking a second player.
  const run=useRef(0);
@@ -35,6 +37,7 @@ export function XPost({post,url,locale,autoload=false}:{post:Post;url:string;loc
    :<><button type="button" onClick={show} disabled={state==='loading'}>{state==='loading'?l('loading'):l(post.hasMedia?'loadMedia':'load')}</button>
     <span>{l(state==='failed'?'failed':'notice')}</span>
     <a href={url} target="_blank" rel="noreferrer">{l('open')}</a></>}</figcaption>
+  {state!=='shown'&&media&&<div className="x-post-video" style={{['--ar' as string]:media.width/media.height}}><XVideo media={media} controls/></div>}
   {state!=='shown'&&<blockquote cite={url} lang={post.lang}>{post.text&&<p>{post.text}</p>}<footer><b>{post.author}</b> <span>@{post.handle} · {date}</span></footer></blockquote>}
   <div ref={box} className="x-post-embed" hidden={state==='idle'||state==='failed'}/>
 </figure>}

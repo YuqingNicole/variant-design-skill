@@ -216,15 +216,17 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .insp-arrows button:last-child:not(:disabled){background:var(--site-ink);color:var(--site-paper);border-color:var(--site-ink)}
 .insp-arrows button:disabled{opacity:.4;cursor:default}
 /* Detail: the study and apply notes read as sentences, the labels as small capitals. */
-.inspiration-page .insp-detail :is(h1,h2){font-size:clamp(40px,6vw,88px);font-weight:400;line-height:1;letter-spacing:-.03em}
+.inspiration-page .insp-detail :is(h1,h2){font-size:clamp(36px,4vw,56px);font-weight:400;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
 .inspiration-page :is(.insp-detail-label,.insp-detail dt){letter-spacing:.1em}
-.inspiration-page .insp-detail dd:nth-of-type(-n+2){font-family:var(--font-display);font-size:24px;line-height:1.25;letter-spacing:-.02em}
+/* The two notes are read, not glanced at: body face, 20px, generous leading and a measure of about 34 characters per line in Chinese. The display face stays on the title only. */
+.inspiration-page .insp-detail dd:nth-of-type(-n+2){font-size:20px;line-height:1.65;max-width:34em;text-wrap:pretty}
 .inspiration-page .insp-detail-media{background:var(--card-g);border:1px solid var(--hair);border-radius:16px;padding:8px}
 .inspiration-page :is(.insp-detail-media,.insp-shot)>.insp-thumb,.inspiration-page .insp-shot img{border-radius:3px}
 /* Radius budget: pill, 16px for panels and cards, 3px for images and sketch lines. */
 .inspiration-page .insp-sketch i{border-radius:3px}
 .inspiration-page :is(.insp-detail-tools :is(a,button),.insp-detail-brief){background:var(--fill-1);border-color:var(--hair)}
-.insp-dialog{border-radius:16px;background:var(--fill-1)}
+/* The dialog is opaque paper: through a translucent fill the blurred cards behind it smudged the notes. */
+.insp-dialog{border-radius:16px;background:var(--site-paper)}
 .inspiration-page .inspiration-pack{background:var(--card-g);border-color:var(--hair);border-radius:16px}
 .inspiration-page .inspiration-brief{background:var(--fill-1);border-color:var(--hair);border-radius:16px}
 @media(max-width:650px){
@@ -249,3 +251,6 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 /* Mount each link preview on an even mat instead of letterboxing it edge to edge: the image keeps its own proportions inside a 10px margin. */
 .inspiration-page .insp-feed>.insp-card .insp-thumb-media>img{inset:10px;width:calc(100% - 20px);height:calc(100% - 20px);border-radius:3px}
 .inspiration-page .insp-feed>.insp-card .insp-vcard-media{box-sizing:border-box;padding:10px}
+/* Detail of an X post with a known video: the video plays from X's file host with its own controls, at its own proportions, before the stored text. */
+/* The box is sized from the stored width and height before the file's metadata arrives (a bare <video> is 300×150 until then, which moved the text below it). */
+.x-post-video .insp-vcard-media{display:block;width:min(100%,calc(72vh * var(--ar,1.78)));height:auto;aspect-ratio:var(--ar,1.78);margin-inline:auto;border-radius:3px;background:var(--site-surface)}
