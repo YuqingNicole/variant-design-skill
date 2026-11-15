@@ -594,7 +594,9 @@ test('best practice shows each X post as its looping video, credits the author a
  await expect(sheep.locator('.insp-vcard-avatar')).toHaveAttribute('alt','areadne @AreadneMaria');
  await expect(sheep.locator('.insp-card-out')).toHaveAttribute('href','https://x.com/AreadneMaria/status/2114898325451444419');
  await sheep.locator('.insp-vcard-open').click();await expect(page).toHaveURL(/\/inspiration\/x-areadnemaria-444419\?in=interaction$/);
- const dialog=page.getByRole('dialog');await expect(dialog.locator('.x-post blockquote')).toContainText('@AreadneMaria');await expect(dialog.locator('.x-post figcaption')).toContainText('没能连上 x.com');
+ const dialog=page.getByRole('dialog');await expect(dialog.locator('.x-post blockquote')).toContainText('@AreadneMaria');await expect(dialog.locator('.x-post figcaption')).toContainText('点击后会从 x.com 加载内容');
+ // The detail plays the post's video from X's file host itself and loads X's widget only when asked.
+ await expect(dialog.locator('.x-post-video video')).toHaveAttribute('poster',sized(media['x-areadnemaria-444419'].poster,640));expect(await dialog.locator('.x-post-video video').evaluate(v=>v.controls&&v.muted)).toBe(true);
  await page.keyboard.press('Escape');
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
  await page.emulateMedia({reducedMotion:'reduce'});await page.reload();
@@ -1238,21 +1240,34 @@ test('a fine pointer drags a soft light across the panel; reduced motion removes
  await p3.mouse.move(100,300);await p3.mouse.move(120,320);await p3.waitForTimeout(200);await expect(p3.locator('.site-spotlight i')).toHaveCSS('opacity','0');await touch.close();
 });
 
-// The X embed arrives late and is taller than the text it replaces. On a phone it sits below the notes, so it can only
+// Opening an X post's detail loads nothing from X's widget host: the stored text and the video file are enough to read and watch it.
+test('an X post detail loads no X widget until the visitor asks for one', async ({page})=>{
+ const widget=[];page.on('request',r=>{if(/platform\.twitter\.com|syndication\.twitter\.com/.test(r.url()))widget.push(r.url())});
+ await page.route(u=>u.origin!==new URL(page.url()||'http://127.0.0.1:4197').origin&&/twitter\.com/.test(u.hostname),r=>r.abort());
+ await page.goto('/inspiration/x-raphaelschaad-757747');await hydrated(page);
+ // The video, or its poster when X refuses the file (XVideo falls back on its own).
+ await expect(page.locator('.x-post-video .insp-vcard-media')).toBeVisible();await expect(page.locator('.x-post blockquote')).toContainText('@raphaelschaad');
+ await page.waitForTimeout(1500);expect(widget,'X widget requests before any click').toEqual([]);
+});
+
+// The X embed (loaded when the visitor asks) arrives late and is taller than the text it replaces. On a phone it sits below the notes, so it can only
 // push down what is under it; this checks the notes do not move and the embed lands under them.
 test('an X post embed arriving does not move the notes above it, on a phone', async ({browser},info)=>{
  const base=info.project.use.baseURL,context=await browser.newContext({baseURL:base,viewport:{width:390,height:844},isMobile:true,hasTouch:true}),page=await context.newPage();
  await page.route(u=>u.origin!==new URL(base).origin,r=>/^https:\/\/platform\.twitter\.com\/widgets\.js/.test(r.request().url())?r.fulfill({contentType:'text/javascript',body:fakeWidgets}):r.abort());
  await page.goto('/inspiration/x-tanglele0318-961255514378');await hydrated(page);
- const notes=page.locator('.insp-detail dl'),before=await notes.boundingBox();
+ // Page coordinates: tapping the button scrolls it into view, which moves everything in the viewport.
+ const top=sel=>page.locator(sel).evaluate(e=>{const r=e.getBoundingClientRect();return {y:r.top+scrollY,height:r.height}});
+ const before=await top('.insp-detail dl');
+ await page.locator('.x-post figcaption button').click();
  await expect(page.locator('.x-post-embed > div')).toHaveCount(1,{timeout:8000});
- const after=await notes.boundingBox(),embed=await page.locator('.x-post-embed').boundingBox();
+ const after=await top('.insp-detail dl'),embed=await top('.x-post-embed');
  expect(after.y,'notes moved when the embed arrived').toBe(before.y);
  expect(embed.y,'embed sits under the notes').toBeGreaterThan(after.y+after.height);
  await context.close();
 });
 
-// On a desktop the embed sits beside the notes. The link out and the notice are above it, so when it arrives nothing a
+// On a desktop the embed (loaded when the visitor asks) sits beside the notes. The link out and the notice are above it, so when it arrives nothing a
 // reader can see moves; the embed is the only thing that changes height.
 test('an X post embed arriving does not move the link out or the notice, on a desktop', async ({browser},info)=>{
  const base=info.project.use.baseURL,context=await browser.newContext({baseURL:base,viewport:{width:1440,height:900}}),page=await context.newPage();
@@ -1261,6 +1276,7 @@ test('an X post embed arriving does not move the link out or the notice, on a de
  await page.goto('/inspiration/x-tanglele0318-961255514378');await hydrated(page);
  const visit=page.locator('.insp-visit'),notice=page.locator('.x-post figcaption'),before=[await visit.boundingBox(),await notice.boundingBox()];
  await page.waitForTimeout(300);
+ await page.locator('.x-post figcaption button').click();
  await expect(page.locator('.x-post-embed > div')).toHaveCount(1,{timeout:8000});await page.waitForTimeout(500);
  const after=[await visit.boundingBox(),await notice.boundingBox()];
  expect(after[0].y,'the link out moved when the embed arrived').toBe(before[0].y);

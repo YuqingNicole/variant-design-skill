@@ -13,7 +13,7 @@ export const sizedPoster=(url:string)=>{try{const u=new URL(url);return u.hostna
 // video.twimg.com refuses requests carrying another site's referrer, and <video> has no per-element
 // referrerpolicy, so the document drops it before the first video loads (outbound links already use noreferrer).
 function dropReferrer(){if(document.querySelector('meta[name="referrer"]'))return;const m=document.createElement('meta');m.name='referrer';m.content='no-referrer';document.head.appendChild(m)}
-export function XVideo({media,fallback}:{media:VideoMedia;fallback?:ReactNode}){const ref=useRef<HTMLVideoElement>(null);const [failed,setFailed]=useState(false);
+export function XVideo({media,fallback,controls=false}:{media:VideoMedia;fallback?:ReactNode;controls?:boolean}){const ref=useRef<HTMLVideoElement>(null);const [failed,setFailed]=useState(false);
  // Poster sources in order: the image service resizing X's original (reachable where pbs.twimg.com is not), then X's own
  // small WebP directly; past the last one the fallback shows.
  const viaService=proxied(media.poster,640),direct=sizedPoster(media.poster);const sources=viaService===media.poster?[direct]:[viaService,direct];
@@ -34,4 +34,4 @@ export function XVideo({media,fallback}:{media:VideoMedia;fallback?:ReactNode}){
   return()=>{near.disconnect();io.disconnect();motion.removeEventListener('change',preference);document.removeEventListener('visibilitychange',play);v.pause();v.removeAttribute('src');v.load()}},[media.video]);
  if(posterFailed&&fallback)return <>{fallback}</>;
  return failed?<img className="insp-vcard-media" src={poster} width={media.width} height={media.height} alt="" referrerPolicy="no-referrer" onError={next}/>
-  :<video ref={ref} className="insp-vcard-media" poster={poster} width={media.width} height={media.height} muted loop playsInline preload="metadata" onError={()=>setFailed(true)}/>}
+  :<video ref={ref} className="insp-vcard-media" poster={poster} width={media.width} height={media.height} muted loop playsInline controls={controls} preload="metadata" onError={()=>setFailed(true)}/>}
