@@ -73,6 +73,7 @@
 - 2026-11-16：维护者设好生产回跳地址、发布了 Google 同意屏幕；变量加到 Production 并重新部署，维护者在生产站用 Google 登录成功。
 - 2026-11-16：装了 Supabase CLI 并关联项目（维护者在自己的终端里 `supabase login`）。第一个迁移当初是在 SQL Editor 里手动执行的，用 `supabase migration repair --status applied 20261115000000 --remote` 补登记；之后的迁移用 `supabase db push --remote` 推送。CLI 的命令默认连本地，连线上要加 `--remote`。
 - 2026-11-16：赞助咨询迁移先在一个必然回滚的事务里试跑（anon 读不到表、直接插入被拒、邮箱和网址格式错误被拒、第 21 条被限流），然后正式推送；再用公开 key 走一遍网站实际调用的接口，写入成功（204），anon 读表返回空，测试记录随后删除。
+- 2026-11-16：邮件通知迁移推到线上，Vault 里存了 Resend 密钥和收件地址；从公开接口提交一条测试咨询，Resend 返回 200 接受发送，测试记录随后删除。
 - 只读查询确认收藏写进了数据库：有 1 个用户、`reference_packs` 有 1 行。
 - 隐私说明在 `/privacy`（`website/src/PrivacyPage.tsx`），登录框链接到它。存储键、第三方请求或账号字段变了，要同时改这一页。
 
