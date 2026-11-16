@@ -35,7 +35,7 @@ const browser:Row[]=[
  {title:{zh:'Cookie',en:'Cookies'},text:{zh:'网站代码不设置 cookie。',en:'The site’s code sets no cookies.'}},
 ];
 const others:Row[]=[
- {title:{zh:'Vercel',en:'Vercel'},text:{zh:'网站托管在 Vercel。和所有网站一样，服务器会收到你的访问请求，其中包括 IP 地址。网站预览图经 Vercel 的图片服务从来源网站取。',en:'The site is hosted on Vercel. As with any website, the servers receive your requests, including your IP address. Website previews are fetched from their source sites through Vercel’s image service.'}},
+ {title:{zh:'Vercel',en:'Vercel'},text:{zh:'网站托管在 Vercel。和所有网站一样，服务器会收到你的访问请求，其中包括 IP 地址。网站预览图大多经 Vercel 的图片服务从来源网站取；来源网站不在它的名单里，或者缩小失败时，浏览器会直接从来源网站加载，这时来源网站也会收到你的请求和 IP 地址。',en:'The site is hosted on Vercel. As with any website, the servers receive your requests, including your IP address. Most website previews are fetched from their source sites through Vercel’s image service; when a source site is not on its list, or resizing fails, your browser loads the image straight from the source site, which then also receives your request and IP address.'}},
  {title:{zh:'X',en:'X'},text:{zh:'来自 X 的视频和图片从 X 的服务器加载；点“从 X 加载帖子”时还会加载 X 的嵌入脚本。X 可能记录这些访问。',en:'Videos and images from X load from X’s servers, and pressing “Load the post from X” also loads X’s embed script. X may record these visits.'}},
  {title:{zh:'Google',en:'Google'},text:{zh:'选择用 Google 登录时，Google 会知道你登录了本站。',en:'If you choose Google sign-in, Google knows you signed in to this site.'}},
  {title:{zh:'Supabase',en:'Supabase'},text:{zh:'提供登录、发送登录邮件和保存收藏。',en:'Provides sign-in, sends sign-in emails and stores your saves.'}},
