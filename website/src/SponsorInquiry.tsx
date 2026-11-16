@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { t, type Localized } from './i18n/localized';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
@@ -19,7 +19,10 @@ const m={
 } satisfies Record<string,Localized>;
 export function SponsorInquiry({github}:{github:string}){
  const language=useLocale(),l=(k:keyof typeof m)=>t(m[k],language);
- const [status,setStatus]=useState<'idle'|'sending'|'sent'|'failed'>('idle');
+ const [status,setStatus]=useState<'idle'|'sending'|'sent'|'failed'>('idle'),[ready,setReady]=useState(false);
+ // The prerendered page carries only the GitHub link: a form submitted before the script runs would put the email and
+ // message in the address as a GET. The form appears once the page is interactive.
+ useEffect(()=>setReady(true),[]);
  async function submit(event:FormEvent<HTMLFormElement>){
   event.preventDefault();if(status==='sending')return;
   const data=new FormData(event.currentTarget),get=(k:string)=>String(data.get(k)??'').trim();
@@ -29,9 +32,10 @@ export function SponsorInquiry({github}:{github:string}){
   try{await sendInquiry({brand:get('brand'),contact_name:get('name'),email:get('email'),product_url:get('url'),message:get('message'),language});setStatus('sent')}
   catch{setStatus('failed')}
  };
+ if(!ready)return <div className="home-actions"><a className="home-action-primary" href={github} target="_blank" rel="noreferrer">{l('github')}</a></div>;
  if(status==='sent')return <p className="sponsor-inquiry-done" role="status">{l('sent')}</p>;
  const field=(name:string,label:keyof typeof m,type='text',max=200,required=true)=><label htmlFor={`sponsor-${name}`}><span>{l(label)}</span><input id={`sponsor-${name}`} name={name} type={type} maxLength={max} required={required} autoComplete={name==='email'?'email':name==='name'?'name':name==='brand'?'organization':'off'}/></label>;
- return <form className="submission-intake sponsor-inquiry" onSubmit={submit} aria-label={l('send')}>
+ return <form className="submission-intake sponsor-inquiry" method="post" onSubmit={submit} aria-label={l('send')}>
   <div className="submission-fields">
    {field('brand','brand')}{field('name','name','text',200,false)}{field('email','email','email',320)}{field('url','url','url',2000)}
    <label htmlFor="sponsor-message" className="sponsor-inquiry-wide"><span>{l('message')}</span><textarea id="sponsor-message" name="message" required maxLength={4000}/></label>

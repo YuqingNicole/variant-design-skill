@@ -62,6 +62,8 @@
 - **配置**：迁移 `supabase/migrations/20261116000000_sponsor_inquiries.sql` 已于 2026-11-16 用 Supabase CLI 推到线上项目。没执行迁移的项目里，表单提交会失败，页面提示改去 GitHub 开 Issue。
 - **存储**：数据存在 `sponsor_inquiries` 表，字段有品牌、名字（可不填）、邮箱、产品网址和留言。公开的 API 读不到这张表，只能通过 `submit_sponsor_inquiry()` 写入；维护者在 Table Editor 里看。
 - **防刷**：表单有一个访客看不到的字段，脚本填了这个字段就不发送；数据库限制全站每小时最多 20 条，并检查长度和邮箱格式。
+- **限流是宽松的**：计数和写入之间没有加锁，同时到达的请求可能让一小时内略超过 20 条。它只用来挡住刷量，不需要精确；要严格的话，在函数里先取 `pg_advisory_xact_lock` 再计数（需要新迁移）。
+- **页面加载完才显示表单**：预渲染的 HTML 里只有 GitHub 链接，避免脚本加载前提交时把邮箱和留言拼进网址。
 - **没有通知**：来了新咨询不会提醒，要自己去看。以后可以用 Supabase 的 Database Webhooks 转发到邮件或 Slack。
 - **开关**：没配 `VITE_SUPABASE_URL` 的构建（本地、CI）不显示表单，仍然只链接 GitHub。
 
