@@ -33,3 +33,5 @@ const page: Promise<ReactNode> = route === "/lab/canvas" ? import("./LandingCanv
   : import("./LibraryPage").then(m => route === "/cases" ? <m.LibraryPage view={{kind:"feed"}}/> : route.startsWith("/c/") ? <m.LibraryPage view={{kind:"category",id:route.slice(3)}}/>
     : route.startsWith("/d/") ? <m.LibraryPage key={route} view={{kind:"entry",slug:route.slice(3)}}/> : <m.LibraryPage view={{kind:"entry",slug:""}}/>);
 page.then(node => createRoot(document.getElementById("root")!).render(<StrictMode><LocaleProvider locale={parsed.locale} route={route}><LocaleNotice/>{node}</LocaleProvider></StrictMode>));
+// Offline page and repeat-visit caching (public/sw.js). Production builds only; the worker never touches /api/ or sign-in callbacks.
+if ("serviceWorker" in navigator && import.meta.env.PROD) addEventListener("load", () => { navigator.serviceWorker.register("/sw.js").catch(() => {}); });

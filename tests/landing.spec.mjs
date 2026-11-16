@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
+import http from 'node:http';
 import { probe, grade, defaults } from '../scripts/style-budget.mjs';
 import { measure, pages as labPages, fakeWidgets } from './perf-lab.mjs';
 import { probeFocus } from './focus-probe.mjs';
@@ -1317,4 +1318,22 @@ test('every public page shows the same ink focus ring, at 3:1 or better against 
   for(const r of rows){expect(r.ring,`${path} ${r.tag} "${r.label}" has no focus ring`).not.toBeNull();expect(r.ring,`${path} ${r.tag} "${r.label}"`).toEqual([29,31,35]);expect(r.width,`${path} ${r.label}`).toBe('2px');expect(r.ratio,`${path} ${r.label} contrast`).toBeGreaterThanOrEqual(3)}
   await context.close();
  }
+});
+
+test('the service worker serves a stored page and then the offline page once the server is gone, and leaves /api/ and query addresses alone', async ({ browser, baseURL }) => {
+  // A small proxy stands in for the site, so it can really go away: context.setOffline does not reach a worker's own fetches.
+  const proxy = http.createServer((req, res) => { http.get(baseURL + req.url, { headers: { accept: req.headers.accept || '*/*' } }, up => { res.writeHead(up.statusCode, up.headers); up.pipe(res); }).on('error', () => { res.writeHead(502); res.end(); }); });
+  await new Promise(r => proxy.listen(0, '127.0.0.1', r));
+  const origin = `http://127.0.0.1:${proxy.address().port}`, context = await browser.newContext({ serviceWorkers: 'allow' }), page = await context.newPage();
+  try {
+    await page.goto(origin + '/docs'); await hydrated(page);
+    await expect(async () => { expect(await page.evaluate(async () => !!(await navigator.serviceWorker.getRegistration('/'))?.active)).toBe(true); }).toPass();
+    await page.reload(); await hydrated(page);
+    await page.evaluate(() => fetch('/docs?utm=1').then(r => r.text())); await page.evaluate(() => fetch('/api/status').catch(() => {}));
+    const stored = await page.evaluate(async () => ({ page: !!(await caches.match('/docs')), query: !!(await caches.match('/docs?utm=1')), api: !!(await caches.match('/api/status')), offline: !!(await caches.match('/offline.html')) }));
+    expect(stored).toEqual({ page: true, query: false, api: false, offline: true });
+    proxy.closeAllConnections(); await new Promise(r => proxy.close(r));
+    await page.goto(origin + '/docs'); await expect(page.locator('h1')).toHaveText('文档');
+    await page.goto(origin + '/pricing'); await expect(page.locator('h1')).toContainText('现在连不上网络');
+  } finally { proxy.closeAllConnections(); proxy.close(); await context.close(); }
 });
