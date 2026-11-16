@@ -6,6 +6,8 @@ import './content-pages.css';
 import './home.css';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
+import { SponsorInquiry } from './SponsorInquiry';
+import { inquiriesEnabled } from './sponsor-inquiry';
 const copyText={msg:{zh:'。',en:'.'}} satisfies Record<string,Localized>;
 const msg={} satisfies Record<string,Localized>;
 // Brand sponsorship (RFC-003 step 7). No prices or traffic figures until there is real data to quote.
@@ -34,7 +36,9 @@ const rules:Row[]=[
  {title:{zh:'不给读者数据',en:'No reader data'},text:{zh:'不向赞助方提供读者的个人数据。',en:'No personal data about readers is shared with sponsors.'}},
 ];
 const steps:Row[]=[
- {title:{zh:'发起咨询',en:'Open an inquiry'},text:{zh:'开一个「赞助咨询」Issue，写明品牌、想介绍的产品和希望的时间。',en:'Open a “Sponsorship inquiry” issue with your brand, the product and the timing you have in mind.'}},
+ inquiriesEnabled
+  ?{title:{zh:'发起咨询',en:'Send an inquiry'},text:{zh:'填下面的表单，写明品牌、想介绍的产品和希望的时间。也可以在 GitHub 上开一个「赞助咨询」Issue。',en:'Fill in the form below with your brand, the product and the timing you have in mind. You can also open a “Sponsorship inquiry” issue on GitHub.'}}
+  :{title:{zh:'发起咨询',en:'Open an inquiry'},text:{zh:'开一个「赞助咨询」Issue，写明品牌、想介绍的产品和希望的时间。',en:'Open a “Sponsorship inquiry” issue with your brand, the product and the timing you have in mind.'}},
  {title:{zh:'我们回复',en:'We reply'},text:{zh:'附上当时的真实访问数据、可用的位置和方式。目前只有案例页里的一个标注位（第三个案例之后），其他位置在洽谈时一起确定。',en:'With current traffic data and the placements and formats available. There is one labelled slot today, in the cases grid after the third case; anything else is agreed as part of the conversation.'}},
 ];
 function Rows({rows,language,className,ordered}:{rows:Row[];language:Language;className?:string;ordered?:boolean}){
@@ -44,11 +48,11 @@ function Rows({rows,language,className,ordered}:{rows:Row[];language:Language;cl
 export function SponsorPage(){
  const language = useLocale();const zh=language==='zh';const l=(k:keyof typeof m)=>t(m[k],language);
  useEffect(()=>{document.title=l('metaTitle');document.documentElement.lang=t({zh:'zh-CN',en:'en'},language);document.querySelector('meta[name="description"]')?.setAttribute('content',l('metaDescription'));},[language,zh]);
- const inquiry=<a className="home-action-primary" href={contact} target="_blank" rel="noreferrer">{l('cta')}</a>;
+ const inquiry=inquiriesEnabled?<a className="home-action-primary" href="#inquiry">{l('cta')}</a>:<a className="home-action-primary" href={contact} target="_blank" rel="noreferrer">{l('cta')}</a>;
  return <main className="content-page sponsor-page"><SiteHeader language={language}/>
   <header className="content-hero site-shell sponsor-hero"><h1>{l('title')}</h1><p>{l('lead')}</p><div className="home-actions">{inquiry}<a className="home-action-secondary" href="#rules">{l('toRules')}</a></div></header>
   <section className="site-shell sponsor-section" aria-labelledby="sponsor-audience"><h2 id="sponsor-audience">{l('audience')}</h2><div><Rows rows={readers} language={language}/><p className="sponsor-note">{l('traffic')}</p></div></section>
   <section className="site-shell sponsor-section" id="rules" aria-labelledby="sponsor-rules"><h2 id="sponsor-rules">{l('rules')}</h2><Rows rows={rules} language={language} className="sponsor-rules"/></section>
-  <section className="site-shell sponsor-section" aria-labelledby="sponsor-how"><h2 id="sponsor-how">{l('how')}</h2><div><Rows rows={steps} language={language} ordered/><div className="home-actions">{inquiry}</div></div></section>
+  <section className="site-shell sponsor-section" id="inquiry" aria-labelledby="sponsor-how"><h2 id="sponsor-how">{l('how')}</h2><div><Rows rows={steps} language={language} ordered/>{inquiriesEnabled?<SponsorInquiry github={contact}/>:<div className="home-actions">{inquiry}</div>}</div></section>
   <SiteFooter language={language}/></main>;
 }

@@ -36,7 +36,7 @@ let server,base;
 test.beforeAll(async()=>{const dir=fixtureDir;fs.rmSync(dir,{recursive:true,force:true});fs.mkdirSync(path.join(dir,'src'),{recursive:true});fs.cpSync('../website/src',path.join(dir,'src'),{recursive:true});const modules=path.join(dir,'node_modules');if(!fs.existsSync(modules))fs.symlinkSync(path.resolve('../website/node_modules'),modules,'dir');
  fs.writeFileSync(path.join(dir,'fake-supabase.js'),fake);
  fs.writeFileSync(path.join(dir,'index.html'),'<html><head><meta name="description" content="Fixture"></head><body style="margin:0"><div id="root"></div><script type="module" src="/main.tsx"></script></body></html>');
- fs.writeFileSync(path.join(dir,'main.tsx'),`import {createRoot} from 'react-dom/client';import './src/site-styles';import {InspirationPage} from './src/InspirationPage';import {LocaleProvider} from './src/i18n/LocaleProvider';import {parseLocale} from './src/i18n/locale-route';const p=parseLocale(location.pathname);createRoot(document.getElementById('root')!).render(<LocaleProvider locale={p.locale} route={p.route}><InspirationPage detail={p.route==='/'?undefined:p.route.split('/')[2]}/></LocaleProvider>);`);
+ fs.writeFileSync(path.join(dir,'main.tsx'),`import {createRoot} from 'react-dom/client';import './src/site-styles';import {InspirationPage} from './src/InspirationPage';import {SponsorPage} from './src/SponsorPage';import {LocaleProvider} from './src/i18n/LocaleProvider';import {parseLocale} from './src/i18n/locale-route';const p=parseLocale(location.pathname);createRoot(document.getElementById('root')!).render(<LocaleProvider locale={p.locale} route={p.route}>{p.route==='/sponsor'?<SponsorPage/>:<InspirationPage detail={p.route==='/'?undefined:p.route.split('/')[2]}/>}</LocaleProvider>);`);
  server=await createServer({root:dir,configFile:false,plugins:[inspirationPlugin()],esbuild:{jsx:'automatic'},resolve:{alias:{'@supabase/supabase-js':path.join(dir,'fake-supabase.js')}},
   define:{__SHOW_TRANSLATION_DRAFTS__:'true',__SHOW_CASES__:'true',__SUPABASE__:JSON.stringify({url:'https://fake.supabase.test',key:'public-anon-key'})},server:{host:'127.0.0.1',port:0,fs:{allow:[dir,path.resolve('../website/node_modules')]}}});
  await server.listen();base=`http://127.0.0.1:${server.httpServer.address().port}`;
@@ -141,3 +141,22 @@ test('an import whose first write failed is cleared after the next write succeed
  await expect(firstCard(page).locator('.insp-card-save')).toHaveAttribute('aria-pressed','false');
 });
 
+
+// The sponsor form (src/SponsorInquiry.tsx) posts to the project's RPC with the public key; no account needed.
+const rpc=/fake\.supabase\.test\/rest\/v1\/rpc\/submit_sponsor_inquiry$/;
+const fillInquiry=async page=>{await page.getByLabel('品牌').fill('Acme');await page.getByLabel('回复邮箱').fill('team@acme.test');await page.getByLabel('想介绍的产品网址').fill('https://acme.test');await page.getByLabel('想怎么合作、希望的时间').fill('下个月，案例页');};
+test('the sponsor page sends an inquiry from its own form, without an account', async ({page})=>{
+ const bodies=[];await page.route(rpc,async r=>{bodies.push({body:r.request().postDataJSON(),key:r.request().headers().apikey});await r.fulfill({status:204,body:''})});
+ await page.goto(base+'/sponsor');await page.locator('.home-action-primary[href="#inquiry"]').first().click();await expect(page.locator('#inquiry')).toBeInViewport();
+ await fillInquiry(page);await page.getByRole('button',{name:'发送咨询'}).click();
+ await expect(page.getByRole('status')).toHaveText('已收到。我们会用你留的邮箱回复。');
+ expect(bodies).toEqual([{key:'public-anon-key',body:{brand:'Acme',contact_name:'',email:'team@acme.test',product_url:'https://acme.test',message:'下个月，案例页',language:'zh'}}]);
+});
+test('a failed inquiry keeps the form and offers GitHub; the hidden field stops scripts without sending', async ({page})=>{
+ let calls=0;await page.route(rpc,async r=>{calls++;await r.fulfill({status:400,body:'{"message":"too_many_inquiries"}'})});
+ await page.goto(base+'/sponsor');await fillInquiry(page);await page.getByRole('button',{name:'发送咨询'}).click();
+ const alert=page.getByRole('alert');await expect(alert).toContainText('没有发送成功');await expect(alert.getByRole('link',{name:'在 GitHub 上咨询'})).toHaveAttribute('href',/template=sponsorship\.md/);
+ await expect(page.getByLabel('品牌')).toHaveValue('Acme');expect(calls).toBe(1);
+ await page.locator('input[name="website"]').fill('spam',{force:true});await page.getByRole('button',{name:'发送咨询'}).click();
+ await expect(page.getByRole('status')).toContainText('已收到');expect(calls).toBe(1);
+});

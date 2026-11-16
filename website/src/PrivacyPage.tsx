@@ -42,7 +42,7 @@ const others:Row[]=[
 ];
 const tracking:Row[]=[
  {title:{zh:'访问统计',en:'Analytics'},text:{zh:'网站现在不加载任何统计或广告追踪脚本。以后加访问统计，会选不识别个人的工具，并先更新这一页。',en:'The site loads no analytics or ad-tracking scripts today. If we add analytics, it will be a tool that does not identify people, and this page will change first.'}},
- {title:{zh:'赞助',en:'Sponsors'},text:{zh:'不向赞助方提供读者的个人数据。',en:'No personal data about readers is shared with sponsors.'}},
+ {title:{zh:'赞助',en:'Sponsors'},text:{zh:'不向赞助方提供读者的个人数据。赞助页表单提交的品牌、名字、邮箱、网址和留言存在维护者的 Supabase 项目里，只用来回复那次咨询，不公开。',en:'No personal data about readers is shared with sponsors. What the sponsor form sends (brand, name, email, URL and message) is kept in the maintainer’s Supabase project, used only to reply to that inquiry and never published.'}},
 ];
 const contact:Row[]=[
  {title:{zh:'有问题',en:'Questions'},text:{zh:'在 GitHub 上开一个 Issue。Issue 是公开的，不要在里面写邮箱等个人信息。',en:'Open an issue on GitHub. Issues are public, so do not put your email or other personal details in it.'}},
