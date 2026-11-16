@@ -55,10 +55,25 @@
 
 这些用来登录和同步收藏，不用来发营销邮件；可以看不对应到个人的汇总数字来改进灵感库。数据存在维护者的 Supabase 项目里，删除账号会立即删除这些数据。
 
+## 赞助咨询表单
+
+`/sponsor` 的“怎么联系”一节直接嵌入表单（`website/src/SponsorInquiry.tsx`、`website/src/sponsor-inquiry.ts`），不需要登录。
+
+- **配置**：迁移 `supabase/migrations/20261116000000_sponsor_inquiries.sql` 已于 2026-11-16 用 Supabase CLI 推到线上项目。没执行迁移的项目里，表单提交会失败，页面提示改去 GitHub 开 Issue。
+- **存储**：数据存在 `sponsor_inquiries` 表，字段有品牌、名字（可不填）、邮箱、产品网址和留言。公开的 API 读不到这张表，只能通过 `submit_sponsor_inquiry()` 写入；维护者在 Table Editor 里看。
+- **防刷**：表单有一个访客看不到的字段，脚本填了这个字段就不发送；数据库限制全站每小时最多 20 条，并检查长度和邮箱格式。
+- **限流是宽松的**：计数和写入之间没有加锁，同时到达的请求可能让一小时内略超过 20 条。它只用来挡住刷量，不需要精确；要严格的话，在函数里先取 `pg_advisory_xact_lock` 再计数（需要新迁移）。
+- **页面加载完才显示表单**：预渲染的 HTML 里只有 GitHub 链接，避免脚本加载前提交时把邮箱和留言拼进网址。
+- **没有通知**：来了新咨询不会提醒，要自己去看。以后可以用 Supabase 的 Database Webhooks 转发到邮件或 Slack。
+- **开关**：没配 `VITE_SUPABASE_URL` 的构建（本地、CI）不显示表单，仍然只链接 GitHub。
+
 ## 上线记录
 
 - 2026-11-15：变量加到 Vercel Preview，维护者在 dev 部署上用 Google 登录成功。
 - 2026-11-16：维护者设好生产回跳地址、发布了 Google 同意屏幕；变量加到 Production 并重新部署，维护者在生产站用 Google 登录成功。
+- 2026-11-16：装了 Supabase CLI 并关联项目（维护者在自己的终端里 `supabase login`）。第一个迁移当初是在 SQL Editor 里手动执行的，用 `supabase migration repair --status applied 20261115000000 --remote` 补登记；之后的迁移用 `supabase db push --remote` 推送。CLI 的命令默认连本地，连线上要加 `--remote`。
+- 2026-11-16：赞助咨询迁移先在一个必然回滚的事务里试跑（anon 读不到表、直接插入被拒、邮箱和网址格式错误被拒、第 21 条被限流），然后正式推送；再用公开 key 走一遍网站实际调用的接口，写入成功（204），anon 读表返回空，测试记录随后删除。
+- 只读查询确认收藏写进了数据库：有 1 个用户、`reference_packs` 有 1 行。
 - 隐私说明在 `/privacy`（`website/src/PrivacyPage.tsx`），登录框链接到它。存储键、第三方请求或账号字段变了，要同时改这一页。
 
 ## 尚未验证

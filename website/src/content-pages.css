@@ -15,6 +15,7 @@
 .sponsor-rows code{font:13px var(--font-mono);background:var(--site-surface);border-radius:var(--radius-control);padding:1px 6px;color:var(--site-ink)}
 .sponsor-note{margin-top:24px;padding-top:18px;border-top:1px solid var(--site-line);max-width:none}
 .sponsor-hero>.privacy-updated{margin-top:16px;color:var(--site-muted)}
+.sponsor-inquiry.submission-intake{margin:32px 0 0}.sponsor-inquiry-wide{grid-column:1/-1}.sponsor-inquiry-trap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}.sponsor-inquiry-done{margin:32px 0 0;padding-top:18px;border-top:1px solid var(--site-line);font-size:16px;color:var(--site-ink)}
 .sponsor-section .home-actions{margin-top:32px}.sponsor-page :is(a,button):focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
 @media(max-width:1000px){.sponsor-section{grid-template-columns:1fr;gap:28px;padding-block:56px}}
 @media(max-width:640px){.sponsor-hero{padding-block:40px 56px}.sponsor-rows li{grid-template-columns:1fr;gap:4px}}

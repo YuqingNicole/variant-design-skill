@@ -28,3 +28,4 @@ website/.canvas-data/
 /tests/.submission-site/
 /tests/.accounts-site/
 /tests/.premium-eval/
+/supabase/.temp/
