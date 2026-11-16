@@ -14,6 +14,7 @@
 .sponsor-rows strong{font-size:16px;font-weight:500;color:var(--site-ink)}.sponsor-rows p,.sponsor-note{margin:0;font-size:16px;line-height:1.7;color:var(--site-muted);max-width:68ch}
 .sponsor-rows code{font:13px var(--font-mono);background:var(--site-surface);border-radius:var(--radius-control);padding:1px 6px;color:var(--site-ink)}
 .sponsor-note{margin-top:24px;padding-top:18px;border-top:1px solid var(--site-line);max-width:none}
+.sponsor-hero>.privacy-updated{margin-top:16px;color:var(--site-muted)}
 .sponsor-section .home-actions{margin-top:32px}.sponsor-page :is(a,button):focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
 @media(max-width:1000px){.sponsor-section{grid-template-columns:1fr;gap:28px;padding-block:56px}}
 @media(max-width:640px){.sponsor-hero{padding-block:40px 56px}.sponsor-rows li{grid-template-columns:1fr;gap:4px}}

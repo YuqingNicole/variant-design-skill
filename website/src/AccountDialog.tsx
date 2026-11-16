@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { Language } from './direction-engine';
 import { t, type Localized } from './i18n/localized';
 import { closeSignIn, dismissSignIn, deleteAccount, openSignIn, sendSignInLink, signInWithGoogle, signOut, useAccountState } from './account';
+import { localePath } from './i18n/locale-route';
 import './account.css';
 // The sign-in dialog and the header's account control (src/account.ts). Rendered by SiteHeader only when accounts are on.
 const m = {
@@ -17,7 +18,8 @@ const m = {
   sent: { zh: (email: string) => `登录链接已发到 ${email}。请在这台设备上打开邮件里的链接。`, en: (email: string) => `A sign-in link is on its way to ${email}. Open it on this device.` },
   other: { zh: '换一个邮箱', en: 'Use another email' },
   failed: { zh: '没能完成登录，请稍后再试。', en: 'Sign-in did not go through. Please try again.' },
-  privacy: { zh: '我们只保存你的邮箱（用 Google 登录时还有名字和头像）以及你收藏的参考和笔记，只用来让你登录、同步收藏。可以随时在账号菜单里删除账号。', en: 'We keep only your email (and, with Google, your name and picture) plus the references and notes you save, to sign you in and sync your saves. You can delete your account any time from the account menu.' },
+  privacy: { zh: '我们只保存你的邮箱（用 Google 登录时还有名字和头像）以及你收藏的参考和笔记，用来让你登录、同步收藏，不发营销邮件。可以随时在账号菜单里删除账号。', en: 'We keep only your email (and, with Google, your name and picture) plus the references and notes you save, to sign you in and sync your saves, never for marketing email. You can delete your account any time from the account menu.' },
+  privacyLink: { zh: '隐私说明', en: 'Privacy' },
   close: { zh: '关闭', en: 'Close' },
   signIn: { zh: '登录', en: 'Sign in' },
   account: { zh: '账号', en: 'Account' },
@@ -56,7 +58,7 @@ export function AccountDialog({ language }: { language: Language }) {
         <button type="submit" className="account-secondary" disabled={busy}>{busy ? l('sending') : l('send')}</button>
       </form>}
     {error && <p role="alert" className="account-error">{error}</p>}
-    <p className="account-privacy">{l('privacy')}</p>
+    <p className="account-privacy">{l('privacy')} <a href={localePath('/privacy', language)}>{l('privacyLink')}</a></p>
   </dialog>;
 }
 

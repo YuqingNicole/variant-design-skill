@@ -26,7 +26,7 @@ test('the install page opens with what the skill does and that every step can be
   await page.goto(route);await expect(page.locator('.docs-pitch p'),route).toHaveText(lines);
  }
 });
-for(const route of ['/docs','/docs/install','/sponsor'])test(`${route} keeps a consistent type and color scale in both languages`,async({page},info)=>{
+for(const route of ['/docs','/docs/install','/sponsor','/privacy'])test(`${route} keeps a consistent type and color scale in both languages`,async({page},info)=>{
  await page.emulateMedia({reducedMotion:'reduce'});const samples=[];
  for(const language of ['zh','en'])for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});await page.goto((language==='en'?'/en':'')+route);await expect(page.locator('footer')).toBeAttached();await page.evaluate(()=>document.fonts.ready);
@@ -426,6 +426,15 @@ test('submission page states the three entry kinds, permissions and takedown pro
  await expect(page.locator('.content-reading a[href$="/issues/new/choose"]')).toBeVisible();
  await page.locator('.site-language').click();await expect(page.locator('h1')).toHaveText('Submissions & permissions');await expect(page.getByRole('heading',{name:'Takedown requests'})).toBeVisible();
  for(const width of [320,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
+});
+
+test('privacy page is prerendered, linked from the footer and states what is kept, in both languages', async ({page,request})=>{
+ const html=await (await request.get('/privacy')).text();expect(html).toContain('<title>隐私说明 — Variant Design</title>');expect(html).toContain('variant-inspiration-pack-v1');
+ await page.goto('/sponsor');
+ await page.locator('.site-footer a[href="/privacy"]').click();await expect(page).toHaveURL(/\/privacy$/);await expect(page).toHaveTitle('隐私说明 — Variant Design');
+ await expect(page.locator('h1')).toHaveText('隐私说明');await expect(page.locator('.privacy-page .sponsor-section')).toHaveCount(5);
+ await expect(page.locator('#account')).toContainText('删除账号');await expect(page.locator('#tracking')).toContainText('不向赞助方提供读者的个人数据');
+ await page.locator('.site-language').click();await expect(page.locator('h1')).toHaveText('Privacy');await expect(page).toHaveTitle('Privacy — Variant Design');await expect(page.locator('.site-footer a[href="/en/privacy"]')).toHaveCount(1);
 });
 
 test('sponsor page states the rules without prices and links to an inquiry template, in both languages', async ({page})=>{
