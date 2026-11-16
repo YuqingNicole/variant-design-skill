@@ -239,8 +239,68 @@ ${answers ? `## Guides\n\n${answers}\n\n` : ''}${cases ? `## Cases\n\n${cases}\n
 
 ## Optional
 
+- [Install steps written for an agent to follow](${site}/install/agent.md)
 - [Full install guide as text](${site}/llms-full.txt)
 - [RSS feed of references and cases](${site}/feed.xml)
+`;
+}
+// /install/agent.md: the install steps written for an agent to follow, built from the same data as the guide so the commands cannot drift.
+// It asks the agent to confirm scope with the user and to report what it did and did not check.
+export function agentInstall(docs, site = defaultSite) {
+  const paths = docs.agents.map(a => `- ${a.label || 'Another agent (use that agent\'s own skills folder, or this path)'}: \`${a.path}\``).join('\n');
+  const fresh = docs.clone('<path>');
+  return `# Install Variant Design (instructions for an agent)
+
+You are an AI coding agent and your user asked you to install the Variant Design skill. Follow these steps in order. Stop and tell the user if a step fails; do not work around a failure by guessing.
+
+## 0. Know what you are installing
+
+Variant Design turns one design brief into three comparable directions (A/B/C) in the user's own project. It is a folder of instructions plus Node.js helper scripts, MIT licensed. Install the **complete repository**: \`SKILL.md\` alone is not enough because it routes to sub-skills and scripts. Source: ${repository}
+
+## 1. Check the machine
+
+Run \`git --version\` and \`node --version\`. Node.js must be v22 or later. If either is missing or too old, tell the user what is missing and ask before installing anything; do not use sudo and do not install Node.js on your own. Without Node.js the skill can still suggest designs, but its snapshots and previews will not run, so say that plainly.
+
+## 2. Ask where to install
+
+Ask the user one question unless they already answered: user-level (every project) or this project only. Use the skills folder of the agent you are running in. Default paths from the install guide:
+
+${paths}
+
+If the target folder already exists, do not overwrite it. Ask the user, and if they want to update, run \`git -C <path> pull --ff-only\`.
+
+## 3. Install
+
+For a user-level install, clone into the chosen path:
+
+\`\`\`
+${fresh}
+\`\`\`
+
+For a project-only install, the skills CLI works: \`npx skills add YuqingNicole/variant-design-skill -a codex\` (or \`-a claude-code\`). Tell the user that this CLI reports installs to skills.sh unless \`DISABLE_TELEMETRY=1\` is set, and let them choose.
+
+Claude Code can also install it as a plugin: \`claude plugin marketplace add YuqingNicole/variant-design-skill\`, then \`claude plugin install variant-design@variant-design\`.
+
+## 4. Check it
+
+\`\`\`
+node --version
+cat <path>/VERSION
+\`\`\`
+
+Confirm that \`<path>/SKILL.md\`, \`<path>/skills\`, \`<path>/references\` and \`<path>/scripts\` exist.
+
+## 5. Tell the user
+
+Say which path you installed to, the version in \`VERSION\`, and which of the checks above you actually ran. Tell them to open a new agent session, because most agents only load skills at start. Suggest this first prompt: "Use the Variant Design skill to create three directions A/B/C for this page, keeping the existing brand."
+
+## Rules
+
+- Change nothing outside the install folder. Do not edit the user's project during installation.
+- Do not claim that the skill is active until you have checked the files; a new session is needed to see it in the agent's skill list.
+- Output of later runs goes to \`variant-output/\` in the project, and working files to \`.variant-work/\`, which should not be committed.
+
+Full guide: ${site}/en/docs/install · Guide as text: ${site}/llms-full.txt · Project summary: ${site}/llms.txt
 `;
 }
 // The whole install guide as Markdown, English then Chinese.
@@ -344,6 +404,8 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap(indexableRoutes(pages), site, lastModified({ references, entries: listed.entries, guides: listed.guides, sectionOf: sectionModule.sectionOf })));
   fs.writeFileSync(path.join(dist, 'feed.xml'), rss(hideCases ? [] : entries, site, references));
   fs.writeFileSync(path.join(dist, 'llms.txt'), llms(listed.entries, docs, site, englishReferences, listed.guides));
+  fs.mkdirSync(path.join(dist, 'install'), { recursive: true });
+  fs.writeFileSync(path.join(dist, 'install', 'agent.md'), agentInstall(docs, site));
   fs.writeFileSync(path.join(dist, 'llms-full.txt'), llmsFull(listed.entries, docs, site, englishReferences, listed.guides));
   fs.writeFileSync(path.join(dist, 'robots.txt'), robots(site));
   console.log(`Prerendered ${pages.size} routes (including reference details) and ${entries.length} direction cards for ${site}; sitemap.xml, feed.xml, llms.txt and robots.txt written.`);

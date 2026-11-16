@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
-import { aiTrainingCrawlers, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
+import { agentInstall, aiTrainingCrawlers, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
 const { detailTitle, sectionOf, sections } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
@@ -225,4 +225,15 @@ test('production can leave the A/B/C cases out while keeping every other page', 
   const docs = await importTs(new URL('../src/docs-content.ts', import.meta.url).pathname), text = llms([], docs, 'https://example.test');
   assert.ok(!text.includes('## Cases') && !text.includes('/d/'), 'llms.txt has no case section without entries');
   assert.ok(text.includes('## Library'));
+});
+
+test('the agent install page uses the guide\'s commands, asks before writing and says what was checked', async () => {
+  const docs = await importTs(new URL('../src/docs-content.ts', import.meta.url).pathname), text = agentInstall(docs, 'https://example.test');
+  assert.match(text, /^# Install Variant Design/);
+  for (const a of docs.agents) assert.ok(text.includes(a.path), a.id);
+  assert.ok(text.includes(docs.clone('<path>')) && text.includes('node --version') && text.includes('v22'));
+  assert.ok(text.includes('do not use sudo') && text.includes('do not overwrite it') && text.includes('Ask the user one question'));
+  assert.ok(llms([], docs, 'https://example.test').includes('https://example.test/install/agent.md'));
+  assert.ok(text.includes('which of the checks above you actually ran') && text.includes('https://example.test/llms-full.txt'));
+  assert.ok(!text.includes('`sudo '), 'never tells the agent to run sudo');
 });
