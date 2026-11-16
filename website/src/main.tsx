@@ -27,7 +27,7 @@ const page: Promise<ReactNode> = route === "/lab/canvas" ? import("./LandingCanv
   : route === "/changelog" ? import("./ChangelogPage").then(m => <m.ChangelogPage/>)
   : route === "/docs" || route.startsWith("/docs/") && route !== "/docs/install" ? import("./GuidesPage").then(m => <m.GuidesPage base="/docs" slug={route === "/docs" ? undefined : route.slice(6)}/>)
   : route === "/guides" || route.startsWith("/guides/") ? import("./GuidesPage").then(m => <m.GuidesPage slug={route === "/guides" ? undefined : route.slice(8)}/>)
-  : route === "/submit" ? import("./SubmitPage").then(m => <m.SubmitPage/>) : route === "/sponsor" ? import("./SponsorPage").then(m => <m.SponsorPage/>) : route === "/docs/install" ? import("./ContentPages").then(m => <m.ContentPages page="docs"/>)
+  : route === "/submit" ? import("./SubmitPage").then(m => <m.SubmitPage/>) : route === "/sponsor" ? import("./SponsorPage").then(m => <m.SponsorPage/>) : route === "/privacy" ? import("./PrivacyPage").then(m => <m.PrivacyPage/>) : route === "/docs/install" ? import("./ContentPages").then(m => <m.ContentPages page="docs"/>)
   : route === "/directions" ? import("./ExpressiveDirections").then(m => <m.ExpressiveDirections/>) : route === "/showcase" ? import("./ShowcasePage").then(m => <m.ShowcasePage/>)
   : route === "/pricing" ? import("./pricing").then(m => <m.PricingPage repositoryUrl="https://github.com/YuqingNicole/variant-design-skill"/>)
   : import("./LibraryPage").then(m => route === "/cases" ? <m.LibraryPage view={{kind:"feed"}}/> : route.startsWith("/c/") ? <m.LibraryPage view={{kind:"category",id:route.slice(3)}}/>

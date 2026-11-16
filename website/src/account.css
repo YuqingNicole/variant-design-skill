@@ -17,7 +17,7 @@
 .account-dialog .account-sent{color:var(--site-ink)}
 .account-link{border:0;padding:0;background:none;color:var(--site-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .account-dialog .account-error,.site-account-panel .account-error{color:var(--site-ink);margin:12px 0 0}
-.account-dialog .account-privacy{margin:20px 0 0;padding-top:16px;border-top:1px solid var(--site-line);font-size:12px}
+.account-dialog .account-privacy{margin:20px 0 0;padding-top:16px;border-top:1px solid var(--site-line);font-size:12px}.account-dialog .account-privacy a{color:var(--site-ink)}
 .site-nav-end{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .site-nav .site-nav-end .site-language{margin-left:0}
 @media(max-width:650px){.site-nav .site-nav-end{margin-left:auto}}

@@ -18,6 +18,7 @@ import { LibraryPage } from './LibraryPage';
 import { categories, entries } from './library-data';
 import { PaperLanding } from './PaperLanding';
 import { PricingPage } from './pricing';
+import { PrivacyPage } from './PrivacyPage';
 import { SkillsPage } from './SkillsPage';
 import { SponsorPage } from './SponsorPage';
 import { SubmitPage } from './SubmitPage';
@@ -26,7 +27,7 @@ const standalone: Record<string, ReactNode> = {
   ...Object.fromEntries(authorizedReferences.map(i=>[`/inspiration/${i.id}`,<InspirationPage detail={i.id}/>])),
   ...Object.fromEntries(withdrawnReferences.map(i=>[`/inspiration/${i.id}`,<WithdrawnReferencePage record={i}/>])),
   '/about': <PaperLanding/>, '/pricing': <PricingPage repositoryUrl="https://github.com/YuqingNicole/variant-design-skill"/>,
-  '/skills': <SkillsPage/>, '/submit': <SubmitPage/>, '/sponsor': <SponsorPage/>, '/guides': <GuidesPage/>, '/changelog': <ChangelogPage/>, '/': <InspirationPage/>, ...Object.fromEntries(activeSections(references).map(c=>[`/browse/${c.id}`,<InspirationPage section={c.id}/>])), '/cases': <LibraryPage view={{ kind: 'feed' }}/>,
+  '/skills': <SkillsPage/>, '/submit': <SubmitPage/>, '/sponsor': <SponsorPage/>, '/privacy': <PrivacyPage/>, '/guides': <GuidesPage/>, '/changelog': <ChangelogPage/>, '/': <InspirationPage/>, ...Object.fromEntries(activeSections(references).map(c=>[`/browse/${c.id}`,<InspirationPage section={c.id}/>])), '/cases': <LibraryPage view={{ kind: 'feed' }}/>,
   ...Object.fromEntries(guides.map(g => [`/guides/${g.slug}`, <GuidesPage slug={g.slug}/>])),
   '/docs': <GuidesPage base="/docs"/>, ...Object.fromEntries(docsArticles.map(g => [`/docs/${g.slug}`, <GuidesPage base="/docs" slug={g.slug}/>])),
 };

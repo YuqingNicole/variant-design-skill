@@ -52,7 +52,7 @@ test('signed out, saving a reference asks for sign-in and nothing is saved', asy
  await firstCard(page).locator('.insp-card-save').click();
  const dialog=page.getByRole('dialog',{name:'登录 Variant Design'});await expect(dialog).toBeVisible();
  await expect(dialog).toContainText('登录后就能收藏这条参考');await expect(dialog.getByRole('button',{name:'使用 Google 登录'})).toBeVisible();
- await expect(dialog).toContainText('只保存你的邮箱');
+ await expect(dialog).toContainText('只保存你的邮箱');await expect(dialog.getByRole('link',{name:'隐私说明'})).toHaveAttribute('href','/privacy');
  await page.keyboard.press('Escape');await expect(dialog).toBeHidden();
  expect(await store(page,'variant-account-pending'),'a dismissed dialog does not resume the save later').toBeNull();
  await expect(page.locator('.inspiration-pack')).toHaveCount(0);expect(await store(page,'variant-inspiration-pack-v1')).toBeNull();
