@@ -73,7 +73,8 @@ test('integrated B keeps a mobile action, navigation, brief on language change, 
   expect(await page.locator('.hero-actions a').first().evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThan(844);
   await expect(page.locator('#generator button[type="submit"]')).toBeDisabled();
 
-  await page.locator('.site-nav a[href="/skills"]').click();
+  // At 390px the site links are the bottom tab bar.
+  await page.locator('.site-tabbar a[href="/skills"]').click();
   await expect(page).toHaveURL(/\/skills$/);
   await page.goto('/workbench');
   await page.locator('#design-prompt').fill('A landing page for the real Variant Design project');
@@ -82,7 +83,7 @@ test('integrated B keeps a mobile action, navigation, brief on language change, 
   await expect(page.locator('h1')).toContainText('Three directions.');
   await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
   await page.goto('/workbench');
-  await page.locator('.site-nav-links a').last().focus();
+  await page.locator('.site-wordmark').focus();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Switch to Chinese' })).toBeFocused();
   await expect(page.getByRole('button', { name: 'Switch to Chinese' })).toHaveCSS('outline-style', 'solid');
@@ -974,8 +975,10 @@ test('every navigation link stays visible on narrow screens in both languages', 
   for (const width of [320, 390, 600]) for (const route of ['/', '/docs', '/en', '/en/cases', '/pricing']) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto(route);
-    await expect(page.locator('.site-nav-links a').last()).toBeVisible();
-    const clipped = await page.locator('.site-nav-links').evaluate(nav => {
+    // Phones (651px and below) use the bottom tab bar; wider screens use the header links.
+    const bar = width <= 650 ? '.site-tabbar' : '.site-nav-links';
+    await expect(page.locator(`${bar} a`).last()).toBeVisible();
+    const clipped = await page.locator(bar).evaluate(nav => {
       const box = nav.getBoundingClientRect(), vw = document.documentElement.clientWidth;
       return [...nav.querySelectorAll('a')].filter(a => getComputedStyle(a).display !== 'none').filter(a => { const r = a.getBoundingClientRect(); return r.right > Math.min(box.right, vw) + 0.5 || r.left < Math.max(box.left, 0) - 0.5; }).map(a => a.textContent);
     });
