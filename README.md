@@ -106,6 +106,8 @@ compare old new          → Side-by-side existing vs. redesigned
 
 Install the **complete repository**, preserving `SKILL.md`, `skills/`, `references/`, `scripts/`, `assets/`, and `VERSION` together. Copying only `SKILL.md` is insufficient: it routes to sub-skills and executable helpers.
 
+To have your agent do it, tell it to read https://variantdesign.xyz/install/agent.md. It asks where to install, checks Git and Node.js 22+, and reports what it did and did not verify.
+
 For Codex, clone into its skills directory (use your configured skills root if different):
 
 ```bash
