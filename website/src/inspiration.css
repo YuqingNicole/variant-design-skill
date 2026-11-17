@@ -254,3 +254,34 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 /* Detail of an X post with a known video: the video plays from X's file host with its own controls, at its own proportions, before the stored text. */
 /* The box is sized from the stored width and height before the file's metadata arrives (a bare <video> is 300×150 until then, which moved the text below it). */
 .x-post-video .insp-vcard-media{display:block;width:min(100%,calc(72vh * var(--ar,1.78)));height:auto;aspect-ratio:var(--ar,1.78);margin-inline:auto;border-radius:3px;background:var(--site-surface)}
+
+/* Phones: a two-column vertical feed (cover, two-line title, author, save), a compact header and a bottom tab bar, the way phone content apps
+   are laid out. The desktop strip and its arrows stay as they are above 650px. */
+@media(max-width:650px){
+ .inspiration-page .inspiration-grid.insp-feed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-flow:row;grid-auto-columns:auto;gap:12px 10px;overflow:visible;scroll-snap-type:none;padding:4px 0 8px;margin-inline:0;align-items:start}
+ .inspiration-page .insp-feed>.insp-card{padding:0;border:0;background:none;border-radius:16px;scroll-snap-align:none}
+ .inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){aspect-ratio:4/5;border-radius:16px}
+ .inspiration-page .insp-feed .insp-card-meta{padding:8px 44px 0 2px;min-height:0;display:grid;grid-template-columns:20px minmax(0,1fr);align-items:center;gap:4px 6px}
+ .inspiration-page .insp-feed .insp-card-meta>span{display:contents}
+ .inspiration-page .insp-feed .insp-card-meta b{grid-column:1/-1;grid-row:1;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;white-space:normal;font-size:14px;line-height:1.35}
+ .inspiration-page .insp-feed .insp-card-meta .insp-vcard-avatar{grid-column:1;grid-row:2;width:20px;height:20px}
+ .inspiration-page .insp-feed .insp-card-meta small{grid-column:2;grid-row:2;line-height:20px}
+ .inspiration-page .insp-feed .insp-card-meta:not(:has(.insp-vcard-avatar)) small{grid-column:1/-1}
+ .inspiration-page .insp-feed :is(.insp-card-save){right:-4px;bottom:-4px;width:44px;height:44px;background:none;border:0}
+ .inspiration-page .insp-feed .insp-card-out,.insp-controls{display:none}
+ .insp-more{display:flex;justify-content:center;padding:8px 0 16px}
+ /* Header: the title and the rights notice stay; the long intro and counts leave the first screen. */
+ .inspiration-page .insp-title h1{font-size:30px}
+ .inspiration-page .insp-title>p:not(.insp-links),.inspiration-page .insp-counts{display:none}
+ .inspiration-page .insp-head{padding-block:12px 4px}
+ /* Bottom tab bar (SiteChrome mounts .site-tabbar on <body> after hydration). */
+ /* Gone from the first paint, so mounting the tab bar moves nothing; without JavaScript there is no tab bar, so the links come back. */
+ .site-nav-links{display:none}
+ @media(scripting:none){.site-nav-links{display:flex}}
+ .site-tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:0 8px env(safe-area-inset-bottom);height:calc(56px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--site-paper,#fff) 92%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-top:1px solid var(--site-line)}
+ .site-tabbar a{display:flex;align-items:center;justify-content:center;min-height:56px;font-size:13px;position:relative;color:var(--site-ink);text-decoration:none}
+ .site-tabbar a[aria-current=page]{color:var(--site-brand);font-weight:500}
+ .site-tabbar a[aria-current=page]::after{content:"";position:absolute;bottom:8px;width:4px;height:4px;border-radius:50%;background:var(--site-brand)}
+ body{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
+}
+@media(min-width:651px){.site-tabbar{display:none}}
