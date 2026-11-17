@@ -89,6 +89,8 @@
 
 Ego Lite 每周一 09:00（Asia/Shanghai）搜索最近 7 天、互动数至少 100 的设计视频，把链接和互动数据放进 `website/content/x-post-inbox.json`。收件箱只供人工筛选；看过原帖并补齐中英文研究笔记后，才能加入公开灵感页。每条处理完要在收件箱里写明 `published`（带 `entry`）或 `rejected`（带 `reason`）和 `reviewedAt`。搜什么由 `website/content/x-discovery.json` 里标了 `weekly` 的组决定。手动运行：`website/scripts/run-x-discovery.sh`（用 `PATH` 里的 `ego-browser`，或设 `EGO_BROWSER` 指向它）；加 `--groups <组名,组名>` 或 `--groups all` 跑其他组。
 
+Threads 也有每周发现，走 Meta 官方的 Threads API，候选写进 `website/content/threads-post-inbox.json`，筛选规则和 X 收件箱相同。配置和边界见 `docs/threads-discovery.md`。【维护者】建 Meta 应用、存凭据、为 `threads_keyword_search` 提交审核（同一文件“维护者要做的配置”）；批下来之前只能搜到自己的帖子。脚本还没用真凭据跑过。
+
 <!-- 格式：- https://x.com/<handle>/status/<id> — 好在哪（可选：分类） -->
 
 - recent.design 首页的 947 条作品（维护者本地的 `Recent-Design首页作品链接.csv`，2026-06-11 至 10-31）：2026-11-02 已分两批精选 60 条带视频的 X 帖子加入；2026-11-11 又加入 20 条 X 帖子和 10 个网站（记录见 `docs/research/2026-11-11-reference-batch.md`），条目带 `via` 指回 recent.design。2026-11-12 的第四批没有用这个来源（收件箱 + 关键词加搜 + 手选网站，见 `docs/research/2026-11-12-reference-batch.md`）。其余按第 3 组的固定流程分批挑选：看过视频再写笔记，同一作者不重复；Instagram 的 54 条现在没有对应的展示方式，先不加。
