@@ -41,7 +41,11 @@ test('plans TOP searches with a since date, and runs a repeated search once', ()
 });
 
 test('keeps posts and quotes, drops replies and reposts, and marks sites already in the library', () => {
-  const library = libraryIndex('{\n "id": "linear",\n "name": "Linear",\n "url": "https://linear.app/",\n}');
+  const library = libraryIndex(`export const inspirationItems = ${JSON.stringify([
+    { id: 'x-someone-123456', url: 'https://x.com/someone/status/1', post: { id: '2118039625952600400' } },
+    { id: 'linear', name: 'Linear', url: 'https://linear.app/' },
+  ], null, 2)};\n`);
+  assert.deepEqual([...library.values()], ['x-someone-123456', 'linear'], 'a nested post.id never claims the next entry\'s URL');
   const posts = [
     { id: '1', permalink: 'https://www.threads.com/@a/post/1', username: 'a', text: ' new site ', media_type: 'IMAGE', timestamp: '2026-11-15T00:00:00+0000', link_attachment_url: 'https://www.linear.app' },
     { id: '2', permalink: 'https://www.threads.com/@b/post/2', is_reply: true },
@@ -83,6 +87,10 @@ test('the token is stored outside the repo, private, and refreshed after six day
   assert.equal(await loadToken({ file, env: {}, fetchImpl, now }), 'THAAnew-token-1234567890');
   assert.match(calls[0], /refresh_access_token\?grant_type=th_refresh_token/);
   assert.equal(JSON.parse(await fs.readFile(file, 'utf8')).accessToken, 'THAAnew-token-1234567890');
+  const empty = async () => new Response('not json');
+  await assert.rejects(loadToken({ file, env: {}, fetchImpl: empty, now: new Date('2026-12-30T00:00:00Z') }), /saved token was kept/);
+  assert.equal(JSON.parse(await fs.readFile(file, 'utf8')).accessToken, 'THAAnew-token-1234567890');
+  assert.deepEqual((await fs.readdir(path.dirname(file))).filter(name => name.endsWith('.tmp')), []);
   assert.equal(await loadToken({ file, env: { THREADS_ACCESS_TOKEN: 'from-env' } }), 'from-env');
 });
 

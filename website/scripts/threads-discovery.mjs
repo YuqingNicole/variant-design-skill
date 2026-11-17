@@ -82,12 +82,14 @@ export function planSearches(config, { groups, days, now = new Date() } = {}) {
 
 const normalize = url => { try { const u = new URL(url); return `${u.hostname.replace(/^www\./, '')}${u.pathname.replace(/\/+$/, '')}`.toLowerCase(); } catch { return null; } };
 
-// Site URL → library entry id, so a candidate that points at a site the library already has says so.
+// Site URL → library entry id, so a candidate that points at a site the library already has says so. The items array
+// in inspiration-data.ts is plain JSON, so it is parsed as such: entries nest their own ids (post.id), so a regex over
+// the text would pair a nested id with the next entry's URL. Without that array there is simply nothing to mark.
 export function libraryIndex(source) {
-  const index = new Map();
-  for (const [, id, url] of source.matchAll(/"id": "([^"]+)",[\s\S]*?"url": "([^"]+)"/g)) {
-    const key = normalize(url);
-    if (key && !index.has(key)) index.set(key, id);
+  const index = new Map(), array = /export const inspirationItems = (\[[\s\S]*?\n\])/.exec(source)?.[1];
+  for (const item of array ? JSON.parse(array) : []) {
+    const key = typeof item?.url === 'string' && normalize(item.url);
+    if (key && typeof item.id === 'string' && !index.has(key)) index.set(key, item.id);
   }
   return index;
 }
@@ -129,9 +131,12 @@ async function readJson(file, fallback) {
 
 async function writeJson(file, value, mode) {
   await fs.mkdir(path.dirname(file), { recursive: true });
-  const temporary = `${file}.tmp`;
-  await fs.writeFile(temporary, `${JSON.stringify(value, null, 2)}\n`, mode ? { mode } : undefined);
-  await fs.rename(temporary, file);
+  // A temporary name per run, created exclusively, so two overlapping runs never write into the same file.
+  const temporary = `${file}.${process.pid}.${Date.now()}.tmp`;
+  try {
+    await fs.writeFile(temporary, `${JSON.stringify(value, null, 2)}\n`, { flag: 'wx', ...(mode ? { mode } : {}) });
+    await fs.rename(temporary, file);
+  } catch (error) { await fs.rm(temporary, { force: true }); throw error; }
 }
 
 async function call(fetchImpl, endpoint, params) {
@@ -151,6 +156,8 @@ export async function loadToken({ file = tokenPath, env = process.env, fetchImpl
   const age = now - new Date(saved.refreshedAt ?? 0);
   if (age > 6 * 864e5) {
     const body = await call(fetchImpl, 'refresh_access_token', { grant_type: 'th_refresh_token', access_token: saved.accessToken });
+    // Never replace a working token with nothing: an odd response keeps the saved one, and the next run tries again.
+    if (typeof body.access_token !== 'string' || !body.access_token.trim()) throw new Error('Threads API refresh_access_token returned no token; the saved token was kept.');
     await writeJson(file, { accessToken: body.access_token, refreshedAt: now.toISOString(), expiresIn: body.expires_in }, 0o600);
     return body.access_token;
   }
