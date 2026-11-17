@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
+import http from 'node:http';
 import { probe, grade, defaults } from '../scripts/style-budget.mjs';
 import { measure, pages as labPages, fakeWidgets } from './perf-lab.mjs';
 import { probeFocus } from './focus-probe.mjs';
@@ -72,7 +73,8 @@ test('integrated B keeps a mobile action, navigation, brief on language change, 
   expect(await page.locator('.hero-actions a').first().evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThan(844);
   await expect(page.locator('#generator button[type="submit"]')).toBeDisabled();
 
-  await page.locator('.site-nav a[href="/skills"]').click();
+  // At 390px the site links are the bottom tab bar.
+  await page.locator('.site-tabbar a[href="/skills"]').click();
   await expect(page).toHaveURL(/\/skills$/);
   await page.goto('/workbench');
   await page.locator('#design-prompt').fill('A landing page for the real Variant Design project');
@@ -81,7 +83,7 @@ test('integrated B keeps a mobile action, navigation, brief on language change, 
   await expect(page.locator('h1')).toContainText('Three directions.');
   await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
   await page.goto('/workbench');
-  await page.locator('.site-nav-links a').last().focus();
+  await page.locator('.site-wordmark').focus();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Switch to Chinese' })).toBeFocused();
   await expect(page.getByRole('button', { name: 'Switch to Chinese' })).toHaveCSS('outline-style', 'solid');
@@ -973,8 +975,10 @@ test('every navigation link stays visible on narrow screens in both languages', 
   for (const width of [320, 390, 600]) for (const route of ['/', '/docs', '/en', '/en/cases', '/pricing']) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto(route);
-    await expect(page.locator('.site-nav-links a').last()).toBeVisible();
-    const clipped = await page.locator('.site-nav-links').evaluate(nav => {
+    // Phones (651px and below) use the bottom tab bar; wider screens use the header links.
+    const bar = width <= 650 ? '.site-tabbar' : '.site-nav-links';
+    await expect(page.locator(`${bar} a`).last()).toBeVisible();
+    const clipped = await page.locator(bar).evaluate(nav => {
       const box = nav.getBoundingClientRect(), vw = document.documentElement.clientWidth;
       return [...nav.querySelectorAll('a')].filter(a => getComputedStyle(a).display !== 'none').filter(a => { const r = a.getBoundingClientRect(); return r.right > Math.min(box.right, vw) + 0.5 || r.left < Math.max(box.left, 0) - 0.5; }).map(a => a.textContent);
     });
@@ -1316,5 +1320,34 @@ test('every public page shows the same ink focus ring, at 3:1 or better against 
   expect(rows.length,`${path} focusable elements`).toBeGreaterThan(5);
   for(const r of rows){expect(r.ring,`${path} ${r.tag} "${r.label}" has no focus ring`).not.toBeNull();expect(r.ring,`${path} ${r.tag} "${r.label}"`).toEqual([29,31,35]);expect(r.width,`${path} ${r.label}`).toBe('2px');expect(r.ratio,`${path} ${r.label} contrast`).toBeGreaterThanOrEqual(3)}
   await context.close();
+ }
+});
+
+test('the service worker serves a stored page and then the offline page once the server is gone, and leaves /api/ and query addresses alone', async ({ browser, baseURL }) => {
+  // A small proxy stands in for the site, so it can really go away: context.setOffline does not reach a worker's own fetches.
+  const proxy = http.createServer((req, res) => { http.get(baseURL + req.url, { headers: { accept: req.headers.accept || '*/*' } }, up => { res.writeHead(up.statusCode, up.headers); up.pipe(res); }).on('error', () => { res.writeHead(502); res.end(); }); });
+  await new Promise(r => proxy.listen(0, '127.0.0.1', r));
+  const origin = `http://127.0.0.1:${proxy.address().port}`, context = await browser.newContext({ serviceWorkers: 'allow' }), page = await context.newPage();
+  try {
+    await page.goto(origin + '/docs'); await hydrated(page);
+    await expect(async () => { expect(await page.evaluate(async () => !!(await navigator.serviceWorker.getRegistration('/'))?.active)).toBe(true); }).toPass();
+    await page.reload(); await hydrated(page);
+    await page.evaluate(() => fetch('/docs?utm=1').then(r => r.text())); await page.evaluate(() => fetch('/api/status').catch(() => {}));
+    const stored = await page.evaluate(async () => ({ page: !!(await caches.match('/docs')), query: !!(await caches.match('/docs?utm=1')), api: !!(await caches.match('/api/status')), offline: !!(await caches.match('/offline.html')) }));
+    expect(stored).toEqual({ page: true, query: false, api: false, offline: true });
+    proxy.closeAllConnections(); await new Promise(r => proxy.close(r));
+    await page.goto(origin + '/docs'); await expect(page.locator('h1')).toHaveText('文档');
+    await page.goto(origin + '/pricing'); await expect(page.locator('h1')).toContainText('现在连不上网络');
+  } finally { proxy.closeAllConnections(); proxy.close(); await context.close(); }
+});
+
+test('every indexable page names our share image', () => {
+ const dist=new URL('../website/dist/',import.meta.url);
+ for(const p of ['index.html','en/index.html','docs/index.html','browse/motion/index.html']){
+  const html=fs.readFileSync(new URL(p,dist),'utf8');
+  expect(html,p).toMatch(/<meta property="og:image" content="https:\/\/[^"]+\/share-card\.png">/);
+  expect(html,p).toMatch(/<meta name="twitter:image" content="https:\/\/[^"]+\/share-card\.png">/);
+  expect(html,p).toContain('<meta name="twitter:card" content="summary_large_image">');
+  expect(html,p).toContain('og:image:width" content="1200"');
  }
 });

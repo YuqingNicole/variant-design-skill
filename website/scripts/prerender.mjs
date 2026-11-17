@@ -142,14 +142,18 @@ function guideData(g, site, lang = 'zh') {
   return { '@type': 'Article', headline: g.title[lang], description: g.answer[lang], datePublished: g.publishedAt, inLanguage: lang === 'en' ? 'en' : 'zh-CN', url: site + pathIn(guideRoute(g), lang), author: { '@type': 'Person', name: 'Yuqing Nicole' }, about: { '@id': `${site}/#skill` } };
 }
 
-function page(template, { site, route, title, description, image, type = 'website', body = '', data, lang = 'zh', translated = false }) {
-  const url = site + pathIn(route, lang);
+// Every page without a picture of its own shares this one: our mark and words, never someone else's screenshot (the repository stores none).
+export const shareCard = { src: '/share-card.png', width: 1200, height: 630 };
+// The card's own text is English, so the alt text is too in both languages.
+const shareAlt = { zh: 'Variant Design: the best design inspiration. Every reference comes with its source and our notes.', en: 'Variant Design: the best design inspiration. Every reference comes with its source and our notes.' };
+function page(template, { site, route, title, description, image: own, type = 'website', body = '', data, lang = 'zh', translated = false }) {
+  const url = site + pathIn(route, lang), image = own ?? { ...shareCard, alt: shareAlt[lang === 'en' ? 'en' : 'zh'] };
   // Every version names all versions including itself; x-default is the unprefixed address (RFC-005 §3.4).
   const versions = translated ? [['zh-CN', 'zh'], ['en', 'en'], ['x-default', 'zh']].map(([tag, l]) => `<link rel="alternate" hreflang="${tag}" href="${escape(site + pathIn(route, l))}">`) : [];
   const meta = [`<link rel="canonical" href="${escape(url)}">`, ...versions, `<meta property="og:locale" content="${lang === 'en' ? 'en_US' : 'zh_CN'}">`, `<meta property="og:type" content="${type}">`, `<meta property="og:site_name" content="Variant Design">`,
     `<meta property="og:title" content="${escape(title)}">`, `<meta property="og:description" content="${escape(description)}">`, `<meta property="og:url" content="${escape(url)}">`,
-    ...(image ? [`<meta property="og:image" content="${escape(site + image.src)}">`, `<meta property="og:image:width" content="${image.width}">`, `<meta property="og:image:height" content="${image.height}">`, `<meta property="og:image:alt" content="${escape(image.alt)}">`] : []),
-    `<meta name="twitter:card" content="${image ? 'summary_large_image' : 'summary'}">`,
+    `<meta property="og:image" content="${escape(site + image.src)}">`, `<meta property="og:image:width" content="${image.width}">`, `<meta property="og:image:height" content="${image.height}">`, `<meta property="og:image:alt" content="${escape(image.alt)}">`,
+    `<meta name="twitter:card" content="summary_large_image">`, `<meta name="twitter:image" content="${escape(site + image.src)}">`,
     `<link rel="alternate" type="application/rss+xml" title="Variant Design 灵感与方向库" href="${site}/feed.xml">`,
     ...(data ? [`<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', ...data }).replace(/</g, '\\u003c')}</script>`] : [])].join('\n    ');
   const html = template

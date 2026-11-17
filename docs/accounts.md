@@ -64,7 +64,7 @@
 - **防刷**：表单有一个访客看不到的字段，脚本填了这个字段就不发送；数据库限制全站每小时最多 20 条，并检查长度和邮箱格式。
 - **限流是宽松的**：计数和写入之间没有加锁，同时到达的请求可能让一小时内略超过 20 条。它只用来挡住刷量，不需要精确；要严格的话，在函数里先取 `pg_advisory_xact_lock` 再计数（需要新迁移）。
 - **页面加载完才显示表单**：预渲染的 HTML 里只有 GitHub 链接，避免脚本加载前提交时把邮箱和留言拼进网址。
-- **没有通知**：来了新咨询不会提醒，要自己去看。以后可以用 Supabase 的 Database Webhooks 转发到邮件或 Slack。
+- **邮件通知**：迁移 `20261116020000_sponsor_inquiry_email.sql` 加了一个触发器：每条新咨询写入后，数据库用 pg_net 调 Resend 的接口发一封通知邮件，回复这封邮件就能直接回复对方（`reply_to` 是对方邮箱）。发信是异步的，Resend 出错不影响咨询保存。密钥和收件地址存在 Supabase Vault 里，不进仓库：`resend_api_key`（必填）、`sponsor_notify_to`（必填）、`sponsor_notify_from`（可不填，默认 Resend 的测试发件人 `onboarding@resend.dev`，它只能发到 Resend 注册时的邮箱；验证了自己的域名后可以换成 `Variant Design <hello@你的域名>`）。缺必填项时只保存，不发信。发送记录在 `net._http_response` 表里（保留约 6 小时）。2026-11-16 在回滚事务里试跑过：没配密钥时不排队，配了以后排队一条请求，内容和引号、换行转义正确。
 - **开关**：没配 `VITE_SUPABASE_URL` 的构建（本地、CI）不显示表单，仍然只链接 GitHub。
 
 ## 上线记录
@@ -73,6 +73,7 @@
 - 2026-11-16：维护者设好生产回跳地址、发布了 Google 同意屏幕；变量加到 Production 并重新部署，维护者在生产站用 Google 登录成功。
 - 2026-11-16：装了 Supabase CLI 并关联项目（维护者在自己的终端里 `supabase login`）。第一个迁移当初是在 SQL Editor 里手动执行的，用 `supabase migration repair --status applied 20261115000000 --remote` 补登记；之后的迁移用 `supabase db push --remote` 推送。CLI 的命令默认连本地，连线上要加 `--remote`。
 - 2026-11-16：赞助咨询迁移先在一个必然回滚的事务里试跑（anon 读不到表、直接插入被拒、邮箱和网址格式错误被拒、第 21 条被限流），然后正式推送；再用公开 key 走一遍网站实际调用的接口，写入成功（204），anon 读表返回空，测试记录随后删除。
+- 2026-11-16：邮件通知迁移推到线上，Vault 里存了 Resend 密钥和收件地址；从公开接口提交一条测试咨询，Resend 返回 200 接受发送，测试记录随后删除。
 - 只读查询确认收藏写进了数据库：有 1 个用户、`reference_packs` 有 1 行。
 - 隐私说明在 `/privacy`（`website/src/PrivacyPage.tsx`），登录框链接到它。存储键、第三方请求或账号字段变了，要同时改这一页。
 

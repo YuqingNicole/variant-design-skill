@@ -33,6 +33,21 @@ test('the slash key focuses the search, except while typing',async({page})=>{
  await page.keyboard.type('a/b');await expect(page.locator('.insp-search input')).toHaveValue('a/b');
 });
 
+test('phones get a tab bar fixed to the bottom that marks the current page, and the vertical feed loads the next page by scrolling; wide screens and no-JavaScript visitors keep the header links',async({page,browser,baseURL})=>{
+ await page.setViewportSize({width:390,height:844});await page.goto('/browse/motion');
+ const bar=page.locator('.site-tabbar');await expect(bar.locator('a')).toHaveCount(5);await expect(bar.locator('a[aria-current=page]')).toHaveText('动效');
+ await page.evaluate(()=>scrollTo(0,document.body.scrollHeight/2));
+ const box=await bar.boundingBox();expect(Math.round(box.y+box.height),'fixed to the viewport bottom').toBe(844);
+ await expect(page.locator('.site-nav-links')).toBeHidden();
+ await page.goto('/');await page.evaluate(()=>document.fonts.ready);
+ const count=()=>page.locator('.insp-feed>.insp-card').count();
+ // The prerendered page lists every card; hydration trims it to the first page of 30.
+ await expect.poll(count).toBeLessThanOrEqual(60);const before=await count();
+ await expect(async()=>{await page.evaluate(()=>scrollTo(0,document.body.scrollHeight));expect(await count()).toBeGreaterThan(before)}).toPass();
+ await page.setViewportSize({width:1440,height:900});await expect(bar).toBeHidden();await expect(page.locator('.site-nav-links')).toBeVisible();
+ const bare=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844},baseURL}),q=await bare.newPage();await q.goto('/docs');await expect(q.locator('.site-nav-links')).toBeVisible();await bare.close();
+});
+
 test('details share an element transition and restore focus, history and the scrolled feed',async({page})=>{
  await page.addInitScript(()=>{window.transitions=[];const start=document.startViewTransition?.bind(document);if(start)document.startViewTransition=update=>{const r={ready:false,error:null};window.transitions.push(r);const vt=start(update);vt.ready.then(()=>r.ready=true,e=>r.error=String(e));return vt};});
  await page.goto('/browse/web?sort=curated');
@@ -68,7 +83,12 @@ test('both languages meet the visual budget, show a wall three cards high on the
   await page.setViewportSize({width,height:900});await page.goto(language==='en'?'/en':'/');await expect(page.locator('nav[aria-label="全部参考"]')).toHaveCount(0);await expect(page.locator('.insp-card').first()).toBeVisible();await page.evaluate(()=>document.fonts.ready);
   const sample=await page.evaluate(probe);expect(grade(sample).over,`${language} ${width}`).toEqual([]);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  const meta=page.locator('.insp-card-meta').first();await expect(meta).toHaveCSS('opacity','1');if(width<=390){await expect(meta.locator('.insp-vcard-avatar')).toBeVisible();expect((await wall()).rows,`${language} ${width} rows`).toBe(1);}else{
+  const meta=page.locator('.insp-card-meta').first();await expect(meta).toHaveCSS('opacity','1');if(width<=390){await expect(meta.locator('.insp-vcard-avatar')).toBeVisible();
+   // Phones: a vertical two-column feed. The first two cards share a row and split the width; the third starts a new row below.
+   const tops=await page.locator('.insp-feed>.insp-card').evaluateAll(cs=>cs.slice(0,4).map(c=>{const r=c.getBoundingClientRect();return {top:Math.round(r.top),left:Math.round(r.left),width:Math.round(r.width)}}));
+   expect(tops[0].top,`${language} ${width} first row`).toBe(tops[1].top);expect(tops[2].top,`${language} ${width} second row`).toBeGreaterThan(tops[0].top);
+   expect(Math.abs(tops[0].width-tops[1].width),`${language} ${width} equal columns`).toBeLessThanOrEqual(1);expect(tops[0].width*2,`${language} ${width} fills the width`).toBeGreaterThan(width*.8);
+  }else{
    // Desktop: three rows at the 220px minimum card width; on a 900px screen the first two rows (five columns) are whole and the third starts above the fold.
    const w=await wall();expect(w,`${language} ${width}`).toMatchObject({rows:3,width:220});expect(w.whole,`${language} ${width} whole cards`).toBeGreaterThanOrEqual(10);
   }

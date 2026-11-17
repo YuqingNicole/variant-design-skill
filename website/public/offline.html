@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>网络不可用 · Offline — Variant Design</title>
+<style>
+html{background:#f7f7f2;color:#1d2a17;font:16px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif}
+body{margin:0;min-height:100svh;display:grid;place-items:center;padding:max(24px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left))}
+main{max-width:420px}
+img{width:56px;height:56px}
+h1{font-size:26px;line-height:1.3;margin:20px 0 8px;font-weight:500}
+p{margin:0 0 12px;color:#4a5644}
+p.en{color:#6b7566;font-size:14px}
+button{margin-top:12px;min-height:44px;padding:12px 20px;border:0;border-radius:6px;background:#2e4325;color:#fff;font:inherit;font-size:14px;cursor:pointer}
+button:focus-visible{outline:2px solid #2e4325;outline-offset:3px}
+</style>
+</head>
+<body>
+<main>
+<img src="/icon-192.png" alt="" width="56" height="56">
+<h1>现在连不上网络</h1>
+<p>这个页面还没有被存到你的设备上。恢复网络后重新加载；之前打开过的页面仍可能能看。</p>
+<p class="en">You are offline, and this page was not saved on your device. Reload once you are back online; pages you opened before may still open.</p>
+<button type="button" onclick="location.reload()">重新加载 · Reload</button>
+</main>
+</body>
+</html>

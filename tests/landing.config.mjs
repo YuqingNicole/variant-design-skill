@@ -4,6 +4,6 @@ export default defineConfig({
   testMatch: ['landing.spec.mjs','inspiration-browsing.spec.mjs','submission.spec.mjs','accounts.spec.mjs'],
   workers: 1,
   reporter: 'list',
-  use: { headless: true, baseURL: 'http://127.0.0.1:4197', channel: process.env.PLAYWRIGHT_CHANNEL || undefined },
+  use: { headless: true, serviceWorkers: 'block', baseURL: 'http://127.0.0.1:4197', channel: process.env.PLAYWRIGHT_CHANNEL || undefined },
   webServer: { command: 'node ../website/server.mjs', url: 'http://127.0.0.1:4197/api/status', env: { PORT: '4197' }, reuseExistingServer: false },
 });

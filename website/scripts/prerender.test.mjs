@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
-import { agentInstall, aiTrainingCrawlers, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
+import { agentInstall, aiTrainingCrawlers, shareCard, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
 const { detailTitle, sectionOf, sections } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
@@ -236,4 +236,10 @@ test('the agent install page uses the guide\'s commands, asks before writing and
   assert.ok(llms([], docs, 'https://example.test').includes('https://example.test/install/agent.md'));
   assert.ok(text.includes('which of the checks above you actually ran') && text.includes('https://example.test/llms-full.txt'));
   assert.ok(!text.includes('`sudo '), 'never tells the agent to run sudo');
+});
+
+test('the share card is the size the pages declare', async () => {
+  const fs = await import('node:fs');
+  const png = fs.readFileSync(new URL('./share-card.png', new URL('../public/', import.meta.url)));
+  assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [shareCard.width, shareCard.height]);
 });
