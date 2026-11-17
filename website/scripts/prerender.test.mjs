@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
-import { aiTrainingCrawlers, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
+import { aiTrainingCrawlers, shareCard, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
 const { detailTitle, sectionOf, sections } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
@@ -225,4 +225,17 @@ test('production can leave the A/B/C cases out while keeping every other page', 
   const docs = await importTs(new URL('../src/docs-content.ts', import.meta.url).pathname), text = llms([], docs, 'https://example.test');
   assert.ok(!text.includes('## Cases') && !text.includes('/d/'), 'llms.txt has no case section without entries');
   assert.ok(text.includes('## Library'));
+});
+
+test('every indexable page names a share image: its own cover for a case, our own card for everything else', async () => {
+  const fs = await import('node:fs'), dist = new URL('../dist/', import.meta.url);
+  const png = fs.readFileSync(new URL('./share-card.png', new URL('../public/', import.meta.url)));
+  assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [shareCard.width, shareCard.height]);
+  const read = p => fs.readFileSync(new URL(p, dist), 'utf8');
+  for (const p of ['index.html', 'en/index.html', 'docs/index.html', 'browse/motion/index.html']) {
+    const html = read(p);
+    assert.match(html, /<meta property="og:image" content="https:\/\/[^"]+\/share-card\.png">/, p);
+    assert.match(html, /<meta name="twitter:image" content="https:\/\/[^"]+\/share-card\.png">/, p);
+    assert.ok(html.includes('<meta name="twitter:card" content="summary_large_image">') && html.includes('og:image:width" content="1200"') && html.includes('og:image:alt'), p);
+  }
 });
