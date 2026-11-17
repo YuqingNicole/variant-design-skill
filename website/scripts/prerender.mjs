@@ -144,7 +144,8 @@ function guideData(g, site, lang = 'zh') {
 
 // Every page without a picture of its own shares this one: our mark and words, never someone else's screenshot (the repository stores none).
 export const shareCard = { src: '/share-card.png', width: 1200, height: 630 };
-const shareAlt = { zh: 'Variant Design：互联网上最好的设计灵感，每条都附出处和我们的笔记', en: 'Variant Design: the best design inspiration, each with its source and our notes' };
+// The card's own text is English, so the alt text is too in both languages.
+const shareAlt = { zh: 'Variant Design: the best design inspiration. Every reference comes with its source and our notes.', en: 'Variant Design: the best design inspiration. Every reference comes with its source and our notes.' };
 function page(template, { site, route, title, description, image: own, type = 'website', body = '', data, lang = 'zh', translated = false }) {
   const url = site + pathIn(route, lang), image = own ?? { ...shareCard, alt: shareAlt[lang === 'en' ? 'en' : 'zh'] };
   // Every version names all versions including itself; x-default is the unprefixed address (RFC-005 §3.4).
