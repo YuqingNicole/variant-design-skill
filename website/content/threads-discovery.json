@@ -1,0 +1,24 @@
+{
+  "groups": [
+    {
+      "id": "weekly",
+      "weekly": true,
+      "days": 7,
+      "queries": [
+        { "q": "web design inspiration" },
+        { "q": "landing page design" },
+        { "q": "portfolio website" },
+        { "q": "UI animation", "mediaType": "VIDEO" },
+        { "q": "webdesign", "mode": "TAG" }
+      ]
+    },
+    {
+      "id": "zh",
+      "days": 30,
+      "queries": [
+        { "q": "网页设计" },
+        { "q": "设计灵感" }
+      ]
+    }
+  ]
+}
