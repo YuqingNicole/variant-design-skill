@@ -1340,3 +1340,14 @@ test('the service worker serves a stored page and then the offline page once the
     await page.goto(origin + '/pricing'); await expect(page.locator('h1')).toContainText('现在连不上网络');
   } finally { proxy.closeAllConnections(); proxy.close(); await context.close(); }
 });
+
+test('every indexable page names our share image', () => {
+ const dist=new URL('../website/dist/',import.meta.url);
+ for(const p of ['index.html','en/index.html','docs/index.html','browse/motion/index.html']){
+  const html=fs.readFileSync(new URL(p,dist),'utf8');
+  expect(html,p).toMatch(/<meta property="og:image" content="https:\/\/[^"]+\/share-card\.png">/);
+  expect(html,p).toMatch(/<meta name="twitter:image" content="https:\/\/[^"]+\/share-card\.png">/);
+  expect(html,p).toContain('<meta name="twitter:card" content="summary_large_image">');
+  expect(html,p).toContain('og:image:width" content="1200"');
+ }
+});

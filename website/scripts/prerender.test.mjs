@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
-import { aiTrainingCrawlers, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
+import { aiTrainingCrawlers, shareCard, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
 const { detailTitle, sectionOf, sections } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
@@ -225,4 +225,10 @@ test('production can leave the A/B/C cases out while keeping every other page', 
   const docs = await importTs(new URL('../src/docs-content.ts', import.meta.url).pathname), text = llms([], docs, 'https://example.test');
   assert.ok(!text.includes('## Cases') && !text.includes('/d/'), 'llms.txt has no case section without entries');
   assert.ok(text.includes('## Library'));
+});
+
+test('the share card is the size the pages declare', async () => {
+  const fs = await import('node:fs');
+  const png = fs.readFileSync(new URL('./share-card.png', new URL('../public/', import.meta.url)));
+  assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [shareCard.width, shareCard.height]);
 });
