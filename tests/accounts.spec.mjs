@@ -48,29 +48,29 @@ const cardId=async page=>(await firstCard(page).locator('.insp-card-open').getAt
 const store=(page,key)=>page.evaluate(k=>localStorage.getItem(k),key);
 
 test('signed out, saving a reference asks for sign-in and nothing is saved', async ({page})=>{
- await page.goto(base+'/');const header=page.locator('.site-nav .site-account');await expect(header).toHaveText('登录');
+ await page.goto(base+'/zh');const header=page.locator('.site-nav .site-account');await expect(header).toHaveText('登录');
  await firstCard(page).locator('.insp-card-save').click();
  const dialog=page.getByRole('dialog',{name:'登录 Variant Design'});await expect(dialog).toBeVisible();
  await expect(dialog).toContainText('登录后就能收藏这条参考');await expect(dialog.getByRole('button',{name:'使用 Google 登录'})).toBeVisible();
- await expect(dialog).toContainText('只保存你的邮箱');await expect(dialog.getByRole('link',{name:'隐私说明'})).toHaveAttribute('href','/privacy');
+ await expect(dialog).toContainText('只保存你的邮箱');await expect(dialog.getByRole('link',{name:'隐私说明'})).toHaveAttribute('href','/zh/privacy');
  await page.keyboard.press('Escape');await expect(dialog).toBeHidden();
  expect(await store(page,'variant-account-pending'),'a dismissed dialog does not resume the save later').toBeNull();
  await expect(page.locator('.inspiration-pack')).toHaveCount(0);expect(await store(page,'variant-inspiration-pack-v1')).toBeNull();
 });
 
 test('signing in with Google saves the reference that asked for it and cleans the address', async ({page})=>{
- await page.goto(base+'/');const id=await cardId(page);
+ await page.goto(base+'/zh');const id=await cardId(page);
  await firstCard(page).locator('.insp-card-save').click();
  await page.getByRole('button',{name:'使用 Google 登录'}).click();
  await expect(page.locator('.site-nav .site-account')).toHaveAttribute('aria-label','账号: reader@example.test');
- await expect(page).toHaveURL(base+'/');expect(await store(page,'fake-last-provider')).toBe('google');
+ await expect(page).toHaveURL(base+'/zh');expect(await store(page,'fake-last-provider')).toBe('google');
  await expect(firstCard(page).locator('.insp-card-save')).toHaveAttribute('aria-pressed','true');
  await expect(page.locator('.inspiration-pack')).toContainText('保存在你的账号里');
  expect(JSON.parse(await store(page,'fake-db'))['user-1']).toEqual({[id]:{use:'',avoid:''}});
 });
 
 test('the first sign-in imports the pack this browser saved before, notes included, then clears it', async ({page})=>{
- await page.goto(base+'/');const id=await cardId(page);
+ await page.goto(base+'/zh');const id=await cardId(page);
  await page.evaluate(id=>localStorage.setItem('variant-inspiration-pack-v1',JSON.stringify({[id]:{use:'Study the rhythm',avoid:''}})),id);
  await page.reload();await expect(page.locator('.inspiration-pack')).toHaveCount(0);
  await page.locator('.site-nav .site-account').click();await page.getByRole('button',{name:'使用 Google 登录'}).click();
@@ -80,7 +80,7 @@ test('the first sign-in imports the pack this browser saved before, notes includ
 });
 
 test('signed in, changes are written to the account and a failed write says so', async ({page})=>{
- await page.goto(base+'/');await page.evaluate(()=>localStorage.setItem('sb-fake-auth-token','1'));await page.reload();
+ await page.goto(base+'/zh');await page.evaluate(()=>localStorage.setItem('sb-fake-auth-token','1'));await page.reload();
  const id=await cardId(page);await firstCard(page).locator('.insp-card-save').click();
  await expect.poll(async()=>JSON.parse(await store(page,'fake-db')||'{}')['user-1']).toEqual({[id]:{use:'',avoid:''}});
  await page.evaluate(()=>localStorage.setItem('fake-fail-writes','99'));
@@ -89,10 +89,10 @@ test('signed in, changes are written to the account and a failed write says so',
 });
 
 test('the email link is sent to the address given, and briefs ask for sign-in too', async ({page})=>{
- await page.goto(base+'/');await page.locator('.site-nav .site-account').click();
+ await page.goto(base+'/zh');await page.locator('.site-nav .site-account').click();
  const dialog=page.getByRole('dialog');await dialog.getByLabel('邮箱').fill('reader@example.test');await dialog.getByRole('button',{name:'发送登录链接'}).click();
  await expect(dialog.getByRole('status')).toContainText('登录链接已发到 reader@example.test');
- expect(JSON.parse(await store(page,'fake-last-otp'))).toEqual({email:'reader@example.test',redirect:base+'/'});
+ expect(JSON.parse(await store(page,'fake-last-otp'))).toEqual({email:'reader@example.test',redirect:base+'/zh'});
  await dialog.getByRole('button',{name:'关闭'}).click();
  await firstCard(page).locator('.insp-card-open').click();
  await page.getByRole('button',{name:'生成参考指令'}).click();
@@ -100,7 +100,7 @@ test('the email link is sent to the address given, and briefs ask for sign-in to
 });
 
 test('the account menu signs out and deletes the account', async ({page})=>{
- await page.goto(base+'/');await page.evaluate(()=>localStorage.setItem('sb-fake-auth-token','1'));await page.reload();
+ await page.goto(base+'/zh');await page.evaluate(()=>localStorage.setItem('sb-fake-auth-token','1'));await page.reload();
  const menu=page.locator('.site-nav .site-account');await menu.click();
  await expect(page.locator('.site-account-panel')).toContainText('reader@example.test');
  await page.getByRole('button',{name:'退出登录'}).click();await expect(menu).toHaveText('登录');
@@ -112,7 +112,7 @@ test('the account menu signs out and deletes the account', async ({page})=>{
 });
 
 test('a save made while the account pack is still loading is kept and written', async ({page})=>{
- await page.goto(base+'/');const id=await cardId(page);
+ await page.goto(base+'/zh');const id=await cardId(page);
  await page.evaluate(id=>{localStorage.setItem('fake-db',JSON.stringify({'user-1':{}}));localStorage.setItem('fake-read-delay','1500');localStorage.setItem('sb-fake-auth-token','1')},id);
  await page.reload();await expect(page.locator('.site-nav .site-account')).toHaveAttribute('aria-label',/reader@example\.test/);
  await firstCard(page).locator('.insp-card-save').click();
@@ -122,7 +122,7 @@ test('a save made while the account pack is still loading is kept and written', 
 });
 
 test('a slow earlier write never overwrites a newer note', async ({page})=>{
- await page.goto(base+'/');await page.evaluate(()=>localStorage.setItem('sb-fake-auth-token','1'));await page.reload();
+ await page.goto(base+'/zh');await page.evaluate(()=>localStorage.setItem('sb-fake-auth-token','1'));await page.reload();
  const id=await cardId(page);await page.evaluate(()=>localStorage.setItem('fake-write-delays',JSON.stringify([1200,0])));
  await firstCard(page).locator('.insp-card-save').click();
  const note=page.locator('.inspiration-pack textarea').first();await page.waitForTimeout(600);await note.fill('Newest note');
@@ -131,7 +131,7 @@ test('a slow earlier write never overwrites a newer note', async ({page})=>{
 });
 
 test('an import whose first write failed is cleared after the next write succeeds, so a removed reference stays removed', async ({page})=>{
- await page.goto(base+'/');const id=await cardId(page);
+ await page.goto(base+'/zh');const id=await cardId(page);
  await page.evaluate(id=>{localStorage.setItem('variant-inspiration-pack-v1',JSON.stringify({[id]:{use:'',avoid:''}}));localStorage.setItem('fake-fail-writes','1');localStorage.setItem('sb-fake-auth-token','1')},id);
  await page.reload();await expect(page.getByRole('alert').filter({hasText:'没能把收藏保存到账号'})).toBeVisible();
  expect(await store(page,'variant-inspiration-pack-v1'),'a failed import keeps the browser copy').not.toBeNull();
@@ -147,14 +147,14 @@ const rpc=/fake\.supabase\.test\/rest\/v1\/rpc\/submit_sponsor_inquiry$/;
 const fillInquiry=async page=>{await page.getByLabel('品牌').fill('Acme');await page.getByLabel('回复邮箱').fill('team@acme.test');await page.getByLabel('想介绍的产品网址').fill('https://acme.test');await page.getByLabel('想怎么合作、希望的时间').fill('下个月，案例页');};
 test('the sponsor page sends an inquiry from its own form, without an account', async ({page})=>{
  const bodies=[];await page.route(rpc,async r=>{bodies.push({body:r.request().postDataJSON(),key:r.request().headers().apikey});await r.fulfill({status:204,body:''})});
- await page.goto(base+'/sponsor');await page.locator('.home-action-primary[href="#inquiry"]').first().click();await expect(page.locator('#inquiry')).toBeInViewport();
+ await page.goto(base+'/zh/sponsor');await page.locator('.home-action-primary[href="#inquiry"]').first().click();await expect(page.locator('#inquiry')).toBeInViewport();
  await fillInquiry(page);await page.getByRole('button',{name:'发送咨询'}).click();
  await expect(page.getByRole('status')).toHaveText('已收到。我们会用你留的邮箱回复。');
  expect(bodies).toEqual([{key:'public-anon-key',body:{brand:'Acme',contact_name:'',email:'team@acme.test',product_url:'https://acme.test',message:'下个月，案例页',language:'zh'}}]);
 });
 test('a failed inquiry keeps the form and offers GitHub; the hidden field stops scripts without sending', async ({page})=>{
  let calls=0;await page.route(rpc,async r=>{calls++;await r.fulfill({status:400,body:'{"message":"too_many_inquiries"}'})});
- await page.goto(base+'/sponsor');await fillInquiry(page);await page.getByRole('button',{name:'发送咨询'}).click();
+ await page.goto(base+'/zh/sponsor');await fillInquiry(page);await page.getByRole('button',{name:'发送咨询'}).click();
  const alert=page.getByRole('alert');await expect(alert).toContainText('没有发送成功');await expect(alert.getByRole('link',{name:'在 GitHub 上咨询'})).toHaveAttribute('href',/template=sponsorship\.md/);
  await expect(page.getByLabel('品牌')).toHaveValue('Acme');expect(calls).toBe(1);
  await page.locator('input[name="website"]').fill('spam',{force:true});await page.getByRole('button',{name:'发送咨询'}).click();

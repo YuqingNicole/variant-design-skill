@@ -41,10 +41,10 @@ test('each section page has its own address, title, description and canonical, l
   const pages = renderSite(entries, template, 'https://example.test', refs, { sections: list, english });
   const titles = new Set(), descriptions = new Set();
   for (const s of list) {
-    const zh = pages.get(`/browse/${s.id}`), en = pages.get(`/en/browse/${s.id}`);
+    const zh = pages.get(`/zh/browse/${s.id}`), en = pages.get(`/browse/${s.id}`);
     assert.ok(zh && en, s.id);
-    assert.ok(zh.includes(`<link rel="canonical" href="https://example.test/browse/${s.id}">`));
-    assert.ok(en.includes(`<link rel="canonical" href="https://example.test/en/browse/${s.id}">`));
+    assert.ok(zh.includes(`<link rel="canonical" href="https://example.test/zh/browse/${s.id}">`));
+    assert.ok(en.includes(`<link rel="canonical" href="https://example.test/browse/${s.id}">`));
     assert.ok(zh.includes(`<title>${s.title.zh} — Variant Design</title>`));
     titles.add(s.title.zh); descriptions.add(zh.match(/name="description" content="([^"]*)"/)[1]);
   }
@@ -61,10 +61,10 @@ test('sitemap lastmod uses recorded dates only: newest of checked and added, new
   ];
   const dates = lastModified({ references: refs, entries: [{ slug: 'forma', publishedAt: '2026-10-27' }], guides: [{ slug: 'g', publishedAt: '2026-11-02' }, { slug: 'bad', publishedAt: 'soon' }], sectionOf });
   assert.deepEqual(dates, { '/inspiration/a': '2026-10-29', '/inspiration/b': '2026-11-05', '/inspiration/c': '2026-11-03', '/browse/web': '2026-11-03', '/browse/motion': '2026-11-05', '/': '2026-11-05', '/d/forma': '2026-10-27', '/guides/g': '2026-11-02' });
-  const map = sitemap(['/', '/en', '/inspiration/a', '/en/inspiration/a', '/cases', '/guides/bad'], 'https://example.test', dates);
+  const map = sitemap(['/', '/zh', '/inspiration/a', '/zh/inspiration/a', '/cases', '/guides/bad'], 'https://example.test', dates);
   assert.ok(map.includes('<loc>https://example.test/</loc><lastmod>2026-11-05</lastmod>'));
-  assert.ok(map.includes('<loc>https://example.test/en</loc><lastmod>2026-11-05</lastmod>'));
-  assert.ok(map.includes('<loc>https://example.test/en/inspiration/a</loc><lastmod>2026-10-29</lastmod>'));
+  assert.ok(map.includes('<loc>https://example.test/zh</loc><lastmod>2026-11-05</lastmod>'));
+  assert.ok(map.includes('<loc>https://example.test/zh/inspiration/a</loc><lastmod>2026-10-29</lastmod>'));
   assert.ok(map.includes('<loc>https://example.test/cases</loc><xhtml') || map.includes('<loc>https://example.test/cases</loc></url>'), 'undated page has no lastmod');
   assert.ok(!map.includes('/cases</loc><lastmod>') && !map.includes('/guides/bad</loc><lastmod>'));
   assert.equal(sitemap(['/cases'], 'https://example.test').includes('lastmod'), false);

@@ -10,7 +10,7 @@ test.beforeEach(async({page})=>{
 });
 
 test('the chronological stream includes every kind, pages and preserves shareable filters',async({page})=>{
- await page.setViewportSize({width:1280,height:360});await page.goto('/?utm_source=regression');
+ await page.setViewportSize({width:1280,height:360});await page.goto('/zh?utm_source=regression');
  const cards=page.locator('.insp-feed>.insp-card');await expect(cards).toHaveCount(30);
  const expected=[...items].sort((a,b)=>Date.parse(b.addedAt)-Date.parse(a.addedAt));
  expect(await cards.locator('.insp-card-open').evaluateAll(as=>as.map(a=>a.pathname.split('/').pop()))).toEqual(expected.slice(0,30).map(i=>i.id));
@@ -21,36 +21,36 @@ test('the chronological stream includes every kind, pages and preserves shareabl
  await page.getByRole('link',{name:'网站',exact:true}).click();await expect(page).toHaveURL(/\/browse\/web$/);
  // A tab is a full page load: act only after React has taken over the prerendered page, or its state replaces the filters.
  await page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
- await page.goto('/browse/web?topic=saas-home');await page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));await page.getByRole('searchbox').fill('Vercel');await page.getByRole('combobox',{name:'排序',exact:true}).selectOption('name');
+ await page.goto('/zh/browse/web?topic=saas-home');await page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));await page.getByRole('searchbox').fill('Vercel');await page.getByRole('combobox',{name:'排序',exact:true}).selectOption('name');
  await expect(cards).toHaveCount(1);await expect(cards.locator('.insp-card-open')).toHaveAttribute('href',/\/v0$/);
  await expect(page).toHaveURL(/sort=name/);const params=new URL(page.url()).searchParams;expect(Object.fromEntries(params)).toEqual({topic:'saas-home',q:'Vercel',sort:'name'});
  await page.reload();await expect(cards).toHaveCount(1);await expect(page.getByRole('searchbox')).toHaveValue('Vercel');await expect(page).toHaveURL(/topic=saas-home/);
 });
 
 test('the slash key focuses the search, except while typing',async({page})=>{
- await page.goto('/');await expect(page.locator('.insp-search input')).toBeVisible();
+ await page.goto('/zh');await expect(page.locator('.insp-search input')).toBeVisible();
  await expect(async()=>{await page.keyboard.press('/');await expect(page.locator('.insp-search input')).toBeFocused({timeout:500})}).toPass();
  await page.keyboard.type('a/b');await expect(page.locator('.insp-search input')).toHaveValue('a/b');
 });
 
 test('phones get a tab bar fixed to the bottom that marks the current page, and the vertical feed loads the next page by scrolling; wide screens and no-JavaScript visitors keep the header links',async({page,browser,baseURL})=>{
- await page.setViewportSize({width:390,height:844});await page.goto('/browse/motion');
+ await page.setViewportSize({width:390,height:844});await page.goto('/zh/browse/motion');
  const bar=page.locator('.site-tabbar');await expect(bar.locator('a')).toHaveCount(5);await expect(bar.locator('a[aria-current=page]')).toHaveText('动效');
  await page.evaluate(()=>scrollTo(0,document.body.scrollHeight/2));
  const box=await bar.boundingBox();expect(Math.round(box.y+box.height),'fixed to the viewport bottom').toBe(844);
  await expect(page.locator('.site-nav-links')).toBeHidden();
- await page.goto('/');await page.evaluate(()=>document.fonts.ready);
+ await page.goto('/zh');await page.evaluate(()=>document.fonts.ready);
  const count=()=>page.locator('.insp-feed>.insp-card').count();
  // The prerendered page lists every card; hydration trims it to the first page of 30.
  await expect.poll(count).toBeLessThanOrEqual(60);const before=await count();
  await expect(async()=>{await page.evaluate(()=>scrollTo(0,document.body.scrollHeight));expect(await count()).toBeGreaterThan(before)}).toPass();
  await page.setViewportSize({width:1440,height:900});await expect(bar).toBeHidden();await expect(page.locator('.site-nav-links')).toBeVisible();
- const bare=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844},baseURL}),q=await bare.newPage();await q.goto('/docs');await expect(q.locator('.site-nav-links')).toBeVisible();await bare.close();
+ const bare=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844},baseURL}),q=await bare.newPage();await q.goto('/zh/docs');await expect(q.locator('.site-nav-links')).toBeVisible();await bare.close();
 });
 
 test('details share an element transition and restore focus, history and the scrolled feed',async({page})=>{
  await page.addInitScript(()=>{window.transitions=[];const start=document.startViewTransition?.bind(document);if(start)document.startViewTransition=update=>{const r={ready:false,error:null};window.transitions.push(r);const vt=start(update);vt.ready.then(()=>r.ready=true,e=>r.error=String(e));return vt};});
- await page.goto('/browse/web?sort=curated');
+ await page.goto('/zh/browse/web?sort=curated');
  // The prerendered feed has default filters; wait for the requested client state before scrolling it.
  await expect(page.getByRole('combobox',{name:'排序',exact:true})).toHaveValue('curated');
  const opener=page.locator('.insp-feed .insp-card-open').nth(12);await opener.scrollIntoViewIfNeeded();const before=await page.evaluate(()=>scrollY),href=await opener.getAttribute('href');await opener.click();
@@ -66,7 +66,7 @@ test('details share an element transition and restore focus, history and the scr
 
 test('motion preference changes stop video downloads and playback; offscreen videos pause',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await page.addInitScript(()=>{window.transitionCalls=0;const start=document.startViewTransition?.bind(document);if(start)document.startViewTransition=update=>{window.transitionCalls++;return start(update)}});
- await page.goto('/');const first=page.locator('.insp-feed video').first();await expect(first).toBeAttached();await expect(first).not.toHaveAttribute('src');
+ await page.goto('/zh');const first=page.locator('.insp-feed video').first();await expect(first).toBeAttached();await expect(first).not.toHaveAttribute('src');
  await page.locator('.insp-card-open').first().click();await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).not.toBeVisible();expect(await page.evaluate(()=>window.transitionCalls)).toBe(0);
  await page.emulateMedia({reducedMotion:'no-preference'});await expect.poll(()=>first.evaluate(v=>!v.paused&&v.currentTime>0)).toBe(true);
  await page.locator('.insp-feed .insp-card').nth(20).scrollIntoViewIfNeeded();await expect.poll(()=>first.evaluate(v=>v.paused)).toBe(true);
@@ -94,25 +94,25 @@ test('both languages meet the visual budget, show a wall three cards high on the
   }
  }
  // On a 1080px screen the card width follows the height, so all three rows end above the fold: the first five columns are whole.
- await page.setViewportSize({width:1920,height:1080});await page.goto('/');await expect(page.locator('.insp-card').first()).toBeVisible();await page.evaluate(()=>document.fonts.ready);
+ await page.setViewportSize({width:1920,height:1080});await page.goto('/zh');await expect(page.locator('.insp-card').first()).toBeVisible();await page.evaluate(()=>document.fonts.ready);
  const w=await wall();expect(w.rows).toBe(3);expect(w.width).toBeGreaterThan(220);expect(w.whole,'whole cards at 1920×1080').toBeGreaterThanOrEqual(15);
 });
 
 
 test('direct details support keyboard navigation without the transitions API',async({page})=>{
  await page.addInitScript(()=>Object.defineProperty(document,'startViewTransition',{value:undefined}));
- await page.goto('/inspiration/raycast?sort=curated');await page.getByRole('button',{name:'下一个',exact:true}).focus();await expect(page.locator('h1')).toHaveText('Raycast');
+ await page.goto('/zh/inspiration/raycast?sort=curated');await page.getByRole('button',{name:'下一个',exact:true}).focus();await expect(page.locator('h1')).toHaveText('Raycast');
  await page.keyboard.press('ArrowRight');await expect(page.locator('h1')).toHaveText('Resend');await expect(page).toHaveURL(/\/inspiration\/resend\?sort=curated$/);
  await page.keyboard.press('ArrowLeft');await expect(page.locator('h1')).toHaveText('Raycast');
- await page.keyboard.press('Escape');await expect(page).toHaveURL(/\/\?sort=curated$/);await expect(page.locator('.insp-feed')).toBeVisible();
+ await page.keyboard.press('Escape');await expect(page).toHaveURL(/\/zh\?sort=curated$/);await expect(page.locator('.insp-feed')).toBeVisible();
 });
 
 // Delay the real update callback so several key events arrive before a transition commits.
 for(const mode of ['modal','page'])test(`rapid detail arrows preserve every navigation intent in ${mode} mode`,async({page})=>{
  await page.addInitScript(()=>{const start=document.startViewTransition?.bind(document);if(start)document.startViewTransition=update=>start(async()=>{await new Promise(resolve=>setTimeout(resolve,100));return update()})});
  const list=items.filter(i=>i.category==='landing'||(i.category==='practice'&&!['motion','interaction','branding','brand'].includes(i.tag.toLowerCase())));
- if(mode==='modal'){await page.goto('/browse/web?sort=curated');await page.locator('.insp-card-open').first().click();await expect(page.getByRole('dialog')).toBeVisible();}
- else await page.goto(`/inspiration/${list[0].id}?sort=curated&in=web`);
+ if(mode==='modal'){await page.goto('/zh/browse/web?sort=curated');await page.locator('.insp-card-open').first().click();await expect(page.getByRole('dialog')).toBeVisible();}
+ else await page.goto(`/zh/inspiration/${list[0].id}?sort=curated&in=web`);
  await page.getByRole('button',{name:'下一个',exact:true}).focus();
  const arrows=async(key,count)=>page.evaluate(({key,count,mode})=>{const target=mode==='modal'?document.querySelector('dialog'):window;for(let i=0;i<count;i++)target.dispatchEvent(new KeyboardEvent('keydown',{key,bubbles:true,cancelable:true}))},{key,count,mode});
  await arrows('ArrowRight',5);await expect(page).toHaveURL(new RegExp(`/inspiration/${list[5].id}\\?`));
