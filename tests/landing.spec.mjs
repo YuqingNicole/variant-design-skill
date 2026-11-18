@@ -87,6 +87,8 @@ test('integrated B keeps a mobile action, navigation, brief on language change, 
   await page.goto('/workbench');
   await page.locator('.site-wordmark').focus();
   await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Connect' })).toBeFocused();
+  await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Switch to Chinese' })).toBeFocused();
   await expect(page.getByRole('button', { name: 'Switch to Chinese' })).toHaveCSS('outline-style', 'solid');
 });
@@ -439,6 +441,22 @@ test('privacy page is prerendered, linked from the footer and states what is kep
  await expect(page.locator('h1')).toHaveText('隐私说明');await expect(page.locator('.privacy-page .sponsor-section')).toHaveCount(5);
  await expect(page.locator('#account')).toContainText('删除账号');await expect(page.locator('#tracking')).toContainText('不向赞助方提供读者的个人数据');
  await page.locator('.site-language').click();await expect(page.locator('h1')).toHaveText('Privacy');await expect(page).toHaveTitle('Privacy — Variant Design');await expect(page.locator('.site-footer a[href="/privacy"]')).toHaveCount(1);
+});
+
+test('the header Connect button opens a dialog with the install command for Claude Code and Codex, in both languages', async ({page,context})=>{
+ await context.grantPermissions(['clipboard-read','clipboard-write']);
+ await page.goto('/');await hydrated(page);
+ await page.locator('.site-connect').click();const dialog=page.locator('dialog.connect-dialog');await expect(dialog).toBeVisible();
+ await expect(dialog.locator('h2')).toHaveText('Connect the skill');
+ await expect(dialog.locator('.connect-agents button[aria-pressed=true]')).toHaveText('Claude Code');
+ await expect(dialog.locator('.connect-code').first()).toContainText('claude plugin marketplace add YuqingNicole/variant-design-skill');await expect(dialog.locator('.connect-code').first()).toContainText('claude plugin install variant-design@variant-design');
+ await dialog.getByRole('button',{name:'Codex'}).click();await expect(dialog.locator('.connect-code').first()).toContainText('git clone https://github.com/YuqingNicole/variant-design-skill.git ~/.codex/skills/variant-design');
+ await dialog.locator('.connect-copy').first().click();await expect(dialog.locator('.connect-status')).toHaveText('Copied: Codex');
+ expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe('git clone https://github.com/YuqingNicole/variant-design-skill.git ~/.codex/skills/variant-design');
+ await expect(dialog.locator('.connect-foot')).toContainText('https://variantdesign.xyz/install/agent.md');await expect(dialog.locator('.connect-foot a')).toHaveAttribute('href','/docs/install');
+ await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);
+ await page.goto('/zh');await hydrated(page);await page.locator('.site-connect').click();
+ await expect(page.locator('dialog.connect-dialog h2')).toHaveText('接入技能');await expect(page.locator('.connect-foot a')).toHaveAttribute('href','/zh/docs/install');
 });
 
 test('sponsor page states the rules without prices and links to an inquiry template, in both languages', async ({page})=>{
