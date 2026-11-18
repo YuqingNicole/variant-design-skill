@@ -1,7 +1,7 @@
 {
   "updatedAt": "2026-11-13T08:53:15.026Z",
   "source": "Ego Lite on X search",
-  "reviewPolicy": "Candidates are not published until a person watches the original post and writes bilingual research notes.",
+  "reviewPolicy": "Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request; a person merging that pull request is the review.",
   "candidates": [
     {
       "id": "2109936492084895806",
