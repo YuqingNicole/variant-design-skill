@@ -7,7 +7,7 @@ import './home.css';
 import { useLocale } from './i18n/LocaleProvider';
 // What the site keeps and requests, checked against the code (docs/drafts/measurement-method.md §5, docs/accounts.md).
 // When accounts, storage keys, analytics or third-party requests change, change this page in the same commit.
-const updated = '2026-11-16';
+const updated = '2026-11-18';
 const issues = 'https://github.com/YuqingNicole/variant-design-skill/issues/new';
 const m={
  title:{zh:'隐私说明',en:'Privacy'},
@@ -38,6 +38,7 @@ const browser:Row[]=[
 const others:Row[]=[
  {title:{zh:'Vercel',en:'Vercel'},text:{zh:'网站托管在 Vercel。和所有网站一样，服务器会收到你的访问请求，其中包括 IP 地址。网站预览图大多经 Vercel 的图片服务从来源网站取；来源网站不在它的名单里，或者缩小失败时，浏览器会直接从来源网站加载，这时来源网站也会收到你的请求和 IP 地址。',en:'The site is hosted on Vercel. As with any website, the servers receive your requests, including your IP address. Most website previews are fetched from their source sites through Vercel’s image service; when a source site is not on its list, or resizing fails, your browser loads the image straight from the source site, which then also receives your request and IP address.'}},
  {title:{zh:'X',en:'X'},text:{zh:'来自 X 的视频和图片从 X 的服务器加载；点“从 X 加载帖子”时还会加载 X 的嵌入脚本。X 可能记录这些访问。',en:'Videos and images from X load from X’s servers, and pressing “Load the post from X” also loads X’s embed script. X may record these visits.'}},
+ {title:{zh:'Threads 上的公开帖子',en:'Public posts on Threads'},text:{zh:'每周一次，我们通过 Threads 官方接口按设计相关的关键词搜索公开帖子，用来发现值得收录的网站。我们只保存帖子的链接、作者用户名、发帖时间、帖子附带的网址和前 280 个字，存在本项目公开的代码仓库里；不复制帖子里的图片和视频，不抓取 Threads 页面，也不涉及本站读者的任何信息。想让自己的帖子从中去掉，在 GitHub 上开一个 Issue。',en:'Once a week we search public Threads posts for design-related keywords through Threads’ official API, to find sites worth adding. We keep only a post’s link, the author’s username, its time, the web address it carries and its first 280 characters, in this project’s public code repository. We do not copy a post’s images or videos, do not scrape Threads pages, and this involves no information about readers of this site. To have your post removed from it, open an issue on GitHub.'}},
  {title:{zh:'Google',en:'Google'},text:{zh:'选择用 Google 登录时，Google 会知道你登录了本站。',en:'If you choose Google sign-in, Google knows you signed in to this site.'}},
  {title:{zh:'Supabase',en:'Supabase'},text:{zh:'提供登录、发送登录邮件和保存收藏。',en:'Provides sign-in, sends sign-in emails and stores your saves.'}},
 ];
