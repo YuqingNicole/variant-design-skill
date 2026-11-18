@@ -2,14 +2,14 @@ import { createContext, useContext, useState, type ReactNode } from 'react';
 import { t, type Localized } from './localized';
 import { hasLanguageUrl, localePath } from './locale-route';
 import { listsLanguage } from './translations';
-import { isLocale, sourceLocale, type Locale } from './locales';
+import { defaultLocale, isLocale, type Locale } from './locales';
 
 const preferenceKey = 'variant-language';
 export function readPreference(): Locale | null { try { const value = localStorage.getItem(preferenceKey); return isLocale(value) ? value : null; } catch { return null; } }
 export function rememberLocale(locale: Locale) { try { localStorage.setItem(preferenceKey, locale); } catch { /* storage blocked: the address still carries the language */ } }
 
 // The address decides the language (RFC-005 §3.3). `route` is the path without its language prefix.
-const LocaleContext = createContext<{ locale: Locale; route: string }>({ locale: sourceLocale, route: '/' });
+const LocaleContext = createContext<{ locale: Locale; route: string }>({ locale: defaultLocale, route: '/' });
 export const LocaleProvider = ({ locale, route, children }: { locale: Locale; route: string; children: ReactNode }) => <LocaleContext.Provider value={{ locale, route }}>{children}</LocaleContext.Provider>;
 export const useLocale = () => useContext(LocaleContext).locale;
 export const useRoute = () => useContext(LocaleContext).route;

@@ -73,7 +73,22 @@
     },
     {
       "source": "/en/inspiration",
-      "destination": "/en",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/zh/inspiration",
+      "destination": "/zh",
+      "permanent": true
+    },
+    {
+      "source": "/en",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/en/:path*",
+      "destination": "/:path*",
       "permanent": true
     }
   ],

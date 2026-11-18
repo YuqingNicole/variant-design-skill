@@ -2,15 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 import { importTs } from './ts-module.mjs';
-const { locales, localeCodes, publishedLocales, fallbackChain, isLocale, sourceLocale } = await importTs(fileURLToPath(new URL('../src/i18n/locales.ts', import.meta.url)));
+const { locales, localeCodes, publishedLocales, fallbackChain, isLocale, sourceLocale, defaultLocale } = await importTs(fileURLToPath(new URL('../src/i18n/locales.ts', import.meta.url)));
 const { t, has, resolvedLocale, fromPair, completeIn, isLocalized } = await importTs(fileURLToPath(new URL('../src/i18n/localized.ts', import.meta.url)));
 const { formatDate, formatNumber, collator } = await importTs(fileURLToPath(new URL('../src/i18n/format.ts', import.meta.url)));
 
-test('the locale table keeps Chinese unprefixed and every other language on its own prefix', () => {
-  assert.equal(sourceLocale, 'zh'); assert.equal(locales.zh.path, ''); assert.equal(locales.zh.fallback, null);
+test('the locale table keeps English unprefixed and every other language on its own prefix', () => {
+  assert.equal(sourceLocale, 'zh'); assert.equal(defaultLocale, 'en'); assert.equal(locales.en.path, ''); assert.equal(locales.zh.path, '/zh'); assert.equal(locales.zh.fallback, null);
   const paths = localeCodes.map(l => locales[l].path);
   assert.equal(new Set(paths).size, paths.length);
-  for (const l of localeCodes.filter(l => l !== 'zh')) assert.match(locales[l].path, /^\/[a-z]{2}(-[a-z]{2,4})?$/, l);
+  for (const l of localeCodes.filter(l => l !== defaultLocale)) assert.match(locales[l].path, /^\/[a-z]{2}(-[a-z]{2,4})?$/, l);
   for (const l of localeCodes) { assert.ok(locales[l].htmlLang && locales[l].label && locales[l].dateLocale, l); if (locales[l].fallback) assert.ok(isLocale(locales[l].fallback), l); }
   assert.deepEqual(publishedLocales, ['zh', 'en']);
   assert.equal(isLocale('en'), true); assert.equal(isLocale('toString'), false); assert.equal(isLocale('fr'), false);

@@ -1,6 +1,6 @@
-// How languages map to addresses (RFC-005 §3.3): Chinese keeps unprefixed URLs, other languages get a path prefix.
+// How languages map to addresses (RFC-005 §3.3): English keeps unprefixed URLs, other languages get a path prefix.
 // Experiments, previews and files have one address and switch language in place, if at all.
-import { localeCodes, locales, sourceLocale, type Locale } from './locales';
+import { defaultLocale, localeCodes, locales, type Locale } from './locales';
 
 const oneAddress = /^\/(lab|directions|showcase|variant-output|api)(\/|$)/;
 export const hasLanguageUrl = (route: string) => !oneAddress.test(route) && !/\.[a-z0-9]+$/i.test(route);
@@ -12,7 +12,7 @@ export function parseLocale(pathname: string): { locale: Locale; route: string }
     const route = pathname.slice(prefix.length) || '/';
     if (hasLanguageUrl(route)) return { locale, route };
   }
-  return { locale: sourceLocale, route: pathname };
+  return { locale: defaultLocale, route: pathname };
 }
 
 // `target` may carry a query or hash. External links, anchors and single-address routes come back unchanged.

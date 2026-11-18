@@ -1,6 +1,9 @@
 # RFC-005 · 网站多语言架构
 
 - 状态：已接受，P0 已实施（`website/src/i18n/`）；P1 逐页推进，灵感页已完成（2026-11-02：`inspiration-data.ts` 改为按语言取值，`InspirationPage.tsx` 的三元表达式和位置读取清零，中英文页面文字与 `aria-label` 前后对比一致）；首页、作品页、分类页和 `/docs` 也已完成（2026-11-02，同样做了前后对比）。P1 已完成（2026-11-02）：其余页面和组件（关于、技能、投稿、赞助、实验室、工作台、能力演示、引导演示、表现力方向页）的三元表达式和位置读取也已迁移，82 个页面状态（含逐个点击切换按钮后的状态）前后对比零差异。评审时发现 `i18n-inventory.mjs` 原来只认 `zh ?`，漏掉了 `language==='zh'?…` 这种写法（工作台、画布、导出 HTML 和赞助页共 34 处）；脚本已改为同时计入这种写法、不计语言代码之间的选择，并加了测试，这 34 处也已迁移，98 个页面状态（含画布）前后对比零差异。剩下的计数已人工核对：1 处是 `docs-content.ts` 里 `verify()` 的布尔参数；1 处是画布 `LandingCanvas.tsx` 用中英对照表翻译界面的 `t()`，属于另一种翻译方式，没有改；位置读取都是普通数组下标或标题分行，不是中英文配对；页面自管语言的 4 处在实验页和工作台，按 §3.3 保持页面内切换。先把结构定下来，再按 §5 的阶段推进。P2、P3 已实施（2026-11-02）：`website/src/i18n/locale-route.ts` 和 `LocaleProvider.tsx`，除 `/lab`、工作台、画布外的公开页面都有 `/en/...` 地址，按语言预渲染并输出 `hreflang` 和 sitemap 语言对照。英文正文由构建时的 React 渲染生成，渲染不出 `<h1>` 时构建失败；§3.5 的逐条 `translations` 状态已实现（2026-11-02）：指南（`guides-content.ts`）和方向库条目（`website/content/entries/*.json`）可以写 `translations: { en: { status: 'draft' | 'complete', reviewedAt } }`；没写状态的按已发布处理，所以现有英文不变；`/guides` 的英文仍待人工审阅，是否标成 `draft` 由维护者决定。维护者 2026-11-02 决定：英文是第一个可独立收录的语言版本，试点页面为首页、`/docs`、`/inspiration`、作品页、分类页和 `/guides`。
+
+> **2026-11-17 修订（维护者决定）：默认语言改为英文。** 无前缀地址（`/`、`/docs`、`/d/forma`）现在是英文，中文移到 `/zh` 前缀（`/zh`、`/zh/docs`）。中文仍是源语言（文案按中文写、缺英文时回落到中文），所以 `sourceLocale` 仍是 `zh`，新增 `defaultLocale = 'en'` 管无前缀地址。旧的 `/en/...` 由 `vercel.json` 301 到无前缀地址；旧的中文无前缀链接现在打开的是英文页，访客上次选过中文时页面会提示切换（LocaleNotice）。没有英文版的页面（草稿英文）在无前缀地址上显示中文内容，标记 noindex，canonical 指向 `/zh/...`。`x-default` 指向英文。方案 B 里说的 301 与链接失效风险，这次只落在旧中文地址上。
+
 - 日期：2026-11-01。
 - 关联：RFC-002（方向库路由、预渲染、方向卡）、RFC-003 §5（多语言、SEO 与 GEO 的目标和验收）、`docs/design-system.md`。
 - 范围：`website/` 的文案模型、语言状态、路由、预渲染、字体和测试。技能本身（`SKILL.md`、`skills/`、`references/`）不在范围内。
@@ -30,7 +33,7 @@
 ```ts
 export const locales = {
   zh: { htmlLang: 'zh-CN', label: '中文', path: '', fallback: null, dateLocale: 'zh-CN', published: true },
-  en: { htmlLang: 'en', label: 'English', path: '/en', fallback: 'zh', dateLocale: 'en-US', published: true },
+  en: { htmlLang: 'en', label: 'English', path: '', fallback: 'zh', dateLocale: 'en-US', published: true },
   // ja: { htmlLang: 'ja', label: '日本語', path: '/ja', fallback: 'en', dateLocale: 'ja-JP', published: false },
 } as const;
 export type Locale = keyof typeof locales;
@@ -77,7 +80,7 @@ export function has(value: Localized<unknown>, locale: Locale): boolean
 ### 3.4 预渲染与索引
 
 - `renderSite(entries, template, site, references, locale)` 按语言各跑一遍。只有某一页在该语言下内容完整（§3.5）时才输出该语言的 HTML。
-- 每个输出页面：`<html lang>` 取语言表、正文为该语言、`canonical` 指向自己、`hreflang` 列出所有已发布的语言版本（包括自己），`x-default` 指向中文地址。
+- 每个输出页面：`<html lang>` 取语言表、正文为该语言、`canonical` 指向自己、`hreflang` 列出所有已发布的语言版本（包括自己），`x-default` 指向英文地址（无前缀）。
 - `sitemap.xml` 每个地址带 `xhtml:link` 的语言对照；RSS 先只出中文。
 - 浏览器加载后，React 读到的语言必须与预渲染的语言一致，避免内容闪动、语言错乱。
 

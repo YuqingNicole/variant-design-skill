@@ -1,7 +1,7 @@
 import { StrictMode, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import "./site-styles";
-import { parseLocale } from "./i18n/locale-route";
+import { localePath, parseLocale } from "./i18n/locale-route";
 import { LocaleNotice, LocaleProvider } from "./i18n/LocaleProvider";
 // Old paths keep working: the address is rewritten in place (Vercel also redirects them with 301).
 const legacy = (path: string) => path === "/canvas" ? "/lab/canvas" : path === "/workbench" ? "/lab/workbench" : path.startsWith("/showcase/") ? "/d/" + path.split("/")[2]
@@ -15,10 +15,10 @@ if (oldCategory !== undefined && (route === "/" || route.startsWith("/inspiratio
   const query = new URLSearchParams(location.search); query.delete("category");
   if (route === "/") { const next = oldCategory ? "/browse/" + oldCategory : "/"; route = next; }
   else if (oldCategory) query.set("in", oldCategory);
-  const base = route === "/" ? "/" : route, prefix = parsed.locale === "en" ? (base === "/" ? "/en" : "/en" + base) : base, rest = query.toString();
+  const base = route === "/" ? "/" : route, prefix = localePath(base, parsed.locale), rest = query.toString();
   history.replaceState(null, "", prefix + (rest ? "?" + rest : "") + location.hash);
 }
-if (moved) { history.replaceState(null, "", (parsed.locale === "en" ? (moved === "/" ? "/en" : "/en" + moved) : moved) + (moved.startsWith("/lab/") || route === "/inspiration" ? location.search : "") + location.hash); route = moved; }
+if (moved) { history.replaceState(null, "", localePath(moved, parsed.locale) + (moved.startsWith("/lab/") || route === "/inspiration" ? location.search : "") + location.hash); route = moved; }
 const page: Promise<ReactNode> = route === "/lab/canvas" ? import("./LandingCanvas").then(m => <m.LandingCanvas/>) : route === "/lab/workbench" ? import("./App").then(m => <m.default/>)
   : route === "/lab" ? import("./LabPage").then(m => <m.LabPage/>) : route === "/skills" ? import("./SkillsPage").then(m => <m.SkillsPage/>) : route === "/about" ? import("./PaperLanding").then(m => <m.PaperLanding/>)
   // The inspiration pages wait for the records their first render shows (reference-library.ts), so the prerendered cards are never replaced by a gap.

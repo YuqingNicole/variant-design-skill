@@ -15,13 +15,13 @@ if (existsSync(envPath)) {
 const root = join(projectRoot, "dist");
 const port = Number(process.env.PORT || 4173);
 const vercel = JSON.parse(readFileSync(join(projectRoot, "..", "vercel.json"), "utf8"));
-// The redirects of vercel.json, applied the same way here: ":name" matches one path segment, `missing` query keys must be absent, the query string is kept.
-const redirects = (vercel.redirects ?? []).map(r => ({ ...r, pattern: new RegExp(`^${r.source.replace(/:([A-Za-z]+)/g, "(?<$1>[^/]+)")}$`) }));
+// The redirects of vercel.json, applied the same way here: ":name" matches one path segment and ":name*" the rest of the path, `missing` query keys must be absent, the query string is kept.
+const redirects = (vercel.redirects ?? []).map(r => ({ ...r, pattern: new RegExp(`^${r.source.replace(/:([A-Za-z]+)\*/g, "(?<$1>.*)").replace(/:([A-Za-z]+)(?![A-Za-z<>])/g, "(?<$1>[^/]+)")}$`) }));
 function redirectFor(pathname, search) {
   for (const r of redirects) {
     const m = r.pattern.exec(pathname);
     if (!m || (r.missing ?? []).some(c => c.type === "query" && new URLSearchParams(search).has(c.key))) continue;
-    return r.destination.replace(/:([A-Za-z]+)/g, (_, name) => m.groups?.[name] ?? "") + search;
+    return r.destination.replace(/:([A-Za-z]+)\*?/g, (_, name) => m.groups?.[name] ?? "") + search;
   }
   return null;
 }
