@@ -196,7 +196,7 @@ export async function run({ groups, days, config = configPath, inbox: inboxFile 
   const output = {
     updatedAt: capturedAt,
     source: 'Ego Lite on X search',
-    reviewPolicy: 'Candidates are not published until a person watches the original post and writes bilingual research notes.',
+    reviewPolicy: 'Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request; a person merging that pull request is the review.',
     candidates: merged.candidates,
   };
   const temporary = `${inboxFile}.tmp`;
