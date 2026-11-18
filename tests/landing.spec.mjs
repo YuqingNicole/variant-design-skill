@@ -8,6 +8,8 @@ import { importTs } from '../website/scripts/ts-module.mjs';
 import { readLibrary, splitReferences } from '../website/scripts/inspiration-split.mjs';
 // The sections the home has to fetch once a reader reaches past its first page (a section whose references are all on that page is never fetched).
 const beyondFirstPage=await (async()=>{const library=readLibrary(),{sectionOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname),split=splitReferences(library.items,sectionOf,library);return new Set(Object.entries(split.sections).filter(([,part])=>part.items.some(r=>!split.first.items.includes(r))).map(([id])=>id))})();
+// Library totals come from the data, so adding a reference (the weekly X pull request does) does not break counts pinned here.
+const libraryCounts=await (async()=>{const {sectionOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname),items=readLibrary().items;const by=key=>items.filter(i=>sectionOf(i)===key).length;return{total:items.length,web:by('web'),by};})();
 const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
 // The homepage includes X motion now; regressions isolate its media in every scenario.
 // Individual media tests override these routes with their own playback/failure fixture.
@@ -344,9 +346,9 @@ test('inspiration references filter, create an original brief and recover from c
  // The prerendered page answers clicks only after React replaces it; its static reference index goes away then.
  await expect(page.locator('nav[aria-label="全部参考"]')).toHaveCount(0);
  const cards=page.locator('.inspiration-grid .insp-card');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('248 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.total} 个参考`);
  // Every tab is its own page with its own references; together they list each reference once.
- for(const [name,count] of [['网站',140],['产品界面',12],['交互',42],['动效',31],['品牌',16],['插画',3],['海报',2],['印刷',2]]){
+ for(const [name,count] of [['网站','web'],['产品界面','interface'],['交互','interaction'],['动效','motion'],['品牌','branding'],['插画','illustration'],['海报','posters'],['印刷','print']].map(([name,key])=>[name,libraryCounts.by(key)])){
   await page.locator('.insp-pills').getByRole('link',{name,exact:true}).click();
   await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${count} 个参考`);
  }
@@ -391,7 +393,7 @@ test('inspiration thumbnails map each link\'s own preview, resized from the sour
  await stubPreviews(page,['linear']);
  // A short window keeps the load-more sentinel out of reach, so the first page and the fallback button can be checked.
  await page.setViewportSize({width:1280,height:360});await page.goto('/zh/browse/web?sort=curated');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('140 个参考');// The web page also lists X videos; the thumbnail rules below are about its 30 website cards, which come first.
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.web} 个参考`);// The web page also lists X videos; the thumbnail rules below are about its 30 website cards, which come first.
  const sites=page.locator('.inspiration-grid .insp-card:not(.insp-vcard)');await expect(sites).toHaveCount(30);
  await expect(sites.locator('.insp-card-meta small')).toHaveCount(30);
  await expect(sites.locator('.insp-thumb-post')).toHaveCount(0);await expect(sites.locator('div.insp-thumb')).toHaveCount(30);
@@ -641,8 +643,8 @@ test('a reference opens as a dialog from the grid and as its own page from a dir
  await expect(page.locator('h1')).toHaveText('Notion');await expect(page.getByRole('dialog')).toHaveCount(0);
  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/^Notion：/);
  await expect(page.getByRole('link',{name:'访问原站'})).toHaveAttribute('href','https://www.notion.com/');
- await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/:\d+\/zh$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('248 个参考');
- await page.goto('/zh/inspiration/no-such-reference');await expect(page).toHaveURL(/:\d+\/zh$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText('248 个参考');
+ await page.getByRole('link',{name:'全部参考'}).click();await expect(page).toHaveURL(/:\d+\/zh$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.total} 个参考`);
+ await page.goto('/zh/inspiration/no-such-reference');await expect(page).toHaveURL(/:\d+\/zh$/);await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.total} 个参考`);
 });
 
 test('the footer links the feed in both languages, and the feed answers', async ({page,request})=>{
@@ -661,7 +663,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText('11 个参考');await expect(page.locator('.inspiration-topic')).toContainText('2026-11-01');
  await expect(page.locator('.insp-card-out[href="https://attio.com/"]')).toHaveCount(1);
  await page.goto('/zh?topic=unknown');
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('248 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.total} 个参考`);
  await page.goto('/zh');await hydrated(page);
  const cards=page.locator('.inspiration-grid .insp-card');
  await page.goto('/zh?topic=saas-home');await hydrated(page);
@@ -669,7 +671,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(page.locator('.inspiration-topic')).toContainText('2026-10-29');
  await expect(cards.locator('.insp-card-open[href="/zh/inspiration/lovable"]')).toHaveCount(0);
  await expect(cards.locator('.insp-card-out[href="https://impeccable.style/"]')).toHaveCount(1);
- await expect(page.locator('.insp-pills a[aria-current=page]')).toHaveText(/^全部\s*248$/);await expect(page.locator('.insp-pills')).toContainText('网站 140');
+ await expect(page.locator('.insp-pills a[aria-current=page]')).toHaveText(new RegExp(`^全部\\s*${libraryCounts.total}$`));await expect(page.locator('.insp-pills')).toContainText(`网站 ${libraryCounts.web}`);
  await page.getByRole('searchbox').fill('Vercel');
  await expect(cards).toHaveCount(1);await expect(cards.first().locator('.insp-card-open')).toHaveAttribute('href','/zh/inspiration/v0');
  await page.getByRole('searchbox').fill('');
@@ -992,7 +994,7 @@ test('without JavaScript the inspiration page links every reference, and with it
   for (const [route, prefix] of [['/zh', '/zh/inspiration/'], ['/', '/inspiration/']]) {
     await reader.goto(route);
     const links = await reader.locator(`#root a[href^="${prefix}"]`).evaluateAll(as => [...new Set(as.map(a => a.getAttribute('href').split(/[?#]/)[0]))]);
-    expect(links.length, route).toBe(248);
+    expect(links.length, route).toBe(libraryCounts.total);
   }
   await noScript.close();
   await page.goto('/zh');

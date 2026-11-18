@@ -6844,6 +6844,38 @@ export const inspirationItems = [
     "verification": "official-public-source",
     "mobile": "not-tested",
     "addedAt": "2026-11-13T17:20:00+08:00"
+  },
+  {
+    "id": "x-zarazhangrui-667145",
+    "name": "Personal site on a retro Mac",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/zarazhangrui/status/2122743151127667145",
+    "source": "link-only",
+    "focus": {
+      "zh": "把个人网站放进一台红色复古一体机的屏幕里：开机进度条之后，米白底的等宽字体菜单（socials、takes、projects、writings、journey、recs，每项带编号）逐项高亮，背景是开满波斯菊的草地",
+      "en": "A personal site shown on the screen of a red retro all-in-one computer: after a boot progress bar, a cream monospaced menu (socials, takes, projects, writings, journey, recs, each numbered) highlights item by item, set in a field of cosmos flowers"
+    },
+    "application": {
+      "zh": "个人主页和作品集的展示与开场动效",
+      "en": "Presenting a personal homepage or portfolio, and its opening animation"
+    },
+    "publisher": "Zara Zhang (@zarazhangrui)",
+    "kind": "social-post",
+    "designer": "Zara Zhang",
+    "checkedAt": "2026-11-18",
+    "addedAt": "2026-11-18T07:12:02.465Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2122743151127667145",
+      "author": "Zara Zhang",
+      "handle": "zarazhangrui",
+      "date": "2026-11-17",
+      "lang": "en",
+      "text": "So pretty 😭 🌸",
+      "hasMedia": true
+    }
   }
 ];
 
