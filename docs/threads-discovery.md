@@ -8,11 +8,11 @@
 
 ## 边界
 
-- **候选不是条目**：收件箱只放帖子链接、作者、发帖时间、帖子附带的网址和前 280 个字。要先打开原帖和它指向的网站，写好中英文研究笔记，才能加进灵感页。
+- **候选不是条目**：收件箱只放帖子链接、作者、发帖时间、帖子附带的网址和前 280 个字。`threads-publish.mjs` 会打开帖子指向的网站，由模型读截图写中英文笔记；人在合并 PR 时才算审核。
 - **收录的是网站**：帖子是发现渠道。条目指向原网站，可以注明“发现于 @某某 的 Threads”。
 - **不搬帖子里的图和视频**：按 RFC-008，只用链接、官方嵌入，或作者授权的素材。
 - **已经收过的网站会标出来**：帖子附带的网址如果已经在 `website/src/inspiration-data.ts` 里，候选带 `inLibrary`（条目 id）。
-- **每条都要处理**：和 X 收件箱一样，处理完把 `status` 改成 `published`（带 `entry`）或 `rejected`（带 `reason`），并写 `reviewedAt`。
+- **每条都要处理**：`threads-publish.mjs` 处理完把 `status` 写成 `published`（带 `entry`）或 `rejected`（带 `reason`），并写 `reviewedAt`；读不到的留在 `pending`。
 
 ## 接口的限制
 
@@ -49,7 +49,18 @@ node website/scripts/threads-discovery.mjs --plan --groups all # 不连网，只
 - **凭据会自动续期**：长期凭据 60 天过期。脚本发现凭据存了超过 6 天，就先续期再搜，所以只要每周在跑，凭据就不会过期。停了超过 60 天，就要回到第 4 步重新生成。
 - **定时**：加到每周一和 X 发现一起跑；不需要浏览器，普通的 Node 22 就行。
 
+## 自动上线（后半段）
+
+`website/scripts/threads-publish.mjs` 处理收件箱里的 `pending`：
+- 没有附带网址的帖子、网址已在库里的站点（含 `www.` 和路径不同的）、打不开（非 200）或没有分享预览图的，直接拒；
+- 其余在无头 Chrome 里打开一次（1280×800，前三屏拼成一张图），交给 `claude -p`（只许读这张图）：被拦截页、验证或订阅闸门、只有一屏、停业公告、陈旧无可学的拒掉，收的写中英文笔记；答案不合格式时带原因重试一次；
+- 收的条目追加进 `inspiration-data.ts`（`via` 指向 Threads 帖子），分享预览写进 `link-previews.json`；
+- 读不到的（网络、Chrome、模型出错）留在 `pending` 等下一次。
+
+`website/scripts/run-threads-weekly.sh` 把搜索、筛选和测试串起来，在临时 worktree 里开 `codex/threads-weekly-<日期>` 分支并自动开 PR，合并才上线。只看了前三屏，没有交互和手机视图；`vercel.json` 的图片域名清单已满 50 个，新站的预览图走原图回退。
+
 ## 尚未验证
 
 - 脚本只用假的接口响应测过，还没有用真凭据调过 Threads API。第一次真跑时要核对：返回字段和 `media_type` 的取值是否和文档一致，`link_attachment_url` 有没有值。
+- 筛选这一步用真实网站（arc.net、tldraw.com、webflow.com）在 Chrome 和 claude 上演练过（`--dry-run`，收件箱用的是自己写的假候选）；`run-threads-weekly.sh` 的建分支、推送和开 PR 没有真跑过，搜索那一步仍没用真凭据。
 - 审核没批之前，看不出这些关键词在公开帖子里能搜出多少有用的候选；批下来后第一周要人工看一遍，再调整 `threads-discovery.json`。

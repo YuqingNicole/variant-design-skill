@@ -50,7 +50,7 @@ Reject (accept=false) when any applies: a resource list or "bookmark these" thre
 Otherwise accept, and write notes a designer can use. Do not invent: no names, claims or tools the frames and the text do not show. Keep the author's own credit if the text gives one.
 
 Answer with one JSON object and nothing else:
-{"accept": true, "name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "focus": {"zh": "<what to study, one sentence>", "en": "<same, in English>"}, "application": {"zh": "<where it applies, a short phrase>", "en": "<same, in English>"}}
+{"accept": true, "name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "focus": {"zh": "<what to study, one sentence, at most 300 characters>", "en": "<same, in English>"}, "application": {"zh": "<where it applies, a short phrase>", "en": "<same, in English>"}}
 or {"accept": false, "reason": "<one sentence in English>"}`;
 }
 
@@ -73,6 +73,14 @@ export function parseVerdict(output) {
     if (!cjk.test(v[key].zh) || !latin.test(v[key].en)) throw new Error(`"${key}" zh must be Chinese and en must be English`);
   }
   return { accept: true, name: v.name.trim(), tag: v.tag, focus: { zh: v.focus.zh.trim(), en: v.focus.en.trim() }, application: { zh: v.application.zh.trim(), en: v.application.en.trim() } };
+}
+
+// An answer that fails validation is sent back once with the reason, because a note that runs long is the usual miss.
+export async function judged(ask, prompt, dir) {
+  const first = await ask(prompt, dir);
+  try { return parseVerdict(first); } catch (error) {
+    return parseVerdict(await ask(`${prompt}\n\nYour previous answer was rejected: ${error.message}. Answer again with the corrected JSON object only.`, dir));
+  }
 }
 
 export function entryFor(candidate, meta, verdict, at) {
@@ -138,7 +146,8 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
         const media = pickMedia(await dep.syndication(post.id));
         if (!media) { decide(candidate, { status: 'rejected', reason: 'The post has no video the embed endpoint serves' }); summary.rejected.push([label, 'no video']); continue; }
         const meta = fromOembed(await dep.oembed(post), post);
-        const verdict = parseVerdict(await dep.ask(buildPrompt(candidate, meta, await dep.sheet(media.video, dir)), dir));
+        const prompt = buildPrompt(candidate, meta, await dep.sheet(media.video, dir));
+        const verdict = await judged(dep.ask, prompt, dir);
         if (!verdict.accept) { decide(candidate, { status: 'rejected', reason: verdict.reason }); summary.rejected.push([label, verdict.reason]); continue; }
         const entry = entryFor(candidate, meta, verdict, now.toISOString());
         if (items.some(i => i.id === entry.id) || added.some(i => i.id === entry.id)) throw new Error(`entry id ${entry.id} already exists`);

@@ -16,7 +16,7 @@ const libraryPath = path.resolve(here, '../src/inspiration-data.ts');
 export const tokenPath = process.env.THREADS_TOKEN_FILE || path.join(os.homedir(), '.config/variant-design/threads.json');
 const api = 'https://graph.threads.com/v1.0';
 const fields = 'id,text,media_type,permalink,timestamp,username,is_reply,is_quote_post,link_attachment_url';
-const reviewPolicy = 'Candidates are not published until a person opens the post and the site it points to and writes bilingual research notes. Media from a post needs the author\'s permission.';
+const reviewPolicy = 'Candidates reach the library only through threads-publish.mjs, which opens the site a post points to, reads a screenshot and writes bilingual notes into a pull request; a person merging that pull request is the review. Media from a post needs the author\'s permission.';
 
 // Search groups live in `website/content/threads-discovery.json`: a group has an id, a window in `days` and `queries`
 // ({ q, mode?: KEYWORD|TAG, mediaType?: TEXT|IMAGE|VIDEO, author? }). Groups marked `weekly` run on the schedule.
