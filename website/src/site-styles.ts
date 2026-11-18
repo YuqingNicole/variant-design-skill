@@ -21,3 +21,5 @@ import "./pricing.css";
 import "./landing-canvas.css";
 import "./atmosphere.css";
 import "./account.css";
+import "./connect.css";
+import "./connect-button.css";

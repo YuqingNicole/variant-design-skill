@@ -1,0 +1,4 @@
+/* Header "Connect" button (src/ConnectButton.tsx); the dialog's own rules are in connect.css. */
+.site-connect{min-height:44px;padding:8px 16px;border:1px solid var(--hair,var(--site-line));border-radius:999px;background:var(--fill-1);color:var(--site-ink);font:inherit;font-size:14px;cursor:pointer;flex-shrink:0}
+.site-connect:hover{background:var(--fill-2)}
+@media(max-width:480px){.site-connect{font-size:13px;padding:8px 12px}}
