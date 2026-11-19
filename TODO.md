@@ -99,4 +99,4 @@ Threads 也有每周发现，走 Meta 官方的 Threads API，候选写进 `webs
 
 - 每两周按 GEO 策略里的 10 个问题测一次 AI 搜索是否提到并引用本站，结果记在 `docs/research/`。
 - 每季度重看一次竞品对比，更新 `docs/research/` 里的记录（star 数、定价和功能变化很快）。
-- X 视频只剩封面、不再播放时，运行 `node website/scripts/x-media.mjs` 刷新 `website/src/x-media.json`。
+- X 视频只剩封面、不再播放时，运行 `node website/scripts/x-media.mjs --refresh` 刷新 `website/src/x-media.json`（不带 `--refresh` 只为还没有记录的新帖子追加，不改已有记录；`--refresh` 会改写很多条，提交前看一眼差异）。
