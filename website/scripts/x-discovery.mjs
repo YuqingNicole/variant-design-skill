@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Weekly discovery runs inside Ego Lite's Node runtime. It stores only links and public post metadata;
-// a person still watches each post and writes the bilingual research notes before publication.
+// x-publish.mjs screens each candidate and writes the bilingual notes; the weekly pull request merges once CI passes.
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -196,7 +196,7 @@ export async function run({ groups, days, config = configPath, inbox: inboxFile 
   const output = {
     updatedAt: capturedAt,
     source: 'Ego Lite on X search',
-    reviewPolicy: 'Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request; a person merging that pull request is the review.',
+    reviewPolicy: 'Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request that merges itself once CI passes; nobody reviews entries one by one.',
     candidates: merged.candidates,
   };
   const temporary = `${inboxFile}.tmp`;

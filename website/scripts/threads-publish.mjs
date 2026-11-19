@@ -2,7 +2,7 @@
 // Closes the loop after Threads discovery. A Threads post is a lead; what the library collects is the site it points to.
 // For each `pending` candidate with a link, this opens the site once in headless Chrome (1280×800, first three screens as
 // one image), reads its share preview, and asks a model to accept it with bilingual notes or reject it with a reason.
-// Nothing here publishes: run-threads-weekly.sh puts the change in a pull request, and a person merging it is the review.
+// Nothing here publishes by itself: run-threads-weekly.sh puts the change in a pull request that merges once CI passes, with no person reviewing it.
 // Usage: node website/scripts/threads-publish.mjs [--limit n] [--dry-run]
 import fs from 'node:fs/promises';
 import os from 'node:os';
@@ -32,7 +32,7 @@ export function idFor(url, taken) {
 }
 
 export function buildPrompt(candidate, preview, sheet) {
-  return `You are screening one website for Variant Design's design inspiration library, for a pull request a person will review.
+  return `You are screening one website for Variant Design's design inspiration library, entries you accept go live without a person reviewing them, so reject when unsure.
 Read the image at ${sheet}: the first three screens of ${candidate.link} at 1280×800, one above the other. You cannot interact with the site or see it on a phone, so describe only what the screens show.
 
 It was found in a Threads post by @${candidate.username ?? 'unknown'}: ${JSON.stringify(candidate.text)}

@@ -1,5 +1,5 @@
 #!/bin/zsh
-# The Threads job, end to end: search, screen the sites the posts point to, and open one pull request. Nothing reaches master until a person merges it.
+# The Threads job, end to end: search, screen the sites the posts point to, open one pull request, and merge it once CI passes (maintainer's decision, 2026-11-19; see merge-weekly-pr.sh).
 # Usage: run-threads-weekly.sh [--groups a,b|all] [--limit n]
 # Needs on this machine: a saved Threads token (docs/threads-discovery.md), Google Chrome, claude, gh, and a clean checkout of this repository.
 set -eu
@@ -20,7 +20,7 @@ git diff --quiet && git diff --cached --quiet || { echo "The working tree has un
 git fetch -q origin master
 DAY="$(date +%F)"; BRANCH="codex/threads-weekly-$DAY"; WORK="$(mktemp -d)/threads-weekly"
 git worktree add -q -b "$BRANCH" "$WORK" origin/master
-trap 'cd "$ROOT"; git worktree remove --force "$WORK" 2>/dev/null || true' EXIT
+trap 'cd "$ROOT"; git worktree remove --force "$WORK" 2>/dev/null || true; git branch -D "$BRANCH" >/dev/null 2>&1 || true' EXIT
 cd "$WORK"
 
 node website/scripts/threads-discovery.mjs ${GROUPS_ARG:+--groups "$GROUPS_ARG"}
@@ -34,7 +34,7 @@ git commit -q -m "Add this week's sites found on Threads ($DAY)
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 git push -q -u origin "$BRANCH"
 gh pr create --base master --title "Add this week's sites found on Threads ($DAY)" --body "$(cat <<EOF
-Weekly Threads discovery, screened by \`website/scripts/threads-publish.mjs\`: each site a post points to was opened once in headless Chrome (first three screens), and the model wrote the notes from that image. Nobody has used the sites or seen them on a phone; read the notes against the preview before merging, and drop a card by removing its entry and setting the inbox row to \`rejected\`.
+Weekly Threads discovery, screened by \`website/scripts/threads-publish.mjs\`: each site a post points to was opened once in headless Chrome (first three screens), and the model wrote the notes from that image. Nobody has used the sites or seen them on a phone; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`.
 
 \`\`\`
 $(cat "$OUT")
@@ -43,3 +43,4 @@ $(cat "$OUT")
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 EOF
 )"
+"$WORK/website/scripts/merge-weekly-pr.sh" "$BRANCH"

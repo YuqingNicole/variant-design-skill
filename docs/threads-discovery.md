@@ -8,7 +8,7 @@
 
 ## 边界
 
-- **候选不是条目**：收件箱只放帖子链接、作者、发帖时间、帖子附带的网址和前 280 个字。`threads-publish.mjs` 会打开帖子指向的网站，由模型读截图写中英文笔记；人在合并 PR 时才算审核。
+- **候选不是条目**：收件箱只放帖子链接、作者、发帖时间、帖子附带的网址和前 280 个字。`threads-publish.mjs` 会打开帖子指向的网站，由模型读截图写中英文笔记，CI 通过后自动上线，没有人逐条看过。上线后发现不合适，删掉条目并把收件箱那行改成 `rejected`。
 - **收录的是网站**：帖子是发现渠道。条目指向原网站，可以注明“发现于 @某某 的 Threads”。
 - **不搬帖子里的图和视频**：按 RFC-008，只用链接、官方嵌入，或作者授权的素材。
 - **已经收过的网站会标出来**：帖子附带的网址如果已经在 `website/src/inspiration-data.ts` 里，候选带 `inLibrary`（条目 id）。
@@ -57,7 +57,7 @@ node website/scripts/threads-discovery.mjs --plan --groups all # 不连网，只
 - 收的条目追加进 `inspiration-data.ts`（`via` 指向 Threads 帖子），分享预览写进 `link-previews.json`；
 - 读不到的（网络、Chrome、模型出错）留在 `pending` 等下一次。
 
-`website/scripts/run-threads-weekly.sh` 把搜索、筛选和测试串起来，在临时 worktree 里开 `codex/threads-weekly-<日期>` 分支并自动开 PR，合并才上线。只看了前三屏，没有交互和手机视图；`vercel.json` 的图片域名清单已满 50 个，新站的预览图走原图回退。
+`website/scripts/run-threads-weekly.sh` 把搜索、筛选和测试串起来，在临时 worktree 里开 `codex/threads-weekly-<日期>` 分支并自动开 PR，CI 通过后由 `website/scripts/merge-weekly-pr.sh` 自动合并上线（维护者 2026-11-19 决定不再等人合并）；CI 失败先重跑一次，仍失败就留着 PR 等人看。合并后 dev 快进到 master。只看了前三屏，没有交互和手机视图；`vercel.json` 的图片域名清单已满 50 个，新站的预览图走原图回退。
 
 ## 尚未验证
 

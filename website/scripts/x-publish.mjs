@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Closes the loop after weekly discovery: every `pending` candidate in the X inbox gets its video frames read by a model,
 // which accepts it with bilingual notes or rejects it with a reason; the result is written to the inbox and the library.
-// Nothing here publishes: run-x-weekly.sh puts the change in a pull request, and a person merging it is the review.
+// Nothing here publishes by itself: run-x-weekly.sh puts the change in a pull request that merges once CI passes, with no person reviewing it.
 // Usage: node website/scripts/x-publish.mjs [--limit n] [--dry-run]
 import fs from 'node:fs/promises';
 import os from 'node:os';
@@ -40,7 +40,7 @@ export function authorInLibrary(items, handle) {
 }
 
 export function buildPrompt(candidate, meta, sheet) {
-  return `You are screening one X video post for Variant Design's design inspiration library, for a pull request a person will review.
+  return `You are screening one X video post for Variant Design's design inspiration library, entries you accept go live without a person reviewing them, so reject when unsure.
 Read the image at ${sheet}: six frames from the post's video, left to right, top to bottom. You cannot play the video, so describe only what the frames show.
 
 Post: https://x.com/${candidate.handle}/status/${candidate.id} by ${meta.author} (@${meta.handle}), ${meta.date}, ${candidate.likes} likes.

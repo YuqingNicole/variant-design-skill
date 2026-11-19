@@ -1,5 +1,5 @@
 #!/bin/zsh
-# The Monday job, end to end: find candidates, screen them, and open one pull request. Nothing reaches master until a person merges it.
+# The Monday job, end to end: find candidates, screen them, open one pull request, and merge it once CI passes (maintainer's decision, 2026-11-19; see merge-weekly-pr.sh).
 # Usage: run-x-weekly.sh [--groups a,b|all] [--limit n]
 # Needs on this machine: ego-browser (logged in to x.com), ffmpeg, claude, gh, and a clean checkout of this repository.
 set -eu
@@ -20,7 +20,7 @@ git diff --quiet && git diff --cached --quiet || { echo "The working tree has un
 git fetch -q origin master
 DAY="$(date +%F)"; BRANCH="codex/x-weekly-$DAY"; WORK="$(mktemp -d)/x-weekly"
 git worktree add -q -b "$BRANCH" "$WORK" origin/master
-trap 'cd "$ROOT"; git worktree remove --force "$WORK" 2>/dev/null || true' EXIT
+trap 'cd "$ROOT"; git worktree remove --force "$WORK" 2>/dev/null || true; git branch -D "$BRANCH" >/dev/null 2>&1 || true' EXIT
 cd "$WORK"
 
 "$WORK/website/scripts/run-x-discovery.sh" ${GROUPS_ARG:+--groups "$GROUPS_ARG"}
@@ -35,7 +35,7 @@ git commit -q -m "Add this week's X design references ($DAY)
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 git push -q -u origin "$BRANCH"
 gh pr create --base master --title "Add this week's X design references ($DAY)" --body "$(cat <<EOF
-Weekly X discovery, screened by \`website/scripts/x-publish.mjs\`: the model read six frames per video and wrote the notes. Nobody has watched the videos; read the notes against the preview before merging, and drop a card by removing its entry and setting the inbox row to \`rejected\`.
+Weekly X discovery, screened by \`website/scripts/x-publish.mjs\`: the model read six frames per video and wrote the notes. Nobody has watched the videos; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`.
 
 \`\`\`
 $(cat "$OUT")
@@ -44,3 +44,4 @@ $(cat "$OUT")
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 EOF
 )"
+"$WORK/website/scripts/merge-weekly-pr.sh" "$BRANCH"
