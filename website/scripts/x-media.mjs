@@ -3,7 +3,7 @@
 // uses (cdn.syndication.twimg.com). The maintainer chose this on 2026-11-01 over the paid X API; it is
 // undocumented and may stop working, in which case cards fall back to the poster or the stored text.
 // Nothing is downloaded: the page streams the video from video.twimg.com.
-// Usage: node website/scripts/x-media.mjs   (rewrites src/x-media.json)
+// Usage: node website/scripts/x-media.mjs [--refresh]   (adds records for new posts to src/x-media.json; --refresh re-reads every post)
 import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
@@ -21,19 +21,29 @@ export function pickMedia(json, maxHeight = 720) {
   return { video: video.url, poster: media.media_url_https, width, height: h, avatar: json.user?.profile_image_url_https?.replace('_normal.', '_bigger.') ?? null };
 }
 
+// Only posts with no stored record are fetched, so a run adds records and never rewrites the ones already there (the poster and
+// video addresses X returns change between calls). `refresh` re-reads every post, keeping the stored record when X gives none.
+export async function collect({ posts, stored = {}, refresh = false, today = new Date().toISOString().slice(0, 10), fetchJson, log = () => {} }) {
+  const out = { ...stored }, added = [];
+  for (const { id, post } of posts) {
+    if (stored[id] && !refresh) continue;
+    try {
+      const res = await fetchJson(post.id);
+      const media = res.ok ? pickMedia(await res.json()) : null;
+      if (media) { out[id] = { ...media, fetchedAt: today }; added.push(id); }
+      log(`${media ? 'ok  ' : 'none'} ${id}${res.ok ? '' : ` (${res.status})`}`);
+    } catch (e) { log(`fail ${id} (${e.message})`); }
+  }
+  return { out, added };
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const source = fs.readFileSync(new URL('../src/inspiration-data.ts', import.meta.url), 'utf8');
   const from = source.indexOf('[', source.indexOf('export const inspirationItems = '));
   const posts = JSON.parse(source.slice(from, source.indexOf('\n];', from) + 2)).filter(i => i.post);
   const file = new URL('../src/x-media.json', import.meta.url), stored = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
-  const out = {}, today = new Date().toISOString().slice(0, 10);
-  for (const { id, post } of posts) {
-    try {
-      const res = await fetch(`https://cdn.syndication.twimg.com/tweet-result?id=${post.id}&lang=en&token=${syndicationToken(post.id)}`, { signal: AbortSignal.timeout(15000) });
-      const media = res.ok ? pickMedia(await res.json()) : null;
-      if (media) out[id] = { ...media, fetchedAt: today }; else if (stored[id]) out[id] = stored[id];
-      console.error(`${media ? 'ok  ' : 'none'} ${id}${res.ok ? '' : ` (${res.status})`}`);
-    } catch (e) { if (stored[id]) out[id] = stored[id]; console.error(`fail ${id} (${e.message})`); }
-  }
-  fs.writeFileSync(file, `${JSON.stringify(out, null, 2)}\n`);
+  const fetchJson = id => fetch(`https://cdn.syndication.twimg.com/tweet-result?id=${id}&lang=en&token=${syndicationToken(id)}`, { signal: AbortSignal.timeout(15000) });
+  const { out, added } = await collect({ posts, stored, refresh: process.argv.includes('--refresh'), fetchJson, log: m => console.error(m) });
+  if (added.length) fs.writeFileSync(file, `${JSON.stringify(out, null, 2)}\n`);
+  console.error(`${added.length} record${added.length === 1 ? '' : 's'} written${added.length ? '' : '; nothing to add'}`);
 }
