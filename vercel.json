@@ -87,6 +87,66 @@
       "permanent": true
     },
     {
+      "source": "/browse/interaction",
+      "destination": "/browse/videos?type=interaction",
+      "permanent": true
+    },
+    {
+      "source": "/zh/browse/interaction",
+      "destination": "/zh/browse/videos?type=interaction",
+      "permanent": true
+    },
+    {
+      "source": "/browse/motion",
+      "destination": "/browse/videos?type=motion",
+      "permanent": true
+    },
+    {
+      "source": "/zh/browse/motion",
+      "destination": "/zh/browse/videos?type=motion",
+      "permanent": true
+    },
+    {
+      "source": "/browse/branding",
+      "destination": "/browse/videos?type=branding",
+      "permanent": true
+    },
+    {
+      "source": "/zh/browse/branding",
+      "destination": "/zh/browse/videos?type=branding",
+      "permanent": true
+    },
+    {
+      "source": "/browse/illustration",
+      "destination": "/browse/videos?type=illustration",
+      "permanent": true
+    },
+    {
+      "source": "/zh/browse/illustration",
+      "destination": "/zh/browse/videos?type=illustration",
+      "permanent": true
+    },
+    {
+      "source": "/browse/posters",
+      "destination": "/browse/videos?type=posters",
+      "permanent": true
+    },
+    {
+      "source": "/zh/browse/posters",
+      "destination": "/zh/browse/videos?type=posters",
+      "permanent": true
+    },
+    {
+      "source": "/browse/print",
+      "destination": "/browse/videos?type=print",
+      "permanent": true
+    },
+    {
+      "source": "/zh/browse/print",
+      "destination": "/zh/browse/videos?type=print",
+      "permanent": true
+    },
+    {
       "source": "/en/:path*",
       "destination": "/:path*",
       "permanent": true

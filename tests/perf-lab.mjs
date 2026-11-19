@@ -7,7 +7,7 @@ import { writeFileSync } from 'node:fs';
 import zlib from 'node:zlib';
 
 const pixel = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', 'base64');
-export const pages = ['/', '/browse/interaction', '/inspiration/linear', '/sponsor'];
+export const pages = ['/', '/browse/videos', '/inspiration/linear', '/sponsor'];
 export const median = list => [...list].sort((a, b) => a - b)[Math.floor(list.length / 2)];
 
 // `stub` answers every third-party image with one pixel and blocks other third-party requests, so the numbers describe our

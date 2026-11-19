@@ -285,3 +285,10 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
  body{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
 }
 @media(min-width:651px){.site-tabbar{display:none}}
+
+/* Design-type filter inside the videos tab: the same pills as the section tabs, as buttons because they filter in place. */
+.insp-types{display:flex;gap:var(--space-1);overflow-x:auto;scrollbar-width:none;padding-bottom:var(--space-2)}.insp-types::-webkit-scrollbar{display:none}
+.insp-types button{display:inline-flex;align-items:center;flex:none;height:32px;padding:0 var(--space-4);border:0;border-radius:var(--radius-pill);font:inherit;font-size:14px;cursor:pointer;background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-muted);transition:background var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+.insp-types button small{font-size:12px;margin-left:6px;font-variant-numeric:tabular-nums}
+.insp-types button[aria-pressed=true]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}.insp-types button[aria-pressed=true] small{opacity:.75}
+@media(max-width:650px){.insp-types button{height:44px}}

@@ -11,7 +11,7 @@ import { importTs } from './ts-module.mjs';
 const src = path.join(path.dirname(fileURLToPath(import.meta.url)), '../src');
 export const pageSize = 30;
 // What the tabs, counts, sort orders, topics, pack and prev/next order need without the record itself.
-export const rowFields = ['id', 'name', 'category', 'tag', 'source', 'addedAt', 'checkedAt'];
+export const rowFields = ['id', 'name', 'category', 'tag', 'source', 'addedAt', 'checkedAt', 'kind'];
 const empty = { items: [], previews: {}, media: {} };
 
 const block = (source, name) => { const start = source.indexOf(`export const ${name} = `); if (start < 0) throw new Error(`${name} is not in inspiration-data.ts`); const from = source.indexOf('[', start); return JSON.parse(source.slice(from, source.indexOf('\n];', from) + 2)); };
