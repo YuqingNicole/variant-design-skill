@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-19T01:29:56.997Z",
+  "updatedAt": "2026-11-19T02:04:23.161Z",
   "source": "Ego Lite on X search",
   "reviewPolicy": "Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request; a person merging that pull request is the review.",
   "candidates": [
@@ -13,8 +13,10 @@
       "views": 12315,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(typography OR \"variable font\" OR lettering OR \"type design\") (animation OR animated OR process OR specimen) -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "type"
+      "status": "rejected",
+      "group": "type",
+      "reason": "The post is a how-to for a tool workflow: it tells you to give Claude Code a motion reference and split it into six controls in Remotion and GSAP, and the frames show the tool's demo interface instead of an original design piece, so it falls under the tutorial and tool-promotion rejections.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2112562917543694656",
@@ -42,9 +44,11 @@
       "views": 7070,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:itsnicethat -filter:replies filter:videos min_faves:50 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The post is a paid ad, marked #ad, promoting the Affinity and Cavalry tools: the frames end on a sponsor lockup reading It's Nice That | affinity | Cavalry, and the work shown is a montage of other creatives' work with no clear original author.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2112940935478956459",
@@ -71,8 +75,10 @@
       "views": 15643,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"motion poster\" OR \"kinetic poster\" OR \"kinetic type\" OR \"kinetic typography\" OR \"type specimen\" OR typeface) -tutorial -course -free filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "poster"
+      "status": "rejected",
+      "group": "poster",
+      "reason": "This is a resource list that promotes 20 open-source GitHub repos for Claude Code, and the video shows those repos as a five-floor card grid.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2113123211768385895",
@@ -99,8 +105,10 @@
       "views": 6552,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"packaging design\" OR \"print design\" OR risograph OR letterpress OR zine OR \"book cover\" OR \"book design\") -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "print"
+      "status": "published",
+      "group": "print",
+      "entry": "x-touhubook-733613",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2113693043052445946",
@@ -112,8 +120,10 @@
       "views": 57699,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"packaging design\" OR \"print design\" OR risograph OR letterpress OR zine OR \"book cover\" OR \"book design\") -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "print"
+      "status": "rejected",
+      "group": "print",
+      "reason": "The post is a sponsored CapCut Pro and Ultra discount promotion that tells viewers how to make AI marketing footage, so it is a tool promotion and not an original design piece.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2113858025064997373",
@@ -125,8 +135,10 @@
       "views": 19087,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"packaging design\" OR \"print design\" OR risograph OR letterpress OR zine OR \"book cover\" OR \"book design\") -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "print"
+      "status": "rejected",
+      "group": "print",
+      "reason": "The rainbow-roll letterpress print is strong print work, but it was posted by an aggregator account (Classical Melodies) whose first-person caption looks lifted from the Sacramento History Museum print shop, so the original author is unclear and this is likely a repost.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2113892309536592325",
@@ -138,8 +150,10 @@
       "views": 1043,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"packaging design\" OR \"print design\" OR risograph OR letterpress OR zine OR \"book cover\" OR \"book design\") -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "print"
+      "status": "rejected",
+      "group": "print",
+      "reason": "The frames show someone operating a press at a museum, and the finished print carries a \"Sacramento History Museum\" imprint, but the post never says the poster made or designed it, so the original author is unclear.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2114025218985357319",
@@ -182,9 +196,11 @@
       "views": 5769,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:nitishkmrk -filter:replies filter:videos min_faves:100 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-nitishkmrk-546145)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2114332745946235004",
@@ -196,8 +212,10 @@
       "views": 4622,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"packaging design\" OR \"print design\" OR risograph OR letterpress OR zine OR \"book cover\" OR \"book design\") -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "print"
+      "status": "published",
+      "group": "print",
+      "entry": "x-freshnfits-235004",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2114661365331927532",
@@ -209,9 +227,11 @@
       "views": 3973,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:posterlad -filter:replies filter:videos min_faves:50 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-posterlad-339220)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2114664920612520198",
@@ -238,9 +258,11 @@
       "views": 8363,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:itsnicethat -filter:replies filter:videos min_faves:50 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The post is a paid #ad promoting the Affinity and Cavalry apps; the frames show a poster being edited in software menus rather than a credited original work, and the poster's designer is never named.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2114728245598036382",
@@ -252,9 +274,11 @@
       "views": 9665,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:bruno_simon -filter:replies filter:videos min_faves:100 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "Bruno Simon is reposting someone else's work: a 3D game-style portfolio he credits to @longhoang_lyo, shared as a Three.js Journey selection with course hashtags. That makes it both a repost and a course promotion, not the author's own post.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2114733796473897027",
@@ -296,9 +320,11 @@
       "views": 3102,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:posterlad -filter:replies filter:videos min_faves:50 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-posterlad-339220)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2115500002349121831",
@@ -325,9 +351,11 @@
       "views": 10275,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:bruno_simon -filter:replies filter:videos min_faves:100 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The frames show a physical 3D-printed toy car being pushed by hand across a tabletop, which is a physical object rather than interface, motion, brand, print, poster, illustration or web design, and the post points readers to a print file in a reply.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2115899405542813923",
@@ -339,8 +367,10 @@
       "views": 26349,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(typography OR \"variable font\" OR lettering OR \"type design\") (animation OR animated OR process OR specimen) -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "type"
+      "status": "rejected",
+      "group": "type",
+      "reason": "The post is a 'bookmark these' resource list of 17 third-party asset libraries (Poly Haven, ambientCG, Mixamo, LottieFiles, Rive and others), framed with a hype claim about an ex-Anthropic motion designer, and the video is a promo explainer for that list rather than original design work from a clearly credited author.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2116531845839851723",
@@ -382,8 +412,10 @@
       "views": 5030,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"packaging design\" OR \"print design\" OR risograph OR letterpress OR zine OR \"book cover\" OR \"book design\") -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "print"
+      "status": "rejected",
+      "group": "print",
+      "reason": "The post is a pre-sale announcement for the author's Buntober 2026 zine ('Preorders go live at 12pm PST'), and the frames show a flip-through of its pages on screen, which counts as merchandise promotion.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2117300715739857151",
@@ -395,8 +427,10 @@
       "views": 318158,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"packaging design\" OR \"print design\" OR risograph OR letterpress OR zine OR \"book cover\" OR \"book design\") -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "print"
+      "status": "rejected",
+      "group": "print",
+      "reason": "This is a product launch promotion for the Letterpress-1 coding agent: a talking-head founder video with subtitles and staged team shots, not interface, motion, brand or web design work.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2117498789900820512",
@@ -408,8 +442,10 @@
       "views": 10250,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"brand identity\" OR rebrand OR \"logo animation\" OR \"motion identity\") -tutorial -course -free -prompt -\"ai tools\" filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "identity"
+      "status": "published",
+      "group": "identity",
+      "entry": "x-fafamotion_-820512",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2117563774152417367",
@@ -436,9 +472,11 @@
       "views": 6329,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:nitishkmrk -filter:replies filter:videos min_faves:100 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-nitishkmrk-546145)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2117614894673498502",
@@ -480,8 +518,10 @@
       "views": 130079,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(typography OR \"variable font\" OR lettering OR \"type design\") (animation OR animated OR process OR specimen) -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "type"
+      "status": "rejected",
+      "group": "type",
+      "reason": "The post promotes a product: it announces the Tesseract tool with Claude Opus 5.5 for 3D and 2D animation, and the video ends on a 'TESSERACT 3D' title card. That makes it a tool promotion, not a standalone design piece.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2118103217288728824",
@@ -493,9 +533,11 @@
       "views": 5694,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:akella -filter:replies filter:videos min_faves:100 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-akella-999886)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2118294715326214540",
@@ -507,8 +549,10 @@
       "views": 11345,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"packaging design\" OR \"print design\" OR risograph OR letterpress OR zine OR \"book cover\" OR \"book design\") -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "print"
+      "status": "published",
+      "group": "print",
+      "entry": "x-meylin_room-214540",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2118353851493536037",
@@ -535,8 +579,10 @@
       "views": 4827,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"motion poster\" OR \"kinetic poster\" OR \"kinetic type\" OR \"kinetic typography\" OR \"type specimen\" OR typeface) -tutorial -course -free filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "poster"
+      "status": "rejected",
+      "group": "poster",
+      "reason": "This is a product promotion: ElevenCreative is announcing that the Gemini Omni Flash 1.2 model is live on its platform, and the frames are an ad with feature captions like \"Transform materials\" and \"Change lighting\" and an \"Available now\" end card.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2118420136118083943",
@@ -563,9 +609,11 @@
       "views": 4297,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:nitishkmrk -filter:replies filter:videos min_faves:100 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-nitishkmrk-546145)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2118624571926692054",
@@ -577,9 +625,11 @@
       "views": 4517,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:akella -filter:replies filter:videos min_faves:100 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-akella-999886)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2118781184306299354",
@@ -591,8 +641,10 @@
       "views": 11829,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"brand identity\" OR rebrand OR \"logo animation\" OR \"motion identity\") -tutorial -course -free -prompt -\"ai tools\" filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "identity"
+      "status": "published",
+      "group": "identity",
+      "entry": "x-0xcharlota-299354",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2118795397770387724",
@@ -604,8 +656,10 @@
       "views": 4301,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"app design\" OR \"mobile app\" OR \"ios app\" OR \"app concept\") (ui OR interface OR animation) -tutorial -course -free -prompt -template filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "apps"
+      "status": "published",
+      "group": "apps",
+      "entry": "x-rashedatj-387724",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2118882795485565100",
@@ -617,8 +671,10 @@
       "views": 25153,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(illustration OR \"character design\" OR \"editorial illustration\") (process OR timelapse OR speedpaint) -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "illustration"
+      "status": "rejected",
+      "group": "illustration",
+      "reason": "The library already has a post by this author (x-nahographics-594724)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2119024322325217293",
@@ -630,8 +686,10 @@
       "views": 18740,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(dashboard OR \"design system\" OR \"data visualization\" OR dataviz OR \"product design\") (ui OR interface) -tutorial -course -free -prompt -template filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "dashboards"
+      "status": "rejected",
+      "group": "dashboards",
+      "reason": "The post is a 'bookmark this' list of links to design resources and tools, not original design work by the author.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2119127905666314632",
@@ -658,8 +716,10 @@
       "views": 15075,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"app design\" OR \"mobile app\" OR \"ios app\" OR \"app concept\") (ui OR interface OR animation) -tutorial -course -free -prompt -template filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "apps"
+      "status": "rejected",
+      "group": "apps",
+      "reason": "The post presents the clip as a demo of an AI model checkpoint ('New Opus/Fable checkpoint animation'), so it is mainly a tool showcase and model news, not the author's own design work, even though the frames show a coherent 3D forest chase scene.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2119287017599307959",
@@ -671,9 +731,11 @@
       "views": 6495,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:nitishkmrk -filter:replies filter:videos min_faves:100 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-nitishkmrk-546145)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2119313705582436488",
@@ -700,8 +762,10 @@
       "views": 22039,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(spline OR rive OR lottie OR \"3d web\" OR \"scroll animation\" OR scrolltrigger OR gsap) -tutorial -course -free -prompt -template filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "motion-3d"
+      "status": "rejected",
+      "group": "motion-3d",
+      "reason": "The post text is a list of 20 GitHub repositories and skills for Claude Opus 5.5, so it is a resource list and tool promotion, not original design work.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2120167637133238295",
@@ -728,8 +792,10 @@
       "views": 12612,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(illustration OR \"character design\" OR \"editorial illustration\") (process OR timelapse OR speedpaint) -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "illustration"
+      "status": "rejected",
+      "group": "illustration",
+      "reason": "The library already has a post by this author (x-nahographics-594724)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2120517107536249255",
@@ -741,9 +807,11 @@
       "views": 3844,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:itsnicethat -filter:replies filter:videos min_faves:50 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The post is a paid promotion (#ad) for a sponsored webinar series run by It's Nice That with MPB, and the frames show the photography of three other photographers rather than original design work by the poster.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2120695954689188180",
@@ -755,8 +823,10 @@
       "views": 3111,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(illustration OR \"character design\" OR \"editorial illustration\") (process OR timelapse OR speedpaint) -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "illustration"
+      "status": "published",
+      "group": "illustration",
+      "entry": "x-tayerexx-188180",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2120770750265385440",
@@ -768,8 +838,10 @@
       "views": 6274,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(dashboard OR \"design system\" OR \"data visualization\" OR dataviz OR \"product design\") (ui OR interface) -tutorial -course -free -prompt -template filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "dashboards"
+      "status": "rejected",
+      "group": "dashboards",
+      "reason": "The post is a \"bookmark this\" list that promotes outside resource sites (prompt libraries, component packs, shader collections), not original design work by the author.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2120893836847165784",
@@ -781,9 +853,11 @@
       "views": 13452,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:jsngr -filter:replies filter:videos min_faves:200 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-jsngr-648801)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2121034261356810750",
@@ -811,9 +885,11 @@
       "views": 6564,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:nitishkmrk -filter:replies filter:videos min_faves:100 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-nitishkmrk-546145)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2121156173319786640",
@@ -825,8 +901,10 @@
       "views": 8100,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(illustration OR \"character design\" OR \"editorial illustration\") (process OR timelapse OR speedpaint) -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "illustration"
+      "status": "rejected",
+      "group": "illustration",
+      "reason": "The library already has a post by this author (x-nahographics-594724)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2121162309011734726",
@@ -854,9 +932,11 @@
       "views": 13274,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:steveruizok -filter:replies filter:videos min_faves:200 since:2026-11-12",
-      "status": "pending",
+      "status": "published",
       "watched": true,
-      "group": "weekly"
+      "group": "weekly",
+      "entry": "x-steveruizok-959007",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2121313004562337938",
@@ -868,8 +948,10 @@
       "views": 13128,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"motion poster\" OR \"kinetic poster\" OR \"kinetic type\" OR \"kinetic typography\" OR \"type specimen\" OR typeface) -tutorial -course -free filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "poster"
+      "status": "rejected",
+      "group": "poster",
+      "reason": "The post promotes a guide and agent skill made by someone else ('someone turned Opus 5.5 into...'), so it is a resource and tool promotion with no clear original author, and the frames show only a text index of 637 technique names filling up, not any motion design work.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2121325978936893680",
@@ -881,8 +963,10 @@
       "views": 27374,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"motion poster\" OR \"kinetic poster\" OR \"kinetic type\" OR \"kinetic typography\" OR \"type specimen\" OR typeface) -tutorial -course -free filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "poster"
+      "status": "rejected",
+      "group": "poster",
+      "reason": "This is a \"bookmark this\" resource list promoting 12 Claude Code skills and GitHub tools: the frames show repo cards, install commands and a final \"bookmark this before your feed buries it\" call to action, so it is tool promotion rather than original design work.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2121340063254556890",
@@ -909,8 +993,10 @@
       "views": 12988,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(illustration OR \"character design\" OR \"editorial illustration\") (process OR timelapse OR speedpaint) -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "illustration"
+      "status": "rejected",
+      "group": "illustration",
+      "reason": "The library already has a post by this author (x-nahographics-594724)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2121643521933496517",
@@ -922,9 +1008,11 @@
       "views": 14214,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:jsngr -filter:replies filter:videos min_faves:200 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-jsngr-648801)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2121787138455040333",
@@ -951,9 +1039,11 @@
       "views": 7553,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:nitishkmrk -filter:replies filter:videos min_faves:100 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-nitishkmrk-546145)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2122007985505395059",
@@ -965,8 +1055,10 @@
       "views": 7374,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"motion poster\" OR \"kinetic poster\" OR \"kinetic type\" OR \"kinetic typography\" OR \"type specimen\" OR typeface) -tutorial -course -free filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "poster"
+      "status": "rejected",
+      "group": "poster",
+      "reason": "The post promotes a third-party tool: the frames are screen recordings of the iart.ai 'motion-skills' GitHub repository for AI coding agents, not original design work by the poster.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2122076035533414521",
@@ -978,9 +1070,11 @@
       "views": 6862,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:akella -filter:replies filter:videos min_faves:100 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The library already has a post by this author (x-akella-999886)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2122081757101223992",
@@ -992,8 +1086,10 @@
       "views": 11673,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(typography OR \"variable font\" OR lettering OR \"type design\") (animation OR animated OR process OR specimen) -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "type"
+      "status": "rejected",
+      "group": "type",
+      "reason": "This is a resource-list thread that promotes 21 GitHub tools for building with Opus 5.5. The frames are a scrolling grid of tool cards (Remotion Skills, AutoAnimate, FLIP Toolkit, SplitType and others), not an original design piece by the author.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2122091242821402804",
@@ -1005,9 +1101,11 @@
       "views": 37091,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:steveruizok -filter:replies filter:videos min_faves:200 since:2026-11-12",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "weekly"
+      "group": "weekly",
+      "reason": "The library already has a post by this author (x-steveruizok-959007)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2122328210989883731",
@@ -1049,9 +1147,11 @@
       "views": 9479,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:jakubkrehel -filter:replies filter:videos min_faves:100 since:2026-11-12",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "weekly"
+      "group": "weekly",
+      "reason": "The library already has a post by this author (x-jakubkrehel-379386)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2122437698329727471",
@@ -1078,9 +1178,11 @@
       "views": 23156,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "from:bruno_simon -filter:replies filter:videos min_faves:100 since:2026-10-20",
-      "status": "pending",
+      "status": "rejected",
       "watched": true,
-      "group": "designers"
+      "group": "designers",
+      "reason": "The frames show a coding tutorial: the presenter talks to camera over a code editor (script.js) and lesson slides about lights and shadows, so it is a tutorial, not design work to study.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2122656124960973065",
@@ -1092,8 +1194,10 @@
       "views": 31198,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(illustration OR \"character design\" OR \"editorial illustration\") (process OR timelapse OR speedpaint) -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "illustration"
+      "status": "rejected",
+      "group": "illustration",
+      "reason": "The library already has a post by this author (x-nahographics-594724)",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2122721932659331084",
@@ -1135,8 +1239,10 @@
       "views": 19133,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(design OR UI OR interaction OR motion) filter:videos min_faves:100 since:2026-11-12",
-      "status": "pending",
-      "group": "weekly"
+      "status": "rejected",
+      "group": "weekly",
+      "reason": "The post is a launch promotion for the author's own tutorial website (vibedesign.tips), so it falls under both tool/product promotion and tutorials. The frames are a site walkthrough, not a standalone design piece.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2122984275566076395",
@@ -1163,8 +1269,10 @@
       "views": 4581,
       "capturedAt": "2026-11-19T01:24:49.410Z",
       "query": "(\"packaging design\" OR \"print design\" OR risograph OR letterpress OR zine OR \"book cover\" OR \"book design\") -tutorial -course -free -prompt filter:videos min_faves:150 since:2026-10-20",
-      "status": "pending",
-      "group": "print"
+      "status": "rejected",
+      "group": "print",
+      "reason": "The post reacts with excitement to a zine branded \"That AngelBite\" that can be decorated, which reads as someone else's product or merchandise rather than the poster's own work, and all six frames show the same static spread with no visible author credit.",
+      "reviewedAt": "2026-11-19"
     },
     {
       "id": "2123077098298282203",

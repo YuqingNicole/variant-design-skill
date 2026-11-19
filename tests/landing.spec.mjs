@@ -602,19 +602,19 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.locator('.insp-pills').getByRole('link',{name:'动效',exact:true}).click();await expect(page).toHaveURL(/\/browse\/motion$/);
  // The client render replaces the prerendered feed; wait for it (XVideo adds the referrer meta on mount) before holding a card.
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
- // The motion tab lists 31 references; the strip mounts its first 30, and the widgets card is the oldest, so load the rest first.
+ // The motion tab lists every motion reference; the strip mounts its first 30, and the widgets card is the oldest, so load the rest first.
  const motion=page.locator('.insp-videos > li');await expect(motion).toHaveCount(30);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
- await page.locator('.insp-more button').click();await expect(motion).toHaveCount(31);
+ await page.locator('.insp-more button').click();await expect(motion).toHaveCount(libraryCounts.by('motion'));
  const widgets=motion.filter({has:page.locator('a[href="/zh/inspiration/paper-widgets"]')});
  // Videos only start once visible, and a newer card can push this one below the fold. A re-render can replace the card mid-scroll, so retry that.
  await expect(async()=>{await widgets.scrollIntoViewIfNeeded()}).toPass();
  await expect(widgets.locator('img.insp-vcard-media')).toHaveAttribute('src',sized(media['paper-widgets'].poster,640));await expect(widgets.locator('video')).toHaveCount(0);
  await page.getByRole('link',{name:'交互',exact:true}).click();await expect(page).toHaveURL(/\/browse\/interaction$/);
- // The interaction tab lists 42 references; the strip mounts its first 30 and loads the rest as it is scrolled.
+ // The interaction tab lists every interaction reference; the strip mounts its first 30 and loads the rest as it is scrolled.
  const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(30);await expect(page.locator('.inspiration-grid')).toHaveCount(1);
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
- // Newer posts pushed the sheep past the first 30 cards, so load the remaining eight before looking for it.
- await page.locator('.insp-more button').click();await expect(cards).toHaveCount(42);
+ // Newer posts pushed the sheep past the first 30 cards, so load the rest before looking for it.
+ await page.locator('.insp-more button').click();await expect(cards).toHaveCount(libraryCounts.by('interaction'));
  const sheep=cards.filter({has:page.locator('a[href="/zh/inspiration/x-areadnemaria-444419"]')});
  // Videos far below the fold attach their file only as they near the screen.
  expect(await cards.last().locator('video').evaluate(v=>v.getAttribute('src'))).toBeNull();
@@ -698,7 +698,7 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(cards).toHaveCount(0);
  await page.locator('.inspiration-empty').getByRole('button',{name:'清除筛选'}).click();
  await expect(page).not.toHaveURL(/topic=/);
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText('16 个参考');
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.by('branding')} 个参考`);
 });
 test('the cases grid keeps one labelled sponsor slot after the third case, and it is not a case', async ({page})=>{
  await page.goto('/zh/cases');await hydrated(page);
@@ -893,7 +893,7 @@ test('the header names the motion feed once, keeps the full wordmark on phones a
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/zh/browse/motion');
   await expect(page.locator('.site-nav-links a[aria-current=page]')).toHaveText('动效');
-  await expect(page.locator('.insp-pills a[aria-current=page]')).toHaveText(/^动效\s*31$/);
+  await expect(page.locator('.insp-pills a[aria-current=page]')).toHaveText(new RegExp(`^动效\\s*${libraryCounts.by('motion')}$`));
   const language = await page.locator('.site-language').evaluate(e => { const s = getComputedStyle(e); return [s.borderTopWidth, parseFloat(s.minHeight)]; });
   expect(language[0]).toBe('0px'); expect(language[1]).toBeGreaterThanOrEqual(44);
   for (const width of [320, 390]) {

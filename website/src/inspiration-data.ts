@@ -7132,6 +7132,262 @@ export const inspirationItems = [
       "text": "before choosing a logo for a new project, I like to ask an LLM to stress test it",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-steveruizok-959007",
+    "name": "Question-and-answer card graph for reading a complex plan",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/steveruizok/status/2121276417635959007",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究如何把长文档拆成问答卡片图：每张卡片以问题为标题、一句话回答为摘要，点开某行后新卡片从右侧展开，上一层卡片淡出但仍可见，顶部面包屑显示路径，并有方向键、空格、esc 的键盘提示。",
+      "en": "Study how a long document becomes a graph of Q&A cards: each card has a question title and a one-sentence answer. Opening a row slides a new card in from the right while the parent card fades but stays visible. A breadcrumb shows the path, and hints show arrow, space and esc keys."
+    },
+    "application": {
+      "zh": "长文档、技术方案和知识库的分层阅读界面",
+      "en": "Layered reading interfaces for long documents, technical plans and knowledge bases"
+    },
+    "publisher": "Steve Ruiz (@steveruizok)",
+    "kind": "social-post",
+    "designer": "Steve Ruiz",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T02:04:23.161Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2121276417635959007",
+      "author": "Steve Ruiz",
+      "handle": "steveruizok",
+      "date": "2026-11-13",
+      "lang": "en",
+      "text": "Suffering from markdown fatigue 😪 and trying something new to understand a complex plan: a graph of cards, organized around questions and answers, with just enough information at every level. Keyboard driven, highlight focused content, gives me something to do while I read",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-0xcharlota-299354",
+    "name": "Dot-ring logo explorer with parametric controls",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/0xCharlota/status/2118781184306299354",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究 charlota 如何用一个随手搭建的参数化工具探索点阵标志：深蓝圆点排成同心环，用滑块调整环数、每环点数、半径、间距和扭转角度，再把部分点关闭成浅灰，或把相邻圆点连成胶囊形，并把候选方案存为缩略图来比较。",
+      "en": "Study how charlota explores dot-based logo marks with a throwaway parametric tool: navy dots set in concentric rings, sliders for ring count, dots per ring, radius, spacing and twist, some dots switched off to pale grey or joined to their neighbours as capsule shapes, and saved versions kept as thumbnails to compare."
+    },
+    "application": {
+      "zh": "品牌标志早期探索与生成式标志系统",
+      "en": "Early logo exploration and generative identity systems"
+    },
+    "publisher": "charlota (@0xCharlota)",
+    "kind": "social-post",
+    "designer": "charlota",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T02:04:23.161Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2118781184306299354",
+      "author": "charlota",
+      "handle": "0xCharlota",
+      "date": "2026-11-06",
+      "lang": "en",
+      "text": "in my brand identity design process, I make a lot of vibe-coded, throwaway design tools. \n\nthey're not deliverables. they're tools for thinking.\n\nhere I was exploring logo ideas built from dots arranged in rings and grids, so I spun up a little artifact in Claude with controls…",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-fafamotion_-820512",
+    "name": "Logo animation tests: SUPER Every MOMENT to oppo",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/fafamotion_/status/2117498789900820512",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究一个黑白网格里的多种标志动画测试：“SUPER Every MOMENT”标语在椭圆括号中重新排列、收缩，括号打开露出图片，再变成圆环并组成 oppo 字标。每个变体对比都很克制，只靠时序和图形变化区分。",
+      "en": "Study a black-and-white grid of logo animation tests. In each, the \"SUPER Every MOMENT\" tagline rearranges and shrinks inside oval brackets, the brackets open to reveal photos, then close into rings that form the oppo wordmark. Each variant uses minimal contrast and differs only in timing and shape."
+    },
+    "application": {
+      "zh": "品牌标志动画与片尾定版",
+      "en": "Brand logo animation and end-card reveals"
+    },
+    "publisher": "fafa (@fafamotion_)",
+    "kind": "social-post",
+    "designer": "fafa",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T02:04:23.161Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2117498789900820512",
+      "author": "fafa",
+      "handle": "fafamotion_",
+      "date": "2026-11-03",
+      "lang": "en",
+      "text": "Earlier this year, I got a logo animation project at the studio and thought, why not try a bunch of different ideas?\n\nSo I ended up making all these little tests 😂\n\nWe actually went with my colleague’s version for the final animation, but I had a lot of fun exploring all the…",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-meylin_room-214540",
+    "name": "Meylin Land freestyle collage ZINE, spiral-bound",
+    "category": "practice",
+    "tag": "Print",
+    "url": "https://x.com/meylin_room/status/2118294715326214540",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究 Meylin Land 自制线圈装订 ZINE 的做法：高饱和粉红与青绿撞色，星形图案、镂空纹样边框与娃娃、玩偶图像层层拼贴，再配上荧光绿标签和彩色线圈；作者说明每一册的构成和收录内容都略有不同。",
+      "en": "Study how Meylin Land's handmade spiral-bound ZINEs layer saturated hot pink and teal with star motifs, ornamental cut-pattern borders, and doll and toy imagery. A neon-green label and colored binding rings finish each one, and the author notes that every copy differs slightly in layout and contents."
+    },
+    "application": {
+      "zh": "独立出版 ZINE、拼贴风印刷品与装订设计",
+      "en": "Independent zines, collage print pieces and binding design"
+    },
+    "publisher": "Meylin Land(メイリン ランド) (@meylin_room)",
+    "kind": "social-post",
+    "designer": "Meylin Land(メイリン ランド)",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T02:04:23.161Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2118294715326214540",
+      "author": "Meylin Land(メイリン ランド)",
+      "handle": "meylin_room",
+      "date": "2026-11-05",
+      "lang": "ja",
+      "text": "文学フリマ東京43\nブースNo. ▶︎ Y-9•10\n\nフリースタイルZINEは一冊ずつ構成や収録内容が少しづつ違います。コラージュしてたりしてなかったり、作品の断片が紛れ込んでいたりします。\n\n《イベント出展のおしらせ》\n\n2026/11/8(日) 12:00〜17:00\n東京ビッグサイト 南1-4ホール\n\n「文学フリマ43東京」",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-freshnfits-235004",
+    "name": "Fresh 'n Fits physical fan zine flip-through",
+    "category": "practice",
+    "tag": "Print",
+    "url": "https://x.com/freshnfits/status/2114332745946235004",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究这本 Fresh 'n Fits 自制 Splatoon 同人杂志如何借用商业杂志的版式：封面刊头配多条栏目标题、目录页、跨页大标题“HOME-COMING”、带描边的鲜艳插画搭配粗体倾斜字体，以及编辑专栏与制作名单页，让同人作品看起来像正式出版物。",
+      "en": "Study how Fresh 'n Fits' self-made Splatoon fan zine borrows commercial magazine conventions: a cover masthead stacked with section headlines, a contents page, spread-wide display titles like \"HOME-COMING\", bold outlined illustrations paired with heavy slanted type, and editor's column and credits pages that make a fan project read as a real publication."
+    },
+    "application": {
+      "zh": "同人志、独立杂志与印刷刊物版式设计",
+      "en": "Fan zines, indie magazines and print editorial layout"
+    },
+    "publisher": "Fresh 'n Fits! 🐙 CA12 N21-22 (@freshnfits)",
+    "kind": "social-post",
+    "designer": "Fresh 'n Fits! 🐙 CA12 N21-22",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T02:04:23.161Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2114332745946235004",
+      "author": "Fresh 'n Fits! 🐙 CA12 N21-22",
+      "handle": "freshnfits",
+      "date": "2026-10-25",
+      "lang": "en",
+      "text": "🧵(1/2) Hello folks, so this is the sneak peek of our physical zine! Looks like a real magazine right? #cf23 #splatoon",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-touhubook-733613",
+    "name": "Lenticular illustrated card with a figure that moves on tilt",
+    "category": "practice",
+    "tag": "Print",
+    "url": "https://x.com/touhubook/status/2113621316821733613",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究这张由作者自制的光栅卡如何在倾斜时变化：上方的天空、红色山丘和三个白色小角色保持不动，下方青绿色水面中一个黄色角色随卡片倾斜从左侧移到右侧草丛。整张卡采用平涂色块和粗黑描边，构图分为固定的背景带和运动区域。",
+      "en": "Study how the author's handmade lenticular card changes as it tilts: the sky, red hills and three small white figures at the top stay fixed, while a yellow figure in the teal water below moves from the left to the grass on the right. The card uses flat colour fills with bold black outlines, and the layout is split into fixed background bands and one area where the motion happens."
+    },
+    "application": {
+      "zh": "光栅印刷卡片与同人或独立出版周边",
+      "en": "Lenticular printed cards and zine or indie-publishing extras"
+    },
+    "publisher": "津村根央:12/13コミティアす79a (@touhubook)",
+    "kind": "social-post",
+    "designer": "津村根央:12/13コミティアす79a",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T02:04:23.161Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2113621316821733613",
+      "author": "津村根央:12/13コミティアす79a",
+      "handle": "touhubook",
+      "date": "2026-10-23",
+      "lang": "ja",
+      "text": "レンチキュラーカードを作りました\n\n11/7(土)、ZINEフェス吉祥寺に出ます",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-tayerexx-188180",
+    "name": "Cherry-blossom swing character illustration process",
+    "category": "practice",
+    "tag": "Illustration",
+    "url": "https://x.com/TayeRexx/status/2120695954689188180",
+    "source": "link-only",
+    "focus": {
+      "zh": "观察这幅插画从线稿到完稿的步骤：先铺平涂色块和粉蓝渐变发色，再加入缠绕秋千绳的藤蔓与樱花，最后补上撒满花瓣的草地背景和柔和的光影，让人物与场景融为一体。",
+      "en": "Follow how the piece moves from a clean line sketch to flat colour and pink-to-blue gradient hair, then adds vines and cherry blossoms wrapped around the swing ropes, and finishes with a petal-covered grass background and soft lighting that ties the character into the scene."
+    },
+    "application": {
+      "zh": "动漫风角色插画与分步过程展示",
+      "en": "Anime-style character illustration and step-by-step process showcases"
+    },
+    "publisher": "taye ₍ᐢ •̀⩊•́ ᐢ₎ (@TayeRexx)",
+    "kind": "social-post",
+    "designer": "taye ₍ᐢ •̀⩊•́ ᐢ₎",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T02:04:23.161Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2120695954689188180",
+      "author": "taye ₍ᐢ •̀⩊•́ ᐢ₎",
+      "handle": "TayeRexx",
+      "date": "2026-11-12",
+      "lang": "en",
+      "text": "snapshot illustration process ‧₊˚🌸",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-rashedatj-387724",
+    "name": "Isometric winding-road lesson map in a mobile app",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/RashedatJ/status/2118795397770387724",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究如何把课程进度做成可滚动的等距视角蜿蜒道路地图：圆形节点代表课时，沿路布置小场景插画，顶部固定深色模块卡片和橙色行动按钮，并与设计稿逐一对照还原。",
+      "en": "Study how lesson progress becomes a scrollable isometric winding-road map: round nodes mark lessons, small illustrated scenes sit along the road, and a pinned dark module card with an orange action button stays on top, shown side by side with the design file."
+    },
+    "application": {
+      "zh": "移动学习应用的课程进度地图",
+      "en": "Course progress maps in mobile learning apps"
+    },
+    "publisher": "Engr. Rashedat (@RashedatJ)",
+    "kind": "social-post",
+    "designer": "Engr. Rashedat",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T02:04:23.161Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2118795397770387724",
+      "author": "Engr. Rashedat",
+      "handle": "RashedatJ",
+      "date": "2026-11-06",
+      "lang": "en",
+      "text": "When it comes to converting designs to code perfectly, leave it for me. \nMy manger was skeptical about how doable this UI was and I built a perfect implementation regardless. This feature is available to Koyology subscribers on the koyo mobile app. \n\nThe design vs The mobile app https://t.co/HIwDrU586X",
+      "hasMedia": true
+    }
   }
 ];
 
