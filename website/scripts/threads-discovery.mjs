@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Weekly Threads discovery through Meta's official Threads API (keyword search), not by reading threads.com pages.
-// It stores only links and public post text; a person still opens each post and the site it points to before anything
-// goes into the library, and media from a post is never copied without the author's permission (RFC-008).
+// It stores only links and public post text; threads-publish.mjs screens the site each post points to, and its weekly
+// pull request merges once CI passes. Media from a post is never copied without the author's permission (RFC-008).
 // Until Meta approves the app's `threads_keyword_search` permission, search only returns the token owner's own posts.
 import fs from 'node:fs/promises';
 import os from 'node:os';
@@ -16,7 +16,7 @@ const libraryPath = path.resolve(here, '../src/inspiration-data.ts');
 export const tokenPath = process.env.THREADS_TOKEN_FILE || path.join(os.homedir(), '.config/variant-design/threads.json');
 const api = 'https://graph.threads.com/v1.0';
 const fields = 'id,text,media_type,permalink,timestamp,username,is_reply,is_quote_post,link_attachment_url';
-const reviewPolicy = 'Candidates reach the library only through threads-publish.mjs, which opens the site a post points to, reads a screenshot and writes bilingual notes into a pull request; a person merging that pull request is the review. Media from a post needs the author\'s permission.';
+const reviewPolicy = 'Candidates reach the library only through threads-publish.mjs, which opens the site a post points to, reads a screenshot and writes bilingual notes into a pull request that merges itself once CI passes; nobody reviews entries one by one. Media from a post needs the author\'s permission.';
 
 // Search groups live in `website/content/threads-discovery.json`: a group has an id, a window in `days` and `queries`
 // ({ q, mode?: KEYWORD|TAG, mediaType?: TEXT|IMAGE|VIDEO, author? }). Groups marked `weekly` run on the schedule.
