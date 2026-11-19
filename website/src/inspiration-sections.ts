@@ -15,13 +15,13 @@ export const sections: Section[] = [
     intro: { zh: '编辑器、知识库、项目和分析类产品的界面，以及引导、创建、历史和交付这些关键流程。', en: 'Interfaces for editors, knowledge bases, projects and analytics, plus the onboarding, creation, history and delivery flows.' } },
   { id: 'videos', name: { zh: '视频', en: 'Videos' }, work: { zh: '创意视频', en: 'Creative video' }, videoGrid: true,
     title: { zh: '创意视频灵感', en: 'Creative video inspiration' },
-    intro: { zh: '来自 X 的设计短视频：交互、动效、品牌、插画、海报和印刷作品，每条都能直接看它怎么动、怎么响应。', en: 'Short design videos from X: interaction, motion, brand, illustration, poster and print work, each one showing how it moves and responds.' } },
+    intro: { zh: '来自 X 和 YouTube 的设计短视频：交互、动效、品牌、插画、海报和印刷作品，每条都能直接看它怎么动、怎么响应。', en: 'Short design videos from X and YouTube: interaction, motion, brand, illustration, poster and print work, each one showing how it moves and responds.' } },
 ];
 
-// `landing` is a website; `product` and `flow` are interface work; a social post is a video. Its design type is its tag.
+// `landing` is a website; `product` and `flow` are interface work; a social post or a YouTube video is a video. Its design type is its tag.
 const typeByTag: Record<string, string> = { motion: 'motion', interaction: 'interaction', branding: 'branding', brand: 'branding', illustration: 'illustration', poster: 'posters', posters: 'posters', print: 'print' };
 export function sectionOf(item: { category: string; tag: string; kind?: string }): string {
-  if (item.kind === 'social-post') return 'videos';
+  if (item.kind === 'social-post' || item.kind === 'youtube-video') return 'videos';
   if (item.category === 'product' || item.category === 'flow') return 'interface';
   return 'web';
 }

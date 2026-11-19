@@ -7388,6 +7388,35 @@ export const inspirationItems = [
       "text": "When it comes to converting designs to code perfectly, leave it for me. \nMy manger was skeptical about how doable this UI was and I built a perfect implementation regardless. This feature is available to Koyology subscribers on the koyo mobile app. \n\nThe design vs The mobile app https://t.co/HIwDrU586X",
       "hasMedia": true
     }
+  },
+  {
+    "id": "yt-v3tbi0I9xrc",
+    "name": "Broadway Magic Hour wordmark animation",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://www.youtube.com/watch?v=v3tbi0I9xrc",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究黑底白色高对比衬线字标“BROADWAY MAGIC HOUR”的两行排版，以及画面中第二行只出现一部分、字标在不同帧中大小不同的出现方式。",
+      "en": "Study the two-line white high-contrast serif wordmark \"BROADWAY MAGIC HOUR\" on black, and how it appears in the frames: the second line only partly formed in one, and the mark shown at different sizes across frames."
+    },
+    "application": {
+      "zh": "演出或活动品牌的字标片头",
+      "en": "Wordmark intros for show or event brands"
+    },
+    "publisher": "AnimotionsStudio",
+    "kind": "youtube-video",
+    "designer": null,
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T07:57:29.703Z",
+    "verification": "public-video",
+    "mobile": "not-tested",
+    "video": {
+      "platform": "youtube",
+      "id": "v3tbi0I9xrc",
+      "channel": "AnimotionsStudio",
+      "channelUrl": "https://www.youtube.com/@AnimotionsStudio"
+    }
   }
 ];
 

@@ -83,7 +83,8 @@ test('both languages meet the visual budget, show a wall three cards high on the
   await page.setViewportSize({width,height:900});await page.goto(language==='en'?'/en':'/');await expect(page.locator('nav[aria-label="全部参考"]')).toHaveCount(0);await expect(page.locator('.insp-card').first()).toBeVisible();await page.evaluate(()=>document.fonts.ready);
   const sample=await page.evaluate(probe);expect(grade(sample).over,`${language} ${width}`).toEqual([]);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  const meta=page.locator('.insp-card-meta').first();await expect(meta).toHaveCSS('opacity','1');if(width<=390){await expect(meta.locator('.insp-vcard-avatar')).toBeVisible();
+  const meta=page.locator('.insp-card-meta').first();await expect(meta).toHaveCSS('opacity','1');await expect(meta.locator('small')).toBeVisible();// a YouTube card has no avatar, so the credit text is what every card shows
+  if(width<=390){await expect(page.locator('.insp-card-meta:has(.insp-vcard-avatar)').first().locator('.insp-vcard-avatar')).toBeVisible();
    // Phones: a vertical two-column feed. The first two cards share a row and split the width; the third starts a new row below.
    const tops=await page.locator('.insp-feed>.insp-card').evaluateAll(cs=>cs.slice(0,4).map(c=>{const r=c.getBoundingClientRect();return {top:Math.round(r.top),left:Math.round(r.left),width:Math.round(r.width)}}));
    expect(tops[0].top,`${language} ${width} first row`).toBe(tops[1].top);expect(tops[2].top,`${language} ${width} second row`).toBeGreaterThan(tops[0].top);

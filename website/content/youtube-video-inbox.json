@@ -1,0 +1,21 @@
+{
+  "updatedAt": "2026-11-19T07:57:29.703Z",
+  "source": "YouTube Data API v3 search",
+  "reviewPolicy": "Candidates reach the library only through youtube-publish.mjs, which reads YouTube's own thumbnails and writes bilingual notes into a pull request that merges itself once CI passes. Nothing from a video is downloaded or kept.",
+  "candidates": [
+    {
+      "id": "v3tbi0I9xrc",
+      "url": "https://www.youtube.com/watch?v=v3tbi0I9xrc",
+      "title": "Logo Animation | Transforming Logos into Motion Magic 🌟",
+      "channel": "AnimotionsStudio",
+      "channelUrl": "https://www.youtube.com/@AnimotionsStudio",
+      "text": "",
+      "capturedAt": "2026-11-19T07:57:29.482Z",
+      "query": "by address",
+      "group": "manual",
+      "status": "published",
+      "entry": "yt-v3tbi0I9xrc",
+      "reviewedAt": "2026-11-19"
+    }
+  ]
+}

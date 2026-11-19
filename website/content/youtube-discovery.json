@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "id": "weekly",
+      "weekly": true,
+      "days": 14,
+      "maxSeconds": 240,
+      "queries": [
+        { "q": "UI animation design", "minViews": 5000 },
+        { "q": "motion design logo animation", "minViews": 5000 },
+        { "q": "interaction design concept", "minViews": 5000 },
+        { "q": "brand identity animation", "minViews": 5000 }
+      ]
+    },
+    {
+      "id": "more",
+      "days": 60,
+      "maxSeconds": 240,
+      "queries": [
+        { "q": "kinetic typography", "minViews": 10000 },
+        { "q": "3D web design scroll animation", "minViews": 10000 },
+        { "q": "packaging design process", "minViews": 10000 },
+        { "q": "illustration process timelapse", "minViews": 10000 }
+      ]
+    }
+  ]
+}

@@ -922,7 +922,7 @@ test('X posters and avatars fall back to X directly when the image service fails
   await page.route(/\/_vercel\/image\?/, r => r.abort());
   await page.goto('/zh/browse/videos');
   await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content', 'no-referrer');
-  const card = page.locator('.insp-videos > li').first();
+  const card = page.locator('.insp-videos > li:not(:has(img[src*="ytimg"]))').first(); // the newest card may be a YouTube one
   const id = (await card.locator('.insp-card-open').getAttribute('href')).split('/').pop();
   // The card may switch from <video poster> to <img src> when the video fails, so read whichever is shown.
   await expect.poll(() => card.locator('.insp-vcard-media').evaluate(e => e.getAttribute(e.tagName === 'VIDEO' ? 'poster' : 'src'))).toBe(`${xMedia[id].poster}?format=webp&name=small`);
@@ -933,7 +933,7 @@ test('X posters and avatars fall back to X directly when the image service fails
 test('X cards whose poster cannot load fall back to the analysis card, not a broken image', async ({ page }) => {
   await page.route(/twimg\.com|platform\.twitter\.com/, r => r.abort());
   await page.goto('/zh/browse/videos');
-  const cards = page.locator('.insp-videos > li');
+  const cards = page.locator('.insp-videos > li:not(:has(img[src*="ytimg"]))');
   await expect(cards.first().locator('.insp-vcard-open > .insp-thumb')).toBeVisible();
   await expect(cards.first().locator('.insp-vcard-open > .insp-thumb b')).not.toBeEmpty();
   await expect.poll(() => page.locator('.insp-feed img').evaluateAll(imgs => imgs.filter(i => i.complete && i.naturalWidth === 0 && getComputedStyle(i).display !== 'none').length)).toBe(0);
@@ -1381,6 +1381,27 @@ test('the videos tab filters by design type in place, keeps the choice in the ad
  await types.first().click();await expect(page).not.toHaveURL(/type=/);
  // Websites have no design types.
  await page.goto('/zh/browse/web');await hydrated(page);await expect(page.locator('.insp-types')).toHaveCount(0);
+});
+
+test('a YouTube video shows its thumbnail, loads nothing from YouTube but that picture, and starts the player only on press', async ({page})=>{
+ const entry=readLibrary().items.find(i=>i.kind==='youtube-video');expect(entry,'the library has a YouTube video').toBeTruthy();
+ const hosts=new Set();page.on('request',r=>hosts.add(new URL(r.url()).hostname));
+ await page.route(/i\.ytimg\.com/,r=>r.fulfill({contentType:'image/png',body:pixel}));await page.route(/youtube-nocookie\.com/,r=>r.fulfill({contentType:'text/html',body:'<title>player</title>'}));
+ // The feed: a thumbnail card in the videos tab, credited to the channel, no player.
+ await page.goto('/zh/browse/videos');await hydrated(page);
+ const card=page.locator('.insp-videos > li',{has:page.locator(`a[href="/zh/inspiration/${entry.id}"]`)});
+ await expect(async()=>{await card.scrollIntoViewIfNeeded()}).toPass();await expect(card.locator('img.insp-vcard-media')).toHaveAttribute('src',new RegExp(`i\\.ytimg\\.com/vi/${entry.video.id}/`));
+ await expect(card.locator('.insp-card-meta small')).toHaveText(entry.video.channel);
+ expect([...hosts].some(h=>/youtube/.test(h)&&h!=='i.ytimg.com'),'only the thumbnail host before play').toBe(false);
+ // The detail: the same thumbnail behind a play button; the iframe appears on press and on no earlier moment.
+ await page.goto(`/zh/inspiration/${entry.id}`);await hydrated(page);
+ await expect(page.locator('iframe')).toHaveCount(0);await expect(page.locator('.yt-embed')).toContainText('YouTube 可能记录这次访问');
+ expect([...hosts].some(h=>/youtube-nocookie/.test(h))).toBe(false);
+ await page.getByRole('button',{name:/^播放：/}).click();
+ await expect(page.locator('iframe')).toHaveAttribute('src',new RegExp(`^https://www\\.youtube-nocookie\\.com/embed/${entry.video.id}\\?autoplay=1`));
+ await expect(page.locator('iframe')).toHaveAttribute('referrerpolicy','strict-origin-when-cross-origin');
+ // English words and the privacy page name what loads.
+ await page.goto('/privacy');await expect(page.getByText('Public videos on YouTube')).toBeVisible();
 });
 
 test('every indexable page names our share image', () => {

@@ -22,7 +22,7 @@ const cjk = /[㐀-鿿]/, latin = /[A-Za-z]{3}/;
 const chrome = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 const hostOf = url => { try { return new URL(url).hostname.replace(/^www\./, '').toLowerCase(); } catch { return null; } };
-export const siteInLibrary = (items, url) => { const host = hostOf(url); return host ? items.find(i => !i.post && hostOf(i.url) === host) ?? null : null; };
+export const siteInLibrary = (items, url) => { const host = hostOf(url); return host ? items.find(i => !i.post && i.kind !== 'youtube-video' && hostOf(i.url) === host) ?? null : null; };
 // `drinkpoppi.com` → `drinkpoppi`; a clash gets the next free number, so ids never repeat.
 export function idFor(url, taken) {
   const base = (hostOf(url) ?? 'site').split('.').slice(0, -1).join('-').replace(/[^a-z0-9-]/g, '') || 'site';
