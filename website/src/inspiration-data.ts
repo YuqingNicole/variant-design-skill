@@ -6876,6 +6876,262 @@ export const inspirationItems = [
       "text": "So pretty 😭 🌸",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-shuding-479363",
+    "name": "A Dashboard layout compiled into a math function",
+    "category": "practice",
+    "tag": "Web",
+    "url": "https://x.com/shuding/status/2115082810738479363",
+    "source": "link-only",
+    "focus": {
+      "zh": "看如何把 Dashboard 布局写成数学函数：padding 对 UI 的梯度箭头、页面高度随视口宽度跳变的断点图、用 sigmoid 平滑断点，以及卡片网格的完整公式表。",
+      "en": "Study how a dashboard layout is written as a math function: arrows for the gradient of the UI with respect to padding, page height jumping at viewport-width breakpoints, a sigmoid that smooths those breakpoints, and a full formula sheet for the card grid."
+    },
+    "application": {
+      "zh": "响应式布局与断点设计",
+      "en": "Responsive layout and breakpoint design"
+    },
+    "publisher": "Shu (@shuding)",
+    "kind": "social-post",
+    "designer": "Shu",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T01:29:56.997Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2115082810738479363",
+      "author": "Shu",
+      "handle": "shuding",
+      "date": "2026-10-27",
+      "lang": "en",
+      "text": "UI and math time! UI = f(props) is the most famous line in React. But that f is JavaScript, not math.\n\nInspired by @_chenglou’s Handwired project, I compiled a <Dashboard/> component into a real math function, and asked what becomes possible.https://t.co/HlECebkKCt",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-kyleanthony-121831",
+    "name": "Particle brand identity: striped sphere and color bars",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/kyleanthony/status/2115500002349121831",
+    "source": "link-only",
+    "focus": {
+      "zh": "Kyle Anthony Miller 团队为 Suhail 的新公司 Particle 打造的品牌识别：可研究斜线条纹球体标志，以及橙、绿、粉、青、黄等高饱和色带叠加的扫描故障感。系统配合衬线字标与等宽小字标注，并延展到网站首页、海报、作文本封面和徽章。",
+      "en": "Kyle Anthony Miller's team's identity for Suhail's new company, Particle. Study the diagonal-striped sphere mark and the stacked, glitch-like scanline bands in saturated orange, green, pink, cyan and yellow. The system pairs a serif wordmark with small monospace labels and carries across a website homepage, posters, composition-notebook covers and patches."
+    },
+    "application": {
+      "zh": "科技公司品牌系统与官网视觉",
+      "en": "Tech brand identity systems and website visuals"
+    },
+    "publisher": "Kyle Anthony Miller (@kyleanthony)",
+    "kind": "social-post",
+    "designer": "Kyle Anthony Miller",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T01:29:56.997Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2115500002349121831",
+      "author": "Kyle Anthony Miller",
+      "handle": "kyleanthony",
+      "date": "2026-10-28",
+      "lang": "en",
+      "text": "We partnered with Suhail to create the brand identity for his new company, Particle. https://t.co/Fw6z9gyL9n",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-adelineastraos-883731",
+    "name": "Fermah iridescent blob hero with dot-grid shading",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/AdelineAstraOS/status/2122328210989883731",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究深色背景下青绿色虹彩透明形体如何持续变形，网点纹理与粉色边缘高光如何营造诡异质感；标语出现后“moon math”被描边框突出，绿色胶囊按钮发光，悬停时顶部出现网点光弧。",
+      "en": "Study how a translucent teal iridescent blob keeps morphing on a dark background, with dot-grid texture and pink rim highlights giving it an eerie feel; after the headline appears, 'moon math' gets an outlined highlight box, the green pill CTA glows, and a dotted light arc appears at the top on hover."
+    },
+    "application": {
+      "zh": "科技品牌落地页首屏",
+      "en": "Tech brand landing page hero"
+    },
+    "publisher": "Adeline (@AdelineAstraOS)",
+    "kind": "social-post",
+    "designer": "Adeline",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T01:29:56.997Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2122328210989883731",
+      "author": "Adeline",
+      "handle": "AdelineAstraOS",
+      "date": "2026-11-16",
+      "lang": "en",
+      "text": "Brand identity, UI and interactions\n\nTurns out making an iridescent blob look eerie is a real job. Who knew?\n\nHuge thanks to @ElzigAstraOS for reminding me, very gently and only every five minutes, how light and reflections are supposed to work 🪷",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-nfarina-083943",
+    "name": "Kindle iOS page-turn swipe: stock vs. patched",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/nfarina/status/2118420136118083943",
+    "source": "link-only",
+    "focus": {
+      "zh": "对比左右两台设备上的同一阅读页面：左为亚马逊原版 Kindle iOS 应用，右为作者 Nick Farina 修改滑动识别与翻页动画后的版本；观察手指滑动时页面的响应方式与过渡效果（右侧画面中出现文字运动模糊的翻页过渡）。",
+      "en": "Compare the same reading page on two devices side by side: Amazon's stock Kindle iOS app on the left and Nick Farina's version on the right, with his changes to swipe detection and the page-turn animation. Watch how each page responds to the finger swipe and how the turn transitions. On the right, the text shows motion blur mid-turn."
+    },
+    "application": {
+      "zh": "电子阅读器翻页手势与过渡动画",
+      "en": "E-reader page-turn gestures and transition animation"
+    },
+    "publisher": "Nick Farina (@nfarina)",
+    "kind": "social-post",
+    "designer": "Nick Farina",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T01:29:56.997Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2118420136118083943",
+      "author": "Nick Farina",
+      "handle": "nfarina",
+      "date": "2026-11-05",
+      "lang": "en",
+      "text": "So…I was very annoyed with Kindle, then remembered Unfairplay. I asked 6.1 Sol to \"fix\" the iOS app by patching the binary directly and adjusting the swipe detection and animation. And it f*cking DID IT. Shitty Amazon version on left, patched version on right.\n\nI'm scared https://t.co/NTYmjtJCGo",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-lexnlin-238295",
+    "name": "Claude logo animation: 3D book pages fold into the mark",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/LexnLin/status/2120167637133238295",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究如何把一本橙色封面的3D书，借助特写的纸页边缘和翻页时的打光，展开成放射状的星形标志，再切到米色底上的平面标志与文字组合。",
+      "en": "Study how a 3D book with an orange cover, shown through close-ups of paper edges and lit fanning pages, opens into a radial star mark, then cuts to the flat mark and wordmark on a cream background."
+    },
+    "application": {
+      "zh": "品牌标志动画与片尾标志展示",
+      "en": "Brand logo animation and end-card logo reveals"
+    },
+    "publisher": "Leon Lin (@LexnLin)",
+    "kind": "social-post",
+    "designer": "Leon Lin",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T01:29:56.997Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2120167637133238295",
+      "author": "Leon Lin",
+      "handle": "LexnLin",
+      "date": "2026-11-10",
+      "lang": "en",
+      "text": "Claude logo animation made with Fable 5.2 high",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-dieegosf-331084",
+    "name": "Design documentation canvas with UI states and copy specs",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/dieegosf/status/2122721932659331084",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究作者如何在同一画布上把界面文档化：每个组件旁配有说明文字、状态矩阵（默认、悬停、按下、聚焦、禁用）、用量额度卡片的多种状态变体、事件与界面响应对照表，以及逐步提问的表单流程，使界面设计可以被直接复用。",
+      "en": "Study how the author documents an interface on a single canvas: each component sits beside written rationale, a state matrix (default, hover, pressed, focus, disabled), usage-credit cards shown in several state variants, a table pairing events with UI responses, and a step-by-step question flow, so the screens can be reused directly."
+    },
+    "application": {
+      "zh": "产品设计系统与界面规格文档",
+      "en": "Product design systems and UI spec documentation"
+    },
+    "publisher": "Diego Fernandes (@dieegosf)",
+    "kind": "social-post",
+    "designer": "Diego Fernandes",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T01:29:56.997Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2122721932659331084",
+      "author": "Diego Fernandes",
+      "handle": "dieegosf",
+      "date": "2026-11-17",
+      "lang": "pt",
+      "text": "quando eu falo sobre documentação de design\n\ncom tudo isso aí, as telas que meus agentes desenham no Paper saem 90% sem qualquer tipo de ajuste, eu no máximo mexo em algum fluxo que ficou estranho\n\n(eu nem to mostrando tudo no vídeo)",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-hamzainstantly-048130",
+    "name": "Smot brand identity: playful white blob mascots",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/HamzaInstantly/status/2122363590779048130",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究深绿底上的四个白色圆润剪影角色（一个8字形、一个云朵形、一个戴耳机带音符、一个小幽灵），只用两个椭圆眼睛表情，在动画里眨眼、眯眼、轻微晃动，让科技初创品牌显得不那么严肃。",
+      "en": "Study four rounded white silhouette characters on deep green (a figure-8 shape, a cloud shape, one wearing headphones with a music note, a small ghost), each given expression only through two oval eyes, blinking, squinting and bobbing slightly in the animation to make a tech startup brand feel less serious."
+    },
+    "application": {
+      "zh": "科技初创品牌的吉祥物系统与动态标识",
+      "en": "Mascot systems and animated logos for tech startup brands"
+    },
+    "publisher": "Hamza A. (@HamzaInstantly)",
+    "kind": "social-post",
+    "designer": "Hamza A.",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T01:29:56.997Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2122363590779048130",
+      "author": "Hamza A.",
+      "handle": "HamzaInstantly",
+      "date": "2026-11-16",
+      "lang": "en",
+      "text": "Brand identity for Smot\n\nWho said a tech startup needs to look serious?",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-ibelick-734726",
+    "name": "Neueface logo stress test across real-world contexts",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/Ibelick/status/2121162309011734726",
+    "source": "link-only",
+    "focus": {
+      "zh": "研究如何在定稿前把一个由竖条组成的黑白标志放进多种真实场景中检验：不同尺寸的缩小测试、与字标的组合、macOS Dock 深浅色背景下的应用图标、名片、贴纸、3D 立体渲染、动效帧，以及彩色底与重复图案，从而判断标志在每种用途下是否依然清晰可辨。",
+      "en": "Study how a black-and-white mark made of vertical bars is checked in many real contexts before it is chosen: shrinking it to small sizes, pairing it with the wordmark, app icons in a macOS dock on light and dark backgrounds, business cards, stickers, 3D renders, motion frames, colored tiles and repeat patterns, to see whether the mark stays readable in each use."
+    },
+    "application": {
+      "zh": "新项目的标志筛选与品牌系统验证",
+      "en": "Choosing a logo and testing a brand system for a new project"
+    },
+    "publisher": "Ibelick (@Ibelick)",
+    "kind": "social-post",
+    "designer": "Ibelick",
+    "checkedAt": "2026-11-19",
+    "addedAt": "2026-11-19T01:29:56.997Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2121162309011734726",
+      "author": "Ibelick",
+      "handle": "Ibelick",
+      "date": "2026-11-13",
+      "lang": "en",
+      "text": "before choosing a logo for a new project, I like to ask an LLM to stress test it",
+      "hasMedia": true
+    }
   }
 ];
 
