@@ -136,7 +136,7 @@
 
 | 组件 | 位置 | 要点 |
 |---|---|---|
-| 导航 | `SiteHeader`（`SiteChrome.tsx`） | 品牌字标（手机上也保留完整的 variant design）、6 个链接、语言切换。语言切换是无边框文字，和导航链接同一种样子，点击区域至少 44px 高。导航项和它指向的页面、筛选胶囊用同一个名字（动效 → /browse/motion）。当前页用下划线标出，偏移 6px |
+| 导航 | `SiteHeader`（`SiteChrome.tsx`） | 品牌字标（手机上也保留完整的 variant design）、6 个链接、语言切换。语言切换是无边框文字，和导航链接同一种样子，点击区域至少 44px 高。导航项和它指向的页面、筛选胶囊用同一个名字（视频 → /browse/videos）。当前页用下划线标出，偏移 6px |
 | 页脚 | `SiteFooter` | 浅绿收尾 CTA（标题 + 一句说明 + 按钮，不加眉标，按钮不带箭头；标题用 `text-wrap: balance` 防止单字孤行，`halt` 让全角逗号收成半宽）+ 品牌和四组站内链接；CTA 回到灵感流。字体授权行必须保留（见第 3 节） |
 | 主按钮 | `.home-action-primary`、`.content-button`、`.paper-button`、`.pricing-button` 等 | 墨色底、`--site-on-ink` 字、6px 圆角，悬停向纸色提亮约 22%；内边距 12px 20px、14px 字、至少 44px 高。页脚收尾按钮相同。质感统一写在 `site-system.css` 末尾：顶部 1px 浅色内边、底部一道贴身的墨绿阴影，按下缩到 98%（仅在未开减少动态时）；不用光晕 |
 | 次按钮 | `.home-action-secondary` | 透明底、墨色 1px 边框、墨色字 |

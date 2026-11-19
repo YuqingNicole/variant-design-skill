@@ -21,7 +21,7 @@ function redirectFor(pathname, search) {
   for (const r of redirects) {
     const m = r.pattern.exec(pathname);
     if (!m || (r.missing ?? []).some(c => c.type === "query" && new URLSearchParams(search).has(c.key))) continue;
-    return r.destination.replace(/:([A-Za-z]+)\*?/g, (_, name) => m.groups?.[name] ?? "") + search;
+    return r.destination.replace(/:([A-Za-z]+)\*?/g, (_, name) => m.groups?.[name] ?? "") + (search && r.destination.includes("?") ? search.replace(/^\?/, "&") : search);
   }
   return null;
 }

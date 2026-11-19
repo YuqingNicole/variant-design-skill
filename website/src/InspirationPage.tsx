@@ -6,7 +6,7 @@ import { XVideo } from './XVideo';
 import { sized, proxied } from './image-proxy';
 import { locales, type Locale } from './i18n/locales';
 import { t, type Localized } from './i18n/localized';
-import { sectionOf, sectionPath, sectionById, activeSections, detailTitle } from './inspiration-sections';
+import { sectionOf, sectionPath, sectionById, activeSections, detailTitle, videoTypes, videoTypeOf } from './inspiration-sections';
 import { references, referencesFor, withdrawnReferences, permissionOf, referenceOf, previewOf, mediaOf, ensure, ensureAll, loaded, subscribe, snapshot, inspirationTopics, type Reference, type Row, type Preview } from './reference-library';
 import { AuthorizationDetails, AuthorizedMedia, authorizedVideo, WithdrawnReferencePage } from './ReferencePermission';
 import './content-pages.css';
@@ -42,7 +42,7 @@ const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdra
  copyManually:{zh:'请在文本框中选择并手动复制。',en:'Select the text and copy it manually.'},submissions:{zh:'投稿与授权规则',en:'Submissions & permissions'},casesEntry:{zh:'案例：一个任务出三版 →',en:'Cases: one brief, three directions →'},
  rights:{zh:'作品版权归原作者；仅链接的参考与作者授权的媒体分别注明来源和权限。',en:'The work belongs to its owners; link-only references and author-permission media each state their source and rights.'},rightsMore:{zh:'展示方式与数据来源',en:'How media is shown and where data comes from'},
 
- refType:{zh:'参考类型',en:'Reference type'},all:{zh:'全部',en:'All'},search:{zh:'搜索参考',en:'Search references'},searchHint:{zh:'搜索 ⌘K',en:'Search ⌘K'},
+ refType:{zh:'参考类型',en:'Reference type'},videoType:{zh:'视频类型',en:'Video type'},all:{zh:'全部',en:'All'},search:{zh:'搜索参考',en:'Search references'},searchHint:{zh:'搜索 ⌘K',en:'Search ⌘K'},
  sort:{zh:'排序',en:'Sort'},curated:{zh:'最近收录',en:'Recently added'},original:{zh:'编辑顺序',en:'Editorial order'},recent:{zh:'最近核对',en:'Recently checked'},byName:{zh:'按名称',en:'By name'},references:{zh:'个参考',en:'references'},openOnX:{zh:'在 X 上打开',en:'Open on X'},
  openSource:{zh:'打开来源',en:'Open source'},noMatches:{zh:'没有匹配结果。试试其他关键词或专题。',en:'No matches. Try another query or topic.'},clear:{zh:'清除筛选',en:'Clear filters'},
  closing:{zh:'看过之后，做出自己的版本。',en:'After looking, make your own version.'},install:{zh:'安装并开始',en:'Install & start'},studies:{zh:'查看我们的 A/B/C 案例',en:'See our A/B/C cases'},
@@ -91,7 +91,7 @@ export function prepare(route:string){const p=new URLSearchParams(location.searc
 export function InspirationPage({detail='',section:sectionProp=''}:{detail?:string;section?:string}){
  const language = useLocale();useSyncExternalStore(subscribe,snapshot,snapshot);// re-renders as section chunks arrive
  const rows=referencesFor(language),total=rows.length,count=(c:string)=>rows.filter(i=>sectionOf(i)===c).length,tabs=activeSections(rows),withdrawn=withdrawnReferences.find(r=>r.id===detail);const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);// A section is the page's own address (/browse/<id>); a detail opened from one keeps it in `in` so Esc and the arrows stay inside it.
- const [section]=useState(()=>{const id=sectionProp||(detail?new URLSearchParams(location.search).get('in')??'':'');return tabs.some(s=>s.id===id)?id:''});const sectionInfo=sectionById(section);const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('q')??'');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [sort,setSort]=useState(()=>{const s=new URLSearchParams(location.search).get('sort');return s==='name'||s==='checked'||s==='curated'?s:'default'});const [visible,setVisible]=useState(()=>typeof IntersectionObserver==='undefined'?Infinity:pageSize);
+ const [section]=useState(()=>{const id=sectionProp||(detail?new URLSearchParams(location.search).get('in')??'':'');return tabs.some(s=>s.id===id)?id:''});const sectionInfo=sectionById(section);const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('q')??'');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [type,setType]=useState(()=>{const id=new URLSearchParams(location.search).get('type');return videoTypes.some(v=>v.id===id)?id!:''});const [sort,setSort]=useState(()=>{const s=new URLSearchParams(location.search).get('sort');return s==='name'||s==='checked'||s==='curated'?s:'default'});const [visible,setVisible]=useState(()=>typeof IntersectionObserver==='undefined'?Infinity:pageSize);
  // `page` is a detail opened by its own address; `modal` is one opened from the grid over it.
  const [open,setOpen]=useState<{id:string;mode:'page'|'modal'}|null>(()=>rows.some(i=>i.id===detail)?{id:detail,mode:'page'}:null);
  const requestedOpen=useRef(open);
@@ -130,7 +130,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  // One stream, sorted by the commit that first collected each reference, not its later review date.
  // A query matches the notes too, so it asks for every record; until they arrive only the name and tag of an unfetched reference count.
  const q=query.trim().toLowerCase(),text=(r:Row)=>{const full=referenceOf(r.id);return (full?[full.name,full.tag,full.publisher,...Object.values(full.focus),...Object.values(full.application)]:[r.name,r.tag]).join(' ').toLowerCase()};
- const matches=rows.filter(r=>(!section||sectionOf(r)===section)&&(!activeTopic||activeTopic.items.includes(r.id))&&(!q||text(r).includes(q)));
+ const matches=rows.filter(r=>(!section||sectionOf(r)===section)&&(!activeTopic||activeTopic.items.includes(r.id))&&(!type||section!=='videos'||videoTypeOf(r)===type)&&(!q||text(r).includes(q)));
  const results=sort==='checked'?[...matches].sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt)):sort==='name'?[...matches].sort((a,b)=>a.name.localeCompare(b.name)):sort==='curated'?matches:[...matches].sort((a,b)=>Date.parse(b.addedAt)-Date.parse(a.addedAt));
  // Cards render from records; the rows on screen whose section has not been fetched ask for it, and the store re-renders the page when it lands.
  const shown=results.slice(0,visible),cards=shown.flatMap(r=>referenceOf(r.id)??[]),missing=shown.filter(r=>!referenceOf(r.id)).map(r=>r.id).join(' ');
@@ -148,10 +148,10 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   const valid=rows.some(i=>i.id===id);if(valid&&fromGrid.current&&!returnTo.current)remember();
   const next=valid?{id,mode:fromGrid.current?'modal' as const:'page' as const}:null;requestedOpen.current=next;
   const apply=()=>transition(()=>{setOpen(next);
-   const params=new URLSearchParams(location.search),s=params.get('sort');setTopic(params.get('topic')??'');setQuery(params.get('q')??'');setSort(s==='name'||s==='checked'||s==='curated'?s:'default')});
+   const params=new URLSearchParams(location.search),s=params.get('sort');setTopic(params.get('topic')??'');setType(videoTypes.some(v=>v.id===params.get('type'))?params.get('type')!:'');setQuery(params.get('q')??'');setSort(s==='name'||s==='checked'||s==='curated'?s:'default')});
   if(next&&!loaded([next.id]))ensure([next.id]).then(()=>{if(requestedOpen.current===next)apply()});else apply();
  };addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
- useEffect(()=>{const url=new URL(location.href);for(const [key,value] of Object.entries({topic,q:query,sort:sort==='default'?'':sort})){if(value)url.searchParams.set(key,value);else url.searchParams.delete(key)}history.replaceState(history.state,'',url.pathname+url.search+url.hash)},[topic,query,sort]);
+ useEffect(()=>{const url=new URL(location.href);for(const [key,value] of Object.entries({topic,type:section==='videos'?type:'',q:query,sort:sort==='default'?'':sort})){if(value)url.searchParams.set(key,value);else url.searchParams.delete(key)}history.replaceState(history.state,'',url.pathname+url.search+url.hash)},[topic,type,query,sort]);
  const inQuery=(drop=false)=>{const p=new URLSearchParams(location.search);if(drop||!section)p.delete('in');else p.set('in',section);const q=p.toString();return q?'?'+q:''};
  // A reference outside the fetched sections is shown once its record is here; a newer request in the meantime wins.
  function show(id:string,mode:'page'|'modal'){if(!requestedOpen.current&&mode==='modal')remember();const request={id,mode};requestedOpen.current=request;const go=()=>transition(()=>{
@@ -220,7 +220,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    
    <label className="insp-search"><Icon d={icons.search}/><span className="insp-visually-hidden">{l('search')}</span><input ref={searchRef} type="search" value={query} onChange={e=>{setQuery(e.target.value);setVisible(pageSize)}} placeholder={l('searchHint')}/></label>
    <select aria-label={l('sort')} value={sort} onChange={e=>{const v=e.target.value;filter(()=>setSort(v))}}><option value="default">{l('curated')}</option><option value="curated">{l('original')}</option><option value="checked">{l('recent')}</option><option value="name">{l('byName')}</option></select>
-  </div></div>
+  </div>{section==='videos'&&<div className="site-shell"><div className="insp-types" role="group" aria-label={l('videoType')}>{[{id:'',name:{zh:'全部',en:'All'}},...videoTypes.filter(v=>rows.some(r=>sectionOf(r)==='videos'&&videoTypeOf(r)===v.id))].map(v=><button key={v.id||'all'} type="button" aria-pressed={type===v.id} onClick={()=>{filter(()=>setType(v.id));feedRef.current?.scrollTo({left:0});scrollTo({top:0})}}>{t(v.name,language)} <small aria-hidden="true">{rows.filter(r=>sectionOf(r)==='videos'&&(!v.id||videoTypeOf(r)===v.id)).length}</small></button>)}</div></div>}</div>
   <section className="site-shell insp-body">
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
@@ -234,7 +234,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    </li>})}</ul>
    {results.length>0&&<div className="insp-controls"><div className="insp-progress" aria-hidden="true">{String(Math.min(cards.length,Math.round(feed.at*(cards.length-1))+1)).padStart(2,'0')} / {String(results.length).padStart(2,'0')}<i style={{'--p':`${Math.round(feed.at*100)}%`} as CSSProperties}/></div><div className="insp-arrows"><button type="button" aria-label={l('scrollPrev')} disabled={!feed.can||feed.at<=.001} onClick={()=>scrollFeed(-1)}><Icon d={icons.prev}/></button><button type="button" aria-label={l('scrollNext')} disabled={!feed.can||feed.at>=.999} onClick={()=>scrollFeed(1)}><Icon d={icons.next}/></button></div></div>}
    {visible<results.length&&<div className="insp-more" ref={moreRef}><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}
-   {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setTopic('');setQuery('')})}>{l('clear')}</button></p>}
+   {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setTopic('');setType('');setQuery('')})}>{l('clear')}</button></p>}
    {tail}
    <section className="content-closing"><h2>{l('closing')}</h2><a className="content-button" href={localePath('/docs',language)}>{l('install')}</a>{showCases&&<a className="content-secondary" href={localePath('/cases',language)}>{l('studies')}</a>}<p className="inspiration-count">{l('checked')}</p></section>
   </section>

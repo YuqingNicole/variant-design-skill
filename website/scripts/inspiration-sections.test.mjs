@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { loadEntries } from './content.mjs';
 import { loadReferences, renderSite, sectionPages, sitemap, indexableRoutes, lastModified } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
-const { sections, sectionOf, sectionPath, activeSections } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
+const { sections, sectionOf, sectionPath, activeSections, videoTypeOf, videoTypes } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 
 test('every reference belongs to exactly one section, so no tab repeats another', () => {
@@ -15,23 +15,25 @@ test('every reference belongs to exactly one section, so no tab repeats another'
   assert.equal(new Set(Object.values(byId).flat().map(r => r.id)).size, refs.length);
 });
 
-test('mapping rules: practice splits by tag, landing is web, product and flow are interface', () => {
+test('mapping rules: a social post is a video, landing is web, product and flow are interface', () => {
   assert.equal(sectionOf({ category: 'landing', tag: 'SaaS' }), 'web');
   assert.equal(sectionOf({ category: 'product', tag: 'Editor' }), 'interface');
   assert.equal(sectionOf({ category: 'flow', tag: 'History' }), 'interface');
-  for (const [tag, id] of [['Motion', 'motion'], ['Interaction', 'interaction'], ['Branding', 'branding'], ['Brand', 'branding'], ['Web', 'web'], ['Illustration', 'illustration'], ['Poster', 'posters'], ['Print', 'print'], ['Anything else', 'web']]) assert.equal(sectionOf({ category: 'practice', tag }), id, tag);
+  for (const tag of ['Motion', 'Interaction', 'Branding', 'Web', 'Illustration', 'Poster', 'Print']) assert.equal(sectionOf({ category: 'practice', tag, kind: 'social-post' }), 'videos', tag);
+  assert.equal(sectionOf({ category: 'practice', tag: 'Motion' }), 'web');
+  // Inside the videos tab the design type is the tag; an unknown tag is a web video.
+  for (const [tag, id] of [['Motion', 'motion'], ['Interaction', 'interaction'], ['Branding', 'branding'], ['Brand', 'branding'], ['Web', 'web'], ['Illustration', 'illustration'], ['Poster', 'posters'], ['Print', 'print'], ['Anything else', 'web']]) assert.equal(videoTypeOf({ tag }), id, tag);
+  assert.deepEqual(videoTypes.map(v => v.id).sort(), ['branding', 'illustration', 'interaction', 'motion', 'posters', 'print', 'web']);
   assert.equal(sectionPath(''), '/'); assert.equal(sectionPath('web'), '/browse/web');
 });
 
 test('a section with no reference has no tab and no page until one exists', () => {
-  const only = [{ category: 'practice', tag: 'Motion' }];
-  assert.deepEqual(activeSections(only).map(s => s.id), ['motion']);
+  const only = [{ category: 'practice', tag: 'Motion', kind: 'social-post' }];
+  assert.deepEqual(activeSections(only).map(s => s.id), ['videos']);
   const refs = loadReferences(), active = activeSections(refs).map(s => s.id);
-  // Data-driven: a section is active exactly when a reference maps to it. Illustration and posters got their first
-  // entries in the first 2026-11-13 batch and print in the second, so every section is active now; the `only` case
-  // above keeps the empty-section rule covered.
+  // Data-driven: a section is active exactly when a reference maps to it; the `only` case above keeps the empty-section rule covered.
   for (const s of sections) assert.equal(active.includes(s.id), refs.some(r => sectionOf(r) === s.id), s.id);
-  assert.ok(active.includes('print'));
+  assert.ok(active.includes('videos'));
   assert.ok(sectionPages(refs).every(s => s.count.zh > 0));
 });
 
@@ -56,11 +58,11 @@ test('each section page has its own address, title, description and canonical, l
 test('sitemap lastmod uses recorded dates only: newest of checked and added, newest in a section for the section and the home page', () => {
   const refs = [
     { id: 'a', category: 'landing', tag: 'SaaS', checkedAt: '2026-10-29', addedAt: '2026-10-07T20:39:49+08:00' },
-    { id: 'b', category: 'practice', tag: 'Motion', checkedAt: '2026-11-01', addedAt: '2026-11-05T09:00:00+08:00' },
-    { id: 'c', category: 'practice', tag: 'Web', checkedAt: 'not a date', addedAt: '2026-11-03T09:00:00+08:00' },
+    { id: 'b', category: 'practice', tag: 'Motion', kind: 'social-post', checkedAt: '2026-11-01', addedAt: '2026-11-05T09:00:00+08:00' },
+    { id: 'c', category: 'practice', tag: 'Web', kind: 'social-post', checkedAt: 'not a date', addedAt: '2026-11-03T09:00:00+08:00' },
   ];
   const dates = lastModified({ references: refs, entries: [{ slug: 'forma', publishedAt: '2026-10-27' }], guides: [{ slug: 'g', publishedAt: '2026-11-02' }, { slug: 'bad', publishedAt: 'soon' }], sectionOf });
-  assert.deepEqual(dates, { '/inspiration/a': '2026-10-29', '/inspiration/b': '2026-11-05', '/inspiration/c': '2026-11-03', '/browse/web': '2026-11-03', '/browse/motion': '2026-11-05', '/': '2026-11-05', '/d/forma': '2026-10-27', '/guides/g': '2026-11-02' });
+  assert.deepEqual(dates, { '/inspiration/a': '2026-10-29', '/inspiration/b': '2026-11-05', '/inspiration/c': '2026-11-03', '/browse/web': '2026-10-29', '/browse/videos': '2026-11-05', '/': '2026-11-05', '/d/forma': '2026-10-27', '/guides/g': '2026-11-02' });
   const map = sitemap(['/', '/zh', '/inspiration/a', '/zh/inspiration/a', '/cases', '/guides/bad'], 'https://example.test', dates);
   assert.ok(map.includes('<loc>https://example.test/</loc><lastmod>2026-11-05</lastmod>'));
   assert.ok(map.includes('<loc>https://example.test/zh</loc><lastmod>2026-11-05</lastmod>'));

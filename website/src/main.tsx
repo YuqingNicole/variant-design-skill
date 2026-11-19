@@ -10,7 +10,7 @@ const parsed = parseLocale(window.location.pathname.replace(/\/+$/, "") || "/");
 let route = parsed.route;
 const moved = legacy(route);
 // The old `?category=` filter became one page per section; its values map onto the new addresses (`practice` was every video, so it goes to the feed).
-const oldCategory = ({ landing: "web", product: "interface", flow: "interface", motion: "motion", practice: "" } as Record<string, string>)[new URLSearchParams(location.search).get("category") ?? "-"];
+const oldCategory = ({ landing: "web", product: "interface", flow: "interface", motion: "videos", practice: "videos" } as Record<string, string>)[new URLSearchParams(location.search).get("category") ?? "-"];
 if (oldCategory !== undefined && (route === "/" || route.startsWith("/inspiration/"))) {
   const query = new URLSearchParams(location.search); query.delete("category");
   if (route === "/") { const next = oldCategory ? "/browse/" + oldCategory : "/"; route = next; }

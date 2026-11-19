@@ -14,7 +14,7 @@ import type { Locale } from './i18n/locales';
 import type { XMedia } from './XVideo';
 export type Link=typeof links[number];
 export type Reference=Link|Authorized;
-export type Row=Pick<Link,'id'|'name'|'category'|'tag'|'source'|'addedAt'|'checkedAt'>&{translations?:Translations};
+export type Row=Pick<Link,'id'|'name'|'category'|'tag'|'source'|'addedAt'|'checkedAt'>&Partial<Pick<Link,'kind'>>&{translations?:Translations};
 // The preview a site publishes for shared links (scripts/link-preview.mjs).
 export type Preview={image:string;title:string;description:string;lang:string;fetchedAt:string};
 export const inspirationTopics:typeof topicList=topics;
