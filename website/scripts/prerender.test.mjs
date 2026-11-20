@@ -138,7 +138,7 @@ test('guides get their own pages, are listed for search and read in both languag
   const guides = [...answers, ...docsArticles];
   // The Codex article's English has not been reviewed, so it is the one article marked draft.
   assert.ok(docsArticles.length >= 5 && docsArticles.every(g => g.base === '/docs'));
-  assert.deepEqual(docsArticles.filter(g => g.translations).map(g => [g.slug, g.translations]), [['frontend-design-in-codex', { en: { status: 'draft' } }]]);
+  assert.deepEqual(docsArticles.filter(g => g.translations).map(g => [g.slug, g.translations]), [['frontend-design-in-codex', { en: { status: 'draft' } }], ['design-system-after-pick-lessons', { en: { status: 'draft' } }], ['why-ai-design-directions-look-alike', { en: { status: 'draft' } }]]);
   const rendered = Object.fromEntries(guides.map(g => [guideRoute(g), `<main><h1>${g.slug}</h1></main>`]));
   const pages = renderSite(entries, template, 'https://example.test', [], { guides, rendered });
   const map = sitemap(indexableRoutes(pages), 'https://example.test'), docs = await importTs(new URL('../src/docs-content.ts', import.meta.url).pathname), text = llms(entries, docs, 'https://example.test', [], guides);
