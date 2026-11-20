@@ -172,7 +172,7 @@ export async function run({ groups, days, config = configPath, inbox: inboxFile 
   const now = new Date();
   const capturedAt = now.toISOString();
   const searches = planSearches(await readConfig(config), { groups, days, now });
-  const task = await taskSpace(`X design discovery ${capturedAt.replace(/[:.]/g, '-')}`);
+  const task = await taskSpace(`X creative video discovery ${capturedAt.replace(/[:.]/g, '-')}`);
   const page = task.page('p1');
 
   // A search marked `required` must read posts, or the run stops and the inbox is left unchanged. For any other search,
@@ -203,7 +203,7 @@ export async function run({ groups, days, config = configPath, inbox: inboxFile 
   await fs.writeFile(temporary, `${JSON.stringify(output, null, 2)}\n`);
   await fs.rename(temporary, inboxFile);
   await task.finish({ keep: [] });
-  console.log(`X design discovery: ${merged.qualifying} qualifying posts, ${merged.added} new, from ${searches.length} searches; ${inboxFile}`);
+  console.log(`X creative video discovery: ${merged.qualifying} qualifying posts, ${merged.added} new, from ${searches.length} searches; ${inboxFile}`);
   for (const group of new Set(searches.map(search => search.group))) {
     const tally = merged.groups.get(group) ?? { qualifying: 0, added: 0 }, misses = quiet.get(group) ?? [];
     const total = searches.filter(search => search.group === group).length;

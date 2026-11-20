@@ -30,11 +30,11 @@ node --test website/scripts/inspiration-data.test.mjs website/scripts/x-media.te
 
 if git diff --quiet; then echo "Nothing to publish this week."; git branch -D "$BRANCH" >/dev/null 2>&1 || true; exit 0; fi
 git add website/content/x-post-inbox.json website/src/inspiration-data.ts website/src/x-media.json
-git commit -q -m "Add this week's X design references ($DAY)
+git commit -q -m "Add this week's X creative videos ($DAY)
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 git push -q -u origin "$BRANCH"
-gh pr create --base master --title "Add this week's X design references ($DAY)" --body "$(cat <<EOF
+gh pr create --base master --title "Add this week's X creative videos ($DAY)" --body "$(cat <<EOF
 Weekly X discovery, screened by \`website/scripts/x-publish.mjs\`: the model read six frames per video and wrote the notes. Nobody has watched the videos; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`.
 
 \`\`\`

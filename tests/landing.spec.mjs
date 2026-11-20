@@ -9,7 +9,7 @@ import { readLibrary, splitReferences } from '../website/scripts/inspiration-spl
 // The sections the home has to fetch once a reader reaches past its first page (a section whose references are all on that page is never fetched).
 const beyondFirstPage=await (async()=>{const library=readLibrary(),{sectionOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname),split=splitReferences(library.items,sectionOf,library);return new Set(Object.entries(split.sections).filter(([,part])=>part.items.some(r=>!split.first.items.includes(r))).map(([id])=>id))})();
 // Library totals come from the data, so adding a reference (the weekly X pull request does) does not break counts pinned here.
-const libraryCounts=await (async()=>{const {sectionOf,videoTypeOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname),items=readLibrary().items;const by=key=>items.filter(i=>sectionOf(i)===key).length;const type=key=>items.filter(i=>sectionOf(i)==='design-motion'&&videoTypeOf(i)===key).length;return{total:items.length,web:by('web'),by,type};})();
+const libraryCounts=await (async()=>{const {sectionOf,videoTypeOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname),items=readLibrary().items;const by=key=>items.filter(i=>sectionOf(i)===key).length;const type=key=>items.filter(i=>sectionOf(i)==='design-motion'&&videoTypeOf(i)===key).length;const typeIn=(section,key)=>items.filter(i=>sectionOf(i)===section&&videoTypeOf(i)===key).length;return{total:items.length,web:by('web'),by,type,typeIn};})();
 const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
 // The homepage includes X motion now; regressions isolate its media in every scenario.
 // Individual media tests override these routes with their own playback/failure fixture.
@@ -597,7 +597,7 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.route(/platform\.twitter\.com/,r=>r.abort());await page.route(/pbs\.twimg\.com/,r=>r.fulfill({contentType:'image/png',body:pixel}));
  // The widgets video fails; the sheep video stays pending, so the suite never streams from X.
  await page.route(/video\.twimg\.com/,r=>{if(r.request().url()===media['paper-widgets'].video)return r.abort()});
- await page.goto('/zh/browse/interface?sort=curated');await expect(page.locator('.insp-pills a')).toHaveText([/^全部\s*\d+$/,/^网站\s*\d+$/,/^产品界面\s*\d+$/,/^动态设计\s*\d+$/]);
+ await page.goto('/zh/browse/interface?sort=curated');await expect(page.locator('.insp-pills a')).toHaveText([/^全部\s*\d+$/,/^网站\s*\d+$/,/^产品界面\s*\d+$/,/^动态设计\s*\d+$/,...(libraryCounts.by('videos')?[/^视频\s*\d+$/]:[])]);
  expect(xRequests.filter(u=>new URL(u).hostname==='video.twimg.com')).toEqual([]);
  await page.locator('.insp-pills').getByRole('link',{name:'动态设计',exact:true}).click();await expect(page).toHaveURL(/\/browse\/design-motion$/);
  await page.locator('.insp-types').getByRole('button',{name:'动效',exact:true}).click();await expect(page).toHaveURL(/\/browse\/design-motion\?type=motion$/);
@@ -1095,7 +1095,7 @@ test('each inspiration tab is its own page, and no reference appears on two of t
   await page.goto(href);await expect(page.locator('.insp-pills').getByRole('link',{name,exact:true})).toHaveAttribute('aria-current','page');
   await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${ids.length} 个参考`);
  }
- expect(titles.size).toBe(3);expect(headings.size).toBe(3);
+ expect(titles.size).toBe(tabs.length-1);expect(headings.size).toBe(tabs.length-1);
  expect([...seen].sort()).toEqual([...home.ids].sort());
 });
 
@@ -1374,6 +1374,20 @@ test('the service worker serves a stored page and then the offline page once the
     await page.goto(origin + '/zh/docs'); await expect(page.locator('h1')).toHaveText('文档');
     await page.goto(origin + '/zh/pricing'); await expect(page.locator('h1')).toContainText('You are offline');
   } finally { proxy.closeAllConnections(); proxy.close(); await context.close(); }
+});
+
+// Videos holds creative videos only and filters them by how they were made (2026-11-20).
+test('the videos tab filters creative videos by how they were made, with the data\'s own counts', async ({page})=>{
+ test.skip(!libraryCounts.by('videos'),'no creative video published yet');
+ await page.goto('/zh/browse/videos');await hydrated(page);
+ await expect(page.locator('h1')).toHaveText('创意视频');
+ const types=page.locator('.insp-types button'),creative=[['动画短片','animation'],['特效合成','vfx'],['定格与手作','craft'],['代码与生成','generative'],['实拍脑洞','live-action'],['幽默','humor']];
+ const shown=creative.filter(([,key])=>libraryCounts.typeIn('videos',key));
+ await expect(types).toHaveText([new RegExp(`^全部\\s*${libraryCounts.by('videos')}$`),...shown.map(([name,key])=>new RegExp(`^${name}\\s*${libraryCounts.typeIn('videos',key)}$`))]);
+ for(const name of ['交互','动效','品牌'])await expect(types.filter({hasText:name})).toHaveCount(0);
+ const [name,key]=shown[0];await types.filter({hasText:name}).click();
+ await expect(page).toHaveURL(new RegExp(`/browse/videos\\?type=${key}$`));
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.typeIn('videos',key)} 个参考`);
 });
 
 test('the design-motion tab filters by design type in place, keeps the choice in the address and states each type\'s count', async ({page})=>{
