@@ -2,7 +2,7 @@
 // Plain data only: the prerender imports this file without a TS loader for JSX.
 // Every claim here must trace to a file in this repository (a reference, a script, or a dated record in docs/research/ or CHANGELOG.md).
 // The English of the first four was reviewed against the repository files on 2026-11-10, so they ship in both languages.
-// The English of the Codex article and of the two lessons articles is unreviewed and marked draft: production leaves that English page out until someone reviews it.
+// The English of the Codex article and of the lessons and premium articles is unreviewed and marked draft: production leaves that English page out until someone reviews it.
 import type { Guide } from './guides-content';
 import { installCommand, prompts, repository } from './docs-content';
 
@@ -316,6 +316,78 @@ export const docsArticles: Guide[] = [
         link: { href: `${blob}/docs/research/2026-10-29-home-slop-pass.md`, label: { zh: '阅读首页这次的记录', en: 'Read the record of the home page pass' } } },
       { id: 'limits', heading: { zh: '6. 证据的局限', en: '6. What this evidence does not show' },
         body: [{ zh: '复测是单次运行，没有去掉新说明的对照，所以不能说是新说明带来了差别；我们补的“同一布局的浅色和深色版算同一个方向”“不离开页面的按钮不加 ↗”两条，补充后没有复测。检查只看代码里能匹配的模式，三条新规则是提示，不是结论。', en: 'The retest was a single run with no control that lacks the new instructions, so we cannot say the instructions caused the difference. Two lines added afterwards, “a light and a dark version of one layout count as one direction” and “a button that does not leave the page gets no ↗”, were not re-run. The checks only match patterns in code, and the three new rules are hints, not verdicts.' }] },
+    ],
+  },
+  {
+    slug: 'make-ai-ui-look-premium',
+    base: '/docs',
+    publishedAt: '2026-11-20',
+    translations: { en: { status: 'draft' } },
+    title: { zh: '让 AI 把界面做得“高级”：把这个词拆成能数的东西', en: 'Asking an AI to make a UI “premium”: turn the word into things you can count' },
+    answer: {
+      zh: '“做高级点”这句话，Agent 最容易的读法是深色底加金色加衬线，这是最廉价的一种读法。我们把“高级”拆成克制、精确、字体细节、素材、文案和动效六件事，其中“克制”可以直接计数：字体不超过 2 种、字号不超过 7 种、字重不超过 3 种、文字颜色不超过 5 种、圆角不超过 3 种、阴影不超过 2 种。用这套预算量我们自己的首页，字号从 15 种收到 7 种。计数下降只说明更克制，不证明更好看。',
+      en: 'Told to “make it premium”, an agent’s easiest reading is a dark background, gold and a serif, which is the cheapest reading of the request. We split “premium” into six things: restraint, precision, type craft, material, copy and motion. Restraint can be counted directly: at most 2 font families, 7 sizes, 3 weights, 5 text colours, 3 radii and 2 shadows. Measured against that budget, our own home page went from 15 type sizes to 7. A lower count shows restraint, not that it looks better.',
+    },
+    sections: [
+      { id: 'problem', heading: { zh: '1. 问题：这个词没有对应的动作', en: '1. The problem: the word has no action behind it' },
+        body: [{ zh: '2026-11-02，维护者希望整个项目“设计高级些”。我们检索技能文本时发现：', en: 'On 2026-11-02 the maintainer wanted the whole project to feel more premium. Searching the skill’s text, we found:' }],
+        list: [
+          { zh: 'premium 被当成一种风格：方向表里有 “Dark / Premium” 一行，色板里有 “Premium Black”；', en: 'Premium was treated as a style: the direction table had a “Dark / Premium” row and the palettes had “Premium Black”;' },
+          { zh: 'Agent 听到“做高级点”，最可能的做法是深色底加金色加衬线；', en: 'Told to make it premium, an agent’s likeliest move is a dark background, gold and a serif;' },
+          { zh: '没有一个动作对应“更高级”：质量基线只规定了不要做什么，没有规定最多用多少种字号、颜色和圆角。', en: 'No action corresponded to “more premium”: the quality baseline said what not to do but not how many sizes, colours or radii at most.' },
+        ] },
+      { id: 'split', heading: { zh: '2. 拆解：高级来自克制、精确和自信', en: '2. The split: premium comes from restraint, precision and confidence' },
+        body: [{ zh: '“高级”主要不是某种视觉风格。可以检查的六件事：', en: 'Premium is mostly not a visual style. Six things you can check:' }],
+        list: [
+          { zh: '克制：字号、强调色、圆角、阴影的种类少，空间充裕；', en: 'Restraint: few type sizes, one accent, few radii and shadows, generous space;' },
+          { zh: '精确：间距和字号来自 token，边缘对齐，没有差 1–3px 的值；', en: 'Precision: spacing and sizes come from tokens, edges align, nothing is off by 1–3px;' },
+          { zh: '字体细节：字号之间有明确的阶差，每行 60–75 个字符，数据用等宽数字，中英文混排要处理；', en: 'Type craft: clear steps between sizes, 60–75 characters per line, tabular numerals for data, care with mixed CJK and Latin;' },
+          { zh: '素材：真实截图或照片，处理方式统一，不用 emoji 图标和库存插画；', en: 'Material: real screenshots or photography with one consistent treatment, no emoji icons or stock illustration;' },
+          { zh: '文案：具体、简短、不夸张；', en: 'Copy: specific, short, no hype;' },
+          { zh: '动效：少，只用来表达状态。', en: 'Motion: little, used to show state.' },
+        ] },
+      { id: 'budget', heading: { zh: '3. 其中“克制”可以直接计数', en: '3. Restraint can be counted' },
+        body: [{ zh: '技能里的默认预算（项目自己的系统更严格时以它为准）：', en: 'The skill’s default budget, unless the project’s own system is stricter:' }],
+        code: { zh: 'families ≤ 2（代码样例不算） · sizes ≤ 7 · weights ≤ 3 · text colors ≤ 5 · radii ≤ 3（胶囊算一种） · shadows ≤ 2', en: 'families ≤ 2 (code samples excluded) · sizes ≤ 7 · weights ≤ 3 · text colors ≤ 5 · radii ≤ 3 (pill counts once) · shadows ≤ 2' },
+        list: [
+          { zh: 'style-budget.mjs probe 打印一段表达式，在页面里运行，统计可见元素的字体、字号、字重、文字颜色、圆角和阴影；', en: 'style-budget.mjs probe prints an expression to run in the page; it counts the fonts, sizes, weights, text colours, radii and shadows of visible elements;' },
+          { zh: 'style-budget.mjs check 按预算打分，加 --before 可以和修改前对比；没有依赖。', en: 'style-budget.mjs check scores the sample against the budget, and --before compares with the state before the change; it has no dependencies.' },
+        ],
+        link: { href: `${blob}/references/workflow/adjective-translation.md`, label: { zh: '阅读形容词翻译的完整说明', en: 'Read the full adjective-translation reference' } } },
+      { id: 'skill', heading: { zh: '4. 技能里改了什么', en: '4. What changed in the skill' },
+        body: [],
+        list: [
+          { zh: '新增 references/workflow/adjective-translation.md：把“高级、简洁、科技感、年轻、温暖”这类形容词翻译成可检查的属性；', en: 'A new references/workflow/adjective-translation.md translates adjectives such as premium, clean, techy, young and warm into checkable properties;' },
+          { zh: '没有锁定设计系统时，A/B/C 用三种“高级”的读法，而不是三种风格：安静、编辑、精密；', en: 'Without a locked design system, A/B/C are three readings of “premium” instead of three styles: quiet, editorial and precise;' },
+          { zh: '方向表里的 “Dark / Premium” 改名为 “Dark / Atmospheric”，并注明“高级”不是一种风格；', en: 'The “Dark / Premium” row became “Dark / Atmospheric”, with a note that premium is not a style;' },
+          { zh: '新增 Refine premium 动作，顺序是：先量、收敛、轻度精简、打磨细节、改文案、再量。', en: 'A new Refine premium action runs in this order: measure, converge, trim lightly, polish details, edit copy, measure again.' },
+        ] },
+      { id: 'measured', heading: { zh: '5. 在我们自己的首页上量了一次', en: '5. One measurement on our own home page' },
+        body: [{ zh: '环境：本地构建，Chrome，1440×900，先滚到底让懒加载内容出现。改动前后都是同一个分支的构建：', en: 'Setup: a local build, Chrome, 1440×900, scrolled to the bottom so lazy content appears. Before and after are builds of the same branch:' }],
+        list: [
+          { zh: '字体：3 种降到 2 种（预算 2）；', en: 'Font families: 3 down to 2 (budget 2);' },
+          { zh: '字号：15 种降到 7 种（预算 7）；', en: 'Font sizes: 15 down to 7 (budget 7);' },
+          { zh: '字重：2 种，没变（预算 3）；', en: 'Font weights: 2, unchanged (budget 3);' },
+          { zh: '文字颜色：11 种降到 5 种（预算 5）；', en: 'Text colours: 11 down to 5 (budget 5);' },
+          { zh: '圆角：6 种降到 3 种（预算 3）；', en: 'Radii: 6 down to 3 (budget 3);' },
+          { zh: '阴影：1 种，没变（预算 2）。', en: 'Shadows: 1, unchanged (budget 2).' },
+        ] },
+      { id: 'how', heading: { zh: '6. 改动是怎么做的', en: '6. How the numbers came down' },
+        body: [],
+        list: [
+          { zh: '合并相近的字号：12 和 13px 合为 13px，14 和 15px 合为 14px，16 和 17px 合为 16px；区块标题的 38、40、44、46、48px 统一成一个 clamp(30px, 3.4vw, 46px)；', en: 'Merge near-identical sizes: 12 and 13px became 13px, 14 and 15px became 14px, 16 and 17px became 16px; section headings at 38, 40, 44, 46 and 48px became one clamp(30px, 3.4vw, 46px);' },
+          { zh: '合并一次性的颜色：几个只出现一次的绿色和灰色并入品牌绿、正文深灰和墨色；', en: 'Merge one-off colours: a few greens and greys used once were folded into the brand green, body grey and ink;' },
+          { zh: '统一圆角：3、4、5px 改为 6px。', en: 'Unify radii: 3, 4 and 5px became 6px.' },
+        ] },
+      { id: 'limits', heading: { zh: '7. 没验证的', en: '7. What this does not show' },
+        body: [],
+        list: [
+          { zh: '计数下降只说明更克制，不证明更好看；', en: 'A lower count shows restraint, not that the page looks better;' },
+          { zh: '截图对比只看了 1440 宽度的中文首页，以及 390 宽度没有横向滚动；英文版、320 宽度和其他页面没有逐一截图；', en: 'The screenshot check covered only the Chinese home page at 1440 wide, plus no horizontal scroll at 390; the English version, 320 wide and other pages were not screenshotted one by one;' },
+          { zh: '改的样式也影响案例详情页，那些页面只跑了 landing 测试，没有单独计数；', en: 'The style change also touches case detail pages, which only ran the landing tests and were not counted separately;' },
+          { zh: '没有用真实 Agent 跑过 Refine premium 动作和形容词翻译，所以不能说它们在 Claude Code 或 Codex 里的实际效果。', en: 'No real agent run has tested the Refine premium action or the adjective translation, so we cannot say how they behave in Claude Code or Codex.' },
+        ],
+        link: { href: `${blob}/docs/research/2026-11-02-premium-style-budget.md`, label: { zh: '阅读完整记录', en: 'Read the full record' } } },
     ],
   },
 ];
