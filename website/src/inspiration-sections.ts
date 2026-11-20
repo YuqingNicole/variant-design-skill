@@ -62,3 +62,11 @@ export const activeSections = (items: { category: string; tag: string; kind?: st
   const used = new Set(items.map(sectionOf));
   return sections.filter(s => used.has(s.id));
 };
+
+// Up to five other references of the same kind (same section; in Videos, same type), the same tag first, starting after this one so every page links to different neighbours.
+export function relatedReferences<T extends { id: string; category: string; tag: string; kind?: string }>(item: { id: string; category: string; tag: string; kind?: string }, rows: T[]): { list: T[]; total: number } {
+  const same = (r: T) => sectionOf(r) === sectionOf(item) && (sectionOf(item) !== 'videos' || videoTypeOf(r) === videoTypeOf(item));
+  const group = rows.filter(same), at = group.findIndex(r => r.id === item.id);
+  const around = [...group.slice(at + 1), ...group.slice(0, Math.max(at, 0))];
+  return { list: [...around.filter(r => r.tag === item.tag), ...around.filter(r => r.tag !== item.tag)].slice(0, 5), total: group.length };
+}

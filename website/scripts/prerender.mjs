@@ -94,9 +94,16 @@ export function referenceIndex(references, lang = 'zh') {
   const en = lang === 'en', href = id => pathIn(`/inspiration/${id}`, lang);
   return `<nav aria-label="${en ? 'All references' : '全部参考'}"><h2>${en ? `All ${references.length} references` : `全部 ${references.length} 个参考`}</h2><ul>${references.map(r => `<li><a href="${href(escape(r.id))}">${escape(r.name)}</a></li>`).join('')}</ul></nav>`;
 }
-function referenceBody(r) {
+const zhText = {
+  crumbs: '路径', home: '灵感', related: '同类参考', seeAll: '浏览这一类的所有条目', yours: '做出你的版本', installSkill: '安装技能',
+  yoursNote: '把这条参考写进指令，让 variant-design 技能在你自己的项目里生成 A/B/C 三个方向。',
+};
+function referenceBody(r, references = [], sections = []) {
   const permission=r.source==='permission'?`<aside><p>作者授权 · 仅限本站展示，不含下载、复用、MCP、再分发或商业使用。</p><p><a href="${escape(r.credit.url)}">${escape(r.credit.name)}</a> · <a href="${escape(r.permission.record)}">授权记录</a></p></aside>`:'';
-  return `<main><p><a href="/zh">灵感</a></p><h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus.zh)}</dd><dt>用在哪里</dt><dd>${escape(r.application.zh)}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}${r.via ? ` · <a href="${escape(r.via)}">经 ${escape(new URL(r.via).hostname)} 发现</a>` : ''}</dd></dl>${permission}<p><a href="${escape(r.url)}">访问原站</a></p></main>`;
+  const section = sections.find(c => c.id === sectionModule.sectionOf(r)), { list, total } = sectionModule.relatedReferences(r, references);
+  const crumbs = section ? `<nav aria-label="${zhText.crumbs}"><a href="/zh">${zhText.home}</a> / <a href="/zh/browse/${section.id}">${escape(section.title.zh)}</a></nav>` : `<p><a href="/zh">${zhText.home}</a></p>`;
+  const more = list.length ? `<section><h2>${zhText.related}</h2><ul>${list.map(x => `<li><a href="/zh/inspiration/${escape(x.id)}">${escape(x.name)}</a> <small>${escape(x.tag)}</small></li>`).join('')}</ul>${section ? `<a href="/zh/browse/${section.id}">${zhText.seeAll} (${total})</a>` : ''}</section>` : '';
+  return `<main>${crumbs}<h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus.zh)}</dd><dt>用在哪里</dt><dd>${escape(r.application.zh)}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}${r.via ? ` · <a href="${escape(r.via)}">经 ${escape(new URL(r.via).hostname)} 发现</a>` : ''}</dd></dl>${permission}<p><a href="${escape(r.url)}">访问原站</a></p>${more}<section><h2>${zhText.yours}</h2><p>${zhText.yoursNote}</p><a href="/zh/docs/install">${zhText.installSkill}</a></section></main>`;
 }
 // The install guide (src/docs-content.ts) as static HTML, so /docs reads without JavaScript.
 function docsBody(d, lang = 'zh') {
@@ -173,6 +180,17 @@ function page(template, { site, route, title, description, image: own, type = 'w
   return unlisted.has(route) ? withNoindex(html) : html;
 }
 
+// Structured data for a reference page: where it sits (BreadcrumbList) and what it is (CreativeWork pointing at its source).
+export function referenceData(r, site, lang, sections) {
+  const en = lang === 'en', section = sections.find(c => c.id === sectionModule.sectionOf(r)), url = site + pathIn(`/inspiration/${r.id}`, lang);
+  return { '@graph': [
+    { '@type': 'BreadcrumbList', itemListElement: [[en ? 'Inspiration' : '灵感', site + pathIn('/', lang)], [section?.title[lang], site + pathIn(`/browse/${section?.id}`, lang)], [r.name, url]].filter(([n]) => n).map(([name, item], i) => ({ '@type': 'ListItem', position: i + 1, name, item })) },
+    { '@type': 'CreativeWork', name: r.name, description: `${r.focus[lang]}`, url, inLanguage: en ? 'en' : 'zh-CN', keywords: r.tag, dateModified: r.checkedAt, isBasedOn: r.url, isPartOf: { '@id': `${site}/#website` } }] };
+}
+export function listData(section, references, site, lang) {
+  const en = lang === 'en', url = site + pathIn(`/browse/${section.id}`, lang), items = references.filter(r => sectionModule.sectionOf(r) === section.id);
+  return { '@type': 'CollectionPage', name: section.title[lang], description: section.intro[lang], url, inLanguage: en ? 'en' : 'zh-CN', mainEntity: { '@type': 'ItemList', numberOfItems: items.length, itemListElement: items.map((r, i) => ({ '@type': 'ListItem', position: i + 1, url: site + pathIn(`/inspiration/${r.id}`, lang), name: r.name })) } };
+}
 export function renderSite(entries, template, site = defaultSite, references = [], { docs, version = '', guides = [], rendered = {}, english = {}, withdrawn = [], sections = [] } = {}) {
   const sorted = order(entries), pages = new Map();
   const zhPage = options => page(template, { site, translated: !!english[options.route], ...options });
@@ -181,7 +199,7 @@ export function renderSite(entries, template, site = defaultSite, references = [
   const homeTitle = 'Variant Design — AI 时代最好的设计灵感', homeDescription = `精选网站、界面和动效作品，每条都附出处和我们写的笔记：研究什么、用在哪里。目前 ${onHome(references).length} 条。`;
   pages.set('/', zhPage({ route: '/', data: { '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/zh`, name: 'Variant Design', description: homeDescription, inLanguage: ['zh-CN', 'en'] }, title: homeTitle, description: homeDescription, body: rendered['/'] ?? '' }));
   // One page per section: its own address, title, description and only its own references.
-  for (const c of sections) pages.set(`/browse/${c.id}`, zhPage({ route: `/browse/${c.id}`, title: `${c.title.zh} — Variant Design`, description: `${c.intro.zh}目前 ${c.count.zh} 条。`, body: rendered[`/browse/${c.id}`] ?? '' }));
+  for (const c of sections) pages.set(`/browse/${c.id}`, zhPage({ route: `/browse/${c.id}`, title: `${c.title.zh} — Variant Design`, description: `${c.intro.zh}目前 ${c.count.zh} 条。`, body: rendered[`/browse/${c.id}`] ?? '', data: listData(c, references, site, 'zh') }));
   pages.set('/cases', zhPage({ route: '/cases', title: `A/B/C 案例 — ${library}`, description: '同一个任务的三个方向：每个方向说明优化什么、牺牲什么、适合什么场景。技能产出和概念作品分别标注。', body: rendered['/cases'] ?? '' }));
   for (const category of [...new Set(sorted.map(e => e.category))]) {
     const name = categoryNames[category] ?? category, list = sorted.filter(e => e.category === category);
@@ -192,7 +210,7 @@ export function renderSite(entries, template, site = defaultSite, references = [
     pages.set(`/d/${e.slug}`, zhPage({ route: `/d/${e.slug}`, type: 'article', data: { '@type': 'CreativeWork', name: e.title[0], alternateName: e.title[1], description: e.summary[0], datePublished: e.publishedAt, url: `${site}/zh/d/${e.slug}`, image: site + `/media/${e.slug}/${image.file}`, isPartOf: { '@id': `${site}/#website` } }, title: `${e.title[0]} — ${library}`, description: e.summary[0],
       image: { src: `/media/${e.slug}/${image.file}`, width: image.width, height: image.height, alt: image.alt[0] }, body: entryBody(e) }));
   }
-  for (const r of references) pages.set(`/inspiration/${r.id}`, zhPage({ route: `/inspiration/${r.id}`, title: sectionModule.detailTitle(r, 'zh'), description: `${r.name}：${r.focus.zh}。用在${r.application.zh}。`, body: rendered[`/inspiration/${r.id}`]??referenceBody(r) }));
+  for (const r of references) pages.set(`/inspiration/${r.id}`, zhPage({ route: `/inspiration/${r.id}`, title: sectionModule.detailTitle(r, 'zh'), description: `${r.name}：${r.focus.zh}。用在${r.application.zh}。`, body: rendered[`/inspiration/${r.id}`]??referenceBody(r, references, sections), data: referenceData(r, site, 'zh', sections) }));
   for (const [route, [title, description]] of Object.entries(staticPages)) pages.set(route, zhPage({ route, title, description, body: rendered[route] ?? '', ...(route === '/docs/install' && docs ? { body: docsBody(docs), data: docsData(docs, site) } : {}), ...(route === '/skills' ? { data: skillData(site, version) } : {}) }));
   for (const g of guides) pages.set(guideRoute(g), zhPage({ route: guideRoute(g), type: 'article', title: `${g.title.zh} — Variant Design`, description: g.answer.zh, data: guideData(g, site), body: rendered[guideRoute(g)] ?? '' }));
 
@@ -205,8 +223,8 @@ export function renderSite(entries, template, site = defaultSite, references = [
   for (const category of new Set(sorted.map(e => e.category))) { const name = enCategories[category] ?? category, count = sorted.filter(e => e.category === category).length; enPage({ route: `/c/${category}`, title: `${name} — ${enLibrary}`, description: `${name}: ${count} ${count === 1 ? 'entry' : 'entries'}, each with three directions for the same brief.` }); }
   for (const e of sorted) { const { image } = cover(e); enPage({ route: `/d/${e.slug}`, type: 'article', title: `${e.title[1]} — ${enLibrary}`, description: e.summary[1], image: { src: `/media/${e.slug}/${image.file}`, width: image.width, height: image.height, alt: image.alt[1] },
     data: { '@type': 'CreativeWork', name: e.title[1], description: e.summary[1], datePublished: e.publishedAt, url: `${site}/d/${e.slug}`, image: site + `/media/${e.slug}/${image.file}`, isPartOf: { '@id': `${site}/#website` } } }); }
-  for (const r of references) enPage({ route: `/inspiration/${r.id}`, title: sectionModule.detailTitle(r, 'en'), description: `${r.name}: ${r.focus.en}. Use it for ${r.application.en}.` });
-  for (const c of sections) enPage({ route: `/browse/${c.id}`, title: `${c.title.en} — Variant Design`, description: `${c.intro.en} ${c.count.en} so far.` });
+  for (const r of references) enPage({ route: `/inspiration/${r.id}`, title: sectionModule.detailTitle(r, 'en'), description: `${r.name}: ${r.focus.en}. Use it for ${r.application.en}.`, data: referenceData(r, site, 'en', sections) });
+  for (const c of sections) enPage({ route: `/browse/${c.id}`, title: `${c.title.en} — Variant Design`, description: `${c.intro.en} ${c.count.en} so far.`, data: listData(c, englishReferences, site, 'en') });
   for (const [route, [title, description]] of Object.entries(staticPagesEn(onHome(references).length))) enPage({ route, title, description, ...(route === '/docs/install' && docs ? { data: docsData(docs, site, 'en') } : {}), ...(route === '/skills' ? { data: skillData(site, version, 'en') } : {}) });
   for (const g of guides) enPage({ route: guideRoute(g), type: 'article', title: `${g.title.en} — Variant Design`, description: g.answer.en, data: guideData(g, site, 'en') });
   for(const r of withdrawn)for(const lang of ['zh','en']){const en=lang==='en',route=`/inspiration/${r.id}`,title=en?'This work has been removed':'这条作品已撤下';const body=(en?english[route]:rendered[route])??`<main><h1>${title}</h1><p>${escape(r.name)}</p><p>${escape(r.withdrawnAt)}</p><p>${escape(r.reason[lang])}</p><a href="${en?'/':'/zh'}">${en?'Back to inspiration':'返回灵感作品流'}</a></main>`;pages.set(lang==='en'?enKey(route):route,withNoindex(page(template,{site,route,lang,translated:true,title:`${r.name} — ${title} — Variant Design`,description:r.reason[lang],body}))) }

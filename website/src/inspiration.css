@@ -308,3 +308,12 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .yt-embed-play::after{content:"";position:absolute;left:25px;top:20px;border-left:20px solid #fff;border-block:12px solid transparent}
 .yt-embed-frame>button:is(:hover,:focus-visible) .yt-embed-play{background:rgba(0,0,0,.88)}
 .yt-embed figcaption{display:flex;flex-wrap:wrap;gap:var(--space-1) var(--space-4);font-size:13px;color:var(--site-muted)}.yt-embed figcaption a{color:inherit;text-underline-offset:3px}
+
+.insp-crumbs{font-size:13px;color:var(--site-muted,inherit)}
+.insp-crumbs a{text-decoration:underline;text-underline-offset:3px}
+.insp-related,.insp-yours{display:grid;gap:var(--space-1);margin-top:var(--space-3)}
+.insp-related h2,.insp-yours h2{font-size:16px;margin:0}
+.insp-related ul{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.insp-related small{opacity:.7}
+.insp-related a,.insp-yours a{text-decoration:underline;text-underline-offset:3px}
+.insp-yours p{margin:0}
