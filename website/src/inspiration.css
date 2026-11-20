@@ -327,3 +327,12 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .insp-related small{opacity:.7}
 .insp-related a,.insp-yours a{text-decoration:underline;text-underline-offset:3px}
 .insp-yours p{margin:0}
+
+.insp-analysis{display:grid;gap:var(--space-1);margin-top:var(--space-3)}
+.insp-analysis h2{font-size:16px;margin:0}.insp-analysis h2 small{font-weight:400;opacity:.7;margin-left:6px}
+.insp-analysis h3{font-size:14px;margin:var(--space-1) 0 0}
+.insp-analysis p,.insp-analysis ul{margin:0}.insp-analysis ul{padding-left:1.2em}
+.insp-analysis-note{font-size:13px;opacity:.7}
+/* The detail rule above sets every h2 in .insp-detail to display size; these are section labels. */
+.inspiration-page .insp-detail :is(.insp-related,.insp-yours,.insp-analysis) h2{font-size:16px;font-weight:600;line-height:1.3;letter-spacing:0;margin:0;text-wrap:wrap}
+.inspiration-page .insp-detail .insp-analysis h2 small{font-size:13px;font-weight:400}
