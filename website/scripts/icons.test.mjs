@@ -31,7 +31,7 @@ test('the manifest installs the site as its own app, and every shortcut points a
   const manifest = JSON.parse(fs.readFileSync(path.join(root, 'public/site.webmanifest'), 'utf8'));
   assert.equal(manifest.display, 'standalone');
   assert.equal(manifest.start_url, '/'); assert.equal(manifest.scope, '/');
-  for (const s of manifest.shortcuts) assert.match(s.url, /^\/(browse\/(motion|web|interface|interaction|brand)|docs|submit)$/, s.url);
+  for (const s of manifest.shortcuts) assert.match(s.url, /^\/(browse\/(design-motion|videos|web|interface)|docs|submit)$/, s.url);
   assert.ok(fs.existsSync(path.join(root, 'public/offline.html')) && fs.existsSync(path.join(root, 'public/sw.js')));
 });
 

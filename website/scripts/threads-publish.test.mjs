@@ -15,6 +15,8 @@ const html = '<html lang="en"><head><meta property="og:image" content="https://c
 test('a site is the same site with or without www, and ids never repeat', () => {
   assert.equal(siteInLibrary([site('old', 'https://www.old.example/')], 'https://old.example/pricing').id, 'old');
   assert.equal(siteInLibrary([{ id: 'p', url: 'https://x.com/old.example/status/1', post: { id: '1' } }], 'https://old.example/'), null);
+  // A YouTube video is not the site youtube.com: a post linking to it must not be rejected as a site the library already has.
+  assert.equal(siteInLibrary([{ id: 'yt-a', url: 'https://www.youtube.com/watch?v=aaaaaaaaaaa', kind: 'youtube-video', video: { platform: 'youtube' } }], 'https://youtube.com/'), null);
   assert.equal(idFor('https://www.drinkpoppi.com/', new Set()), 'drinkpoppi');
   assert.equal(idFor('https://acme.co.uk/', new Set(['acme-co', 'acme-co-2'])), 'acme-co-3');
 });

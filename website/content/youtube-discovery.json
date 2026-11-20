@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "id": "weekly",
+      "weekly": true,
+      "days": 14,
+      "maxSeconds": 240,
+      "queries": [
+        { "q": "animated short film", "minViews": 20000 },
+        { "q": "stop motion animation", "minViews": 20000 },
+        { "q": "vfx short", "minViews": 20000 },
+        { "q": "creative video idea", "minViews": 20000 }
+      ]
+    },
+    {
+      "id": "more",
+      "days": 60,
+      "maxSeconds": 240,
+      "queries": [
+        { "q": "claymation short", "minViews": 50000 },
+        { "q": "forced perspective video", "minViews": 50000 },
+        { "q": "generative art animation", "minViews": 50000 },
+        { "q": "funny animation short", "minViews": 50000 }
+      ]
+    }
+  ]
+}

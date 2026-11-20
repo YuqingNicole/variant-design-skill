@@ -36,9 +36,9 @@
   ],
   "shortcuts": [
     {
-      "name": "动效灵感",
-      "short_name": "动效",
-      "url": "/browse/motion",
+      "name": "动态设计灵感",
+      "short_name": "动态设计",
+      "url": "/browse/design-motion",
       "icons": [
         {
           "src": "/icon-192.png",

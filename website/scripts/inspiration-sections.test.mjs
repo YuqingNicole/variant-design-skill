@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { loadEntries } from './content.mjs';
 import { loadReferences, renderSite, sectionPages, sitemap, indexableRoutes, lastModified } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
-const { sections, sectionOf, sectionPath, activeSections, videoTypeOf, videoTypes } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
+const { sections, sectionOf, sectionPath, activeSections, videoTypeOf, designTypeIds } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 
 test('every reference belongs to exactly one section, so no tab repeats another', () => {
@@ -15,25 +15,38 @@ test('every reference belongs to exactly one section, so no tab repeats another'
   assert.equal(new Set(Object.values(byId).flat().map(r => r.id)).size, refs.length);
 });
 
-test('mapping rules: a social post is a video, landing is web, product and flow are interface', () => {
+test('mapping rules: landing is web, product and flow are interface, a video is creative or design work by its tag', () => {
   assert.equal(sectionOf({ category: 'landing', tag: 'SaaS' }), 'web');
   assert.equal(sectionOf({ category: 'product', tag: 'Editor' }), 'interface');
   assert.equal(sectionOf({ category: 'flow', tag: 'History' }), 'interface');
-  for (const tag of ['Motion', 'Interaction', 'Branding', 'Web', 'Illustration', 'Poster', 'Print']) assert.equal(sectionOf({ category: 'practice', tag, kind: 'social-post' }), 'videos', tag);
+  for (const kind of ['social-post', 'youtube-video']) {
+    for (const tag of ['Motion', 'Interaction', 'Branding', 'Web', 'Illustration', 'Poster', 'Print', 'Anything else']) assert.equal(sectionOf({ category: 'practice', tag, kind }), 'design-motion', tag);
+    for (const tag of ['Animation', 'VFX', 'Craft', 'Generative', 'Live action', 'Humor']) assert.equal(sectionOf({ category: 'practice', tag, kind }), 'videos', tag);
+  }
   assert.equal(sectionOf({ category: 'practice', tag: 'Motion' }), 'web');
-  // Inside the videos tab the design type is the tag; an unknown tag is a web video.
-  for (const [tag, id] of [['Motion', 'motion'], ['Interaction', 'interaction'], ['Branding', 'branding'], ['Brand', 'branding'], ['Web', 'web'], ['Illustration', 'illustration'], ['Poster', 'posters'], ['Print', 'print'], ['Anything else', 'web']]) assert.equal(videoTypeOf({ tag }), id, tag);
-  assert.deepEqual(videoTypes.map(v => v.id).sort(), ['branding', 'illustration', 'interaction', 'motion', 'posters', 'print', 'web']);
+  // Inside a video section the type is the tag; an unknown design tag is a web video.
+  for (const [tag, id] of [['Motion', 'motion'], ['Interaction', 'interaction'], ['Branding', 'branding'], ['Brand', 'branding'], ['Web', 'web'], ['Illustration', 'illustration'], ['Poster', 'posters'], ['Print', 'print'], ['Anything else', 'web'],
+    ['Animation', 'animation'], ['VFX', 'vfx'], ['Craft', 'craft'], ['Generative', 'generative'], ['Live action', 'live-action'], ['Humor', 'humor']]) assert.equal(videoTypeOf({ tag }), id, tag);
+  const types = id => sections.find(s => s.id === id).types.map(v => v.id).sort();
+  assert.deepEqual(types('design-motion'), ['branding', 'illustration', 'interaction', 'motion', 'posters', 'print', 'web']);
+  assert.deepEqual(designTypeIds.sort(), types('design-motion'));
+  assert.deepEqual(types('videos'), ['animation', 'craft', 'generative', 'humor', 'live-action', 'vfx']);
+  assert.equal(sections.find(s => s.id === 'web').types, undefined);
   assert.equal(sectionPath(''), '/'); assert.equal(sectionPath('web'), '/browse/web');
 });
 
+test('the publish scripts tag every accepted video with a creative type, so it lands in Videos', async () => {
+  const { TAGS } = await import('./x-publish.mjs');
+  for (const tag of TAGS) assert.equal(sectionOf({ category: 'practice', tag, kind: 'social-post' }), 'videos', tag);
+});
+
 test('a section with no reference has no tab and no page until one exists', () => {
-  const only = [{ category: 'practice', tag: 'Motion', kind: 'social-post' }];
-  assert.deepEqual(activeSections(only).map(s => s.id), ['videos']);
+  assert.deepEqual(activeSections([{ category: 'practice', tag: 'Motion', kind: 'social-post' }]).map(s => s.id), ['design-motion']);
+  assert.deepEqual(activeSections([{ category: 'practice', tag: 'Humor', kind: 'youtube-video' }]).map(s => s.id), ['videos']);
   const refs = loadReferences(), active = activeSections(refs).map(s => s.id);
-  // Data-driven: a section is active exactly when a reference maps to it; the `only` case above keeps the empty-section rule covered.
+  // Data-driven: a section is active exactly when a reference maps to it; the cases above keep the empty-section rule covered.
   for (const s of sections) assert.equal(active.includes(s.id), refs.some(r => sectionOf(r) === s.id), s.id);
-  assert.ok(active.includes('videos'));
+  assert.ok(active.includes('design-motion'));
   assert.ok(sectionPages(refs).every(s => s.count.zh > 0));
 });
 
@@ -62,7 +75,7 @@ test('sitemap lastmod uses recorded dates only: newest of checked and added, new
     { id: 'c', category: 'practice', tag: 'Web', kind: 'social-post', checkedAt: 'not a date', addedAt: '2026-11-03T09:00:00+08:00' },
   ];
   const dates = lastModified({ references: refs, entries: [{ slug: 'forma', publishedAt: '2026-10-27' }], guides: [{ slug: 'g', publishedAt: '2026-11-02' }, { slug: 'bad', publishedAt: 'soon' }], sectionOf });
-  assert.deepEqual(dates, { '/inspiration/a': '2026-10-29', '/inspiration/b': '2026-11-05', '/inspiration/c': '2026-11-03', '/browse/web': '2026-10-29', '/browse/videos': '2026-11-05', '/': '2026-11-05', '/d/forma': '2026-10-27', '/guides/g': '2026-11-02' });
+  assert.deepEqual(dates, { '/inspiration/a': '2026-10-29', '/inspiration/b': '2026-11-05', '/inspiration/c': '2026-11-03', '/browse/web': '2026-10-29', '/browse/design-motion': '2026-11-05', '/': '2026-11-05', '/d/forma': '2026-10-27', '/guides/g': '2026-11-02' });
   const map = sitemap(['/', '/zh', '/inspiration/a', '/zh/inspiration/a', '/cases', '/guides/bad'], 'https://example.test', dates);
   assert.ok(map.includes('<loc>https://example.test/</loc><lastmod>2026-11-05</lastmod>'));
   assert.ok(map.includes('<loc>https://example.test/zh</loc><lastmod>2026-11-05</lastmod>'));

@@ -13,7 +13,7 @@ test('every external reference records provenance; unknown designers stay null',
     assert.equal(new URL(i.url).protocol, 'https:', i.id);
     assert.equal(i.source, 'link-only', i.id);
     assert.ok(i.publisher?.trim(), i.id);
-    assert.ok(['official-site', 'product-page', 'documentation', 'social-post'].includes(i.kind), i.id);
+    assert.ok(['official-site', 'product-page', 'documentation', 'social-post', 'youtube-video'].includes(i.kind), i.id);
     assert.ok(i.designer === null || i.designer.trim(), i.id);
     assert.match(i.checkedAt, date, i.id);
     assert.ok(Number.isFinite(Date.parse(i.addedAt)), `${i.id}: first collection timestamp`);
@@ -21,7 +21,7 @@ test('every external reference records provenance; unknown designers stay null',
 });
 
 test('best-practice entries and other X links carry the oEmbed fields their card renders', () => {
-  for (const i of items.filter(i => i.category === 'practice' || i.post || i.kind === 'social-post')) {
+  for (const i of items.filter(i => (i.category === 'practice' && i.kind !== 'youtube-video') || i.post || i.kind === 'social-post')) {
     assert.ok(i.post, i.id); assert.equal(i.kind, 'social-post', i.id); assert.equal(i.source, 'link-only', i.id);
     const m = /^https:\/\/x\.com\/([A-Za-z0-9_]+)\/status\/(\d+)$/.exec(i.url); assert.ok(m, i.id);
     assert.equal(i.post.handle, m[1], i.id); assert.equal(i.post.id, m[2], i.id);
@@ -30,6 +30,16 @@ test('best-practice entries and other X links carry the oEmbed fields their card
     if (!i.post.text.trim()) { assert.ok(i.post.hasMedia, i.id); assert.equal(i.post.lang, 'zxx', i.id); }
     if (i.via) assert.match(i.via, /^https:\/\/[^/]+\//, i.id);
     assert.doesNotMatch(i.post.text, /&(amp|lt|gt|quot|#\d+);/, `${i.id}: store decoded text`); assert.match(i.post.date, date, i.id);
+    assert.doesNotMatch(i.focus.zh + i.application.zh + i.name, /TODO/, i.id);
+  }
+});
+
+test('YouTube entries name their video and have no X post fields', () => {
+  for (const i of items.filter(i => i.kind === 'youtube-video' || i.video)) {
+    assert.equal(i.kind, 'youtube-video', i.id); assert.ok(!i.post, i.id); assert.equal(i.source, 'link-only', i.id); assert.equal(i.category, 'practice', i.id);
+    assert.equal(i.video.platform, 'youtube', i.id); assert.match(i.video.id, /^[A-Za-z0-9_-]{11}$/, i.id);
+    assert.equal(i.url, `https://www.youtube.com/watch?v=${i.video.id}`, i.id); assert.equal(i.id, `yt-${i.video.id}`, i.id);
+    assert.ok(i.video.channel?.trim(), i.id); if (i.video.date) assert.match(i.video.date, date, i.id); if ('seconds' in i.video) assert.ok(i.video.seconds > 0, i.id);
     assert.doesNotMatch(i.focus.zh + i.application.zh + i.name, /TODO/, i.id);
   }
 });

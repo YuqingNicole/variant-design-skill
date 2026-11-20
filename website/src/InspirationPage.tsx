@@ -1,12 +1,13 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { transition } from './view-transition';
+import { YouTubeEmbed, YouTubeThumb, isYouTube, type YouTubeVideo } from './YouTubeEmbed';
 import { XPost, type Post } from './XPost';
 import { XVideo } from './XVideo';
 import { sized, proxied } from './image-proxy';
 import { locales, type Locale } from './i18n/locales';
 import { t, type Localized } from './i18n/localized';
-import { sectionOf, sectionPath, sectionById, activeSections, detailTitle, videoTypes, videoTypeOf } from './inspiration-sections';
+import { sectionOf, sectionPath, sectionById, activeSections, detailTitle, videoTypeOf } from './inspiration-sections';
 import { references, referencesFor, withdrawnReferences, permissionOf, referenceOf, previewOf, mediaOf, ensure, ensureAll, loaded, subscribe, snapshot, inspirationTopics, type Reference, type Row, type Preview } from './reference-library';
 import { AuthorizationDetails, AuthorizedMedia, authorizedVideo, WithdrawnReferencePage } from './ReferencePermission';
 import './content-pages.css';
@@ -25,6 +26,8 @@ const mediaFor=(item:Item)=>{const r=permissionOf(item);return r?(r.media.kind==
 // without a preview, or whose image fails to load, falls back to our analysis card.
 const labels:Record<string,Localized>={landing:{zh:'Landing',en:'Landing'},product:{zh:'产品界面',en:'Product'},flow:{zh:'关键流程',en:'Flow'},motion:{zh:'动效',en:'Motion'},practice:{zh:'Best practice',en:'Best practice'}};
 const postOf=(item:Item)=>(item as Item&{post?:Post}).post;
+// A YouTube entry carries `video` (channel, length); it has no stored text, so its card is the thumbnail and its detail the click-to-play embed.
+const youtubeOf=(item:Item):YouTubeVideo|undefined=>{const v=(item as Item&{video?:unknown}).video;return isYouTube(v)?v:undefined};
 // Where we found the work, when another curator surfaced it first; credited beside the source.
 const viaOf=(item:Item)=>(item as Item&{via?:string}).via;
 // Three structural sketches per category, picked by id, so neighbouring cards do not repeat.
@@ -77,7 +80,7 @@ const Icon=({d}:{d:string})=><svg viewBox="0 0 16 16" width="14" height="14" ari
 const icons={out:'M5 11 11 5M6 5h5v5',save:'M4 2.5h8v11L8 10.5l-4 3z',close:'M4 4l8 8M12 4l-8 8',prev:'M10 3 5 8l5 5',next:'M6 3l5 5-5 5',search:'M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM14 14l-3.5-3.5'};
 // Ten columns of the three-row wall (and a multiple of the phone's single row), so a partial page ends on a full column.
 const pageSize=30;
-const kinds:Record<string,Localized>={'submitted-work':{zh:'作者投稿',en:'Author submission'},'official-site':{zh:'官网',en:'Official site'},'product-page':{zh:'产品页',en:'Product page'},documentation:{zh:'帮助文档',en:'Documentation'},'social-post':{zh:'社交帖子',en:'Social post'}};
+const kinds:Record<string,Localized>={'submitted-work':{zh:'作者投稿',en:'Author submission'},'official-site':{zh:'官网',en:'Official site'},'youtube-video':{zh:'YouTube 视频',en:'YouTube video'},'product-page':{zh:'产品页',en:'Product page'},documentation:{zh:'帮助文档',en:'Documentation'},'social-post':{zh:'社交帖子',en:'Social post'}};
 // Everything the record does not establish goes into the brief as an explicit unknown (RFC-003 §3).
 const unknowns=(item:Item,locale:Locale)=>[...(item.designer?[]:[m.unknownDesignerField]),...(item.mobile==='not-tested'?[m.unknownMobile]:[]),permissionOf(item)?m.unknownReuse:m.unknownRights].map(v=>t(v,locale)).join(t(m.listJoin,locale));
 const known=(id:string)=>references.some(item=>item.id===id)||withdrawnReferences.some(item=>item.id===id);
@@ -91,7 +94,7 @@ export function prepare(route:string){const p=new URLSearchParams(location.searc
 export function InspirationPage({detail='',section:sectionProp=''}:{detail?:string;section?:string}){
  const language = useLocale();useSyncExternalStore(subscribe,snapshot,snapshot);// re-renders as section chunks arrive
  const rows=referencesFor(language),total=rows.length,count=(c:string)=>rows.filter(i=>sectionOf(i)===c).length,tabs=activeSections(rows),withdrawn=withdrawnReferences.find(r=>r.id===detail);const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);// A section is the page's own address (/browse/<id>); a detail opened from one keeps it in `in` so Esc and the arrows stay inside it.
- const [section]=useState(()=>{const id=sectionProp||(detail?new URLSearchParams(location.search).get('in')??'':'');return tabs.some(s=>s.id===id)?id:''});const sectionInfo=sectionById(section);const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('q')??'');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [type,setType]=useState(()=>{const id=new URLSearchParams(location.search).get('type');return videoTypes.some(v=>v.id===id)?id!:''});const [sort,setSort]=useState(()=>{const s=new URLSearchParams(location.search).get('sort');return s==='name'||s==='checked'||s==='curated'?s:'default'});const [visible,setVisible]=useState(()=>typeof IntersectionObserver==='undefined'?Infinity:pageSize);
+ const [section]=useState(()=>{const id=sectionProp||(detail?new URLSearchParams(location.search).get('in')??'':'');return tabs.some(s=>s.id===id)?id:''});const sectionInfo=sectionById(section);const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('q')??'');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [type,setType]=useState(()=>{const id=new URLSearchParams(location.search).get('type');return (sectionInfo?.types??[]).some(v=>v.id===id)?id!:''});const [sort,setSort]=useState(()=>{const s=new URLSearchParams(location.search).get('sort');return s==='name'||s==='checked'||s==='curated'?s:'default'});const [visible,setVisible]=useState(()=>typeof IntersectionObserver==='undefined'?Infinity:pageSize);
  // `page` is a detail opened by its own address; `modal` is one opened from the grid over it.
  const [open,setOpen]=useState<{id:string;mode:'page'|'modal'}|null>(()=>rows.some(i=>i.id===detail)?{id:detail,mode:'page'}:null);
  const requestedOpen=useRef(open);
@@ -130,7 +133,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  // One stream, sorted by the commit that first collected each reference, not its later review date.
  // A query matches the notes too, so it asks for every record; until they arrive only the name and tag of an unfetched reference count.
  const q=query.trim().toLowerCase(),text=(r:Row)=>{const full=referenceOf(r.id);return (full?[full.name,full.tag,full.publisher,...Object.values(full.focus),...Object.values(full.application)]:[r.name,r.tag]).join(' ').toLowerCase()};
- const matches=rows.filter(r=>(!section||sectionOf(r)===section)&&(!activeTopic||activeTopic.items.includes(r.id))&&(!type||section!=='videos'||videoTypeOf(r)===type)&&(!q||text(r).includes(q)));
+ const matches=rows.filter(r=>(!section||sectionOf(r)===section)&&(!activeTopic||activeTopic.items.includes(r.id))&&(!type||!sectionInfo?.types||videoTypeOf(r)===type)&&(!q||text(r).includes(q)));
  const results=sort==='checked'?[...matches].sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt)):sort==='name'?[...matches].sort((a,b)=>a.name.localeCompare(b.name)):sort==='curated'?matches:[...matches].sort((a,b)=>Date.parse(b.addedAt)-Date.parse(a.addedAt));
  // Cards render from records; the rows on screen whose section has not been fetched ask for it, and the store re-renders the page when it lands.
  const shown=results.slice(0,visible),cards=shown.flatMap(r=>referenceOf(r.id)??[]),missing=shown.filter(r=>!referenceOf(r.id)).map(r=>r.id).join(' ');
@@ -148,10 +151,10 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   const valid=rows.some(i=>i.id===id);if(valid&&fromGrid.current&&!returnTo.current)remember();
   const next=valid?{id,mode:fromGrid.current?'modal' as const:'page' as const}:null;requestedOpen.current=next;
   const apply=()=>transition(()=>{setOpen(next);
-   const params=new URLSearchParams(location.search),s=params.get('sort');setTopic(params.get('topic')??'');setType(videoTypes.some(v=>v.id===params.get('type'))?params.get('type')!:'');setQuery(params.get('q')??'');setSort(s==='name'||s==='checked'||s==='curated'?s:'default')});
+   const params=new URLSearchParams(location.search),s=params.get('sort');setTopic(params.get('topic')??'');setType((sectionInfo?.types??[]).some(v=>v.id===params.get('type'))?params.get('type')!:'');setQuery(params.get('q')??'');setSort(s==='name'||s==='checked'||s==='curated'?s:'default')});
   if(next&&!loaded([next.id]))ensure([next.id]).then(()=>{if(requestedOpen.current===next)apply()});else apply();
  };addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
- useEffect(()=>{const url=new URL(location.href);for(const [key,value] of Object.entries({topic,type:section==='videos'?type:'',q:query,sort:sort==='default'?'':sort})){if(value)url.searchParams.set(key,value);else url.searchParams.delete(key)}history.replaceState(history.state,'',url.pathname+url.search+url.hash)},[topic,type,query,sort]);
+ useEffect(()=>{const url=new URL(location.href);for(const [key,value] of Object.entries({topic,type:sectionInfo?.types?type:'',q:query,sort:sort==='default'?'':sort})){if(value)url.searchParams.set(key,value);else url.searchParams.delete(key)}history.replaceState(history.state,'',url.pathname+url.search+url.hash)},[topic,type,query,sort]);
  const inQuery=(drop=false)=>{const p=new URLSearchParams(location.search);if(drop||!section)p.delete('in');else p.set('in',section);const q=p.toString();return q?'?'+q:''};
  // A reference outside the fetched sections is shown once its record is here; a newer request in the meantime wins.
  function show(id:string,mode:'page'|'modal'){if(!requestedOpen.current&&mode==='modal')remember();const request={id,mode};requestedOpen.current=request;const go=()=>transition(()=>{
@@ -186,7 +189,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  // Independent filter changes must apply immediately; the shared animation queue keeps only its latest update.
  const filter=(update:()=>void)=>{update();setVisible(pageSize)};
  function brief(item:Item){if(needAccount('brief'))return;if(open?.mode==='modal'){afterClose.current=()=>useReference(item);close()}else useReference(item)}
- const detailView=(item:Item,asPage:boolean)=>{const H=asPage?'h1':'h2';const post=postOf(item);const preview=previewOf(item.id);
+ const detailView=(item:Item,asPage:boolean)=>{const H=asPage?'h1':'h2';const post=postOf(item),yt=youtubeOf(item);const preview=previewOf(item.id);
   return <article className="insp-detail" aria-labelledby={`detail-${item.id}`}>
    <div className="insp-detail-notes">
     <nav className="insp-detail-tools" aria-label={l('refNav')}>{asPage?<a href={localePath('/',language)} onClick={e=>{e.preventDefault();close()}}><Icon d={icons.prev}/>{l('allRefs')}</a>:<button type="button" onClick={close} aria-label={l('close')}><Icon d={icons.close}/></button>}
@@ -198,7 +201,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
     <button type="button" className="insp-detail-brief" onClick={()=>brief(item)}>{l('createBrief')}</button>
     {permissionOf(item)&&<AuthorizationDetails record={permissionOf(item)!}/>}
    </div>
-   <div className={`insp-detail-visual${post&&!permissionOf(item)?' insp-detail-visual-post':''}`}><div className="insp-detail-media" style={{viewTransitionName:`ref-${item.id}`}}>{permissionOf(item)?<AuthorizedMedia key={item.id} record={permissionOf(item)!}/>:post?<XPost key={item.id} post={post} url={item.url} locale={language} media={mediaFor(item)??undefined}/>:preview?<LinkPreview key={item.id} item={item} preview={preview} locale={language}/>:<Thumb key={item.id} item={item} locale={language}/>}</div>
+   <div className={`insp-detail-visual${post&&!permissionOf(item)?' insp-detail-visual-post':''}`}><div className="insp-detail-media" style={{viewTransitionName:`ref-${item.id}`}}>{permissionOf(item)?<AuthorizedMedia key={item.id} record={permissionOf(item)!}/>:yt?<YouTubeEmbed key={item.id} video={yt} title={item.name} url={item.url} locale={language}/>:post?<XPost key={item.id} post={post} url={item.url} locale={language} media={mediaFor(item)??undefined}/>:preview?<LinkPreview key={item.id} item={item} preview={preview} locale={language}/>:<Thumb key={item.id} item={item} locale={language}/>}</div>
     <a className="content-button insp-visit" href={item.url} target="_blank" rel="noreferrer">{l('visit')}<Icon d={icons.out}/></a></div>
   </article>};
  const tail=<>
@@ -220,14 +223,14 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    
    <label className="insp-search"><Icon d={icons.search}/><span className="insp-visually-hidden">{l('search')}</span><input ref={searchRef} type="search" value={query} onChange={e=>{setQuery(e.target.value);setVisible(pageSize)}} placeholder={l('searchHint')}/></label>
    <select aria-label={l('sort')} value={sort} onChange={e=>{const v=e.target.value;filter(()=>setSort(v))}}><option value="default">{l('curated')}</option><option value="curated">{l('original')}</option><option value="checked">{l('recent')}</option><option value="name">{l('byName')}</option></select>
-  </div>{section==='videos'&&<div className="site-shell"><div className="insp-types" role="group" aria-label={l('videoType')}>{[{id:'',name:{zh:'全部',en:'All'}},...videoTypes.filter(v=>rows.some(r=>sectionOf(r)==='videos'&&videoTypeOf(r)===v.id))].map(v=><button key={v.id||'all'} type="button" aria-pressed={type===v.id} onClick={()=>{filter(()=>setType(v.id));feedRef.current?.scrollTo({left:0});scrollTo({top:0})}}>{t(v.name,language)} <small aria-hidden="true">{rows.filter(r=>sectionOf(r)==='videos'&&(!v.id||videoTypeOf(r)===v.id)).length}</small></button>)}</div></div>}</div>
+  </div>{sectionInfo?.types&&<div className="site-shell"><div className="insp-types" role="group" aria-label={l('videoType')}>{[{id:'',name:{zh:'全部',en:'All'}},...sectionInfo.types.filter(v=>rows.some(r=>sectionOf(r)===section&&videoTypeOf(r)===v.id))].map(v=><button key={v.id||'all'} type="button" aria-pressed={type===v.id} onClick={()=>{filter(()=>setType(v.id));feedRef.current?.scrollTo({left:0});scrollTo({top:0})}}>{t(v.name,language)} <small aria-hidden="true">{rows.filter(r=>sectionOf(r)===section&&(!v.id||videoTypeOf(r)===v.id)).length}</small></button>)}</div></div>}</div>
   <section className="site-shell insp-body">
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
-   <ul ref={feedRef} onScroll={onFeedScroll} className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}`}>{cards.map(item=>{const media=mediaFor(item),post=postOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
-    <a className={`insp-card-open${media?' insp-vcard-open':''}${fills(media)?' insp-fills':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
-     {media?<XVideo media={media} fallback={<AnalysisCard item={item} locale={language}/>}/>:<Thumb item={item} locale={language}/>}
-     <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={proxied(media.avatar,640)} width="28" height="28" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer" onError={e=>{const i=e.currentTarget;if(media.avatar&&i.dataset.direct!==''&&i.getAttribute('src')!==media.avatar){i.dataset.direct='';i.src=media.avatar}else i.style.display='none'}}/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:new URL(item.url).hostname.replace(/^www\./,'')}{authorized&&` · ${rightsLabel(item,language)}`}</small></span></span>
+   <ul ref={feedRef} onScroll={onFeedScroll} className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}`}>{cards.map(item=>{const media=mediaFor(item),post=postOf(item),yt=youtubeOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
+    <a className={`insp-card-open${media||yt?' insp-vcard-open':''}${fills(media)||yt?' insp-fills':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
+     {media?<XVideo media={media} fallback={<AnalysisCard item={item} locale={language}/>}/>:yt?<YouTubeThumb video={yt} fallback={<AnalysisCard item={item} locale={language}/>}/>:<Thumb item={item} locale={language}/>}
+     <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={proxied(media.avatar,640)} width="28" height="28" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer" onError={e=>{const i=e.currentTarget;if(media.avatar&&i.dataset.direct!==''&&i.getAttribute('src')!==media.avatar){i.dataset.direct='';i.src=media.avatar}else i.style.display='none'}}/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:yt?yt.channel:new URL(item.url).hostname.replace(/^www\./,'')}{authorized&&` · ${rightsLabel(item,language)}`}</small></span></span>
     </a>
     <button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${l(selection[item.id]?'removePack':'addPack')}：${item.name}`}><Icon d={icons.save}/></button>
     <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l(post?'openOnX':'openSource')}：${item.name}`}><Icon d={icons.out}/></a>

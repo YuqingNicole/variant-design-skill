@@ -56,16 +56,17 @@ test('published direction cards pass the skill\'s own validator', () => {
 
 // The kind of work each section's detail titles name, in Chinese and English. Pinned here so a change to either language is a deliberate one.
 const work = {
-  web: ['网站设计', 'Website design'], interface: ['产品界面设计', 'Product interface design'], videos: ['创意视频', 'Creative video'],
+  web: ['网站设计', 'Website design'], interface: ['产品界面设计', 'Product interface design'], 'design-motion': ['动态设计', 'Design in motion'], videos: ['创意视频', 'Creative video'],
 };
 
 test('a detail title names the work after the reference, in both languages, for every section', () => {
   assert.deepEqual(sections.map(s => [s.id, [s.work.zh, s.work.en]]), Object.entries(work));
   assert.equal(detailTitle({ name: 'Linear', category: 'landing', tag: 'SaaS' }, 'zh'), 'Linear — 网站设计灵感 — Variant Design');
   assert.equal(detailTitle({ name: 'Linear', category: 'landing', tag: 'SaaS' }, 'en'), 'Linear — Website design inspiration — Variant Design');
-  assert.equal(detailTitle({ name: 'Blue cat zine', category: 'practice', tag: 'Print', kind: 'social-post' }, 'zh'), 'Blue cat zine — 创意视频灵感 — Variant Design');
+  assert.equal(detailTitle({ name: 'Blue cat zine', category: 'practice', tag: 'Print', kind: 'social-post' }, 'zh'), 'Blue cat zine — 动态设计灵感 — Variant Design');
   assert.equal(detailTitle({ name: 'Figma · Export', category: 'flow', tag: 'Delivery' }, 'en'), 'Figma · Export — Product interface design inspiration — Variant Design');
-  assert.equal(detailTitle({ name: 'Pencil portrait timelapse', category: 'practice', tag: 'Illustration', kind: 'social-post' }, 'en'), 'Pencil portrait timelapse — Creative video inspiration — Variant Design');
+  assert.equal(detailTitle({ name: 'Pencil portrait timelapse', category: 'practice', tag: 'Illustration', kind: 'social-post' }, 'en'), 'Pencil portrait timelapse — Design in motion inspiration — Variant Design');
+  assert.equal(detailTitle({ name: 'Clay chase', category: 'practice', tag: 'Craft', kind: 'youtube-video' }, 'zh'), 'Clay chase — 创意视频灵感 — Variant Design');
 });
 
 test('every reference gets its own detail page with an escaped title and a link back to the library', () => {

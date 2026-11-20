@@ -44,7 +44,7 @@ export function withImageHosts(config, previews, cap = imageHostCap) {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const source = fs.readFileSync(new URL('../src/inspiration-data.ts', import.meta.url), 'utf8');
   const from = source.indexOf('[', source.indexOf('export const inspirationItems = '));
-  const items = JSON.parse(source.slice(from, source.indexOf('\n];', from) + 2)).filter(i => !i.post);
+  const items = JSON.parse(source.slice(from, source.indexOf('\n];', from) + 2)).filter(i => !i.post && i.kind !== 'youtube-video');
   // A failed request keeps the stored record; only a page that loads without a preview drops it.
   const stored = JSON.parse(fs.readFileSync(new URL('../src/link-previews.json', import.meta.url), 'utf8'));
   const out = {}, today = new Date().toISOString().slice(0, 10);
