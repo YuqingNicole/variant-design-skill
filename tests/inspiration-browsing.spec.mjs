@@ -34,8 +34,10 @@ test('the slash key focuses the search, except while typing',async({page})=>{
 });
 
 test('phones get a tab bar fixed to the bottom that marks the current page, and the vertical feed loads the next page by scrolling; wide screens and no-JavaScript visitors keep the header links',async({page,browser,baseURL})=>{
- await page.setViewportSize({width:390,height:844});await page.goto('/zh/browse/videos');
- const bar=page.locator('.site-tabbar');await expect(bar.locator('a')).toHaveCount(5);await expect(bar.locator('a[aria-current=page]')).toHaveText('视频');
+ await page.setViewportSize({width:390,height:844});await page.goto('/zh/browse/design-motion');
+ // Design videos belong to 灵感; the 视频 tab appears once the first creative video has a page (2026-11-20).
+ const hasVideos=fs.existsSync(new URL('../website/dist/zh/browse/videos/index.html',import.meta.url));
+ const bar=page.locator('.site-tabbar');await expect(bar.locator('a')).toHaveCount(hasVideos?5:4);await expect(bar.locator('a[aria-current=page]')).toHaveText('灵感');
  await page.evaluate(()=>scrollTo(0,document.body.scrollHeight/2));
  const box=await bar.boundingBox();expect(Math.round(box.y+box.height),'fixed to the viewport bottom').toBe(844);
  await expect(page.locator('.site-nav-links')).toBeHidden();

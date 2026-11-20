@@ -47,36 +47,37 @@ test('an account search keeps only that account, uses its own like threshold and
   assert.equal(extractCandidates(rows, capturedAt, 'q').length, 1, 'the keyword search keeps its 100-like floor and has no watched mark');
 });
 
-test('the shipped config is valid and the weekly group still makes the searches the schedule has always run', () => {
+test('the shipped config is valid and searches for creative videos, not design work (Videos tab, 2026-11-20)', () => {
   const weekly = planSearches(config, { now });
   assert.deepEqual([...new Set(weekly.map(s => s.group))], ['weekly']);
-  assert.deepEqual(weekly[0], {
-    group: 'weekly', screens: 0, query: '(design OR UI OR interaction OR motion) filter:videos min_faves:100 since:2026-11-07',
-    kind: 'query', label: '(design OR UI OR interaction OR motion)', url: makeSearchUrl('(design OR UI OR interaction OR motion)', '2026-11-07', 100),
-    minLikes: 100, required: true,
-  });
-  assert.deepEqual(weekly.slice(1).map(s => [s.handle, s.minLikes]), [
-    ['raunofreiberg', 300], ['jakubkrehel', 100], ['jh3yy', 300], ['mattgperry', 100], ['lochieaxon', 50], ['ibelick', 50], ['steveruizok', 200],
-  ]);
-  assert.ok(weekly.slice(1).every(s => s.kind === 'account' && !s.required && s.query.startsWith(`from:${s.handle} -filter:replies`)));
+  assert.ok(weekly.length >= 1 && weekly[0].required && weekly[0].kind === 'query');
+  assert.match(weekly[0].query, /animation.*filter:videos min_faves:1000 since:2026-11-07$/);
+  for (const s of planSearches(config, { groups: 'all', now })) assert.doesNotMatch(s.label, /\b(design|typography|dashboard|branding|rebrand)\b/i, s.label);
 });
 
-test('a run covers the weekly groups unless groups are named; named groups keep config order, their own window and screens', () => {
-  assert.deepEqual(selectGroups(config).map(g => g.id), config.groups.filter(g => g.weekly).map(g => g.id));
-  assert.deepEqual(selectGroups(config, '').map(g => g.id), selectGroups(config).map(g => g.id));
-  assert.deepEqual(selectGroups(config, 'designers, print').map(g => g.id), ['print', 'designers']);
-  assert.deepEqual(selectGroups(config, ['all']).map(g => g.id), config.groups.map(g => g.id));
-  assert.throws(() => selectGroups(config, 'print,nope'), /Unknown discovery group: nope\. Known groups: weekly,/);
+// Group selection and windows, on a fixed config so the rules stay covered whatever the shipped groups are.
+const groupsFixture = validateConfig({ groups: [
+  { id: 'weekly', weekly: true, days: 7, queries: [{ terms: '(animation OR vfx)', minLikes: 1000, required: true }], accounts: [{ handle: 'someone', minLikes: 50 }] },
+  { id: 'print', days: 30, screens: 3, queries: [{ terms: '("packaging design" OR zine)', minLikes: 150 }] },
+  { id: 'designers', days: 30, screens: 3, accounts: [{ handle: 'posterlad', minLikes: 50 }] },
+] });
 
-  const print = planSearches(config, { groups: 'print', now });
+test('a run covers the weekly groups unless groups are named; named groups keep groupsFixture order, their own window and screens', () => {
+  assert.deepEqual(selectGroups(groupsFixture).map(g => g.id), groupsFixture.groups.filter(g => g.weekly).map(g => g.id));
+  assert.deepEqual(selectGroups(groupsFixture, '').map(g => g.id), selectGroups(groupsFixture).map(g => g.id));
+  assert.deepEqual(selectGroups(groupsFixture, 'designers, print').map(g => g.id), ['print', 'designers']);
+  assert.deepEqual(selectGroups(groupsFixture, ['all']).map(g => g.id), groupsFixture.groups.map(g => g.id));
+  assert.throws(() => selectGroups(groupsFixture, 'print,nope'), /Unknown discovery group: nope\. Known groups: weekly,/);
+
+  const print = planSearches(groupsFixture, { groups: 'print', now });
   assert.equal(print.length, 1);
   assert.match(print[0].query, /^\("packaging design" OR .* filter:videos min_faves:150 since:2026-10-15$/);
   assert.equal(print[0].screens, 3);
   assert.equal(print[0].required, false);
-  assert.match(planSearches(config, { groups: 'print', days: '14', now })[0].query, /since:2026-10-31$/);
-  assert.ok(planSearches(config, { groups: 'weekly', days: 3, now }).every(s => s.query.endsWith('since:2026-11-11')));
-  for (const bad of ['0', '91', '7.5', 'week']) assert.throws(() => planSearches(config, { days: bad, now }), /--days must be a whole number from 1 to 90/);
-  assert.equal(planSearches(config, { groups: 'all', now }).length, config.groups.reduce((n, g) => n + (g.queries?.length ?? 0) + (g.accounts?.length ?? 0), 0));
+  assert.match(planSearches(groupsFixture, { groups: 'print', days: '14', now })[0].query, /since:2026-10-31$/);
+  assert.ok(planSearches(groupsFixture, { groups: 'weekly', days: 3, now }).every(s => s.query.endsWith('since:2026-11-11')));
+  for (const bad of ['0', '91', '7.5', 'week']) assert.throws(() => planSearches(groupsFixture, { days: bad, now }), /--days must be a whole number from 1 to 90/);
+  assert.equal(planSearches(groupsFixture, { groups: 'all', now }).length, groupsFixture.groups.reduce((n, g) => n + (g.queries?.length ?? 0) + (g.accounts?.length ?? 0), 0));
 });
 
 test('the same search reached through two groups runs once, under the first', () => {

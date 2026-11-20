@@ -9,7 +9,7 @@ import { readLibrary, splitReferences } from '../website/scripts/inspiration-spl
 // The sections the home has to fetch once a reader reaches past its first page (a section whose references are all on that page is never fetched).
 const beyondFirstPage=await (async()=>{const library=readLibrary(),{sectionOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname),split=splitReferences(library.items,sectionOf,library);return new Set(Object.entries(split.sections).filter(([,part])=>part.items.some(r=>!split.first.items.includes(r))).map(([id])=>id))})();
 // Library totals come from the data, so adding a reference (the weekly X pull request does) does not break counts pinned here.
-const libraryCounts=await (async()=>{const {sectionOf,videoTypeOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname),items=readLibrary().items;const by=key=>items.filter(i=>sectionOf(i)===key).length;const type=key=>items.filter(i=>sectionOf(i)==='videos'&&videoTypeOf(i)===key).length;return{total:items.length,web:by('web'),by,type};})();
+const libraryCounts=await (async()=>{const {sectionOf,videoTypeOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname),items=readLibrary().items;const by=key=>items.filter(i=>sectionOf(i)===key).length;const type=key=>items.filter(i=>sectionOf(i)==='design-motion'&&videoTypeOf(i)===key).length;return{total:items.length,web:by('web'),by,type};})();
 const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
 // The homepage includes X motion now; regressions isolate its media in every scenario.
 // Individual media tests override these routes with their own playback/failure fixture.
@@ -350,7 +350,7 @@ test('inspiration references filter, create an original brief and recover from c
  const cards=page.locator('.inspiration-grid .insp-card');
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.total} 个参考`);
  // Every tab is its own page with its own references; together they list each reference once.
- for(const [name,count] of [['网站','web'],['产品界面','interface'],['视频','videos']].map(([name,key])=>[name,libraryCounts.by(key)])){
+ for(const [name,count] of [['网站','web'],['产品界面','interface'],['动态设计','design-motion'],...(libraryCounts.by('videos')?[['视频','videos']]:[])].map(([name,key])=>[name,libraryCounts.by(key)])){
   await page.locator('.insp-pills').getByRole('link',{name,exact:true}).click();
   await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${count} 个参考`);
  }
@@ -597,10 +597,10 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.route(/platform\.twitter\.com/,r=>r.abort());await page.route(/pbs\.twimg\.com/,r=>r.fulfill({contentType:'image/png',body:pixel}));
  // The widgets video fails; the sheep video stays pending, so the suite never streams from X.
  await page.route(/video\.twimg\.com/,r=>{if(r.request().url()===media['paper-widgets'].video)return r.abort()});
- await page.goto('/zh/browse/interface?sort=curated');await expect(page.locator('.insp-pills a')).toHaveText([/^全部\s*\d+$/,/^网站\s*\d+$/,/^产品界面\s*\d+$/,/^视频\s*\d+$/]);
+ await page.goto('/zh/browse/interface?sort=curated');await expect(page.locator('.insp-pills a')).toHaveText([/^全部\s*\d+$/,/^网站\s*\d+$/,/^产品界面\s*\d+$/,/^动态设计\s*\d+$/]);
  expect(xRequests.filter(u=>new URL(u).hostname==='video.twimg.com')).toEqual([]);
- await page.locator('.insp-pills').getByRole('link',{name:'视频',exact:true}).click();await expect(page).toHaveURL(/\/browse\/videos$/);
- await page.locator('.insp-types').getByRole('button',{name:'动效',exact:true}).click();await expect(page).toHaveURL(/\/browse\/videos\?type=motion$/);
+ await page.locator('.insp-pills').getByRole('link',{name:'动态设计',exact:true}).click();await expect(page).toHaveURL(/\/browse\/design-motion$/);
+ await page.locator('.insp-types').getByRole('button',{name:'动效',exact:true}).click();await expect(page).toHaveURL(/\/browse\/design-motion\?type=motion$/);
  // The client render replaces the prerendered feed; wait for it (XVideo adds the referrer meta on mount) before holding a card.
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
  // The motion type lists every motion video; the strip mounts its first 30, and the widgets card is the oldest, so load the rest first.
@@ -610,7 +610,7 @@ test('best practice shows each X post as its looping video, credits the author a
  // Videos only start once visible, and a newer card can push this one below the fold. A re-render can replace the card mid-scroll, so retry that.
  await expect(async()=>{await widgets.scrollIntoViewIfNeeded()}).toPass();
  await expect(widgets.locator('img.insp-vcard-media')).toHaveAttribute('src',sized(media['paper-widgets'].poster,640));await expect(widgets.locator('video')).toHaveCount(0);
- await page.locator('.insp-types').getByRole('button',{name:'交互',exact:true}).click();await expect(page).toHaveURL(/\/browse\/videos\?type=interaction$/);
+ await page.locator('.insp-types').getByRole('button',{name:'交互',exact:true}).click();await expect(page).toHaveURL(/\/browse\/design-motion\?type=interaction$/);
  // The interaction type lists every interaction video; the strip mounts its first 30 and loads the rest as it is scrolled.
  const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(Math.min(30,libraryCounts.type('interaction')));await expect(page.locator('.inspiration-grid')).toHaveCount(1);
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
@@ -625,7 +625,7 @@ test('best practice shows each X post as its looping video, credits the author a
  expect(await video.evaluate(v=>v.muted&&v.loop&&v.playsInline)).toBe(true);
  await expect(sheep.locator('.insp-vcard-avatar')).toHaveAttribute('alt','areadne @AreadneMaria');
  await expect(sheep.locator('.insp-card-out')).toHaveAttribute('href','https://x.com/AreadneMaria/status/2114898325451444419');
- await sheep.locator('.insp-vcard-open').click();await expect(page).toHaveURL(/\/inspiration\/x-areadnemaria-444419\?type=interaction&in=videos$/);
+ await sheep.locator('.insp-vcard-open').click();await expect(page).toHaveURL(/\/inspiration\/x-areadnemaria-444419\?type=interaction&in=design-motion$/);
  const dialog=page.getByRole('dialog');await expect(dialog.locator('.x-post blockquote')).toContainText('@AreadneMaria');await expect(dialog.locator('.x-post figcaption')).toContainText('点击后会从 x.com 加载内容');
  // The detail plays the post's video from X's file host itself and loads X's widget only when asked.
  await expect(dialog.locator('.x-post-video video')).toHaveAttribute('poster',sized(media['x-areadnemaria-444419'].poster,640));expect(await dialog.locator('.x-post-video video').evaluate(v=>v.controls&&v.muted)).toBe(true);
@@ -695,11 +695,11 @@ test('a topic narrows the library to its dated references and states what is unk
  await expect(cards).toHaveCount(1);await expect(cards.first().locator('.insp-card-open')).toHaveAttribute('href','/zh/inspiration/v0');
  await page.getByRole('searchbox').fill('');
  // A section page keeps the topic filter inside its own references.
- await page.goto('/zh/browse/videos?topic=saas-home');
+ await page.goto('/zh/browse/design-motion?topic=saas-home');
  await expect(cards).toHaveCount(0);
  await page.locator('.inspiration-empty').getByRole('button',{name:'清除筛选'}).click();
  await expect(page).not.toHaveURL(/topic=/);
- await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.by('videos')} 个参考`);
+ await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.by('design-motion')} 个参考`);
 });
 test('the cases grid keeps one labelled sponsor slot after the third case, and it is not a case', async ({page})=>{
  await page.goto('/zh/cases');await hydrated(page);
@@ -890,11 +890,12 @@ test('headings, primary buttons and filters share one scale and one look across 
   expect(await page.locator('.billing-switch button[aria-pressed=true]').evaluate(e => getComputedStyle(e).boxShadow)).toBe('rgba(35, 38, 34, 0.14) 0px 1px 2px 0px');
 });
 
-test('the header names the motion feed once, keeps the full wordmark on phones and the counts follow the filter', async ({ page }) => {
+test('design videos sit under Inspiration, keep the full wordmark on phones and the counts follow the filter', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/zh/browse/videos');
-  await expect(page.locator('.site-nav-links a[aria-current=page]')).toHaveText('视频');
-  await expect(page.locator('.insp-pills a[aria-current=page]')).toHaveText(new RegExp(`^视频\\s*${libraryCounts.by('videos')}$`));
+  await page.goto('/zh/browse/design-motion');
+  // Design videos are design inspiration; the 视频 nav item is for creative videos only (2026-11-20).
+  await expect(page.locator('.site-nav-links a[aria-current=page]')).toHaveText('灵感');
+  await expect(page.locator('.insp-pills a[aria-current=page]')).toHaveText(new RegExp(`^动态设计\\s*${libraryCounts.by('design-motion')}$`));
   const language = await page.locator('.site-language').evaluate(e => { const s = getComputedStyle(e); return [s.borderTopWidth, parseFloat(s.minHeight)]; });
   expect(language[0]).toBe('0px'); expect(language[1]).toBeGreaterThanOrEqual(44);
   for (const width of [320, 390]) {
@@ -920,7 +921,7 @@ test('content shares the heading\'s left edge and two-tone headings use the pale
 test('X posters and avatars fall back to X directly when the image service fails', async ({ page }) => {
   const xMedia = JSON.parse(fs.readFileSync(new URL('../website/src/x-media.json', import.meta.url), 'utf8'));
   await page.route(/\/_vercel\/image\?/, r => r.abort());
-  await page.goto('/zh/browse/videos');
+  await page.goto('/zh/browse/design-motion');
   await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content', 'no-referrer');
   const card = page.locator('.insp-videos > li:not(:has(img[src*="ytimg"]))').first(); // the newest card may be a YouTube one
   const id = (await card.locator('.insp-card-open').getAttribute('href')).split('/').pop();
@@ -932,7 +933,7 @@ test('X posters and avatars fall back to X directly when the image service fails
 
 test('X cards whose poster cannot load fall back to the analysis card, not a broken image', async ({ page }) => {
   await page.route(/twimg\.com|platform\.twitter\.com/, r => r.abort());
-  await page.goto('/zh/browse/videos');
+  await page.goto('/zh/browse/design-motion');
   const cards = page.locator('.insp-videos > li:not(:has(img[src*="ytimg"]))');
   await expect(cards.first().locator('.insp-vcard-open > .insp-thumb')).toBeVisible();
   await expect(cards.first().locator('.insp-vcard-open > .insp-thumb b')).not.toBeEmpty();
@@ -1054,15 +1055,19 @@ test('home leads with the inspiration feed, cases have their own page, and the s
  await expect(page.locator('h1')).toHaveText('AI 时代最好的设计灵感。');
  await expect(page.locator('.insp-title')).toContainText('每条附出处和我们的笔记');
  await expect(page.locator('.inspiration-grid .insp-card').first()).toBeInViewport();
- await expect(page.locator('.site-nav-links a')).toHaveText(['灵感','视频','案例','技能','文档','投稿']);
+ // 视频 is creative videos only (2026-11-20); the navigation names it once the first one is published.
+ const hasVideos=libraryCounts.by('videos')>0;
+ await expect(page.locator('.site-nav-links a')).toHaveText(['灵感',...(hasVideos?['视频']:[]),'案例','技能','文档','投稿']);
  await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');
- await page.locator('.site-nav-links a',{hasText:'视频'}).click();
- await expect(page).toHaveURL(/\/browse\/videos$/);await expect(page.locator('h1')).toHaveText('创意视频灵感');await expect(page.locator('.insp-pills').getByRole('link',{name:'视频',exact:true})).toHaveAttribute('aria-current','page');
- await page.getByRole('link',{name:'全部',exact:true}).click();await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a',{hasText:'视频'})).not.toHaveAttribute('aria-current','page');
+ if(hasVideos){
+  await page.locator('.site-nav-links a',{hasText:'视频'}).click();
+  await expect(page).toHaveURL(/\/browse\/videos$/);await expect(page.locator('h1')).toHaveText('创意视频');await expect(page.locator('.insp-pills').getByRole('link',{name:'视频',exact:true})).toHaveAttribute('aria-current','page');
+  await page.getByRole('link',{name:'全部',exact:true}).click();await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a',{hasText:'视频'})).not.toHaveAttribute('aria-current','page');
+ }
  for(const [group,links] of [['Variant Design 技能',['/zh/docs','/zh/about','/zh/pricing','/zh/changelog','/lab']],['资源',['/zh/skills','/zh/guides','/zh/submit']]])
   for(const href of links)await expect(page.getByRole('navigation',{name:group}).locator(`a[href="${href}"]`)).toHaveCount(1);
  await page.goto('/zh?utm_source=practice');
- await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a',{hasText:'视频'})).not.toHaveAttribute('aria-current','page');
+ await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');await expect(page.locator('.site-nav-links a[aria-current=page]')).toHaveCount(1);
  await page.goto('/zh/inspiration?topic=saas-home');
  await expect(page).toHaveURL(/:\d+\/zh\?topic=saas-home$/);await expect(page.locator('.inspiration-grid .insp-card')).toHaveCount(10);
  await page.goto('/zh/inspiration/linear');await expect(page.locator('.site-nav-links a').first()).toHaveAttribute('aria-current','page');
@@ -1077,7 +1082,7 @@ test('each inspiration tab is its own page, and no reference appears on two of t
  await page.goto('/zh');
  // The count after each name is aria-hidden, so the accessible name is the name alone.
  const tabs=await page.locator('.insp-pills a').evaluateAll(as=>as.map(a=>[a.textContent.replace(/\s*\d+\s*$/,'').trim(),a.getAttribute('href')]));
- expect(tabs.map(t=>t[1])).toEqual(['/zh','/zh/browse/web','/zh/browse/interface','/zh/browse/videos']);
+ expect(tabs.map(t=>t[1])).toEqual(['/zh','/zh/browse/web','/zh/browse/interface','/zh/browse/design-motion',...(libraryCounts.by('videos')?['/zh/browse/videos']:[])]);
  // Read the prerendered pages as a crawler does: every reference of the page is in the HTML, with no scrolling.
  const idsOf=async href=>{const html=await(await request.get(href)).text();return {html,ids:[...html.matchAll(/class="insp-card-open[^"]*" href="\/zh\/inspiration\/([^"]+)"/g)].map(m=>m[1])}};
  const home=await idsOf('/zh'),seen=new Set(),titles=new Set(),headings=new Set();
@@ -1098,21 +1103,26 @@ test('old category links and empty sections land on the right page', async ({pag
  const go=async(from,to)=>{await page.goto(from);await expect(page).toHaveURL(new RegExp('^http://127\\.0\\.0\\.1:\\d+'+to.replace(/[?.]/g,'\\$&')+'$'))};
  await go('/zh/?category=landing&sort=name','/zh/browse/web?sort=name');
  await go('/zh/?category=product','/zh/browse/interface');
- await go('/zh/?category=motion','/zh/browse/videos');
- await go('/zh/?category=practice&sort=name','/zh/browse/videos?sort=name');
- await go('/?category=motion','/browse/videos');
- // The old interaction, motion, brand, illustration, poster and print pages are now design types inside the videos tab.
- await go('/zh/browse/motion','/zh/browse/videos?type=motion');
- await go('/browse/print','/browse/videos?type=print');
- await go('/zh/browse/branding?sort=name','/zh/browse/videos?type=branding&sort=name');
+ // The old motion and practice categories were design videos; they now live in the design-motion tab.
+ await go('/zh/?category=motion','/zh/browse/design-motion');
+ await go('/zh/?category=practice&sort=name','/zh/browse/design-motion?sort=name');
+ await go('/?category=motion','/browse/design-motion');
+ // The old interaction, motion, brand, illustration, poster and print pages are design types inside design-motion.
+ await go('/zh/browse/motion','/zh/browse/design-motion?type=motion');
+ await go('/browse/print','/browse/design-motion?type=print');
+ await go('/zh/browse/branding?sort=name','/zh/browse/design-motion?type=branding&sort=name');
+ // Videos was filtered by design type until 2026-11-20; those links (and browsers that cached the old redirects) follow the design videos.
+ await go('/zh/browse/videos?type=motion','/zh/browse/design-motion?type=motion');
+ await go('/browse/videos?type=print&sort=name','/browse/design-motion?type=print&sort=name');
  await go('/zh/inspiration/linear?category=landing','/zh/inspiration/linear?in=web');
- await go('/zh/browse/zzz','/zh'); // a section that does not exist goes home; print got its first references in the second 2026-11-13 batch, so every section has a page now
+ await go('/zh/browse/zzz','/zh'); // a section that does not exist goes home
+ if(!libraryCounts.by('videos'))await go('/zh/browse/videos','/zh'); // no creative video yet, so Videos has no page
 });
 
 test('on a phone the tabs stay in one row with the current one in view, and the filters no longer pin over the list', async ({page})=>{
- await page.setViewportSize({width:390,height:844});await page.goto('/zh/browse/videos');await hydrated(page);
+ await page.setViewportSize({width:390,height:844});await page.goto('/zh/browse/design-motion');await hydrated(page);
  const row=page.locator('.insp-pills');
- await expect(row.locator('a')).toHaveCount(4);
+ await expect(row.locator('a')).toHaveCount(libraryCounts.by('videos')?5:4);
  const m=await row.evaluate(r=>{const cur=r.querySelector('[aria-current=page]').getBoundingClientRect();return{h:r.getBoundingClientRect().height,wrap:getComputedStyle(r).flexWrap,inView:cur.left>=0&&cur.right<=innerWidth,overflow:document.documentElement.scrollWidth>innerWidth}});
  expect(m).toEqual({h:44,wrap:'nowrap',inView:true,overflow:false});
  expect(await page.locator('.insp-bar').evaluate(b=>getComputedStyle(b).position)).toBe('static');
@@ -1122,14 +1132,14 @@ test('on a phone the tabs stay in one row with the current one in view, and the 
 
 test('a tab is fetched as soon as the pointer or finger is on it, once', async ({page})=>{
  await page.goto('/zh/browse/web');await hydrated(page);
- const tab=page.locator('.insp-pills a',{hasText:'视频'});
+ const tab=page.locator('.insp-pills a',{hasText:'动态设计'});
  await tab.hover();await tab.dispatchEvent('touchstart');await tab.focus();
- await expect(page.locator('link[rel=prefetch][href="/zh/browse/videos"]')).toHaveCount(1);
+ await expect(page.locator('link[rel=prefetch][href="/zh/browse/design-motion"]')).toHaveCount(1);
  await expect(page.locator('link[rel=prefetch]')).toHaveCount(1);
 });
 
 test('feed motion stays inside the budget: 200ms card zoom, a fixed-width search box, hover only where hover exists', async ({page,browser})=>{
- await page.goto('/zh/browse/videos');await hydrated(page);
+ await page.goto('/zh/browse/design-motion');await hydrated(page);
  expect(await page.locator('.insp-card-open').first().evaluate(a=>{const c=a.querySelector('.insp-thumb,.insp-vcard-media');const s=getComputedStyle(c);return [s.transitionProperty,s.transitionDuration]})).toEqual(['transform','0.2s']);
  const search=page.locator('.insp-search input'),width=await search.evaluate(e=>e.getBoundingClientRect().width);
  expect(await search.evaluate(e=>getComputedStyle(e).transitionProperty.includes('width'))).toBe(false);
@@ -1155,7 +1165,7 @@ test('page crossfade is wired in, drops the shared card names while it runs, and
  let seen=false;
  for(let attempt=0;attempt<3&&!seen;attempt++){
   await page.goto('/zh/browse/web');await page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
-  await page.locator('.insp-pills a',{hasText:'视频'}).click();await expect(page).toHaveURL(/\/browse\/videos$/);
+  await page.locator('.insp-pills a',{hasText:'动态设计'}).click();await expect(page).toHaveURL(/\/browse\/design-motion$/);
   seen=await page.waitForFunction(()=>window.__vt.finished===true,null,{timeout:5000}).then(()=>true,()=>false);
  }
  if(seen){
@@ -1166,7 +1176,7 @@ test('page crossfade is wired in, drops the shared card names while it runs, and
  // Reduced motion never starts a transition, so this holds on any machine.
  const calm=await browser.newContext({reducedMotion:'reduce'}),q=await calm.newPage();await q.addInitScript(watch);
  await q.goto('/zh/browse/web');await q.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
- await q.locator('.insp-pills a',{hasText:'视频'}).click();await expect(q).toHaveURL(/\/browse\/videos$/);
+ await q.locator('.insp-pills a',{hasText:'动态设计'}).click();await expect(q).toHaveURL(/\/browse\/design-motion$/);
  expect(await q.evaluate(()=>window.__vt.reveal??false)).toBe(false);await calm.close();
 });
 
@@ -1179,7 +1189,7 @@ test('the reference brief rises into place, and only fades with reduced motion',
 });
 
 test('motion tokens, tabs without a hover lift, a save button that answers with colour and press, reduced motion that keeps feedback', async ({page,browser})=>{
- await page.goto('/zh/browse/videos');await hydrated(page);
+ await page.goto('/zh/browse/design-motion');await hydrated(page);
  // The tokens resolve on :root (the page transition reads them too); compare computed values, not the minified source text.
  expect(await page.evaluate(()=>{const e=document.createElement('i');document.body.append(e);const out=['--dur-press','--dur-fast','--dur-base','--dur-slow'].map(k=>{e.style.transitionDuration=`var(${k})`;return getComputedStyle(e).transitionDuration});e.style.transitionTimingFunction='var(--ease-out)';out.push(getComputedStyle(e).transitionTimingFunction);e.remove();return out})).toEqual(['0.16s','0.14s','0.2s','0.34s','cubic-bezier(0.22, 1, 0.36, 1)']);
  // Tabs change colour only: no lift on hover, and transform is not among their transitions.
@@ -1191,7 +1201,7 @@ test('motion tokens, tabs without a hover lift, a save button that answers with 
  expect(props.name).toBe('none');for(const p of ['background-color','color','transform'])expect(props.transition).toContain(p);
  await save.click();await expect(save).toHaveAttribute('aria-pressed','true');expect(await save.evaluate(b=>getComputedStyle(b).animationName)).toBe('none');
  // Reduced motion: movement goes, opacity and colour feedback stay, and the dialog still fades in.
- const calm=await browser.newContext({reducedMotion:'reduce'}),q=await calm.newPage();await q.goto('/zh/browse/videos');await hydrated(q);
+ const calm=await browser.newContext({reducedMotion:'reduce'}),q=await calm.newPage();await q.goto('/zh/browse/design-motion');await hydrated(q);
  expect(await q.locator('.insp-card-meta').first().evaluate(m=>{const s=getComputedStyle(m);return [s.transitionProperty.includes('opacity'),s.transitionProperty.includes('transform'),parseFloat(s.transitionDuration)>0]})).toEqual([true,false,true]);
  expect(await q.locator('.insp-card-save').first().evaluate(b=>getComputedStyle(b).transitionProperty.includes('transform'))).toBe(false);
  await q.locator('.insp-card-open').first().click();await expect(q.getByRole('dialog')).toBeVisible();
@@ -1246,7 +1256,7 @@ test('lab budget: no layout shift past 0.1, a quick first paint on our own pages
 // section chunk at a time, each fetched once, only when the reader asks for it (TODO §6, 2026-11-13). The prerendered HTML is
 // unchanged, and a page whose first render needs more waits for it rather than replacing that HTML with a gap.
 test('the home fetches the rest of the library per section, once, only when scrolled, searched, sorted or opened',async({page})=>{
- const chunks=[];page.on('request',r=>{const m=new URL(r.url()).pathname.match(/\/assets\/section-([a-z]+)-/);if(m)chunks.push(m[1])});
+ const chunks=[];page.on('request',r=>{const m=new URL(r.url()).pathname.match(/\/assets\/section-([a-z-]+?)-[\w-]{8}\.js$/);if(m)chunks.push(m[1])});
  await page.goto('/zh');await hydrated(page);
  const cards=page.locator('.inspiration-grid .insp-card');await expect(cards).toHaveCount(30);expect(chunks).toEqual([]);
  await page.locator('.insp-more button').click();await expect(cards).toHaveCount(60);expect(chunks.length).toBeGreaterThan(0);
@@ -1366,17 +1376,17 @@ test('the service worker serves a stored page and then the offline page once the
   } finally { proxy.closeAllConnections(); proxy.close(); await context.close(); }
 });
 
-test('the videos tab filters by design type in place, keeps the choice in the address and states each type\'s count', async ({page})=>{
- await page.goto('/zh/browse/videos');await hydrated(page);
+test('the design-motion tab filters by design type in place, keeps the choice in the address and states each type\'s count', async ({page})=>{
+ await page.goto('/zh/browse/design-motion');await hydrated(page);
  const types=page.locator('.insp-types button');
- await expect(types.first()).toHaveText(new RegExp(`^全部\\s*${libraryCounts.by('videos')}$`));await expect(types.first()).toHaveAttribute('aria-pressed','true');
+ await expect(types.first()).toHaveText(new RegExp(`^全部\\s*${libraryCounts.by('design-motion')}$`));await expect(types.first()).toHaveAttribute('aria-pressed','true');
  // Only types that have a video get a button, and each count is the data's own.
  for(const [name,key] of [['交互','interaction'],['动效','motion'],['品牌','branding'],['印刷','print']]) await expect(types.filter({hasText:name})).toHaveText(new RegExp(`^${name}\\s*${libraryCounts.type(key)}$`));
  await types.filter({hasText:'印刷'}).click();
- await expect(page).toHaveURL(/\/browse\/videos\?type=print$/);await expect(types.filter({hasText:'印刷'})).toHaveAttribute('aria-pressed','true');
+ await expect(page).toHaveURL(/\/browse\/design-motion\?type=print$/);await expect(types.filter({hasText:'印刷'})).toHaveAttribute('aria-pressed','true');
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.type('print')} 个参考`);
  // The address alone restores the choice, and the site-wide search stays inside it.
- await page.goto('/zh/browse/videos?type=motion');await hydrated(page);
+ await page.goto('/zh/browse/design-motion?type=motion');await hydrated(page);
  await expect(types.filter({hasText:'动效'})).toHaveAttribute('aria-pressed','true');await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.type('motion')} 个参考`);
  await types.first().click();await expect(page).not.toHaveURL(/type=/);
  // Websites have no design types.
@@ -1388,7 +1398,7 @@ test('a YouTube video shows its thumbnail, loads nothing from YouTube but that p
  const hosts=new Set();page.on('request',r=>hosts.add(new URL(r.url()).hostname));
  await page.route(/i\.ytimg\.com/,r=>r.fulfill({contentType:'image/png',body:pixel}));await page.route(/youtube-nocookie\.com/,r=>r.fulfill({contentType:'text/html',body:'<title>player</title>'}));
  // The feed: a thumbnail card in the videos tab, credited to the channel, no player.
- await page.goto('/zh/browse/videos');await hydrated(page);
+ await page.goto('/zh/browse/design-motion');await hydrated(page);
  const card=page.locator('.insp-videos > li',{has:page.locator(`a[href="/zh/inspiration/${entry.id}"]`)});
  await expect(async()=>{await card.scrollIntoViewIfNeeded()}).toPass();await expect(card.locator('img.insp-vcard-media')).toHaveAttribute('src',new RegExp(`i\\.ytimg\\.com/vi/${entry.video.id}/`));
  await expect(card.locator('.insp-card-meta small')).toHaveText(entry.video.channel);
@@ -1406,7 +1416,7 @@ test('a YouTube video shows its thumbnail, loads nothing from YouTube but that p
 
 test('every indexable page names our share image', () => {
  const dist=new URL('../website/dist/',import.meta.url);
- for(const p of ['index.html','zh/index.html','docs/index.html','browse/videos/index.html']){
+ for(const p of ['index.html','zh/index.html','docs/index.html','browse/design-motion/index.html']){
   const html=fs.readFileSync(new URL(p,dist),'utf8');
   expect(html,p).toMatch(/<meta property="og:image" content="https:\/\/[^"]+\/share-card\.png">/);
   expect(html,p).toMatch(/<meta name="twitter:image" content="https:\/\/[^"]+\/share-card\.png">/);

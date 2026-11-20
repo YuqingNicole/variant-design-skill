@@ -7,13 +7,16 @@ export async function probeFocus(page, { tabs = 14 } = {}) {
   for (let i = 0; i < tabs; i++) {
     await page.keyboard.press('Tab');
     found.push(await page.evaluate(() => {
-      const el = document.activeElement; if (!el || el === document.body) return null;
+      const focused = document.activeElement; if (!focused || focused === document.body) return null;
+      // A field whose wrapper draws the ring (`:focus-within`, as the library search does) is judged by that wrapper.
+      const ringless = e => { const t = getComputedStyle(e); return t.outlineStyle === 'none' || t.outlineWidth === '0px'; };
+      const el = ringless(focused) && focused.parentElement?.matches(':focus-within') && !ringless(focused.parentElement) ? focused.parentElement : focused;
       const s = getComputedStyle(el), parse = c => (c.match(/[\d.]+/g) || []).map(Number);
       // The ring sits outside the element when it has an offset, so it is judged against what is behind it, not the element's own fill.
       let bg = parseFloat(s.outlineOffset) >= 1 ? el.parentElement : el, color = [255, 255, 255];
       while (bg) { const c = parse(getComputedStyle(bg).backgroundColor); if (c.length >= 3 && (c[3] ?? 1) > 0.5) { color = c.slice(0, 3); break; } bg = bg.parentElement; }
       const r = el.getBoundingClientRect();
-      return { tag: el.tagName.toLowerCase(), label: (el.getAttribute('aria-label') || el.textContent || el.getAttribute('href') || '').trim().slice(0, 28), ring: s.outlineStyle === 'none' || s.outlineWidth === '0px' ? null : parse(s.outlineColor).slice(0, 3), width: s.outlineWidth, background: color, visible: r.width > 0 && r.height > 0 };
+      return { tag: focused.tagName.toLowerCase(), label: (focused.getAttribute('aria-label') || focused.getAttribute('placeholder') || el.textContent || el.getAttribute('href') || '').trim().slice(0, 28), ring: s.outlineStyle === 'none' || s.outlineWidth === '0px' ? null : parse(s.outlineColor).slice(0, 3), width: s.outlineWidth, background: color, visible: r.width > 0 && r.height > 0 };
     }));
   }
   return found.filter(Boolean).filter(f => f.visible).map(f => ({ ...f, ratio: f.ring ? +contrast(f.ring, f.background).toFixed(2) : 0 }));

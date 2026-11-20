@@ -9,7 +9,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { readItems, appendItems, askClaude, judged as judgedWith, TAGS, review } from './x-publish.mjs';
+import { readItems, appendItems, askClaude, judged as judgedWith, TAGS, SCOPE, TAG_GUIDE, SCOPE_REJECTS, review } from './x-publish.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const inboxPath = path.resolve(here, '../content/youtube-video-inbox.json');
@@ -27,16 +27,17 @@ export function channelInLibrary(items, candidate) {
 export function buildPrompt(candidate, sheet) {
   const facts = [`Title: ${JSON.stringify(candidate.title)}`, `Channel: ${candidate.channel}`, candidate.seconds ? `Length: ${candidate.seconds} seconds` : null, candidate.views ? `${candidate.views} views` : null,
     candidate.text ? `Description (start): ${JSON.stringify(candidate.text)}` : null].filter(Boolean).join('\n');
-  return `You are screening one YouTube video for Variant Design's design inspiration library, for a pull request a person will review.
+  return `You are screening one YouTube video for the Videos tab of Variant Design's inspiration library. Entries you accept go live once CI passes, without a person reviewing them, so reject when unsure.
+${SCOPE}
 Read the image at ${sheet}: YouTube's public thumbnails of ${candidate.url}, in a 2×2 grid: top left is the cover; the other three are small, blurry frames from the middle of the video. You cannot play the video, so describe only what the pictures and the title show, and say nothing about motion or timing that they do not.
 
 ${facts}
 
-Reject (accept=false) when any applies: a tutorial, course, "how to" or tips list; a tool, product, plugin, template or sponsor promotion; a talk, interview, podcast, vlog, reaction or commentary; a music video or film trailer; a compilation of other people's work or an unclear original author; content that is not interface, motion, brand, print, poster, illustration or web design; pictures too unclear to describe.
-Otherwise accept, and write notes a designer can use. Do not invent: no names, claims or tools the pictures and the text do not show.
+Reject (accept=false) when any applies: ${SCOPE_REJECTS}; a tutorial, course, "how to" or tips list; a tool, product, plugin, template or sponsor promotion; a talk, interview, podcast, vlog, reaction or commentary; a compilation of other people's work or an unclear original author; pictures too unclear to describe.
+Otherwise accept, and write notes on what makes it fun or clever. ${TAG_GUIDE} Do not invent: no names, claims or tools the pictures and the text do not show.
 
 Answer with one JSON object and nothing else:
-{"accept": true, "name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "focus": {"zh": "<what to study, one sentence, at most 300 characters>", "en": "<same, in English>"}, "application": {"zh": "<where it applies, a short phrase>", "en": "<same, in English>"}}
+{"accept": true, "name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "focus": {"zh": "<what happens and what makes it fun or clever, one sentence, at most 300 characters>", "en": "<same, in English>"}, "application": {"zh": "<the idea worth borrowing, a short phrase>", "en": "<same, in English>"}}
 or {"accept": false, "reason": "<one sentence in English>"}`;
 }
 

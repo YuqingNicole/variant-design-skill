@@ -5,97 +5,40 @@
       "weekly": true,
       "days": 7,
       "queries": [
-        { "terms": "(design OR UI OR interaction OR motion)", "minLikes": 100, "required": true }
-      ],
-      "accounts": [
-        { "handle": "raunofreiberg", "minLikes": 300 },
-        { "handle": "jakubkrehel", "minLikes": 100 },
-        { "handle": "jh3yy", "minLikes": 300 },
-        { "handle": "mattgperry", "minLikes": 100 },
-        { "handle": "lochieaxon", "minLikes": 50 },
-        { "handle": "ibelick", "minLikes": 50 },
-        { "handle": "steveruizok", "minLikes": 200 }
+        { "terms": "(animation OR animated OR \"short film\" OR \"stop motion\" OR claymation OR vfx) -tutorial -course -giveaway -prompt -template -\"ui\" -logo", "minLikes": 1000, "required": true },
+        { "terms": "(\"made this\" OR \"i made\" OR \"we made\") (video OR film OR animation) -tutorial -course -giveaway -prompt -template -app -website", "minLikes": 2000 }
       ]
     },
     {
-      "id": "apps",
+      "id": "craft",
       "days": 30,
       "screens": 3,
       "queries": [
-        { "terms": "(\"app design\" OR \"mobile app\" OR \"ios app\" OR \"app concept\") (ui OR interface OR animation) -tutorial -course -free -prompt -template", "minLikes": 150 }
+        { "terms": "(\"stop motion\" OR stopmotion OR claymation OR papercraft OR \"paper animation\") -tutorial -course -giveaway", "minLikes": 500 }
       ]
     },
     {
-      "id": "dashboards",
+      "id": "vfx",
       "days": 30,
       "screens": 3,
       "queries": [
-        { "terms": "(dashboard OR \"design system\" OR \"data visualization\" OR dataviz OR \"product design\") (ui OR interface) -tutorial -course -free -prompt -template", "minLikes": 150 }
+        { "terms": "(vfx OR \"visual effects\" OR \"forced perspective\" OR \"camera trick\" OR \"in-camera\") -tutorial -course -giveaway -breakdown", "minLikes": 1000 }
       ]
     },
     {
-      "id": "type",
+      "id": "generative",
       "days": 30,
       "screens": 3,
       "queries": [
-        { "terms": "(typography OR \"variable font\" OR lettering OR \"type design\") (animation OR animated OR process OR specimen) -tutorial -course -free -prompt", "minLikes": 150 }
+        { "terms": "(\"generative art\" OR creativecoding OR \"creative coding\" OR simulation OR shader) -tutorial -course -giveaway -prompt -ui", "minLikes": 500 }
       ]
     },
     {
-      "id": "poster",
+      "id": "humor",
       "days": 30,
       "screens": 3,
       "queries": [
-        { "terms": "(\"motion poster\" OR \"kinetic poster\" OR \"kinetic type\" OR \"kinetic typography\" OR \"type specimen\" OR typeface) -tutorial -course -free", "minLikes": 150 }
-      ]
-    },
-    {
-      "id": "motion-3d",
-      "days": 30,
-      "screens": 3,
-      "queries": [
-        { "terms": "(spline OR rive OR lottie OR \"3d web\" OR \"scroll animation\" OR scrolltrigger OR gsap) -tutorial -course -free -prompt -template", "minLikes": 150 }
-      ]
-    },
-    {
-      "id": "print",
-      "days": 30,
-      "screens": 3,
-      "queries": [
-        { "terms": "(\"packaging design\" OR \"print design\" OR risograph OR letterpress OR zine OR \"book cover\" OR \"book design\") -tutorial -course -free -prompt", "minLikes": 150 }
-      ]
-    },
-    {
-      "id": "identity",
-      "days": 30,
-      "screens": 3,
-      "queries": [
-        { "terms": "(\"brand identity\" OR rebrand OR \"logo animation\" OR \"motion identity\") -tutorial -course -free -prompt -\"ai tools\"", "minLikes": 150 }
-      ]
-    },
-    {
-      "id": "illustration",
-      "days": 30,
-      "screens": 3,
-      "queries": [
-        { "terms": "(illustration OR \"character design\" OR \"editorial illustration\") (process OR timelapse OR speedpaint) -tutorial -course -free -prompt", "minLikes": 150 }
-      ]
-    },
-    {
-      "id": "designers",
-      "days": 30,
-      "screens": 3,
-      "accounts": [
-        { "handle": "JamesJeanArt", "minLikes": 100 },
-        { "handle": "Kuvshinov_Ilya", "minLikes": 100 },
-        { "handle": "itsnicethat", "minLikes": 50 },
-        { "handle": "motionographer", "minLikes": 50 },
-        { "handle": "posterlad", "minLikes": 50 },
-        { "handle": "nitishkmrk", "minLikes": 100 },
-        { "handle": "mrncst", "minLikes": 100 },
-        { "handle": "jsngr", "minLikes": 200 },
-        { "handle": "bruno_simon", "minLikes": 100 },
-        { "handle": "akella", "minLikes": 100 }
+        { "terms": "(\"animated short\" OR \"funny animation\" OR \"short skit\" OR \"comedy short\") -tutorial -course -giveaway -prompt", "minLikes": 2000 }
       ]
     }
   ]

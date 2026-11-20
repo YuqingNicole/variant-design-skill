@@ -6,7 +6,7 @@ import path from 'node:path';
 import { readItems } from './x-publish.mjs';
 import { videoId, channelInLibrary, buildPrompt, entryFor, candidateFromUrl, run, report } from './youtube-publish.mjs';
 
-const good = { accept: true, name: 'Logo morph', tag: 'Motion', focus: { zh: '标志从线条变形为实心图形', en: 'A mark morphs from outlines to a solid shape' }, application: { zh: '品牌开场动画', en: 'Brand intro animation' } };
+const good = { accept: true, name: 'Paper city', tag: 'Craft', focus: { zh: '纸折的城市一格一格立起来，再被一阵风吹平', en: 'A folded paper city rises frame by frame, then a gust flattens it' }, application: { zh: '定格动画的节奏感', en: 'The rhythm of stop-motion' } };
 const idOf = n => String(n).padStart(11, 'a');
 const cand = (n, extra = {}) => ({ id: idOf(n), url: `https://www.youtube.com/watch?v=${idOf(n)}`, title: `T${n}`, channel: `Chan${n}`, channelUrl: `https://www.youtube.com/channel/UC${n}`, publishedAt: '2026-11-10T00:00:00Z', seconds: 40, views: 1000 + n, text: '', capturedAt: '2026-11-17T00:00:00Z', status: 'pending', ...extra });
 const existing = { id: 'yt-old', name: 'Old', url: 'https://www.youtube.com/watch?v=ooooooooooo', kind: 'youtube-video', video: { platform: 'youtube', id: 'ooooooooooo', channel: 'Taken', channelUrl: 'https://www.youtube.com/channel/UCtaken' } };
@@ -18,7 +18,7 @@ test('addresses give a video id only for watch pages, and a channel is only coll
   assert.equal(channelInLibrary([existing], { channel: 'Other', channelUrl: 'https://www.youtube.com/channel/UCtaken' }).id, 'yt-old');
   assert.equal(channelInLibrary([existing], { channel: ' taken ' }).id, 'yt-old');
   assert.equal(channelInLibrary([existing], { channel: 'New', channelUrl: 'https://www.youtube.com/channel/UCnew' }), null);
-  assert.match(buildPrompt(cand(1), '/s.jpg'), /2×2 grid[\s\S]*tutorial[\s\S]*Motion/);
+  assert.match(buildPrompt(cand(1), '/s.jpg'), /2×2 grid[\s\S]*design work of any kind[\s\S]*tutorial[\s\S]*Live action/);
 });
 
 test('an entry carries the video facts and no X post fields; an address alone leaves length and date out', () => {

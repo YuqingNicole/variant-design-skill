@@ -15,7 +15,13 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const inboxPath = path.resolve(here, '../content/x-post-inbox.json');
 const dataPath = path.resolve(here, '../src/inspiration-data.ts');
 
-export const TAGS = ['Interaction', 'Motion', 'Web', 'Branding', 'Illustration', 'Poster', 'Print'];
+// The Videos tab collects fun, creative videos that are not design work (maintainer, 2026-11-20); the tag is how a video was made,
+// and inspiration-sections.ts files a video under `videos` by it. Design videos already in the library stay under `design-motion`.
+export const TAGS = ['Animation', 'VFX', 'Craft', 'Generative', 'Live action', 'Humor'];
+// Shared with youtube-publish.mjs, so both sources apply one definition of what belongs in the tab.
+export const SCOPE = `The Videos tab holds fun, creative short videos that have nothing to do with design: animation, visual effects, stop-motion and handmade craft, generative or code-made visuals, clever live-action ideas, and humour. A viewer should enjoy it or want to share it.`;
+export const TAG_GUIDE = `Pick the tag by how the video is made: Animation (2D, 3D or hand-drawn animated films), VFX (effects composited into real footage), Craft (stop-motion, claymation, paper, physical making), Generative (code, simulation or procedural visuals), Live action (filmed ideas such as forced perspective, in-camera tricks or performance), Humor (when the joke is the point and no technique stands out).`;
+export const SCOPE_REJECTS = `design work of any kind (interfaces, apps, websites, logos, brand identities, posters, print, typography, product or UI animation); ads, trailers and official music videos; pranks or stunts that hurt or humiliate someone; sexual, violent or shock content`;
 const cjk = /[㐀-鿿]/, latin = /[A-Za-z]{3}/;
 
 // The library is a TS module of JSON literals: `export const inspirationItems = [ ... ];`.
@@ -40,17 +46,18 @@ export function authorInLibrary(items, handle) {
 }
 
 export function buildPrompt(candidate, meta, sheet) {
-  return `You are screening one X video post for Variant Design's design inspiration library, entries you accept go live without a person reviewing them, so reject when unsure.
+  return `You are screening one X video post for the Videos tab of Variant Design's inspiration library. Entries you accept go live without a person reviewing them, so reject when unsure.
+${SCOPE}
 Read the image at ${sheet}: six frames from the post's video, left to right, top to bottom. You cannot play the video, so describe only what the frames show.
 
 Post: https://x.com/${candidate.handle}/status/${candidate.id} by ${meta.author} (@${meta.handle}), ${meta.date}, ${candidate.likes} likes.
 Post text: ${JSON.stringify(meta.text)}
 
-Reject (accept=false) when any applies: a resource list or "bookmark these" thread; a tool, product, course or sponsor promotion; a repost of someone else's work or an unclear original author; merchandise or pre-sale; a portfolio montage; tutorials and news; content that is not interface, motion, brand, print, poster, illustration or web design; frames too unclear to describe.
-Otherwise accept, and write notes a designer can use. Do not invent: no names, claims or tools the frames and the text do not show. Keep the author's own credit if the text gives one.
+Reject (accept=false) when any applies: ${SCOPE_REJECTS}; a resource list or "bookmark these" thread; a tool, product, course or sponsor promotion; a repost of someone else's work or an unclear original author; merchandise or pre-sale; a montage of clips; tutorials and news; frames too unclear to describe.
+Otherwise accept, and write notes on what makes it fun or clever. ${TAG_GUIDE} Do not invent: no names, claims or tools the frames and the text do not show. Keep the author's own credit if the text gives one.
 
 Answer with one JSON object and nothing else:
-{"accept": true, "name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "focus": {"zh": "<what to study, one sentence, at most 300 characters>", "en": "<same, in English>"}, "application": {"zh": "<where it applies, a short phrase>", "en": "<same, in English>"}}
+{"accept": true, "name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "focus": {"zh": "<what happens and what makes it fun or clever, one sentence, at most 300 characters>", "en": "<same, in English>"}, "application": {"zh": "<the idea worth borrowing, a short phrase>", "en": "<same, in English>"}}
 or {"accept": false, "reason": "<one sentence in English>"}`;
 }
 

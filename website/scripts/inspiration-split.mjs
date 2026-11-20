@@ -40,7 +40,7 @@ const prefix = 'virtual:inspiration/', resolved = '\0' + prefix;
 export const moduleSource = part => `export const items=${JSON.stringify(part.items)};export const previews=${JSON.stringify(part.previews)};export const media=${JSON.stringify(part.media)};`;
 export function inspirationPlugin() {
   let cache;
-  const data = async () => cache ??= (async () => { const { sectionOf } = await importTs(path.join(src, 'inspiration-sections.ts')); const lib = readLibrary(); return { ...splitReferences(lib.items, sectionOf, lib), topics: lib.topics }; })();
+  const data = async () => cache ??= (async () => { const { sectionOf } = await importTs(path.join(src, 'inspiration-sections.ts')); const lib = readLibrary(); return { ...splitReferences(lib.items, sectionOf, lib), topics: lib.topics, sectionOf }; })();
   return {
     name: 'variant-inspiration-split',
     resolveId(id) { if (id.startsWith(prefix)) return '\0' + id; },
@@ -50,6 +50,8 @@ export function inspirationPlugin() {
       for (const f of libraryFiles) this.addWatchFile(f);
       const what = id.slice(resolved.length), s = await data();
       if (what === 'index') return `export const index=${JSON.stringify(s.index)};export const topics=${JSON.stringify(s.topics)};`;
+      // The sections that hold a reference, for the site navigation, which links to a section only when it has a page.
+      if (what === 'sections') return `export const active=${JSON.stringify([...new Set(s.index.map(r => s.sectionOf(r)))])};`;
       if (what === 'initial') return moduleSource(options?.ssr ? s.all : s.first);
       if (what === 'loader') return `export const loadSection=id=>({${Object.keys(s.sections).map(k => `${JSON.stringify(k)}:()=>import(${JSON.stringify(`${prefix}section-${k}`)})`).join(',')}})[id]?.()??Promise.resolve(${JSON.stringify(empty)});`;
       if (what.startsWith('section-')) return moduleSource(s.sections[what.slice(8)] ?? empty);

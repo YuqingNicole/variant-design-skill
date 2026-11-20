@@ -6,10 +6,10 @@
       "days": 14,
       "maxSeconds": 240,
       "queries": [
-        { "q": "UI animation design", "minViews": 5000 },
-        { "q": "motion design logo animation", "minViews": 5000 },
-        { "q": "interaction design concept", "minViews": 5000 },
-        { "q": "brand identity animation", "minViews": 5000 }
+        { "q": "animated short film", "minViews": 20000 },
+        { "q": "stop motion animation", "minViews": 20000 },
+        { "q": "vfx short", "minViews": 20000 },
+        { "q": "creative video idea", "minViews": 20000 }
       ]
     },
     {
@@ -17,10 +17,10 @@
       "days": 60,
       "maxSeconds": 240,
       "queries": [
-        { "q": "kinetic typography", "minViews": 10000 },
-        { "q": "3D web design scroll animation", "minViews": 10000 },
-        { "q": "packaging design process", "minViews": 10000 },
-        { "q": "illustration process timelapse", "minViews": 10000 }
+        { "q": "claymation short", "minViews": 50000 },
+        { "q": "forced perspective video", "minViews": 50000 },
+        { "q": "generative art animation", "minViews": 50000 },
+        { "q": "funny animation short", "minViews": 50000 }
       ]
     }
   ]

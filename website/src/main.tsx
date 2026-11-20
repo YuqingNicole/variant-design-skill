@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./site-styles";
 import { localePath, parseLocale } from "./i18n/locale-route";
 import { LocaleNotice, LocaleProvider } from "./i18n/LocaleProvider";
+import { designTypeIds } from "./inspiration-sections";
 // Old paths keep working: the address is rewritten in place (Vercel also redirects them with 301).
 const legacy = (path: string) => path === "/canvas" ? "/lab/canvas" : path === "/workbench" ? "/lab/workbench" : path.startsWith("/showcase/") ? "/d/" + path.split("/")[2]
   : path === "/showcase" && !new URLSearchParams(location.search).has("direction") ? "/cases" : path === "/inspiration" ? "/" : null;
@@ -10,7 +11,7 @@ const parsed = parseLocale(window.location.pathname.replace(/\/+$/, "") || "/");
 let route = parsed.route;
 const moved = legacy(route);
 // The old `?category=` filter became one page per section; its values map onto the new addresses (`practice` was every video, so it goes to the feed).
-const oldCategory = ({ landing: "web", product: "interface", flow: "interface", motion: "videos", practice: "videos" } as Record<string, string>)[new URLSearchParams(location.search).get("category") ?? "-"];
+const oldCategory = ({ landing: "web", product: "interface", flow: "interface", motion: "design-motion", practice: "design-motion" } as Record<string, string>)[new URLSearchParams(location.search).get("category") ?? "-"];
 if (oldCategory !== undefined && (route === "/" || route.startsWith("/inspiration/"))) {
   const query = new URLSearchParams(location.search); query.delete("category");
   if (route === "/") { const next = oldCategory ? "/browse/" + oldCategory : "/"; route = next; }
@@ -18,6 +19,8 @@ if (oldCategory !== undefined && (route === "/" || route.startsWith("/inspiratio
   const base = route === "/" ? "/" : route, prefix = localePath(base, parsed.locale), rest = query.toString();
   history.replaceState(null, "", prefix + (rest ? "?" + rest : "") + location.hash);
 }
+// Design videos left `videos` for `design-motion` (2026-11-20); a link that still filters `videos` by a design type follows them.
+if (route === "/browse/videos" && designTypeIds.includes(new URLSearchParams(location.search).get("type") ?? "")) { route = "/browse/design-motion"; history.replaceState(null, "", localePath(route, parsed.locale) + location.search + location.hash); }
 if (moved) { history.replaceState(null, "", localePath(moved, parsed.locale) + (moved.startsWith("/lab/") || route === "/inspiration" ? location.search : "") + location.hash); route = moved; }
 const page: Promise<ReactNode> = route === "/lab/canvas" ? import("./LandingCanvas").then(m => <m.LandingCanvas/>) : route === "/lab/workbench" ? import("./App").then(m => <m.default/>)
   : route === "/lab" ? import("./LabPage").then(m => <m.LabPage/>) : route === "/skills" ? import("./SkillsPage").then(m => <m.SkillsPage/>) : route === "/about" ? import("./PaperLanding").then(m => <m.PaperLanding/>)
