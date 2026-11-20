@@ -2,7 +2,7 @@
 // Plain data only: the prerender imports this file without a TS loader for JSX.
 // Every claim here must trace to a file in this repository (a reference, a script, or a dated record in docs/research/ or CHANGELOG.md).
 // The English of the first four was reviewed against the repository files on 2026-11-10, so they ship in both languages.
-// The Codex article's English is unreviewed and marked draft: production leaves that English page out until someone reviews it.
+// The English of the Codex article and of the two lessons articles is unreviewed and marked draft: production leaves that English page out until someone reviews it.
 import type { Guide } from './guides-content';
 import { installCommand, prompts, repository } from './docs-content';
 
@@ -214,6 +214,108 @@ export const docsArticles: Guide[] = [
           { zh: 'Codex 在沙箱里打不开预览，所以每次都把视觉检查标为“未验证”：它交付了能打开的静态快照，但没有看过渲染结果。页面好不好看、在手机宽度下是否正常，要你自己打开看。交互式的 Codex 可以申请权限来启动服务，这一点我们没有实测。', en: 'Codex could not open the preview inside the sandbox, so it marked the visual check as “unverified” every time: it delivered a snapshot that opens, but it never saw the rendered result. Whether the page looks right, or holds up at phone width, is for you to open and see. Interactive Codex can ask for permission to start a server; we have not tested that.' },
         ],
         link: { href: `${blob}/docs/research/2026-10-26-cli-dogfood.md`, label: { zh: '阅读 Codex 和 Claude Code 的实测记录', en: 'Read the record of the Codex and Claude Code runs' } } },
+    ],
+  },
+  {
+    slug: 'design-system-after-pick-lessons',
+    base: '/docs',
+    publishedAt: '2026-11-20',
+    translations: { en: { status: 'draft' } },
+    title: { zh: 'AI 从选定的方向提炼设计系统：我们踩过的坑', en: 'Turning a chosen direction into a design system with an AI agent: what went wrong' },
+    answer: {
+      zh: '我们让 Codex 在 pick B 之后，从被选中的方向提炼设计系统。第一次得到 108 个 token，其中 27 个是色块，预览页是色板网格和字号阶梯，维护者看后认为“AI 味儿太重”。原因都在技能自己的说明里：它在填模板、把方向里的套路原样固化、没有立场。改成先写决策、审查来源、按实际用量定规模之后，同一个项目的 token 降到 34 个，没用到的 token 为 0。这是一次 Codex 运行，不是对照实验。',
+      en: 'After pick B, we had Codex extract a design system from the chosen direction. The first run produced 108 tokens, 27 of them colour swatches, and a preview that was a colour grid and a type ladder; the maintainer found it too AI-looking. The causes were all in the skill’s own instructions: it was filling a template, it froze the direction’s habits into tokens, and it took no position. After we changed it to write decisions first, review where values come from and size the system by real use, the same project came out at 34 tokens with none unused. That is one Codex run, not a controlled comparison.',
+    },
+    sections: [
+      { id: 'saw', heading: { zh: '1. 第一次得到了什么', en: '1. What the first run produced' },
+        body: [{ zh: '2026-11-03，在没有品牌约束的 Harbor 项目上，Codex 在 pick B 之后生成的设计系统：', en: 'On 2026-11-03, on the Harbor project with no brand constraints, this is what Codex produced after pick B:' }],
+        list: [
+          { zh: '108 个 token，其中 27 个是色块，字号有 9 级；', en: '108 tokens, 27 of them colour swatches, and 9 type sizes;' },
+          { zh: '命名是 --p-brand-50…900、--text-2xs…4xl 这一类；', en: 'Names like --p-brand-50…900 and --text-2xs…4xl;' },
+          { zh: '预览页是色板网格、“2xl — Harbor 团队协作”字号阶梯和间距条。', en: 'A preview made of a colour grid, a “2xl — Harbor” type ladder and spacing bars.' },
+        ] },
+      { id: 'causes', heading: { zh: '2. 三个原因，都在技能自己的说明里', en: '2. Three causes, all in the skill’s own text' },
+        body: [{ zh: '看过第一次运行的截图后，我们归纳出：', en: 'After looking at the screenshots of that run we found:' }],
+        list: [
+          { zh: '系统在填模板。说明里给了一套 Tailwind 和 Material 式的 token 模板（50–900 色阶、z-index 阶梯、Material 缓动、sm/md/lg 阴影），又要求写出模板的“每一节”；', en: 'The system was filling a template. The instructions gave a Tailwind- and Material-style token template (50–900 colour scales, a z-index ladder, Material easing, sm/md/lg shadows) and asked for every section of it;' },
+          { zh: '它把方向 B 的套路原样固化：大写眉标、设置页上的口号式标题、装饰用的“04”、米色加鼠尾草绿、每块都套卡片，被直接写成了 token，例如 --tracking-label: 0.12em；', en: 'It froze direction B’s habits: uppercase eyebrow labels, slogan headings on a settings page, a decorative “04”, beige with sage green, a card around everything, written straight into tokens such as --tracking-label: 0.12em;' },
+          { zh: '没有立场：只有数值，没有“这个权限页要突出什么、排除什么”的决策。', en: 'It took no position: only values, with no decision on what this permissions page should stress or leave out.' },
+        ] },
+      { id: 'changes', heading: { zh: '3. 我们改了什么', en: '3. What we changed' },
+        body: [{ zh: '新增 references/design-system/system-decisions.md，规定四件事：先决策、审查来源、按产品的实际用量确定规模、在使用场景中展示系统。另外：', en: 'We added references/design-system/system-decisions.md, which asks for four things: decide first, review where values come from, size the system by what the product actually uses, and show the system in use. Also:' }],
+        list: [
+          { zh: 'ds-check.mjs --used-by 会列出预览页从未用到的 token；', en: 'ds-check.mjs --used-by lists tokens the preview never uses;' },
+          { zh: '模板只示范层级和命名，不再要求填满。', en: 'The template now only shows hierarchy and naming and no longer has to be filled.' },
+        ],
+        link: { href: `${blob}/references/design-system/system-decisions.md`, label: { zh: '阅读这份说明', en: 'Read the instructions' } } },
+      { id: 'after', heading: { zh: '4. 改完之后', en: '4. After the change' },
+        body: [{ zh: '同一个项目用 Codex 再跑 generate → pick 一次，12 项检查全部通过（345 秒，约 97 万 token）：', en: 'Running generate → pick on the same project with Codex again, all 12 checks passed (345 seconds, about 970,000 tokens):' }],
+        list: [
+          { zh: 'token 从 108 个降到 34 个，命名成了 --text-page-title、--radius-control、--shadow-dialog；', en: 'Tokens went from 108 to 34, named --text-page-title, --radius-control, --shadow-dialog;' },
+          { zh: '文件开头是 4 条决策、归整清单和一份 Dropped: 清单（眉标、口号式标题、装饰数字、非常规字重）；', en: 'The file opens with 4 decisions, a normalisation list and a Dropped: list (eyebrows, slogan headings, decorative numbers, unusual weights);' },
+          { zh: '预览页换成邀请表单、正在改角色的成员行、移除权限的确认框、错误和空状态，每段附一句说明体现了哪条决策；', en: 'The preview became an invite form, a member row mid role change, a remove-access confirmation, and error and empty states, each with a line on which decision it shows;' },
+          { zh: '没用到的 token 从 34 个降到 0 个。', en: 'Unused tokens went from 34 to 0.' },
+        ] },
+      { id: 'pick', heading: { zh: '5. 另一个教训：选定不等于修改', en: '5. Another lesson: picking is not editing' },
+        body: [{ zh: '后来的一次运行里，Codex 在 pick 这一轮发现方向 B 的邮箱校验有 bug，就经 apply 修好了（可以撤销），并在报告里写明。修的是真问题，过程也透明，但用户只说了 pick B。我们在 Step 1b 里补了一条：pick 只选择、不修改；发现缺陷就列在报告里，并给出修复用的命令。补充之后还没有复测。', en: 'In a later run, during the pick turn Codex found a bug in direction B’s email validation and fixed it through apply (undoable), saying so in its report. It was a real bug and the process was transparent, but the user had only said pick B. We added a line to Step 1b: pick only selects and never edits; list any defect in the report with the command to fix it. That addition has not been re-run.' }] },
+      { id: 'open', heading: { zh: '6. 没解决的和这次证据的局限', en: '6. What is unsolved and what this evidence does not show' },
+        body: [{ zh: '下面这些是记录里写明的：', en: 'These are stated in the record:' }],
+        list: [
+          { zh: '方向 B 本身的套路没有变：口号式标题、“04”、大写眉标、米色加陶土色都还在。这是生成三个方向时的问题，设计系统这一步只能事后丢弃；', en: 'Direction B’s own habits did not change: the slogan headings, “04”, uppercase eyebrows and beige with terracotta are all still there. That is a problem of generating the three directions; the design-system step can only drop them afterwards;' },
+          { zh: '保留色板和 Georgia 的理由写得太弱，只写了“selected editorial identity”。说明里已补充：“用户选中”只覆盖方向的主张，不覆盖其中每个习惯；', en: 'The reason for keeping the palette and Georgia was weak, only “selected editorial identity”. The instructions now say that being chosen covers the direction’s claim, not each of its habits;' },
+          { zh: '以上都是单次运行，只用了 Codex；审美判断由维护者看截图决定，不是自动检查的结果。', en: 'All of this is single runs, with Codex only; the aesthetic judgement was the maintainer’s from screenshots, not an automated check.' },
+        ],
+        link: { href: `${blob}/docs/research/2026-11-03-design-system-after-pick.md`, label: { zh: '阅读完整记录', en: 'Read the full record' } } },
+    ],
+  },
+  {
+    slug: 'why-ai-design-directions-look-alike',
+    base: '/docs',
+    publishedAt: '2026-11-20',
+    translations: { en: { status: 'draft' } },
+    title: { zh: '三个 AI 方向为什么长得一样：一个成员页的例子', en: 'Why three AI design directions look alike: a members-page example' },
+    answer: {
+      zh: '2026-11-03，同一天几次 Codex 生成的 Harbor 成员页 A/B/C 用的是同一副骨架：大写眉标、自编口号、右上角巨大的“04 members”、一张宣传卡片。三个方向只换了配色，而原页面只有标题“Members”和一句说明。原因在技能自己的说明里，不在模型。我们改了说明，加了三条只提示不阻断的检查，复测一次后，两个 Agent 的产出都保留了原标题，但结构差异的程度不同。',
+      en: 'On 2026-11-03, several Codex runs of the Harbor members page produced A/B/C on the same skeleton: an uppercase eyebrow, an invented slogan, a huge “04 members” at the top right and a promotional card. The three directions changed only the colours, while the original page had just the heading “Members” and one sentence. The cause was in the skill’s own instructions, not the model. We changed the instructions, added three checks that flag without blocking, and in one retest both agents kept the original heading, though their directions differed by different amounts.',
+    },
+    sections: [
+      { id: 'saw', heading: { zh: '1. 我们看到了什么', en: '1. What we saw' },
+        body: [{ zh: '几次生成都有这些东西：', en: 'Several runs had the same things:' }],
+        list: [
+          { zh: '大写眉标，例如“DIRECTION A · The team ledger”；', en: 'An uppercase eyebrow such as “DIRECTION A · The team ledger”;' },
+          { zh: '自编口号：“Your people. One place.”、“Make room for good work.”、“Every person. Clear access.”；', en: 'Invented slogans: “Your people. One place.”, “Make room for good work.”, “Every person. Clear access.”;' },
+          { zh: '右上角巨大的“04 members”；', en: 'A huge “04 members” at the top right;' },
+          { zh: '一张“Grow your team / Good work starts with people.”的宣传卡片。', en: 'A promotional card, “Grow your team / Good work starts with people.”' },
+        ] },
+      { id: 'causes', heading: { zh: '2. 在技能说明里找到的原因', en: '2. Causes we found in the skill’s text' },
+        body: [],
+        list: [
+          { zh: '没有确认设计系统时，说明要求三个方向是“不同工作室的诠释”，又给了一张风格表，于是差异被做在配色上；', en: 'Without a confirmed design system, the instructions asked for three directions as “different studios’ interpretations” and gave a style table, so the difference went into colour;' },
+          { zh: '每个方向都必须有一个“signature detail”，于是出现了装饰数字和眉标；', en: 'Every direction had to have a “signature detail”, which produced decorative numbers and eyebrows;' },
+          { zh: '成员页被归入 dashboard 领域，而那份参考写着大号指标数字；', en: 'The members page was filed under the dashboard domain, whose reference calls for large metric numbers;' },
+          { zh: '没有规定已有页面仍然是那个页面。', en: 'Nothing said that an existing page stays the page it is.' },
+        ] },
+      { id: 'changes', heading: { zh: '3. 我们改了什么', en: '3. What we changed' },
+        body: [],
+        list: [
+          { zh: 'references/workflow/quality-baseline.md 新增“Generator habits”清单，生成和设计系统共用；', en: 'references/workflow/quality-baseline.md gained a “Generator habits” list, shared by generation and the design system;' },
+          { zh: '生成说明：已有页面保持原来的作用、名称和文案，不加口号或宣传卡片；没有确认的系统时，先让三个方向在结构上不同，再配各自的视觉；风格表只用于营销、编辑和品牌页；signature detail 必须服务于任务；管理类页面用 dashboard 参考时，不加 KPI 头部；', en: 'Generation instructions: an existing page keeps its purpose, name and copy, with no slogan or promotional card; without a confirmed system, make the three directions differ in structure first and then give each its visuals; the style table is for marketing, editorial and brand pages only; a signature detail must serve the task; an admin page using the dashboard reference gets no KPI header;' },
+          { zh: 'quality-gate.mjs 新增 eyebrow-label、decorative-number、direction-label-in-ui 三条规则，级别是 review：会列出来，但不影响 --strict。原因是品牌页可能是有意这样用，我们自己的咖啡示例里就有 6 处眉标和 01–04 步骤编号。', en: 'quality-gate.mjs gained three rules, eyebrow-label, decorative-number and direction-label-in-ui, at level review: they are listed but do not affect --strict, because a brand page may use these on purpose; our own coffee example has 6 eyebrows and 01–04 step numbers.' },
+        ],
+        link: { href: `${blob}/references/workflow/quality-baseline.md`, label: { zh: '阅读质量基线', en: 'Read the quality baseline' } } },
+      { id: 'retest', heading: { zh: '4. 复测：单轮，两个 Agent', en: '4. The retest: one round, two agents' },
+        body: [{ zh: '复测同一个 Harbor 项目，两个 Agent 都是 7/7 项检查通过（Codex 212 秒、约 56 万 token；Claude Code 516 秒、$2.30），标题都保留了“Members”加项目原文：', en: 'Retesting the same Harbor project, both agents passed 7 of 7 checks (Codex 212 seconds and about 560,000 tokens; Claude Code 516 seconds and $2.30), and both kept the heading “Members” with the project’s own text:' }],
+        list: [
+          { zh: 'Claude Code 的三个方向结构不同：A 是密集表格、邀请内嵌在表头；B 按角色分组并列出各角色能做什么；C 是深色界面，邀请在前，右侧是操作记录和撤销；', en: 'Claude Code’s three directions differed in structure: A a dense table with the invite in the header; B grouped by role, listing what each role can do; C a dark interface with the invite first and an activity log with undo on the right;' },
+          { zh: 'Codex 的 A 和 C 结构接近，C 基本是 A 的深色版；', en: 'Codex’s A and C were close in structure; C was largely a dark version of A;' },
+          { zh: 'Codex 的主按钮带“↗”外链箭头，但其实不离开页面。', en: 'Codex’s main button carried a “↗” external-link arrow although it does not leave the page.' },
+        ],
+        link: { href: `${blob}/docs/research/2026-11-03-design-system-after-pick.md`, label: { zh: '阅读完整记录', en: 'Read the full record' } } },
+      { id: 'site', heading: { zh: '5. 同样的东西在我们自己的网站上', en: '5. The same things on our own site' },
+        body: [{ zh: '2026-10-29，维护者看过首页后认为“有点 AI slop”。我们用 npx impeccable@4.8.0 detect --json 扫描本地构建的首页：改之前 31 项发现（低对比度 12、过小的界面文字 13、首屏眉标 1、过小文字 2、过宽字距 2、过度使用的字体 1），改之后 3 项（两处是页眉页脚字标浅色部分的对比度，一处是字体）。改的内容包括：删掉所有标题上方的小号大写标签和 01–04 编号，把四张相同的卡片改成两栏列表，展示卡不再同时有边框和阴影，链接和按钮文字里去掉箭头字符。检测器只覆盖能机械判断的规则；检测器报告首页约 92% 的文字用 Arial，更换字体影响整个网站，需要维护者先选定字体，当时没有处理。', en: 'On 2026-10-29 the maintainer found our home page “a bit AI slop”. We scanned the locally built home page with npx impeccable@4.8.0 detect --json: 31 findings before (low contrast 12, undersized interface text 13, a hero eyebrow chip 1, tiny text 2, wide tracking 2, an overused font 1) and 3 after (two for the light part of the header and footer wordmark, one for the font). The changes removed every small uppercase label above a heading and the 01–04 numbering, turned four identical cards into a two-column list, stopped display cards from having both a border and a shadow, and removed arrow characters from link and button text. The detector covers only what can be judged mechanically; it reported about 92% of the home page’s text in Arial, and changing the font affects the whole site and needs the maintainer to choose one first, so it was left.' }],
+        link: { href: `${blob}/docs/research/2026-10-29-home-slop-pass.md`, label: { zh: '阅读首页这次的记录', en: 'Read the record of the home page pass' } } },
+      { id: 'limits', heading: { zh: '6. 证据的局限', en: '6. What this evidence does not show' },
+        body: [{ zh: '复测是单次运行，没有去掉新说明的对照，所以不能说是新说明带来了差别；我们补的“同一布局的浅色和深色版算同一个方向”“不离开页面的按钮不加 ↗”两条，补充后没有复测。检查只看代码里能匹配的模式，三条新规则是提示，不是结论。', en: 'The retest was a single run with no control that lacks the new instructions, so we cannot say the instructions caused the difference. Two lines added afterwards, “a light and a dark version of one layout count as one direction” and “a button that does not leave the page gets no ↗”, were not re-run. The checks only match patterns in code, and the three new rules are hints, not verdicts.' }] },
     ],
   },
 ];
