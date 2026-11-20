@@ -65,3 +65,15 @@ test('every note, topic and source label is written in both languages', () => {
     assert.ok(value.zh.trim() && value.en.trim(), name);
   }
 });
+
+// A breakdown is hand-written from opening the site: dated, and every part written in both languages.
+test('every breakdown is dated and complete in both languages', () => {
+  const analysed = items.filter(i => i.analysis);
+  assert.ok(analysed.length >= 5);
+  for (const { id, analysis: a } of analysed) {
+    assert.match(a.checkedAt, /^\d{4}-\d{2}-\d{2}$/, id);
+    for (const key of ['structure', 'learn', 'avoid']) { assert.deepEqual(Object.keys(a[key]), ['zh', 'en'], `${id}.${key}`); assert.ok(a[key].zh.trim() && a[key].en.trim(), `${id}.${key}`); assert.ok(/[㐀-鿿]/.test(a[key].zh) && /[A-Za-z]{3}/.test(a[key].en), `${id}.${key} languages`); }
+    assert.ok(a.measured.zh.length >= 2 && a.measured.zh.length === a.measured.en.length, `${id}.measured`);
+    assert.ok([...a.measured.zh, ...a.measured.en].every(v => v.trim()), id);
+  }
+});

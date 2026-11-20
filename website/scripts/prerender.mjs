@@ -96,14 +96,17 @@ export function referenceIndex(references, lang = 'zh') {
 }
 const zhText = {
   crumbs: '路径', home: '灵感', related: '同类参考', seeAll: '浏览这一类的所有条目', yours: '做出你的版本', installSkill: '安装技能',
+  bd: { breakdown: '拆解', checked: '核对于', structure: '页面怎么搭', measured: '实测', learn: '最值得学的一个细节', avoid: '不建议照搬的一点', unchecked: '只在桌面宽屏上看了页面结构和样式，没有在手机上看，也没有测交互、速度和无障碍。网站随时会改，以上是核对当天的样子；「我们的判断」没有经过实测。' },
   yoursNote: '把这条参考写进指令，让 variant-design 技能在你自己的项目里生成 A/B/C 三个方向。',
 };
 function referenceBody(r, references = [], sections = []) {
   const permission=r.source==='permission'?`<aside><p>作者授权 · 仅限本站展示，不含下载、复用、MCP、再分发或商业使用。</p><p><a href="${escape(r.credit.url)}">${escape(r.credit.name)}</a> · <a href="${escape(r.permission.record)}">授权记录</a></p></aside>`:'';
   const section = sections.find(c => c.id === sectionModule.sectionOf(r)), { list, total } = sectionModule.relatedReferences(r, references);
   const crumbs = section ? `<nav aria-label="${zhText.crumbs}"><a href="/zh">${zhText.home}</a> / <a href="/zh/browse/${section.id}">${escape(section.title.zh)}</a></nav>` : `<p><a href="/zh">${zhText.home}</a></p>`;
+  const a = r.analysis, bd = zhText.bd;
+  const analysis = a ? `<section><h2>${bd.breakdown} <small>${bd.checked} ${escape(a.checkedAt)}</small></h2><h3>${bd.structure}</h3><p>${escape(a.structure.zh)}</p><h3>${bd.measured}</h3><ul>${a.measured.zh.map(v => `<li>${escape(v)}</li>`).join('')}</ul><h3>${bd.learn}</h3><p>${escape(a.learn.zh)}</p><h3>${bd.avoid}</h3><p>${escape(a.avoid.zh)}</p><p>${bd.unchecked}</p></section>` : '';
   const more = list.length ? `<section><h2>${zhText.related}</h2><ul>${list.map(x => `<li><a href="/zh/inspiration/${escape(x.id)}">${escape(x.name)}</a> <small>${escape(x.tag)}</small></li>`).join('')}</ul>${section ? `<a href="/zh/browse/${section.id}">${zhText.seeAll} (${total})</a>` : ''}</section>` : '';
-  return `<main>${crumbs}<h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus.zh)}</dd><dt>用在哪里</dt><dd>${escape(r.application.zh)}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}${r.via ? ` · <a href="${escape(r.via)}">经 ${escape(new URL(r.via).hostname)} 发现</a>` : ''}</dd></dl>${permission}<p><a href="${escape(r.url)}">访问原站</a></p>${more}<section><h2>${zhText.yours}</h2><p>${zhText.yoursNote}</p><a href="/zh/docs/install">${zhText.installSkill}</a></section></main>`;
+  return `<main>${crumbs}<h1>${escape(r.name)}</h1><p>${escape(new URL(r.url).hostname)}</p><dl><dt>研究什么</dt><dd>${escape(r.focus.zh)}</dd><dt>用在哪里</dt><dd>${escape(r.application.zh)}</dd><dt>出处</dt><dd>${escape(r.publisher)} · ${escape(r.checkedAt)}${r.via ? ` · <a href="${escape(r.via)}">经 ${escape(new URL(r.via).hostname)} 发现</a>` : ''}</dd></dl>${permission}<p><a href="${escape(r.url)}">访问原站</a></p>${analysis}${more}<section><h2>${zhText.yours}</h2><p>${zhText.yoursNote}</p><a href="/zh/docs/install">${zhText.installSkill}</a></section></main>`;
 }
 // The install guide (src/docs-content.ts) as static HTML, so /docs reads without JavaScript.
 function docsBody(d, lang = 'zh') {

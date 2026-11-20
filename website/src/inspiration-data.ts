@@ -20,7 +20,34 @@ export const inspirationItems = [
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "addedAt": "2026-10-07T20:39:49+08:00"
+    "addedAt": "2026-10-07T20:39:49+08:00",
+    "analysis": {
+      "structure": {
+        "zh": "从上到下：左对齐的一句主张「The product development system for teams and agents」，一行小字副标题，右侧一个「New Loops →」入口；紧接着不是按钮，而是一整块产品界面（侧栏、一条名为 Faster app launch 的任务、一个浮在上面的 Linear 代理面板）。之后按「Intake and integrations → Planning and monitoring → AI and automations → Build, review, and ship」四段展开，接 Changelog，最后用「Built for the future. Available today.」收尾。首屏没有行动按钮，唯一的注册入口是页头的 Sign up。",
+        "en": "Top to bottom: a left-aligned claim, “The product development system for teams and agents”, one line of small subtitle, and a “New Loops →” link on the right. What follows is not a button but a whole product window: a sidebar, an issue called Faster app launch, and an agent panel floating over it. Then four sections (Intake and integrations → Planning and monitoring → AI and automations → Build, review, and ship), a Changelog, and a closing line, “Built for the future. Available today.” The first screen has no call-to-action button; the only sign-up is Sign up in the header."
+      },
+      "measured": {
+        "zh": [
+          "字体 Inter Variable（回退 SF Pro Display）；标题 64px、字重 510、字距 −1.408px",
+          "深色：背景 rgb(8, 9, 10)，正文 rgb(247, 248, 248)",
+          "页头的 Sign up 是整圆角（9999px）的浅色按钮，是首屏唯一的实心按钮"
+        ],
+        "en": [
+          "Font Inter Variable (falling back to SF Pro Display); headline 64px, weight 510, letter-spacing −1.408px",
+          "Dark: background rgb(8, 9, 10), text rgb(247, 248, 248)",
+          "Sign up in the header is a fully rounded (9999px) light button, the only solid button on the first screen"
+        ]
+      },
+      "learn": {
+        "zh": "让产品本身当首屏的主角：标题之后直接放一整块界面，界面里是一条具体的任务和它的活动记录，读者不点任何东西就知道这个产品长什么样、谁在往里写东西。这是对「让交付物尽早出现」最直接的演示。",
+        "en": "Let the product be the hero. Right after the headline comes a whole window showing one specific issue and its activity, so a reader sees what the product looks like and who writes into it without clicking anything. It is the most direct demonstration of showing deliverables early."
+      },
+      "avoid": {
+        "zh": "整个首屏没有一个行动按钮。我们的判断：这个做法默认读者已经认识 Linear，会自己去找页头的 Sign up；对不知名的产品，首屏会没有下一步，至少保留一个明确的入口。",
+        "en": "The first screen has no call-to-action button. Our reading: this assumes the visitor already knows Linear and will find Sign up in the header. For a product nobody knows, the first screen would have no next step; keep at least one clear entry."
+      },
+      "checkedAt": "2026-11-20"
+    }
   },
   {
     "id": "notion",
@@ -43,7 +70,34 @@ export const inspirationItems = [
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "addedAt": "2026-10-07T20:39:49+08:00"
+    "addedAt": "2026-10-07T20:39:49+08:00",
+    "analysis": {
+      "structure": {
+        "zh": "居中的大标题「A shared brain for your team and agents.」，一行说明，两个按钮（实心的「Get Notion free」、浅灰的「Request a demo」），下面是一个嵌在绿色绘画感背景里的产品窗口，窗口里是一篇标题为 Scaling your ambitions 的页面，和一个停在输入瞬间的搜索框。往下依次是：「Notion knows what your agents don’t.」（Bring all your context together / Make any agent smarter / More control, lower cost）→「All your context, in one place.」（Know what everyone knows / Do the work once / Have more “aha!” moments）→「The smartest teams already work this way.」→「Join the new way of working.」。五个页面里它最短。",
+        "en": "A centered headline, “A shared brain for your team and agents.”, one line of explanation and two buttons (a solid “Get Notion free” and a pale grey “Request a demo”). Below sits a product window set inside a painterly green background, showing a page titled Scaling your ambitions and a search box caught mid-typing. Then: “Notion knows what your agents don’t.” (Bring all your context together / Make any agent smarter / More control, lower cost) → “All your context, in one place.” (Know what everyone knows / Do the work once / Have more “aha!” moments) → “The smartest teams already work this way.” → “Join the new way of working.” It is the shortest of the five pages."
+      },
+      "measured": {
+        "zh": [
+          "标题字体 Die Grotesk，80px、字重 500；正文 NotionInter（回退 Inter）",
+          "白底 rgb(255, 255, 255)，正文 rgba(0, 0, 0, 0.95)",
+          "标题、说明和按钮全部居中；两个主按钮和页头的 Try Notion 都是整圆角"
+        ],
+        "en": [
+          "Headline font Die Grotesk, 80px, weight 500; body NotionInter (falling back to Inter)",
+          "White background rgb(255, 255, 255), text rgba(0, 0, 0, 0.95)",
+          "Headline, explanation and buttons are all centered; both main buttons and Try Notion in the header are fully rounded"
+        ]
+      },
+      "learn": {
+        "zh": "标题只讲一个概念（共享的大脑），后面每一段都是同一个节奏：先给一句结论，再给三个短小标题。读者往下滑，每屏只需要记住一句话。",
+        "en": "The headline carries one idea, a shared brain, and every later section keeps the same rhythm: one conclusion, then three short subheads. Scrolling down, a reader only has to hold one sentence per screen."
+      },
+      "avoid": {
+        "zh": "绿色绘画感背景加产品窗口是 Notion 自己的视觉语言，照搬会让别家产品像在模仿它。可以借的是分工：背景负责气质，窗口负责信息，而不是背景本身。",
+        "en": "The green painterly background with a product window is Notion’s own visual language; copying it makes another product look like an imitation. What to borrow is the division of labour, the background for mood and the window for information, not the background itself."
+      },
+      "checkedAt": "2026-11-20"
+    }
   },
   {
     "id": "raycast",
@@ -66,7 +120,34 @@ export const inspirationItems = [
     "checkedAt": "2026-10-29",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "addedAt": "2026-10-07T20:39:49+08:00"
+    "addedAt": "2026-10-07T20:39:49+08:00",
+    "analysis": {
+      "structure": {
+        "zh": "页头是一条悬浮的圆角栏（Store、Pro、AI、iOS、Windows、Teams、Enterprise、Blog、Pricing、Log in、Download）。首屏是居中的标题「Your shortcut to everything.」，压在一大块带颗粒的红色斜条纹图形上，下面一句说明和唯一的按钮「Download for Mac」，再下一行等宽小字写着系统要求和 Homebrew 安装方式。之后依次是：「Take shortcuts, not detours.」→「It’s not about saving time.」→「There’s an extension for that.」→「Meet your new virtual assistant」（AI Chat / Quick AI / AI Extensions）→「Built for professionals like you.」→「Don't repeat yourself.」→「Stay in the loop.」→「Build the perfect tools.」→「Take the short way.」。五个页面里它最长。",
+        "en": "The header is a floating rounded bar (Store, Pro, AI, iOS, Windows, Teams, Enterprise, Blog, Pricing, Log in, Download). The first screen is a centered headline, “Your shortcut to everything.”, laid over a large grainy red diagonal-stripe artwork, with one line of explanation, the only button, “Download for Mac”, and below it a line of monospace text giving the system requirement and the Homebrew install. Then: “Take shortcuts, not detours.” → “It’s not about saving time.” → “There’s an extension for that.” → “Meet your new virtual assistant” (AI Chat / Quick AI / AI Extensions) → “Built for professionals like you.” → “Don't repeat yourself.” → “Stay in the loop.” → “Build the perfect tools.” → “Take the short way.” It is the longest of the five pages."
+      },
+      "measured": {
+        "zh": [
+          "字体 Inter；标题 64px、字重 600，字距正常",
+          "近黑底 rgb(7, 8, 10)，白色正文；首屏的颜色来自红色图形",
+          "按钮圆角 8px"
+        ],
+        "en": [
+          "Font Inter; headline 64px, weight 600, normal letter-spacing",
+          "Near-black background rgb(7, 8, 10), white text; the colour of the first screen comes from the red artwork",
+          "Button radius 8px"
+        ]
+      },
+      "learn": {
+        "zh": "首屏只给一个动作，而且写明平台（Download for Mac），按钮下一行马上交代系统要求和另一种安装方式：对开发者类产品，把「我能不能装」的疑问放在按钮旁边就回答掉。",
+        "en": "One action on the first screen, and it names the platform (Download for Mac); the line under the button states the requirement and the other way to install. For a developer product, the question “can I install it?” is answered right beside the button."
+      },
+      "avoid": {
+        "zh": "红色斜条纹加颗粒的大图是整页的情绪来源，也占满整个首屏，很难在不显得模仿的情况下复用。借「一个写明平台的按钮 + 一行安装前提」就够了。这一页很长，我们没有核对它在手机上的节奏。",
+        "en": "The grainy red stripes carry the page’s mood and fill the whole first screen; they are hard to reuse without looking like imitation. Borrow “one button that names the platform plus one line of install requirements” instead. The page is long, and we did not check its rhythm on a phone."
+      },
+      "checkedAt": "2026-11-20"
+    }
   },
   {
     "id": "resend",
@@ -480,7 +561,34 @@ export const inspirationItems = [
     "checkedAt": "2026-10-07",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "addedAt": "2026-10-07T20:39:49+08:00"
+    "addedAt": "2026-10-07T20:39:49+08:00",
+    "analysis": {
+      "structure": {
+        "zh": "页头有 Products、Solutions、Community、Resources、Pricing，右侧是 Log in、Contact sales、Get started for free。首屏是产品名「Figma Design」加灰色的两行副标题「Made for the big picture. Perfect down to every pixel.」，两个大按钮（实心的「Get started」、描边的「Contact sales」）靠右排在同一行；下面是一块粉紫色颗粒背景，上面是一个博物馆应用的界面和一条停在输入中的 AI 提示。我们第一次打开时，右下角被 cookie 提示框盖住了一部分。往下依次是：「An infinite canvas for infinite expression.」（Add motion / Draw rich illustrations / Chat with Figma）→「Know what your user will experience before you build.」→「The products you love are designed in Figma」→「Build the best design systems in the business.」→「Code and design work together.」→「Packed with powerful features designers love」（Figma Motion、3D transforms、Figma Weave tools、Generative plugins、Shaders、Figma agent、MCP server、Brushes）。",
+        "en": "The header has Products, Solutions, Community, Resources and Pricing, with Log in, Contact sales and Get started for free on the right. The first screen is the product name, “Figma Design”, with a two-line grey subtitle, “Made for the big picture. Perfect down to every pixel.”, and two large buttons (a solid “Get started”, an outlined “Contact sales”) on the right of the same row. Below is a grainy pink-and-lilac field holding a museum app’s interface and an AI prompt caught mid-typing. When we first opened it, a cookie box covered part of the lower right. Then: “An infinite canvas for infinite expression.” (Add motion / Draw rich illustrations / Chat with Figma) → “Know what your user will experience before you build.” → “The products you love are designed in Figma” → “Build the best design systems in the business.” → “Code and design work together.” → “Packed with powerful features designers love” (Figma Motion, 3D transforms, Figma Weave tools, Generative plugins, Shaders, Figma agent, MCP server, Brushes)."
+      },
+      "measured": {
+        "zh": [
+          "字体 figmaSans（回退 SF Pro Display、system-ui）；标题 48px、字重 400",
+          "首屏按钮明显比页头按钮大，圆角 8px",
+          "这是产品页（/design/），不是品牌首页"
+        ],
+        "en": [
+          "Font figmaSans (falling back to SF Pro Display, system-ui); headline 48px, weight 400",
+          "The first-screen buttons are much larger than the header ones, radius 8px",
+          "This is a product page (/design/), not the brand home"
+        ]
+      },
+      "learn": {
+        "zh": "最后一段把十几项功能排成一列短名词（Shaders、Brushes、MCP server……），不逐个解释：功能很多的产品可以用名词清单表示「能做的事很多」，细节留给下一级页面。",
+        "en": "The last section lists a dozen features as short nouns (Shaders, Brushes, MCP server, …) without explaining each. A product with many features can use a noun list to say “it does a lot” and leave the detail to the next page down."
+      },
+      "avoid": {
+        "zh": "它把产品名当 H1，标题是「Figma Design」而不是一个主张。我们的判断：它依赖 Figma 已有的知名度和下一级页面；一个新产品照搬，首屏就没有告诉读者能得到什么。",
+        "en": "It uses the product name as the H1, “Figma Design”, rather than a claim. Our reading: it relies on Figma’s existing fame and on the pages below; a new product copying this would leave the first screen without saying what the reader gets."
+      },
+      "checkedAt": "2026-11-20"
+    }
   },
   {
     "id": "framer",
@@ -4202,7 +4310,36 @@ export const inspirationItems = [
     "checkedAt": "2026-11-12",
     "verification": "official-public-source",
     "mobile": "not-tested",
-    "addedAt": "2026-11-12T10:58:00+08:00"
+    "addedAt": "2026-11-12T10:58:00+08:00",
+    "analysis": {
+      "structure": {
+        "zh": "三栏式首屏：左边是标题「Agentic Infrastructure」和两个按钮（实心的「Deploy now」、描边的「Talk to sales」），中间是一个带柔和光晕的黑色三角形（品牌标志），右边是三行短句（For coding agents / To ship apps and agents / Automated by agents）；首屏底部是一排客户标志（Meta、DoorDash、OpenAI、SpaceX、The Weather Company、Polymarket）。往下是三段主张：「Build agents on infrastructure that thinks like them」→「Ship apps that scale from zero to millions instantly」→「Host platforms that serve every customer」，然后是 Recently shipped 和「Built by you, or your agents」，最后是按 Agent Stack、Core Platform、Security、Tools、Frameworks、SDKs 分组的链接列表。",
+        "en": "A three-column first screen: on the left the headline “Agentic Infrastructure” and two buttons (a solid “Deploy now”, an outlined “Talk to sales”); in the middle a black triangle, the brand mark, with a soft halo; on the right three short lines (For coding agents / To ship apps and agents / Automated by agents). A row of customer logos (Meta, DoorDash, OpenAI, SpaceX, The Weather Company, Polymarket) closes the screen. Below come three claims (“Build agents on infrastructure that thinks like them” → “Ship apps that scale from zero to millions instantly” → “Host platforms that serve every customer”), then Recently shipped and “Built by you, or your agents”, and finally link lists grouped under Agent Stack, Core Platform, Security, Tools, Frameworks and SDKs."
+      },
+      "measured": {
+        "zh": [
+          "字体 Geist Sans；标题 64px、字重 400、字距 −3.84px（约 −0.06em）",
+          "浅灰底 rgb(250, 250, 250)，正文 rgb(23, 23, 23)，首屏只有黑、白、灰",
+          "首屏两个按钮看起来是整圆角，页头 Sign Up 实测圆角 6px",
+          "页面里有 2 个 canvas 元素，我们没有核对它们画的是什么"
+        ],
+        "en": [
+          "Font Geist Sans; headline 64px, weight 400, letter-spacing −3.84px (about −0.06em)",
+          "Light grey background rgb(250, 250, 250), text rgb(23, 23, 23); the first screen is black, white and grey only",
+          "The two hero buttons look fully rounded; Sign Up in the header measures 6px",
+          "The page holds 2 canvas elements; we did not check what they draw"
+        ]
+      },
+      "learn": {
+        "zh": "字重 400 配很紧的字距：标题不靠加粗，靠大小和紧凑拉出分量，整页因此显得克制。右侧三行短句把一个抽象的标题拆成三个具体的对象，读者一眼知道它为谁服务。",
+        "en": "Weight 400 with very tight tracking: the headline gets its weight from size and compactness rather than boldness, which keeps the page restrained. The three short lines on the right turn an abstract headline into three concrete subjects, so a reader sees who it serves at a glance."
+      },
+      "avoid": {
+        "zh": "首屏把三个意思分在三栏，窄屏上必须重排，我们没有在手机上看过它怎么处理。−0.06em 的字距只适合这种大号标题；我们的判断是用在正文上会难读，但没有实测。",
+        "en": "The first screen spreads three ideas over three columns, which must reflow on a narrow screen; we did not look at how it does on a phone. −0.06em tracking only suits headlines this large; our reading is that it would be hard to read in body text, which we did not test."
+      },
+      "checkedAt": "2026-11-20"
+    }
   },
   {
     "id": "supabase",
