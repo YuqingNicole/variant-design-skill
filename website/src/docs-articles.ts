@@ -2,7 +2,7 @@
 // Plain data only: the prerender imports this file without a TS loader for JSX.
 // Every claim here must trace to a file in this repository (a reference, a script, or a dated record in docs/research/ or CHANGELOG.md).
 // The English of the first four was reviewed against the repository files on 2026-11-10, so they ship in both languages.
-// The English of the Codex article and of the lessons and premium articles is unreviewed and marked draft: production leaves that English page out until someone reviews it.
+// The English of the Codex article and of the lessons, premium and recheck articles is unreviewed and marked draft: production leaves that English page out until someone reviews it.
 import type { Guide } from './guides-content';
 import { installCommand, prompts, repository } from './docs-content';
 
@@ -388,6 +388,50 @@ export const docsArticles: Guide[] = [
           { zh: '没有用真实 Agent 跑过 Refine premium 动作和形容词翻译，所以不能说它们在 Claude Code 或 Codex 里的实际效果。', en: 'No real agent run has tested the Refine premium action or the adjective translation, so we cannot say how they behave in Claude Code or Codex.' },
         ],
         link: { href: `${blob}/docs/research/2026-11-02-premium-style-budget.md`, label: { zh: '阅读完整记录', en: 'Read the full record' } } },
+    ],
+  },
+  {
+    slug: 'check-a-design-reference-is-still-true',
+    base: '/docs',
+    publishedAt: '2026-11-20',
+    translations: { en: { status: 'draft' } },
+    title: { zh: '怎么核对一条设计参考笔记还对不对：打开页面，别只看 200', en: 'How to check that a design reference note is still true: open the page, not just a 200' },
+    answer: {
+      zh: '链接返回 HTTP 200 只说明页面打得开，不说明它还和笔记写的一样。我们的做法是在浏览器里打开页面，读标题、二级标题、首屏的按钮，再和笔记逐条对照。2026-10-29 打开 9 个页面，8 个能核对：7 个一致、1 个（Framer）已经过时；另 1 个（Lovable）被验证页挡住，没法核对；2026-11-20 又核对 5 条，1 条（Notion）部分过时、1 条（Vercel）只核对了一半。这是一个人对首屏和标题结构的判断，不是第二人复核过的结论。',
+      en: 'A link that returns HTTP 200 only shows the page opens, not that it still matches the note. We open the page in a browser, read the headings, the second-level headings and the first-screen buttons, and compare them with the note one by one. On 2026-10-29 we opened 9 pages and could check 8: 7 matched and 1 (Framer) was out of date; 1 more (Lovable) was blocked by a verification page and could not be checked. On 2026-11-20 we checked 5 more: 1 (Notion) was partly out of date and 1 (Vercel) was only half checked. That is one person’s reading of the first screen and the headings, not a second-reviewed finding.',
+    },
+    sections: [
+      { id: 'why', heading: { zh: '1. 为什么 200 不够', en: '1. Why a 200 is not enough' },
+        body: [{ zh: '2026-10-29，我们先用 curl -L（桌面浏览器的 User-Agent）对一个专题的 9 个候选各请求一次：8 个返回 HTTP 200，没有跳到别的域名；Lovable 返回 HTTP 403。但 200 只说明链接可访问，不说明页面内容仍和研究笔记一致，而笔记是 2026-10-07 的观察。Lovable 的 403 可能是对脚本请求的拦截，需要在浏览器里复查。', en: 'On 2026-10-29 we first requested the 9 candidates of one topic with curl -L and a desktop browser User-Agent: 8 returned HTTP 200 with no redirect to another domain, and Lovable returned HTTP 403. But a 200 only shows the link is reachable, not that the page still matches the research note, which was an observation of 2026-10-07. Lovable’s 403 may be a block on scripted requests and needed a recheck in a browser.' }],
+        link: { href: `${blob}/docs/research/2026-10-29-reference-topic-batch1.md`, label: { zh: '阅读链接核查的记录', en: 'Read the link-check record' } } },
+      { id: 'method', heading: { zh: '2. 我们怎么核对', en: '2. How we check' },
+        body: [],
+        list: [
+          { zh: '用 Playwright 驱动本机 Chrome，1440 × 900，英文环境，加载后等待 4 秒；', en: 'Drive the local Chrome with Playwright at 1440 × 900 in an English locale and wait 4 seconds after load;' },
+          { zh: '提取标题、h1、前 12 个 h2，以及首屏内的链接和按钮文字，另存一张首屏截图；', en: 'Extract the title, the h1, the first 12 h2s and the links and buttons on the first screen, and keep a first-screen screenshot;' },
+          { zh: '截图只留在本机，不进仓库，也不在网站托管；', en: 'The screenshots stay on the machine, not in the repository and not hosted on the site;' },
+          { zh: '把看到的和笔记里的“研究什么”逐条对照，给出“一致”“部分过时”或“无法核对”。', en: 'Compare what was seen with each note’s “what to study” and call it consistent, partly out of date or not checkable.' },
+        ] },
+      { id: 'first', heading: { zh: '3. 第一次：2026-10-29，9 个页面', en: '3. First pass: 2026-10-29, 9 pages' },
+        body: [{ zh: '一共核对了 9 个页面：', en: 'Nine pages in all:' }],
+        list: [
+          { zh: '7 条与笔记一致：Linear、Notion、Raycast、Cursor、v0、Obsidian、Plausible；', en: '7 matched the note: Linear, Notion, Raycast, Cursor, v0, Obsidian and Plausible;' },
+          { zh: 'Framer 的主张已经改成“带一流设计代理的网站构建器”，首屏是代理对话框，原笔记“设计、修改与发布”已过时，改成“设计代理 → 可编辑画布 → 发布上线”；', en: 'Framer’s claim had changed to a website builder with a world-class design agent, with an agent chat box on the first screen, so the old note about designing, editing and publishing was out of date and became “design agent → editable canvas → publish”;' },
+          { zh: 'Lovable 的自动化浏览器同样收到 Cloudflare 验证页（403），无法核对，仍不纳入专题，需要人工打开。', en: 'Lovable gave the automated browser the same Cloudflare verification page (403), so it could not be checked and stayed out of the topic until someone opens it by hand.' },
+        ],
+        link: { href: `${blob}/docs/research/2026-10-29-reference-topic-note-check.md`, label: { zh: '阅读第一次核对的记录', en: 'Read the record of the first pass' } } },
+      { id: 'second', heading: { zh: '4. 三周后再来一次：2026-11-20，5 条', en: '4. Again a few weeks later: 2026-11-20, 5 entries' },
+        body: [{ zh: '距各自上次核对 8 到 44 天，对象是 Linear、Notion、Raycast、Figma Design 和 Vercel：', en: 'Between 8 and 44 days after each one’s last check, for Linear, Notion, Raycast, Figma Design and Vercel:' }],
+        list: [
+          { zh: 'Linear、Raycast 与笔记一致，Figma Design 基本一致（协作只在一个编号列表里出现，没有单独成段）；', en: 'Linear and Raycast matched the note, and Figma Design mostly did (collaboration appears only in a numbered list, not as its own section);' },
+          { zh: 'Notion 部分过时：标题现在只讲一个概念，其后每段先给结论、再给三个短小标题，不再是“多能力产品的分层介绍”，我们改写了笔记；', en: 'Notion was partly out of date: its headline now carries one idea and each later section gives a conclusion and then three short subheads, no longer a layered explanation of a multi-tool product, so we rewrote the note;' },
+          { zh: 'Vercel 的首屏与笔记一致，但笔记后半（每个客户案例配一句带数字的说明）这次没有逐段读，写明“未核对”，没有更新核对日期。', en: 'Vercel’s first screen matched the note, but the second half of the note (each customer story getting a line with a number) was not read section by section this time, so it is marked as not checked and its check date was not updated.' },
+        ],
+        link: { href: `${blob}/docs/research/2026-11-20-reference-note-recheck.md`, label: { zh: '阅读这次核对的记录', en: 'Read the record of this recheck' } } },
+      { id: 'rule', heading: { zh: '5. 一条规矩：核对日期只在整条笔记都核对过时才改', en: '5. One rule: move the check date only when the whole note was checked' },
+        body: [{ zh: '核对日期等于“这条笔记的每一句我们都对照过”。只对上一半，就保留旧日期并写明哪一半没看；否则日期会比实际的把握更新。', en: 'A check date means we compared every sentence of the note. If only half was compared, keep the old date and say which half was not read; otherwise the date would be fresher than our confidence.' }] },
+      { id: 'limits', heading: { zh: '6. 这些核对的局限', en: '6. The limits of these checks' },
+        body: [{ zh: '结论是一个人对首屏和标题结构的判断，没有第二个人复核；只看了桌面首屏和标题，没有逐屏读全文，没看手机，也没测交互、速度和无障碍；页面随时会改版。核对不改变授权状态，也不代表用户能用这些参考完成任务。', en: 'The findings are one person’s reading of the first screen and the headings, with no second reviewer. We looked at the desktop first screen and the headings, did not read every screen, did not look at a phone and did not test interaction, speed or accessibility. Pages can change at any time. A check does not change the permission status and does not show that users can finish a task with these references.' }] },
     ],
   },
 ];

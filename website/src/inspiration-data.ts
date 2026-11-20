@@ -17,7 +17,7 @@ export const inspirationItems = [
     "publisher": "Linear",
     "kind": "official-site",
     "designer": null,
-    "checkedAt": "2026-10-29",
+    "checkedAt": "2026-11-20",
     "verification": "official-public-source",
     "mobile": "not-tested",
     "addedAt": "2026-10-07T20:39:49+08:00",
@@ -57,8 +57,8 @@ export const inspirationItems = [
     "url": "https://www.notion.com/",
     "source": "link-only",
     "focus": {
-      "zh": "多能力产品的分层介绍",
-      "en": "Layered explanation of a multi-tool product"
+      "zh": "一个概念当标题，之后每段先给结论、再给三个短小标题",
+      "en": "One idea as the headline, then each section a conclusion plus three short subheads"
     },
     "application": {
       "zh": "减少首屏认知负担",
@@ -67,7 +67,7 @@ export const inspirationItems = [
     "publisher": "Notion",
     "kind": "official-site",
     "designer": null,
-    "checkedAt": "2026-10-29",
+    "checkedAt": "2026-11-20",
     "verification": "official-public-source",
     "mobile": "not-tested",
     "addedAt": "2026-10-07T20:39:49+08:00",
@@ -117,7 +117,7 @@ export const inspirationItems = [
     "publisher": "Raycast",
     "kind": "official-site",
     "designer": null,
-    "checkedAt": "2026-10-29",
+    "checkedAt": "2026-11-20",
     "verification": "official-public-source",
     "mobile": "not-tested",
     "addedAt": "2026-10-07T20:39:49+08:00",
@@ -558,7 +558,7 @@ export const inspirationItems = [
     "publisher": "Figma",
     "kind": "product-page",
     "designer": null,
-    "checkedAt": "2026-10-07",
+    "checkedAt": "2026-11-20",
     "verification": "official-public-source",
     "mobile": "not-tested",
     "addedAt": "2026-10-07T20:39:49+08:00",
