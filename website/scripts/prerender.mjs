@@ -84,6 +84,8 @@ export function withoutDrafts(english, drafts) {
 // The reference library lives in a TS module of plain JSON literals; read it without a TS loader.
 // Sections that have at least one reference, with how many each language lists (draft English is left out of production).
 const sectionModule = await importTs(path.join(here, '../src/inspiration-sections.ts'));
+// The home (Inspiration) lists everything except an own-page section such as Videos, so its counts leave those out.
+const onHome = references => references.filter(r => !sectionModule.pageOf(r));
 export const sectionPages = (references, englishReferences = references) => sectionModule.activeSections(references).map(c => ({ ...c, count: { zh: references.filter(r => sectionModule.sectionOf(r) === c.id).length, en: englishReferences.filter(r => sectionModule.sectionOf(r) === c.id).length } }));
 export const loadReferences=()=>referenceRecords().published;
 export const loadWithdrawnReferences=()=>referenceRecords().withdrawn;
@@ -176,7 +178,7 @@ export function renderSite(entries, template, site = defaultSite, references = [
   const zhPage = options => page(template, { site, translated: !!english[options.route], ...options });
   const enPage = options => { if (english[options.route]) pages.set(enKey(options.route), page(template, { site, lang: 'en', translated: true, body: english[options.route], ...options })); };
   const library = 'Variant Design 方向库';
-  const homeTitle = 'Variant Design — AI 时代最好的设计灵感', homeDescription = `精选网站、界面和动效作品，每条都附出处和我们写的笔记：研究什么、用在哪里。目前 ${references.length} 条。`;
+  const homeTitle = 'Variant Design — AI 时代最好的设计灵感', homeDescription = `精选网站、界面和动效作品，每条都附出处和我们写的笔记：研究什么、用在哪里。目前 ${onHome(references).length} 条。`;
   pages.set('/', zhPage({ route: '/', data: { '@type': 'WebSite', '@id': `${site}/#website`, url: `${site}/zh`, name: 'Variant Design', description: homeDescription, inLanguage: ['zh-CN', 'en'] }, title: homeTitle, description: homeDescription, body: rendered['/'] ?? '' }));
   // One page per section: its own address, title, description and only its own references.
   for (const c of sections) pages.set(`/browse/${c.id}`, zhPage({ route: `/browse/${c.id}`, title: `${c.title.zh} — Variant Design`, description: `${c.intro.zh}目前 ${c.count.zh} 条。`, body: rendered[`/browse/${c.id}`] ?? '' }));
@@ -205,7 +207,7 @@ export function renderSite(entries, template, site = defaultSite, references = [
     data: { '@type': 'CreativeWork', name: e.title[1], description: e.summary[1], datePublished: e.publishedAt, url: `${site}/d/${e.slug}`, image: site + `/media/${e.slug}/${image.file}`, isPartOf: { '@id': `${site}/#website` } } }); }
   for (const r of references) enPage({ route: `/inspiration/${r.id}`, title: sectionModule.detailTitle(r, 'en'), description: `${r.name}: ${r.focus.en}. Use it for ${r.application.en}.` });
   for (const c of sections) enPage({ route: `/browse/${c.id}`, title: `${c.title.en} — Variant Design`, description: `${c.intro.en} ${c.count.en} so far.` });
-  for (const [route, [title, description]] of Object.entries(staticPagesEn(references.length))) enPage({ route, title, description, ...(route === '/docs/install' && docs ? { data: docsData(docs, site, 'en') } : {}), ...(route === '/skills' ? { data: skillData(site, version, 'en') } : {}) });
+  for (const [route, [title, description]] of Object.entries(staticPagesEn(onHome(references).length))) enPage({ route, title, description, ...(route === '/docs/install' && docs ? { data: docsData(docs, site, 'en') } : {}), ...(route === '/skills' ? { data: skillData(site, version, 'en') } : {}) });
   for (const g of guides) enPage({ route: guideRoute(g), type: 'article', title: `${g.title.en} — Variant Design`, description: g.answer.en, data: guideData(g, site, 'en') });
   for(const r of withdrawn)for(const lang of ['zh','en']){const en=lang==='en',route=`/inspiration/${r.id}`,title=en?'This work has been removed':'这条作品已撤下';const body=(en?english[route]:rendered[route])??`<main><h1>${title}</h1><p>${escape(r.name)}</p><p>${escape(r.withdrawnAt)}</p><p>${escape(r.reason[lang])}</p><a href="${en?'/':'/zh'}">${en?'Back to inspiration':'返回灵感作品流'}</a></main>`;pages.set(lang==='en'?enKey(route):route,withNoindex(page(template,{site,route,lang,translated:true,title:`${r.name} — ${title} — Variant Design`,description:r.reason[lang],body}))) }
   // Public addresses: English unprefixed, Chinese under /zh. A route with no English page keeps its address and shows the Chinese
@@ -253,7 +255,7 @@ export function llms(entries, docs, site = defaultSite, references = [], guides 
 ${articles ? `${articles}\n` : ''}
 ${answers ? `## Guides\n\n${answers}\n\n` : ''}${cases ? `## Cases\n\n${cases}\n\n` : ''}## Library
 
-- [Design inspiration](${site}/): ${references.length} curated external references, each with our own notes on what to study and where to use it, the source and the date it was checked.
+- [Design inspiration](${site}/): ${onHome(references).length} curated external references, each with our own notes on what to study and where to use it, the source and the date it was checked.
 - [Design skills](${site}/skills): design delivery skills that were run in a throwaway project, with public records.
 
 ## Optional

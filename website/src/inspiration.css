@@ -292,6 +292,8 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .insp-types button small{font-size:12px;margin-left:6px;font-variant-numeric:tabular-nums}
 .insp-types button[aria-pressed=true]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}.insp-types button[aria-pressed=true] small{opacity:.75}
 @media(max-width:650px){.insp-types button{height:44px}}
+.insp-bar .insp-types-main{flex:1 1 auto;min-width:0;padding-bottom:0}
+@media(max-width:650px){.insp-bar .insp-types-main{grid-column:1/-1;flex-basis:100%}}
 
 /* YouTube: the card's length badge and the detail's click-to-play frame (the player loads only on press). */
 .insp-vcard-open{position:relative}
