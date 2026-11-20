@@ -168,7 +168,7 @@ test('a run reads each planned search, writes new candidates with their group an
   assert.deepEqual(got.written.candidates.map(c => [c.id, c.status, c.group, c.watched]), [
     ['2120000000000000023', 'pending', 'weekly', true], ['2120000000000000024', 'pending', 'print', undefined], ['2120000000000000021', 'published', undefined, undefined],
   ]);
-  assert.match(got.lines[0], /^X design discovery: 3 qualifying posts, 2 new, from 4 searches; /);
+  assert.match(got.lines[0], /^X creative video discovery: 3 qualifying posts, 2 new, from 4 searches; /);
   assert.deepEqual(got.lines.slice(1), [
     '  weekly: 2 qualifying, 1 new; 0/2 searches gave nothing (none)',
     '  print: 1 qualifying, 1 new; 1/2 searches gave nothing (letterpress)',
