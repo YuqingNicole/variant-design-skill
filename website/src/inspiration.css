@@ -318,3 +318,12 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 @media(max-width:650px){.inspiration-page .insp-own .insp-card-meta{padding-right:2px}}
 @media(max-width:1023px) and (min-width:651px){.insp-bar>.site-shell:has(.insp-types-main){flex-wrap:wrap}.insp-bar .insp-types-main{flex-basis:100%}}
 @media(max-width:650px){.insp-bar .insp-types-main{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);padding-right:28px}}
+
+.insp-crumbs{font-size:13px;color:var(--site-muted,inherit)}
+.insp-crumbs a{text-decoration:underline;text-underline-offset:3px}
+.insp-related,.insp-yours{display:grid;gap:var(--space-1);margin-top:var(--space-3)}
+.insp-related h2,.insp-yours h2{font-size:16px;margin:0}
+.insp-related ul{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.insp-related small{opacity:.7}
+.insp-related a,.insp-yours a{text-decoration:underline;text-underline-offset:3px}
+.insp-yours p{margin:0}

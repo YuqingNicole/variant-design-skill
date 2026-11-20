@@ -1181,6 +1181,19 @@ test('page crossfade is wired in, drops the shared card names while it runs, and
  expect(await q.evaluate(()=>window.__vt.reveal??false)).toBe(false);await calm.close();
 });
 
+test('a reference page names where it sits, links up to five like it and the install page, in both languages',async({page})=>{
+ for(const [path,home,related,install] of [['/zh/inspiration/linear','灵感','同类参考','/zh/docs/install'],['/inspiration/linear','Inspiration','More like this','/docs/install']]){
+  await page.goto(path);
+  await expect(page.locator('.insp-crumbs a').first()).toHaveText(home);
+  await expect(page.locator('.insp-crumbs a').nth(1)).toHaveAttribute('href',/\/browse\/web$/);
+  const links=page.locator('.insp-related li a');
+  expect(await links.count()).toBeGreaterThanOrEqual(3);expect(await links.count()).toBeLessThanOrEqual(5);
+  await expect(page.locator('.insp-related h2')).toHaveText(related);
+  for(const href of await links.evaluateAll(a=>a.map(x=>x.getAttribute('href'))))expect(href).not.toMatch(/inspiration\/linear$/);
+  await expect(page.locator('.insp-yours a')).toHaveAttribute('href',install);
+ }
+});
+
 test('the reference brief rises into place, and only fades with reduced motion', async ({page,browser})=>{
  const calm=await browser.newContext({reducedMotion:'reduce'}),q=await calm.newPage();
  await q.goto('/zh/inspiration/linear');await q.getByRole('button',{name:'生成参考指令'}).click();

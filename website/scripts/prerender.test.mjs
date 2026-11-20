@@ -2,9 +2,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
-import { indexableRoutes, agentInstall, aiTrainingCrawlers, shareCard, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
+import { indexableRoutes, agentInstall, aiTrainingCrawlers, shareCard, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, sectionPages, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
-const { detailTitle, sectionOf, sections, pageOf } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
+const { detailTitle, sectionOf, sections, pageOf, relatedReferences, videoTypeOf } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 
 test('every entry and category gets its own page with metadata and readable content', () => {
@@ -247,4 +247,31 @@ test('the share card is the size the pages declare', async () => {
   const fs = await import('node:fs');
   const png = fs.readFileSync(new URL('./share-card.png', new URL('../public/', import.meta.url)));
   assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [shareCard.width, shareCard.height]);
+});
+
+test('every reference page links to up to five others of its kind, never itself, and says where it sits', () => {
+  const references = loadReferences();
+  for (const r of references) {
+    const { list, total } = relatedReferences(r, references);
+    assert.ok(list.length <= 5 && !list.some(x => x.id === r.id), r.id);
+    assert.ok(list.every(x => sectionOf(x) === sectionOf(r) && (sectionOf(r) !== 'videos' || videoTypeOf(x) === videoTypeOf(r))), r.id);
+    assert.equal(list.length, Math.min(5, total - 1), `${r.id} lists every other one when there are fewer than five`);
+  }
+});
+
+test('reference pages carry a breadcrumb and a CreativeWork, section pages an ItemList, and the Chinese body links related references', () => {
+  const references = loadReferences(), sections = sectionPages(references);
+  const pages = renderSite([], template, 'https://example.test', references, { sections, english: {} });
+  const graph = html => JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(html)[1]);
+  const r = references.find(x => sectionOf(x) === 'web'), zh = pages.get(`/zh/inspiration/${r.id}`);
+  const types = graph(zh)['@graph'].map(n => n['@type']);
+  assert.deepEqual(types, ['BreadcrumbList', 'CreativeWork']);
+  const crumbs = graph(zh)['@graph'][0].itemListElement;
+  assert.deepEqual(crumbs.map(c => c.position), [1, 2, 3]);
+  assert.equal(crumbs[2].item, `https://example.test/zh/inspiration/${r.id}`);
+  assert.equal(graph(zh)['@graph'][1].isBasedOn, r.url);
+  assert.match(zh, /<h2>同类参考<\/h2>/);
+  const list = graph(pages.get('/browse/videos'));
+  assert.equal(list['@type'], 'CollectionPage');
+  assert.equal(list.mainEntity.numberOfItems, references.filter(x => sectionOf(x) === 'videos').length);
 });

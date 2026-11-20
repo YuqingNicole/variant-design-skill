@@ -7,7 +7,7 @@ import { XVideo } from './XVideo';
 import { sized, proxied } from './image-proxy';
 import { locales, type Locale } from './i18n/locales';
 import { t, type Localized } from './i18n/localized';
-import { sectionOf, sectionPath, sectionById, activeSections, detailTitle, videoTypeOf, pageOf } from './inspiration-sections';
+import { sectionOf, sectionPath, sectionById, activeSections, detailTitle, videoTypeOf, pageOf, relatedReferences } from './inspiration-sections';
 import { references, referencesFor, withdrawnReferences, permissionOf, referenceOf, previewOf, mediaOf, ensure, ensureAll, loaded, subscribe, snapshot, inspirationTopics, type Reference, type Row, type Preview } from './reference-library';
 import { AuthorizationDetails, AuthorizedMedia, authorizedVideo, WithdrawnReferencePage } from './ReferencePermission';
 import './content-pages.css';
@@ -35,7 +35,7 @@ const sketches:Record<string,number[]>={landing:[4,3,5],product:[6,5,7],flow:[3,
 const variantOf=(id:string)=>[...id].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7)%3;
 // Vercel shrinks each preview to the size it is shown at (vercel.json `images`). If that fails the original loads, then the analysis card.
 // Interface copy, one entry per message (RFC-005 §3.2). Formatters take the values they interpolate.
-const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdrawnNote:{zh:'这件作品已撤下，不会进入参考指令；你的笔记仍保留在本地。',en:'This work was removed and is excluded from briefs. Your notes remain in this browser.'},authorized:{zh:'作者授权',en:'Author permission'},unknownReuse:{zh:'本站展示以外的使用权限',en:'rights beyond display on this site'},linkOnly:{zh:'仅链接',en:'Link only'},title:{zh:'AI 时代最好的设计灵感。',en:'The best design inspiration in the AI era.'},motionNote:{zh:'动效是 Inspiration 里 Best practice 的一个筛选项。',en:'Motion is a filter within Best practice in Inspiration.'},refNav:{zh:'参考导航',en:'Reference navigation'},allRefs:{zh:'全部参考',en:'All references'},close:{zh:'关闭',en:'Close'},
+const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdrawnNote:{zh:'这件作品已撤下，不会进入参考指令；你的笔记仍保留在本地。',en:'This work was removed and is excluded from briefs. Your notes remain in this browser.'},authorized:{zh:'作者授权',en:'Author permission'},unknownReuse:{zh:'本站展示以外的使用权限',en:'rights beyond display on this site'},linkOnly:{zh:'仅链接',en:'Link only'},title:{zh:'AI 时代最好的设计灵感。',en:'The best design inspiration in the AI era.'},motionNote:{zh:'动效是 Inspiration 里 Best practice 的一个筛选项。',en:'Motion is a filter within Best practice in Inspiration.'},refNav:{zh:'参考导航',en:'Reference navigation'},crumbs:{zh:'路径',en:'Breadcrumb'},crumbHome:{zh:'灵感',en:'Inspiration'},related:{zh:'同类参考',en:'More like this'},seeAll:{zh:'浏览这一类的所有条目',en:'Browse this whole section'},yours:{zh:'做出你的版本',en:'Make your version'},yoursNote:{zh:'把这条参考写进指令，让 variant-design 技能在你自己的项目里生成 A/B/C 三个方向。',en:'Put this reference into a brief and let the variant-design skill generate three A/B/C directions in your own project.'},installSkill:{zh:'安装技能',en:'Install the skill'},allRefs:{zh:'全部参考',en:'All references'},close:{zh:'关闭',en:'Close'},
  addPack:{zh:'加入参考包',en:'Add to pack'},removePack:{zh:'移出参考包',en:'Remove from pack'},prev:{zh:'上一个',en:'Previous'},next:{zh:'下一个',en:'Next'},scrollPrev:{zh:'向左滚动作品',en:'Scroll references left'},scrollNext:{zh:'向右滚动作品',en:'Scroll references right'},study:{zh:'研究什么',en:'Study'},fun:{zh:'看点',en:'What makes it fun'},borrow:{zh:'可以借的点子',en:'Idea to borrow'},creator:{zh:'作者',en:'Creator'},apply:{zh:'用在哪里',en:'Apply'},
  source:{zh:'出处',en:'Source'},designer:{zh:'设计者',en:'Designer'},unknownDesigner:{zh:'未知',en:'Unknown'},stillUnknown:{zh:'还不知道',en:'Unknown'},createBrief:{zh:'生成参考指令',en:'Create brief'},visit:{zh:'访问原站',en:'Visit source'},
  storageError:{zh:'无法读取或保存本地参考包。本次修改仅在当前页面有效，请复制指令保存。',en:'Unable to read or save the local pack. Changes remain on this page only; copy the brief to keep them.'},
@@ -192,11 +192,13 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  // Independent filter changes must apply immediately; the shared animation queue keeps only its latest update.
  const filter=(update:()=>void)=>{update();setVisible(pageSize)};
  function brief(item:Item){if(needAccount('brief'))return;if(open?.mode==='modal'){afterClose.current=()=>useReference(item);close()}else useReference(item)}
+ const related=(item:Item)=>relatedReferences(item,rows);
  const detailView=(item:Item,asPage:boolean)=>{const H=asPage?'h1':'h2';const post=postOf(item),yt=youtubeOf(item);const preview=previewOf(item.id);
   // A creative video (Videos, its own page) is not design work: its notes say what is fun and what to borrow, and the design-brief tools stay off.
   const own=sectionById(pageOf(item)),typeName=own?.types?.find(v=>v.id===videoTypeOf(item))?.name;
   return <article className="insp-detail" aria-labelledby={`detail-${item.id}`}>
    <div className="insp-detail-notes">
+    {asPage&&<nav className="insp-crumbs" aria-label={l('crumbs')}><a href={localePath('/',language)}>{l('crumbHome')}</a> / <a href={localePath(sectionPath(sectionOf(item)),language)}>{t(sectionById(sectionOf(item))!.name,language)}</a></nav>}
     <nav className="insp-detail-tools" aria-label={l('refNav')}>{asPage?<a href={localePath('/',language)} onClick={e=>{e.preventDefault();close()}}><Icon d={icons.prev}/>{l('allRefs')}</a>:<button type="button" onClick={close} aria-label={l('close')}><Icon d={icons.close}/></button>}
      {!own&&<button type="button" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])}><Icon d={icons.save}/>{l(selection[item.id]?'removePack':'addPack')}</button>}
      <span><button type="button" onClick={()=>step(-1)} aria-label={l('prev')}><Icon d={icons.prev}/></button><button type="button" onClick={()=>step(1)} aria-label={l('next')}><Icon d={icons.next}/></button></span></nav>
@@ -205,6 +207,9 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
     <dl><dt>{l(own?'fun':'study')}</dt><dd>{t(item.focus,language)}</dd><dt>{l(own?'borrow':'apply')}</dt><dd>{t(item.application,language)}</dd><dt>{l('source')}</dt><dd><a href={item.url} target="_blank" rel="noreferrer">{item.publisher}</a> · {t(kinds[item.kind],language)} · {item.checkedAt}{viaOf(item)&&<> · <a href={viaOf(item)} target="_blank" rel="noreferrer">{fl('via')(new URL(viaOf(item)!).hostname)}</a></>}</dd><dt>{l(own?'creator':'designer')}</dt><dd>{item.designer ?? l('unknownDesigner')}</dd>{!own&&<><dt>{l('stillUnknown')}</dt><dd>{unknowns(item,language)}</dd></>}</dl>
     {!own&&<button type="button" className="insp-detail-brief" onClick={()=>brief(item)}>{l('createBrief')}</button>}
     {permissionOf(item)&&<AuthorizationDetails record={permissionOf(item)!}/>}
+    {asPage&&(()=>{const {list,total}=related(item);return <>
+     {list.length>0&&<section className="insp-related" aria-labelledby={`related-${item.id}`}><h2 id={`related-${item.id}`}>{l('related')}</h2><ul>{list.map(r=><li key={r.id}><a href={localePath(`/inspiration/${r.id}`,language)}>{r.name}</a> <small>{r.tag}</small></li>)}</ul><a href={localePath(sectionPath(sectionOf(item)),language)}>{l('seeAll')} ({total})</a></section>}
+     <section className="insp-yours" aria-labelledby={`yours-${item.id}`}><h2 id={`yours-${item.id}`}>{l('yours')}</h2><p>{l('yoursNote')}</p><a href={localePath('/docs/install',language)}>{l('installSkill')}</a></section></>})()}
    </div>
    <div className={`insp-detail-visual${post&&!permissionOf(item)?' insp-detail-visual-post':''}`}><div className="insp-detail-media" style={{viewTransitionName:`ref-${item.id}`}}>{permissionOf(item)?<AuthorizedMedia key={item.id} record={permissionOf(item)!}/>:yt?<YouTubeEmbed key={item.id} video={yt} title={item.name} url={item.url} locale={language}/>:post?<XPost key={item.id} post={post} url={item.url} locale={language} media={mediaFor(item)??undefined}/>:preview?<LinkPreview key={item.id} item={item} preview={preview} locale={language}/>:<Thumb key={item.id} item={item} locale={language}/>}</div>
     <a className="content-button insp-visit" href={item.url} target="_blank" rel="noreferrer">{l('visit')}<Icon d={icons.out}/></a></div>
