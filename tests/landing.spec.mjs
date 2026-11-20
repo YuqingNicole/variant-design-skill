@@ -1194,6 +1194,16 @@ test('a reference page names where it sits, links up to five like it and the ins
  }
 });
 
+test('a breakdown shows its date, what was measured, what to learn and what not to copy, in both languages',async({page})=>{
+ for(const [path,heads,checked] of [['/zh/inspiration/linear',['页面怎么搭','实测','最值得学的一个细节','不建议照搬的一点'],'核对于 2026-11-20'],['/inspiration/linear',['How the page is built','Measured','The detail most worth learning','What not to copy'],'Checked 2026-11-20']]){
+  await page.goto(path);
+  await expect(page.locator('.insp-analysis h2')).toContainText(checked);
+  await expect(page.locator('.insp-analysis h3')).toHaveText(heads);
+  expect(await page.locator('.insp-analysis li').count()).toBeGreaterThanOrEqual(2);
+ }
+ await page.goto('/zh/inspiration/aesop');await expect(page.locator('.insp-analysis')).toHaveCount(0);
+});
+
 test('the reference brief rises into place, and only fades with reduced motion', async ({page,browser})=>{
  const calm=await browser.newContext({reducedMotion:'reduce'}),q=await calm.newPage();
  await q.goto('/zh/inspiration/linear');await q.getByRole('button',{name:'生成参考指令'}).click();
