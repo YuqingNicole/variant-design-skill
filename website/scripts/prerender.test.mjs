@@ -4,7 +4,7 @@ import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
 import { indexableRoutes, agentInstall, aiTrainingCrawlers, shareCard, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
 import { importTs } from './ts-module.mjs';
-const { detailTitle, sectionOf, sections } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
+const { detailTitle, sectionOf, sections, pageOf } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 
 test('every entry and category gets its own page with metadata and readable content', () => {
@@ -97,7 +97,10 @@ test('the install guide, structured data and llms.txt are readable without JavaS
   // The home page is the inspiration feed; the skill is described on /skills.
   const [home] = data(pages.get('/zh'));
   assert.equal(home['@type'], 'WebSite');
-  assert.ok(home.description.includes(`目前 ${references.length} 条`) && pages.get('/zh').includes(`目前 ${references.length} 条`));
+  // Videos is its own page, so the home counts only the references it lists.
+  const listed = references.filter(r => !pageOf(r)).length;
+  assert.ok(listed < references.length || !references.some(r => sectionOf(r) === 'videos'));
+  assert.ok(home.description.includes(`目前 ${listed} 条`) && pages.get('/zh').includes(`目前 ${listed} 条`));
   const [skill] = data(pages.get('/zh/skills'));
   assert.equal(skill['@type'], 'SoftwareSourceCode');
   assert.equal(skill.version, '9.9.9');
@@ -106,7 +109,7 @@ test('the install guide, structured data and llms.txt are readable without JavaS
   assert.deepEqual(data(pages.get('/zh/about')), []);
   const brief = llms(entries, docs, site, references), full = llmsFull(entries, docs, site, references);
   assert.match(brief, /^# Variant Design\n\n> /);
-  assert.ok(brief.includes(docs.installCommand) && brief.includes(`${site}/docs`) && brief.includes(`${references.length} curated`));
+  assert.ok(brief.includes(docs.installCommand) && brief.includes(`${site}/docs`) && brief.includes(`${listed} curated`));
   for (const e of entries) assert.ok(brief.includes(`(${site}/d/${e.slug})`), e.slug);
   // Shorthand quoted for agents must be commands the install guide documents.
   const usage = brief.slice(brief.indexOf('## For agents'), brief.indexOf('## Docs')), commands = [...docs.refine, ...docs.deliver].map(([c]) => c);

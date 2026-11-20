@@ -7,7 +7,7 @@ import { XVideo } from './XVideo';
 import { sized, proxied } from './image-proxy';
 import { locales, type Locale } from './i18n/locales';
 import { t, type Localized } from './i18n/localized';
-import { sectionOf, sectionPath, sectionById, activeSections, detailTitle, videoTypeOf } from './inspiration-sections';
+import { sectionOf, sectionPath, sectionById, activeSections, detailTitle, videoTypeOf, pageOf } from './inspiration-sections';
 import { references, referencesFor, withdrawnReferences, permissionOf, referenceOf, previewOf, mediaOf, ensure, ensureAll, loaded, subscribe, snapshot, inspirationTopics, type Reference, type Row, type Preview } from './reference-library';
 import { AuthorizationDetails, AuthorizedMedia, authorizedVideo, WithdrawnReferencePage } from './ReferencePermission';
 import './content-pages.css';
@@ -93,8 +93,11 @@ export function prepare(route:string){const p=new URLSearchParams(location.searc
  if(route.startsWith('/browse/'))return ensure(references.filter(r=>sectionOf(r)===route.slice(8)).map(r=>r.id));if(route.startsWith('/inspiration/'))return ensure([route.slice(13)]);return Promise.resolve()}
 export function InspirationPage({detail='',section:sectionProp=''}:{detail?:string;section?:string}){
  const language = useLocale();useSyncExternalStore(subscribe,snapshot,snapshot);// re-renders as section chunks arrive
- const rows=referencesFor(language),total=rows.length,count=(c:string)=>rows.filter(i=>sectionOf(i)===c).length,tabs=activeSections(rows),withdrawn=withdrawnReferences.find(r=>r.id===detail);const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);// A section is the page's own address (/browse/<id>); a detail opened from one keeps it in `in` so Esc and the arrows stay inside it.
- const [section]=useState(()=>{const id=sectionProp||(detail?new URLSearchParams(location.search).get('in')??'':'');return tabs.some(s=>s.id===id)?id:''});const sectionInfo=sectionById(section);const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('q')??'');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [type,setType]=useState(()=>{const id=new URLSearchParams(location.search).get('type');return (sectionInfo?.types??[]).some(v=>v.id===id)?id!:''});const [sort,setSort]=useState(()=>{const s=new URLSearchParams(location.search).get('sort');return s==='name'||s==='checked'||s==='curated'?s:'default'});const [visible,setVisible]=useState(()=>typeof IntersectionObserver==='undefined'?Infinity:pageSize);
+ // Videos is a page of its own (pageOf): on it only creative videos count; everywhere else (Inspiration) they are left out.
+ // A detail belongs to the page of its reference, so one opened by address lands in the right place.
+ const all=referencesFor(language),[page]=useState(()=>sectionById(sectionProp)?.ownPage?sectionProp:detail?pageOf(all.find(r=>r.id===detail)??{category:'',tag:''}):'');
+ const rows=all.filter(r=>pageOf(r)===page),total=rows.length,count=(c:string)=>rows.filter(i=>sectionOf(i)===c).length,tabs=activeSections(rows),withdrawn=withdrawnReferences.find(r=>r.id===detail);const l=(k:keyof typeof m)=>t(m[k],language),fl=<K extends keyof typeof f>(k:K)=>t(f[k] as Localized<(typeof f)[K]['zh']>,language);// A section is the page's own address (/browse/<id>); a detail opened from one keeps it in `in` so Esc and the arrows stay inside it.
+ const [section]=useState(()=>{const id=sectionProp||(detail?new URLSearchParams(location.search).get('in')??'':'');return tabs.some(s=>s.id===id)?id:page});const sectionInfo=sectionById(section);const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('q')??'');const [prompt,setPrompt]=useState('');const [notice,setNotice]=useState('');const [topic,setTopic]=useState(()=>{const id=new URLSearchParams(location.search).get('topic');return inspirationTopics.some(t=>t.id===id)?id!:''});const activeTopic=inspirationTopics.find(t=>t.id===topic);const [type,setType]=useState(()=>{const id=new URLSearchParams(location.search).get('type');return (sectionInfo?.types??[]).some(v=>v.id===id)?id!:''});const [sort,setSort]=useState(()=>{const s=new URLSearchParams(location.search).get('sort');return s==='name'||s==='checked'||s==='curated'?s:'default'});const [visible,setVisible]=useState(()=>typeof IntersectionObserver==='undefined'?Infinity:pageSize);
  // `page` is a detail opened by its own address; `modal` is one opened from the grid over it.
  const [open,setOpen]=useState<{id:string;mode:'page'|'modal'}|null>(()=>rows.some(i=>i.id===detail)?{id:detail,mode:'page'}:null);
  const requestedOpen=useRef(open);
@@ -123,7 +126,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   try{if(initialPack.error)throw new Error();localStorage.setItem(packKey,JSON.stringify(next));setStorageError(false)}catch{setStorageError(true)}}
  // Saving and briefs need an account when accounts are on; the reference asked for is saved once the visitor is back signed in.
  const needAccount=(reason:'save'|'brief',id?:string)=>{if(!accounts||userId)return false;if(id)rememberPending(id);openSignIn(reason);return true};
- const selected=rows.filter(item=>selection[item.id]),unavailable=withdrawnReferences.filter(item=>selection[item.id]);
+ const selected=all.filter(item=>selection[item.id]),unavailable=withdrawnReferences.filter(item=>selection[item.id]);
  function toggleSelection(id:string){if(needAccount('save',selection[id]?undefined:id))return;edit(p=>{const next={...p};if(next[id])delete next[id];else next[id]={use:'',avoid:''};return next})}
  function updateIntent(id:string,field:'use'|'avoid',value:string){edit(p=>p[id]?{...p,[id]:{...p[id],[field]:value}}:p)}
  // The pack brief quotes each record, so the selected ones are fetched first.
@@ -141,7 +144,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  useEffect(()=>{if(q)ensureAll()},[q]);
  function useReference(item:Item){setNotice('');setPrompt(fl('useReference')(item))}
  async function copy(){try{await navigator.clipboard.writeText(prompt);setNotice(l('copied'))}catch{setNotice(l('copyManually'))}}
- useEffect(()=>{if(detail&&!withdrawn&&!rows.some(i=>i.id===detail))history.replaceState(null,'',localePath('/',language)+location.search)},[detail]);
+ useEffect(()=>{if(detail&&!withdrawn&&!all.some(i=>i.id===detail))history.replaceState(null,'',localePath('/',language)+location.search)},[detail]);
  // A section with no reference has no page; its address falls back to the feed instead of showing the feed twice.
  useEffect(()=>{if(sectionProp&&!tabs.some(s=>s.id===sectionProp))history.replaceState(null,'',localePath('/',language)+location.search)},[]);
  const pushed=useRef(false),returnTo=useRef<{x:number;y:number;opener:HTMLElement|null}|null>(null),afterClose=useRef<(()=>void)|null>(null);
@@ -210,20 +213,22 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   {selected.length>0&&<section className="inspiration-pack" aria-labelledby="pack-title"><h2 id="pack-title">{l('pack')} ({selected.length})</h2><p>{l(accounts?'packNoteAccount':'packNote')}</p>{selected.map(item=><fieldset key={item.id}><legend>{item.name}</legend><label>{l('useFor')}<textarea aria-label={l('useFor')} value={selection[item.id].use} onChange={e=>updateIntent(item.id,'use',e.target.value)}/></label><label>{l('avoid')}<textarea aria-label={l('avoid')} value={selection[item.id].avoid} onChange={e=>updateIntent(item.id,'avoid',e.target.value)}/></label><button type="button" onClick={()=>toggleSelection(item.id)}>{l('remove')}</button></fieldset>)}<button className="content-button" onClick={createPack}>{l('packBrief')}</button></section>}
   {prompt&&<section ref={briefRef} tabIndex={-1} className="inspiration-brief" aria-labelledby="reference-brief-title"><h2 id="reference-brief-title">{l('takeIt')}</h2><textarea aria-label={l('briefLabel')} readOnly value={prompt} rows={6}/><button className="content-button" onClick={copy}>{l('copyBrief')}</button><button className="inspiration-dismiss" onClick={()=>{setPrompt('');setNotice('')}}>{l('dismiss')}</button><p role="status">{notice}</p></section>}
  </>;
+ // On its own page (Videos) the types are the page's only categories, in the place of the Inspiration tabs.
+ const typeRow=<div className={`insp-types${page?' insp-types-main':''}`} role="group" aria-label={l('videoType')}>{[{id:'',name:{zh:'全部',en:'All'}},...(sectionInfo?.types??[]).filter(v=>rows.some(r=>sectionOf(r)===section&&videoTypeOf(r)===v.id))].map(v=><button key={v.id||'all'} type="button" aria-pressed={type===v.id} onClick={()=>{filter(()=>setType(v.id));feedRef.current?.scrollTo({left:0});scrollTo({top:0})}}>{t(v.name,language)} <small aria-hidden="true">{rows.filter(r=>sectionOf(r)===section&&(!v.id||videoTypeOf(r)===v.id)).length}</small></button>)}</div>;
  const header=<SiteHeader language={language} page="inspiration" inspirationCategory={section}/>;
  if(withdrawn)return <WithdrawnReferencePage record={withdrawn}/>;
  if(open?.mode==='page'&&openItem)return <main className="content-page inspiration-page">{header}<div className="site-shell insp-page-detail">{detailView(openItem,true)}{tail}</div><SiteFooter language={language}/></main>;
  return <main className="content-page inspiration-page">{header}
   <header className="site-shell insp-head">
-   <div className="insp-title"><h1>{sectionInfo?t(sectionInfo.title,language):l('title')}</h1><p>{sectionInfo?t(sectionInfo.intro,language):l('intro')}</p><p className="insp-links">{showCases&&<a href={localePath('/cases',language)}>{l('casesEntry')}</a>}<a href={localePath('/submit',language)}>{l('submissions')}</a></p></div>
+   <div className="insp-title"><h1>{sectionInfo?t(sectionInfo.title,language):l('title')}</h1><p>{sectionInfo?t(sectionInfo.intro,language):l('intro')}</p><p className="insp-links">{showCases&&!page&&<a href={localePath('/cases',language)}>{l('casesEntry')}</a>}<a href={localePath('/submit',language)}>{l('submissions')}</a></p></div>
    <p className="insp-rights">{l('rights')} <a href={localePath('/submit',language)+'#display'}>{l('rightsMore')}</a></p>
   </header>
   <div className="insp-bar"><div className="site-shell">
-   <nav className="insp-pills" aria-label={l('refType')} ref={pillsRef}>{[{id:'',name:{zh:'全部',en:'All'}},...tabs].map(c=><a key={c.id||'all'} href={localePath(sectionPath(c.id),language)} aria-current={section===c.id?'page':undefined} onPointerEnter={prefetch} onFocus={prefetch} onTouchStart={prefetch}>{t(c.name,language)} <small aria-hidden="true">{c.id?count(c.id):total}</small></a>)}</nav>
+   {page?typeRow:<nav className="insp-pills" aria-label={l('refType')} ref={pillsRef}>{[{id:'',name:{zh:'全部',en:'All'}},...tabs].map(c=><a key={c.id||'all'} href={localePath(sectionPath(c.id),language)} aria-current={section===c.id?'page':undefined} onPointerEnter={prefetch} onFocus={prefetch} onTouchStart={prefetch}>{t(c.name,language)} <small aria-hidden="true">{c.id?count(c.id):total}</small></a>)}</nav>}
    
    <label className="insp-search"><Icon d={icons.search}/><span className="insp-visually-hidden">{l('search')}</span><input ref={searchRef} type="search" value={query} onChange={e=>{setQuery(e.target.value);setVisible(pageSize)}} placeholder={l('searchHint')}/></label>
    <select aria-label={l('sort')} value={sort} onChange={e=>{const v=e.target.value;filter(()=>setSort(v))}}><option value="default">{l('curated')}</option><option value="curated">{l('original')}</option><option value="checked">{l('recent')}</option><option value="name">{l('byName')}</option></select>
-  </div>{sectionInfo?.types&&<div className="site-shell"><div className="insp-types" role="group" aria-label={l('videoType')}>{[{id:'',name:{zh:'全部',en:'All'}},...sectionInfo.types.filter(v=>rows.some(r=>sectionOf(r)===section&&videoTypeOf(r)===v.id))].map(v=><button key={v.id||'all'} type="button" aria-pressed={type===v.id} onClick={()=>{filter(()=>setType(v.id));feedRef.current?.scrollTo({left:0});scrollTo({top:0})}}>{t(v.name,language)} <small aria-hidden="true">{rows.filter(r=>sectionOf(r)===section&&(!v.id||videoTypeOf(r)===v.id)).length}</small></button>)}</div></div>}</div>
+  </div>{sectionInfo?.types&&!page&&<div className="site-shell">{typeRow}</div>}</div>
   <section className="site-shell insp-body">
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>

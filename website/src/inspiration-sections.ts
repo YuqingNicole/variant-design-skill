@@ -6,8 +6,9 @@
 type Copy = { zh: string; en: string };
 export type VideoType = { id: string; name: Copy };
 // `work` is the kind of work a section holds, as a searcher would name it; it goes into each detail page's title.
-// `types` is the filter row inside a video section; each type is read from the reference's tag.
-export type Section = { id: string; name: Copy; work: Copy; title: Copy; intro: Copy; videoGrid: boolean; types?: VideoType[] };
+// `types` is the filter row inside a video section; each type is read from the reference's tag. A section with `ownPage` stands
+// apart from Inspiration (2026-11-20): its references are not in the Inspiration feed, counts or tabs, and its page shows only its types.
+export type Section = { id: string; name: Copy; work: Copy; title: Copy; intro: Copy; videoGrid: boolean; types?: VideoType[]; ownPage?: boolean };
 
 const designTypes: VideoType[] = [
   { id: 'interaction', name: { zh: '交互', en: 'Interaction' } }, { id: 'motion', name: { zh: '动效', en: 'Motion' } }, { id: 'web', name: { zh: '网页', en: 'Web' } },
@@ -28,7 +29,7 @@ export const sections: Section[] = [
   { id: 'design-motion', name: { zh: '动态设计', en: 'Design in motion' }, work: { zh: '动态设计', en: 'Design in motion' }, videoGrid: true, types: designTypes,
     title: { zh: '动态设计灵感', en: 'Design in motion inspiration' },
     intro: { zh: '来自 X 和 YouTube 的设计短视频：交互、动效、品牌、插画、海报和印刷作品，每条都能直接看它怎么动、怎么响应。', en: 'Short design videos from X and YouTube: interaction, motion, brand, illustration, poster and print work, each one showing how it moves and responds.' } },
-  { id: 'videos', name: { zh: '视频', en: 'Videos' }, work: { zh: '创意视频', en: 'Creative video' }, videoGrid: true, types: creativeTypes,
+  { id: 'videos', name: { zh: '视频', en: 'Videos' }, work: { zh: '创意视频', en: 'Creative video' }, videoGrid: true, types: creativeTypes, ownPage: true,
     title: { zh: '创意视频', en: 'Creative videos' },
     intro: { zh: '来自 X 和 YouTube 的有趣创意短视频，和设计无关：动画、特效、定格和手作、代码生成、实拍的脑洞和纯粹的幽默。', en: 'Fun, creative short videos from X and YouTube that have nothing to do with design: animation, effects, stop-motion and craft, generative work, live-action ideas and plain humour.' } },
 ];
@@ -54,6 +55,8 @@ export function detailTitle(item: { name: string; category: string; tag: string;
 }
 export const sectionPath = (id: string) => (id ? `/browse/${id}` : '/');
 export const sectionById = (id: string) => sections.find(s => s.id === id);
+// The page a reference is listed on: its own-page section (Videos), or '' for Inspiration.
+export const pageOf = (item: { category: string; tag: string; kind?: string }) => { const id = sectionOf(item); return sectionById(id)?.ownPage ? id : ''; };
 // Only sections that have at least one reference get a tab and a page.
 export const activeSections = (items: { category: string; tag: string; kind?: string }[]) => {
   const used = new Set(items.map(sectionOf));

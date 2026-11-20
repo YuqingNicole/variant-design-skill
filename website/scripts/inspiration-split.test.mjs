@@ -4,8 +4,8 @@ import zlib from 'node:zlib';
 import { importTs } from './ts-module.mjs';
 import { inspirationPlugin, moduleSource, pageSize, readLibrary, rowFields, splitReferences } from './inspiration-split.mjs';
 
-const { sectionOf, sections } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
-const library = readLibrary(), split = splitReferences(library.items, sectionOf, library);
+const { sectionOf, sections, pageOf } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
+const library = readLibrary(), split = splitReferences(library.items, sectionOf, { ...library, onHome: r => !pageOf(r) });
 const gzipKb = text => zlib.gzipSync(Buffer.from(text)).length / 1024;
 
 test('the index keeps every reference in file order with only the row fields', () => {
@@ -15,8 +15,8 @@ test('the index keeps every reference in file order with only the row fields', (
   assert.ok(split.index.length === 0 || 'focus' in library.items[0]);
 });
 
-test('the first page is the newest references, as the home sorts them, with their previews and media', () => {
-  const newest = [...library.items].sort((a, b) => Date.parse(b.addedAt) - Date.parse(a.addedAt)).slice(0, pageSize);
+test('the first page is the newest references the home lists (no Videos), as the home sorts them, with their previews and media', () => {
+  const newest = [...library.items].filter(r => !pageOf(r)).sort((a, b) => Date.parse(b.addedAt) - Date.parse(a.addedAt)).slice(0, pageSize);
   assert.deepEqual(split.first.items.map(r => r.id), newest.map(r => r.id));
   for (const r of split.first.items) {
     assert.equal(split.first.previews[r.id], library.previews[r.id]);

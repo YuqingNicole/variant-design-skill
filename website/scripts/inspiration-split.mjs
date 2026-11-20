@@ -21,16 +21,17 @@ export function readLibrary(dir = src) {
   return { items: block(source, 'inspirationItems'), topics: block(source, 'inspirationTopics'), previews: json('link-previews.json'), media: json('x-media.json') };
 }
 
-// `first` is the home's default order (newest `addedAt` first, file order on ties, as InspirationPage sorts) cut at one page;
+// `first` is the home's default order (newest `addedAt` first, file order on ties, as InspirationPage sorts) cut at one page,
+// leaving out what the home does not list (`onHome`: an own-page section such as Videos);
 // each section chunk keeps file order and carries its own link previews and X media, so nothing per reference ships twice
 // except the first page, which its section repeats.
-export function splitReferences(items, sectionOf, { previews = {}, media = {} } = {}) {
+export function splitReferences(items, sectionOf, { previews = {}, media = {}, onHome = () => true } = {}) {
   const part = list => ({ items: list, previews: Object.fromEntries(list.flatMap(r => previews[r.id] ? [[r.id, previews[r.id]]] : [])), media: Object.fromEntries(list.flatMap(r => media[r.id] ? [[r.id, media[r.id]]] : [])) });
   const sections = {};
   for (const r of items) (sections[sectionOf(r)] ??= []).push(r);
   return {
     index: items.map(r => Object.fromEntries(rowFields.map(k => [k, r[k]]))),
-    first: part([...items].sort((a, b) => Date.parse(b.addedAt) - Date.parse(a.addedAt)).slice(0, pageSize)),
+    first: part([...items].filter(onHome).sort((a, b) => Date.parse(b.addedAt) - Date.parse(a.addedAt)).slice(0, pageSize)),
     sections: Object.fromEntries(Object.entries(sections).map(([id, list]) => [id, part(list)])),
     all: part(items),
   };
@@ -40,7 +41,7 @@ const prefix = 'virtual:inspiration/', resolved = '\0' + prefix;
 export const moduleSource = part => `export const items=${JSON.stringify(part.items)};export const previews=${JSON.stringify(part.previews)};export const media=${JSON.stringify(part.media)};`;
 export function inspirationPlugin() {
   let cache;
-  const data = async () => cache ??= (async () => { const { sectionOf } = await importTs(path.join(src, 'inspiration-sections.ts')); const lib = readLibrary(); return { ...splitReferences(lib.items, sectionOf, lib), topics: lib.topics, sectionOf }; })();
+  const data = async () => cache ??= (async () => { const { sectionOf, pageOf } = await importTs(path.join(src, 'inspiration-sections.ts')); const lib = readLibrary(); return { ...splitReferences(lib.items, sectionOf, { ...lib, onHome: r => !pageOf(r) }), topics: lib.topics, sectionOf }; })();
   return {
     name: 'variant-inspiration-split',
     resolveId(id) { if (id.startsWith(prefix)) return '\0' + id; },
