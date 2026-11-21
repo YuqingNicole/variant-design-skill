@@ -24,3 +24,16 @@ test('only reviewed references make a collection ready', () => {
   all.r5.status='reviewed';
   assert.equal(collectionCandidates(all).find(r=>r.value==='dark').ready,true);
 });
+
+test('a review confirms one record with today\'s date and keeps the file one line per reference', async () => {
+  const {reviewRecord,serializeFacets}=await import('./facet-review.mjs');
+  const all={a:draft({styles:['dark']}),b:draft()};
+  const next=reviewRecord(all,'a',{styles:['dark','editorial'],industry:'ai'},{reviewed:true,today:'2026-11-22'});
+  assert.deepEqual(next.a,{status:'reviewed',reviewedAt:'2026-11-22',industry:'ai',medium:'website',pageTypes:[],patterns:[],components:[],techniques:[],styles:['dark','editorial']});
+  assert.equal(next.b,all.b);
+  assert.equal(reviewRecord(next,'a',{},{reviewed:false,today:'2026-11-22'}).a.reviewedAt,undefined);
+  assert.throws(()=>reviewRecord(all,'a',{styles:['moody']},{reviewed:true,today:'2026-11-22'}),/unknown styles value moody/);
+  assert.throws(()=>reviewRecord(all,'zzz',{},{reviewed:true,today:'2026-11-22'}),/Unknown reference/);
+  assert.deepEqual(JSON.parse(serializeFacets(next)),next);
+  assert.equal(serializeFacets(next).split('\n').length,5);
+});
