@@ -918,6 +918,13 @@ test('content shares the heading\'s left edge and two-tone headings use the pale
   }
 });
 
+test('the home page does not preload every avatar', async ({ request }) => {
+  // React preloads each eager <img> in the head; 135 avatars once meant 134 preload links and 600 requests on one load.
+  const html = await (await request.get('/')).text();
+  expect((html.match(/<link rel="preload" as="image"/g) ?? []).length).toBeLessThan(10);
+  expect(html).not.toMatch(/<img class="insp-vcard-avatar"(?![^>]*loading="lazy")/);
+});
+
 test('X posters and avatars fall back to X directly when the image service fails', async ({ page }) => {
   const xMedia = JSON.parse(fs.readFileSync(new URL('../website/src/x-media.json', import.meta.url), 'utf8'));
   await page.route(/\/_vercel\/image\?/, r => r.abort());
