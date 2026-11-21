@@ -918,6 +918,17 @@ test('content shares the heading\'s left edge and two-tone headings use the pale
   }
 });
 
+test('the prerendered home page carries one batch of cards and links to every other reference', async ({ request }) => {
+  // Every card in the static HTML fetches its poster before any script runs, so the page ships one batch (30) and the full link list under the page covers the rest.
+  const html = await (await request.get('/')).text();
+  expect((html.match(/class="insp-card-open/g) ?? []).length).toBeLessThanOrEqual(30);
+  const linked = new Set([...html.matchAll(/href="\/inspiration\/([^"/?#]+)"/g)].map(m => m[1]));
+  const sitemap = fs.readFileSync(new URL('../website/dist/sitemap.xml', import.meta.url), 'utf8');
+  const wanted = new Set([...sitemap.matchAll(/<loc>https:\/\/variantdesign\.xyz\/inspiration\/([^<\/]+)<\/loc>/g)].map(m => m[1]));
+  expect(wanted.size).toBeGreaterThan(200);
+  expect([...wanted].filter(id => !linked.has(id))).toEqual([]);
+});
+
 test('the home page does not preload every avatar', async ({ request }) => {
   // React preloads each eager <img> in the head; 135 avatars once meant 134 preload links and 600 requests on one load.
   const html = await (await request.get('/')).text();
@@ -1091,9 +1102,9 @@ test('each inspiration tab is its own page, and no reference appears on two of t
  // The count after each name is aria-hidden, so the accessible name is the name alone.
  const tabs=await page.locator('.insp-pills a').evaluateAll(as=>as.map(a=>[a.textContent.replace(/\s*\d+\s*$/,'').trim(),a.getAttribute('href')]));
  expect(tabs.map(t=>t[1])).toEqual(['/zh','/zh/browse/web','/zh/browse/interface','/zh/browse/design-motion']);
- // Read the prerendered pages as a crawler does: every reference of the page is in the HTML, with no scrolling.
+ // Read the prerendered pages as a crawler does, with no scrolling.
  const idsOf=async href=>{const html=await(await request.get(href)).text();return {html,ids:[...html.matchAll(/class="insp-card-open[^"]*" href="\/zh\/inspiration\/([^"]+)"/g)].map(m=>m[1])}};
- const home=await idsOf('/zh'),seen=new Set(),titles=new Set(),headings=new Set();
+ const home=await idsOf('/zh'),seen=new Set(),titles=new Set(),headings=new Set();let sum=0;
  for(const [name,href] of tabs.slice(1)){
   const {html,ids}=await idsOf(href);
   expect(ids.length).toBeGreaterThan(0);expect(new Set(ids).size).toBe(ids.length);
@@ -1101,10 +1112,12 @@ test('each inspiration tab is its own page, and no reference appears on two of t
   titles.add(html.match(/<title>([^<]*)/)[1]);headings.add(html.match(/<h1[^>]*>([^<]*)/)[1]);
   expect(html).toContain(`<link rel="canonical" href="https://variantdesign.xyz${href}">`);
   await page.goto(href);await expect(page.locator('.insp-pills').getByRole('link',{name,exact:true})).toHaveAttribute('aria-current','page');
-  await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${ids.length} 个参考`);
+  // A page ships one batch of cards (30); the full list is linked under it, so the count on the page is what the section holds.
+  const total=Number((await page.locator('.inspiration-count[role=status]').textContent()).match(/\d+/)[0]);
+  expect(ids.length).toBe(Math.min(total,30));sum+=total;
  }
  expect(titles.size).toBe(tabs.length-1);expect(headings.size).toBe(tabs.length-1);
- expect([...seen].sort()).toEqual([...home.ids].sort());
+ await page.goto('/zh');expect(Number((await page.locator('.inspiration-count[role=status]').textContent()).match(/\d+/)[0])).toBe(sum);
 });
 
 test('old category links and empty sections land on the right page', async ({page})=>{
