@@ -91,19 +91,21 @@ export type ReferenceFacets = {
   pageTypes: string[]; patterns: string[]; components: string[]; techniques: string[]; styles: string[];
 };
 
+// Own string keys only: `in` would accept inherited names such as "constructor".
+const known = (vocab: Vocabulary, v: unknown) => typeof v === 'string' && Object.hasOwn(vocab, v);
 // Returns the problems in one record, empty when it is valid. The file is small, so callers check every record.
 export function facetProblems(id: string, f: ReferenceFacets): string[] {
   const out: string[] = [], at = (m: string) => out.push(`${id}: ${m}`);
   if (f.status !== 'draft' && f.status !== 'reviewed') at(`unknown status ${f.status}`);
   if (f.status === 'reviewed' && !/^\d{4}-\d{2}-\d{2}$/.test(f.reviewedAt ?? '')) at('reviewed without reviewedAt');
-  if (f.industry !== null && !(f.industry in industries)) at(`unknown industry ${f.industry}`);
-  if (!(f.medium in media)) at(`unknown medium ${f.medium}`);
+  if (f.industry !== null && !known(industries, f.industry)) at(`unknown industry ${f.industry}`);
+  if (!known(media, f.medium)) at(`unknown medium ${f.medium}`);
   for (const name of multiFacets) {
     const list = f[name], vocab = facetVocabulary[name];
     if (!Array.isArray(list)) { at(`${name} is not a list`); continue; }
     if (list.length > facetLimit) at(`${name} has more than ${facetLimit} values`);
     if (new Set(list).size !== list.length) at(`${name} repeats a value`);
-    for (const v of list) if (!(v in vocab)) at(`unknown ${name} value ${v}`);
+    for (const v of list) if (!known(vocab, v)) at(`unknown ${name} value ${v}`);
   }
   return out;
 }

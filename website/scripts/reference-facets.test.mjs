@@ -14,6 +14,7 @@ test('rejects values outside the vocabulary, long lists and reviews without a da
   assert.match(facetProblems('a', draft({patterns:['faq','faq']}))[0], /repeats/);
   assert.match(facetProblems('a', draft({components:['button','card','tabs','toggle']}))[0], /more than 3/);
   assert.deepEqual(facetProblems('a', draft({status:'reviewed'})), ['a: reviewed without reviewedAt']);
+  assert.deepEqual(facetProblems('a', draft({medium:'constructor',styles:['toString',1]})), ['a: unknown medium constructor','a: unknown styles value toString','a: unknown styles value 1']);
 });
 
 test('only reviewed references make a collection ready', () => {
