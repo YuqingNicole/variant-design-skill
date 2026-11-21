@@ -21,6 +21,8 @@ import { PricingPage } from './pricing';
 import { PrivacyPage } from './PrivacyPage';
 import { SkillsPage } from './SkillsPage';
 import { SponsorPage } from './SponsorPage';
+import { CollectionPage } from './CollectionPage';
+import { collections } from './collections';
 import { SubmitPage } from './SubmitPage';
 
 const standalone: Record<string, ReactNode> = {
@@ -29,6 +31,8 @@ const standalone: Record<string, ReactNode> = {
   '/about': <PaperLanding/>, '/pricing': <PricingPage repositoryUrl="https://github.com/YuqingNicole/variant-design-skill"/>,
   '/skills': <SkillsPage/>, '/submit': <SubmitPage/>, '/sponsor': <SponsorPage/>, '/privacy': <PrivacyPage/>, '/guides': <GuidesPage/>, '/changelog': <ChangelogPage/>, '/': <InspirationPage/>, ...Object.fromEntries(activeSections(references).map(c=>[`/browse/${c.id}`,<InspirationPage section={c.id}/>])), '/cases': <LibraryPage view={{ kind: 'feed' }}/>,
   ...Object.fromEntries(guides.map(g => [`/guides/${g.slug}`, <GuidesPage slug={g.slug}/>])),
+  // Every defined collection renders; the prerender decides which ones a build publishes (src/collections.ts).
+  '/collections': <CollectionPage/>, ...Object.fromEntries(collections.map(c => [`/collections/${c.slug}`, <CollectionPage slug={c.slug}/>])),
   '/docs': <GuidesPage base="/docs"/>, ...Object.fromEntries(docsArticles.map(g => [`/docs/${g.slug}`, <GuidesPage base="/docs" slug={g.slug}/>])),
 };
 const library: Record<string, ReactNode> = {
