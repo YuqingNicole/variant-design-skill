@@ -19,6 +19,10 @@ export async function measure(browser, { base, path, mobile = false, stub = true
   // X's embed script is stood in for by one that adds a tall block 700ms after it is asked for (a shift within 500ms of an
   // input does not count, and the real widget takes longer than that),
   // so a layout that lets the embed push the page's text down shows up here instead of only on production.
+  // Vercel's resizer (/_vercel/image) is a local redirect to the remote original, which the stub would then answer only after a
+  // round trip through the local server; answer it with the pixel directly, as the landing tests do, so a preview image's reading
+  // is our page's, not the redirect's (it put /inspiration/linear at 5,248 ms once in CI).
+  if (stub) await page.route(url => url.origin === origin && url.pathname === '/_vercel/image', r => r.fulfill({ contentType: 'image/png', body: pixel }));
   if (stub) await page.route(url => url.origin !== origin, r => /^https:\/\/platform\.twitter\.com\/widgets\.js/.test(r.request().url()) ? r.fulfill({ contentType: 'text/javascript', body: fakeWidgets }) : r.request().resourceType() === 'image' ? r.fulfill({ contentType: 'image/png', body: pixel }) : r.abort());
   if (mobile) await (await context.newCDPSession(page)).send('Emulation.setCPUThrottlingRate', { rate: 4 });
   const reads = [];

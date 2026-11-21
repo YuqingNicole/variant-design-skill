@@ -1289,7 +1289,9 @@ test('lab budget: no layout shift past 0.1, a quick first paint on our own pages
   // One line per page in the test output, so a CI run that passes still shows what the figures were and which element the LCP was.
   console.log(`lab: ${path} ${mobile?'phone':'desktop'} lcp=${m.lcp} (${m.lcpElement}) cls=${m.cls} kb=${m.kb.js}`);
   expect(m.cls,`${path} ${mobile?'phone':'desktop'} CLS`).toBeLessThanOrEqual(0.1);
-  if(path!=='/zh/inspiration/linear')expect(m.lcp,`${path} ${mobile?'phone':'desktop'} LCP (${m.lcpElement})`).toBeLessThanOrEqual(2500);
+  // Every page has the line, Linear's detail included: its preview image used to arrive through the resizer's local redirect, and the
+  // exemption that covered that broke silently when the paths moved under /zh (#280). measure() now stubs the resizer itself.
+  expect(m.lcp,`${path} ${mobile?'phone':'desktop'} LCP (${m.lcpElement})`).toBeLessThanOrEqual(2500);
   // `kb` is what the home loads to render: a light row per reference and the records of its first page (reference-library.ts).
   // The rest of the library arrives per section when the reader scrolls, sorts, searches or opens one, and counts in `kbAfter`,
   // not here. The cap followed the library while the whole of it shipped in the script (145 → 160 → 180 KB, measured 173 at 209
