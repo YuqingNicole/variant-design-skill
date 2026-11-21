@@ -1,6 +1,6 @@
 // A local page for the maintainer to review reference facets collection by collection: open the work, fix the values,
 // confirm. Confirming sets `status: "reviewed"` and today's `reviewedAt` in src/reference-facets.json; nothing else is
-// written and nothing leaves this machine. Collections go public once six members are reviewed (src/collections.ts).
+// written. The server listens on localhost only; covers load from their sources (X, the sites' own previews), as on the site. Collections go public once six members are reviewed (src/collections.ts).
 // node website/scripts/facet-review.mjs [--port 4800]   (or `npm run review:facets --prefix website`)
 import fs from 'node:fs';
 import http from 'node:http';
@@ -46,6 +46,8 @@ export function server() {
     if (req.method === 'GET' && req.url === '/api/state') return send(200, state());
     if (req.url === '/favicon.ico') { res.writeHead(204); return res.end(); }
     if (req.method === 'POST' && req.url === '/api/review') {
+      // JSON only: a page elsewhere can send a plain-text POST to localhost without a preflight, but not this.
+      if ((req.headers['content-type'] || '').split(';')[0] !== 'application/json') return send(415, { ok: false, error: 'Expected application/json' });
       let body = '';
       req.on('data', chunk => { body += chunk; if (body.length > 20000) req.destroy(); });
       req.on('end', () => {
@@ -62,7 +64,7 @@ export function server() {
 const page = `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>核对参考属性</title><style>
 :root{--ink:#1d1f23;--muted:#5b616b;--line:#dcdfe4;--paper:#f6f7f9;--card:#fff;--ok:#1f7a4d;font-family:-apple-system,"PingFang SC",sans-serif;color:var(--ink);background:var(--paper)}
 body{margin:0;display:grid;grid-template-columns:260px 1fr;min-height:100vh}aside{border-right:1px solid var(--line);padding:16px;position:sticky;top:0;height:100vh;overflow:auto;box-sizing:border-box;background:var(--card)}
-aside h1{font-size:16px;margin:0 0 4px}aside p{font-size:12px;color:var(--muted);margin:0 0 12px;line-height:1.5}aside button{display:flex;justify-content:space-between;width:100%;text-align:left;border:0;background:none;padding:10px 8px;border-radius:6px;font:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
+aside h1{font-size:16px;margin:0 0 4px}aside p{font-size:12px;color:var(--muted);margin:0 0 12px;line-height:1.5}aside button{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:44px;text-align:left;border:0;background:none;padding:10px 8px;border-radius:6px;font:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
 aside button[aria-current=true]{background:var(--paper);font-weight:600}aside button small{color:var(--muted);font-weight:400}aside button small.ready{color:var(--ok)}
 main{padding:16px 24px 80px;max-width:1100px}.toolbar{display:flex;gap:12px;align-items:center;margin-bottom:12px;font-size:14px;color:var(--muted)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px;display:grid;grid-template-columns:220px 1fr;gap:16px}.card.done{border-color:var(--ok)}
@@ -92,8 +94,10 @@ function card(id){const it=S.items[id],f=structuredClone(it.facets),done=f.statu
   const chips=S.vocab[k].map(v=>el('button',{type:'button',textContent:v.label.zh,title:v.label.en+' · '+v.value,ariaPressed:String(vals.includes(v.value)),disabled:isMulti&&!vals.includes(v.value)&&vals.length>=S.limit,
    onclick:()=>{if(isMulti)f[k]=vals.includes(v.value)?vals.filter(x=>x!==v.value):[...vals,v.value];else f[k]=k==='industry'&&f[k]===v.value?null:v.value;draw()}}));
   return el('div',{className:'facet'},el('span',{textContent:names[k]}),el('div',{className:'chips'},...chips))}))};draw();
- const save=async reviewed=>{status.className='status';status.textContent='保存中…';const r=await fetch('/api/review',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id,facets:f,reviewed})});const out=await r.json();
-  if(!out.ok){status.className='status err';status.textContent=out.error;return}const y=scrollY;await load();scrollTo(0,y)};
+ const fail=t=>{status.className='status err';status.textContent=t};
+ const save=async reviewed=>{status.className='status';status.textContent='保存中…';let out;
+  try{const r=await fetch('/api/review',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id,facets:f,reviewed})});out=await r.json()}catch{return fail('没有保存：连不上本地服务，确认终端里的脚本还在运行后再点一次。')}
+  if(!out.ok)return fail('没有保存：'+out.error);const y=scrollY;try{await load();scrollTo(0,y)}catch{fail('已保存，但刷新列表失败；重新打开页面即可看到。')}};
  const actions=el('div',{className:'actions'},el('button',{className:'primary',type:'button',textContent:'确认已核对',onclick:()=>save(true)}),el('button',{type:'button',textContent:done?'改回初稿':'只保存修改',onclick:()=>save(false)}),status);
  const notes=el('div',{className:'notes'},el('div',{},el('span',{textContent:'研究什么：'}),it.focus.zh),el('div',{},el('span',{textContent:'用在哪里：'}),it.application.zh));
  const body=el('div',{},el('div',{className:'head'},el('b',{textContent:it.name}),el('a',{href:it.url,target:'_blank',rel:'noreferrer',textContent:'打开原站 ↗'}),el('span',{className:'meta',textContent:it.section+' · '+it.tag+' · '+id})),notes);
