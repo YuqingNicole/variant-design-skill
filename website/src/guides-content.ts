@@ -175,4 +175,52 @@ export const guides: Guide[] = [
         body: [{ zh: '不论参考来自哪里，至少记下原始链接、发布者、你打开它的日期，以及你打算借鉴的是结构、代码还是素材。复制代码、图片或文案之前，先找到原作的许可证。', en: 'Wherever a reference comes from, record at least the original link, the publisher, the date you opened it, and whether you mean to borrow its structure, its code or its assets. Before copying code, images or text, find the original’s license.' }] },
     ],
   },
+  {
+    // From the skill's own rules: references/workflow/project-discovery.md (the task brief), design-declaration.md and
+    // adjective-translation.md; the examples are the prompts in evals/fixtures (pulse, premium).
+    slug: 'write-a-design-brief-for-ai',
+    translations: { en: { status: 'draft' } },
+    publishedAt: '2026-11-21',
+    title: { zh: '怎么给 AI 写设计需求', en: 'How to write a design brief for AI' },
+    answer: {
+      zh: '给 AI 的设计需求至少写清六件事：给谁用、要完成哪一件事；哪些任务、数据和操作不能丢；可以改哪些地方；品牌约束和它写在哪里；“高级”“简洁”这类词具体指什么；做完怎么验收。下面每一条都来自 Variant Design 技能在生成之前要整理的任务简报，最后附一份可以直接填的模板。这是我们的做法，没有做过对照实验证明写成这样效果一定更好。',
+      en: 'A design brief for AI should state at least six things: who it is for and the one job it must do; which tasks, data and actions must survive; what may be changed; the brand constraints and where they are written; what words like "premium" or "clean" actually mean; and how the result will be checked. Each point below comes from the task brief the Variant Design skill writes before it generates anything, and a template to fill in closes the page. This is how we work; we have not run a controlled study showing that briefs written this way give better results.',
+    },
+    sections: [
+      { id: 'job', heading: { zh: '1. 写给谁、完成哪一件事', en: '1. Who it is for and the one job it must do' },
+        body: [
+          { zh: '先写读者在什么情况下打开这个页面，以及页面必须帮他完成的那一件事。技能把这叫“设计声明”，里面还有一项“成功的时刻”：读者做到了什么，才算页面成功。', en: 'Start with the situation in which the reader opens the page and the one job the page must do for them. The skill calls this the design declaration, and it includes a "success moment": what the reader does that tells you the page worked.' },
+          { zh: '技能自带的例子是投资研究看板：读者是开盘前的买方分析师，要完成的事是把有证据的信号和需要核实的噪音分开；成功的时刻是分析师打开来源、记下下一步研究，而不是只凭 AI 打的分就行动。', en: 'The skill’s own example is an investment-research dashboard: the reader is a buy-side analyst before market open, the job is to separate evidence-backed signals from noise that needs checking, and the success moment is the analyst opening the source and recording a next research step, rather than acting on an AI score alone.' },
+        ],
+        link: { href: '/guides/avoid-generic-ai-ui', label: { zh: '另一个例子：Pulse 的读者和任务', en: 'Another example: the reader and task in Pulse' } } },
+      { id: 'preserve', heading: { zh: '2. 列出不能丢的东西', en: '2. List what must survive' },
+        body: [{ zh: '写明哪些核心任务、共享数据和必要操作在每个方向里都要保留。设计可以改结构和取舍，不能顺手删掉一个功能。我们的一个测试项目里，修改请求是这样写的：', en: 'Name the core tasks, shared data and necessary actions that every direction must keep. A design can change structure and tradeoffs; it must not quietly drop a feature. In one of our test projects, an edit request reads:' }],
+        code: { zh: '把 B 做得更高级、更有质感。保留现有品牌、书目与搜索、分类、收藏功能；只改 B，不要替我选定最终方案。', en: 'Make B more premium and refined. Keep the existing brand, the book list with search, categories and favorites; change only B, and do not pick the final version for me.' } },
+      { id: 'scope', heading: { zh: '3. 写清可以改哪里', en: '3. Say what may be changed' },
+        body: [{ zh: '上面那句里的“只改 B”就是范围。写明目标页面或路由，以及允许改的区域和文件。技能把这些记进任务简报，只在授权的范围里写入；读项目本身不等于获得了修改的许可。', en: '"Change only B" in that request is the scope. Name the target page or route and the regions and files that may change. The skill records these in its task brief and writes only inside them; reading the project does not grant permission to change it.' }],
+        link: { href: '/guides/compare-design-directions', label: { zh: '在现有项目里比较三个方向', en: 'Compare three directions in an existing project' } } },
+      { id: 'brand', heading: { zh: '4. 写清品牌约束，以及写在哪里', en: '4. State the brand constraints and where they live' },
+        body: [{ zh: '如果字体、颜色已经定了，说出来，并指出写在哪个文件里。我们的 Pulse 测试项目在 src/tokens.css 里注明品牌已锁定。反过来，项目里找不到设计 token，不代表可以换掉品牌；技能会把“没有检测到”和“允许替换”分开记。', en: 'If fonts and colors are settled, say so and point to the file that holds them. Our Pulse test project marks its brand as locked in src/tokens.css. The reverse does not hold: finding no design tokens in a project is not permission to replace the brand, and the skill records "none detected" separately from "may replace".' }] },
+      { id: 'adjectives', heading: { zh: '5. 把形容词换成能检查的东西', en: '5. Turn adjectives into things you can check' },
+        body: [{ zh: '“高级”“简洁”“有科技感”说的是印象，不是做法。AI 照字面理解，常常给出最便宜的版本：深色背景配金色，或者霓虹渐变。写需求时把词拆开，例如：', en: '"Premium", "clean" and "techy" name an impression, not a method. Read literally, they often produce the cheapest version: a dark background with gold, or neon gradients. Break the word down when you write the brief, for example:' }],
+        list: [
+          { zh: '高级：字号不超过 7 种，只用一个强调色，圆角最多 3 种、阴影最多 2 种，留白更多', en: 'Premium: no more than 7 type sizes, one accent color, at most 3 radii and 2 shadows, more space' },
+          { zh: '简洁：每屏元素更少、容器更少，只有一个主要操作', en: 'Clean: fewer elements and containers per screen, one primary action' },
+          { zh: '科技感：精确对齐和真实的产品数据，等宽字体只用于数据，不用霓虹渐变', en: 'Techy: precise alignment and real product data, monospace for data only, no neon gradients' },
+        ],
+        link: { href: '/docs/make-ai-ui-look-premium', label: { zh: '把“高级”拆成能数的东西', en: 'Turn "premium" into things you can count' } } },
+      { id: 'references', heading: { zh: '6. 给参考时写借鉴什么、避免什么', en: '6. With a reference, say what to borrow and what to avoid' },
+        body: [{ zh: '只贴一个链接，AI 不知道你看中的是结构、节奏还是配色。写明要借鉴什么、要避开什么，并说明来源只是参考材料，不复制它的文案、商标和素材。本站参考页的“生成参考指令”就是按这个格式写的：出处、核对日期、参考、避免、权限和未知项。', en: 'A bare link does not tell AI whether you like its structure, its rhythm or its colors. Say what to borrow and what to avoid, and that the source is reference material only, with no copying of its text, marks or assets. The "Create brief" button on this site’s reference pages writes exactly that: source, check date, use for, avoid, rights and unknowns.' }],
+        link: { href: '/', label: { zh: '浏览设计参考', en: 'Explore references' } } },
+      { id: 'acceptance', heading: { zh: '7. 写清怎么验收', en: '7. Say how it will be checked' },
+        body: [{ zh: '最后写几条做完以后能检查的标准，例如手机和桌面都能完成主要操作、对比度达标、不出现虚构的数据。也写出你还不知道、但可能影响结果的事。技能只追问会改变任务或范围的问题，最多两个；其余的先按项目里的证据推断，并标明是推断。', en: 'End with a few criteria you can check afterwards, such as the main action working on phone and desktop, passing contrast, and no invented data. Also name what you do not know yet but that could change the result. The skill only asks about missing facts that change the task or its scope, at most two questions; the rest it infers from the project and marks as inferred.' }],
+        link: { href: '/docs/check-ai-generated-ui-before-you-ship', label: { zh: '上线前怎么检查 AI 生成的界面', en: 'How to check AI-generated UI before you ship' } } },
+      { id: 'template', heading: { zh: '可以直接填的模板', en: 'A template to fill in' },
+        body: [{ zh: '把下面这段复制给 Agent，填上你的内容。没有把握的项写“不确定”，不要空着。', en: 'Copy this to your agent and fill it in. Write "not sure" instead of leaving a line empty.' }],
+        code: {
+          zh: '页面：<路由或文件>\n读者和场景：<谁、在什么情况下打开>\n要完成的事：<一件事>\n成功的时刻：<读者做到什么算成功>\n必须保留：<核心任务、数据、操作>\n可以改：<区域和文件；其余不动>\n品牌约束：<字体、颜色、写在哪个文件>\n想要的感觉：<形容词，以及它具体指什么>\n参考：<链接；借鉴什么；避免什么>\n验收：<做完怎么检查>\n还不知道：<可能影响结果的事>\n请先检查项目结构和设计系统，再做三个在取舍上不同的方向；说明每个方向优化什么、牺牲什么，给出有理由的推荐，但不要替我选定。',
+          en: 'Page: <route or file>\nReader and situation: <who, opening it when>\nThe one job: <one thing>\nSuccess moment: <what the reader does when it works>\nMust keep: <core tasks, data, actions>\nMay change: <regions and files; leave the rest>\nBrand constraints: <fonts, colors, and the file they are in>\nThe feel: <the adjective, and what it means here>\nReferences: <links; what to borrow; what to avoid>\nAcceptance: <how to check it when done>\nNot known yet: <anything that could change the result>\nInspect the project structure and design system first, then build three directions that differ in their tradeoffs; say what each optimizes and gives up, and recommend one with reasons, but do not pick for me.',
+        } },
+    ],
+  },
 ];
