@@ -201,7 +201,7 @@ test('draft English stays out of the English pages, hreflang and sitemap, and th
   assert.deepEqual(drafts, [...marked.filter(g => g.translations?.en?.status === 'draft').map(g => `/guides/${g.slug}`), '/d/pulse']);
   const legacy = guides.map(({ translations, ...guide }) => guide);
   assert.deepEqual(draftRoutes({ guides: legacy, entries }), [], 'legacy items without a status count as published');
-  assert.deepEqual(draftRoutes({ guides, entries }), ['/guides/undo-ai-design-changes', '/guides/git-or-snapshot-undo', '/guides/design-references-with-sources']);
+  assert.deepEqual(draftRoutes({ guides, entries }), ['/guides/undo-ai-design-changes', '/guides/git-or-snapshot-undo', '/guides/design-references-with-sources', '/guides/write-a-design-brief-for-ai']);
   const body = route => `<main><h1>${route}</h1></main>`, routes = [...guides.map(g => `/guides/${g.slug}`), '/d/pulse'];
   const english = Object.fromEntries(routes.map(r => [r, body(r)])), rendered = Object.fromEntries(guides.map(g => [`/guides/${g.slug}`, body(g.slug)]));
   const pages = renderSite(draftEntries, template, 'https://example.test', [], { guides: marked, rendered, english: withoutDrafts(english, drafts) });
