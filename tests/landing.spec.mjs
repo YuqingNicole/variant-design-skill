@@ -896,8 +896,11 @@ test('design videos sit under Inspiration, keep the full wordmark on phones and 
   // Design videos are design inspiration; the 视频 nav item is for creative videos only (2026-11-20).
   await expect(page.locator('.site-nav-links a[aria-current=page]')).toHaveText('灵感');
   await expect(page.locator('.insp-pills a[aria-current=page]')).toHaveText(new RegExp(`^动态设计\\s*${libraryCounts.by('design-motion')}$`));
-  const language = await page.locator('.site-language').evaluate(e => { const s = getComputedStyle(e); return [s.borderTopWidth, parseFloat(s.minHeight)]; });
-  expect(language[0]).toBe('0px'); expect(language[1]).toBeGreaterThanOrEqual(44);
+  // Read the switch after hydration and retry: a node that React replaces mid-read is detached, and a detached node's computed style is empty.
+  await hydrated(page);
+  const language = () => page.locator('.site-language').evaluate(e => { const s = getComputedStyle(e); return [s.borderTopWidth, parseFloat(s.minHeight)]; });
+  await expect.poll(async () => (await language())[0]).toBe('0px');
+  expect((await language())[1]).toBeGreaterThanOrEqual(44);
   for (const width of [320, 390]) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto('/zh');
