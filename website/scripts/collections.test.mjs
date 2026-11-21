@@ -16,7 +16,7 @@ const ids = [...Array(8)].map((_, i) => `r${i}`), rows = ids.map((id, i) => ({ i
 test('every collection filters on real facet values and has both languages', () => {
   const vocab = facetsModule.facetVocabulary;
   for (const c of collections) {
-    assert.ok(c.title.zh && c.title.en && c.intro.zh && c.intro.en, c.slug);
+    assert.ok(c.short.zh && c.short.en && c.title.zh && c.title.en && c.intro.zh && c.intro.en, c.slug);
     for (const [name, value] of Object.entries(c.where)) assert.ok(Object.hasOwn(vocab[name], value), `${c.slug}: ${name}=${value}`);
   }
   assert.equal(new Set(collections.map(c => c.slug)).size, collections.length);
