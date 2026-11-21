@@ -1,30 +1,35 @@
-.collection-crumbs{font-size:14px;color:var(--site-muted);margin-bottom:var(--space-3)}.collection-crumbs a{display:inline-flex;align-items:center;min-height:44px;text-underline-offset:4px}
-.collection-draft{border:1px dashed var(--site-line);border-radius:var(--radius-control);padding:var(--space-3) var(--space-4);font-size:14px;line-height:1.7;color:var(--site-muted);margin:0 0 var(--space-5)}
-.collection-cards,.collection-index{list-style:none;margin-block:0;padding-block:0 var(--space-7);display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--space-6) var(--space-4)}
-.collection-card,.collection-index-card{display:flex;flex-direction:column;gap:var(--space-2);height:100%;color:inherit;text-decoration:none;border-radius:var(--radius-card)}
-.collection-cover{display:block;aspect-ratio:16/10;overflow:hidden;border:1px solid var(--site-line);border-radius:var(--radius-panel);background:var(--site-card)}
-.collection-cover>*{width:100%;height:100%;max-height:none;margin:0;border:0;border-radius:0}.collection-cover :is(img,video){width:100%;height:100%;object-fit:cover}
-.collection-card-text{display:grid;gap:var(--space-1);padding-inline:2px}
-.collection-card b{font-size:16px;font-weight:600;line-height:1.4}.collection-card:hover b{text-decoration:underline;text-underline-offset:4px}
-.collection-card small,.collection-index-card small{font:12px/1.5 var(--font-mono);color:var(--site-muted)}
-.collection-focus,.collection-apply{font-size:14px;line-height:1.6;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
-.collection-focus{color:var(--site-ink);margin-top:var(--space-1)}.collection-apply{color:var(--site-muted)}.collection-apply em{font-style:normal;font-size:12px}
-.collection-index-card{border-top:1px solid var(--site-line);border-radius:0;padding-top:var(--space-4)}
-.collection-index-card b{font-family:var(--font-display);font-weight:500;font-size:22px;line-height:1.3}.collection-index-card:hover b{text-decoration:underline;text-underline-offset:4px}
-.collection-index-card span{font-size:14px;line-height:1.7;color:var(--site-muted);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+/* Collection pages read like a notes feed: channel tabs, then a staggered two-column (wider: three or four) feed of
+   cards with the cover on top, a two-line title and the source underneath. The covers keep their media's shape. */
+.collection-hero{padding-bottom:var(--space-4)}
+.collection-intro{max-width:680px;color:var(--site-muted);line-height:1.75;font-size:16px;margin:0}
+.collection-more{display:none}
+.collection-channels{position:sticky;top:0;z-index:5;background:var(--site-paper);border-bottom:1px solid var(--site-line);margin-bottom:var(--space-4)}
+.collection-channels>div{display:flex;gap:var(--space-5);overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain}.collection-channels>div::-webkit-scrollbar{display:none}
+.collection-channels a{flex:none;display:inline-flex;align-items:center;min-height:44px;font-size:15px;color:var(--site-muted);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent}
+.collection-channels a[aria-current=page]{color:var(--site-ink);font-weight:600;border-bottom-color:var(--site-ink)}
+.collection-draft{border:1px dashed var(--site-line);border-radius:var(--radius-control);padding:var(--space-2) var(--space-3);font-size:13px;line-height:1.6;color:var(--site-muted);margin:0 0 var(--space-4)}
+.collection-feed{list-style:none;margin-block:0;padding-block:0 var(--space-7);columns:4;column-gap:var(--space-4)}
+.collection-feed>li{break-inside:avoid;margin-bottom:var(--space-4)}
+.collection-card{display:flex;flex-direction:column;color:inherit;text-decoration:none;background:var(--site-card);border-radius:var(--radius-panel);overflow:hidden;box-shadow:0 1px 2px rgba(20,22,26,.06)}
+.collection-card:focus-visible{outline:2px solid var(--site-brand);outline-offset:3px}
+.collection-cover{display:block;overflow:hidden;background:var(--site-surface)}
+.collection-cover>*{width:100%;height:100%;max-height:none;aspect-ratio:auto;margin:0;border:0;border-radius:0}.collection-cover :is(img,video){width:100%;height:100%;object-fit:cover}
+.collection-title{padding:var(--space-2) var(--space-3) 0;font-size:14px;line-height:1.45;color:var(--site-ink);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.collection-title b{font-weight:600}
+.collection-foot{display:flex;align-items:center;gap:6px;padding:var(--space-2) var(--space-3) var(--space-3);font-size:12px;color:var(--site-muted);min-width:0}
+.collection-foot>span:not(.collection-avatar){overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.collection-foot em{margin-left:auto;flex:none;font-style:normal;font-size:12px;padding:0 6px;border-radius:var(--radius-pill);background:var(--site-surface)}
+.collection-avatar{flex:none;width:20px;height:20px;border-radius:50%;object-fit:cover;display:inline-grid;place-items:center;background:var(--site-surface-2);color:var(--site-ink);font:600 12px/1 var(--font-serif)}
 .collection-yours{border-top:1px solid var(--site-line);padding-block:var(--space-6) var(--space-7)}.collection-yours h2{font-size:26px;margin:0 0 var(--space-3)}.collection-yours p{color:var(--site-muted);line-height:1.75;max-width:640px}
 .collection-yours a{display:inline-flex;align-items:center;min-height:44px;padding:0 var(--space-5);border:1px solid var(--site-ink);border-radius:var(--radius-control);text-decoration:none;font-size:14px}
-:is(.collection-card,.collection-index-card):focus-visible{outline:2px solid var(--site-brand);outline-offset:4px}
-/* Phones: two columns of covers like the Inspiration grid; the second note line and the long intros give way. */
+@media(max-width:1100px){.collection-feed{columns:3}}
+/* Phones: compact header, the intro folds to two lines, two tight columns edge to edge. */
 @media(max-width:600px){
-  .collection-page .content-hero{padding-block:var(--space-5)}.collection-page .content-hero h1{font-size:30px;margin-bottom:var(--space-3)}
-  .collection-page .content-hero>p:last-child{font-size:15px;line-height:1.7}
-  .collection-draft{font-size:13px;padding:var(--space-2) var(--space-3)}
-  .collection-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-5) var(--space-3)}
-  .collection-cover{aspect-ratio:4/3;border-radius:var(--radius-card)}
-  .collection-card b{font-size:14px}.collection-card small{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .collection-focus{font-size:13px;line-height:1.5}.collection-apply{display:none}
-  .collection-index{grid-template-columns:1fr;gap:0;padding-bottom:var(--space-6)}.collection-index-card{padding-block:var(--space-4)}.collection-index-card b{font-size:20px}.collection-index-card span{-webkit-line-clamp:2}
+  .collection-page .collection-hero{padding-block:var(--space-4) var(--space-2)}.collection-page .collection-hero h1{font-size:24px;margin-bottom:var(--space-2)}
+  .collection-intro{font-size:14px;line-height:1.6;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}.collection-intro.is-open{display:block}
+  .collection-more{display:inline-flex;align-items:center;min-height:44px;padding:0;border:0;background:none;color:var(--site-ink);font-size:14px;text-decoration:underline;text-underline-offset:4px}
+  .collection-channels{margin-bottom:var(--space-2)}.collection-channels>div{gap:var(--space-4)}
+  .collection-page .collection-feed{columns:2;column-gap:6px;padding-inline:6px}.collection-feed>li{margin-bottom:6px}
+  .collection-card{border-radius:var(--radius-card)}
   .collection-yours{padding-block:var(--space-5) var(--space-6)}.collection-yours h2{font-size:22px}
 }
-@media(max-width:360px){.collection-cards{grid-template-columns:minmax(0,1fr)}}
