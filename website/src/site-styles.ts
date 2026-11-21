@@ -23,3 +23,4 @@ import "./atmosphere.css";
 import "./account.css";
 import "./connect.css";
 import "./connect-button.css";
+import "./collections.css";

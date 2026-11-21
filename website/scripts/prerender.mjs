@@ -194,7 +194,20 @@ export function listData(section, references, site, lang) {
   const en = lang === 'en', url = site + pathIn(`/browse/${section.id}`, lang), items = references.filter(r => sectionModule.sectionOf(r) === section.id);
   return { '@type': 'CollectionPage', name: section.title[lang], description: section.intro[lang], url, inLanguage: en ? 'en' : 'zh-CN', mainEntity: { '@type': 'ItemList', numberOfItems: items.length, itemListElement: items.map((r, i) => ({ '@type': 'ListItem', position: i + 1, url: site + pathIn(`/inspiration/${r.id}`, lang), name: r.name })) } };
 }
-export function renderSite(entries, template, site = defaultSite, references = [], { docs, version = '', guides = [], rendered = {}, english = {}, withdrawn = [], sections = [] } = {}) {
+// A collection page: where it sits (BreadcrumbList) and what it lists (CollectionPage with an ItemList of reference pages).
+export function collectionData(c, names, site, lang) {
+  const en = lang === 'en', url = site + pathIn(`/collections/${c.slug}`, lang);
+  return { '@graph': [
+    { '@type': 'BreadcrumbList', itemListElement: [[en ? 'Inspiration' : '灵感', site + pathIn('/', lang)], [en ? 'Design collections' : '设计合集', site + pathIn('/collections', lang)], [c.title[lang], url]].map(([name, item], i) => ({ '@type': 'ListItem', position: i + 1, name, item })) },
+    { '@type': 'CollectionPage', name: c.title[lang], description: c.intro[lang], url, inLanguage: en ? 'en' : 'zh-CN', isPartOf: { '@id': `${site}/#website` },
+      mainEntity: { '@type': 'ItemList', numberOfItems: c.items.length, itemListElement: c.items.map((id, i) => ({ '@type': 'ListItem', position: i + 1, url: site + pathIn(`/inspiration/${id}`, lang), name: names.get(id) ?? id })) } }] };
+}
+export function collectionIndexData(list, site, lang) {
+  const en = lang === 'en';
+  return { '@type': 'CollectionPage', name: en ? 'Design collections' : '设计合集', url: site + pathIn('/collections', lang), inLanguage: en ? 'en' : 'zh-CN',
+    mainEntity: { '@type': 'ItemList', numberOfItems: list.length, itemListElement: list.map((c, i) => ({ '@type': 'ListItem', position: i + 1, url: site + pathIn(`/collections/${c.slug}`, lang), name: c.title[lang] })) } };
+}
+export function renderSite(entries, template, site = defaultSite, references = [], { docs, version = '', guides = [], rendered = {}, english = {}, withdrawn = [], sections = [], collections = [] } = {}) {
   const sorted = order(entries), pages = new Map();
   const zhPage = options => page(template, { site, translated: !!english[options.route], ...options });
   const enPage = options => { if (english[options.route]) pages.set(enKey(options.route), page(template, { site, lang: 'en', translated: true, body: english[options.route], ...options })); };
@@ -216,6 +229,14 @@ export function renderSite(entries, template, site = defaultSite, references = [
   for (const r of references) pages.set(`/inspiration/${r.id}`, zhPage({ route: `/inspiration/${r.id}`, title: sectionModule.detailTitle(r, 'zh'), description: `${r.name}：${r.focus.zh}。用在${r.application.zh}。`, body: rendered[`/inspiration/${r.id}`]??referenceBody(r, references, sections), data: referenceData(r, site, 'zh', sections) }));
   for (const [route, [title, description]] of Object.entries(staticPages)) pages.set(route, zhPage({ route, title, description, body: rendered[route] ?? '', ...(route === '/docs/install' && docs ? { body: docsBody(docs), data: docsData(docs, site) } : {}), ...(route === '/skills' ? { data: skillData(site, version) } : {}) }));
   for (const g of guides) pages.set(guideRoute(g), zhPage({ route: guideRoute(g), type: 'article', title: `${g.title.zh} — Variant Design`, description: g.answer.zh, data: guideData(g, site), body: rendered[guideRoute(g)] ?? '' }));
+  // Collections: only what this build publishes is passed in; one that is not ready yet (a preview build) is noindex.
+  const names = new Map(references.map(r => [r.id, r.name])), anyReady = collections.some(c => c.ready);
+  const collectionPage = (lang, route, title, description, data, ready) => { const options = { site, route, lang, title, description, data, translated: !!english[route], body: (lang === 'en' ? english : rendered)[route] ?? '' };
+    if (lang === 'en' && !english[route]) return; const html = page(template, options); pages.set(lang === 'en' ? enKey(route) : route, ready ? html : withNoindex(html)); };
+  if (collections.length) for (const lang of ['zh', 'en']) {
+    collectionPage(lang, '/collections', lang === 'en' ? 'Design collections — Variant Design' : '设计合集 — Variant Design', lang === 'en' ? 'References grouped by industry, page pattern, interaction technique and visual style, each with its source and our notes.' : '按行业、页面模式、交互技法和视觉风格整理的参考合集，每一条都附出处和我们的笔记。', collectionIndexData(collections, site, lang), anyReady);
+    for (const c of collections) collectionPage(lang, `/collections/${c.slug}`, `${c.title[lang]} — Variant Design`, c.intro[lang], collectionData(c, names, site, lang), c.ready);
+  }
 
   // English exists only where it rendered in full; a page without it stays Chinese-only and unlisted in hreflang.
   const enLibrary = 'Variant Design direction library', enCategories = { landing: 'Landing pages', product: 'Product UI', data: 'Data', brand: 'Brand', component: 'Components' };
@@ -431,7 +452,11 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   // The untouched shell stays available as app.html: the fallback for routes without their own page.
   const shell = path.join(dist, 'app.html');
   if (!fs.existsSync(shell)) fs.copyFileSync(path.join(dist, 'index.html'), shell);
-  const template = fs.readFileSync(shell, 'utf8').replace(`    ${noindexTag}\n`, ''), pages = renderSite(entries, template, site, references, { docs, version, guides, rendered, english: withoutDrafts(english, drafts), withdrawn, sections: sectionPages(references, englishReferences) });
+  // Production publishes only collections with enough reviewed references; previews build them all, noindex (src/collections.ts).
+  const { visibleCollections } = await importTs(path.join(here, '../src/collections.ts')), { readFacets } = await import('./reference-facets.mjs');
+  const collections = visibleCollections(readFacets(), references, process.env.VERCEL_ENV !== 'production');
+  console.log(`Collections: ${collections.filter(c => c.ready).length} public, ${collections.filter(c => !c.ready).length} preview-only (noindex).`);
+  const template = fs.readFileSync(shell, 'utf8').replace(`    ${noindexTag}\n`, ''), pages = renderSite(entries, template, site, references, { docs, version, guides, rendered, english: withoutDrafts(english, drafts), withdrawn, sections: sectionPages(references, englishReferences), collections });
   if (hideCases) withoutCases(pages);
   for (const [route, html] of pages) {
     const file = route === '/' ? path.join(dist, 'index.html') : path.join(dist, route.slice(1), 'index.html');

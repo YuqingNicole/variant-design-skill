@@ -27,6 +27,7 @@ const page: Promise<ReactNode> = route === "/lab/canvas" ? import("./LandingCanv
   // The inspiration pages wait for the records their first render shows (reference-library.ts), so the prerendered cards are never replaced by a gap.
   : route.startsWith("/browse/") ? import("./InspirationPage").then(m => m.prepare(route).then(() => <m.InspirationPage section={route.slice(8)}/>))
   : route === "/" || route.startsWith("/inspiration/") ? import("./InspirationPage").then(m => m.prepare(route).then(() => <m.InspirationPage detail={route === "/" ? undefined : route.slice(13)}/>))
+  : route === "/collections" || route.startsWith("/collections/") ? import("./CollectionPage").then(m => { const slug = route.slice(13); return m.prepare(slug).then(() => <m.CollectionPage slug={slug}/>); })
   : route === "/changelog" ? import("./ChangelogPage").then(m => <m.ChangelogPage/>)
   : route === "/docs" || route.startsWith("/docs/") && route !== "/docs/install" ? import("./GuidesPage").then(m => <m.GuidesPage base="/docs" slug={route === "/docs" ? undefined : route.slice(6)}/>)
   : route === "/guides" || route.startsWith("/guides/") ? import("./GuidesPage").then(m => <m.GuidesPage slug={route === "/guides" ? undefined : route.slice(8)}/>)
