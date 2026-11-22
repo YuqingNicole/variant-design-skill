@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-22T11:56:27.931Z",
+  "updatedAt": "2026-11-22T13:05:15.162Z",
   "source": "Ego Lite on X search",
   "reviewPolicy": "Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request that merges itself once CI passes; nobody reviews entries one by one.",
   "candidates": [
@@ -2631,6 +2631,19 @@
       "status": "rejected",
       "reviewedAt": "2026-11-12",
       "reason": "Reposted video; the original author could not be confirmed"
+    },
+    {
+      "id": "2124169434998939918",
+      "url": "https://x.com/duckwhocodes/status/2124169434998939918",
+      "handle": "duckwhocodes",
+      "author": "Dakshie",
+      "publishedAt": "2026-11-21",
+      "likes": 2869,
+      "capturedAt": "2026-11-22T13:05:15.162Z",
+      "query": "maintainer link (2026-11-22)",
+      "status": "published",
+      "entry": "x-duckwhocodes-939918",
+      "reviewedAt": "2026-11-22"
     }
   ]
 }

@@ -7850,6 +7850,38 @@ export const inspirationItems = [
     "verification": "official-public-source",
     "mobile": "not-tested",
     "via": "https://onepagelove.com/justin-schuler"
+  },
+  {
+    "id": "x-duckwhocodes-939918",
+    "name": "Pop-up book of rooms",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/duckwhocodes/status/2124169434998939918",
+    "source": "link-only",
+    "focus": {
+      "zh": "一本立体书式的房间浏览：点左右箭头翻页，纸页沿折线展开成等距视角的房间（卧室、浴室、厨房、阳台），蓝色手绘描线加淡彩填色，底部用手写体标出房间名；翻到下一间时，上一间折回纸面，下一间从纸里立起来。",
+      "en": "A pop-up book of rooms: the left and right arrows turn the page, and the paper unfolds along its creases into an isometric room (bedroom, bathroom, kitchen, balcony) drawn in blue hand-drawn lines with soft colour fills and labelled in handwriting below; moving on folds one room flat as the next rises out of the page."
+    },
+    "application": {
+      "zh": "用折叠和展开做分步浏览或空间介绍的转场",
+      "en": "Fold-and-unfold transitions for step-by-step browsing or presenting spaces"
+    },
+    "publisher": "Dakshie (@duckwhocodes)",
+    "kind": "social-post",
+    "designer": "Dakshie",
+    "checkedAt": "2026-11-22",
+    "addedAt": "2026-11-22T13:05:15.162Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2124169434998939918",
+      "author": "Dakshie",
+      "handle": "duckwhocodes",
+      "date": "2026-11-21",
+      "lang": "en",
+      "text": "playing around with a fun idea https://t.co/KKAesLo1FO",
+      "hasMedia": true
+    }
   }
 ];
 
