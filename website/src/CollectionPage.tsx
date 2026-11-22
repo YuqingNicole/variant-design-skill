@@ -1,14 +1,14 @@
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { t, type Localized } from './i18n/localized';
 import { locales } from './i18n/locales';
 import { useLocale } from './i18n/LocaleProvider';
 import { localePath } from './i18n/locale-route';
-import { showDrafts } from './i18n/translations';
+import { isDraft, showDrafts, type Translations } from './i18n/translations';
 import { references, referencesFor, referenceOf, mediaOf, ensure, subscribe, snapshot } from './reference-library';
 import { ReferenceCover } from './InspirationPage';
 import { proxied } from './image-proxy';
-import { visibleCollections, collectionBySlug, collectionState, minimumReviewed } from './collections';
+import { visibleCollections, collectionBySlug, collectionState, minimumReviewed, indexTranslations } from './collections';
 import facetData from './reference-facets.json';
 import type { ReferenceFacets } from './reference-facets';
 import './content-pages.css';
@@ -45,16 +45,21 @@ function Avatar({ id, label }: { id: string; label: string }) {
 export function CollectionPage({ slug = '' }: { slug?: string }) {
   const language = useLocale(); useSyncExternalStore(subscribe, snapshot, snapshot);
   const l = (k: keyof typeof m) => t(m[k], language), rows = referencesFor(language), [expanded, setExpanded] = useState(false);
+  // Collection copy whose English is an unreviewed draft falls back to Chinese where drafts are hidden (production), as the
+  // prerender does for those addresses; previews show the draft English.
+  const copyIn = (item: { translations?: Translations }) => showDrafts || !isDraft(item, language) ? language : 'zh';
+  const copy = (item: { translations?: Translations }, value: Localized) => { const at = copyIn(item); return at === language ? t(value, at) : <span lang="zh-CN">{t(value, at)}</span>; };
+  const indexItem = { translations: indexTranslations };
   const list = visibleCollections(facets, rows, showDrafts), current = list.find(c => c.slug === slug);
-  const title = current ? `${t(current.title, language)} — Variant Design` : l('indexTitle');
+  const title = current ? `${t(current.title, copyIn(current))} — Variant Design` : t(m.indexTitle, copyIn(indexItem));
   useEffect(() => { document.title = title; document.documentElement.lang = locales[language].htmlLang; }, [language, title]);
   // Channels: every collection one tap away, the current one marked, scrolling sideways on a phone.
   const channels = <nav className="collection-channels" aria-label={l('index')}><div className="site-shell"><a href={localePath('/collections', language)} aria-current={current ? undefined : 'page'}>{l('all')}</a>
-    {list.map(c => <a key={c.slug} href={localePath(`/collections/${c.slug}`, language)} aria-current={c.slug === slug ? 'page' : undefined}>{t(c.short, language)}</a>)}</div></nav>;
-  const intro = (text: string) => <><p className={`collection-intro${expanded ? ' is-open' : ''}`}>{text}</p><button type="button" className="collection-more" aria-expanded={expanded} onClick={() => setExpanded(v => !v)}>{l(expanded ? 'less' : 'more')}</button></>;
+    {list.map(c => <a key={c.slug} href={localePath(`/collections/${c.slug}`, language)} aria-current={c.slug === slug ? 'page' : undefined}>{copy(c, c.short)}</a>)}</div></nav>;
+  const intro = (text: ReactNode) => <><p className={`collection-intro${expanded ? ' is-open' : ''}`}>{text}</p><button type="button" className="collection-more" aria-expanded={expanded} onClick={() => setExpanded(v => !v)}>{l(expanded ? 'less' : 'more')}</button></>;
   return <main className="content-page collection-page"><SiteHeader language={language}/>
     {current ? <>
-      <header className="content-hero site-shell collection-hero"><h1>{t(current.title, language)}</h1>{intro(t(current.intro, language))}</header>
+      <header className="content-hero site-shell collection-hero"><h1>{copy(current, current.title)}</h1>{intro(copy(current, current.intro))}</header>
       {channels}
       {!current.ready && <div className="site-shell"><p className="collection-draft" role="note">{l('draft')} {t(reviewedCount, language)(current.reviewed)}</p></div>}
       <ul className="site-shell collection-feed">{current.items.map(id => { const r = referenceOf(id); if (!r) return null; const source = sourceOf(r);
@@ -65,11 +70,11 @@ export function CollectionPage({ slug = '' }: { slug?: string }) {
           <span className="collection-foot"><Avatar id={id} label={source}/><span>{source}</span>{facets[id]?.status === 'draft' && <em>{l('draftTag')}</em>}</span></a></li>; })}</ul>
       <section className="site-shell collection-yours"><h2>{l('yours')}</h2><p>{l('yoursNote')}</p><a href={localePath('/docs/install', language)}>{l('install')}</a></section>
     </> : <>
-      <header className="content-hero site-shell collection-hero"><h1>{l('index')}</h1><p className="collection-intro is-open">{l('indexIntro')}</p></header>
+      <header className="content-hero site-shell collection-hero"><h1>{copy(indexItem, m.index)}</h1><p className="collection-intro is-open">{copy(indexItem, m.indexIntro)}</p></header>
       {list.length ? <>{channels}<ul className="site-shell collection-feed">{list.map(c => { const first = referenceOf(c.items[0] ?? '');
         return <li key={c.slug}><a className="collection-card" href={localePath(`/collections/${c.slug}`, language)}>
           {first && <span className="collection-cover" style={{ aspectRatio: coverRatio(first.id) }}><ReferenceCover item={first} locale={language}/></span>}
-          <span className="collection-title"><b>{t(c.title, language)}</b></span>
+          <span className="collection-title"><b>{copy(c, c.title)}</b></span>
           <span className="collection-foot"><span>{t(count, language)(c.items.length)}</span>{!c.ready && <em>{l('draftTag')}</em>}</span></a></li>; })}</ul></>
         : <p className="site-shell">{l('empty')}</p>}
     </>}

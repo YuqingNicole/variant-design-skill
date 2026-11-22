@@ -9,9 +9,15 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const { collections, visibleCollections, collectionState, minimumReviewed } = await importTs(path.join(here, '../src/collections.ts'));
 const template = '<!doctype html><html><head>\n<meta name="description" content="old" />\n<title>Old</title>\n</head><body><div id="root"></div></body></html>';
 const dark = collections.find(c => c.slug === 'dark-websites');
-const facet = (status, over = {}) => ({ status, ...(status === 'reviewed' ? { reviewedAt: '2026-11-21' } : {}), industry: null, medium: 'website', pageTypes: [], patterns: [], components: [], techniques: [], styles: ['dark'], ...over });
+const facet = (status, over = {}) => ({ status, ...(status === 'reviewed' ? { reviewedAt: '2026-11-21', reviewedBy: 'agent' } : {}), industry: null, medium: 'website', pageTypes: [], patterns: [], components: [], techniques: [], styles: ['dark'], ...over });
 const facets = n => Object.fromEntries([...Array(8)].map((_, i) => [`r${i}`, facet(i < n ? 'reviewed' : 'draft', i === 7 ? { medium: 'poster' } : {})]));
 const ids = [...Array(8)].map((_, i) => `r${i}`), rows = ids.map((id, i) => ({ id, category: 'landing', tag: 'SaaS', kind: i === 6 ? 'social-post' : 'official-site' }));
+
+test('unreviewed English collection pages are listed as drafts for production', async () => {
+  const { englishDraftRoutes } = await importTs(path.join(here, '../src/collections.ts'));
+  assert.deepEqual(englishDraftRoutes([]), []);
+  assert.deepEqual(englishDraftRoutes([dark, { slug: 'x', translations: { en: { status: 'complete' } } }]), ['/collections', '/collections/dark-websites']);
+});
 
 test('every collection filters on real facet values and has both languages', () => {
   const vocab = facetsModule.facetVocabulary;
