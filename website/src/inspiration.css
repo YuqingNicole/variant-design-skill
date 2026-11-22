@@ -196,25 +196,17 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .inspiration-page .insp-pills a[aria-current=page]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}
 .inspiration-page :is(.insp-bar select,.insp-search){background:var(--fill-1);border-color:var(--hair)}
 .inspiration-page .inspiration-count{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-/* The feed is a horizontal wall three cards high, newest first down each column: image first, name and note under it, never
-   overlaid. The card width follows the viewport height so the three rows end above the fold on a 1080px screen and grow to
-   360px on taller ones; it never drops below 220px, so on a 900px laptop the third row runs under the fold. Phones keep one row. */
-.inspiration-page .inspiration-grid.insp-feed{grid-template-columns:none;grid-template-rows:repeat(3,auto);grid-auto-flow:column;grid-auto-columns:clamp(220px,(100svh - 560px) / 2.25,360px);gap:12px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:32px;padding:4px 32px 8px;margin-inline:-32px;scrollbar-width:thin}
-.inspiration-page .insp-feed>.insp-card{scroll-snap-align:start;background:var(--card-g);border:1px solid var(--hair);border-radius:16px;padding:8px 8px 10px}
+/* The feed is a vertical grid, newest first along each row: image first, name and note under it, never overlaid. Cards are at
+   least 220px wide and fill the row; scrolling down loads the next page (maintainer, 2026-11-22: it replaced the three-row
+   sideways wall, since scrolling down is what visitors expect). Phones get two columns further down. */
+.inspiration-page .inspiration-grid.insp-feed{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding:4px 0 8px}
+.inspiration-page .insp-feed>.insp-card{background:var(--card-g);border:1px solid var(--hair);border-radius:16px;padding:8px 8px 10px}
 .inspiration-page .insp-feed .insp-card-open{aspect-ratio:auto;overflow:visible;background:none}
 .inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){background:var(--site-surface)}
 .inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){aspect-ratio:4/3;height:auto;border-radius:3px;overflow:hidden}
 .inspiration-page .insp-feed .insp-card-meta{position:static;opacity:1;padding:10px 80px 0 8px;background:none;min-height:44px}
 .inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){top:auto;bottom:12px;right:12px}
 .inspiration-page .insp-feed .insp-card-out{right:46px}
-.insp-controls{display:flex;align-items:center;justify-content:space-between;padding-top:18px;border-top:1px solid var(--hair)}
-.insp-progress{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--site-muted);font-variant-numeric:tabular-nums}
-.insp-progress i{display:block;width:160px;height:2px;background:var(--hair);position:relative}
-.insp-progress i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--p,0%);background:var(--site-ink)}
-.insp-arrows{display:flex;gap:8px}
-.insp-arrows button{display:grid;place-items:center;width:42px;height:42px;padding:0;border-radius:50%;border:1px solid var(--hair);background:var(--fill-1);color:var(--site-ink);cursor:pointer}
-.insp-arrows button:last-child:not(:disabled){background:var(--site-ink);color:var(--site-paper);border-color:var(--site-ink)}
-.insp-arrows button:disabled{opacity:.4;cursor:default}
 /* Detail: the study and apply notes read as sentences, the labels as small capitals. */
 .inspiration-page .insp-detail :is(h1,h2){font-size:clamp(36px,4vw,56px);font-weight:400;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
 .inspiration-page :is(.insp-detail-label,.insp-detail dt){letter-spacing:.1em}
@@ -236,7 +228,6 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
  .inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){width:44px;height:44px;top:auto;bottom:6px}
  .inspiration-page .insp-feed .insp-card-meta{padding-right:108px}
  .inspiration-page .insp-feed .insp-card-save{right:6px}.inspiration-page .insp-feed .insp-card-out{right:56px;left:auto}
- .insp-progress i{width:80px}.insp-arrows button{width:44px;height:44px}
 }
 @media(prefers-reduced-motion:reduce){.inspiration-page .inspiration-grid.insp-feed{scroll-behavior:auto}}
 /* The frosted panel carries the footer's links; the green call to action would repeat the closing section above it. */
@@ -268,7 +259,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
  .inspiration-page .insp-feed .insp-card-meta small{grid-column:2;grid-row:2;line-height:20px}
  .inspiration-page .insp-feed .insp-card-meta:not(:has(.insp-vcard-avatar)) small{grid-column:1/-1}
  .inspiration-page .insp-feed :is(.insp-card-save){right:-4px;bottom:-4px;width:44px;height:44px;background:none;border:0}
- .inspiration-page .insp-feed .insp-card-out,.insp-controls{display:none}
+ .inspiration-page .insp-feed .insp-card-out{display:none}
  .insp-more{display:flex;justify-content:center;padding:8px 0 16px}
  /* Header: the title and the rights notice stay; the long intro and counts leave the first screen. */
  .inspiration-page .insp-title h1{font-size:30px}
