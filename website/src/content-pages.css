@@ -77,3 +77,6 @@
 @media(hover:hover){.docs-hub :is(.docs-card,.docs-answers,.docs-changelog):hover{border-color:var(--site-brand);background:var(--site-card)}}
 @media(max-width:800px){.docs-hub{grid-template-columns:minmax(0,1fr)}}
 .docs-pitch{max-width:680px;margin:0 0 18px}.docs-pitch p{margin:0;color:var(--site-ink);font-size:20px;line-height:1.55}.docs-pitch p+p{margin-top:10px;font-size:16px}@media(max-width:600px){.docs-pitch p{font-size:18px}}
+
+.guide-figure{margin:24px 0 32px;max-width:100%}.guide-figure img{display:block;width:100%;height:auto;border:1px solid var(--site-line);border-radius:var(--radius-card);background:var(--site-surface)}.guide-figure figcaption{margin-top:8px;font-size:13px;line-height:1.6;color:var(--site-muted)}
+.guide-table{overflow-x:auto;margin:20px 0 28px}.guide-table table{border-collapse:collapse;min-width:100%;font-size:14px;line-height:1.6}.guide-table :is(th,td){text-align:left;vertical-align:top;padding:10px 14px 10px 0;border-bottom:1px solid var(--site-line)}.guide-table thead th{font-size:12px;color:var(--site-muted);font-weight:500}.guide-table tbody th{font-weight:600;white-space:nowrap}

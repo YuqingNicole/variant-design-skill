@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries, toCard } from './content.mjs';
@@ -138,7 +139,7 @@ test('guides get their own pages, are listed for search and read in both languag
   const guides = [...answers, ...docsArticles];
   // The Codex article's English has not been reviewed, so it is the one article marked draft.
   assert.ok(docsArticles.length >= 5 && docsArticles.every(g => g.base === '/docs'));
-  assert.deepEqual(docsArticles.filter(g => g.translations).map(g => [g.slug, g.translations]), [['frontend-design-in-codex', { en: { status: 'draft' } }], ['design-system-after-pick-lessons', { en: { status: 'draft' } }], ['why-ai-design-directions-look-alike', { en: { status: 'draft' } }], ['make-ai-ui-look-premium', { en: { status: 'draft' } }], ['check-a-design-reference-is-still-true', { en: { status: 'draft' } }]]);
+  assert.deepEqual(docsArticles.filter(g => g.translations).map(g => [g.slug, g.translations]), [['frontend-design-in-codex', { en: { status: 'draft' } }], ['design-system-after-pick-lessons', { en: { status: 'draft' } }], ['why-ai-design-directions-look-alike', { en: { status: 'draft' } }], ['make-ai-ui-look-premium', { en: { status: 'draft' } }], ['check-a-design-reference-is-still-true', { en: { status: 'draft' } }], ['pricing-page-three-directions-claude-code', { en: { status: 'draft' } }]]);
   const rendered = Object.fromEntries(guides.map(g => [guideRoute(g), `<main><h1>${g.slug}</h1></main>`]));
   const pages = renderSite(entries, template, 'https://example.test', [], { guides, rendered });
   const map = sitemap(indexableRoutes(pages), 'https://example.test'), docs = await importTs(new URL('../src/docs-content.ts', import.meta.url).pathname), text = llms(entries, docs, 'https://example.test', [], guides);
@@ -149,7 +150,9 @@ test('guides get their own pages, are listed for search and read in both languag
     assert.ok(html.includes(`<link rel="canonical" href="https://example.test/zh${route}">`) && html.includes(`"url":"https://example.test/zh${route}"`), route);
     const ids = g.sections.map(s => s.id);
     assert.equal(new Set(ids).size, ids.length);
-    for (const value of [g.title, g.answer, ...g.sections.flatMap(s => [s.heading, ...s.body, ...(s.list ?? []), ...(s.code ? [s.code] : [])])]) assert.ok(value.zh && value.en, g.slug);
+    for (const value of [g.title, g.answer, ...g.sections.flatMap(s => [s.heading, ...s.body, ...(s.list ?? []), ...(s.code ? [s.code] : []), ...(s.figures ?? []).flatMap(f => [f.alt, ...(f.caption ? [f.caption] : [])]), ...(s.table ? [...s.table.head, ...s.table.rows.flat()] : [])])]) assert.ok(value.zh && value.en, g.slug);
+    // Figures and share cards are our own files under public/; a missing one would ship a broken image.
+    for (const f of [...(g.image ? [g.image] : []), ...g.sections.flatMap(s => s.figures ?? [])]) assert.ok(fs.existsSync(new URL(`../public${f.src}`, import.meta.url)), f.src);
     for (const s of g.sections) if (s.link && !s.link.href.startsWith('http')) assert.ok(pages.has(s.link.href) || ['/docs', '/docs/install', '/inspiration'].includes(s.link.href) || /^\/(guides|docs)\//.test(s.link.href) && pages.has(s.link.href) , s.link.href);
   }
 });

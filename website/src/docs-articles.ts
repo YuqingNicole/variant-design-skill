@@ -2,7 +2,7 @@
 // Plain data only: the prerender imports this file without a TS loader for JSX.
 // Every claim here must trace to a file in this repository (a reference, a script, or a dated record in docs/research/ or CHANGELOG.md).
 // The English of the first four was reviewed against the repository files on 2026-11-10, so they ship in both languages.
-// The English of the Codex article and of the lessons, premium and recheck articles is unreviewed and marked draft: production leaves that English page out until someone reviews it.
+// The English of the Codex article, of the lessons, premium and recheck articles and of the pricing-page run is unreviewed and marked draft: production leaves that English page out until someone reviews it.
 import type { Guide } from './guides-content';
 import { installCommand, prompts, repository } from './docs-content';
 
@@ -432,6 +432,112 @@ export const docsArticles: Guide[] = [
         body: [{ zh: '核对日期等于“这条笔记的每一句我们都对照过”。只对上一半，就保留旧日期并写明哪一半没看；否则日期会比实际的把握更新。', en: 'A check date means we compared every sentence of the note. If only half was compared, keep the old date and say which half was not read; otherwise the date would be fresher than our confidence.' }] },
       { id: 'limits', heading: { zh: '6. 这些核对的局限', en: '6. The limits of these checks' },
         body: [{ zh: '结论是一个人对首屏和标题结构的判断，没有第二个人复核；只看了桌面首屏和标题，没有逐屏读全文，没看手机，也没测交互、速度和无障碍；页面随时会改版。核对不改变授权状态，也不代表用户能用这些参考完成任务。', en: 'The findings are one person’s reading of the first screen and the headings, with no second reviewer. We looked at the desktop first screen and the headings, did not read every screen, did not look at a phone and did not test interaction, speed or accessibility. Pages can change at any time. A check does not change the permission status and does not show that users can finish a task with these references.' }] },
+    ],
+  },
+  {
+    // A real run written up shot by shot (the ChatCut breakdown format): every number comes from the dated record linked below.
+    slug: 'pricing-page-three-directions-claude-code',
+    base: '/docs',
+    publishedAt: '2026-11-22',
+    translations: { en: { status: 'draft' } },
+    title: { zh: '用 Claude Code 把一个定价页做成三个方向：每条指令、每个方向和每处问题', en: 'We redesigned a pricing page three ways with Claude Code: every prompt, direction and fix' },
+    answer: {
+      zh: '我们在一个品牌锁定的 Next.js 定价页上真实跑了一次 variant-design 技能：一条中文指令生成 A/B/C 三个方向，再用一句 pick B 选定。两轮共 $3.56、12 分钟，20 项自动检查通过 19 项。下面是原样的指令、三个方向的截图、各自做对和没做好的地方，以及 agent 自己发现但没擅自改的问题。',
+      en: 'We ran the variant-design skill for real on a brand-locked Next.js pricing page: one prompt produced three directions, A/B/C, and one more line, pick B, chose one. Two turns cost $3.56 and 12 minutes, and 19 of 20 automatic checks passed. Below are the exact prompts, screenshots of the three directions, what each got right and wrong, and the problems the agent found but did not fix on its own.',
+    },
+    image: { src: '/docs/ledger-pricing-run/variant-C.jpg', width: 1280, height: 1271, alt: { zh: '方向 C：左侧三个方案列出年度总额，右侧时间线写明试用和扣款时点', en: 'Direction C: three plans with yearly totals on the left, a timeline of the trial and charges on the right' } },
+    sections: [
+      { id: 'takeaways', heading: { zh: '要点', en: 'Key takeaways' },
+        body: [{ zh: '一次两轮的真实运行，项目和指令都在仓库里，可以原样重跑。', en: 'One real two-turn run. The project and the prompts are in the repository, so you can run it again as is.' }],
+        list: [
+          { zh: '三个方向读的是同一份价格数据，品牌字体、颜色和圆角一个没变，差别全在结构：A 先问人数，B 并排比功能，C 先讲清扣款。', en: 'All three directions read the same price data and keep the brand fonts, colours and radius. They differ only in structure: A asks for team size first, B compares features side by side, C explains the charges first.' },
+          { zh: 'agent 推荐 C，但写明“这是假设，没有转化数据支持”，并说清什么情况下该选 A 或 B；它没有替我们选。', en: 'The agent recommended C but wrote that this was an assumption without conversion data, and said when A or B would be the better choice. It did not pick for us.' },
+          { zh: '它发现了原页面的一个金额问题：年付时 Solo 显示 $10/月，年度总额却是 $115。因为结账页也在用这份数据，它没改，留给我们决定。', en: 'It found a money problem in the original page: on yearly billing Solo shows $10 a month but $115 a year. Because checkout uses the same data, it left it for us to decide.' },
+          { zh: '没通过的一项是选定后起草的设计系统：6 个组件 token 指向了不存在的别名。', en: 'The one failed check was in the design system drafted after the pick: six component tokens point at aliases that do not exist.' },
+          { zh: '两轮花费 $1.96 + $1.60，用时 6 分 42 秒 + 5 分 32 秒。', en: 'The two turns cost $1.96 and $1.60 and took 6 min 42 s and 5 min 32 s.' },
+        ] },
+      { id: 'project', heading: { zh: '起点：一个只有骨架的定价页', en: 'The starting point: a bare pricing page' },
+        body: [
+          { zh: '项目是仓库里的 ledger 评测项目：Next.js 15 的 /pricing，三档方案 Solo、Studio、Firm，年付 / 月付切换（默认年付、优惠 20%），USD / EUR / GBP 切换，三条常见问题。方案数据来自 components/plans.ts，结账页和账单设置也在用；货币来自全站共用的上下文。', en: 'The project is the ledger eval project in the repository: a Next.js 15 /pricing page with three plans, Solo, Studio and Firm, a yearly/monthly switch (yearly by default, 20% off), a USD/EUR/GBP switch and three FAQs. Plan data comes from components/plans.ts, which checkout and billing settings also use; the currency comes from a site-wide context.' },
+          { zh: '品牌锁定在 app/globals.css：Source Sans 3 和 Source Serif 4，四个颜色，6px 圆角。注释写明“字体和颜色由品牌规范决定，间距和布局可以改”。', en: 'The brand is locked in app/globals.css: Source Sans 3 and Source Serif 4, four colours and a 6px radius. A comment says fonts and colours come from the brand guidelines, while spacing and layout may change.' },
+        ],
+        figures: [{ src: '/docs/ledger-pricing-run/before.jpg', width: 1280, height: 620, alt: { zh: '原来的定价页：标题、复选框和下拉框，三列方案文字和链接', en: 'The original pricing page: a heading, a checkbox and a select, three columns of plan text and links' }, caption: { zh: '运行前的 /pricing（next dev，1280px）。年付时只显示折算后的月价，不写一年实际扣多少。', en: 'The /pricing page before the run (next dev, 1280px). On yearly billing it shows only the monthly equivalent, never what is charged per year.' } }] },
+      { id: 'prompt', heading: { zh: '指令：原样一条', en: 'The prompt, word for word' },
+        body: [
+          { zh: '首轮只发这一条（评测运行另附了一句“无人值守、不要启动常驻服务器”的说明）。你在自己的项目里可以原样复制：', en: 'The first turn sent only this (the eval run adds a note that it is unattended and must not start a long-running server). You can copy it into your own project as is:' },
+        ],
+        code: { zh: '使用完整 Variant Design 技能。在当前项目中先检查页面结构和设计系统，再生成保留核心任务的 A/B/C 三个设计方向。已有品牌保持字体与 tokens；没有品牌约束时探索三种鲜明风格。打开三版预览，说明优化、取舍与适用场景，并给出有理由的推荐，但先不要替我选定最终方案。', en: 'Use the full Variant Design skill. First inspect the page structure and design system in this project, then generate three design directions, A/B/C, that keep the core task. Keep the fonts and tokens of an existing brand; with no brand constraint, explore three distinct styles. Open the three previews, explain what each optimizes, its tradeoff and where it fits, and give a reasoned recommendation, but do not pick the final one for me yet.' } },
+      { id: 'plan', heading: { zh: '它先写下任务，再动手', en: 'It wrote down the task before designing' },
+        body: [
+          { zh: '读完页面和数据，agent 先写了任务契约：主要任务是“小型工作室负责人在试用前比较三个方案，选定后进入 30 天试用注册”，成功标准是“访客能说出所选方案每次实际扣多少、何时开始扣”。取舍定为清晰优先于说服，不可让步的是：不隐藏年付总额、不改价格和链接、不新增项目里没有的承诺。', en: 'After reading the page and the data, the agent wrote a task contract first: the main job is for a small studio owner to compare the three plans before a trial and then start the 30-day trial; success means the visitor can say how much the chosen plan charges and when. It chose clarity over persuasion, with three non-negotiables: never hide the yearly total, never change prices or links, never add promises the project does not make.' },
+          { zh: '三个方向的分工如下，每一格都是它写进项目上下文的原话：', en: 'Here is how the three directions divide the work, each cell in the agent’s own words from the project context:' },
+        ],
+        table: { head: [{ zh: '方向', en: 'Direction' }, { zh: '优化', en: 'Optimizes' }, { zh: '放弃', en: 'Gives up' }, { zh: '适合', en: 'Best for' }], rows: [
+          [{ zh: 'A 按人数推荐', en: 'A Team size' }, { zh: '只需知道团队人数就看到合适的方案和实际扣款', en: 'Knowing only the team size is enough to see the right plan and its charge' }, { zh: '多一步选择，功能不能并排比', en: 'One extra step; features cannot be compared side by side' }, { zh: '首次访问、想尽快试用的小团队', en: 'First-time visitors who want to start a trial fast' }],
+          [{ zh: 'B 功能对比表', en: 'B Comparison table' }, { zh: '逐项比较最精确，可只看差异', en: 'The most precise line-by-line comparison, with a differences-only switch' }, { zh: '信息最密、引导最少，手机上很挤', en: 'Densest and least guided; cramped on phones' }, { zh: '已在认真评估、要逐项核对的人', en: 'Visitors already evaluating line by line' }],
+          [{ zh: 'C 先讲清扣款', en: 'C Charges first' }, { zh: '年度总额、节省额和试用时间线就在按钮旁', en: 'Yearly totals, savings and a trial timeline right beside the button' }, { zh: '功能默认折叠，页面更长', en: 'Features folded by default; a longer page' }, { zh: '对订阅扣款敏感、怕被锁定的人', en: 'Visitors wary of subscription charges and lock-in' }],
+        ] } },
+      { id: 'direction-a', heading: { zh: '方向 A：先问“你们有几个人”', en: 'Direction A: ask “how many people?” first' },
+        body: [
+          { zh: '四个人数按钮，下面高亮匹配的方案：月价、“每年实际扣 $374”、比月付省多少、试用说明和按钮，右边列出全部功能；其余方案压成一行。', en: 'Four team-size buttons, then the matching plan highlighted: the monthly price, “billed $374 once a year”, the saving against monthly billing, the trial note and the button, with all features on the right. The other plans collapse to one line each.' },
+          { zh: '做对的：路径最短，扣款金额和时点就写在按钮上下。没做好的：想比较 Studio 和 Firm 的功能，得自己读下面那几行压缩过的文字。', en: 'Worked: the shortest path, with the amount and timing of the charge right around the button. Didn’t: to compare Studio and Firm features you have to read the compressed lines below.' },
+        ],
+        figures: [{ src: '/docs/ledger-pricing-run/variant-A.jpg', width: 1280, height: 1227, alt: { zh: '方向 A：人数按钮、高亮的 Studio 方案卡片和下方三行方案列表', en: 'Direction A: team-size buttons, a highlighted Studio card and a three-row plan list below' }, caption: { zh: '方向 A（1280px，agent 生成的静态预览）。截图里是备用字体：项目本身从来没有加载品牌字体。', en: 'Direction A (1280px, the agent’s static preview). The fonts are fallbacks: the project itself never loads the brand fonts.' } }] },
+      { id: 'direction-b', heading: { zh: '方向 B：一张能只看差异的对比表', en: 'Direction B: a comparison table that can hide what is shared' },
+        body: [
+          { zh: '把原来的“Everything in Solo”展开成真实的功能行，每个方案新增的功能标上“New in Studio / New in Firm”，表头有“只看差异”开关；第一行就是“你实际付多少”。', en: 'It expands the original “Everything in Solo” into real feature rows, labels each plan’s additions “New in Studio / New in Firm”, adds a differences-only switch above the table, and makes “What you pay” the first row.' },
+          { zh: '做对的：逐项核对最方便。没做好的，都是 agent 在下一轮自己指出的：Solo 列也被染了“新增”底色却没有标签；币种选择器边框和开关轨道的对比度只有 1.84:1，控件至少要 3:1；表头设了吸顶但在横向滚动容器里固定不住。手机上三列很挤，按钮文字折成三四行。', en: 'Worked: the easiest line-by-line check. Didn’t, all pointed out by the agent itself in the next turn: the Solo column is tinted as “new” without a label; the currency select border and the switch track reach only 1.84:1 contrast where controls need 3:1; the sticky header cannot stick inside a horizontally scrolling container. On phones the three columns are cramped and the buttons wrap to three or four lines.' },
+        ],
+        figures: [
+          { src: '/docs/ledger-pricing-run/variant-B.jpg', width: 1280, height: 1519, alt: { zh: '方向 B：三列对比表，新增功能带标签和底色', en: 'Direction B: a three-column comparison table with labelled, tinted additions' }, caption: { zh: '方向 B（1280px）。注意 Solo 列前三行也有底色。', en: 'Direction B (1280px). Note the tint on the first three Solo rows.' } },
+          { src: '/docs/ledger-pricing-run/variant-B-mobile.jpg', width: 390, height: 1948, alt: { zh: '方向 B 在手机宽度下：三列挤在一起，按钮文字折行', en: 'Direction B at phone width: three tight columns and wrapping button labels' }, caption: { zh: '方向 B（390px）。', en: 'Direction B (390px).' } },
+        ] },
+      { id: 'direction-c', heading: { zh: '方向 C：先讲清会被扣多少、什么时候扣', en: 'Direction C: what you will pay, and when, first' },
+        body: [
+          { zh: '每个方案一行，写出年度总额和节省额；右边是选中方案的时间线：今天开始试用不要卡、第 30 天要卡、试用后每年扣多少、随时可以换方案、离开时账目可以导出，按钮在时间线正下方。时间线里的每句话都来自项目原有的常见问题，没有新增承诺。', en: 'One row per plan with its yearly total and saving; on the right, a timeline for the chosen plan: start the trial today with no card, a card on day 30, what you pay each year after the trial, change plans any time, export your books if you leave, with the button right below. Every line of the timeline comes from the project’s own FAQs; nothing new is promised.' },
+          { zh: '做对的：最直接回应“会被扣多少、能不能退出”。没做好的：功能藏在“What Studio includes”后面，比较功能不如 B 快，页面也比 A 长。agent 按自己的截图修了两处：单选框压到文字，以及一条以“No.”开头的提示语。', en: 'Worked: the most direct answer to “how much, and can I leave?”. Didn’t: features hide behind “What Studio includes”, so comparing them is slower than in B, and the page is longer than A. The agent fixed two things from its own screenshots: a radio button overlapping its label, and a hint that began with “No.”.' },
+        ],
+        figures: [{ src: '/docs/ledger-pricing-run/variant-C.jpg', width: 1280, height: 1271, alt: { zh: '方向 C：方案列表和右侧的试用时间线', en: 'Direction C: the plan list and the trial timeline on the right' }, caption: { zh: '方向 C（1280px）。', en: 'Direction C (1280px).' } }] },
+      { id: 'recommendation', heading: { zh: '推荐 C，但不替你选', en: 'It recommended C, and did not choose' },
+        body: [
+          { zh: '理由是项目注释写明访客是“试用前比较方案的工作室负责人”，三条常见问题里两条在问扣费和退出。它同时写明这是假设：如果真实访客主要卡在“哪个方案有什么功能”，选 B；如果多数是第一次来的小团队，选 A。项目里记录选择的字段保持为空。', en: 'Its reason: the project describes visitors as studio owners comparing plans before a trial, and two of the three FAQs are about charges and leaving. It also wrote that this is an assumption: if real visitors get stuck on which plan has which features, choose B; if most are small teams on a first visit, choose A. The field that records the choice stayed empty.' },
+        ] },
+      { id: 'caught', heading: { zh: '它发现了，但没擅自改', en: 'What it found and left alone' },
+        body: [{ zh: '这几处涉及结账页共用的数据或产品决定，agent 列出来让我们确认，没有自己动：', en: 'These touch data that checkout shares, or product decisions, so the agent listed them for us instead of changing them:' }],
+        list: [
+          { zh: '金额取整：年付时 Solo 显示 $10/月，年度总额是 $115（12 × $9.6），不等于 $120。要显示到分，还是年付改用整数价？', en: 'Rounding: on yearly billing Solo shows $10 a month but $115 a year (12 × $9.60), not $120. Show cents, or use whole yearly prices?' },
+          { zh: '货币：EUR / GBP 按固定汇率从美元换算，是按所选货币收费还是参考价？它没有替项目写“仅供参考”。', en: 'Currency: EUR and GBP are converted from dollars at a fixed rate. Is that what gets charged, or an estimate? It did not add “for reference only” on the project’s behalf.' },
+          { zh: '字体：app/layout.tsx 从来没有加载品牌字体，所以页面一直显示备用字体。', en: 'Fonts: app/layout.tsx never loads the brand fonts, so the page has always shown fallbacks.' },
+        ] },
+      { id: 'pick', heading: { zh: '第二轮：pick B，然后起草设计系统', en: 'Turn two: pick B, then a draft design system' },
+        body: [
+          { zh: '我们按评测设定发了 pick B（不是跟着推荐选）。选定只记下选择，B 的文件一个字节没变；随后它从 B 起草了 design-system.css、预览页和 DESIGN.md，写下五条决定，比如方案用表格比较、不加“最受欢迎”徽标，“实际怎么扣款”作为价格下第一行，层级靠分隔线粗细而不是阴影。它停在“等你 ds confirm”，没有自己确认。', en: 'As the eval prescribes, we sent pick B (not following the recommendation). Picking only recorded the choice; B’s files did not change by a byte. It then drafted design-system.css, a preview page and DESIGN.md from B, with five decisions, such as comparing plans in a table without a “most popular” badge, making “what you are charged” the first line under the price, and building hierarchy from rule weight rather than shadows. It stopped at “waiting for ds confirm” and did not confirm on its own.' },
+          { zh: '没通过的检查就在这里：草稿里 6 个组件 token（按钮和下拉框的高度、内边距、前景色、边框）指向了系统文件里不存在的别名。这是技能要改进的地方，不是项目的问题。', en: 'The failed check is here: in the draft, six component tokens (button and select height, padding, foreground and border) point at aliases that do not exist in the system files. That is for the skill to improve, not a problem in the project.' },
+        ],
+        code: { zh: 'pick B', en: 'pick B' },
+        figures: [{ src: '/docs/ledger-pricing-run/design-system.jpg', width: 1280, height: 900, alt: { zh: '设计系统预览页的首屏', en: 'The first screen of the design system preview' }, caption: { zh: '从 B 起草的设计系统预览（首屏，1280px），状态是待确认。', en: 'The design system preview drafted from B (first screen, 1280px), awaiting confirmation.' } }] },
+      { id: 'cost', heading: { zh: '花了多少', en: 'What it cost' },
+        body: [{ zh: '数字来自 Claude Code 每轮结束时的结果记录；模型是 claude-opus-5-5，运行时的价格。', en: 'The numbers come from Claude Code’s result record at the end of each turn; the model was claude-opus-5-5, at the prices of the day.' }],
+        table: { head: [{ zh: '轮次', en: 'Turn' }, { zh: '花费', en: 'Cost' }, { zh: '回合', en: 'Turns' }, { zh: '用时', en: 'Time' }], rows: [
+          [{ zh: '生成 A/B/C', en: 'Generate A/B/C' }, { zh: '$1.96', en: '$1.96' }, { zh: '42', en: '42' }, { zh: '6 分 42 秒', en: '6 min 42 s' }],
+          [{ zh: 'pick B 与设计系统草稿', en: 'pick B and the draft system' }, { zh: '$1.60', en: '$1.60' }, { zh: '34', en: '34' }, { zh: '5 分 32 秒', en: '5 min 32 s' }],
+          [{ zh: '合计', en: 'Total' }, { zh: '$3.56', en: '$3.56' }, { zh: '76', en: '76' }, { zh: '约 12 分钟', en: 'about 12 min' }],
+        ] } },
+      { id: 'checklist', heading: { zh: '在你自己的项目里照着做', en: 'A checklist for your own run' },
+        body: [{ zh: '照这次的顺序：', en: 'In the order this run used:' }],
+        list: [
+          { zh: '把品牌约束写在一个文件里，并用注释说清哪些能改、哪些不能改。', en: 'Put the brand constraints in one file, with a comment saying what may change and what may not.' },
+          { zh: '指令里要“说明优化、取舍与适用场景”和“先不要替我选”，三个方向才会是三种取舍，而不是三套配色。', en: 'Ask it to explain what each direction optimizes and gives up, and not to pick for you; that is what makes three tradeoffs instead of three palettes.' },
+          { zh: '先看它写下的任务契约和不可让步项，再看截图。', en: 'Read the task contract and the non-negotiables before the screenshots.' },
+          { zh: '涉及金额时，逐个核对它列出的“需要你确认”，尤其是取整和货币。', en: 'When money is involved, go through every item it asks you to confirm, especially rounding and currency.' },
+          { zh: '选定用一句 pick；设计系统要你 ds confirm 才生效，确认前先看草稿里没对上的地方。', en: 'Pick with one line; the design system takes effect only after you run ds confirm, so check the draft’s loose ends first.' },
+        ],
+        link: { href: `${blob}/docs/research/2026-11-22-ledger-pricing-run.md`, label: { zh: '阅读这次运行的完整记录', en: 'Read the full record of this run' } } },
+      { id: 'limits', heading: { zh: '这次没验证什么', en: 'What this run did not prove' },
+        body: [
+          { zh: '只跑了一次，没有比较多次运行的差异；推荐只是 agent 的推断，没有真实访客或转化数据；三版的键盘、焦点和读屏没有人工操作过，agent 也写明它只读了代码；截图里是备用字体。20 项自动检查管的是承诺（没改原页面、没替你选、品牌没跑偏），不管好不好看。', en: 'We ran it once and did not compare runs; the recommendation is the agent’s inference without real visitors or conversion data; nobody operated the three versions with a keyboard or a screen reader, and the agent wrote that it only read the code for those; the screenshots use fallback fonts. The 20 automatic checks cover promises (the original page untouched, no choice made for you, the brand kept), not taste.' },
+        ],
+        link: { href: '/docs/install', label: { zh: '在 Claude Code 和 Codex 里安装技能', en: 'Install the skill in Claude Code and Codex' } } },
     ],
   },
 ];

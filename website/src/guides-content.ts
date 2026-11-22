@@ -5,9 +5,14 @@ import type { Localized } from './i18n/localized';
 import type { Translations } from './i18n/translations';
 import { deliver, installCommand, prompts, repository, refine } from './docs-content';
 
-export type GuideSection = { id: string; heading: Localized; body: Localized[]; list?: Localized[]; code?: Localized; link?: { href: string; label: Localized } };
+// A figure is one of our own images under public/ (never a screenshot of someone else's site); a table is a small grid of
+// facts such as a run's cost. Both are optional, so the older articles keep their shape.
+export type GuideFigure = { src: string; width: number; height: number; alt: Localized; caption?: Localized };
+export type GuideTable = { head: Localized[]; rows: Localized[][] };
+export type GuideSection = { id: string; heading: Localized; body: Localized[]; list?: Localized[]; code?: Localized; figures?: GuideFigure[]; table?: GuideTable; link?: { href: string; label: Localized } };
 // `base` is the route a page lives under: the Q&A answers at /guides, the longer articles at /docs.
-export type Guide = { slug: string; base?: '/guides' | '/docs'; title: Localized; answer: Localized; publishedAt: string; sections: GuideSection[]; translations?: Translations };
+// `image` is the page's share card; without one the site's default card is used.
+export type Guide = { slug: string; base?: '/guides' | '/docs'; title: Localized; answer: Localized; publishedAt: string; sections: GuideSection[]; image?: GuideFigure; translations?: Translations };
 export const guideRoute = (g: Pick<Guide, 'slug' | 'base'>) => `${g.base ?? '/guides'}/${g.slug}`;
 
 const records = `${repository}/blob/master/docs/research`;

@@ -50,6 +50,9 @@ export function GuidesPage({ slug, base = '/guides' }: { slug?: string; base?: '
         <div className="content-reading">{guide.sections.map(s => <section id={s.id} key={s.id}><h2>{t(s.heading, language)}</h2>
           {s.body.map(p => <p key={p.zh}>{t(p, language)}</p>)}
           {s.list && <ul>{s.list.map(item => <li key={item.zh}>{t(item, language)}</li>)}</ul>}
+          {s.table && <div className="guide-table"><table><thead><tr>{s.table.head.map(h => <th key={h.zh} scope="col">{t(h, language)}</th>)}</tr></thead>
+            <tbody>{s.table.rows.map((row, i) => <tr key={i}>{row.map((cell, j) => j ? <td key={j}>{t(cell, language)}</td> : <th key={j} scope="row">{t(cell, language)}</th>)}</tr>)}</tbody></table></div>}
+          {s.figures?.map(f => <figure key={f.src} className="guide-figure"><img src={f.src} width={f.width} height={f.height} alt={t(f.alt, language)} loading="lazy" decoding="async"/>{f.caption && <figcaption>{t(f.caption, language)}</figcaption>}</figure>)}
           {s.code && <pre className="guide-code"><code>{t(s.code, language)}</code></pre>}
           {s.link && linkShown(s.link.href) && <p className="content-link"><a href={localePath(s.link.href,language)}>{t(s.link.label, language)} →</a></p>}
         </section>)}</div></div>

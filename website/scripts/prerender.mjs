@@ -156,7 +156,7 @@ function entryBody(e) {
 }
 
 function guideData(g, site, lang = 'zh') {
-  return { '@type': 'Article', headline: g.title[lang], description: g.answer[lang], datePublished: g.publishedAt, inLanguage: lang === 'en' ? 'en' : 'zh-CN', url: site + pathIn(guideRoute(g), lang), author: { '@type': 'Person', name: 'Yuqing Nicole' }, about: { '@id': `${site}/#skill` } };
+  return { '@type': 'Article', ...(g.image ? { image: site + g.image.src } : {}), headline: g.title[lang], description: g.answer[lang], datePublished: g.publishedAt, inLanguage: lang === 'en' ? 'en' : 'zh-CN', url: site + pathIn(guideRoute(g), lang), author: { '@type': 'Person', name: 'Yuqing Nicole' }, about: { '@id': `${site}/#skill` } };
 }
 
 // Every page without a picture of its own shares this one: our mark and words, never someone else's screenshot (the repository stores none).
@@ -228,7 +228,8 @@ export function renderSite(entries, template, site = defaultSite, references = [
   }
   for (const r of references) pages.set(`/inspiration/${r.id}`, zhPage({ route: `/inspiration/${r.id}`, title: sectionModule.detailTitle(r, 'zh'), description: `${r.name}：${r.focus.zh}。用在${r.application.zh}。`, body: rendered[`/inspiration/${r.id}`]??referenceBody(r, references, sections), data: referenceData(r, site, 'zh', sections) }));
   for (const [route, [title, description]] of Object.entries(staticPages)) pages.set(route, zhPage({ route, title, description, body: rendered[route] ?? '', ...(route === '/docs/install' && docs ? { body: docsBody(docs), data: docsData(docs, site) } : {}), ...(route === '/skills' ? { data: skillData(site, version) } : {}) }));
-  for (const g of guides) pages.set(guideRoute(g), zhPage({ route: guideRoute(g), type: 'article', title: `${g.title.zh} — Variant Design`, description: g.answer.zh, data: guideData(g, site), body: rendered[guideRoute(g)] ?? '' }));
+  const guideImage = (g, lang) => g.image ? { src: g.image.src, width: g.image.width, height: g.image.height, alt: g.image.alt[lang] } : undefined;
+  for (const g of guides) pages.set(guideRoute(g), zhPage({ route: guideRoute(g), type: 'article', title: `${g.title.zh} — Variant Design`, description: g.answer.zh, data: guideData(g, site), image: guideImage(g, 'zh'), body: rendered[guideRoute(g)] ?? '' }));
   // Collections: only what this build publishes is passed in; one that is not ready yet (a preview build) is noindex.
   const names = new Map(references.map(r => [r.id, r.name])), anyReady = collections.some(c => c.ready);
   const collectionPage = (lang, route, title, description, data, ready) => { const options = { site, route, lang, title, description, data, translated: !!english[route], body: (lang === 'en' ? english : rendered)[route] ?? '' };
@@ -250,7 +251,7 @@ export function renderSite(entries, template, site = defaultSite, references = [
   for (const r of references) enPage({ route: `/inspiration/${r.id}`, title: sectionModule.detailTitle(r, 'en'), description: `${r.name}: ${r.focus.en}. Use it for ${r.application.en}.`, data: referenceData(r, site, 'en', sections) });
   for (const c of sections) enPage({ route: `/browse/${c.id}`, title: `${c.title.en} — Variant Design`, description: `${c.intro.en} ${c.count.en} so far.`, data: listData(c, englishReferences, site, 'en') });
   for (const [route, [title, description]] of Object.entries(staticPagesEn(onHome(references).length))) enPage({ route, title, description, ...(route === '/docs/install' && docs ? { data: docsData(docs, site, 'en') } : {}), ...(route === '/skills' ? { data: skillData(site, version, 'en') } : {}) });
-  for (const g of guides) enPage({ route: guideRoute(g), type: 'article', title: `${g.title.en} — Variant Design`, description: g.answer.en, data: guideData(g, site, 'en') });
+  for (const g of guides) enPage({ route: guideRoute(g), type: 'article', title: `${g.title.en} — Variant Design`, description: g.answer.en, data: guideData(g, site, 'en'), image: guideImage(g, 'en') });
   for(const r of withdrawn)for(const lang of ['zh','en']){const en=lang==='en',route=`/inspiration/${r.id}`,title=en?'This work has been removed':'这条作品已撤下';const body=(en?english[route]:rendered[route])??`<main><h1>${title}</h1><p>${escape(r.name)}</p><p>${escape(r.withdrawnAt)}</p><p>${escape(r.reason[lang])}</p><a href="${en?'/':'/zh'}">${en?'Back to inspiration':'返回灵感作品流'}</a></main>`;pages.set(lang==='en'?enKey(route):route,withNoindex(page(template,{site,route,lang,translated:true,title:`${r.name} — ${title} — Variant Design`,description:r.reason[lang],body}))) }
   // Public addresses: English unprefixed, Chinese under /zh. A route with no English page keeps its address and shows the Chinese
   // copy there (the app falls back the same way), marked noindex because its canonical is the /zh page.
