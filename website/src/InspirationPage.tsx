@@ -187,7 +187,9 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  // A page's cards render only once their section's records arrive (reference-library.ts); until then the grid is short and the
  // sentinel sits in view, so the next page waits until every card already asked for is on screen, or every page would mount at once.
  const allShown=cards.length>=shown.length;
- useEffect(()=>{const el=moreRef.current;if(!el||!allShown||!('IntersectionObserver' in window))return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting&&visible<results.length)setVisible(v=>v+pageSize)},{rootMargin:'0px 0px 600px 0px'});io.observe(el);return()=>io.disconnect()},[visible,results.length,allShown]);
+ // A detail opened by its own address renders no feed; closing it mounts the sentinel, which needs a fresh observer.
+ const feedMounted=open?.mode!=='page';
+ useEffect(()=>{const el=moreRef.current;if(!el||!allShown||!('IntersectionObserver' in window))return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting&&visible<results.length)setVisible(v=>v+pageSize)},{rootMargin:'0px 0px 600px 0px'});io.observe(el);return()=>io.disconnect()},[visible,results.length,allShown,feedMounted]);
  // Independent filter changes must apply immediately; the shared animation queue keeps only its latest update.
  const filter=(update:()=>void)=>{update();setVisible(pageSize)};
  function brief(item:Item){if(needAccount('brief'))return;if(open?.mode==='modal'){afterClose.current=()=>useReference(item);close()}else useReference(item)}
