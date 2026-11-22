@@ -453,10 +453,12 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   const shell = path.join(dist, 'app.html');
   if (!fs.existsSync(shell)) fs.copyFileSync(path.join(dist, 'index.html'), shell);
   // Production publishes only collections with enough reviewed references; previews build them all, noindex (src/collections.ts).
-  const { visibleCollections } = await importTs(path.join(here, '../src/collections.ts')), { readFacets } = await import('./reference-facets.mjs');
+  const { visibleCollections, englishDraftRoutes } = await importTs(path.join(here, '../src/collections.ts')), { readFacets } = await import('./reference-facets.mjs');
   const collections = visibleCollections(readFacets(), references, process.env.VERCEL_ENV !== 'production');
+  const collectionDrafts = process.env.VERCEL_ENV === 'production' ? englishDraftRoutes(collections) : [];
+  if (collectionDrafts.length) console.log(`Draft English left out of production: ${collectionDrafts.join(', ')}`);
   console.log(`Collections: ${collections.filter(c => c.ready).length} public, ${collections.filter(c => !c.ready).length} preview-only (noindex).`);
-  const template = fs.readFileSync(shell, 'utf8').replace(`    ${noindexTag}\n`, ''), pages = renderSite(entries, template, site, references, { docs, version, guides, rendered, english: withoutDrafts(english, drafts), withdrawn, sections: sectionPages(references, englishReferences), collections });
+  const template = fs.readFileSync(shell, 'utf8').replace(`    ${noindexTag}\n`, ''), pages = renderSite(entries, template, site, references, { docs, version, guides, rendered, english: withoutDrafts(english, [...drafts, ...collectionDrafts]), withdrawn, sections: sectionPages(references, englishReferences), collections });
   if (hideCases) withoutCases(pages);
   for (const [route, html] of pages) {
     const file = route === '/' ? path.join(dist, 'index.html') : path.join(dist, route.slice(1), 'index.html');

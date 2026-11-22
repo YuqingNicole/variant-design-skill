@@ -5,7 +5,9 @@
 // Values live in `reference-facets.json`, keyed by reference id. A value must be supported by the record itself (name,
 // address, focus, application, analysis, post text) or by public knowledge of what the company does (industry). Visual
 // style is never guessed from a name: no evidence, no value. `status` says who checked it: `draft` was proposed from the
-// notes and nobody has opened the work yet; `reviewed` means a person opened the work and confirmed every value.
+// notes and nobody has opened the work yet; `reviewed` means someone opened the work and confirmed every value, and
+// `reviewedBy` says who: `maintainer` (the review page, scripts/facet-review.mjs) or `agent` (a coding agent working from
+// screenshots of the site or frames of the video, at the maintainer's request). A maintainer review replaces an agent's.
 // Only reviewed values may back a public collection page (see `collectionCandidates`).
 type Copy = { zh: string; en: string };
 type Vocabulary = Record<string, Copy>;
@@ -87,7 +89,7 @@ export type FacetName = keyof typeof facetVocabulary;
 export const multiFacets = ['pageTypes', 'patterns', 'components', 'techniques', 'styles'] as const;
 export const facetLimit = 3;
 export type ReferenceFacets = {
-  status: 'draft' | 'reviewed'; reviewedAt?: string; industry: string | null; medium: string;
+  status: 'draft' | 'reviewed'; reviewedAt?: string; reviewedBy?: 'maintainer' | 'agent'; industry: string | null; medium: string;
   pageTypes: string[]; patterns: string[]; components: string[]; techniques: string[]; styles: string[];
 };
 
@@ -98,6 +100,8 @@ export function facetProblems(id: string, f: ReferenceFacets): string[] {
   const out: string[] = [], at = (m: string) => out.push(`${id}: ${m}`);
   if (f.status !== 'draft' && f.status !== 'reviewed') at(`unknown status ${f.status}`);
   if (f.status === 'reviewed' && !/^\d{4}-\d{2}-\d{2}$/.test(f.reviewedAt ?? '')) at('reviewed without reviewedAt');
+  if (f.status === 'reviewed' && f.reviewedBy !== 'maintainer' && f.reviewedBy !== 'agent') at('reviewed without reviewedBy');
+  if (f.status === 'draft' && (f.reviewedAt !== undefined || f.reviewedBy !== undefined)) at('draft with review fields');
   if (f.industry !== null && !known(industries, f.industry)) at(`unknown industry ${f.industry}`);
   if (!known(media, f.medium)) at(`unknown medium ${f.medium}`);
   for (const name of multiFacets) {

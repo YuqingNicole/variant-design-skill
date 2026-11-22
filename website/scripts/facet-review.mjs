@@ -20,7 +20,7 @@ export const serializeFacets = all => `{\n${Object.entries(all).map(([id, f]) =>
 // Throws with the validator's messages when a value is outside the vocabulary.
 export function reviewRecord(all, id, input, { reviewed, today }) {
   if (!Object.hasOwn(all, id)) throw new Error(`Unknown reference: ${id}`);
-  const next = { status: reviewed ? 'reviewed' : 'draft', ...(reviewed ? { reviewedAt: today } : {}) };
+  const next = { status: reviewed ? 'reviewed' : 'draft', ...(reviewed ? { reviewedAt: today, reviewedBy: 'maintainer' } : {}) };
   for (const k of keys) next[k] = input?.[k] === undefined ? all[id][k] : input[k];
   const problems = facetsModule.facetProblems(id, next);
   if (problems.length) throw new Error(problems.join('\n'));
@@ -89,7 +89,7 @@ function render(){const nav=document.getElementById('nav');nav.replaceChildren()
  document.getElementById('count').textContent=ids.length+' 条';const list=document.getElementById('list');list.replaceChildren(...ids.map(card))}
 function card(id){const it=S.items[id],f=structuredClone(it.facets),done=f.status==='reviewed';
  const cover=it.cover?el('img',{className:'cover',src:it.cover,loading:'lazy',referrerPolicy:'no-referrer',alt:''}):el('div',{className:'cover'});
- const status=el('span',{className:'status'+(done?' ok':''),textContent:done?'已核对 '+f.reviewedAt:'初稿'});
+ const status=el('span',{className:'status'+(done?' ok':''),textContent:done?(f.reviewedBy==='agent'?'代理核对 ':'已核对 ')+f.reviewedAt:'初稿'});
  const editor=el('div');const draw=()=>{editor.replaceChildren(...Object.keys(names).map(k=>{const isMulti=multi.includes(k),vals=isMulti?f[k]:[f[k]];
   const chips=S.vocab[k].map(v=>el('button',{type:'button',textContent:v.label.zh,title:v.label.en+' · '+v.value,ariaPressed:String(vals.includes(v.value)),disabled:isMulti&&!vals.includes(v.value)&&vals.length>=S.limit,
    onclick:()=>{if(isMulti)f[k]=vals.includes(v.value)?vals.filter(x=>x!==v.value):[...vals,v.value];else f[k]=k==='industry'&&f[k]===v.value?null:v.value;draw()}}));
