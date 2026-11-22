@@ -7778,6 +7778,78 @@ export const inspirationItems = [
       "text": "The binding of Isaac: stop motion un proyecto de la escuela que hicimos por capricho mio\nMi amigo y yo amamos tboi por eso salio con tanto esfuerzo esta animacion xd\nGracias edmund por divertirnos por años con tu juego#tboi #art @edmundmcmillen",
       "hasMedia": true
     }
+  },
+  {
+    "id": "geoform",
+    "name": "GEOFORM®",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://geoform.co/",
+    "source": "link-only",
+    "focus": {
+      "zh": "整页只用超大黑色无衬线字铺满白底，3D 产品小渲染图（瓶、罐、袋、香蕉、笔记本）嵌在单词中间，把字拆开 → 开场句 \"Geoform® is a multi-disciplinary design studio. Twenty-six years of making the things people pick up, plug in, tap on and take home.\" → 服务清单用同样手法连排成一段：\"Package design. Interface design. … Copywriting.\" → \"Global clients.\" 段落接续，同一节奏贯穿全页",
+      "en": "Giant black sans type fills a white page, with small 3D product renders (bottles, jars, pouches, a banana, a laptop) set inside words, splitting them → intro \"Geoform® is a multi-disciplinary design studio. Twenty-six years of making the things people pick up, plug in, tap on and take home.\" → services run as one paragraph, same treatment: \"Package design. Interface design. … Copywriting.\" → \"Global clients.\" continues it"
+    },
+    "application": {
+      "zh": "设计工作室首页，纯文字排版加产品图点缀",
+      "en": "Design studio homepages: type-only layout with product-render accents"
+    },
+    "publisher": "GEOFORM®",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-22",
+    "addedAt": "2026-11-22T12:23:03.713Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://onepagelove.com/geoform"
+  },
+  {
+    "id": "fonting",
+    "name": "Fonting",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://www.fonting.co/",
+    "source": "link-only",
+    "focus": {
+      "zh": "居中的极简首屏：小号副文案“Font manager for Mac.”，下接超大紧排标题“A home for your fonts.”，黑色胶囊按钮“Download for Mac”配“$79. No subscription.” → 一排六张高饱和色块卡片，各用一个字形展示字体分类（Serif、Grotesque、Italic、Display、Monospace、Variable） → “Your fonts, wherever you go.”配简化的应用窗口模型“My font library”，沿用同色图标 → “Your library, in your pocket.”配 App Store 按钮和 iPhone 截图。",
+      "en": "Centered minimal hero: small kicker \"Font manager for Mac.\" over a huge tightly tracked \"A home for your fonts.\", black pill \"Download for Mac\" with \"$79. No subscription.\" → row of six saturated color tiles, each showing one glyph per category (Serif, Grotesque, Italic, Display, Monospace, Variable) → \"Your fonts, wherever you go.\" with a simplified \"My font library\" window reusing the tile colors → \"Your library, in your pocket.\" with App Store button and iPhone mockups."
+    },
+    "application": {
+      "zh": "Mac 工具或设计类应用的产品落地页",
+      "en": "Landing pages for Mac utilities or design-tool apps"
+    },
+    "publisher": "Fonting",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-22",
+    "addedAt": "2026-11-22T12:23:03.713Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://onepagelove.com/fonting"
+  },
+  {
+    "id": "justinschueler",
+    "name": "Justin Schueler",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://justinschueler.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "极简单栏个人站：页眉为姓名与“Founder & Designer”，右侧绿点“Available” → 大号自我介绍，smalltribe 与 tribehouse 用波浪下划线标出链接 → “Now”小节写当前在 SUNRISE 的工作 → “Companies”两张浅灰卡片并排放置标志 → “Alongside, I build my own products”列出四个产品链接 → “Projects”中的 Sonoir 应用界面卡片，另一张卡片从右缘露出 → “Services”编号手风琴列表 01–04 → “Thoughts”",
+      "en": "Minimal single-column personal site: header with name, “Founder & Designer” and a green-dot “Available” → large intro with squiggle-underlined links to smalltribe and tribehouse → “Now” note on current work at SUNRISE → “Companies” as two pale grey logo cards → “Alongside, I build my own products” with four linked names → “Projects” showing a Sonoir app UI card, with another card peeking in from the right edge → numbered “Services” accordion 01–04 → “Thoughts”"
+    },
+    "application": {
+      "zh": "设计师或独立创始人的极简作品集与服务页",
+      "en": "Minimal portfolio and services page for a designer or solo founder"
+    },
+    "publisher": "Justin Schueler",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-22",
+    "addedAt": "2026-11-22T12:23:03.713Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://onepagelove.com/justin-schuler"
   }
 ];
 

@@ -887,5 +887,26 @@
     "description": "poppi — the prebiotic soda. Bold, bubbly flavor with just a touch of fruit juice and prebiotics to support a healthy gut. Find your flavor and get it delivered.",
     "lang": "en-US",
     "fetchedAt": "2026-11-13"
+  },
+  "geoform": {
+    "image": "https://geoform.co/og.jpg?v=13",
+    "title": "GEOFORM®",
+    "description": "Full-service multidisciplinary design studio.",
+    "lang": "en",
+    "fetchedAt": "2026-11-22"
+  },
+  "fonting": {
+    "image": "https://fonting.co/og-71de66ba0a.jpg",
+    "title": "Fonting — A home for your fonts.",
+    "description": "Organize and preview the fonts on your Mac, and take your library with you on iPhone. $79, no subscription. Your library in your own iCloud, on every Mac and your iPhone.",
+    "lang": "en",
+    "fetchedAt": "2026-11-22"
+  },
+  "justinschueler": {
+    "image": "https://justinschueler.com/assets/og-image.png?v=33d2a5a1",
+    "title": "Justin Schueler — Founder & Designer",
+    "description": "Designer, founder and creative strategist. I run smalltribe, a studio for brands and products, and tribehouse, a creative house in Leipzig.",
+    "lang": "en",
+    "fetchedAt": "2026-11-22"
   }
 }
