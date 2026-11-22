@@ -1,0 +1,6 @@
+{
+  "sources": [
+    { "id": "onepagelove", "name": "One Page Love", "feed": "https://onepagelove.com/feed", "resolve": "visit-link", "titlePrefix": "Website Inspiration:", "days": 14, "max": 8 },
+    { "id": "minimalgallery", "name": "Minimal Gallery", "feed": "https://minimal.gallery/feed/", "resolve": "image-domain", "days": 14, "max": 8 }
+  ]
+}

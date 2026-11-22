@@ -3,7 +3,8 @@
 // For each `pending` candidate with a link, this opens the site once in headless Chrome (1280×800, first three screens as
 // one image), reads its share preview, and asks a model to accept it with bilingual notes or reject it with a reason.
 // Nothing here publishes by itself: run-threads-weekly.sh puts the change in a pull request that merges once CI passes, with no person reviewing it.
-// Usage: node website/scripts/threads-publish.mjs [--limit n] [--dry-run]
+// The same screening serves the curated-gallery inbox (site-discovery.mjs): pass --inbox website/content/site-inbox.json.
+// Usage: node website/scripts/threads-publish.mjs [--inbox file] [--limit n] [--dry-run]
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -35,7 +36,7 @@ export function buildPrompt(candidate, preview, sheet) {
   return `You are screening one website for Variant Design's design inspiration library, entries you accept go live without a person reviewing them, so reject when unsure.
 Read the image at ${sheet}: the first three screens of ${candidate.link} at 1280×800, one above the other. You cannot interact with the site or see it on a phone, so describe only what the screens show.
 
-It was found in a Threads post by @${candidate.username ?? 'unknown'}: ${JSON.stringify(candidate.text)}
+${candidate.source ? `It was picked by ${candidate.sourceName}, a curated website gallery, as ${JSON.stringify(candidate.title)}; a gallery pick is a lead, not proof of quality.` : `It was found in a Threads post by @${candidate.username ?? 'unknown'}: ${JSON.stringify(candidate.text)}`}
 Its share preview title: ${JSON.stringify(preview.title)}
 
 Reject (accept=false) when any applies: the screens are a block page, a verification or age gate, a subscription or discount gate, or a pop-up covering the main content; the page is empty or did not render past the first screen; only one screen of content; a shutdown, acquisition or farewell notice; a redirect to an unrelated site; a link-in-bio or template page; a page whose design is plain or dated with nothing to study; a small cookie banner alone is not a reason.
@@ -115,9 +116,9 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
   const reject = (candidate, label, reason) => { decide(candidate, { status: 'rejected', reason }); summary.rejected.push([label, reason]); };
   try {
     for (const candidate of queue) {
-      const label = `@${candidate.username ?? '?'} ${candidate.id}`;
+      const label = candidate.source ? `${candidate.sourceName}: ${candidate.title}` : `@${candidate.username ?? '?'} ${candidate.id}`;
       try {
-        if (!candidate.link || !/^https:\/\//.test(candidate.link)) { reject(candidate, label, 'The post points to no website; the library collects sites, not posts'); continue; }
+        if (!candidate.link || !/^https:\/\//.test(candidate.link)) { reject(candidate, label, 'The lead points to no website; the library collects sites, not posts'); continue; }
         const own = siteInLibrary([...items, ...added], candidate.link);
         if (own) { reject(candidate, label, `The library already has this site (${own.id})`); continue; }
         const page = await dep.page(candidate.link);
@@ -158,6 +159,6 @@ export function report(summary) {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = process.argv.slice(2), at = flag => args[args.indexOf(flag) + 1];
   const limit = args.includes('--limit') ? Number(at('--limit')) : 10;
-  if (!Number.isInteger(limit) || limit < 1) { console.error('Usage: threads-publish.mjs [--limit n] [--dry-run]'); process.exit(2); }
-  console.log(report(await run({ limit, dryRun: args.includes('--dry-run') })));
+  if (!Number.isInteger(limit) || limit < 1) { console.error('Usage: threads-publish.mjs [--inbox file] [--limit n] [--dry-run]'); process.exit(2); }
+  console.log(report(await run({ limit, dryRun: args.includes('--dry-run'), ...(args.includes('--inbox') ? { inbox: path.resolve(at('--inbox')) } : {}) })));
 }
