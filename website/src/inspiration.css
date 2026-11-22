@@ -336,3 +336,41 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 /* The detail rule above sets every h2 in .insp-detail to display size; these are section labels. */
 .inspiration-page .insp-detail :is(.insp-related,.insp-yours,.insp-analysis) h2{font-size:16px;font-weight:600;line-height:1.3;letter-spacing:0;margin:0;text-wrap:wrap}
 .inspiration-page .insp-detail .insp-analysis h2 small{font-size:13px;font-weight:400}
+
+/* Phones, notes-feed pass (2026-11-22, the maintainer's phone screenshot): the first row of cards sat 60% down the screen behind
+   two header rows, the title, two links, the rights notice, the pills, the sort and the search. Now: one compact header row, a small
+   title, text channel tabs, search and sort on one line, then the feed; the links and the rights notice follow the feed (.insp-end).
+   Cards become notes: the cover flush with a light card, the title and the author inside it. Desktop is unchanged. Every size, radius
+   and shadow reuses a value the page already had, so the style budget (scripts/style-budget.mjs) holds; touch targets stay 44px and
+   fields 16px. */
+.insp-end{display:none}
+@media(max-width:650px){
+ .site-nav{flex-wrap:nowrap}
+ .site-nav .site-nav-end{gap:4px;flex-wrap:nowrap;min-width:0}
+ .site-nav .site-wordmark{flex-shrink:0}
+ .site-nav .site-nav-end>*,.site-nav .site-nav-end .site-connect,.site-nav .site-nav-end .site-language{min-height:44px;height:44px;padding-block:0;padding-inline:12px;font-size:14px;display:inline-flex;align-items:center;white-space:nowrap}
+ .site-nav .site-nav-end .site-language{min-width:0}
+ .inspiration-page .insp-head{padding-block:8px 0;gap:0}
+ .inspiration-page .insp-title h1{font-size:20px;line-height:1.3;letter-spacing:-.01em}
+ .inspiration-page .insp-head :is(.insp-links,.insp-rights){display:none}
+ .inspiration-page .insp-bar>.site-shell{grid-template-columns:minmax(0,1fr) auto;column-gap:8px;row-gap:4px;padding-block:0 8px}
+ .inspiration-page .insp-pills{grid-column:1/-1;grid-row:1;gap:20px}
+ .inspiration-page .insp-pills a{height:44px;padding:0;background:none;box-shadow:none;border-radius:0;font-size:16px;color:var(--site-muted);border-bottom:2px solid transparent}
+ .inspiration-page .insp-pills a[aria-current=page]{background:none;color:var(--site-ink);font-weight:500;border-bottom-color:var(--site-ink)}
+ .inspiration-page .insp-pills a small{display:none}
+ .inspiration-page .insp-search{grid-column:1;grid-row:2}
+ .inspiration-page .insp-bar select{grid-column:2;grid-row:2;width:auto;padding-inline:12px 28px}
+ .inspiration-page .inspiration-grid.insp-feed{gap:8px 6px;padding-top:2px}
+ .inspiration-page .insp-body{width:calc(100% - 12px)}
+ .inspiration-page .insp-feed>.insp-card{background:var(--site-card);border-radius:16px;overflow:hidden}
+ .inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){border-radius:0}
+ /* Videos fill the cover edge to edge like a note's photo; link previews keep their mat, since cropping would cut the page they show. */
+ .inspiration-page .insp-feed>.insp-card .insp-vcard-media{padding:0;object-fit:cover;background:var(--site-surface)}
+ .inspiration-page .insp-feed .insp-card-meta{padding:8px 40px 10px 10px}
+ .inspiration-page .insp-feed :is(.insp-card-save){right:0;bottom:0}
+ .insp-end{display:grid;gap:var(--space-2);padding-block:var(--space-4) var(--space-5);font-size:14px;line-height:1.6;color:var(--site-muted)}
+ .insp-end p{margin:0}.insp-end-links{display:flex;flex-wrap:wrap;gap:0 var(--space-4)}.insp-end a{display:inline-flex;align-items:center;min-height:44px;color:inherit;text-underline-offset:3px}
+}
+/* The smallest phones (320px): the wordmark stays whole (a phone requirement in tests/landing.spec.mjs); the buttons get tighter and,
+   with Sign in as a third button, the header may wrap to a second row as it did before. */
+@media(max-width:360px){.site-nav{gap:6px;flex-wrap:wrap}.site-nav .site-nav-end{gap:2px}.site-nav .site-nav-end>*,.site-nav .site-nav-end .site-connect,.site-nav .site-nav-end .site-language{padding-inline:8px}}

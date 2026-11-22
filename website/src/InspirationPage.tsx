@@ -227,12 +227,16 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  // On its own page (Videos) the types are the page's only categories, in the place of the Inspiration tabs.
  const typeRow=<div className={`insp-types${page?' insp-types-main':''}`} role="group" aria-label={l('videoType')}>{[{id:'',name:{zh:'全部',en:'All'}},...(sectionInfo?.types??[]).filter(v=>rows.some(r=>sectionOf(r)===section&&videoTypeOf(r)===v.id))].map(v=><button key={v.id||'all'} type="button" aria-pressed={type===v.id} onClick={()=>{filter(()=>setType(v.id));feedRef.current?.scrollTo({left:0});scrollTo({top:0})}}>{t(v.name,language)} <small aria-hidden="true">{rows.filter(r=>sectionOf(r)===section&&(!v.id||videoTypeOf(r)===v.id)).length}</small></button>)}</div>;
  const header=<SiteHeader language={language} page="inspiration" inspirationCategory={section}/>;
+ // Phones show the feed first: the links and the rights notice under the title move below the feed (.insp-end), as notes apps keep the
+ // first screen for content. Both copies are in the HTML; CSS shows one per width.
+ const pageLinkItems=<>{showCases&&!page&&<a href={localePath('/cases',language)}>{l('casesEntry')}</a>}<a href={localePath('/submit',language)}>{l('submissions')}</a></>;
+ const rightsItems=<>{l('rights')} <a href={localePath('/submit',language)+'#display'}>{l('rightsMore')}</a></>;
  if(withdrawn)return <WithdrawnReferencePage record={withdrawn}/>;
  if(open?.mode==='page'&&openItem)return <main className="content-page inspiration-page">{header}<div className="site-shell insp-page-detail">{detailView(openItem,true)}{tail}</div><SiteFooter language={language}/></main>;
  return <main className="content-page inspiration-page">{header}
   <header className="site-shell insp-head">
-   <div className="insp-title"><h1>{sectionInfo?t(sectionInfo.title,language):l('title')}</h1><p>{sectionInfo?t(sectionInfo.intro,language):l('intro')}</p><p className="insp-links">{showCases&&!page&&<a href={localePath('/cases',language)}>{l('casesEntry')}</a>}<a href={localePath('/submit',language)}>{l('submissions')}</a></p></div>
-   <p className="insp-rights">{l('rights')} <a href={localePath('/submit',language)+'#display'}>{l('rightsMore')}</a></p>
+   <div className="insp-title"><h1>{sectionInfo?t(sectionInfo.title,language):l('title')}</h1><p>{sectionInfo?t(sectionInfo.intro,language):l('intro')}</p><p className="insp-links">{pageLinkItems}</p></div>
+   <p className="insp-rights">{rightsItems}</p>
   </header>
   <div className="insp-bar"><div className="site-shell">
    {page?typeRow:<nav className="insp-pills" aria-label={l('refType')} ref={pillsRef}>{[{id:'',name:{zh:'全部',en:'All'}},...tabs].map(c=><a key={c.id||'all'} href={localePath(sectionPath(c.id),language)} aria-current={section===c.id?'page':undefined} onPointerEnter={prefetch} onFocus={prefetch} onTouchStart={prefetch}>{t(c.name,language)} <small aria-hidden="true">{c.id?count(c.id):total}</small></a>)}</nav>}
@@ -257,6 +261,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    {tail}
    <section className="content-closing"><h2>{l('closing')}</h2><a className="content-button" href={localePath('/docs',language)}>{l('install')}</a>{showCases&&<a className="content-secondary" href={localePath('/cases',language)}>{l('studies')}</a>}<p className="inspiration-count">{l('checked')}</p></section>
   </section>
+  <div className="site-shell insp-end"><p className="insp-end-links">{pageLinkItems}</p><p className="insp-end-rights">{rightsItems}</p></div>
   <dialog ref={dialogRef} className="insp-dialog" aria-label={openItem?.name} onCancel={e=>{e.preventDefault();close()}} onKeyDown={e=>{if(e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLInputElement||e.target instanceof HTMLSelectElement)return;if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}if(e.key==='ArrowRight'){e.preventDefault();step(1)}}} onClick={e=>{if(e.target===e.currentTarget)close()}}>{open?.mode==='modal'&&openItem&&detailView(openItem,false)}</dialog>
   <SiteFooter language={language}/></main>
 }
