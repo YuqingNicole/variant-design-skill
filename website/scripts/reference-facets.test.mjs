@@ -1,11 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {facetsModule,facetFileProblems} from './reference-facets.mjs';
+import {facetsModule,facetFileProblems,missingFacets} from './reference-facets.mjs';
 const {facetProblems,collectionCandidates}=facetsModule;
 const draft=(over={})=>({status:'draft',industry:null,medium:'website',pageTypes:[],patterns:[],components:[],techniques:[],styles:[],...over});
 
-test('every published reference has valid facets and no facets point at a missing reference', () => {
+test('stored facets are valid and point at published references; a new reference may have none yet', () => {
   assert.deepEqual(facetFileProblems(), []);
+  // A weekly job adds a reference without facets: not an error, just listed as missing.
+  assert.deepEqual(facetFileProblems({a:draft()},['a','new-site']),[]);
+  assert.deepEqual(missingFacets({a:draft()},['a','new-site']),['new-site']);
+  assert.deepEqual(facetFileProblems({gone:draft()},['a']),['gone: facets for a reference that is not published']);
 });
 
 test('rejects values outside the vocabulary, long lists and reviews without a date', () => {
