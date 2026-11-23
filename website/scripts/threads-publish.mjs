@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 // Closes the loop after Threads discovery. A Threads post is a lead; what the library collects is the site it points to.
-// For each `pending` candidate with a link, this opens the site once in headless Chrome (1280×800, first three screens as
-// one image), reads its share preview, and asks a model to accept it with bilingual notes or reject it with a reason.
+// For each `pending` candidate with a link, this opens the site once in headless Chrome (a 1280×800 viewport, scrolled
+// screen by screen, the first three screens stacked as one image; see site-capture.mjs), reads its share preview, and asks a model to accept it with bilingual notes or reject it with a reason.
 // Nothing here publishes by itself: run-threads-weekly.sh puts the change in a pull request that merges once CI passes, with no person reviewing it.
 // The same screening serves the curated-gallery inbox (site-discovery.mjs): pass --inbox website/content/site-inbox.json.
 // Usage: node website/scripts/threads-publish.mjs [--inbox file] [--limit n] [--dry-run]
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readItems, appendItems, askClaude } from './x-publish.mjs';
 import { parsePreview } from './link-preview.mjs';
 import { fetchImageSize } from './image-size.mjs';
+import { captureScreens } from './site-capture.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const inboxPath = path.resolve(here, '../content/threads-post-inbox.json');
@@ -21,7 +21,6 @@ const previewsPath = path.resolve(here, '../src/link-previews.json');
 
 export const SITE_TAGS = ['Developer', 'SaaS', 'AI', 'Commerce', 'Studio', 'Creative', 'Fintech', 'Knowledge', 'Analytics'];
 const cjk = /[㐀-鿿]/, latin = /[A-Za-z]{3}/;
-const chrome = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 const hostOf = url => { try { return new URL(url).hostname.replace(/^www\./, '').toLowerCase(); } catch { return null; } };
 export const siteInLibrary = (items, url) => { const host = hostOf(url); return host ? items.find(i => !i.post && i.kind !== 'youtube-video' && hostOf(i.url) === host) ?? null : null; };
@@ -35,7 +34,7 @@ export function idFor(url, taken) {
 
 export function buildPrompt(candidate, preview, sheet) {
   return `You are screening one website for Variant Design's design inspiration library, entries you accept go live without a person reviewing them, so reject when unsure.
-Read the image at ${sheet}: the first three screens of ${candidate.link} at 1280×800, one above the other. You cannot interact with the site or see it on a phone, so describe only what the screens show.
+Read the image at ${sheet}: the first three screens of ${candidate.link} in a 1280×800 browser window, one above the other with a thin grey line between them. Each screen was reached by scrolling the mouse wheel one screen height and waiting for the page to settle, so a screen that repeats the one above means the page did not scroll further (or swapped a slide in place). You cannot interact with the site or see it on a phone, so describe only what the screens show.
 
 ${candidate.source ? `It was picked by ${candidate.sourceName}, a curated website gallery, as ${JSON.stringify(candidate.title)}; a gallery pick is a lead, not proof of quality.` : `It was found in a Threads post by @${candidate.username ?? 'unknown'}: ${JSON.stringify(candidate.text)}`}
 Its share preview title: ${JSON.stringify(preview.title)}
@@ -82,12 +81,9 @@ export function review(candidate, patch, today) {
   return { ...rest, ...patch, reviewedAt: today };
 }
 
-// One headless load, the page's first three screens as a single image. `--virtual-time-budget` lets scripts and fonts settle.
-export function screenshot(url, dir) {
-  const file = path.join(dir, 'site.png');
-  const run = spawnSync(chrome, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--window-size=1280,2400', '--virtual-time-budget=10000', `--screenshot=${file}`, url], { timeout: 90000, stdio: 'ignore' });
-  if (run.status !== 0) throw new Error(`Chrome exited ${run.status ?? run.signal}`);
-  return file;
+// One headless load, the page's first three screens as a single image.
+export async function screenshot(url, dir) {
+  return (await captureScreens(url, path.join(dir, 'site.png'))).file;
 }
 
 async function fetchPage(url) {
