@@ -223,4 +223,51 @@ export const guides: Guide[] = [
         } },
     ],
   },
+  {
+    // From skills/variant-generate/zones.md and references/workflow/history.md; the checks are the zone tests in
+    // scripts/variant-loop.test.mjs; the request-id fix and the scoped run are in the 2026-10-26 and 2026-10-27 records.
+    slug: 'edit-one-part-of-a-ui-with-ai',
+    translations: { en: { status: 'draft' } },
+    publishedAt: '2026-11-23',
+    title: { zh: '怎么让 AI 只改界面的一部分，不动别的', en: 'How to have AI change one part of a UI without touching the rest' },
+    answer: {
+      zh: '用 Variant Design 时，在命令后面加上区域名，例如 B vary subtle — hero，就只改 B 的首屏。区域在代码里用一对起止标记划出来；修改先在一份候选副本里做，写回时工具会检查：标记以外的改动直接拒绝，没有这个区域标记的文件必须一个字节都不变。改完能用 undo B 撤回，A、C 和最终选择都不受影响。字节没变不等于页面看起来没变，所以还要对比改动前后渲染出来的其他区域。',
+      en: 'With Variant Design, add a region name after the command, for example B vary subtle — hero, and only B’s hero changes. A region is marked in the code with a pair of start and end markers. The edit is made in a candidate copy first, and when it is written back the tool checks it: a change outside the markers is rejected, and every file without that region’s markers must stay byte-for-byte identical. undo B reverts it, and A, C and the final pick are untouched. Unchanged bytes do not prove the page looks unchanged, so the other regions are also compared before and after rendering.',
+    },
+    sections: [
+      { id: 'say', heading: { zh: '1. 在命令里说清改哪一块', en: '1. Name the region in the request' },
+        body: [{ zh: '格式是“方向 动作 — 区域”。区域按它在页面里的作用来叫，不是 CSS 类名：首屏、导航、卡片、侧栏、页脚、表单、图表、行动按钮、弹窗，也可以用你自己的叫法，比如“价格表”。', en: 'The form is "direction action — region". A region is named by its role on the page, not by a CSS class: hero, nav, card, sidebar, footer, form, chart, cta, modal, or a name of your own such as "pricing table".' }],
+        code: same('B vary subtle — hero\nA remix colors — card\nC shuffle layout — sidebar\nzones A') },
+      { id: 'markers', heading: { zh: '2. 区域怎么划出来', en: '2. How a region is marked' },
+        body: [
+          { zh: '第一次生成时，技能就给每个主要区域加上一对起止标记，结构里一对，样式里一对，名字形如 zone:hero:start 和 zone:hero:end。zones A 会列出 A 里有哪些区域。', en: 'On the first generation the skill brackets each main region with start and end markers, one pair in the markup and one in the styles, named like zone:hero:start and zone:hero:end. zones A lists the regions in A.' },
+          { zh: '已有的页面如果没有标记，先单独做一步“只加标记、外观不变”，确认渲染没变，再做你要的修改。找不到你说的区域时，技能会列出现有的区域让你选，不会猜。', en: 'If an existing page has no markers, adding them is a separate step, "mark the hero, no visual change", checked to render the same before the edit you asked for. If the region you name is not there, the skill lists the regions it found and asks; it does not guess.' },
+        ] },
+      { id: 'check', heading: { zh: '3. 工具怎么保证别处不动', en: '3. How the tool keeps the rest unchanged' },
+        body: [{ zh: '修改不直接写进你的文件。技能先把 B 的文件复制成一份候选副本，记下每个文件原来的内容，在副本里改完再写回。写回时会检查：', en: 'The edit is not written straight into your files. The skill copies B’s files into a candidate, records each file’s original contents, edits the copy, then writes it back. Writing back checks that:' }],
+        list: [
+          { zh: '改动都在这对标记之间；超出的整次拒绝，你的文件不动', en: 'every change sits between the markers; anything outside rejects the whole edit and your files stay as they were' },
+          { zh: '没有这个区域标记的文件，每个字节都和原来一样', en: 'every file without that region’s markers is byte-for-byte identical' },
+          { zh: '共享的颜色、字体等变量不能被一次局部修改改掉，覆盖只能写在区域里', en: 'shared variables such as colors and fonts cannot be changed by a local edit; overrides stay inside the region' },
+          { zh: '准备副本之后你又在编辑器里改过文件，这份副本作废，不会盖掉你的改动', en: 'if you edited the files in your editor after the copy was made, the copy is refused rather than written over your work' },
+        ],
+        link: { href: `${records}/2026-10-27-progressive-loading.md`, label: { zh: '查看一次只改首屏的实测记录', en: 'Read the record of a hero-only run' } } },
+      { id: 'render', heading: { zh: '4. 字节没变，不等于看起来没变', en: '4. Unchanged bytes do not prove an unchanged page' },
+        body: [{ zh: '一个区域可能用到共享组件或共享样式，改它也会影响别处。所以技能在局部修改前，先记下几处其他区域在浏览器里的样子和行为，改完再用同样的检查跑一遍。在用配置驱动的 React 页面上，外层代码不变更不能说明页面范围没变，共享组件在这次修改里只读。', en: 'A region can use shared components or styles, so changing it can reach elsewhere. Before a scoped edit the skill records how a few other regions look and behave in the browser, then runs the same checks after the edit. On configuration-driven React pages, unchanged wrapper code proves even less, and shared components stay read-only during the edit.' }] },
+      { id: 'undo', heading: { zh: '5. 一次请求，一次撤回', en: '5. One request, one undo' },
+        body: [{ zh: '一个请求有时要分几步写回：先补标记，再改，再修一个发现的问题。这几步用同一个请求编号，undo B 会把它们一起撤回。我们 2026-10-26 实测时，一次只改首屏的请求产生了 3 个版本，undo B 当时只撤回了最后一个修复；之后加上了请求编号来解决。', en: 'A request sometimes takes several write-backs: add markers, make the edit, fix a problem found after rendering. They share one request id, and undo B reverts them together. In our 2026-10-26 runs, one hero-only request produced three versions and undo B reverted only the last fix; the request id was added to fix that.' }],
+        link: { href: '/guides/undo-ai-design-changes', label: { zh: '怎么撤回 AI 对设计的修改', en: 'How to undo design changes made by AI' } } },
+      { id: 'pick', heading: { zh: '6. 改了不等于选了', en: '6. Editing is not picking' },
+        body: [{ zh: '修改和撤回只记录你最近在看哪个方向，不会替你选定。只有你明确说 pick B，B 才成为最终方案。', en: 'Edits and undos only record which direction you last worked on; they never pick for you. B becomes the final choice only when you say pick B.' }],
+        code: same('pick B') },
+      { id: 'limits', heading: { zh: '已知限制', en: 'Known limits' },
+        body: [],
+        list: [
+          { zh: '检查的是文件内容，不是每一个渲染结果；共享组件和样式的影响要靠前后对比渲染来发现。', en: 'The check covers file contents, not every rendered result; effects through shared components and styles show up only in the before-and-after rendering comparison.' },
+          { zh: '外部编辑器不遵守技能的操作锁，写回过程中不要同时编辑这些文件。', en: 'External editors do not honor the skill’s operation lock; do not edit these files while a change is being written back.' },
+          { zh: '要在一次修改里新增文件，得在准备副本之前先登记这个文件。', en: 'To add a new file in an edit, register it before the candidate is prepared.' },
+        ],
+        link: { href: `${records}/2026-10-26-cli-dogfood.md`, label: { zh: '查看 2026-10-26 的实测记录', en: 'Read the 2026-10-26 record' } } },
+    ],
+  },
 ];
