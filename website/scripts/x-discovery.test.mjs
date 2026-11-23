@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { run, extractCandidates, makeAccountSearchUrl, makeSearchUrl, mergeCandidates, parseCount, planSearches, readConfig, selectGroups, validateConfig } from './x-discovery.mjs';
+import { run, SKIP_TEXT, skipReason, extractCandidates, makeAccountSearchUrl, makeSearchUrl, mergeCandidates, parseCount, planSearches, readConfig, selectGroups, validateConfig } from './x-discovery.mjs';
 
 const config = await readConfig();
 const now = new Date('2026-11-14T01:00:00.000Z');
@@ -47,12 +47,56 @@ test('an account search keeps only that account, uses its own like threshold and
   assert.equal(extractCandidates(rows, capturedAt, 'q').length, 1, 'the keyword search keeps its 100-like floor and has no watched mark');
 });
 
-test('the shipped config is valid and searches for creative videos, not design work (Videos tab, 2026-11-20)', () => {
+test('the shipped config searches for creative videos posted by their makers, not design work or tool lists (Videos tab, 2026-11-20)', () => {
   const weekly = planSearches(config, { now });
   assert.deepEqual([...new Set(weekly.map(s => s.group))], ['weekly']);
   assert.ok(weekly.length >= 1 && weekly[0].required && weekly[0].kind === 'query');
-  assert.match(weekly[0].query, /animation.*filter:videos min_faves:1000 since:2026-11-07$/);
-  for (const s of planSearches(config, { groups: 'all', now })) assert.doesNotMatch(s.label, /\b(design|typography|dashboard|branding|rebrand)\b/i, s.label);
+  assert.match(weekly[0].query, /"i made".*animation.*filter:videos min_faves:\d+ since:2026-11-07$/);
+  // The 2026-11-22 run screened six posts and rejected all six: repo lists, income claims, "who made this" reposts.
+  for (const s of planSearches(config, { groups: 'all', now })) {
+    assert.doesNotMatch(s.label.replace(/(^|\s)-\S+/g, ''), /\b(design|typography|dashboard|branding|rebrand|ui|interaction|prototype)\b/i, s.label);
+    for (const term of ['-filter:quote', '-filter:replies', '-repos', '-github', '-"who made"']) assert.ok(s.query.includes(term), `${s.label} lacks ${term}`);
+    assert.ok(s.query.length <= 500, `${s.label} is ${s.query.length} characters`);
+  }
+  for (const s of weekly) assert.match(s.label, /"i made"|"made this"|wip/, `${s.label} has no maker phrasing`);
+  assert.ok(config.skipHandles.some(entry => entry.handle === 'e1genqq'));
+});
+
+test('posts the screening always rejected are skipped before they cost a model call', () => {
+  const row = (text, extra = {}) => ({ url: 'https://x.com/maker/status/2120000000000000001', metrics: '900 likes', text, ...extra });
+  const rejected = [
+    ['18 GitHub repos. One map. Bookmark this', 'resource list'],
+    ['20 open-source repos to make motion graphics with Remotion', 'resource list'],
+    ['Remotion just made video editing free', 'repo or tool promotion'],
+    ['Who made this 😭😂', 'repost'],
+    ['so good. credit: @someone', 'repost'],
+    ['I make $12k/month with these AI videos', 'income or growth claim'],
+    ['My short is live on Kickstarter now', 'promotion'],
+    ['Fable 5.2 did not cheat on this one!!! 100% code', 'AI model showcase'],
+    ['This video is just 10KB of code. I made it with my shader-skills repo', 'repo or tool promotion'],
+    ['I made this with GPT Astra 6.2', 'AI model showcase'],
+    ['261121 choi hyunsuk instagram 🎥✨ #최현석', 'repost'],
+  ];
+  for (const [text, reason] of rejected) assert.equal(skipReason(row(text)), reason, text);
+  const kept = [
+    'I made a low-poly cat and animated its walk cycle in Blender.',
+    'Brutally clean shader transition I made yesterday',
+    "shots i animated for jude's new video 113 hours of work, some of my best",
+    'finished my first stop motion, it took me 3 weeks',
+  ];
+  for (const text of kept) assert.equal(skipReason(row(text)), null, text);
+  assert.equal(skipReason(row('I made this', { quote: true })), 'quote post');
+  assert.equal(skipReason(row('I made this', { url: 'https://x.com/E1GENQQ/status/2120000000000000002' }), new Set(['e1genqq'])), 'skipped account');
+  assert.ok(SKIP_TEXT.every(([reason, pattern]) => typeof reason === 'string' && pattern instanceof RegExp));
+});
+
+test('the exclusions are appended to every keyword query, and a query X would answer with nothing is refused', () => {
+  const base = { groups: [{ id: 'g', weekly: true, days: 7, queries: [{ terms: 'claymation', minLikes: 300 }], accounts: [{ handle: 'akella', minLikes: 50 }] }] };
+  const [query, account] = planSearches(validateConfig({ ...base, exclude: '-filter:quote -repos' }), { now });
+  assert.equal(query.query, 'claymation -filter:quote -repos filter:videos min_faves:300 since:2026-11-07');
+  assert.equal(query.label, 'claymation');
+  assert.doesNotMatch(account.query, /-repos/, 'an account search is not given the keyword exclusions');
+  assert.throws(() => planSearches(validateConfig({ ...base, exclude: 'x'.repeat(480) }), { now }), /group "g": the search for claymation is \d+ characters .* X shows nothing past 500/);
 });
 
 // Group selection and windows, on a fixed config so the rules stay covered whatever the shipped groups are.
@@ -108,6 +152,11 @@ test('a config that would search the wrong thing is refused with the reason', ()
     [group({ accounts: [{ handle: '@akella', minLikes: 100 }] }), /invalid handle "@akella"/],
     [group({ accounts: [{ handle: 'akella', minLikes: 100 }, { handle: 'Akella', minLikes: 50 }] }), /lists @Akella twice/],
     [group({ accounts: [{ handle: 'akella' }] }), /@akella needs a positive whole "minLikes"/],
+    [{ ...group({}), exclude: '-repos min_faves:10' }, /"exclude" must be text without filter:videos/],
+    [{ ...group({}), exclude: 3 }, /"exclude" must be text/],
+    [{ ...group({}), skipHandles: [{ handle: '@e1genqq', reason: 'lists' }] }, /skipHandles has an invalid handle "@e1genqq"/],
+    [{ ...group({}), skipHandles: [{ handle: 'e1genqq' }] }, /skipHandles: @e1genqq needs a "reason"/],
+    [{ ...group({}), skipHandles: [{ handle: 'e1genqq', reason: 'a' }, { handle: 'E1genqq', reason: 'b' }] }, /skipHandles lists @E1genqq twice/],
   ];
   for (const [bad, message] of cases) assert.throws(() => validateConfig(bad), message);
 });
@@ -133,7 +182,7 @@ test('new posts join the inbox with their group, reviewed candidates are left as
 async function runWith(pages, options = {}) {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'x-discovery-'));
   const configFile = path.join(dir, 'x-discovery.json'), inbox = path.join(dir, 'inbox.json');
-  await fs.writeFile(configFile, JSON.stringify({ groups: [
+  await fs.writeFile(configFile, JSON.stringify({ skipHandles: [{ handle: 'lister', reason: 'repo lists' }], groups: [
     { id: 'weekly', weekly: true, days: 7, queries: [{ terms: 'design', minLikes: 100, required: true }], accounts: [{ handle: 'akella', minLikes: 50 }] },
     { id: 'print', days: 30, queries: [{ terms: 'zine', minLikes: 150 }, { terms: 'letterpress', minLikes: 150 }] },
   ] }));
@@ -142,7 +191,10 @@ async function runWith(pages, options = {}) {
   let current, finished = false;
   const page = {
     goto: async url => { current = new URL(url).searchParams.get('q'); visited.push(current); },
-    waitForSelector: async () => { if (!Object.keys(pages).some(key => current.startsWith(key))) throw new Error('Timeout 20000ms exceeded'); },
+    waitForSelector: async () => {
+      if (options.flaky?.has(current.split(' ')[0])) { options.flaky.delete(current.split(' ')[0]); throw new Error('Timeout 20000ms exceeded'); }
+      if (!Object.keys(pages).some(key => current.startsWith(key))) throw new Error('Timeout 20000ms exceeded');
+    },
     evaluate: async () => pages[Object.keys(pages).find(key => current.startsWith(key))],
   };
   const log = console.log;
@@ -164,7 +216,7 @@ test('a run reads each planned search, writes new candidates with their group an
     zine: [post('four', '2120000000000000024', 150)],
   }, { groups: 'all', existing: [reviewed] });
   assert.equal(got.error, undefined);
-  assert.deepEqual(got.visited.map(q => q.split(' ')[0]), ['design', 'from:akella', 'zine', 'letterpress']);
+  assert.deepEqual(got.visited.map(q => q.split(' ')[0]), ['design', 'from:akella', 'zine', 'letterpress', 'letterpress'], 'a search that times out is tried once more');
   assert.deepEqual(got.written.candidates.map(c => [c.id, c.status, c.group, c.watched]), [
     ['2120000000000000023', 'pending', 'weekly', true], ['2120000000000000024', 'pending', 'print', undefined], ['2120000000000000021', 'published', undefined, undefined],
   ]);
@@ -176,9 +228,29 @@ test('a run reads each planned search, writes new candidates with their group an
   assert.equal(got.finished, true);
 });
 
+test('quote posts, skipped accounts and list or repost text never reach the inbox, and the report counts them', async () => {
+  const got = await runWith({ design: [
+    { ...post('maker', '2120000000000000031', 500), text: 'I made a little claymation frog' },
+    { ...post('quoter', '2120000000000000032', 500), text: 'this is incredible', quote: true },
+    { ...post('lister', '2120000000000000033', 500), text: 'my animation' },
+    { ...post('reposter', '2120000000000000034', 500), text: 'Who made this 😭' },
+    { ...post('hustler', '2120000000000000035', 500), text: '18 GitHub repos for motion' },
+  ] });
+  assert.deepEqual(got.written.candidates.map(c => c.handle), ['maker']);
+  assert.equal('text' in got.written.candidates[0], false, 'the post text is read for the check, not stored');
+  assert.equal(got.lines.at(-1), '  skipped before screening: 1 quote post, 1 skipped account, 1 repost, 1 resource list');
+});
+
+test('a results page that times out once is read on the retry', async () => {
+  const got = await runWith({ design: [post('one', '2120000000000000021', 500)], 'from:akella': [post('akella', '2120000000000000023', 60)] }, { flaky: new Set(['design', 'from:akella']) });
+  assert.equal(got.error, undefined);
+  assert.deepEqual(got.visited.map(q => q.split(' ')[0]), ['design', 'design', 'from:akella', 'from:akella']);
+  assert.deepEqual(got.written.candidates.map(c => c.handle), ['one', 'akella']);
+});
+
 test('with no groups named only the weekly group is searched', async () => {
   const got = await runWith({ design: [post('one', '2120000000000000021', 500)] });
-  assert.deepEqual(got.visited.map(q => q.split(' ')[0]), ['design', 'from:akella']);
+  assert.deepEqual(got.visited.map(q => q.split(' ')[0]), ['design', 'from:akella', 'from:akella']);
   assert.deepEqual(got.lines.slice(1), ['  weekly: 1 qualifying, 1 new; 1/2 searches gave nothing (@akella)']);
 });
 
@@ -186,13 +258,13 @@ test('the inbox is left unchanged when a required search, or every search of the
   const existing = [{ id: '2120000000000000021', capturedAt: '2026-11-07T01:00:00.000Z', status: 'published', entry: 'x-one' }];
   const loggedOut = await runWith({ 'from:akella': [post('akella', '2120000000000000023', 60)] }, { existing });
   assert.match(loggedOut.error?.message, /^X returned no readable posts; the inbox was left unchanged\. Open x\.com in Ego Lite first and check that it is still logged in\. \(Timeout 20000ms exceeded\)$/);
-  assert.deepEqual(loggedOut.visited.map(q => q.split(' ')[0]), ['design'], 'the run stops at the required search');
+  assert.deepEqual(loggedOut.visited.map(q => q.split(' ')[0]), ['design', 'design'], 'the run stops at the required search after one retry');
   assert.deepEqual(loggedOut.written, { candidates: existing });
 
   const empty = await runWith({ design: [] }, { existing });
   assert.match(empty.error?.message, /^X returned no readable posts; the inbox was left unchanged\./);
   const nothing = await runWith({}, { groups: 'print', existing });
   assert.match(nothing.error?.message, /^X returned no readable posts; the inbox was left unchanged\./);
-  assert.equal(nothing.visited.length, 2, 'a group with no required search tries all of its searches first');
+  assert.equal(nothing.visited.length, 4, 'a group with no required search tries all of its searches, each twice, first');
   assert.deepEqual(nothing.written, { candidates: existing });
 });

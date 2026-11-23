@@ -1,12 +1,28 @@
 {
+  "exclude": "-filter:replies -filter:quote -repos -github -prompt -prompts -bookmark -thread -tutorial -course -giveaway -trailer -kickstarter -\"who made\" -credit -claude -remotion -comfyui",
+  "skipHandles": [
+    { "handle": "e1genqq", "reason": "repo and tool lists with income claims, five times (2026-11-19 to 11-22)" },
+    { "handle": "flxrnc", "reason": "\"N GitHub repos\" list threads, twice (2026-11-20, 11-22)" },
+    { "handle": "cryptowluha", "reason": "\"bookmark these\" repo list (2026-11-22)" },
+    { "handle": "0xMovez", "reason": "\"20 GitHub repos\" list (2026-11-20)" },
+    { "handle": "ToonHive", "reason": "aggregator: reposts other studios' shorts, trailers and ads, three times (2026-11-20)" },
+    { "handle": "DiscussingFilm", "reason": "film news account reposting official shorts (2026-11-20)" },
+    { "handle": "ani_obsessive", "reason": "reposts films it writes about (2026-11-20)" },
+    { "handle": "CartoonsOTMoon", "reason": "aggregator reposting trailers (2026-11-20)" },
+    { "handle": "dailytobytrivia", "reason": "trivia account reposting others' animation (2026-11-20)" }
+  ],
   "groups": [
     {
       "id": "weekly",
       "weekly": true,
       "days": 7,
+      "screens": 2,
       "queries": [
-        { "terms": "(animation OR animated OR \"short film\" OR \"stop motion\" OR claymation OR vfx) -tutorial -course -giveaway -prompt -template -\"ui\" -logo", "minLikes": 1000, "required": true },
-        { "terms": "(\"made this\" OR \"i made\" OR \"we made\") (video OR film OR animation) -tutorial -course -giveaway -prompt -template -app -website", "minLikes": 2000 }
+        { "terms": "(\"i made\" OR \"i animated\" OR \"made this\" OR \"made a little\" OR \"my animation\" OR \"my new short\" OR \"finally finished\" OR \"took me\" OR \"animation test\" OR wip) (animation OR animated OR animatic OR \"short film\")", "minLikes": 500, "required": true },
+        { "terms": "(\"stop motion\" OR stopmotion OR claymation OR \"paper animation\" OR \"frame by frame\" OR \"hand drawn\" OR papercraft) (\"i made\" OR \"made this\" OR \"i animated\" OR \"my first\" OR \"my new\" OR wip OR finished OR \"took me\")", "minLikes": 300 },
+        { "terms": "(shader OR glsl OR \"creative coding\" OR generative OR p5js OR touchdesigner OR \"made in blender\" OR simulation) (\"i made\" OR \"made a\" OR \"made this\" OR wip OR \"playing around\" OR \"playing with\" OR study OR \"real-time\")", "minLikes": 300 },
+        { "terms": "(vfx OR \"visual effects\" OR \"forced perspective\" OR \"practical effects\" OR \"in-camera\" OR \"camera trick\" OR compositing) (\"i made\" OR \"made this\" OR \"we made\" OR \"we shot\" OR \"i shot\" OR \"took me\" OR wip OR \"my first\")", "minLikes": 300 },
+        { "terms": "(\"animated short\" OR \"funny animation\" OR \"short skit\" OR \"comedy short\") (\"i made\" OR \"we made\" OR \"made this\" OR \"i animated\" OR \"my new\" OR \"our new\")", "minLikes": 500 }
       ]
     },
     {
@@ -14,7 +30,7 @@
       "days": 30,
       "screens": 3,
       "queries": [
-        { "terms": "(\"stop motion\" OR stopmotion OR claymation OR papercraft OR \"paper animation\") -tutorial -course -giveaway", "minLikes": 500 }
+        { "terms": "(\"stop motion\" OR stopmotion OR claymation OR papercraft OR \"paper animation\")", "minLikes": 500 }
       ]
     },
     {
@@ -22,7 +38,7 @@
       "days": 30,
       "screens": 3,
       "queries": [
-        { "terms": "(vfx OR \"visual effects\" OR \"forced perspective\" OR \"camera trick\" OR \"in-camera\") -tutorial -course -giveaway -breakdown", "minLikes": 1000 }
+        { "terms": "(vfx OR \"visual effects\" OR \"forced perspective\" OR \"camera trick\" OR \"in-camera\") -breakdown", "minLikes": 1000 }
       ]
     },
     {
@@ -30,7 +46,7 @@
       "days": 30,
       "screens": 3,
       "queries": [
-        { "terms": "(\"generative art\" OR creativecoding OR \"creative coding\" OR simulation OR shader) -tutorial -course -giveaway -prompt -ui", "minLikes": 500 }
+        { "terms": "(\"generative art\" OR creativecoding OR \"creative coding\" OR simulation OR shader) -ui", "minLikes": 500 }
       ]
     },
     {
@@ -38,7 +54,7 @@
       "days": 30,
       "screens": 3,
       "queries": [
-        { "terms": "(\"animated short\" OR \"funny animation\" OR \"short skit\" OR \"comedy short\") -tutorial -course -giveaway -prompt", "minLikes": 2000 }
+        { "terms": "(\"animated short\" OR \"funny animation\" OR \"short skit\" OR \"comedy short\")", "minLikes": 2000 }
       ]
     }
   ]
