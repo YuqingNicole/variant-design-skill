@@ -18,8 +18,14 @@
 ## 流程
 
 - `node website/scripts/site-discovery.mjs [--sources a,b|all] [--days n] [--dry-run]`：读各图库最近 `days` 天的条目，解析出网站地址；库里已有的站点（按域名）、收件箱里已有的条目和本次已从别的图库收到的同一站点跳过；每个图库每次最多加 `max` 个（现在都是 3）。写进 `website/content/site-inbox.json` 时各图库轮流排（每个图库第一条，再每个图库第二条……），状态 `pending`。筛选按收件箱顺序取前 `--limit` 条，所以一周不会被一个图库占满（2026-11-22 那次 10 条全来自 One Page Love）。
-- `node website/scripts/threads-publish.mjs --inbox website/content/site-inbox.json [--limit n] [--dry-run]`：和 Threads 同一套筛选。打开网站一次（无界面 Chrome，1280×800，前三屏一张图），读分享预览，交给模型（`claude -p`）收或拒，收的写中英文笔记；提示词写明“图库收录只是线索，不代表质量”，拿不准就拒。读不到的留在 `pending`。
+- `node website/scripts/threads-publish.mjs --inbox website/content/site-inbox.json [--limit n] [--dry-run]`：和 Threads 同一套筛选。打开网站一次（无界面 Chrome，1280×800，前三屏一张图，截法见下面“截图”），读分享预览，交给模型（`claude -p`）收或拒，收的写中英文笔记；提示词写明“图库收录只是线索，不代表质量”，拿不准就拒。读不到的留在 `pending`。
 - `website/scripts/run-sites-weekly.sh [--sources a,b|all] [--limit n]`：整条流程，开 `codex/sites-weekly-<日期>` 的 PR，CI 通过后自动合并（`merge-weekly-pr.sh`，失败重跑一次，仍失败就留给人）。不需要账号或 API 密钥。
+
+## 截图（`website/scripts/site-capture.mjs`，2026-11-23 改）
+
+以前用 Chrome 的 `--screenshot` 一次截 1280×2400 的窗口。窗口本身就有 2400px 高，`100vh` 的首屏会撑满整张图，看起来像只有一屏（#314 里的 Sunstill、Hoy、Wowww、Studio Plato）；页面也从没滚动过，滚动触发的出现动画和懒加载图片不会执行，留下大片空白（Soma、LouieLouie）。现在窗口是真实的 1280×800：加载后等网络空闲、字体和首屏图片就绪，再等 2.5 秒让入场动画跑完，截第一屏；然后用鼠标滚轮往下滚一屏（滚轮输入能带动平滑滚动库和页面内部的滚动容器，`window.scrollTo` 不能），等 1.2 秒和这一屏的请求，截第二屏，第三屏同样。三张图在同一个 Chrome 里上下拼起来，中间隔一条 8px 的灰线，所以整张图是 1280×2416。页面滚不动时后面几屏会和上一屏一样，提示词里告诉了模型这一点。每个网站一般 10–30 秒，最多 75 秒，超时留在 `pending`。
+
+2026-11-23 用 #314 的 10 个网站对比新旧截图（`--dry-run` 等价的调用，没有写入，提示词的收拒标准没改）：旧截图收 4 拒 6（Soma 这次被收，#314 里被拒，说明模型判断本身有波动）；新截图收 8 拒 2。新收的 Hoy、Wowww、Studio Plato、LouieLouie 在旧截图里都是一屏撑满或空白。仍被拒的：Damián Panes 没有分享预览图（不涉及截图）；Sunstill 页面确实不滚动，三屏重复，按“只有一屏内容”拒，这是标准问题，不是截图问题。
 
 请求带 `VariantDesignDiscovery/1.0` 的 User-Agent 和隐私页地址。
 
