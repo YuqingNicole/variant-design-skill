@@ -16,11 +16,21 @@ test('the chronological stream includes every kind on the home (Videos is its ow
  const {pageOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname);
  const expected=items.filter(i=>!pageOf(i)).sort((a,b)=>Date.parse(b.addedAt)-Date.parse(a.addedAt));
  expect(await cards.locator('.insp-card-open').evaluateAll(as=>as.map(a=>a.pathname.split('/').pop()))).toEqual(expected.slice(0,30).map(i=>i.id));
- // Paging eventually exposes website previews and X videos in this same list. A page's cards arrive as their section chunks
- // land (reference-library.ts), so each round reads the count once and waits for it to grow past that reading.
- // Masonry puts the last card in the shortest column, not necessarily at the bottom, so scroll to the end of the page as a reader does.
- for(let count=await cards.count();count<expected.length;count=await cards.count()){await page.evaluate(()=>scrollTo(0,document.documentElement.scrollHeight));await expect.poll(()=>cards.count()).toBeGreaterThan(count);}
- await expect(cards).toHaveCount(expected.length);await expect(cards.locator('video').first()).toBeAttached();await expect(cards.locator('.insp-thumb-media').first()).toBeAttached();
+ // Scrolling fills a page up to 100 cards (30 at a time); the rest are on numbered pages, so every reference is reachable and website
+ // previews and X videos share the stream. A page's cards arrive as their section chunks land (reference-library.ts), so each round
+ // reads the count once and waits for it to grow past that reading. Masonry puts the last card in the shortest column, so scroll to
+ // the end of the page as a reader does.
+ const ids=()=>cards.locator('.insp-card-open').evaluateAll(as=>as.map(a=>a.pathname.split('/').pop()));
+ const fill=async size=>{for(let count=await cards.count();count<size;count=await cards.count()){await page.evaluate(()=>scrollTo(0,document.documentElement.scrollHeight));await expect.poll(()=>cards.count()).toBeGreaterThan(count);}await expect(cards).toHaveCount(size)};
+ const pages=Math.ceil(expected.length/100),seen=[];
+ await expect(page.locator('.insp-pages [aria-label]')).toHaveCount(pages);
+ for(let n=1;n<=pages;n++){
+  if(n>1){await page.locator('.insp-pages').getByRole('button',{name:'下一页'}).click();await expect(page).toHaveURL(new RegExp(`[?&]page=${n}(&|$)`));await expect(page.locator('.insp-pages [aria-current=page]')).toHaveText(String(n));}
+  await fill(Math.min(100,expected.length-(n-1)*100));seen.push(...await ids());
+ }
+ expect(seen).toEqual(expected.map(i=>i.id));
+ await expect(cards.locator('video').first()).toBeAttached();
+ await page.locator('.insp-pages').getByRole('button',{name:'第 1 页'}).click();await expect(page).not.toHaveURL(/[?&]page=/);await expect(cards.locator('.insp-thumb-media').first()).toBeAttached();
  await page.getByRole('link',{name:'网站',exact:true}).click();await expect(page).toHaveURL(/\/browse\/web$/);
  // A tab is a full page load: act only after React has taken over the prerendered page, or its state replaces the filters.
  await page.waitForFunction(()=>Object.keys(document.getElementById('root')).some(k=>k.startsWith('__reactContainer')));
@@ -30,6 +40,14 @@ test('the chronological stream includes every kind on the home (Videos is its ow
  await page.reload();await expect(cards).toHaveCount(1);await expect(page.getByRole('searchbox')).toHaveValue('Vercel');await expect(page).toHaveURL(/topic=saas-home/);
 });
 
+test('a page opened by address shows its own cards, and on phones the page bar keeps to one line with arrows',async({page})=>{
+ await page.setViewportSize({width:390,height:844});await page.goto('/zh/?page=2');
+ const nav=page.locator('.insp-pages');await expect(nav.locator('[aria-current=page]')).toHaveText('2');
+ await expect(nav.getByRole('button',{name:'上一页'})).toBeEnabled();await expect(nav.getByRole('button',{name:'下一页'})).toBeVisible();
+ const tops=await nav.locator('button').evaluateAll(bs=>bs.map(b=>Math.round(b.getBoundingClientRect().top)));expect(new Set(tops).size).toBe(1);
+ for(const b of await nav.locator('button').all())expect((await b.boundingBox()).height).toBeGreaterThanOrEqual(44);
+ await nav.getByRole('button',{name:'上一页'}).click();await expect(page).not.toHaveURL(/[?&]page=/);await page.goBack();await expect(page).toHaveURL(/[?&]page=2/);await expect(nav.locator('[aria-current=page]')).toHaveText('2');
+});
 test('the slash key focuses the search, except while typing',async({page})=>{
  await page.goto('/zh');await expect(page.locator('.insp-search input')).toBeVisible();
  await expect(async()=>{await page.keyboard.press('/');await expect(page.locator('.insp-search input')).toBeFocused({timeout:500})}).toPass();

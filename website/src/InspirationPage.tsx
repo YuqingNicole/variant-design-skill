@@ -52,7 +52,8 @@ const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdra
  closing:{zh:'看过之后，做出自己的版本。',en:'After looking, make your own version.'},install:{zh:'安装并开始',en:'Install & start'},studies:{zh:'查看我们的 A/B/C 案例',en:'See our A/B/C cases'},
  checked:{zh:'公开来源核对：2026-10-07；SaaS 首页专题复核：2026-10-29；初创公司首页专题核对：2026-11-01',en:'Public sources checked: 2026-10-07; SaaS homepages topic rechecked: 2026-10-29; startup homepages topic checked: 2026-11-01'},
  unknownDesignerField:{zh:'设计者',en:'designer'},unknownMobile:{zh:'手机端表现',en:'mobile behavior'},unknownRights:{zh:'链接以外的使用权限',en:'rights beyond linking'},listJoin:{zh:'、',en:', '},
- intro:{zh:'精选网站、界面和动效作品，每条附出处和我们的笔记。',en:'Curated websites, interfaces and motion work, each with its source and our notes.'}} satisfies Record<string,Localized>;
+ intro:{zh:'精选网站、界面和动效作品，每条附出处和我们的笔记。',en:'Curated websites, interfaces and motion work, each with its source and our notes.'},
+ pages:{zh:'分页',en:'Pages'},pagePrev:{zh:'上一页',en:'Previous page'},pageNext:{zh:'下一页',en:'Next page'}} satisfies Record<string,Localized>;
 const f={
  caption:{zh:(host:string,at:string,failed:boolean)=>`${host} 为分享链接公开的预览，图片取自原站、按显示尺寸缩小，${at} 读取。${failed?'图片暂时无法加载。':''}`,en:(host:string,at:string,failed:boolean)=>`The preview ${host} publishes for shared links; the image comes from the source, resized for display, read ${at}.${failed?' The image could not load right now.':''}`},
  docTitle:{zh:'Variant Design — AI 时代最好的设计灵感',en:'Variant Design — The best design inspiration in the AI era'},
@@ -65,7 +66,8 @@ const f={
   en:(item:Item)=>`Study ${item.name} (${item.url}), focusing on ${item.focus.en} to ${item.application.en.toLowerCase()}. Recheck the current source; do not copy its text, marks or assets. Inspect my project's brand constraints, then create three original directions for the same core task. Explain tradeoffs, provide working previews, and verify desktop/mobile layouts. Check the specific license before reusing code.`},
  topicNote:{zh:(at:string)=>`链接于 ${at} 复查可访问；研究笔记的观察日期见各条。`,en:(at:string)=>`Links rechecked as reachable on ${at}; each note shows its own observation date.`},
  via:{zh:(host:string)=>`经 ${host} 发现`,en:(host:string)=>`found via ${host}`},
- loadMore:{zh:(n:number)=>`加载更多（还有 ${n} 个）`,en:(n:number)=>`Load more (${n} left)`}};
+ loadMore:{zh:(n:number)=>`加载更多（还有 ${n} 个）`,en:(n:number)=>`Load more (${n} left)`},
+ pageN:{zh:(n:number)=>`第 ${n} 页`,en:(n:number)=>`Page ${n}`}};
 const rightsLabel=(item:Item,locale:Locale)=>t(m[permissionOf(item)?'authorized':'linkOnly'],locale);
 const rights=(item:Item,locale:Locale)=><em className="inspiration-link-only">{rightsLabel(item,locale)}</em>;
 function Thumb({item,locale}:{item:Item;locale:Locale}){const preview=previewOf(item.id);const post=postOf(item);const [tries,setTries]=useState(0),[loaded,setLoaded]=useState(false),[ratio,setRatio]=useState('');
@@ -84,6 +86,8 @@ const Icon=({d}:{d:string})=><svg viewBox="0 0 16 16" width="14" height="14" ari
 const icons={out:'M5 11 11 5M6 5h5v5',save:'M4 2.5h8v11L8 10.5l-4 3z',close:'M4 4l8 8M12 4l-8 8',prev:'M10 3 5 8l5 5',next:'M6 3l5 5-5 5',search:'M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM14 14l-3.5-3.5'};
 // One page of cards: a multiple of the two-, three-, five- and six-column grids, so a page ends on a full row.
 const pageSize=30;
+// The feed shows at most 100 cards; the rest are on numbered pages (maintainer, 2026-11-23). Inside a page cards still arrive 30 at a time.
+const perPage=100;
 const kinds:Record<string,Localized>={'submitted-work':{zh:'作者投稿',en:'Author submission'},'official-site':{zh:'官网',en:'Official site'},'youtube-video':{zh:'YouTube 视频',en:'YouTube video'},'product-page':{zh:'产品页',en:'Product page'},documentation:{zh:'帮助文档',en:'Documentation'},'social-post':{zh:'社交帖子',en:'Social post'}};
 // Everything the record does not establish goes into the brief as an explicit unknown (RFC-003 §3).
 const unknowns=(item:Item,locale:Locale)=>[...(item.designer?[]:[m.unknownDesignerField]),...(item.mobile==='not-tested'?[m.unknownMobile]:[]),permissionOf(item)?m.unknownReuse:m.unknownRights].map(v=>t(v,locale)).join(t(m.listJoin,locale));
@@ -93,7 +97,7 @@ function loadPack():{selection:Pack;error:boolean}{try{const raw=localStorage.ge
 const knownOnly=(raw:unknown)=>raw&&typeof raw==='object'&&!Array.isArray(raw)?Object.fromEntries(Object.entries(raw).filter(([id])=>known(id))):{};
 // Before the first render: the records that render shows (main.tsx waits for it). The home's first page is in the script; a
 // section page, a reference opened by address, and a sort, topic or query in the address load their records first.
-export function prepare(route:string){const p=new URLSearchParams(location.search);if(p.get('sort')||p.get('topic')||p.get('q'))return ensureAll();
+export function prepare(route:string){const p=new URLSearchParams(location.search);if(p.get('sort')||p.get('topic')||p.get('q')||Number(p.get('page'))>1)return ensureAll();
  if(route.startsWith('/browse/'))return ensure(references.filter(r=>sectionOf(r)===route.slice(8)).map(r=>r.id));if(route.startsWith('/inspiration/'))return ensure([route.slice(13)]);return Promise.resolve()}
 export function InspirationPage({detail='',section:sectionProp=''}:{detail?:string;section?:string}){
  const language = useLocale();useSyncExternalStore(subscribe,snapshot,snapshot);// re-renders as section chunks arrive
@@ -141,9 +145,11 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  // A query matches the notes too, so it asks for every record; until they arrive only the name and tag of an unfetched reference count.
  const q=query.trim().toLowerCase(),text=(r:Row)=>{const full=referenceOf(r.id);return (full?[full.name,full.tag,full.publisher,...Object.values(full.focus),...Object.values(full.application)]:[r.name,r.tag]).join(' ').toLowerCase()};
  const matches=rows.filter(r=>(!section||sectionOf(r)===section)&&(!activeTopic||activeTopic.items.includes(r.id))&&(!type||!sectionInfo?.types||videoTypeOf(r)===type)&&(!q||text(r).includes(q)));
+ const [pageNo,setPageNo]=useState(()=>Math.max(1,Math.floor(Number(new URLSearchParams(location.search).get('page')))||1));
  const results=sort==='checked'?[...matches].sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt)):sort==='name'?[...matches].sort((a,b)=>a.name.localeCompare(b.name)):sort==='curated'?matches:[...matches].sort((a,b)=>Date.parse(b.addedAt)-Date.parse(a.addedAt));
  // Cards render from records; the rows on screen whose section has not been fetched ask for it, and the store re-renders the page when it lands.
- const shown=results.slice(0,visible),cards=shown.flatMap(r=>referenceOf(r.id)??[]),missing=shown.filter(r=>!referenceOf(r.id)).map(r=>r.id).join(' ');
+ const pages=Math.max(1,Math.ceil(results.length/perPage)),pageAt=Math.min(pageNo,pages),pageResults=results.slice((pageAt-1)*perPage,pageAt*perPage);
+ const shown=pageResults.slice(0,visible),cards=shown.flatMap(r=>referenceOf(r.id)??[]),missing=shown.filter(r=>!referenceOf(r.id)).map(r=>r.id).join(' ');
  useEffect(()=>{if(missing)ensure(missing.split(' '))},[missing]);
  useEffect(()=>{if(q)ensureAll()},[q]);
  function useReference(item:Item){setNotice('');setPrompt(fl('useReference')(item))}
@@ -158,10 +164,10 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   const valid=rows.some(i=>i.id===id);if(valid&&fromGrid.current&&!returnTo.current)remember();
   const next=valid?{id,mode:fromGrid.current?'modal' as const:'page' as const}:null;requestedOpen.current=next;
   const apply=()=>transition(()=>{setOpen(next);
-   const params=new URLSearchParams(location.search),s=params.get('sort');setTopic(params.get('topic')??'');setType((sectionInfo?.types??[]).some(v=>v.id===params.get('type'))?params.get('type')!:'');setQuery(params.get('q')??'');setSort(s==='name'||s==='checked'||s==='curated'?s:'default')});
+   const params=new URLSearchParams(location.search),s=params.get('sort');setTopic(params.get('topic')??'');setType((sectionInfo?.types??[]).some(v=>v.id===params.get('type'))?params.get('type')!:'');setQuery(params.get('q')??'');setSort(s==='name'||s==='checked'||s==='curated'?s:'default');setPageNo(Math.max(1,Math.floor(Number(params.get('page')))||1))});
   if(next&&!loaded([next.id]))ensure([next.id]).then(()=>{if(requestedOpen.current===next)apply()});else apply();
  };addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
- useEffect(()=>{const url=new URL(location.href);for(const [key,value] of Object.entries({topic,type:sectionInfo?.types?type:'',q:query,sort:sort==='default'?'':sort})){if(value)url.searchParams.set(key,value);else url.searchParams.delete(key)}history.replaceState(history.state,'',url.pathname+url.search+url.hash)},[topic,type,query,sort]);
+ useEffect(()=>{const url=new URL(location.href);for(const [key,value] of Object.entries({topic,type:sectionInfo?.types?type:'',q:query,sort:sort==='default'?'':sort,page:pageAt>1?String(pageAt):''})){if(value)url.searchParams.set(key,value);else url.searchParams.delete(key)}history.replaceState(history.state,'',url.pathname+url.search+url.hash)},[topic,type,query,sort,pageAt]);
  const inQuery=(drop=false)=>{const p=new URLSearchParams(location.search);if(drop||!section)p.delete('in');else p.set('in',section);const q=p.toString();return q?'?'+q:''};
  // A reference outside the fetched sections is shown once its record is here; a newer request in the meantime wins.
  function show(id:string,mode:'page'|'modal'){if(!requestedOpen.current&&mode==='modal')remember();const request={id,mode};requestedOpen.current=request;const go=()=>transition(()=>{
@@ -212,9 +218,13 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  const allShown=cards.length>=shown.length;
  // A detail opened by its own address renders no feed; closing it mounts the sentinel, which needs a fresh observer.
  const feedMounted=open?.mode!=='page';
- useEffect(()=>{const el=moreRef.current;if(!el||!allShown||!('IntersectionObserver' in window))return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting&&visible<results.length)setVisible(v=>v+pageSize)},{rootMargin:'0px 0px 600px 0px'});io.observe(el);return()=>io.disconnect()},[visible,results.length,allShown,feedMounted]);
+ useEffect(()=>{const el=moreRef.current;if(!el||!allShown||!('IntersectionObserver' in window))return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting&&visible<pageResults.length)setVisible(v=>v+pageSize)},{rootMargin:'0px 0px 600px 0px'});io.observe(el);return()=>io.disconnect()},[visible,pageResults.length,allShown,feedMounted]);
  // Independent filter changes must apply immediately; the shared animation queue keeps only its latest update.
- const filter=(update:()=>void)=>{update();setVisible(pageSize)};
+ const filter=(update:()=>void)=>{update();setVisible(pageSize);setPageNo(1)};
+ // A page is its own history entry, so Back returns to the page before; the URL effect above keeps the other filters.
+ const goToPage=(n:number)=>{const url=new URL(location.href);if(n>1)url.searchParams.set('page',String(n));else url.searchParams.delete('page');history.pushState(history.state,'',url.pathname+url.search+url.hash);scrollTo({top:0,behavior:'instant'});setVisible(pageSize);setPageNo(n)};
+ // Every page number while there are few; with many, the first, the last and the current one with its neighbours.
+ const pageList=pages<=7?Array.from({length:pages},(_,i)=>i+1):[...new Set([1,pageAt-1,pageAt,pageAt+1,pages])].filter(n=>n>=1&&n<=pages).sort((a,b)=>a-b);
  function brief(item:Item){if(needAccount('brief'))return;if(open?.mode==='modal'){afterClose.current=()=>useReference(item);close()}else useReference(item)}
  const analysisOf=(item:Item)=>(item as {analysis?:{checkedAt:string;structure:Localized<string>;measured:Localized<string[]>;learn:Localized<string>;avoid:Localized<string>}}).analysis;
  const related=(item:Item)=>relatedReferences(item,rows);
@@ -263,7 +273,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   <div className="insp-bar"><div className="site-shell">
    {page?typeRow:<nav className="insp-pills" aria-label={l('refType')} ref={pillsRef}>{[{id:'',name:{zh:'全部',en:'All'}},...tabs].map(c=><a key={c.id||'all'} href={localePath(sectionPath(c.id),language)} aria-current={section===c.id?'page':undefined} onPointerEnter={prefetch} onFocus={prefetch} onTouchStart={prefetch}>{t(c.name,language)} <small aria-hidden="true">{c.id?count(c.id):total}</small></a>)}</nav>}
    
-   <label className="insp-search"><Icon d={icons.search}/><span className="insp-visually-hidden">{l('search')}</span><input ref={searchRef} type="search" value={query} onChange={e=>{setQuery(e.target.value);setVisible(pageSize)}} placeholder={l('searchHint')}/></label>
+   <label className="insp-search"><Icon d={icons.search}/><span className="insp-visually-hidden">{l('search')}</span><input ref={searchRef} type="search" value={query} onChange={e=>{setQuery(e.target.value);setVisible(pageSize);setPageNo(1)}} placeholder={l('searchHint')}/></label>
    <select aria-label={l('sort')} value={sort} onChange={e=>{const v=e.target.value;filter(()=>setSort(v))}}><option value="default">{l('curated')}</option><option value="curated">{l('original')}</option><option value="checked">{l('recent')}</option><option value="name">{l('byName')}</option></select>
   </div>{sectionInfo?.types&&!page&&<div className="site-shell">{typeRow}</div>}</div>
   <section className="site-shell insp-body">
@@ -282,7 +292,12 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
     {!page&&<button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${l(selection[item.id]?'removePack':'addPack')}：${item.name}`}><Icon d={icons.save}/></button>}
     <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l(post?'openOnX':'openSource')}：${item.name}`}><Icon d={icons.out}/></a>
    </li>})}</ul>
-   {visible<results.length&&<div className="insp-more" ref={moreRef}><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}
+   {visible<pageResults.length&&<div className="insp-more" ref={moreRef}><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(pageResults.length-visible)}</button></div>}
+   {pages>1&&<nav className="insp-pages" aria-label={l('pages')}>
+    <button type="button" disabled={pageAt<=1} onClick={()=>goToPage(pageAt-1)}><Icon d={icons.prev}/><span>{l('pagePrev')}</span></button>
+    {pageList.map((n,i)=><span key={n} className="insp-page-slot">{i>0&&n-pageList[i-1]>1&&<span className="insp-page-gap" aria-hidden="true">…</span>}<button type="button" aria-label={fl('pageN')(n)} aria-current={n===pageAt?'page':undefined} onClick={()=>goToPage(n)}>{n}</button></span>)}
+    <button type="button" disabled={pageAt>=pages} onClick={()=>goToPage(pageAt+1)}><span>{l('pageNext')}</span><Icon d={icons.next}/></button>
+   </nav>}
    {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setTopic('');setType('');setQuery('')})}>{l('clear')}</button></p>}
    {tail}
    <section className="content-closing"><h2>{l('closing')}</h2><a className="content-button" href={localePath('/docs',language)}>{l('install')}</a>{showCases&&<a className="content-secondary" href={localePath('/cases',language)}>{l('studies')}</a>}<p className="inspiration-count">{l('checked')}</p></section>

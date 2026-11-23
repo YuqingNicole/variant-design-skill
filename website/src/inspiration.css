@@ -449,3 +449,16 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .search-rank[data-top]{color:var(--site-hot)}
 .search-term{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .search-hot{flex:none;padding:2px 6px;border-radius:var(--radius-pill);background:var(--site-hot);color:var(--site-on-hot);font-style:normal;font-size:12px;line-height:1.2}
+
+/* Pages below the feed (100 cards a page, maintainer 2026-11-23): previous, the numbers, next; every target 44px, the current
+   page filled in ink. Same pill, fill and hairline as the filter pills, so the style budget holds. */
+.insp-pages{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;padding:16px 0 24px}
+.insp-page-slot{display:inline-flex;align-items:center;gap:6px}
+.insp-pages button{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:44px;height:44px;padding:0 14px;border:0;border-radius:var(--radius-pill);background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-ink);font:inherit;font-size:14px;font-variant-numeric:tabular-nums;cursor:pointer}
+.insp-pages button[aria-current=page]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}
+.insp-pages button:disabled{opacity:.4;cursor:default}
+.insp-pages button:focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
+.insp-pages svg{width:14px;height:14px}
+.insp-page-gap{color:var(--site-muted);font-size:14px}
+/* Phones: the arrows alone, so previous, the numbers and next stay on one line; the words remain for screen readers. */
+@media(max-width:650px){.insp-pages button>span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.insp-pages button{padding:0 12px}}
