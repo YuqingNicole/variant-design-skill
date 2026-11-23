@@ -36,19 +36,30 @@ export function SearchSheet({ language, query, sort, sortOptions, topics, onSear
   language: Locale; query: string; sort: string; sortOptions: Option[]; topics: { id: string; title: Localized }[];
   onSearch: (q: string) => void; onTopic: (id: string) => void; onSort: (value: string) => void; onClose: () => void;
 }) {
-  const l = (k: keyof typeof m) => t(m[k], language), input = useRef<HTMLInputElement>(null);
+  const l = (k: keyof typeof m) => t(m[k], language), input = useRef<HTMLInputElement>(null), root = useRef<HTMLDivElement>(null);
   const [value, setValue] = useState(query), [history, setHistory] = useState(readHistory);
   const collections = visibleCollections(facetData as Record<string, ReferenceFacets>, referencesFor(language), showDrafts).filter(c => showDrafts || !isDraft(c, language));
+  // A modal: focus starts in the field, Tab and Shift+Tab wrap inside the sheet, Escape closes it, and focus returns to what
+  // opened it (the search icon) when it closes.
   useEffect(() => {
+    const before = document.activeElement as HTMLElement | null;
     input.current?.focus();
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { onClose(); return; }
+      if (e.key !== 'Tab' || !root.current) return;
+      const items = [...root.current.querySelectorAll<HTMLElement>('input,button,a[href]')].filter(el => !el.hasAttribute('disabled'));
+      const first = items[0], last = items.at(-1);
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
+    };
     const overflow = document.body.style.overflow; document.body.style.overflow = 'hidden';// the feed must not scroll under the sheet
-    addEventListener('keydown', onKey); return () => { removeEventListener('keydown', onKey); document.body.style.overflow = overflow; };
+    addEventListener('keydown', onKey);
+    return () => { removeEventListener('keydown', onKey); document.body.style.overflow = overflow; if (before?.isConnected) before.focus({ preventScroll: true }); };
   }, []);
   const run = (q: string) => { const next = remember(history, q); setHistory(next); save(next); onSearch(q.trim()); };
   // Rendered on <body>: the home's frosted panel (backdrop-filter) would otherwise be the containing block of a fixed element,
   // leaving the sky around the sheet and the tab bar on top of it.
-  return createPortal(<div className="search-sheet content-page" role="dialog" aria-modal="true" aria-label={l('dialog')}>
+  return createPortal(<div ref={root} className="search-sheet content-page" role="dialog" aria-modal="true" aria-label={l('dialog')}>
     <form className="search-sheet-bar" role="search" onSubmit={e => { e.preventDefault(); run(value); }}>
       <input ref={input} type="search" enterKeyHint="search" value={value} onChange={e => setValue(e.target.value)} placeholder={l('placeholder')} aria-label={l('dialog')}/>
       <button type="button" onClick={onClose}>{l('cancel')}</button>
