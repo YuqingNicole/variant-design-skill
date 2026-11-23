@@ -47,7 +47,7 @@ export function validateConfig(config) {
   return config;
 }
 
-const decode = value => value.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").trim();
+const decode = value => value.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/&amp;/g, '&').replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n)).replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16))).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").trim();
 const tag = (block, name) => { const m = block.match(new RegExp(`<${name}(?:\\s[^>]*)?>([\\s\\S]*?)</${name}>`)); return m ? decode(m[1]) : ''; };
 // RSS 2.0 items only (all the configured galleries publish RSS). Returns title, item page, date and the raw item for resolvers.
 export function parseFeed(xml) {
@@ -76,7 +76,7 @@ export function namedLink(html, galleryHost, name) {
   if (want.length < 3) return null;
   for (const m of html.matchAll(/<a\b([^>]*)>([\s\S]{0,200}?)<\/a>/gi)) {
     const href = (m[1].match(/href="([^"]+)"/i) || [])[1];
-    if (!href || !/^https?:\/\//.test(href) || letters(m[2].replace(/<[^>]+>/g, '')) !== want) continue;
+    if (!href || !/^https?:\/\//.test(href) || letters(decode(m[2].replace(/<[^>]+>/g, ''))) !== want) continue;
     try { const url = new URL(href); if (!url.hostname.endsWith(galleryHost)) return url.href; } catch { continue; }
   }
   return null;
@@ -104,7 +104,7 @@ export function nameMatches(name, html) {
 async function get(url) {
   const res = await fetch(url, { headers: { 'user-agent': agent, accept: 'text/html,application/rss+xml,application/xml' }, redirect: 'follow', signal: AbortSignal.timeout(20000) });
   // CSS Winner's feed is ISO-8859-1; res.text() would read every page as UTF-8.
-  const charset = (res.headers.get('content-type')?.match(/charset=([\w-]+)/i) || [])[1] ?? 'utf-8';
+  const charset = (res.headers.get('content-type')?.match(/charset="?([\w-]+)/i) || [])[1] ?? 'utf-8';
   let decoder; try { decoder = new TextDecoder(charset); } catch { decoder = new TextDecoder(); }
   return { status: res.status, url: res.url, text: res.ok ? decoder.decode(await res.arrayBuffer()) : '' };
 }

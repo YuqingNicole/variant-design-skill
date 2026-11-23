@@ -23,6 +23,8 @@ test('a heading link named after the item resolves the site, and a slug check dr
   const html = `<a href="https://www.csswinner.com/profile/morimichi/1">MORIMICHI</a><a href="https://m0r1m1ch1.com" rel="nofollow"><span>Site of the Day</span></a><h1><a href="https://m0r1m1ch1.com" target="_blank">MORIMICHI</a></h1>`;
   assert.equal(namedLink(html, 'csswinner.com', 'MORIMICHI'), 'https://m0r1m1ch1.com/');
   assert.equal(namedLink(html, 'csswinner.com', 'Snapa'), null);
+  assert.equal(namedLink('<a href="https://sj.test/">Smith &amp; Jones</a>', 'g.test', 'Smith & Jones'), 'https://sj.test/');
+  assert.equal(namedLink('<a href="https://sl.test/">&#352;alina&#269;ki lug</a>', 'g.test', 'Šalinački lug'), 'https://sl.test/');
   assert.equal(slugMatches('https://m.test/website/study-hall-agency-website', 'https://studyhall.design/'), true);
   assert.equal(slugMatches('https://m.test/website/gssi-latam', 'https://www.gssilatam.org/'), true);
   assert.equal(slugMatches('https://m.test/website/opentrade', 'https://www.shoreditchdesign.com/'), false);
