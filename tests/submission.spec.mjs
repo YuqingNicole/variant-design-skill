@@ -46,10 +46,10 @@ test('withdrawn details retain a notice, never request media, and stay out of th
 });
 
 test('production guide lists and direct client routes respect draft English while keeping Chinese',async({page})=>{
- const draftSlugs=['undo-ai-design-changes','git-or-snapshot-undo','design-references-with-sources','write-a-design-brief-for-ai'];
+ const draftSlugs=['undo-ai-design-changes','git-or-snapshot-undo','design-references-with-sources','write-a-design-brief-for-ai','edit-one-part-of-a-ui-with-ai'];
  await page.goto(base+'/guides');await expect(page.locator('.guide-list article')).toHaveCount(2);await expect(page.locator('.guide-list a[href="/guides/compare-design-directions"]')).toBeVisible();
  for(const slug of draftSlugs){await expect(page.locator(`.guide-list a[href="/guides/${slug}"]`)).toHaveCount(0);await page.goto(base+'/guides/'+slug);await expect(page.locator('h1')).toHaveText('Not found');await expect(page.locator('.content-reading')).toHaveCount(0)}
- await page.goto(base+'/zh/guides');await expect(page.locator('.guide-list article')).toHaveCount(6);
+ await page.goto(base+'/zh/guides');await expect(page.locator('.guide-list article')).toHaveCount(7);
  for(const slug of draftSlugs){await page.goto(base+'/zh/guides/'+slug);await expect(page.locator('.content-reading')).toBeVisible();await expect(page.locator('h1')).not.toHaveText('页面不存在')}
 });
 
