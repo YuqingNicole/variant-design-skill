@@ -19,9 +19,11 @@ export function parseCount(value) {
 // Search groups live in `website/content/x-discovery.json`. A group has an id, keyword `queries` ({ terms, minLikes,
 // required? }) and `accounts` ({ handle, minLikes }), a window in `days` and, optionally, how many extra `screens` to
 // scroll. Groups marked `weekly` run on the schedule; the others run only when named. `minLikes` is per search because
-// a small account's best post would never reach a keyword search's floor. A person still reviews every candidate.
+// a small account's best post would never reach a keyword search's floor. The top-level `exclude` is appended to every
+// keyword query, and `skipHandles` ({ handle, reason }) lists accounts that only ever brought reposts or promotion.
 const idPattern = /^[a-z0-9][a-z0-9-]*$/, handlePattern = /^[A-Za-z0-9_]{1,15}$/;
 const wholeNumber = (value, min, max) => Number.isInteger(value) && value >= min && value <= max;
+const addedByScript = /\b(filter:videos|min_faves:|since:|until:)/i;
 
 export function validateConfig(config) {
   const fail = message => { throw new Error(`x-discovery.json: ${message}`); };
@@ -40,7 +42,7 @@ export function validateConfig(config) {
     for (const query of queries) {
       if (typeof query?.terms !== 'string' || !query.terms.trim()) fail(`group "${id}" has a query without "terms"`);
       // The script adds these itself; a second copy in the terms would silently fight the configured values.
-      if (/\b(filter:videos|min_faves:|since:|until:)/i.test(query.terms)) fail(`group "${id}": leave filter:videos, min_faves:, since: and until: out of "terms" (${query.terms})`);
+      if (addedByScript.test(query.terms)) fail(`group "${id}": leave filter:videos, min_faves:, since: and until: out of "terms" (${query.terms})`);
       if (!wholeNumber(query.minLikes, 1, 1e7)) fail(`group "${id}": "minLikes" must be a positive whole number (${query.terms})`);
       if (query.required !== undefined && typeof query.required !== 'boolean') fail(`group "${id}": "required" must be true or false (${query.terms})`);
     }
@@ -53,6 +55,14 @@ export function validateConfig(config) {
     }
   }
   if (!config.groups.some(group => group.weekly)) fail('at least one group must be marked "weekly"');
+  if (config.exclude !== undefined && (typeof config.exclude !== 'string' || addedByScript.test(config.exclude))) fail('"exclude" must be text without filter:videos, min_faves:, since: or until:');
+  const skipped = new Set();
+  for (const entry of config.skipHandles ?? []) {
+    if (typeof entry?.handle !== 'string' || !handlePattern.test(entry.handle)) fail(`skipHandles has an invalid handle ${JSON.stringify(entry?.handle)}`);
+    if (typeof entry.reason !== 'string' || !entry.reason.trim()) fail(`skipHandles: @${entry.handle} needs a "reason"`);
+    if (skipped.has(entry.handle.toLowerCase())) fail(`skipHandles lists @${entry.handle} twice`);
+    skipped.add(entry.handle.toLowerCase());
+  }
   return config;
 }
 
@@ -60,6 +70,7 @@ export async function readConfig(file = configPath) {
   return validateConfig(JSON.parse(await fs.readFile(file, 'utf8')));
 }
 
+const maxQuery = 500;
 const searchUrl = query => `https://x.com/search?q=${encodeURIComponent(query)}&src=typed_query&f=top`;
 
 export function makeSearchUrl(terms, date, minLikes) {
@@ -91,12 +102,36 @@ export function planSearches(config, { groups, days, now = new Date() } = {}) {
     const add = search => {
       if (seen.has(search.url)) return;
       seen.add(search.url);
-      searches.push({ group: group.id, screens: group.screens ?? 0, query: new URL(search.url).searchParams.get('q'), ...search });
+      const query = new URL(search.url).searchParams.get('q');
+      // X's web search shows no results at all for a longer query (a 516-character one failed, 483 worked; 2026-11-23).
+      if (query.length > maxQuery) throw new Error(`group "${group.id}": the search for ${search.label} is ${query.length} characters with the exclusions and filters; X shows nothing past ${maxQuery}. Shorten the terms or "exclude".`);
+      searches.push({ group: group.id, screens: group.screens ?? 0, query, ...search });
     };
-    for (const { terms, minLikes, required } of group.queries ?? []) add({ kind: 'query', label: terms, url: makeSearchUrl(terms.trim(), since, minLikes), minLikes, required: Boolean(required) });
+    const exclude = config.exclude?.trim();
+    for (const { terms, minLikes, required } of group.queries ?? []) add({ kind: 'query', label: terms, url: makeSearchUrl(exclude ? `${terms.trim()} ${exclude}` : terms.trim(), since, minLikes), minLikes, required: Boolean(required) });
     for (const { handle, minLikes } of group.accounts ?? []) add({ kind: 'account', label: `@${handle}`, handle, url: makeAccountSearchUrl(handle, since, minLikes), minLikes, required: false });
   }
   return searches;
+}
+
+// Cheap checks before a candidate costs a model screening. Each pattern is a kind of post x-publish.mjs rejected again and
+// again (inbox, 2026-11-16 to 11-22): repo and tool lists, reposts of someone else's video, growth and income posts,
+// promotion, and showcases of an AI model. A quote post is skipped too: its video is usually the quoted account's.
+export const SKIP_TEXT = [
+  ['resource list', /\b\d+\s+(?:[\w-]+\s+){0,2}(?:repos?|repositories|tools|skills|prompts|resources|websites|plugins)\b|\bbookmark (?:this|these|it)\b|🧵/iu],
+  ['repo or tool promotion', /\bgithub\b|\brepo\b|\bremotion\b|\bcomfyui\b|\bopen[- ]source\b/i],
+  ['repost', /\bwho made this\b|\bcredits?\s*(?::|to\b|goes\b)|\bvia\s+@|\bnot mine\b|(?:^|\s)(?:source|🎥|📹)\s*:|\binstagram\s*(?:🎥|📸|story|post|update|live)/iu],
+  ['income or growth claim', /\$\s?\d[\d,.]*\s*[km]?\s*(?:\/|per|a|in)\s*(?:month|mo|week|day)\b|\bpassive income\b|\bmake money\b|\bfollowers in \d+\s*(?:days|weeks)\b/i],
+  ['promotion', /\blink in bio\b|\buse code\b|\bpre-?order\b|\bkickstarter\b|\bgiveaway\b|\bsponsored\b|#ad\b|\bwishlist\b/i],
+  ['AI model showcase', /\b(?:fable|opus|sonnet|claude|gpt|chatgpt|gemini|veo|sora|kling|midjourney|seedance|dreamina|higgsfield)(?:[\s-]+[a-z]+)?[\s-]*\d|\bearly access to @/i],
+];
+
+// Why a row from the results page is not worth screening, or null. `skipHandles` holds lowercased handles from the config.
+export function skipReason(row, skipHandles = new Set()) {
+  const handle = /^https:\/\/x\.com\/([A-Za-z0-9_]{1,15})\//.exec(row.url ?? '')?.[1]?.toLowerCase();
+  if (handle && skipHandles.has(handle)) return 'skipped account';
+  if (row.quote) return 'quote post';
+  return SKIP_TEXT.find(([, pattern]) => pattern.test(row.text ?? ''))?.[0] ?? null;
 }
 
 // `options.handle` keeps only that account's own posts (an account search can show others' reposts) and marks them as watched.
@@ -142,7 +177,10 @@ async function readRows(page, url, screens = 0) {
     const group = article.querySelector('[role="group"]');
     const author = article.querySelector('[data-testid="User-Name"]')?.innerText ?? '';
     const publishedAt = article.querySelector('time')?.getAttribute('datetime') ?? '';
-    return status ? { url: status, metrics: group?.getAttribute('aria-label') ?? '', author, publishedAt } : null;
+    // The text is read for skipReason only and is not stored. A second author name inside the article is a quoted post.
+    const text = article.querySelector('[data-testid="tweetText"]')?.innerText ?? '';
+    const quote = article.querySelectorAll('[data-testid="User-Name"]').length > 1;
+    return status ? { url: status, metrics: group?.getAttribute('aria-label') ?? '', author, publishedAt, text, quote } : null;
   }).filter(Boolean));
 }
 
@@ -171,7 +209,10 @@ const noPosts = 'X returned no readable posts; the inbox was left unchanged. Ope
 export async function run({ groups, days, config = configPath, inbox: inboxFile = inboxPath, pause = 3000 } = {}) {
   const now = new Date();
   const capturedAt = now.toISOString();
-  const searches = planSearches(await readConfig(config), { groups, days, now });
+  const settings = await readConfig(config);
+  const searches = planSearches(settings, { groups, days, now });
+  const skipHandles = new Set((settings.skipHandles ?? []).map(entry => entry.handle.toLowerCase()));
+  const skipped = new Map();
   const task = await taskSpace(`X creative video discovery ${capturedAt.replace(/[:.]/g, '-')}`);
   const page = task.page('p1');
 
@@ -181,11 +222,21 @@ export async function run({ groups, days, config = configPath, inbox: inboxFile 
   let found = [], read = 0;
   for (const [index, search] of searches.entries()) {
     if (index) await new Promise(resolve => setTimeout(resolve, pause));
+    // X sometimes leaves a results page empty partway through a run, and the same search reads fine a minute later
+    // (2026-11-23: three of five searches timed out in one run and returned posts when tried again), so a timeout gets one retry.
     let rows = [];
-    try { rows = await readRows(page, search.url, search.screens); } catch (error) { if (search.required) throw new Error(`${noPosts} (${error.message})`); }
+    try { rows = await readRows(page, search.url, search.screens); } catch {
+      await new Promise(resolve => setTimeout(resolve, pause * 5));
+      try { rows = await readRows(page, search.url, search.screens); } catch (error) { if (search.required) throw new Error(`${noPosts} (${error.message})`); }
+    }
     if (search.required && !rows.length) throw new Error(noPosts);
     read += rows.length;
-    const own = extractCandidates(rows, capturedAt, search.query, { minLikes: search.minLikes, handle: search.handle, group: search.group });
+    const kept = rows.filter(row => {
+      const reason = skipReason(row, skipHandles);
+      if (reason) skipped.set(reason, (skipped.get(reason) ?? new Set()).add(row.url));
+      return !reason;
+    });
+    const own = extractCandidates(kept, capturedAt, search.query, { minLikes: search.minLikes, handle: search.handle, group: search.group });
     if (!own.length) quiet.set(search.group, [...(quiet.get(search.group) ?? []), search.label]);
     found = found.concat(own);
   }
@@ -209,6 +260,7 @@ export async function run({ groups, days, config = configPath, inbox: inboxFile 
     const total = searches.filter(search => search.group === group).length;
     console.log(`  ${group}: ${tally.qualifying} qualifying, ${tally.added} new; ${misses.length}/${total} searches gave nothing (${misses.join('; ') || 'none'})`);
   }
+  if (skipped.size) console.log(`  skipped before screening: ${[...skipped].map(([reason, urls]) => `${urls.size} ${reason}`).join(', ')}`);
 }
 
 // `node website/scripts/x-discovery.mjs --plan [--groups a,b|all] [--days n]` lists the searches a run would make, without a browser.
