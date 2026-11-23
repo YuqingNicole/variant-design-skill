@@ -53,8 +53,10 @@ export async function measure(browser, { base, path, mobile = false, stub = true
   // Then use the page the way a reader does: open a card, close it, search.
   const card = page.locator('.insp-card-open').first();
   if (await card.count()) { await card.click(); await page.waitForTimeout(1400); await page.keyboard.press('Escape'); await page.waitForTimeout(300); }
-  const search = page.locator('.insp-search input');
-  if (await search.count()) { await search.click(); await page.keyboard.type('a'); await page.waitForTimeout(400); }
+  // Desktop types into the bar's field; phones open the search sheet from the icon and submit (2026-11-22).
+  const search = page.locator('.insp-search input'), open = page.locator('.insp-search-open');
+  if (await search.isVisible()) { await search.click(); await page.keyboard.type('a'); await page.waitForTimeout(400); }
+  else if (await open.isVisible()) { await open.click(); await page.locator('.search-sheet input').waitFor(); await page.keyboard.type('a'); await page.keyboard.press('Enter'); await page.waitForTimeout(400); }
   const after = await page.evaluate(() => ({ ...window.__m }));
   const kbAfter = await kb();
   await context.close();
