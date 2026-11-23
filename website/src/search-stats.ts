@@ -11,13 +11,16 @@ const rpc = (name: string, body: unknown, keepalive = false) => fetch(`${config!
 export function logSearch(term: string, language: 'zh' | 'en') {
   if (!config || term.trim().length < 2) return;
   // keepalive: the sheet closes and the feed re-renders right after; the count must not be cut off.
-  rpc('log_search', { p_term: term, p_language: language }, true).catch(error => console.warn('search not counted', error));
+  rpc('log_search', { p_term: term, p_language: language }, true)
+    .then(response => { if (!response.ok) console.warn('search not counted', response.status); })
+    .catch(error => console.warn('search not counted', error));
 }
 export type Trending = { term: string; searches: number };
 export async function topSearches(): Promise<Trending[]> {
   if (!config) return [];
   try {
-    const response = await rpc('top_searches', {});
+    // Twenty, so the library filter in the sheet still has ten to show after dropping terms it cannot match.
+    const response = await rpc('top_searches', { p_limit: 20 });
     if (!response.ok) { console.warn('trending searches unavailable', response.status); return []; }
     const rows = await response.json();
     return Array.isArray(rows) ? rows.filter(r => typeof r?.term === 'string' && Number(r?.searches) > 0).map(r => ({ term: r.term, searches: Number(r.searches) })) : [];

@@ -55,8 +55,8 @@ export function SearchSheet({ language, query, topics, onSearch, onTopic, onClos
   const [trending, setTrending] = useState<Trending[]>([]);
   useEffect(() => {
     let live = true;
-    const texts = [...rows.flatMap(r => [r.name, r.tag]), ...loadedReferences().flatMap(r => [r.focus.zh, r.focus.en, r.application.zh, r.application.en]),
-      ...collections.flatMap(c => [c.short.zh, c.short.en, c.title.zh, c.title.en]), ...Object.values(vocab).flatMap(v => Object.values(v).flatMap(x => [x.zh, x.en]))];
+    // The fields the feed's search matches (InspirationPage `text`): rows give name and tag, loaded records the rest.
+    const texts = [...rows.flatMap(r => [r.name, r.tag]), ...loadedReferences().flatMap(r => [r.name, r.tag, r.publisher, ...Object.values(r.focus), ...Object.values(r.application)])];
     topSearches().then(list => { if (live) setTrending(list.filter(x => inLibrary(x.term, texts)).slice(0, 10)); });
     return () => { live = false; };
   }, []);

@@ -20,6 +20,6 @@ export function guessFromHistory(history: string[], collections: SuggestCollecti
   return picked;
 }
 
-// A trending term is shown only if the library has something for it, judged on the text the browser already holds (names,
-// tags, notes of loaded records, collection and facet labels), which keeps nonsense typed by anyone off the list.
+// A trending term is shown only if searching it would find something: the same fields the feed's search reads (name, tag,
+// publisher, focus, application; InspirationPage), on the records the browser holds. That keeps nonsense typed by anyone off.
 export function inLibrary(term: string, texts: string[]) { const t = lower(term); return t.length >= 2 && texts.some(x => lower(x).includes(t)); }
