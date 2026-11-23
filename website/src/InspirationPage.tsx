@@ -249,7 +249,11 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    <button type="button" className="insp-search-open" aria-label={l('search')} aria-haspopup="dialog" onClick={openSearch}><Icon d={icons.search}/></button>
   </div>{sectionInfo?.types&&!page&&<div className="site-shell">{typeRow}</div>}</div>
   <section className="site-shell insp-body">
-   {query&&<button type="button" className="insp-query-chip" aria-label={`${l('clearSearch')}：${query}`} onClick={()=>filter(()=>setQuery(''))}>{l('searching')}：{query}<Icon d={icons.close}/></button>}
+   {/* Phones: results of a search or topic get the query chip and the sort as text tabs, as a notes app's results page does; desktop keeps both in the bar. */}
+   {(query||activeTopic)&&<div className="insp-result-bar">
+    {query&&<button type="button" className="insp-query-chip" aria-label={`${l('clearSearch')}：${query}`} onClick={()=>filter(()=>setQuery(''))}>{l('searching')}：{query}<Icon d={icons.close}/></button>}
+    <div className="insp-result-sort" role="radiogroup" aria-label={l('sort')}>{([['default','curated'],['curated','original'],['checked','recent'],['name','byName']] as const).map(([value,key])=><button key={value} type="button" role="radio" aria-checked={sort===value} onClick={()=>filter(()=>setSort(value))}>{l(key)}</button>)}</div>
+   </div>}
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
    <ul className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}${page?' insp-own':''}`}>{cards.map(item=>{const media=mediaFor(item),post=postOf(item),yt=youtubeOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
@@ -267,7 +271,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   </section>
   <div className="site-shell insp-end"><p className="insp-end-links">{pageLinkItems}</p><p className="insp-end-rights">{rightsItems}</p></div>
   <dialog ref={dialogRef} className="insp-dialog" aria-label={openItem?.name} onCancel={e=>{e.preventDefault();close()}} onKeyDown={e=>{if(e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLInputElement||e.target instanceof HTMLSelectElement)return;if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}if(e.key==='ArrowRight'){e.preventDefault();step(1)}}} onClick={e=>{if(e.target===e.currentTarget)close()}}>{open?.mode==='modal'&&openItem&&detailView(openItem,false)}</dialog>
-  {searching&&Sheet&&<Sheet language={language} query={query} sort={sort} topics={inspirationTopics} sortOptions={[['default','curated'],['curated','original'],['checked','recent'],['name','byName']].map(([value,key])=>({value,label:l(key as keyof typeof m)}))}
-   onSearch={q=>fromSheet(()=>{setQuery(q);setTopic('')})} onTopic={id=>fromSheet(()=>{setTopic(id);setQuery('')})} onSort={v=>fromSheet(()=>setSort(v))} onClose={()=>setSearching(false)}/>}
+  {searching&&Sheet&&<Sheet language={language} query={query} topics={inspirationTopics}
+   onSearch={q=>fromSheet(()=>{setQuery(q);setTopic('')})} onTopic={id=>fromSheet(()=>{setTopic(id);setQuery('')})} onClose={()=>setSearching(false)}/>}
   <SiteFooter language={language}/></main>
 }

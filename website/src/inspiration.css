@@ -369,14 +369,18 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 /* Phones, notes-app search (2026-11-22, maintainer): the bar is one row of channel tabs and a search icon (not pinned over the list, as before); search and sort
    live in a full-screen sheet (SearchSheet.tsx). Website covers fill a 4:3 frame instead of floating on a grey 4:5 mat. Sizes,
    radii and fills reuse values this page already has (style budget), and every target stays 44px. Desktop keeps the bar. */
-.insp-search-open,.insp-query-chip{display:none}
+.insp-search-open,.insp-result-bar{display:none}
 @media(max-width:650px){
  .inspiration-page .insp-bar>.site-shell{grid-template-columns:minmax(0,1fr) 44px;padding-block:0}
  .inspiration-page .insp-bar :is(.insp-search,select){display:none}
  .inspiration-page .insp-pills{grid-column:1;grid-row:1}
  .insp-search-open{display:grid;place-items:center;grid-column:2;grid-row:1;width:44px;height:44px;padding:0;border:0;background:none;color:var(--site-ink);cursor:pointer}
  .insp-search-open svg{width:20px;height:20px}
- .insp-query-chip{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin:0 0 8px;padding:0 16px;border:0;border-radius:var(--radius-pill);background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-ink);font:inherit;font-size:14px;cursor:pointer}
+ .insp-result-bar{display:grid;gap:4px;margin-bottom:8px}
+ .insp-result-sort{display:flex;gap:20px;overflow-x:auto;scrollbar-width:none}.insp-result-sort::-webkit-scrollbar{display:none}
+ .insp-result-sort button{flex:none;min-height:44px;padding:0;border:0;background:none;color:var(--site-muted);font:inherit;font-size:14px;cursor:pointer}
+ .insp-result-sort [aria-checked=true]{color:var(--site-ink);font-weight:500}
+ .insp-query-chip{justify-self:start;display:inline-flex;align-items:center;gap:6px;min-height:44px;margin:0;padding:0 16px;border:0;border-radius:var(--radius-pill);background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-ink);font:inherit;font-size:14px;cursor:pointer}
  /* A website's share preview is a wide image: it fills a 4:3 cover, trimmed a little at the sides, so no grey mat surrounds it. */
  .inspiration-page .insp-feed .insp-card-open>.insp-thumb.insp-thumb-media{aspect-ratio:4/3}
  .inspiration-page .insp-feed>.insp-card .insp-thumb-media>img{inset:0;width:100%;height:100%;object-fit:cover;border-radius:0}
@@ -385,18 +389,24 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .search-sheet{position:fixed;inset:0;z-index:50;min-height:0;display:flex;flex-direction:column;background:var(--site-paper);color:var(--site-ink);padding-top:env(safe-area-inset-top)}
 /* The sheet borrows .content-page for the page's colour tokens, not its frosted panel frame. */
 .search-sheet.content-page{width:auto;margin:0;transform:none;min-height:0;background:var(--site-paper);-webkit-backdrop-filter:none;backdrop-filter:none;border:0;border-radius:0;box-shadow:none}
-.search-sheet-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--site-line)}
-.search-sheet-bar input{flex:1;min-width:0;height:44px;padding:0 16px;border:1px solid transparent;border-radius:var(--radius-pill);background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-ink);font:inherit;font-size:16px}
-.search-sheet-bar button{height:44px;padding:0 8px;border:0;background:none;color:var(--site-ink);font:inherit;font-size:16px;cursor:pointer}
+.search-sheet-bar{display:flex;align-items:center;gap:4px;padding:8px 12px 8px 4px}
+.search-sheet-back,.search-sheet-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;padding:0;border:0;background:none;color:var(--site-ink);cursor:pointer}
+.search-sheet-field{flex:1;min-width:0;display:flex;align-items:center;height:44px;border:1px solid transparent;border-radius:var(--radius-pill);background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair)}
+.search-sheet-field:focus-within{border-color:var(--site-ink);box-shadow:none}
+.search-sheet-field input{flex:1;min-width:0;height:100%;padding:0 4px 0 16px;border:0;background:none;color:var(--site-ink);font:inherit;font-size:16px;outline:none}
+.search-sheet-field input::-webkit-search-cancel-button{display:none}
+/* The field's rounded frame shows focus (:focus-within); the site-wide square ring on the input itself is turned off here. */
+.search-sheet-field input:focus-visible{outline:none}
+.search-sheet-field button{flex:none;height:100%;padding:0 16px;border:0;border-left:1px solid var(--site-line);background:none;color:var(--site-ink);font:inherit;font-size:16px;font-weight:500;cursor:pointer;border-radius:0 var(--radius-pill) var(--radius-pill) 0}
 .search-sheet-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:8px 16px calc(24px + env(safe-area-inset-bottom))}
 .search-sheet section{padding-block:12px}
 .search-sheet section>header{display:flex;align-items:center;justify-content:space-between;min-height:44px}
 .search-sheet h2{margin:0;font-size:16px;font-weight:500}
-.search-sheet section>header button{min-height:44px;padding:0;border:0;background:none;color:var(--site-muted);font:inherit;font-size:14px;cursor:pointer}
 .search-chips{display:flex;flex-wrap:wrap;gap:8px}
 .search-chips>:is(a,button){display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:0;border-radius:var(--radius-pill);background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-ink);font:inherit;font-size:14px;text-decoration:none;cursor:pointer}
 .search-chips>[aria-checked=true]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}
-.search-sheet-note{margin:8px 0 0;font-size:12px;color:var(--site-muted)}
+.search-chip-fold{width:44px;justify-content:center;padding:0!important}
+.search-sheet-icon{color:var(--site-muted);margin-right:-12px}
+.search-suggestions{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
+.search-suggestions :is(a,button){display:flex;align-items:center;width:100%;min-height:44px;padding:0;border:0;background:none;color:var(--site-ink);font:inherit;font-size:16px;text-align:left;text-decoration:none;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .search-sheet :is(button,a):focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
-/* The field is focused on open, so a thick ring would always show; a hairline in ink marks it instead. */
-.search-sheet-bar input:focus{outline:none;border-color:var(--site-ink);box-shadow:none}
