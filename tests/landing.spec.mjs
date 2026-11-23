@@ -591,6 +591,12 @@ test('a site detail shows the preview the link publishes and falls back when its
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
 });
 
+// The load-more button sits inside the paging sentinel, so a normal click (which scrolls it into view) would also start the
+// automatic load and the button could vanish mid-click. Press it from the top of the page without scrolling.
+// The prerendered button does nothing until React takes over the page, so wait for that first.
+// After a reload the browser may restore a scroll position near the end, where the sentinel has already loaded every card and
+// the button is gone; the counts the callers check next still catch a real failure.
+const pressLoadMore=async page=>{await hydrated(page);await page.evaluate(()=>scrollTo(0,0));const more=page.locator('.insp-more button');if(await more.count())await more.dispatchEvent('click',undefined,{timeout:5000});};
 test('best practice shows each X post as its looping video, credits the author and falls back to the poster', async ({page})=>{
  const media=JSON.parse(fs.readFileSync(new URL('../website/src/x-media.json',import.meta.url),'utf8'));
  const xRequests=[];page.on('request',r=>{if(/twitter\.com|x\.com|twimg\.com/.test(new URL(r.url()).hostname))xRequests.push(r.url())});
@@ -603,19 +609,20 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.locator('.insp-types').getByRole('button',{name:'动效',exact:true}).click();await expect(page).toHaveURL(/\/browse\/design-motion\?type=motion$/);
  // The client render replaces the prerendered feed; wait for it (XVideo adds the referrer meta on mount) before holding a card.
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
- // The motion type lists every motion video; the strip mounts its first 30, and the widgets card is the oldest, so load the rest first.
+ // The motion type lists every motion video; the feed mounts its first 30, and the widgets card is the oldest, so load the rest first.
  const motion=page.locator('.insp-videos > li');await expect(motion).toHaveCount(Math.min(30,libraryCounts.type('motion')));await expect(page.locator('.inspiration-grid')).toHaveCount(1);
- await page.locator('.insp-more button').click();await expect(motion).toHaveCount(libraryCounts.type('motion'));
+ await pressLoadMore(page);await expect(motion).toHaveCount(libraryCounts.type('motion'));
  const widgets=motion.filter({has:page.locator('a[href="/zh/inspiration/paper-widgets"]')});
  // Videos only start once visible, and a newer card can push this one below the fold. A re-render can replace the card mid-scroll, so retry that.
  await expect(async()=>{await widgets.scrollIntoViewIfNeeded()}).toPass();
  await expect(widgets.locator('img.insp-vcard-media')).toHaveAttribute('src',sized(media['paper-widgets'].poster,640));await expect(widgets.locator('video')).toHaveCount(0);
  await page.locator('.insp-types').getByRole('button',{name:'交互',exact:true}).click();await expect(page).toHaveURL(/\/browse\/design-motion\?type=interaction$/);
- // The interaction type lists every interaction video; the strip mounts its first 30 and loads the rest as it is scrolled.
+ // The interaction type lists every interaction video; the feed mounts its first 30 and loads the rest as it is scrolled.
  const cards=page.locator('.insp-videos > li');await expect(cards).toHaveCount(Math.min(30,libraryCounts.type('interaction')));await expect(page.locator('.inspiration-grid')).toHaveCount(1);
  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content','no-referrer');
- // Newer posts pushed the sheep past the first 30 cards, so load the rest before looking for it.
- await page.locator('.insp-more button').click();await expect(cards).toHaveCount(libraryCounts.type('interaction'));
+ // Newer posts pushed the sheep past the first 30 cards, so load the rest before looking for it. The feed grows downwards, so the
+ // button is pressed from the top of the page without scrolling to it: the cards it adds stay far below the fold.
+ await pressLoadMore(page);await expect(cards).toHaveCount(libraryCounts.type('interaction'));
  const sheep=cards.filter({has:page.locator('a[href="/zh/inspiration/x-areadnemaria-444419"]')});
  // Videos far below the fold attach their file only as they near the screen.
  expect(await cards.last().locator('video').evaluate(v=>v.getAttribute('src'))).toBeNull();
@@ -632,7 +639,7 @@ test('best practice shows each X post as its looping video, credits the author a
  await page.keyboard.press('Escape');
  for(const width of [320,390,1440]){await page.setViewportSize({width,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)}
  await page.emulateMedia({reducedMotion:'reduce'});await page.reload();
- await page.locator('.insp-more button').click();await expect(sheep).toBeAttached();
+ await pressLoadMore(page);await expect(sheep).toBeAttached();
  await page.waitForTimeout(800);expect(await sheep.locator('video').evaluate(v=>v.paused)).toBe(true);
  // A post found through another curator credits it beside the source.
  await page.goto('/zh/inspiration/x-keviduk-'+Object.keys(media).find(k=>k.startsWith('x-keviduk-')).slice(-6));
@@ -1308,7 +1315,7 @@ test('the home fetches the rest of the library per section, once, only when scro
  const chunks=[];page.on('request',r=>{const m=new URL(r.url()).pathname.match(/\/assets\/section-([a-z-]+?)-[\w-]{8}\.js$/);if(m)chunks.push(m[1])});
  await page.goto('/zh');await hydrated(page);
  const cards=page.locator('.inspiration-grid .insp-card');await expect(cards).toHaveCount(30);expect(chunks).toEqual([]);
- await page.locator('.insp-more button').click();await expect(cards).toHaveCount(60);expect(chunks.length).toBeGreaterThan(0);
+ await pressLoadMore(page);await expect(cards).toHaveCount(60);expect(chunks.length).toBeGreaterThan(0);
  // A query matches the notes, so it asks for every section it does not have yet; a section is never fetched twice.
  await page.getByRole('searchbox').fill('linear');await expect.poll(()=>new Set(chunks)).toEqual(beyondFirstPage);
  await expect(cards.filter({has:page.locator('a[href="/zh/inspiration/linear"]')})).toHaveCount(1);expect(chunks.length).toBe(beyondFirstPage.size);

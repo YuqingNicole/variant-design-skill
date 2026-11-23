@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
+import { createPortal } from 'react-dom';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { transition } from './view-transition';
 import { YouTubeEmbed, YouTubeThumb, isYouTube, type YouTubeVideo } from './YouTubeEmbed';
@@ -36,7 +37,7 @@ const variantOf=(id:string)=>[...id].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7)
 // Vercel shrinks each preview to the size it is shown at (vercel.json `images`). If that fails the original loads, then the analysis card.
 // Interface copy, one entry per message (RFC-005 §3.2). Formatters take the values they interpolate.
 const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdrawnNote:{zh:'这件作品已撤下，不会进入参考指令；你的笔记仍保留在本地。',en:'This work was removed and is excluded from briefs. Your notes remain in this browser.'},authorized:{zh:'作者授权',en:'Author permission'},unknownReuse:{zh:'本站展示以外的使用权限',en:'rights beyond display on this site'},linkOnly:{zh:'仅链接',en:'Link only'},title:{zh:'AI 时代最好的设计灵感。',en:'The best design inspiration in the AI era.'},motionNote:{zh:'动效是 Inspiration 里 Best practice 的一个筛选项。',en:'Motion is a filter within Best practice in Inspiration.'},refNav:{zh:'参考导航',en:'Reference navigation'},crumbs:{zh:'路径',en:'Breadcrumb'},breakdown:{zh:'拆解',en:'Breakdown'},bdChecked:{zh:'核对于',en:'Checked'},bdStructure:{zh:'页面怎么搭',en:'How the page is built'},bdMeasured:{zh:'实测',en:'Measured'},bdLearn:{zh:'最值得学的一个细节',en:'The detail most worth learning'},bdAvoid:{zh:'不建议照搬的一点',en:'What not to copy'},bdUnchecked:{zh:'只在桌面宽屏上看了页面结构和样式，没有在手机上看，也没有测交互、速度和无障碍。网站随时会改，以上是核对当天的样子；「我们的判断」没有经过实测。',en:'We looked at the page structure and styles on a wide desktop window only, not on a phone, and did not test interaction, speed or accessibility. Sites change; this is how it looked on the day checked, and anything marked as our reading was not tested.'},crumbHome:{zh:'灵感',en:'Inspiration'},related:{zh:'同类参考',en:'More like this'},seeAll:{zh:'浏览这一类的所有条目',en:'Browse this whole section'},yours:{zh:'做出你的版本',en:'Make your version'},yoursNote:{zh:'把这条参考写进指令，让 variant-design 技能在你自己的项目里生成 A/B/C 三个方向。',en:'Put this reference into a brief and let the variant-design skill generate three A/B/C directions in your own project.'},installSkill:{zh:'安装技能',en:'Install the skill'},allRefs:{zh:'全部参考',en:'All references'},close:{zh:'关闭',en:'Close'},
- addPack:{zh:'加入参考包',en:'Add to pack'},removePack:{zh:'移出参考包',en:'Remove from pack'},prev:{zh:'上一个',en:'Previous'},next:{zh:'下一个',en:'Next'},scrollPrev:{zh:'向左滚动作品',en:'Scroll references left'},scrollNext:{zh:'向右滚动作品',en:'Scroll references right'},study:{zh:'研究什么',en:'Study'},fun:{zh:'看点',en:'What makes it fun'},borrow:{zh:'可以借的点子',en:'Idea to borrow'},creator:{zh:'作者',en:'Creator'},apply:{zh:'用在哪里',en:'Apply'},
+ addPack:{zh:'加入参考包',en:'Add to pack'},removePack:{zh:'移出参考包',en:'Remove from pack'},prev:{zh:'上一个',en:'Previous'},next:{zh:'下一个',en:'Next'},study:{zh:'研究什么',en:'Study'},fun:{zh:'看点',en:'What makes it fun'},borrow:{zh:'可以借的点子',en:'Idea to borrow'},creator:{zh:'作者',en:'Creator'},apply:{zh:'用在哪里',en:'Apply'},
  source:{zh:'出处',en:'Source'},designer:{zh:'设计者',en:'Designer'},unknownDesigner:{zh:'未知',en:'Unknown'},stillUnknown:{zh:'还不知道',en:'Unknown'},createBrief:{zh:'生成参考指令',en:'Create brief'},visit:{zh:'访问原站',en:'Visit source'},
  storageError:{zh:'无法读取或保存本地参考包。本次修改仅在当前页面有效，请复制指令保存。',en:'Unable to read or save the local pack. Changes remain on this page only; copy the brief to keep them.'},
  pack:{zh:'你的参考包',en:'Your reference pack'},packNote:{zh:'保存在当前浏览器；清除浏览器数据后会丢失，不会跨设备同步。',en:'Saved in this browser; clearing browser data removes it. It does not sync across devices.'},packNoteAccount:{zh:'保存在你的账号里，换一台设备登录也在。',en:'Saved to your account, on any device you sign in on.'},syncError:{zh:'没能把收藏保存到账号。请检查网络，之后的修改会再试一次。',en:'Could not save to your account. Check your connection; the next change tries again.'},
@@ -45,7 +46,7 @@ const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdra
  copyManually:{zh:'请在文本框中选择并手动复制。',en:'Select the text and copy it manually.'},submissions:{zh:'投稿与授权规则',en:'Submissions & permissions'},casesEntry:{zh:'案例：一个任务出三版 →',en:'Cases: one brief, three directions →'},
  rights:{zh:'作品版权归原作者；仅链接的参考与作者授权的媒体分别注明来源和权限。',en:'The work belongs to its owners; link-only references and author-permission media each state their source and rights.'},rightsMore:{zh:'展示方式与数据来源',en:'How media is shown and where data comes from'},
 
- refType:{zh:'参考类型',en:'Reference type'},videoType:{zh:'视频类型',en:'Video type'},all:{zh:'全部',en:'All'},search:{zh:'搜索参考',en:'Search references'},searchHint:{zh:'搜索 ⌘K',en:'Search ⌘K'},
+ refType:{zh:'参考类型',en:'Reference type'},videoType:{zh:'视频类型',en:'Video type'},all:{zh:'全部',en:'All'},search:{zh:'搜索参考',en:'Search references'},searching:{zh:'搜索',en:'Search'},searchPlaceholder:{zh:'搜索作品、风格或品牌',en:'Search work, styles or brands'},clearSearch:{zh:'清除搜索',en:'Clear search'},searchHint:{zh:'搜索 ⌘K',en:'Search ⌘K'},
  sort:{zh:'排序',en:'Sort'},curated:{zh:'最近收录',en:'Recently added'},original:{zh:'编辑顺序',en:'Editorial order'},recent:{zh:'最近核对',en:'Recently checked'},byName:{zh:'按名称',en:'By name'},references:{zh:'个参考',en:'references'},openOnX:{zh:'在 X 上打开',en:'Open on X'},
  openSource:{zh:'打开来源',en:'Open source'},noMatches:{zh:'没有匹配结果。试试其他关键词或专题。',en:'No matches. Try another query or topic.'},clear:{zh:'清除筛选',en:'Clear filters'},
  closing:{zh:'看过之后，做出自己的版本。',en:'After looking, make your own version.'},install:{zh:'安装并开始',en:'Install & start'},studies:{zh:'查看我们的 A/B/C 案例',en:'See our A/B/C cases'},
@@ -67,20 +68,21 @@ const f={
  loadMore:{zh:(n:number)=>`加载更多（还有 ${n} 个）`,en:(n:number)=>`Load more (${n} left)`}};
 const rightsLabel=(item:Item,locale:Locale)=>t(m[permissionOf(item)?'authorized':'linkOnly'],locale);
 const rights=(item:Item,locale:Locale)=><em className="inspiration-link-only">{rightsLabel(item,locale)}</em>;
-function Thumb({item,locale}:{item:Item;locale:Locale}){const preview=previewOf(item.id);const post=postOf(item);const [tries,setTries]=useState(0),[loaded,setLoaded]=useState(false);
+function Thumb({item,locale}:{item:Item;locale:Locale}){const preview=previewOf(item.id);const post=postOf(item);const [tries,setTries]=useState(0),[loaded,setLoaded]=useState(false),[ratio,setRatio]=useState('');
  const authorized=permissionOf(item);if(authorized)return <AuthorizedMedia key={item.id} record={authorized} thumbnail fallback={<AnalysisCard item={item} locale={locale}/>}/>;
  if(post)return <div className="insp-thumb insp-thumb-post" aria-hidden="true"><small className="insp-thumb-tag">{post.author} @{post.handle} · {post.date}</small><b lang={post.lang}>{post.text}</b></div>;
- if(preview&&tries<2)return <div className="insp-thumb insp-thumb-media" data-loaded={loaded} aria-hidden="true"><AnalysisCard item={item} locale={locale} embedded/><img src={tries?preview.image:sized(preview.image,640)} alt="" loading="lazy" referrerPolicy="no-referrer" onLoad={()=>setLoaded(true)} onError={()=>setTries(t=>t+1)}/></div>;
- return <AnalysisCard item={item} locale={locale}/>}
+ if(preview&&tries<2)return <div className="insp-thumb insp-thumb-media" data-loaded={loaded} aria-hidden="true" style={(preview.width&&preview.height?`${preview.width}/${preview.height}`:ratio)?{'--ar':preview.width&&preview.height?`${preview.width}/${preview.height}`:ratio} as CSSProperties:undefined}><AnalysisCard item={item} locale={locale} embedded/><img src={tries?preview.image:sized(preview.image,640)} alt="" loading="lazy" referrerPolicy="no-referrer" onLoad={e=>{const {naturalWidth:w,naturalHeight:h}=e.currentTarget;if(w&&h&&!preview.width)setRatio(`${w}/${h}`);setLoaded(true)}} onError={()=>setTries(t=>t+1)}/></div>;
+ return <AnalysisCard item={item} locale={locale} ratio={preview?(preview.width&&preview.height?`${preview.width}/${preview.height}`:ratio||'1200/630'):undefined}/>}
 // A reference's picture in a grid: its video, its YouTube thumbnail, or its link preview, falling back to the analysis card. Collection pages reuse it.
 export function ReferenceCover({item,locale}:{item:Item;locale:Locale}){const media=mediaFor(item),yt=youtubeOf(item);return media?<XVideo media={media} fallback={<AnalysisCard item={item} locale={locale}/>}/>:yt?<YouTubeThumb video={yt} fallback={<AnalysisCard item={item} locale={locale}/>}/>:<Thumb item={item} locale={locale}/>}
-function AnalysisCard({item,locale,embedded=false}:{item:Item;locale:Locale;embedded?:boolean}){const v=variantOf(item.id);return <div className={`${embedded?'insp-thumb-fallback':'insp-thumb'} insp-thumb-${item.category} insp-tint-${v%2}`} aria-hidden="true"><small className="insp-thumb-tag">{t(labels[item.category],locale)} · {item.tag} {rights(item,locale)}</small><b>{item.name}</b><span>{t(item.focus,locale)}</span><div className={`insp-sketch insp-sk-${item.category}-${v}`}>{Array.from({length:(sketches[item.category]??[4,4,4])[v]},(_,i)=><i key={i}/>)}</div></div>}
+// `ratio`: the card stands in for a preview image that failed, so it keeps that image's proportions and the feed does not jump.
+function AnalysisCard({item,locale,embedded=false,ratio}:{item:Item;locale:Locale;embedded?:boolean;ratio?:string}){const v=variantOf(item.id);return <div className={`${embedded?'insp-thumb-fallback':'insp-thumb'} insp-thumb-${item.category} insp-tint-${v%2}${ratio?' insp-thumb-standin':''}`} style={ratio?{'--ar':ratio} as CSSProperties:undefined} aria-hidden="true"><small className="insp-thumb-tag">{t(labels[item.category],locale)} · {item.tag} {rights(item,locale)}</small><b>{item.name}</b><span>{t(item.focus,locale)}</span><div className={`insp-sketch insp-sk-${item.category}-${v}`}>{Array.from({length:(sketches[item.category]??[4,4,4])[v]},(_,i)=><i key={i}/>)}</div></div>}
 function LinkPreview({item,preview,locale}:{item:Item;preview:Preview;locale:Locale}){const [tries,setTries]=useState(0);const failed=tries>1;const host=new URL(item.url).hostname;
  const lang=preview.lang||undefined;
  return <figure className="inspiration-demo insp-shot">{failed?<AnalysisCard item={item} locale={locale}/>:<img src={tries?preview.image:sized(preview.image,1280)} alt={preview.title} lang={lang} referrerPolicy="no-referrer" onError={()=>setTries(t=>t+1)}/>}<figcaption><span lang={lang}><b>{preview.title}</b>{preview.description&&<> — {preview.description}</>}</span><br/>{t(f.caption,locale)(host,preview.fetchedAt,failed)}</figcaption></figure>}
 const Icon=({d}:{d:string})=><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={d}/></svg>;
 const icons={out:'M5 11 11 5M6 5h5v5',save:'M4 2.5h8v11L8 10.5l-4 3z',close:'M4 4l8 8M12 4l-8 8',prev:'M10 3 5 8l5 5',next:'M6 3l5 5-5 5',search:'M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM14 14l-3.5-3.5'};
-// Ten columns of the three-row wall (and a multiple of the phone's single row), so a partial page ends on a full column.
+// One page of cards: a multiple of the two-, three-, five- and six-column grids, so a page ends on a full row.
 const pageSize=30;
 const kinds:Record<string,Localized>={'submitted-work':{zh:'作者投稿',en:'Author submission'},'official-site':{zh:'官网',en:'Official site'},'youtube-video':{zh:'YouTube 视频',en:'YouTube video'},'product-page':{zh:'产品页',en:'Product page'},documentation:{zh:'帮助文档',en:'Documentation'},'social-post':{zh:'社交帖子',en:'Social post'}};
 // Everything the record does not establish goes into the brief as an explicit unknown (RFC-003 §3).
@@ -174,23 +176,43 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  },[open]);
  useEffect(()=>{if(open?.mode!=='page')return;const onKey=(e:KeyboardEvent)=>{if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.altKey||e.target instanceof HTMLElement&&e.target.closest('input,textarea,select,[contenteditable="true"]'))return;if(e.key==='Escape'){e.preventDefault();close()}else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();step(e.key==='ArrowLeft'?-1:1)}};addEventListener('keydown',onKey);return()=>removeEventListener('keydown',onKey)},[open,results]);
  const searchRef=useRef<HTMLInputElement>(null);
+ // Phones search in a full-screen sheet (SearchSheet.tsx), fetched the first time it opens; desktop keeps the field in the bar.
+ const [Sheet,setSheet]=useState<null|typeof import('./SearchSheet').SearchSheet>(null),[searching,setSearching]=useState(false);
+ const openSearch=()=>import('./SearchSheet').then(mod=>{setSheet(()=>mod.SearchSheet);setSearching(true)});
+ const fromSheet=(update:()=>void)=>{setSearching(false);scrollTo({top:0,behavior:'instant'});filter(update)};
+ // Phones reach search from a field docked above the bottom tab bar, within thumb reach (maintainer, 2026-11-23). It is portalled
+ // to <body> (the frosted panel would trap a fixed element) and mounts only on the client; desktop keeps the field in the bar.
+ const [docked,setDocked]=useState(false);useEffect(()=>setDocked(true),[]);
  // Each tab is a static page: fetch it as soon as the pointer or finger is on the link, and keep the current tab in view when the row scrolls.
  const pillsRef=useRef<HTMLElement>(null),prefetched=useRef(new Set<string>());
  const prefetch=(e:{currentTarget:HTMLAnchorElement})=>{const href=e.currentTarget.getAttribute('href')??'';if(!href||prefetched.current.has(href))return;prefetched.current.add(href);const link=document.createElement('link');link.rel='prefetch';link.href=href;link.as='document';document.head.append(link)};
  useEffect(()=>{const row=pillsRef.current,tab=row?.querySelector<HTMLElement>('[aria-current=page]');if(row&&tab)row.scrollLeft=tab.offsetLeft-(row.clientWidth-tab.offsetWidth)/2},[section]);
  useEffect(()=>{const onKey=(e:KeyboardEvent)=>{const k=e.key.toLowerCase(),typing=e.target instanceof HTMLElement&&e.target.closest('input,textarea,select,[contenteditable],dialog[open]');if((e.metaKey||e.ctrlKey)&&k==='k'||k==='/'&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&!typing){e.preventDefault();searchRef.current?.focus()}};addEventListener('keydown',onKey);return()=>removeEventListener('keydown',onKey)},[]);
  // The feed is one horizontal strip: arrows and a progress line stand in for the page scrollbar.
- const feedRef=useRef<HTMLUListElement>(null),[feed,setFeed]=useState({at:0,can:false});
- // A page of 30 cards is ten columns of the three-row wall, about two screens wide, so the next page loads within three quarters
- // of a screen of the end (1.5 screens would fire on mount and mount every page at once).
- const onFeedScroll=()=>{const el=feedRef.current;if(!el||matchMedia('(max-width:650px)').matches)return;// phones: a vertical list with no strip to scroll; the sentinel below loads pages
- const max=el.scrollWidth-el.clientWidth;setFeed({at:max>0?Math.min(1,el.scrollLeft/max):0,can:max>1});if(max-el.scrollLeft<el.clientWidth*.75&&visible<results.length)setVisible(v=>v+pageSize)};
- const scrollFeed=(dir:1|-1)=>{const el=feedRef.current;if(el)el.scrollBy({left:dir*el.clientWidth*.8,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})};
- useEffect(onFeedScroll,[cards.length,section]);
- // On phones the feed is a vertical two-column list, so the next page loads when its end nears the screen (the strip's scroll handler never fires there).
+ // The feed is a vertical grid on every screen (maintainer, 2026-11-22: scrolling down is what visitors expect; the desktop
+ // three-row sideways strip is gone). The next page loads when the sentinel under the grid nears the screen.
+ // A type switch scrolls to the top first (instantly), or the shorter list would leave the sentinel in view and page on.
  const moreRef=useRef<HTMLDivElement>(null);
- useEffect(()=>{const el=moreRef.current;if(!el||!('IntersectionObserver' in window))return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting&&matchMedia('(max-width:650px)').matches&&visible<results.length)setVisible(v=>v+pageSize)},{rootMargin:'0px 0px 600px 0px'});io.observe(el);return()=>io.disconnect()},[visible,results.length]);
- // More cards load when the strip nears its right end (onFeedScroll); a sentinel under a short strip is always in view and would mount every card at once.
+ // Masonry (maintainer, 2026-11-23: covers follow the work's own proportions). Each card spans as many 1px grid rows as its own
+ // height needs, so cards of different heights pack without holes, and a new page only adds below: nothing already on screen
+ // moves. Heights are measured after layout and again whenever a card resizes (an image arriving, a width change). Until then,
+ // and without JavaScript, the plain grid of equal rows stays.
+ const gridRef=useRef<HTMLUListElement>(null),cardKey=cards.map(c=>c.id).join(' '),[masonry,setMasonry]=useState(false);
+ useLayoutEffect(()=>{const grid=gridRef.current;if(!grid||typeof ResizeObserver==='undefined')return;
+  const span=(li:HTMLElement,inner:Element)=>{const gap=parseFloat(getComputedStyle(grid).getPropertyValue('--masonry-gap'))||12,c=getComputedStyle(li);
+   return Math.ceil(inner.getBoundingClientRect().height+parseFloat(c.paddingTop)+parseFloat(c.paddingBottom)+parseFloat(c.borderTopWidth)+parseFloat(c.borderBottomWidth)+gap)};
+  const items=[...grid.children].flatMap(li=>li instanceof HTMLElement&&li.firstElementChild?[[li,li.firstElementChild] as const]:[]);
+  const spans=items.map(([li,inner])=>span(li,inner));// read every height first, then write, so layout runs once
+  items.forEach(([li],i)=>{li.style.gridRowEnd=`span ${spans[i]}`});setMasonry(true);
+  const ro=new ResizeObserver(entries=>{for(const e of entries){const li=e.target.parentElement;if(li)li.style.gridRowEnd=`span ${span(li,e.target)}`}});
+  for(const [,inner] of items)ro.observe(inner);
+  return()=>ro.disconnect()},[cardKey]);
+ // A page's cards render only once their section's records arrive (reference-library.ts); until then the grid is short and the
+ // sentinel sits in view, so the next page waits until every card already asked for is on screen, or every page would mount at once.
+ const allShown=cards.length>=shown.length;
+ // A detail opened by its own address renders no feed; closing it mounts the sentinel, which needs a fresh observer.
+ const feedMounted=open?.mode!=='page';
+ useEffect(()=>{const el=moreRef.current;if(!el||!allShown||!('IntersectionObserver' in window))return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting&&visible<results.length)setVisible(v=>v+pageSize)},{rootMargin:'0px 0px 600px 0px'});io.observe(el);return()=>io.disconnect()},[visible,results.length,allShown,feedMounted]);
  // Independent filter changes must apply immediately; the shared animation queue keeps only its latest update.
  const filter=(update:()=>void)=>{update();setVisible(pageSize)};
  function brief(item:Item){if(needAccount('brief'))return;if(open?.mode==='modal'){afterClose.current=()=>useReference(item);close()}else useReference(item)}
@@ -225,7 +247,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   {prompt&&<section ref={briefRef} tabIndex={-1} className="inspiration-brief" aria-labelledby="reference-brief-title"><h2 id="reference-brief-title">{l('takeIt')}</h2><textarea aria-label={l('briefLabel')} readOnly value={prompt} rows={6}/><button className="content-button" onClick={copy}>{l('copyBrief')}</button><button className="inspiration-dismiss" onClick={()=>{setPrompt('');setNotice('')}}>{l('dismiss')}</button><p role="status">{notice}</p></section>}
  </>;
  // On its own page (Videos) the types are the page's only categories, in the place of the Inspiration tabs.
- const typeRow=<div className={`insp-types${page?' insp-types-main':''}`} role="group" aria-label={l('videoType')}>{[{id:'',name:{zh:'全部',en:'All'}},...(sectionInfo?.types??[]).filter(v=>rows.some(r=>sectionOf(r)===section&&videoTypeOf(r)===v.id))].map(v=><button key={v.id||'all'} type="button" aria-pressed={type===v.id} onClick={()=>{filter(()=>setType(v.id));feedRef.current?.scrollTo({left:0});scrollTo({top:0})}}>{t(v.name,language)} <small aria-hidden="true">{rows.filter(r=>sectionOf(r)===section&&(!v.id||videoTypeOf(r)===v.id)).length}</small></button>)}</div>;
+ const typeRow=<div className={`insp-types${page?' insp-types-main':''}`} role="group" aria-label={l('videoType')}>{[{id:'',name:{zh:'全部',en:'All'}},...(sectionInfo?.types??[]).filter(v=>rows.some(r=>sectionOf(r)===section&&videoTypeOf(r)===v.id))].map(v=><button key={v.id||'all'} type="button" aria-pressed={type===v.id} onClick={()=>{scrollTo({top:0,behavior:'instant'});filter(()=>setType(v.id))}}>{t(v.name,language)} <small aria-hidden="true">{rows.filter(r=>sectionOf(r)===section&&(!v.id||videoTypeOf(r)===v.id)).length}</small></button>)}</div>;
  const header=<SiteHeader language={language} page="inspiration" inspirationCategory={section}/>;
  // Phones show the feed first: the links and the rights notice under the title move below the feed (.insp-end), as notes apps keep the
  // first screen for content. Both copies are in the HTML; CSS shows one per width.
@@ -245,9 +267,14 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    <select aria-label={l('sort')} value={sort} onChange={e=>{const v=e.target.value;filter(()=>setSort(v))}}><option value="default">{l('curated')}</option><option value="curated">{l('original')}</option><option value="checked">{l('recent')}</option><option value="name">{l('byName')}</option></select>
   </div>{sectionInfo?.types&&!page&&<div className="site-shell">{typeRow}</div>}</div>
   <section className="site-shell insp-body">
+   {/* Phones: results of a search or topic get the query chip and the sort as text tabs, as a notes app's results page does; desktop keeps both in the bar. */}
+   {(query||activeTopic)&&<div className="insp-result-bar">
+    {query&&<button type="button" className="insp-query-chip" aria-label={`${l('clearSearch')}：${query}`} onClick={()=>filter(()=>setQuery(''))}>{l('searching')}：{query}<Icon d={icons.close}/></button>}
+    <div className="insp-result-sort" role="radiogroup" aria-label={l('sort')}>{([['default','curated'],['curated','original'],['checked','recent'],['name','byName']] as const).map(([value,key])=><button key={value} type="button" role="radio" aria-checked={sort===value} onClick={()=>filter(()=>setSort(value))}>{l(key)}</button>)}</div>
+   </div>}
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
-   <ul ref={feedRef} onScroll={onFeedScroll} className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}${page?' insp-own':''}`}>{cards.map(item=>{const media=mediaFor(item),post=postOf(item),yt=youtubeOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
+   <ul ref={gridRef} className={`inspiration-grid insp-feed${masonry?' is-masonry':''}${sectionInfo?.videoGrid?' insp-videos':''}${page?' insp-own':''}`}>{cards.map(item=>{const media=mediaFor(item),post=postOf(item),yt=youtubeOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
     <a className={`insp-card-open${media||yt?' insp-vcard-open':''}${fills(media)||yt?' insp-fills':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
      <ReferenceCover item={item} locale={language}/>
      <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={proxied(media.avatar,640)} width="28" height="28" loading="lazy" decoding="async" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer" onError={e=>{const i=e.currentTarget;if(media.avatar&&i.dataset.direct!==''&&i.getAttribute('src')!==media.avatar){i.dataset.direct='';i.src=media.avatar}else i.style.display='none'}}/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:yt?yt.channel:new URL(item.url).hostname.replace(/^www\./,'')}{authorized&&` · ${rightsLabel(item,language)}`}</small></span></span>
@@ -255,7 +282,6 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
     {!page&&<button type="button" className="insp-card-save" onClick={()=>toggleSelection(item.id)} aria-pressed={Boolean(selection[item.id])} aria-label={`${l(selection[item.id]?'removePack':'addPack')}：${item.name}`}><Icon d={icons.save}/></button>}
     <a className="insp-card-out" href={item.url} target="_blank" rel="noreferrer" aria-label={`${l(post?'openOnX':'openSource')}：${item.name}`}><Icon d={icons.out}/></a>
    </li>})}</ul>
-   {results.length>0&&!page&&<div className="insp-controls"><div className="insp-progress" aria-hidden="true">{String(Math.min(cards.length,Math.round(feed.at*(cards.length-1))+1)).padStart(2,'0')} / {String(results.length).padStart(2,'0')}<i style={{'--p':`${Math.round(feed.at*100)}%`} as CSSProperties}/></div><div className="insp-arrows"><button type="button" aria-label={l('scrollPrev')} disabled={!feed.can||feed.at<=.001} onClick={()=>scrollFeed(-1)}><Icon d={icons.prev}/></button><button type="button" aria-label={l('scrollNext')} disabled={!feed.can||feed.at>=.999} onClick={()=>scrollFeed(1)}><Icon d={icons.next}/></button></div></div>}
    {visible<results.length&&<div className="insp-more" ref={moreRef}><button type="button" onClick={()=>setVisible(v=>v+pageSize)}>{fl('loadMore')(results.length-visible)}</button></div>}
    {results.length===0&&<p className="inspiration-empty">{l('noMatches')} <button type="button" onClick={()=>filter(()=>{setTopic('');setType('');setQuery('')})}>{l('clear')}</button></p>}
    {tail}
@@ -263,5 +289,8 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   </section>
   <div className="site-shell insp-end"><p className="insp-end-links">{pageLinkItems}</p><p className="insp-end-rights">{rightsItems}</p></div>
   <dialog ref={dialogRef} className="insp-dialog" aria-label={openItem?.name} onCancel={e=>{e.preventDefault();close()}} onKeyDown={e=>{if(e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLInputElement||e.target instanceof HTMLSelectElement)return;if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}if(e.key==='ArrowRight'){e.preventDefault();step(1)}}} onClick={e=>{if(e.target===e.currentTarget)close()}}>{open?.mode==='modal'&&openItem&&detailView(openItem,false)}</dialog>
+  {docked&&!page&&createPortal(<div className="search-dock content-page"><button type="button" className="insp-search-open" aria-haspopup="dialog" aria-label={query?`${l('search')}：${query}`:l('search')} onClick={openSearch}><Icon d={icons.search}/><span className={query?'':'search-dock-placeholder'}>{query||l('searchPlaceholder')}</span></button></div>,document.body)}
+  {searching&&Sheet&&<Sheet language={language} query={query} topics={inspirationTopics}
+   onSearch={q=>fromSheet(()=>{setQuery(q);setTopic('')})} onTopic={id=>fromSheet(()=>{setTopic(id);setQuery('')})} onClose={()=>setSearching(false)}/>}
   <SiteFooter language={language}/></main>
 }

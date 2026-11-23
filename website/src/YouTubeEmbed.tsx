@@ -14,7 +14,7 @@ const formatLength=(seconds?:number)=>seconds?`${Math.floor(seconds/60)}:${Strin
 // The card picture. A thumbnail that cannot load gives way to the caller's fallback instead of a broken image.
 export function YouTubeThumb({video,fallback}:{video:YouTubeVideo;fallback:React.ReactNode}){const [failed,setFailed]=useState(false);
  if(failed)return <>{fallback}</>;
- return <><img className="insp-vcard-media" src={youtubeThumb(video.id)} width={320} height={180} alt="" loading="lazy" referrerPolicy="no-referrer" onError={()=>setFailed(true)}/>{video.seconds&&<span className="insp-play" aria-hidden="true">{formatLength(video.seconds)}</span>}</>}
+ return <><img className="insp-vcard-media" style={{['--ar' as string]:'320/180'}} src={youtubeThumb(video.id)} width={320} height={180} alt="" loading="lazy" referrerPolicy="no-referrer" onError={()=>setFailed(true)}/>{video.seconds&&<span className="insp-play" aria-hidden="true">{formatLength(video.seconds)}</span>}</>}
 export function YouTubeEmbed({video,title,url,locale}:{video:YouTubeVideo;title:string;url:string;locale:Locale}){const l=(k:keyof typeof m)=>t(m[k],locale);const [playing,setPlaying]=useState(false),[tries,setTries]=useState(0);
  const sizes=['maxresdefault','hqdefault'] as const;
  return <figure className="yt-embed">
