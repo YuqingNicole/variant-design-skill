@@ -44,6 +44,13 @@ test('the sheet stacks one viewport-sized shot per screen with a gap between', (
   assert.match(html, /width="1280" height="800"/);
 });
 
+test('a Chrome that cannot start fails the capture instead of crashing the run', async () => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'capture-test-'));
+  try {
+    await assert.rejects(captureScreens('https://example.com/', path.join(dir, 'site.png'), { chrome: path.join(dir, 'no-chrome') }), /Chrome could not start/);
+  } finally { await fs.rm(dir, { recursive: true, force: true }); }
+});
+
 // The two failures seen in the 2026-11-22 run (#314): a `100vh` hero filled the whole capture, and content revealed on
 // scroll stayed blank. The page below has both; each screen must show its own section, revealed.
 const page = `<!doctype html><html><head><style>

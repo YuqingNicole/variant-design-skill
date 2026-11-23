@@ -69,7 +69,7 @@ async function openPage(client, viewport) {
 
 // The scroll position a visitor would see, whether the window or an inner container scrolls.
 const scrolled = `(() => { let y = window.scrollY; for (const el of document.querySelectorAll('body, body *')) { if (el.scrollTop > y) y = el.scrollTop; } return Math.round(y); })()`;
-const settled = `Promise.race([Promise.all([document.fonts?.ready, ...[...document.images].filter(i => !i.complete && i.getBoundingClientRect().top < innerHeight).map(i => new Promise(r => { i.onload = i.onerror = r; }))]), new Promise(r => setTimeout(r, 3000))]).then(() => true)`;
+const settled = `Promise.race([Promise.all([document.fonts?.ready, ...[...document.images].filter(i => !i.complete && i.getBoundingClientRect().top < innerHeight).map(i => new Promise(r => { i.addEventListener('load', r, { once: true }); i.addEventListener('error', r, { once: true }); }))]), new Promise(r => setTimeout(r, 3000))]).then(() => true)`;
 
 // Stacks the screens with a thin grey line between them, so a hero that ends at the fold reads as one screen, not three.
 export function sheetHtml(images, viewport = VIEWPORT) {
@@ -84,8 +84,10 @@ export async function captureScreens(url, file, { screens = 3, viewport = VIEWPO
   const child = spawn(chrome, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--mute-audio', '--no-first-run', '--no-default-browser-check',
     `--window-size=${viewport.width},${viewport.height}`, '--remote-debugging-port=0', `--user-data-dir=${profile}`, ...args, 'about:blank'], { stdio: 'ignore' });
   let client, timer;
+  // A missing or unrunnable binary fails the capture instead of crashing the process with an unhandled 'error' event.
+  const failed = new Promise((_, reject) => child.once('error', error => reject(new Error(`Chrome could not start: ${error.message}`))));
   const work = (async () => {
-    client = connect(await devtoolsPort(profile, child, 15000));
+    client = connect(await Promise.race([devtoolsPort(profile, child, 15000), failed]));
     await client.opened;
     const page = await openPage(client, viewport);
     const load = page.loaded();
@@ -124,7 +126,8 @@ export async function captureScreens(url, file, { screens = 3, viewport = VIEWPO
   } finally {
     clearTimeout(timer); client?.close(); child.kill('SIGKILL');
     work.catch(() => {});
-    await new Promise(resolve => (child.exitCode !== null || child.signalCode ? resolve() : child.once('exit', resolve)));
+    failed.catch(() => {});
+    if (child.pid) await new Promise(resolve => (child.exitCode !== null || child.signalCode ? resolve() : child.once('exit', resolve)));
     await fs.rm(profile, { recursive: true, force: true }).catch(() => {});
   }
 }
