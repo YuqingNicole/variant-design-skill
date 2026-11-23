@@ -4,7 +4,7 @@
 # Needs on this machine: ego-browser (logged in to x.com), ffmpeg, claude, gh, and a clean checkout of this repository.
 set -eu
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-GROUPS_ARG=""; LIMIT=10
+GROUPS_ARG=""; LIMIT=20
 while (( $# )); do
   case "$1" in
     --groups) (( $# >= 2 )) || exit 2; GROUPS_ARG="$2"; shift 2 ;;
