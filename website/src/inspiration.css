@@ -440,3 +440,12 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
  .search-dock .insp-search-open:focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
  .inspiration-page .insp-end{padding-bottom:76px}
 }
+/* Search sheet: "Trending" as a numbered two-column list; the top three get the hot colour and a small "热" badge, the way notes
+   apps mark trending searches. Only real counts reach it (search-stats.ts). */
+.search-sheet section>header small{font-size:12px;color:var(--site-muted)}
+.search-trending{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
+.search-trending button{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;padding:0;border:0;background:none;color:var(--site-ink);font:inherit;font-size:16px;text-align:left;cursor:pointer}
+.search-rank{flex:none;min-width:16px;font-weight:500;color:var(--site-muted);font-variant-numeric:tabular-nums}
+.search-rank[data-top]{color:var(--site-hot)}
+.search-term{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.search-hot{flex:none;padding:2px 6px;border-radius:var(--radius-pill);background:var(--site-hot);color:var(--site-on-hot);font-style:normal;font-size:12px;line-height:1.2}
