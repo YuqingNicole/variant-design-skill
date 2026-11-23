@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { transition } from './view-transition';
 import { YouTubeEmbed, YouTubeThumb, isYouTube, type YouTubeVideo } from './YouTubeEmbed';
@@ -67,14 +67,15 @@ const f={
  loadMore:{zh:(n:number)=>`加载更多（还有 ${n} 个）`,en:(n:number)=>`Load more (${n} left)`}};
 const rightsLabel=(item:Item,locale:Locale)=>t(m[permissionOf(item)?'authorized':'linkOnly'],locale);
 const rights=(item:Item,locale:Locale)=><em className="inspiration-link-only">{rightsLabel(item,locale)}</em>;
-function Thumb({item,locale}:{item:Item;locale:Locale}){const preview=previewOf(item.id);const post=postOf(item);const [tries,setTries]=useState(0),[loaded,setLoaded]=useState(false);
+function Thumb({item,locale}:{item:Item;locale:Locale}){const preview=previewOf(item.id);const post=postOf(item);const [tries,setTries]=useState(0),[loaded,setLoaded]=useState(false),[ratio,setRatio]=useState('');
  const authorized=permissionOf(item);if(authorized)return <AuthorizedMedia key={item.id} record={authorized} thumbnail fallback={<AnalysisCard item={item} locale={locale}/>}/>;
  if(post)return <div className="insp-thumb insp-thumb-post" aria-hidden="true"><small className="insp-thumb-tag">{post.author} @{post.handle} · {post.date}</small><b lang={post.lang}>{post.text}</b></div>;
- if(preview&&tries<2)return <div className="insp-thumb insp-thumb-media" data-loaded={loaded} aria-hidden="true"><AnalysisCard item={item} locale={locale} embedded/><img src={tries?preview.image:sized(preview.image,640)} alt="" loading="lazy" referrerPolicy="no-referrer" onLoad={()=>setLoaded(true)} onError={()=>setTries(t=>t+1)}/></div>;
- return <AnalysisCard item={item} locale={locale}/>}
+ if(preview&&tries<2)return <div className="insp-thumb insp-thumb-media" data-loaded={loaded} aria-hidden="true" style={(preview.width&&preview.height?`${preview.width}/${preview.height}`:ratio)?{'--ar':preview.width&&preview.height?`${preview.width}/${preview.height}`:ratio} as CSSProperties:undefined}><AnalysisCard item={item} locale={locale} embedded/><img src={tries?preview.image:sized(preview.image,640)} alt="" loading="lazy" referrerPolicy="no-referrer" onLoad={e=>{const {naturalWidth:w,naturalHeight:h}=e.currentTarget;if(w&&h&&!preview.width)setRatio(`${w}/${h}`);setLoaded(true)}} onError={()=>setTries(t=>t+1)}/></div>;
+ return <AnalysisCard item={item} locale={locale} ratio={preview?(preview.width&&preview.height?`${preview.width}/${preview.height}`:ratio||'1200/630'):undefined}/>}
 // A reference's picture in a grid: its video, its YouTube thumbnail, or its link preview, falling back to the analysis card. Collection pages reuse it.
 export function ReferenceCover({item,locale}:{item:Item;locale:Locale}){const media=mediaFor(item),yt=youtubeOf(item);return media?<XVideo media={media} fallback={<AnalysisCard item={item} locale={locale}/>}/>:yt?<YouTubeThumb video={yt} fallback={<AnalysisCard item={item} locale={locale}/>}/>:<Thumb item={item} locale={locale}/>}
-function AnalysisCard({item,locale,embedded=false}:{item:Item;locale:Locale;embedded?:boolean}){const v=variantOf(item.id);return <div className={`${embedded?'insp-thumb-fallback':'insp-thumb'} insp-thumb-${item.category} insp-tint-${v%2}`} aria-hidden="true"><small className="insp-thumb-tag">{t(labels[item.category],locale)} · {item.tag} {rights(item,locale)}</small><b>{item.name}</b><span>{t(item.focus,locale)}</span><div className={`insp-sketch insp-sk-${item.category}-${v}`}>{Array.from({length:(sketches[item.category]??[4,4,4])[v]},(_,i)=><i key={i}/>)}</div></div>}
+// `ratio`: the card stands in for a preview image that failed, so it keeps that image's proportions and the feed does not jump.
+function AnalysisCard({item,locale,embedded=false,ratio}:{item:Item;locale:Locale;embedded?:boolean;ratio?:string}){const v=variantOf(item.id);return <div className={`${embedded?'insp-thumb-fallback':'insp-thumb'} insp-thumb-${item.category} insp-tint-${v%2}${ratio?' insp-thumb-standin':''}`} style={ratio?{'--ar':ratio} as CSSProperties:undefined} aria-hidden="true"><small className="insp-thumb-tag">{t(labels[item.category],locale)} · {item.tag} {rights(item,locale)}</small><b>{item.name}</b><span>{t(item.focus,locale)}</span><div className={`insp-sketch insp-sk-${item.category}-${v}`}>{Array.from({length:(sketches[item.category]??[4,4,4])[v]},(_,i)=><i key={i}/>)}</div></div>}
 function LinkPreview({item,preview,locale}:{item:Item;preview:Preview;locale:Locale}){const [tries,setTries]=useState(0);const failed=tries>1;const host=new URL(item.url).hostname;
  const lang=preview.lang||undefined;
  return <figure className="inspiration-demo insp-shot">{failed?<AnalysisCard item={item} locale={locale}/>:<img src={tries?preview.image:sized(preview.image,1280)} alt={preview.title} lang={lang} referrerPolicy="no-referrer" onError={()=>setTries(t=>t+1)}/>}<figcaption><span lang={lang}><b>{preview.title}</b>{preview.description&&<> — {preview.description}</>}</span><br/>{t(f.caption,locale)(host,preview.fetchedAt,failed)}</figcaption></figure>}
@@ -188,6 +189,20 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  // three-row sideways strip is gone). The next page loads when the sentinel under the grid nears the screen.
  // A type switch scrolls to the top first (instantly), or the shorter list would leave the sentinel in view and page on.
  const moreRef=useRef<HTMLDivElement>(null);
+ // Masonry (maintainer, 2026-11-23: covers follow the work's own proportions). Each card spans as many 1px grid rows as its own
+ // height needs, so cards of different heights pack without holes, and a new page only adds below: nothing already on screen
+ // moves. Heights are measured after layout and again whenever a card resizes (an image arriving, a width change). Until then,
+ // and without JavaScript, the plain grid of equal rows stays.
+ const gridRef=useRef<HTMLUListElement>(null),cardKey=cards.map(c=>c.id).join(' '),[masonry,setMasonry]=useState(false);
+ useLayoutEffect(()=>{const grid=gridRef.current;if(!grid||typeof ResizeObserver==='undefined')return;
+  const span=(li:HTMLElement,inner:Element)=>{const gap=parseFloat(getComputedStyle(grid).getPropertyValue('--masonry-gap'))||12,c=getComputedStyle(li);
+   return Math.ceil(inner.getBoundingClientRect().height+parseFloat(c.paddingTop)+parseFloat(c.paddingBottom)+parseFloat(c.borderTopWidth)+parseFloat(c.borderBottomWidth)+gap)};
+  const items=[...grid.children].flatMap(li=>li instanceof HTMLElement&&li.firstElementChild?[[li,li.firstElementChild] as const]:[]);
+  const spans=items.map(([li,inner])=>span(li,inner));// read every height first, then write, so layout runs once
+  items.forEach(([li],i)=>{li.style.gridRowEnd=`span ${spans[i]}`});setMasonry(true);
+  const ro=new ResizeObserver(entries=>{for(const e of entries){const li=e.target.parentElement;if(li)li.style.gridRowEnd=`span ${span(li,e.target)}`}});
+  for(const [,inner] of items)ro.observe(inner);
+  return()=>ro.disconnect()},[cardKey]);
  // A page's cards render only once their section's records arrive (reference-library.ts); until then the grid is short and the
  // sentinel sits in view, so the next page waits until every card already asked for is on screen, or every page would mount at once.
  const allShown=cards.length>=shown.length;
@@ -256,7 +271,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    </div>}
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
-   <ul className={`inspiration-grid insp-feed${sectionInfo?.videoGrid?' insp-videos':''}${page?' insp-own':''}`}>{cards.map(item=>{const media=mediaFor(item),post=postOf(item),yt=youtubeOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
+   <ul ref={gridRef} className={`inspiration-grid insp-feed${masonry?' is-masonry':''}${sectionInfo?.videoGrid?' insp-videos':''}${page?' insp-own':''}`}>{cards.map(item=>{const media=mediaFor(item),post=postOf(item),yt=youtubeOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
     <a className={`insp-card-open${media||yt?' insp-vcard-open':''}${fills(media)||yt?' insp-fills':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
      <ReferenceCover item={item} locale={language}/>
      <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={proxied(media.avatar,640)} width="28" height="28" loading="lazy" decoding="async" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer" onError={e=>{const i=e.currentTarget;if(media.avatar&&i.dataset.direct!==''&&i.getAttribute('src')!==media.avatar){i.dataset.direct='';i.src=media.avatar}else i.style.display='none'}}/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:yt?yt.channel:new URL(item.url).hostname.replace(/^www\./,'')}{authorized&&` · ${rightsLabel(item,language)}`}</small></span></span>

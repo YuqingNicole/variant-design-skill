@@ -6,6 +6,7 @@
 // Usage: node website/scripts/link-preview.mjs   (rewrites src/link-previews.json)
 import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
+import { fetchImageSize } from './image-size.mjs';
 
 const entities = { amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'", apos: "'", nbsp: ' ' };
 const decode = s => s.replace(/&(#\d+|#x[0-9a-f]+|[a-z]+);/gi, (all, e) => e[0] === '#' ? String.fromCodePoint(e[1] === 'x' ? parseInt(e.slice(2), 16) : +e.slice(1)) : entities[e] ?? all);
@@ -52,7 +53,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     try {
       const res = await fetch(i.url, { headers: { 'user-agent': 'Mozilla/5.0 (compatible; VariantDesignLinkPreview/1.0)', accept: 'text/html' }, signal: AbortSignal.timeout(15000) });
       const preview = res.ok ? parsePreview(await res.text(), res.url) : null;
-      if (preview) out[i.id] = { ...preview, fetchedAt: today };
+      // The image's size lets the feed lay the cover out before it loads; an unreadable size is simply left out.
+      if (preview) out[i.id] = { ...preview, ...(await fetchImageSize(preview.image).catch(() => null) ?? {}), fetchedAt: today };
       else if (!res.ok && stored[i.id]) out[i.id] = stored[i.id];
       console.error(`${preview ? 'ok  ' : 'none'} ${i.id}${res.ok ? '' : ` (${res.status})`}`);
     } catch (e) { if (stored[i.id]) out[i.id] = stored[i.id]; console.error(`fail ${i.id} (${e.message})`); }

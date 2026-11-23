@@ -18,7 +18,8 @@ test('the chronological stream includes every kind on the home (Videos is its ow
  expect(await cards.locator('.insp-card-open').evaluateAll(as=>as.map(a=>a.pathname.split('/').pop()))).toEqual(expected.slice(0,30).map(i=>i.id));
  // Paging eventually exposes website previews and X videos in this same list. A page's cards arrive as their section chunks
  // land (reference-library.ts), so each round reads the count once and waits for it to grow past that reading.
- for(let count=await cards.count();count<expected.length;count=await cards.count()){await cards.last().evaluate(el=>el.scrollIntoView({block:'end'}));await expect.poll(()=>cards.count()).toBeGreaterThan(count);}
+ // Masonry puts the last card in the shortest column, not necessarily at the bottom, so scroll to the end of the page as a reader does.
+ for(let count=await cards.count();count<expected.length;count=await cards.count()){await page.evaluate(()=>scrollTo(0,document.documentElement.scrollHeight));await expect.poll(()=>cards.count()).toBeGreaterThan(count);}
  await expect(cards).toHaveCount(expected.length);await expect(cards.locator('video').first()).toBeAttached();await expect(cards.locator('.insp-thumb-media').first()).toBeAttached();
  await page.getByRole('link',{name:'网站',exact:true}).click();await expect(page).toHaveURL(/\/browse\/web$/);
  // A tab is a full page load: act only after React has taken over the prerendered page, or its state replaces the filters.

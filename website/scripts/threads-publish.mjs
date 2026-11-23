@@ -12,6 +12,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readItems, appendItems, askClaude } from './x-publish.mjs';
 import { parsePreview } from './link-preview.mjs';
+import { fetchImageSize } from './image-size.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const inboxPath = path.resolve(here, '../content/threads-post-inbox.json');
@@ -100,7 +101,8 @@ export async function judged(ask, prompt, dir) {
     return parseVerdict(await ask(`${prompt}\n\nYour previous answer was rejected: ${error.message}. Answer again with the corrected JSON object only.`, dir));
   }
 }
-const defaults = { page: fetchPage, screenshot, ask: askClaude };
+// `size` reads the preview image's width and height so the feed can lay its cover out before it loads.
+const defaults = { page: fetchPage, screenshot, ask: askClaude, size: url => fetchImageSize(url).catch(() => null) };
 
 // A candidate that cannot be read this time (network, Chrome, the model) stays `pending`; only a decision changes it.
 export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataPath, previews: previewsFile = previewsPath, limit = 10, dryRun = false, now = new Date(), io = {} } = {}) {
@@ -131,7 +133,7 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
         if (!verdict.accept) { reject(candidate, label, verdict.reason); continue; }
         const id = idFor(candidate.link, new Set([...items, ...added].map(i => i.id)));
         const entry = entryFor(candidate, verdict, id, stamp);
-        added.push(entry); newPreviews[id] = { ...preview, fetchedAt: today };
+        added.push(entry); newPreviews[id] = { ...preview, ...(await dep.size(preview.image) ?? {}), fetchedAt: today };
         decide(candidate, { status: 'published', entry: id });
         summary.accepted.push([label, id, entry.tag, entry.name]);
       } catch (error) { summary.kept.push([label, error.message]); }

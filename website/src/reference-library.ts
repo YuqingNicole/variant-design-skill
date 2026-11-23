@@ -16,7 +16,8 @@ export type Link=typeof links[number];
 export type Reference=Link|Authorized;
 export type Row=Pick<Link,'id'|'name'|'category'|'tag'|'source'|'addedAt'|'checkedAt'>&Partial<Pick<Link,'kind'>>&{translations?:Translations};
 // The preview a site publishes for shared links (scripts/link-preview.mjs).
-export type Preview={image:string;title:string;description:string;lang:string;fetchedAt:string};
+// width and height are the image's own, read when the preview was stored (scripts/image-size.mjs); older entries may lack them.
+export type Preview={image:string;title:string;description:string;lang:string;fetchedAt:string;width?:number;height?:number};
 export const inspirationTopics:typeof topicList=topics;
 const registry=parseRegistry(records);
 const ids=new Set(index.map(r=>r.id));for(const r of registry){if(ids.has(r.id))throw new Error(`Reference id already exists: ${r.id}`);ids.add(r.id)}

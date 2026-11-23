@@ -410,3 +410,23 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .search-suggestions{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
 .search-suggestions :is(a,button){display:flex;align-items:center;width:100%;min-height:44px;padding:0;border:0;background:none;color:var(--site-ink);font:inherit;font-size:16px;text-align:left;text-decoration:none;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .search-sheet :is(button,a):focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
+
+/* Covers at the work's own proportions, packed as masonry (maintainer, 2026-11-23: "fit the card to the original material").
+   A video keeps its stored width:height (--ar, set by XVideo); a website preview starts at the usual share-card 1200:630 and
+   takes the image's measured ratio once it loads (--ar); text cards are as tall as their text. No crop, no grey mat. The grid
+   becomes masonry only once InspirationPage has measured every card (.is-masonry); before that it is the plain grid. */
+.inspiration-page .inspiration-grid.insp-feed{--masonry-gap:12px}
+.inspiration-page .inspiration-grid.insp-feed.is-masonry{grid-auto-rows:1px;row-gap:0;align-items:start}
+.inspiration-page .insp-feed .insp-card-open>.insp-vcard-media{aspect-ratio:var(--ar,auto);height:auto;object-fit:cover}
+.inspiration-page .insp-feed>.insp-card .insp-vcard-media{padding:0}
+.inspiration-page .insp-feed .insp-card-open>.insp-thumb.insp-thumb-media{aspect-ratio:var(--ar,1200/630);height:auto}
+.inspiration-page .insp-feed>.insp-card .insp-thumb-media>img{inset:0;width:100%;height:100%;object-fit:cover;border-radius:0}
+.inspiration-page .insp-feed .insp-card-open>.insp-thumb:not(.insp-thumb-media){aspect-ratio:auto;height:auto}
+.inspiration-page .insp-feed .insp-card-open>.insp-thumb.insp-thumb-standin{aspect-ratio:var(--ar)}
+@media(max-width:650px){
+ .inspiration-page .inspiration-grid.insp-feed{--masonry-gap:8px}
+ .inspiration-page .insp-feed .insp-card-open>.insp-vcard-media{aspect-ratio:var(--ar,auto)}
+ .inspiration-page .insp-feed .insp-card-open>.insp-thumb.insp-thumb-media{aspect-ratio:var(--ar,1200/630)}
+ .inspiration-page .insp-feed .insp-card-open>.insp-thumb:not(.insp-thumb-media){aspect-ratio:auto}
+ .inspiration-page .insp-feed .insp-card-open>.insp-thumb.insp-thumb-standin{aspect-ratio:var(--ar)}
+}

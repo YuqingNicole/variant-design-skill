@@ -39,7 +39,7 @@ test('a run records every decision, adds the preview, and keeps unreadable sites
   const asked = [];
   const io = {
     page: async url => url.includes('gone') ? { status: 404, url, html: '' } : url.includes('flaky') ? Promise.reject(new Error('timeout')) : { status: 200, url, html: url.includes('bare') ? '<html></html>' : html },
-    screenshot: () => '/s.png',
+    screenshot: () => '/s.png', size: async () => ({ width: 1200, height: 630 }),
     ask: prompt => { asked.push(prompt); return prompt.includes('gate.example') ? '{"accept": false, "reason": "A verification gate covers the page."}' : JSON.stringify(good); },
   };
   const result = await run({ inbox, data, previews, io, now: new Date('2026-11-17T01:00:00Z') });
@@ -53,6 +53,7 @@ test('a run records every decision, adds the preview, and keeps unreadable sites
   assert.deepEqual([entry.id, entry.url, entry.kind, entry.designer, entry.via, entry.source], ['acme', 'https://acme.example/', 'official-site', null, 'https://www.threads.com/@u/post/1', 'link-only']);
   const p = JSON.parse(await fs.readFile(previews, 'utf8'));
   assert.equal(p.acme.image, 'https://cdn.acme.example/og.png'); assert.equal(p.acme.fetchedAt, '2026-11-17'); assert.ok(p.old);
+  assert.deepEqual([p.acme.width, p.acme.height], [1200, 630], 'the preview keeps its image size for the feed');
   assert.match(report(result), /Accepted 1, rejected 5, left pending 1/);
 });
 
@@ -61,7 +62,7 @@ test('a dry run, and two posts for one site, publish once and write nothing', as
   const inbox = path.join(dir, 'inbox.json'), data = path.join(dir, 'data.ts'), previews = path.join(dir, 'previews.json');
   const body = JSON.stringify({ candidates: [cand('1', 'https://acme.example/'), cand('2', 'https://www.acme.example/pricing')] });
   await fs.writeFile(inbox, body); await fs.writeFile(data, source); await fs.writeFile(previews, '{}');
-  const io = { page: async url => ({ status: 200, url, html }), screenshot: () => '/s.png', ask: () => JSON.stringify(good) };
+  const io = { page: async url => ({ status: 200, url, html }), screenshot: () => '/s.png', ask: () => JSON.stringify(good), size: async () => null };
   const r = await run({ inbox, data, previews, io, dryRun: true });
   assert.equal(r.accepted.length, 1); assert.equal(r.rejected.length, 1);
   assert.equal(await fs.readFile(inbox, 'utf8'), body); assert.equal(await fs.readFile(data, 'utf8'), source); assert.equal(await fs.readFile(previews, 'utf8'), '{}');

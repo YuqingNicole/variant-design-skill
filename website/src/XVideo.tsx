@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 'react';
 import { proxied } from './image-proxy';
 // The video of a shared X post, streamed from video.twimg.com (address read by scripts/x-media.mjs; reference-library.ts
 // hands each card its record) and played
@@ -36,5 +36,9 @@ export function XVideo({media,fallback,controls=false}:{media:VideoMedia;fallbac
   motion.addEventListener('change',preference);document.addEventListener('visibilitychange',play);
   return()=>{near.disconnect();io.disconnect();motion.removeEventListener('change',preference);document.removeEventListener('visibilitychange',play);v.pause();v.removeAttribute('src');v.load()}},[media.video,controls]);
  if(posterFailed&&fallback)return <>{fallback}</>;
- return failed?<img className="insp-vcard-media" src={poster} width={media.width} height={media.height} alt="" referrerPolicy="no-referrer" onError={next}/>
-  :<video ref={ref} className="insp-vcard-media" poster={poster} width={media.width} height={media.height} muted loop playsInline controls={controls} preload="metadata" onError={()=>setFailed(true)}/>}
+ // A <video> without its file yet lays out at the default 300×150, not at its width/height attributes, so the box would change
+ // size once the file attaches and push everything below it (CLS). --ar carries the stored proportions, and it is in the
+ // prerendered HTML; styles that size the element read it (the feed's masonry covers, the detail player).
+ const ratio={'--ar':`${media.width}/${media.height}`} as CSSProperties;
+ return failed?<img className="insp-vcard-media" style={ratio} src={poster} width={media.width} height={media.height} alt="" referrerPolicy="no-referrer" onError={next}/>
+  :<video ref={ref} className="insp-vcard-media" style={ratio} poster={poster} width={media.width} height={media.height} muted loop playsInline controls={controls} preload="metadata" onError={()=>setFailed(true)}/>}
