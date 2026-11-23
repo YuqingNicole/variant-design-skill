@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
+import { createPortal } from 'react-dom';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { transition } from './view-transition';
 import { YouTubeEmbed, YouTubeThumb, isYouTube, type YouTubeVideo } from './YouTubeEmbed';
@@ -45,7 +46,7 @@ const m={withdrawnPack:{zh:'已撤下的参考',en:'Removed references'},withdra
  copyManually:{zh:'请在文本框中选择并手动复制。',en:'Select the text and copy it manually.'},submissions:{zh:'投稿与授权规则',en:'Submissions & permissions'},casesEntry:{zh:'案例：一个任务出三版 →',en:'Cases: one brief, three directions →'},
  rights:{zh:'作品版权归原作者；仅链接的参考与作者授权的媒体分别注明来源和权限。',en:'The work belongs to its owners; link-only references and author-permission media each state their source and rights.'},rightsMore:{zh:'展示方式与数据来源',en:'How media is shown and where data comes from'},
 
- refType:{zh:'参考类型',en:'Reference type'},videoType:{zh:'视频类型',en:'Video type'},all:{zh:'全部',en:'All'},search:{zh:'搜索参考',en:'Search references'},searching:{zh:'搜索',en:'Search'},clearSearch:{zh:'清除搜索',en:'Clear search'},searchHint:{zh:'搜索 ⌘K',en:'Search ⌘K'},
+ refType:{zh:'参考类型',en:'Reference type'},videoType:{zh:'视频类型',en:'Video type'},all:{zh:'全部',en:'All'},search:{zh:'搜索参考',en:'Search references'},searching:{zh:'搜索',en:'Search'},searchPlaceholder:{zh:'搜索作品、风格或品牌',en:'Search work, styles or brands'},clearSearch:{zh:'清除搜索',en:'Clear search'},searchHint:{zh:'搜索 ⌘K',en:'Search ⌘K'},
  sort:{zh:'排序',en:'Sort'},curated:{zh:'最近收录',en:'Recently added'},original:{zh:'编辑顺序',en:'Editorial order'},recent:{zh:'最近核对',en:'Recently checked'},byName:{zh:'按名称',en:'By name'},references:{zh:'个参考',en:'references'},openOnX:{zh:'在 X 上打开',en:'Open on X'},
  openSource:{zh:'打开来源',en:'Open source'},noMatches:{zh:'没有匹配结果。试试其他关键词或专题。',en:'No matches. Try another query or topic.'},clear:{zh:'清除筛选',en:'Clear filters'},
  closing:{zh:'看过之后，做出自己的版本。',en:'After looking, make your own version.'},install:{zh:'安装并开始',en:'Install & start'},studies:{zh:'查看我们的 A/B/C 案例',en:'See our A/B/C cases'},
@@ -179,6 +180,9 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  const [Sheet,setSheet]=useState<null|typeof import('./SearchSheet').SearchSheet>(null),[searching,setSearching]=useState(false);
  const openSearch=()=>import('./SearchSheet').then(mod=>{setSheet(()=>mod.SearchSheet);setSearching(true)});
  const fromSheet=(update:()=>void)=>{setSearching(false);scrollTo({top:0,behavior:'instant'});filter(update)};
+ // Phones reach search from a field docked above the bottom tab bar, within thumb reach (maintainer, 2026-11-23). It is portalled
+ // to <body> (the frosted panel would trap a fixed element) and mounts only on the client; desktop keeps the field in the bar.
+ const [docked,setDocked]=useState(false);useEffect(()=>setDocked(true),[]);
  // Each tab is a static page: fetch it as soon as the pointer or finger is on the link, and keep the current tab in view when the row scrolls.
  const pillsRef=useRef<HTMLElement>(null),prefetched=useRef(new Set<string>());
  const prefetch=(e:{currentTarget:HTMLAnchorElement})=>{const href=e.currentTarget.getAttribute('href')??'';if(!href||prefetched.current.has(href))return;prefetched.current.add(href);const link=document.createElement('link');link.rel='prefetch';link.href=href;link.as='document';document.head.append(link)};
@@ -261,7 +265,6 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    
    <label className="insp-search"><Icon d={icons.search}/><span className="insp-visually-hidden">{l('search')}</span><input ref={searchRef} type="search" value={query} onChange={e=>{setQuery(e.target.value);setVisible(pageSize)}} placeholder={l('searchHint')}/></label>
    <select aria-label={l('sort')} value={sort} onChange={e=>{const v=e.target.value;filter(()=>setSort(v))}}><option value="default">{l('curated')}</option><option value="curated">{l('original')}</option><option value="checked">{l('recent')}</option><option value="name">{l('byName')}</option></select>
-   <button type="button" className="insp-search-open" aria-label={l('search')} aria-haspopup="dialog" onClick={openSearch}><Icon d={icons.search}/></button>
   </div>{sectionInfo?.types&&!page&&<div className="site-shell">{typeRow}</div>}</div>
   <section className="site-shell insp-body">
    {/* Phones: results of a search or topic get the query chip and the sort as text tabs, as a notes app's results page does; desktop keeps both in the bar. */}
@@ -286,6 +289,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   </section>
   <div className="site-shell insp-end"><p className="insp-end-links">{pageLinkItems}</p><p className="insp-end-rights">{rightsItems}</p></div>
   <dialog ref={dialogRef} className="insp-dialog" aria-label={openItem?.name} onCancel={e=>{e.preventDefault();close()}} onKeyDown={e=>{if(e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLInputElement||e.target instanceof HTMLSelectElement)return;if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}if(e.key==='ArrowRight'){e.preventDefault();step(1)}}} onClick={e=>{if(e.target===e.currentTarget)close()}}>{open?.mode==='modal'&&openItem&&detailView(openItem,false)}</dialog>
+  {docked&&!page&&createPortal(<div className="search-dock content-page"><button type="button" className="insp-search-open" aria-haspopup="dialog" aria-label={query?`${l('search')}：${query}`:l('search')} onClick={openSearch}><Icon d={icons.search}/><span className={query?'':'search-dock-placeholder'}>{query||l('searchPlaceholder')}</span></button></div>,document.body)}
   {searching&&Sheet&&<Sheet language={language} query={query} topics={inspirationTopics}
    onSearch={q=>fromSheet(()=>{setQuery(q);setTopic('')})} onTopic={id=>fromSheet(()=>{setTopic(id);setQuery('')})} onClose={()=>setSearching(false)}/>}
   <SiteFooter language={language}/></main>
