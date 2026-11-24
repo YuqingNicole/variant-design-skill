@@ -7882,6 +7882,134 @@ export const inspirationItems = [
       "text": "playing around with a fun idea https://t.co/KKAesLo1FO",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-xikhar-997818",
+    "name": "Ink-wash platformer made in 24 hours",
+    "category": "practice",
+    "tag": "Generative",
+    "url": "https://x.com/xikhar/status/2117776295534997818",
+    "source": "link-only",
+    "focus": {
+      "zh": "一款 24 小时做出的原创游戏，画面像一幅会动的水墨画：戴斗笠的旅人站在云海边的松树崖顶，攀爬墨色石壁、站上吊台、乘木筏过黑水，红色的门架点缀灰白山崖。作者写明的做法是 AI 生成角色和贴图、Blender 处理模型、three.js 跑在浏览器里。",
+      "en": "An original game made in 24 hours that plays like a moving ink-wash painting: a traveller in a straw hat stands on a pine-topped cliff above a sea of clouds, climbs inky rock faces, rides a hanging platform and crosses black water on a raft, with red gate frames against grey cliffs. The stated stack is AI-generated characters and textures, Blender for models and three.js in the browser."
+    },
+    "application": {
+      "zh": "把水墨画风延伸成可探索的三维场景",
+      "en": "Carrying an ink-wash look into an explorable 3D world"
+    },
+    "publisher": "Shikhar (@xikhar)",
+    "kind": "social-post",
+    "designer": "Shikhar",
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T02:15:37.803Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2117776295534997818",
+      "author": "Shikhar",
+      "handle": "xikhar",
+      "date": "2026-11-04",
+      "lang": "en",
+      "text": "I made a full original game in 24 hours using AI\n\nStack: Opus 5.5 + Flux 3 Max + GPT Image + Tripo + Blender + Three.js\n\nAnyone can make games now. Full workflow thread and prompt below:\n\n(1/7) https://t.co/peyaAUwZPs",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-xikhar-122403",
+    "name": "Papertrails: an endless papercraft world",
+    "category": "practice",
+    "tag": "Generative",
+    "url": "https://x.com/xikhar/status/2122682962647122403",
+    "source": "link-only",
+    "focus": {
+      "zh": "一个无限延伸的纸艺世界：角色走到哪里，纸片做的针叶林、秋天的红叶树、风车村庄和沙漠仙人掌就在周围立起来，像翻开的立体书，季节和地形一路变化。作者说明跑在浏览器里（three.js），完整的提示词和流程也公开了。",
+      "en": "An endless papercraft world: wherever the character walks, paper pines, red autumn trees, a windmill village and desert cacti pop up around it like a pop-up book, changing season and terrain as it goes. The author says it runs in the browser with three.js and shares the full prompt and workflow."
+    },
+    "application": {
+      "zh": "用立体书式的出现动画生成无限场景",
+      "en": "Pop-up-book entrances for an endless generated scene"
+    },
+    "publisher": "Shikhar (@xikhar)",
+    "kind": "social-post",
+    "designer": "Shikhar",
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T02:15:37.803Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2122682962647122403",
+      "author": "Shikhar",
+      "handle": "xikhar",
+      "date": "2026-11-17",
+      "lang": "en",
+      "text": "Papertrails: an endless papercraft world that pops up around you.\n\nBuilt with Fable 5.2 and Opus 5.5, runs in the browser with three.js\n\nFull prompt and workflow steps below. https://t.co/u4594XQyle",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-xikhar-353617",
+    "name": "A whole medieval town built in Unreal Engine with AI",
+    "category": "practice",
+    "tag": "Generative",
+    "url": "https://x.com/xikhar/status/2114567234857353617",
+    "source": "link-only",
+    "focus": {
+      "zh": "作者让 AI 在 Unreal Engine 里搭出一整座中世纪小城，资产都用 Blender 做：先是红瓦屋顶、广场和葡萄园的鸟瞰，再切到银发角色走过石板广场、木筋墙房屋和挂着招牌的小巷。",
+      "en": "The author had AI build an entire medieval town in Unreal Engine, with every asset made in Blender: first aerial views of red-tiled roofs, squares and vineyards, then a silver-haired character walking across a stone plaza, past timber-framed houses and down a lane of hanging signs."
+    },
+    "application": {
+      "zh": "从城市鸟瞰无缝切到第三人称漫游",
+      "en": "Cutting from a city flyover to a third-person walk"
+    },
+    "publisher": "Shikhar (@xikhar)",
+    "kind": "social-post",
+    "designer": "Shikhar",
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T02:15:37.803Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2114567234857353617",
+      "author": "Shikhar",
+      "handle": "xikhar",
+      "date": "2026-10-26",
+      "lang": "en",
+      "text": "Opus 5.5 created this entire city in unreal engine.\n\nAll assets are made with blender.\n\nThis is the worst it will ever be. https://t.co/cggVPnczSH",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-crazykaomei-351374",
+    "name": "Ghibli-style stick-figure music video",
+    "category": "practice",
+    "tag": "Animation",
+    "url": "https://x.com/CrazyKaomei/status/2124821277563351374",
+    "source": "link-only",
+    "focus": {
+      "zh": "火柴人技能的新风格：吉卜力式的夏日画面里，几个火柴人在海边草坡上放风筝、在挂着彩旗的黄昏露台上跳舞，配日文字幕。作者说用 Codex 实测了“音乐到日系 MV”的整条流程，分镜、画面、卡点和字幕都由 AI 自动完成，创意来自 @AveryRunsAI。",
+      "en": "A new style for a stick-figure skill: in Ghibli-like summer scenes, stick figures fly a kite on a seaside meadow and dance on a terrace strung with bunting at dusk, with Japanese subtitles. The author says they ran the whole music-to-MV loop in Codex, with storyboard, images, beat sync and subtitles done by AI; the idea came from @AveryRunsAI."
+    },
+    "application": {
+      "zh": "简笔角色叠在手绘质感背景上做音乐短片",
+      "en": "Stick figures over painterly backgrounds for music shorts"
+    },
+    "publisher": "疯狂的烤妹儿 (@CrazyKaomei)",
+    "kind": "social-post",
+    "designer": "疯狂的烤妹儿",
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T02:15:37.803Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2124821277563351374",
+      "author": "疯狂的烤妹儿",
+      "handle": "CrazyKaomei",
+      "date": "2026-11-23",
+      "lang": "zh",
+      "text": "火柴人 Skill 新风格来袭：A8 - 吉卜力风 ☁️ 🚲\n\n感谢 @AveryRunsAI 的浪漫创意，把宫崎骏动画的夏日美学完美移植到了火柴人宇宙！\n\n我直接用 Codex 实测了 “音乐 ➡️ 全自动日系 MV” 闭环：AI 自动分镜、生成画面、精准卡点并生成日文字幕～\n\n起号绝配赛道：日系治愈漫才、Lofi https://t.co/NaaiXTNRM3",
+      "hasMedia": true
+    }
   }
 ];
 

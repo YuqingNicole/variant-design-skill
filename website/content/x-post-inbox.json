@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-22T13:05:15.162Z",
+  "updatedAt": "2026-11-24T02:15:37.803Z",
   "source": "Ego Lite on X search",
   "reviewPolicy": "Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request that merges itself once CI passes; nobody reviews entries one by one.",
   "candidates": [
@@ -2644,6 +2644,58 @@
       "status": "published",
       "entry": "x-duckwhocodes-939918",
       "reviewedAt": "2026-11-22"
+    },
+    {
+      "id": "2117776295534997818",
+      "url": "https://x.com/xikhar/status/2117776295534997818",
+      "handle": "xikhar",
+      "author": "Shikhar",
+      "publishedAt": "2026-11-04",
+      "likes": 15704,
+      "capturedAt": "2026-11-24T02:15:37.803Z",
+      "query": "maintainer pick (2026-11-24)",
+      "status": "published",
+      "entry": "x-xikhar-997818",
+      "reviewedAt": "2026-11-24"
+    },
+    {
+      "id": "2122682962647122403",
+      "url": "https://x.com/xikhar/status/2122682962647122403",
+      "handle": "xikhar",
+      "author": "Shikhar",
+      "publishedAt": "2026-11-17",
+      "likes": 2310,
+      "capturedAt": "2026-11-24T02:15:37.803Z",
+      "query": "maintainer pick (2026-11-24)",
+      "status": "published",
+      "entry": "x-xikhar-122403",
+      "reviewedAt": "2026-11-24"
+    },
+    {
+      "id": "2114567234857353617",
+      "url": "https://x.com/xikhar/status/2114567234857353617",
+      "handle": "xikhar",
+      "author": "Shikhar",
+      "publishedAt": "2026-10-26",
+      "likes": 5082,
+      "capturedAt": "2026-11-24T02:15:37.803Z",
+      "query": "maintainer pick (2026-11-24)",
+      "status": "published",
+      "entry": "x-xikhar-353617",
+      "reviewedAt": "2026-11-24"
+    },
+    {
+      "id": "2124821277563351374",
+      "url": "https://x.com/CrazyKaomei/status/2124821277563351374",
+      "handle": "CrazyKaomei",
+      "author": "疯狂的烤妹儿",
+      "publishedAt": "2026-11-23",
+      "likes": 162,
+      "capturedAt": "2026-11-24T02:15:37.803Z",
+      "query": "maintainer pick (2026-11-24)",
+      "status": "published",
+      "entry": "x-crazykaomei-351374",
+      "reviewedAt": "2026-11-24"
     }
   ]
 }
