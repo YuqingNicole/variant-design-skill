@@ -26,10 +26,14 @@ cd "$WORK"
 "$WORK/website/scripts/run-x-discovery.sh" ${GROUPS_ARG:+--groups "$GROUPS_ARG"}
 OUT="$(mktemp)"; node website/scripts/x-publish.mjs --limit "$LIMIT" | tee "$OUT"
 node website/scripts/x-media.mjs
-node --test website/scripts/inspiration-data.test.mjs website/scripts/x-media.test.mjs website/scripts/x-publish.test.mjs website/scripts/x-discovery.test.mjs
+# Draft facets for the new references with the local Jev model when the machine started it (JEV_URL); a failure costs nothing.
+if [ -n "${JEV_URL:-}" ] && ! git diff --quiet website/src/inspiration-data.ts; then
+  node website/scripts/jev-facets.mjs --limit 20 | tee -a "$OUT" || echo "Jev facets failed; publishing without drafts."
+fi
+node --test website/scripts/inspiration-data.test.mjs website/scripts/reference-facets.test.mjs website/scripts/x-media.test.mjs website/scripts/x-publish.test.mjs website/scripts/x-discovery.test.mjs
 
 if git diff --quiet; then echo "Nothing to publish this week."; git branch -D "$BRANCH" >/dev/null 2>&1 || true; exit 0; fi
-git add website/content/x-post-inbox.json website/src/inspiration-data.ts website/src/x-media.json
+git add website/content/x-post-inbox.json website/src/inspiration-data.ts website/src/x-media.json website/src/reference-facets.json
 git commit -q -m "Add this week's X creative videos ($DAY)
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"

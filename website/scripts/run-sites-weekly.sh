@@ -26,10 +26,14 @@ cd "$WORK"
 
 node website/scripts/site-discovery.mjs ${SOURCES_ARG:+--sources "$SOURCES_ARG"}
 OUT="$(mktemp)"; node website/scripts/threads-publish.mjs --inbox website/content/site-inbox.json --limit "$LIMIT" | tee "$OUT"
-node --test website/scripts/inspiration-data.test.mjs website/scripts/site-discovery.test.mjs website/scripts/threads-publish.test.mjs
+# Draft facets for the new references with the local Jev model when the machine started it (JEV_URL); a failure costs nothing.
+if [ -n "${JEV_URL:-}" ] && ! git diff --quiet website/src/inspiration-data.ts; then
+  node website/scripts/jev-facets.mjs --limit 20 | tee -a "$OUT" || echo "Jev facets failed; publishing without drafts."
+fi
+node --test website/scripts/inspiration-data.test.mjs website/scripts/reference-facets.test.mjs website/scripts/site-discovery.test.mjs website/scripts/threads-publish.test.mjs
 
 if git diff --quiet; then echo "Nothing to publish this week."; git branch -D "$BRANCH" >/dev/null 2>&1 || true; exit 0; fi
-git add website/content/site-inbox.json website/src/inspiration-data.ts website/src/link-previews.json
+git add website/content/site-inbox.json website/src/inspiration-data.ts website/src/link-previews.json website/src/reference-facets.json
 git commit -q -m "Add this week's sites from curated galleries ($DAY)
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"

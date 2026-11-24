@@ -23,6 +23,9 @@ if(process.argv[1]&&fileURLToPath(import.meta.url)===path.resolve(process.argv[1
   const problems=facetFileProblems(all);if(problems.length){console.error(problems.join('\n'));process.exit(1)}
   const reviewed=Object.values(all).filter(f=>f.status==='reviewed').length,missing=missingFacets(all);
   if(missing.length)console.log(`${missing.length} published references have no facets yet: ${missing.join(', ')}`);
+  // Which records the local model drafted (scripts/jev-facets.mjs), with its probability, so its guesses can be checked.
+  const jev=Object.entries(all).filter(([,f])=>f.draftedBy==='jev');
+  if(jev.length){console.log(`${jev.length} drafted by Jev (${jev.filter(([,f])=>f.status==='reviewed').length} reviewed since):`);for(const[id,f]of jev)console.log(`  ${f.status==='reviewed'?'✓':'·'} ${id.padEnd(28)} dark ${Math.round(f.jev.dark*100)}%${f.styles.includes('dark')?' → dark':''}`)}
   console.log(`${Object.keys(all).length} references, ${reviewed} reviewed. Counting ${drafts?'reviewed and draft':'reviewed'} values; a collection needs ${minimum}.`);
   let facet='';for(const r of facetsModule.collectionCandidates(all,minimum)){const n=drafts?r.reviewed+r.draft:r.reviewed;if(!n)continue;if(r.facet!==facet)console.log(`\n${facet=r.facet}`);console.log(`  ${n>=minimum?'✓':' '} ${r.value.padEnd(20)} ${String(n).padStart(3)}${drafts?`  (${r.reviewed} reviewed)`:''}`)}
 }
