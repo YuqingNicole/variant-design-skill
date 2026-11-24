@@ -1171,5 +1171,50 @@
     "width": 1200,
     "height": 630,
     "fetchedAt": "2026-11-24"
+  },
+  "kevinhipke": {
+    "image": "https://kevinhipke.com/wp-content/uploads/2025/06/kevinhipke_social.gif",
+    "title": "Kevin Hipke – Dutch Design & Art Direction in London | Brand Systems, Digital Craft, Design Strategy",
+    "description": "Dutch Design Director at Saatchi & Saatchi in London, working across brand, identity, art direction and technology.",
+    "lang": "en-US",
+    "width": 500,
+    "height": 500,
+    "fetchedAt": "2026-11-24"
+  },
+  "openinghours": {
+    "image": "https://openinghours.studio/og/og-image.jpg",
+    "title": "OPENINGHOURS Studio",
+    "description": "Exploratory design and technology studio crafting future-proof digital products, brands and experiences",
+    "lang": "en",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-24"
+  },
+  "furnitureconnect": {
+    "image": "https://www.furnitureconnect.com/api/og?title=The%20Agentic%20Catalog%20for%20Furniture%20Brands&subtitle=Show%20%26%20Sell",
+    "title": "The Agentic Catalog for Furniture Brands",
+    "description": "Supplier files arrive as PDFs, spreadsheets and missing dimensions. Furniture Connect turns them into accurate product data, imagery and listings that sell.",
+    "lang": "en",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-24"
+  },
+  "fojcikdominik": {
+    "image": "https://www.fojcikdominik.com/og.jpg",
+    "title": "Dominik Fojcik | Crafting unique websites and experiences for founders and artists",
+    "description": "Aesthetically Driven Developer and Digital Artist. Crafting websites and software to empower individuals. Dedicated to details, silky-smooth animations. Constantly seeking the cutting edge.",
+    "lang": "en",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-24"
+  },
+  "danielvignal": {
+    "image": "https://cdn.sanity.io/images/hbafqp0r/production/6ace2f06122b9a9fd118264865a6fd3d20375142-3000x2250.jpg?auto=format&fit=crop&h=630&q=80&w=1200",
+    "title": "Daniel Vignal — Director of Photography",
+    "description": "Daniel Vignal is a director of photography shooting commercials, music videos and narrative film for The Row, Nike, Louis Vuitton and Tiffany & Co.",
+    "lang": "en",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-24"
   }
 }

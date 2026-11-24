@@ -161,7 +161,9 @@
       "title": "Protip Marketing",
       "publishedAt": "2026-11-20T07:03:01.000Z",
       "foundAt": "2026-11-22T12:22:51.879Z",
-      "status": "pending"
+      "status": "rejected",
+      "reason": "All three screens show the same fixed hero (\"TWORZYMY MARKI, O KTÓRYCH SIĘ MÓWI.\") with only the background video changing, so the page never scrolled past its first screen; a stray video caption (\"suburban and long-distance trains.]\") also shows over the headline.",
+      "reviewedAt": "2026-11-24"
     },
     {
       "id": "minimalgallery-kevinhipke-com",
@@ -172,7 +174,9 @@
       "title": "Kevin Hipke",
       "publishedAt": "2026-11-19T08:45:39.000Z",
       "foundAt": "2026-11-22T12:22:51.879Z",
-      "status": "pending"
+      "status": "published",
+      "entry": "kevinhipke",
+      "reviewedAt": "2026-11-24"
     },
     {
       "id": "minimalgallery-openinghours-studio",
@@ -183,7 +187,9 @@
       "title": "OPENINGHOURS Studio",
       "publishedAt": "2026-11-19T07:25:52.000Z",
       "foundAt": "2026-11-22T12:22:51.879Z",
-      "status": "pending"
+      "status": "published",
+      "entry": "openinghours",
+      "reviewedAt": "2026-11-24"
     },
     {
       "id": "onepagelove-plastic-audio",
@@ -207,7 +213,9 @@
       "title": "Furniture Connect",
       "publishedAt": "2026-11-23T22:31:20.000Z",
       "foundAt": "2026-11-24T08:04:41.794Z",
-      "status": "pending"
+      "status": "published",
+      "entry": "furnitureconnect",
+      "reviewedAt": "2026-11-24"
     },
     {
       "id": "mindsparkle-gssilatam-org",
@@ -229,7 +237,9 @@
       "title": "DOMINIK FOJCIK -- PORTFOLIO",
       "publishedAt": "2026-11-11T00:00:00.000Z",
       "foundAt": "2026-11-24T08:04:41.794Z",
-      "status": "pending"
+      "status": "published",
+      "entry": "fojcikdominik",
+      "reviewedAt": "2026-11-24"
     },
     {
       "id": "onepagelove-ntch-design",
@@ -240,7 +250,9 @@
       "title": "Ilnaz Khasanshin",
       "publishedAt": "2026-11-10T10:57:41.000Z",
       "foundAt": "2026-11-24T08:04:41.794Z",
-      "status": "pending"
+      "status": "rejected",
+      "reason": "All three screens show the same drag-to-explore hero (cartoon scene with \"ILNAZ\" and \"Senior Product Designer\"), so the page never scrolled and only one screen of content can be checked.",
+      "reviewedAt": "2026-11-24"
     },
     {
       "id": "minimalgallery-danielvignal-com",
@@ -251,7 +263,9 @@
       "title": "Daniel Vignal",
       "publishedAt": "2026-11-22T22:31:30.000Z",
       "foundAt": "2026-11-24T08:04:41.794Z",
-      "status": "pending"
+      "status": "published",
+      "entry": "danielvignal",
+      "reviewedAt": "2026-11-24"
     },
     {
       "id": "mindsparkle-studyhall-design",
@@ -309,5 +323,5 @@
       "status": "pending"
     }
   ],
-  "updatedAt": "2026-11-24T08:05:01.938Z"
+  "updatedAt": "2026-11-24T08:18:40.835Z"
 }

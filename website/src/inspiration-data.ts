@@ -8034,6 +8034,126 @@ export const inspirationItems = [
     "verification": "official-public-source",
     "mobile": "not-tested",
     "via": "https://onepagelove.com/clips"
+  },
+  {
+    "id": "kevinhipke",
+    "name": "Kevin Hipke",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://kevinhipke.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "超大字号“KEVIN HIPKE”分列两侧，中间夹着胶囊导航（Index/About/Research/Store）→ 黑白人像大图 → 粗体宣言“Simple at the core. Never simplistic.”，下方是 Design、Creative Direction 等标签胶囊 → 一行本地时间与“LIGHT AT 08:00”的细线信息条 → “INDEX / 01 / SELECTED WORK”编号作品卡片，滚动时卡片缩小并错落排布（Kia、Gaggenau 等），全程以深色为底",
+      "en": "Oversized \"KEVIN HIPKE\" split across the top, with a pill nav (Index/About/Research/Store) sitting between the two words → large black-and-white portrait → bold manifesto \"Simple at the core. Never simplistic.\" above pill tags like Design and Creative Direction → a thin status line showing local time and \"LIGHT AT 08:00\" → \"INDEX / 01 / SELECTED WORK\" numbered cards that shrink into a staggered grid on scroll (Kia, Gaggenau), all on a dark background"
+    },
+    "application": {
+      "zh": "设计师作品集与创意总监个人网站",
+      "en": "Designer portfolios and creative director personal sites"
+    },
+    "publisher": "Kevin Hipke",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T08:18:40.835Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://minimal.gallery/kevin-hipke/"
+  },
+  {
+    "id": "openinghours",
+    "name": "OPENINGHOURS",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://openinghours.studio/",
+    "source": "link-only",
+    "focus": {
+      "zh": "极简白底，仅一行粗体宣言\"OPENINGHOURS is for the dreamers.\"与右上导航\"Work Research About\" → 滚动时宣言逐句替换为\"Those who see the world as it coul…\"\"Together, we craft brands and digital products worth…\"，导航收缩为\"Work\" → 下方案例卡片错落不对称排布，配小号标题如\"Launching a browser revolution with Opera\"\"Moving teamwork forward with Huddly\"，大面积留白衬托作品图。",
+      "en": "Stark white page with one bold line, \"OPENINGHOURS is for the dreamers.\", and nav \"Work Research About\" → on scroll the line swaps to \"Those who see the world as it coul…\" then \"Together, we craft brands and digital products worth…\" while nav shrinks to \"Work\" → asymmetric, staggered case cards with small captions like \"Launching a browser revolution with Opera\" and \"Moving teamwork forward with Huddly\", generous whitespace."
+    },
+    "application": {
+      "zh": "设计工作室作品集首页与滚动叙事",
+      "en": "Design studio portfolio homepages with scroll-driven statements"
+    },
+    "publisher": "OPENINGHOURS",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T08:18:40.835Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://minimal.gallery/openinghours-studio/"
+  },
+  {
+    "id": "furnitureconnect",
+    "name": "Furniture Connect",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://furnitureconnect.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "紫色新闻条与导航 → 超粗无衬线大标题\"SHOW & SELL MORE FURNITURE\"，配一句说明和紫色胶囊按钮\"Start building your catalog\" → \"Trusted by 100+ furniture teams\"浅色 logo 条 → 四张高饱和色块卡片（STUDIO、CATALOG、AI SEARCH、DAM），家具抠图放在有机形状里 → \"FASTER LAUNCHES. MORE SALES\"粉彩数据卡：\"+30%\"\"~50%\"\"10/10\" → 编号功能列表配产品界面截图。右侧悬浮的\"Book your demo\"表单遮住了第三屏一角。",
+      "en": "Purple news bar and nav → heavy black display headline \"SHOW & SELL MORE FURNITURE\" with a one-line pitch and purple pill \"Start building your catalog\" → pale \"Trusted by 100+ furniture teams\" logo strip → four bold color-block cards (STUDIO, CATALOG, AI SEARCH, DAM) with furniture cut-outs in organic shapes → \"FASTER LAUNCHES. MORE SALES\" pastel stat cards \"+30%\", \"~50%\", \"10/10\" → numbered feature list beside a product UI screenshot."
+    },
+    "application": {
+      "zh": "面向垂直行业的 B2B SaaS 落地页",
+      "en": "Vertical B2B SaaS landing pages"
+    },
+    "publisher": "Furniture Connect",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T08:18:40.835Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://minimal.gallery/furniture-connect/"
+  },
+  {
+    "id": "fojcikdominik",
+    "name": "Dominik Fojcik",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://fojcikdominik.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "全黑背景上的窄居中单栏 → 圆形黑白头像，像素等宽字体名字“DOMINIK FOJCIK”，小字简介“I build websites for founders, artists and worldwide brands” → 一个浅色实心按钮“Book a meeting”配一个带图标的纯文字链接“Send me Email” → “RECENT PROJECTS”纵向排列六张缩略图，下方左侧为编号“01–06”、右侧为项目名，如“SALESFORCE AI TRUST MAP”“SPATIAL BLOCKS” → “ARTICLES”沿用同样的卡片格式。研究克制的等宽字体外框如何把鲜艳的作品图衬托出来。",
+      "en": "Narrow centred column on pure black → round black-and-white portrait, pixel-mono name \"DOMINIK FOJCIK\", tiny bio \"I build websites for founders, artists and worldwide brands\" → light solid \"Book a meeting\" button next to an icon text link \"Send me Email\" → \"RECENT PROJECTS\": six stacked thumbnails, number \"01–06\" at left and name at right below each, e.g. \"SALESFORCE AI TRUST MAP\", \"SPATIAL BLOCKS\" → \"ARTICLES\" in the same card format. Study how a quiet mono frame sets off vivid work."
+    },
+    "application": {
+      "zh": "个人作品集、自由职业开发者主页",
+      "en": "Personal portfolios and freelance developer sites"
+    },
+    "publisher": "Dominik Fojcik",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T08:18:40.835Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://www.csswinner.com/details/dominik-fojcik-portfolio/19569/"
+  },
+  {
+    "id": "danielvignal",
+    "name": "Daniel Vignal",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://danielvignal.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "两列错落的电影剧照网格，右侧固定信息栏写着“Daniel Vignal Director of Photography”，配“Work · About · Photo”导航和“All · Commercial · Music Video · Narrative”筛选 → 向下滚动时，左侧竖排大字显示项目与合作者（如“Orebella Elizaveta Porodina”“La Pistola Ramez Silyan”），黑色与灰色字重区分 → 图片高低不一，形成节奏，留白克制。",
+      "en": "Staggered two-column grid of film stills; a fixed right rail reads \"Daniel Vignal Director of Photography\" with \"Work About Photo\" nav and \"All · Commercial · Music Video · Narrative\" filters → on scroll, a vertical left-edge label names the project and collaborator (\"Orebella Elizaveta Porodina\", \"La Pistola Ramez Silyan\") in black vs grey → mixed image heights set rhythm amid restrained whitespace."
+    },
+    "application": {
+      "zh": "摄影师、导演作品集的图片网格与固定侧栏",
+      "en": "Cinematographer or director portfolio grids with a fixed side rail"
+    },
+    "publisher": "Daniel Vignal",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T08:18:40.835Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://minimal.gallery/daniel-vignal/"
   }
 ];
 
