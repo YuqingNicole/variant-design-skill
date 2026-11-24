@@ -8010,6 +8010,30 @@ export const inspirationItems = [
       "text": "火柴人 Skill 新风格来袭：A8 - 吉卜力风 ☁️ 🚲\n\n感谢 @AveryRunsAI 的浪漫创意，把宫崎骏动画的夏日美学完美移植到了火柴人宇宙！\n\n我直接用 Codex 实测了 “音乐 ➡️ 全自动日系 MV” 闭环：AI 自动分镜、生成画面、精准卡点并生成日文字幕～\n\n起号绝配赛道：日系治愈漫才、Lofi https://t.co/NaaiXTNRM3",
       "hasMedia": true
     }
+  },
+  {
+    "id": "plastic",
+    "name": "Clips",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://plastic.audio/clips",
+    "source": "link-only",
+    "focus": {
+      "zh": "深色背景配荧光绿胶囊导航 → 大号细体标题\"Lyric video maker for Mac and Windows.\"，下方主按钮\"Buy Clips $59\"与次按钮\"Try it free\" → 薰衣草田实景中嵌入应用窗口，展示\"Separating the vocals 85%\"进度、Backdrops 缩略图和歌词面板，附\"Play with sound\"按钮 → 五个竖版成片排成一行，黄色粗体单词叠在人像上，分别标注 Verse 1、Pre、Chorus、Verse 2、Bridge",
+      "en": "Dark page with lime pill nav → large thin headline \"Lyric video maker for Mac and Windows.\" over a lime \"Buy Clips $59\" and a grey \"Try it free\" → app window set in a lavender-field scene, showing \"Separating the vocals 85%\", Backdrops thumbnails, a lyrics panel and a \"Play with sound\" button → row of five vertical clips with bold yellow words over a portrait, labeled Verse 1, Pre, Chorus, Verse 2, Bridge"
+    },
+    "application": {
+      "zh": "桌面创意软件落地页与产品演示",
+      "en": "Desktop creative-app landing pages and product demos"
+    },
+    "publisher": "Clips",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T08:05:01.938Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://onepagelove.com/clips"
   }
 ];
 

@@ -184,7 +184,130 @@
       "publishedAt": "2026-11-19T07:25:52.000Z",
       "foundAt": "2026-11-22T12:22:51.879Z",
       "status": "pending"
+    },
+    {
+      "id": "onepagelove-plastic-audio",
+      "source": "onepagelove",
+      "sourceName": "One Page Love",
+      "url": "https://onepagelove.com/clips",
+      "link": "https://plastic.audio/clips",
+      "title": "Clips",
+      "publishedAt": "2026-11-11T10:25:33.000Z",
+      "foundAt": "2026-11-24T08:04:41.794Z",
+      "status": "published",
+      "entry": "plastic",
+      "reviewedAt": "2026-11-24"
+    },
+    {
+      "id": "minimalgallery-furnitureconnect-com",
+      "source": "minimalgallery",
+      "sourceName": "Minimal Gallery",
+      "url": "https://minimal.gallery/furniture-connect/",
+      "link": "https://furnitureconnect.com/",
+      "title": "Furniture Connect",
+      "publishedAt": "2026-11-23T22:31:20.000Z",
+      "foundAt": "2026-11-24T08:04:41.794Z",
+      "status": "pending"
+    },
+    {
+      "id": "mindsparkle-gssilatam-org",
+      "source": "mindsparkle",
+      "sourceName": "Mindsparkle Mag",
+      "url": "https://mindsparklemag.com/website/gssi-latam",
+      "link": "https://www.gssilatam.org/",
+      "title": "GSSI Latam",
+      "publishedAt": "2026-11-18T06:00:00.000Z",
+      "foundAt": "2026-11-24T08:04:41.794Z",
+      "status": "pending"
+    },
+    {
+      "id": "csswinner-fojcikdominik-com",
+      "source": "csswinner",
+      "sourceName": "CSS Winner",
+      "url": "https://www.csswinner.com/details/dominik-fojcik-portfolio/19569/",
+      "link": "https://fojcikdominik.com/",
+      "title": "DOMINIK FOJCIK -- PORTFOLIO",
+      "publishedAt": "2026-11-11T00:00:00.000Z",
+      "foundAt": "2026-11-24T08:04:41.794Z",
+      "status": "pending"
+    },
+    {
+      "id": "onepagelove-ntch-design",
+      "source": "onepagelove",
+      "sourceName": "One Page Love",
+      "url": "https://onepagelove.com/ilnaz-khasanshin",
+      "link": "https://ntch.design/",
+      "title": "Ilnaz Khasanshin",
+      "publishedAt": "2026-11-10T10:57:41.000Z",
+      "foundAt": "2026-11-24T08:04:41.794Z",
+      "status": "pending"
+    },
+    {
+      "id": "minimalgallery-danielvignal-com",
+      "source": "minimalgallery",
+      "sourceName": "Minimal Gallery",
+      "url": "https://minimal.gallery/daniel-vignal/",
+      "link": "https://danielvignal.com/",
+      "title": "Daniel Vignal",
+      "publishedAt": "2026-11-22T22:31:30.000Z",
+      "foundAt": "2026-11-24T08:04:41.794Z",
+      "status": "pending"
+    },
+    {
+      "id": "mindsparkle-studyhall-design",
+      "source": "mindsparkle",
+      "sourceName": "Mindsparkle Mag",
+      "url": "https://mindsparklemag.com/website/study-hall-agency-website",
+      "link": "https://studyhall.design/",
+      "title": "Study Hall — Agency Website",
+      "publishedAt": "2026-11-17T06:00:00.000Z",
+      "foundAt": "2026-11-24T08:04:41.794Z",
+      "status": "pending"
+    },
+    {
+      "id": "csswinner-m0r1m1ch1-com",
+      "source": "csswinner",
+      "sourceName": "CSS Winner",
+      "url": "https://www.csswinner.com/details/morimichi/19577/",
+      "link": "https://m0r1m1ch1.com/",
+      "title": "MORIMICHI",
+      "publishedAt": "2026-11-13T00:00:00.000Z",
+      "foundAt": "2026-11-24T08:04:41.794Z",
+      "status": "pending"
+    },
+    {
+      "id": "minimalgallery-theflatironbuilding-com",
+      "source": "minimalgallery",
+      "sourceName": "Minimal Gallery",
+      "url": "https://minimal.gallery/the-flatiron-building/",
+      "link": "https://theflatironbuilding.com/",
+      "title": "The Flatiron Building",
+      "publishedAt": "2026-11-22T22:30:26.000Z",
+      "foundAt": "2026-11-24T08:04:41.794Z",
+      "status": "pending"
+    },
+    {
+      "id": "mindsparkle-future-human-de",
+      "source": "mindsparkle",
+      "sourceName": "Mindsparkle Mag",
+      "url": "https://mindsparklemag.com/website/future-human",
+      "link": "https://www.future-human.de/",
+      "title": "FUTURE HUMAN",
+      "publishedAt": "2026-11-14T06:00:00.000Z",
+      "foundAt": "2026-11-24T08:04:41.794Z",
+      "status": "pending"
+    },
+    {
+      "id": "csswinner-snapa-sites-uprock-pro",
+      "source": "csswinner",
+      "sourceName": "CSS Winner",
+      "url": "https://www.csswinner.com/details/snapa/19571/",
+      "link": "https://snapa.sites.uprock.pro/",
+      "title": "Snapa",
+      "publishedAt": "2026-11-11T00:00:00.000Z",
+      "foundAt": "2026-11-24T08:04:41.794Z",
+      "status": "pending"
     }
   ],
-  "updatedAt": "2026-11-22T12:23:03.713Z"
+  "updatedAt": "2026-11-24T08:05:01.938Z"
 }
