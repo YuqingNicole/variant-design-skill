@@ -79,7 +79,9 @@ export function sheetHtml(images, viewport = VIEWPORT) {
 export const sheetHeight = (screens, viewport = VIEWPORT) => screens * viewport.height + (screens - 1) * GAP;
 
 // Returns the stacked image's path and, per screen, the scroll offset it was taken at.
-export async function captureScreens(url, file, { screens = 3, viewport = VIEWPORT, chrome = defaultChrome, settle = 1200, intro = 2500, timeout = 75000, args = [] } = {}) {
+// `startup`: how long Chrome may take to open its DevTools port. A cold start on a busy CI runner, or under a scheduled job,
+// took longer than 15 s (2026-11-24: the gallery job and CI both failed with "did not open its DevTools port").
+export async function captureScreens(url, file, { screens = 3, viewport = VIEWPORT, chrome = defaultChrome, settle = 1200, intro = 2500, timeout = 75000, args = [], startup = 45000 } = {}) {
   const profile = await fs.mkdtemp(path.join(os.tmpdir(), 'site-capture-'));
   const child = spawn(chrome, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--mute-audio', '--no-first-run', '--no-default-browser-check',
     `--window-size=${viewport.width},${viewport.height}`, '--remote-debugging-port=0', `--user-data-dir=${profile}`, ...args, 'about:blank'], { stdio: 'ignore' });
@@ -87,7 +89,7 @@ export async function captureScreens(url, file, { screens = 3, viewport = VIEWPO
   // A missing or unrunnable binary fails the capture instead of crashing the process with an unhandled 'error' event.
   const failed = new Promise((_, reject) => child.once('error', error => reject(new Error(`Chrome could not start: ${error.message}`))));
   const work = (async () => {
-    client = connect(await Promise.race([devtoolsPort(profile, child, 15000), failed]));
+    client = connect(await Promise.race([devtoolsPort(profile, child, startup), failed]));
     await client.opened;
     const page = await openPage(client, viewport);
     const load = page.loaded();
