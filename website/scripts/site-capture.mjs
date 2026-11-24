@@ -124,7 +124,9 @@ export const sheetHeight = (screens, viewport = VIEWPORT) => screens * viewport.
 // Where the content sits: the tops of the page's first few hundred visible boxes. Comparing two of these tells whether a
 // screen actually moved, including on sites that scroll with transforms and never change scrollY.
 const layout = `(() => { const tops = []; for (const el of document.querySelectorAll('body *')) { const r = el.getBoundingClientRect(); if (r.width * r.height > 2000) tops.push(Math.round(r.top)); if (tops.length >= 400) break; } return tops; })()`;
+// null when either measurement is missing (the page did not answer in time): unknown, never "did not move".
 export function moved(before, after) {
+  if (!before || !after) return null;
   if (before.offset !== after.offset) return true;
   const n = Math.min(before.tops?.length ?? 0, after.tops?.length ?? 0);
   let shifted = 0;
@@ -133,7 +135,7 @@ export function moved(before, after) {
 }
 
 // Returns the stacked image's path and, per screen, the scroll offset it was taken at and whether the page moved to reach it
-// (`moved[0]` is null). A page that does not move after a second wheel pass and the Page Down key genuinely does not scroll
+// (`moved[0]` is null, and so is any screen whose position could not be measured). A page that does not move after a second wheel pass and the Page Down key genuinely does not scroll
 // (a fixed hero, a drag-to-explore scene); its screens repeat, and the screening prompt says so.
 // `timeout` is the page's budget: a slow page spends it loading, the remaining waits shrink to fit, and the screens show what
 // loaded by then (`late: true`). Only a browser that stops answering fails the capture, `hang` ms after the budget.
@@ -156,7 +158,8 @@ export async function captureScreens(url, file, { screens = 3, viewport = VIEWPO
     await page.quiet(500, budget(6000));
     await within(page.evaluate(settled), budget(4000));
     await wait(intro); // entrance animations on the first screen (fade or blur-in) usually run 1–2s
-    const where = async () => ({ offset: await within(page.evaluate(scrolled), 3000) ?? 0, tops: await within(page.evaluate(layout), 3000) ?? [] });
+    const measure = expression => within(page.evaluate(expression).catch(() => undefined), 3000);
+    const where = async () => { const offset = await measure(scrolled), tops = await measure(layout); return typeof offset === 'number' && Array.isArray(tops) ? { offset, tops } : null; };
     const center = { x: viewport.width / 2, y: viewport.height / 2 };
     // Wheel input in small steps, as a trackpad would send it; scroll-jacking sites ignore window.scrollTo.
     // Chrome acknowledges input once the page has handled it; a busy page can hold that for seconds, so input does not wait long.
@@ -178,15 +181,16 @@ export async function captureScreens(url, file, { screens = 3, viewport = VIEWPO
       if (i) {
         // A page still busy loading (seen under memory pressure) can drop the first wheel pass, so a screen that did not move
         // gets one more pass and then the keyboard before it is taken as it is.
-        let now;
+        // Only a measured standstill earns another try; an unknown result is recorded as unknown, without moving again.
+        let now, step;
         for (const move of [wheel, wheel, pageDown]) {
           await move(); await rest();
-          now = await where();
-          if (moved(here, now)) break;
+          now = await where(); step = moved(here, now);
+          if (step !== false) break;
         }
-        went.push(moved(here, now)); here = now;
+        went.push(step); here = now;
       } else went.push(null);
-      offsets.push(here.offset);
+      offsets.push(here?.offset ?? null);
       shots.push((await page.send('Page.captureScreenshot', { format: 'png' })).data);
     }
     const sheet = await openPage(client, { width: viewport.width, height: sheetHeight(screens, viewport) });

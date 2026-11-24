@@ -95,6 +95,8 @@ test('a screen counts as moved when the scroll offset or most of the content mov
   assert.equal(moved({ offset: 0, tops }, { offset: 0, tops: tops.map(t => t - 800) }), true, 'a transform scroller never changes scrollY');
   assert.equal(moved({ offset: 0, tops }, { offset: 0, tops: [0, 100, 900, 1650] }), false, 'one carousel slide is not a scroll');
   assert.equal(moved({ offset: 0, tops: [] }, { offset: 0, tops: [] }), false);
+  assert.equal(moved({ offset: 0, tops }, null), null, 'a measurement that timed out is unknown, not a standstill');
+  assert.equal(moved(null, { offset: 0, tops }), null);
 });
 
 // The scheduled run of 2026-11-24 lost 9 of 10 sites, 7 to "Chrome did not open its DevTools port" on a machine deep in swap.
