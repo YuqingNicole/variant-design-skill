@@ -32,9 +32,13 @@ export function idFor(url, taken) {
   return id;
 }
 
-export function buildPrompt(candidate, preview, sheet) {
+// `shot`: the capture's image path, or the capture itself ({ file, moved }) so the prompt can say when the page did not move.
+export function buildPrompt(candidate, preview, shot) {
+  const sheet = typeof shot === 'string' ? shot : shot.file;
+  const still = (shot.moved ?? []).flatMap((went, i) => (went === false ? [i + 1] : []));
+  const stuck = still.length ? `\nThe capture checked this: the page did not move to reach screen ${still.join(' or ')}, even after a second wheel pass and the Page Down key, so the repeat is how the page behaves (a fixed hero, a drag or click-to-explore scene), not a capture fault.` : '';
   return `You are screening one website for Variant Design's design inspiration library, entries you accept go live without a person reviewing them, so reject when unsure.
-Read the image at ${sheet}: the first three screens of ${candidate.link} in a 1280×800 browser window, one above the other with a thin grey line between them. Each screen was reached by scrolling the mouse wheel one screen height and waiting for the page to settle, so a screen that repeats the one above means the page did not scroll further (or swapped a slide in place). You cannot interact with the site or see it on a phone, so describe only what the screens show.
+Read the image at ${sheet}: the first three screens of ${candidate.link} in a 1280×800 browser window, one above the other with a thin grey line between them. Each screen was reached by scrolling the mouse wheel one screen height and waiting for the page to settle, so a screen that repeats the one above means the page did not scroll further (or swapped a slide in place).${stuck} You cannot interact with the site or see it on a phone, so describe only what the screens show.
 
 ${candidate.source ? `It was picked by ${candidate.sourceName}, a curated website gallery, as ${JSON.stringify(candidate.title)}; a gallery pick is a lead, not proof of quality.` : `It was found in a Threads post by @${candidate.username ?? 'unknown'}: ${JSON.stringify(candidate.text)}`}
 Its share preview title: ${JSON.stringify(preview.title)}
@@ -81,9 +85,9 @@ export function review(candidate, patch, today) {
   return { ...rest, ...patch, reviewedAt: today };
 }
 
-// One headless load, the page's first three screens as a single image.
+// One headless load, the page's first three screens as a single image, with whether the page moved between them.
 export async function screenshot(url, dir) {
-  return (await captureScreens(url, path.join(dir, 'site.png'))).file;
+  return captureScreens(url, path.join(dir, 'site.png'));
 }
 
 async function fetchPage(url) {
