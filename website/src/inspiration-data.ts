@@ -8188,38 +8188,6 @@ export const inspirationItems = [
     }
   },
   {
-    "id": "x-spiderman20058-917384",
-    "name": "Sonic and Shadow fan animation by @spiderman20058",
-    "category": "practice",
-    "tag": "Animation",
-    "url": "https://x.com/spiderman20058/status/2122758302152917384",
-    "source": "link-only",
-    "focus": {
-      "zh": "作者自制的手绘2D动画：拿着望远镜的Shadow越来越恼火，Sonic却裹着毯子躺在漂在绿色漩涡海面上的木船里，伸懒腰、闭眼傻笑，最后Shadow在熟睡的Sonic旁边气得咬牙切齿；夸张的表情和怒气符号让两人的反差很好笑。",
-      "en": "A hand-drawn 2D animation the author made: Shadow, holding binoculars, gets more and more irritated while Sonic lies wrapped in a blanket in a wooden boat on a swirling green sea, stretching and grinning with his eyes closed, until Shadow seethes next to the sleeping Sonic; the exaggerated faces and anger marks make the contrast between them funny."
-    },
-    "application": {
-      "zh": "用夸张表情和漫画符号制造角色反差笑点",
-      "en": "Exaggerated expressions and comic symbols that play two characters off each other"
-    },
-    "publisher": "MB ( COMM OPEN ) (@spiderman20058)",
-    "kind": "social-post",
-    "designer": "MB ( COMM OPEN )",
-    "checkedAt": "2026-11-24",
-    "addedAt": "2026-11-24T08:47:53.243Z",
-    "verification": "public-post",
-    "mobile": "not-tested",
-    "post": {
-      "id": "2122758302152917384",
-      "author": "MB ( COMM OPEN )",
-      "handle": "spiderman20058",
-      "date": "2026-11-17",
-      "lang": "en",
-      "text": "Sonic and shadow animation i made :)))))))",
-      "hasMedia": true
-    }
-  },
-  {
     "id": "x-rivka_huehhh-958240",
     "name": "Beethoven animation test",
     "category": "practice",

@@ -58,10 +58,10 @@
       "views": 11285,
       "capturedAt": "2026-11-24T08:45:38.745Z",
       "query": "(\"i made\" OR \"i animated\" OR \"made this\" OR \"made a little\" OR \"my animation\" OR \"my new short\" OR \"finally finished\" OR \"took me\" OR \"animation test\" OR wip) (animation OR animated OR animatic OR \"short film\") -filter:replies -filter:quote -repos -github -prompt -prompts -bookmark -thread -tutorial -course -giveaway -trailer -kickstarter -\"who made\" -credit -claude -remotion -comfyui filter:videos min_faves:500 since:2026-11-17",
-      "status": "published",
+      "status": "rejected",
       "group": "weekly",
-      "entry": "x-spiderman20058-917384",
-      "reviewedAt": "2026-11-24"
+      "reviewedAt": "2026-11-24",
+      "reason": "Fan animation of well-known game characters (Sonic and Shadow); fan work of famous IP is left out, as with the 2026-11-24 maintainer picks"
     },
     {
       "id": "2122968874958426184",
