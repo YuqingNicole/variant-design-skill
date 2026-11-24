@@ -28,6 +28,14 @@ test('parseVerdict takes site tags only and needs both languages', () => {
   assert.match(buildPrompt(cand('1', 'https://a.example/'), { title: 'A' }, '/s.png'), /block page[\s\S]*SaaS/);
 });
 
+test('the prompt says when the capture checked that the page did not move, and stays silent otherwise', () => {
+  const stuck = buildPrompt(cand('1', 'https://a.example/'), { title: 'A' }, { file: '/s.png', moved: [null, false, false] });
+  assert.match(stuck, /Read the image at \/s\.png/);
+  assert.match(stuck, /did not move to reach screen 2 or 3, even after a second wheel pass and the Page Down key/);
+  assert.match(stuck, /only one screen of content/, 'the rule that rejects it is unchanged');
+  assert.doesNotMatch(buildPrompt(cand('1', 'https://a.example/'), { title: 'A' }, { file: '/s.png', moved: [null, true, true] }), /did not move/);
+});
+
 test('a run records every decision, adds the preview, and keeps unreadable sites pending', async () => {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'tp-test-'));
   const inbox = path.join(dir, 'inbox.json'), data = path.join(dir, 'data.ts'), previews = path.join(dir, 'previews.json');
