@@ -21,6 +21,9 @@ export const serializeFacets = all => `{\n${Object.entries(all).map(([id, f]) =>
 export function reviewRecord(all, id, input, { reviewed, today }) {
   if (!Object.hasOwn(all, id)) throw new Error(`Unknown reference: ${id}`);
   const next = { status: reviewed ? 'reviewed' : 'draft', ...(reviewed ? { reviewedAt: today, reviewedBy: 'maintainer' } : {}) };
+  // Keep who drafted it and Jev's probabilities, so a reviewed record still shows what the model guessed.
+  if (all[id].draftedBy) next.draftedBy = all[id].draftedBy;
+  if (all[id].jev) next.jev = all[id].jev;
   for (const k of keys) next[k] = input?.[k] === undefined ? all[id][k] : input[k];
   const problems = facetsModule.facetProblems(id, next);
   if (problems.length) throw new Error(problems.join('\n'));
@@ -73,7 +76,7 @@ main{padding:16px 24px 80px;max-width:1100px}.toolbar{display:flex;gap:12px;alig
 .facet{margin:8px 0}.facet>span{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}.chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 10px;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}.chips button[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}.chips button:disabled{opacity:.35;cursor:default}
 .actions{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}.actions button{border:1px solid var(--ink);border-radius:6px;padding:8px 14px;font:inherit;font-size:14px;cursor:pointer;background:var(--card)}.actions .primary{background:var(--ink);color:#fff}
-.status{font-size:13px;color:var(--muted)}.status.ok{color:var(--ok)}.status.err{color:#b42318}details summary{cursor:pointer;font-size:13px;color:var(--muted);margin-top:4px}
+.status{font-size:13px;color:var(--muted)}.status.ok{color:var(--ok)}.status.err{color:#b42318}.jev{font-size:13px;color:#6941c6;border:1px solid #d9d6fe;border-radius:999px;padding:1px 8px;margin-left:8px}details summary{cursor:pointer;font-size:13px;color:var(--muted);margin-top:4px}
 @media(max-width:800px){body{grid-template-columns:1fr}aside{position:static;height:auto}.card{grid-template-columns:1fr}.cover{width:100%}}
 </style></head><body><aside><h1>核对参考属性</h1><p>打开原站，改对属性值，再点“确认已核对”。每个合集核对满 <b id="min"></b> 条，下次部署就会上线。</p><nav id="nav"></nav></aside><main><div class="toolbar"><label><input type="checkbox" id="hide"> 隐藏已核对</label><span id="count"></span></div><div id="list"></div></main>
 <script>
@@ -83,13 +86,16 @@ const el=(tag,props={},...kids)=>{const e=Object.assign(document.createElement(t
 async function load(){S=await (await fetch('/api/state')).json();document.getElementById('min').textContent=S.minimum;if(!current)current=S.collections[0].slug;render()}
 function render(){const nav=document.getElementById('nav');nav.replaceChildren();
  const all={slug:'*',short:{zh:'全部参考'},members:Object.keys(S.items),reviewed:Object.values(S.items).filter(i=>i.facets.status==='reviewed').length};
- for(const c of [...S.collections,all]){const ready=c.slug!=='*'&&c.reviewed>=S.minimum;nav.append(el('button',{onclick:()=>{current=c.slug;render();scrollTo(0,0)},ariaCurrent:String(current===c.slug)},el('span',{textContent:c.short.zh}),el('small',{className:ready?'ready':'',textContent:c.slug==='*'?c.reviewed+' / '+c.members.length:c.reviewed+' / '+S.minimum+' · 共 '+c.members.length})))}
- const c=current==='*'?all:S.collections.find(x=>x.slug===current),hide=document.getElementById('hide').checked;
+ const jev={slug:'jev',short:{zh:'Jev 判断'},members:Object.keys(S.items).filter(id=>S.items[id].facets.draftedBy==='jev')};jev.reviewed=jev.members.filter(id=>S.items[id].facets.status==='reviewed').length;
+ for(const c of [...S.collections,all,...(jev.members.length?[jev]:[])]){const ready=c.slug!=='*'&&c.slug!=='jev'&&c.reviewed>=S.minimum;nav.append(el('button',{onclick:()=>{current=c.slug;render();scrollTo(0,0)},ariaCurrent:String(current===c.slug)},el('span',{textContent:c.short.zh}),el('small',{className:ready?'ready':'',textContent:c.slug==='*'||c.slug==='jev'?c.reviewed+' / '+c.members.length:c.reviewed+' / '+S.minimum+' · 共 '+c.members.length})))}
+ const c=current==='*'?all:current==='jev'?jev:S.collections.find(x=>x.slug===current),hide=document.getElementById('hide').checked;
  const ids=[...c.members].sort((a,b)=>(S.items[a].facets.status==='reviewed')-(S.items[b].facets.status==='reviewed')).filter(id=>!hide||S.items[id].facets.status!=='reviewed');
  document.getElementById('count').textContent=ids.length+' 条';const list=document.getElementById('list');list.replaceChildren(...ids.map(card))}
 function card(id){const it=S.items[id],f=structuredClone(it.facets),done=f.status==='reviewed';
  const cover=it.cover?el('img',{className:'cover',src:it.cover,loading:'lazy',referrerPolicy:'no-referrer',alt:''}):el('div',{className:'cover'});
  const status=el('span',{className:'status'+(done?' ok':''),textContent:done?(f.reviewedBy==='agent'?'代理核对 ':'已核对 ')+f.reviewedAt:'初稿'});
+ // Which values the small local model judged, and how sure it was (scripts/jev-facets.mjs); only 'dark' is asked today.
+ const jevNote=f.draftedBy==='jev'&&f.jev?el('span',{className:'jev',title:'本地小模型 OneJev-0.8B 的判断；概率 ≥ 95% 才写进初稿',textContent:'Jev 判断 · '+Object.entries(f.jev).map(([k,p])=>(k==='dark'?'深色':k)+' '+Math.round(p*100)+'%'+(p>=0.95?' → 已标':'')).join(' · ')}):null;
  const editor=el('div');const draw=()=>{editor.replaceChildren(...Object.keys(names).map(k=>{const isMulti=multi.includes(k),vals=isMulti?f[k]:[f[k]];
   const chips=S.vocab[k].map(v=>el('button',{type:'button',textContent:v.label.zh,title:v.label.en+' · '+v.value,ariaPressed:String(vals.includes(v.value)),disabled:isMulti&&!vals.includes(v.value)&&vals.length>=S.limit,
    onclick:()=>{if(isMulti)f[k]=vals.includes(v.value)?vals.filter(x=>x!==v.value):[...vals,v.value];else f[k]=k==='industry'&&f[k]===v.value?null:v.value;draw()}}));
@@ -98,7 +104,7 @@ function card(id){const it=S.items[id],f=structuredClone(it.facets),done=f.statu
  const save=async reviewed=>{status.className='status';status.textContent='保存中…';let out;
   try{const r=await fetch('/api/review',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id,facets:f,reviewed})});out=await r.json()}catch{return fail('没有保存：连不上本地服务，确认终端里的脚本还在运行后再点一次。')}
   if(!out.ok)return fail('没有保存：'+out.error);const y=scrollY;try{await load();scrollTo(0,y)}catch{fail('已保存，但刷新列表失败；重新打开页面即可看到。')}};
- const actions=el('div',{className:'actions'},el('button',{className:'primary',type:'button',textContent:'确认已核对',onclick:()=>save(true)}),el('button',{type:'button',textContent:done?'改回初稿':'只保存修改',onclick:()=>save(false)}),status);
+ const actions=el('div',{className:'actions'},el('button',{className:'primary',type:'button',textContent:'确认已核对',onclick:()=>save(true)}),el('button',{type:'button',textContent:done?'改回初稿':'只保存修改',onclick:()=>save(false)}),status,...(jevNote?[jevNote]:[]));
  const notes=el('div',{className:'notes'},el('div',{},el('span',{textContent:'研究什么：'}),it.focus.zh),el('div',{},el('span',{textContent:'用在哪里：'}),it.application.zh));
  const body=el('div',{},el('div',{className:'head'},el('b',{textContent:it.name}),el('a',{href:it.url,target:'_blank',rel:'noreferrer',textContent:'打开原站 ↗'}),el('span',{className:'meta',textContent:it.section+' · '+it.tag+' · '+id})),notes);
  if(it.post)body.append(el('details',{},el('summary',{textContent:'帖子原文'}),el('div',{className:'post',textContent:it.post})));

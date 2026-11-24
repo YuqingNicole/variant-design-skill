@@ -89,7 +89,9 @@ export type FacetName = keyof typeof facetVocabulary;
 export const multiFacets = ['pageTypes', 'patterns', 'components', 'techniques', 'styles'] as const;
 export const facetLimit = 3;
 export type ReferenceFacets = {
-  status: 'draft' | 'reviewed'; reviewedAt?: string; reviewedBy?: 'maintainer' | 'agent'; industry: string | null; medium: string;
+  status: 'draft' | 'reviewed'; reviewedAt?: string; reviewedBy?: 'maintainer' | 'agent';
+  // Who proposed a draft, and for `jev` the probabilities the model gave (scripts/jev-facets.mjs), so its guesses can be found and checked.
+  draftedBy?: 'agent' | 'jev'; jev?: Record<string, number>; industry: string | null; medium: string;
   pageTypes: string[]; patterns: string[]; components: string[]; techniques: string[]; styles: string[];
 };
 
@@ -102,6 +104,8 @@ export function facetProblems(id: string, f: ReferenceFacets): string[] {
   if (f.status === 'reviewed' && !/^\d{4}-\d{2}-\d{2}$/.test(f.reviewedAt ?? '')) at('reviewed without reviewedAt');
   if (f.status === 'reviewed' && f.reviewedBy !== 'maintainer' && f.reviewedBy !== 'agent') at('reviewed without reviewedBy');
   if (f.status === 'draft' && (f.reviewedAt !== undefined || f.reviewedBy !== undefined)) at('draft with review fields');
+  if (f.draftedBy !== undefined && f.draftedBy !== 'agent' && f.draftedBy !== 'jev') at(`unknown draftedBy ${f.draftedBy}`);
+  if (f.jev !== undefined && (f.draftedBy !== 'jev' || typeof f.jev !== 'object' || Object.values(f.jev).some(v => typeof v !== 'number' || v < 0 || v > 1))) at('jev probabilities need draftedBy jev and values from 0 to 1');
   if (f.industry !== null && !known(industries, f.industry)) at(`unknown industry ${f.industry}`);
   if (!known(media, f.medium)) at(`unknown medium ${f.medium}`);
   for (const name of multiFacets) {
