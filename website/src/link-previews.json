@@ -1162,5 +1162,14 @@
     "fetchedAt": "2026-11-22",
     "width": 1200,
     "height": 630
+  },
+  "plastic": {
+    "image": "https://plastic.audio/img/share/clips.jpg?v=b2470ba0ba",
+    "title": "Clips · Lyric video maker for Mac and Windows",
+    "description": "An app for Mac and Windows that cuts every part of your song and its catchiest snippets into vertical videos, on the beat, with the lyrics synced word by word.",
+    "lang": "en",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-24"
   }
 }
