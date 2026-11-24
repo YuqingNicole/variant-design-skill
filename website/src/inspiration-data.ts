@@ -8154,6 +8154,134 @@ export const inspirationItems = [
     "verification": "official-public-source",
     "mobile": "not-tested",
     "via": "https://minimal.gallery/daniel-vignal/"
+  },
+  {
+    "id": "x-jvl3djp-980695",
+    "name": "Low-poly cat walk cycle in Blender",
+    "category": "practice",
+    "tag": "Animation",
+    "url": "https://x.com/jvl3djp/status/2122526144125980695",
+    "source": "link-only",
+    "focus": {
+      "zh": "JVL 在 Blender 中制作了一只低多边形橘白猫，并在视口中同时展示正面和侧面两个视角的行走循环：四条腿交替迈步，尾巴高高翘起，几何感的造型配上自然的猫步，简单又讨喜。",
+      "en": "JVL built a low-poly orange-and-white cat in Blender and shows its walk cycle from front and side views at once: the legs step in turn and the tail stays raised, so a blocky, faceted model still walks like a real cat."
+    },
+    "application": {
+      "zh": "用极简低多边形造型呈现真实的动物步态",
+      "en": "Real animal movement on a minimal low-poly model"
+    },
+    "publisher": "JVL (@jvl3djp)",
+    "kind": "social-post",
+    "designer": "JVL",
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T08:47:53.243Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2122526144125980695",
+      "author": "JVL",
+      "handle": "jvl3djp",
+      "date": "2026-11-17",
+      "lang": "en",
+      "text": "I made a low-poly cat and animated its walk cycle in Blender.\n\nI'm still new to animating animal locomotion, so this was quite a challenge. Still got a lot to learn! Huge respect for animal animators!#b3d #3DAnimation",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-rivka_huehhh-958240",
+    "name": "Beethoven animation test",
+    "category": "practice",
+    "tag": "Animation",
+    "url": "https://x.com/rivka_huehhh/status/2124524949427958240",
+    "source": "link-only",
+    "focus": {
+      "zh": "一段手绘铅笔线稿动画测试：贝多芬皱着眉头削羽毛笔，然后从小桌上拿起本子翻看，神情从专注变成疲惫。角落里放着那幅经典肖像画作参考，能直接看到名画如何被画成一个有表情、有动作的角色。",
+      "en": "A rough pencil-line animation test in which Beethoven scowls while trimming his quill, then picks a notebook up off a small table and looks through it, his face going from focused to weary. The classic portrait sits in the corner as reference, so you can see a famous painting turned into a character who acts and emotes."
+    },
+    "application": {
+      "zh": "让名画人物动起来，演一个日常小动作",
+      "en": "Bring a figure from a famous painting to life through small everyday actions"
+    },
+    "publisher": "Rivka (@rivka_huehhh)",
+    "kind": "social-post",
+    "designer": "Rivka",
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T08:47:53.243Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2124524949427958240",
+      "author": "Rivka",
+      "handle": "rivka_huehhh",
+      "date": "2026-11-22",
+      "lang": "en",
+      "text": "Beethoven animation test",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-thomasma_labs-829114",
+    "name": "Pickup truck crash tests in a real-time sand simulation",
+    "category": "practice",
+    "tag": "Generative",
+    "url": "https://x.com/thomasma_labs/status/2123139134134829114",
+    "source": "link-only",
+    "focus": {
+      "zh": "一辆红色皮卡在沙丘上飞驰、翻滚、撞毁，车轮在沙地上留下车辙，沙尘四溅，最后四轮朝天陷在沙里；作者说这一切都是实时物理模拟，没有预制动画，而且直接在浏览器里运行。",
+      "en": "A red pickup tears across desert dunes, carving tyre tracks and kicking up sand, then rolls, breaks apart and ends upside down in the sand. The author says all of it is real-time physics running in a browser, with no canned animations."
+    },
+    "application": {
+      "zh": "用实时物理模拟做出可信的破坏和地形痕迹",
+      "en": "Real-time physics that makes destruction and terrain marks look believable"
+    },
+    "publisher": "invalidUsername.x (@thomasma_labs)",
+    "kind": "social-post",
+    "designer": "invalidUsername.x",
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T08:47:53.243Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2123139134134829114",
+      "author": "invalidUsername.x",
+      "handle": "thomasma_labs",
+      "date": "2026-11-18",
+      "lang": "en",
+      "text": "Real-time sand simulation & terramechanics in the browser (WebGPU + three.js)  \n\nStudy #3\n\nCrashtests...\n\nNot GTA 6 – but the destruction-model is getting real. All physics, no canned animations. Runs in the browser.\n\nWIP@threejs@WebGL_WebGPU@WebGPU@80Level#destruction…",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-gen_xcx-902642",
+    "name": "Real-time black hole VFX in Roblox",
+    "category": "practice",
+    "tag": "Animation",
+    "url": "https://x.com/gen_xcx/status/2123249742519902642",
+    "source": "link-only",
+    "focus": {
+      "zh": "Gen 在 Roblox Studio 里实时制作的黑洞特效（使用 rocca 的贴图）：灰色地面上空的一个小橙色光点膨胀成黑洞，火红的吸积环旋转着把岩石碎块卷进去，伴随红色光束，最后爆发成一团紫白色星云和闪烁星光。作者说为岩石写的数学花了很多时间。",
+      "en": "Gen's real-time black hole effect built in Roblox Studio with rocca's textures: a tiny orange spark above grey ground swells into a black hole whose fiery spinning ring drags in chunks of rock under red beams, then bursts into a purple-white nebula full of twinkling stars; the author says the rock math took the most time."
+    },
+    "application": {
+      "zh": "用逐步升级的节奏，让一个微小光点演变成宏大爆发",
+      "en": "Escalating a tiny spark into a huge cosmic payoff, one beat at a time"
+    },
+    "publisher": "Gen (@gen_xcx)",
+    "kind": "social-post",
+    "designer": "Gen",
+    "checkedAt": "2026-11-24",
+    "addedAt": "2026-11-24T08:47:53.243Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2123249742519902642",
+      "author": "Gen",
+      "handle": "gen_xcx",
+      "date": "2026-11-19",
+      "lang": "en",
+      "text": "black hole i made with rocca's textures, the math for the rocks took me too much time 🥀\nbetter quality in my port#Roblox #RobloxVFX #RobloxDev #VFX #realtimevfx",
+      "hasMedia": true
+    }
   }
 ];
 
