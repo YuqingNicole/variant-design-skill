@@ -8282,6 +8282,38 @@ export const inspirationItems = [
       "text": "black hole i made with rocca's textures, the math for the rocks took me too much time 🥀\nbetter quality in my port#Roblox #RobloxVFX #RobloxDev #VFX #realtimevfx",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-chetaslua-275008",
+    "name": "Illustrated market town as a three.js flythrough",
+    "category": "practice",
+    "tag": "Generative",
+    "url": "https://x.com/chetaslua/status/2125253343480275008",
+    "source": "link-only",
+    "focus": {
+      "zh": "一段 three.js 镜头漫游：先给出一张平面插画（彩旗、条纹遮阳棚的集市街，骑鹈鹕的人），随后同一条街变成可穿行的 3D 场景，镜头跟着骑鹈鹕的人走过水果摊和蓝色犀牛，飞上湖面，天色从白天转到黄昏和夜晚，热气球和孔明灯升满天空。作者说是 Opus 5.6 写的、没有用任何素材文件。",
+      "en": "A three.js camera flythrough: it opens on a flat illustration (a market street of bunting and striped awnings, a man riding a pelican), then the same street becomes a 3D scene the camera follows the rider through, past fruit stalls and a blue rhino, out over a lake as day turns to dusk and night and hot-air balloons and sky lanterns fill the sky. The author says Opus 5.6 wrote it with no asset files."
+    },
+    "application": {
+      "zh": "把一张插画的配色和造型延伸成可穿行的 3D 场景",
+      "en": "Extending one illustration’s palette and shapes into a 3D scene you can move through"
+    },
+    "publisher": "Chetaslua (@chetaslua)",
+    "kind": "social-post",
+    "designer": "Chetaslua",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T01:39:19.239Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125253343480275008",
+      "author": "Chetaslua",
+      "handle": "chetaslua",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "Opus 5.6 is peak @threejs, no assets.\n\nCan you feel the AGI, son?",
+      "hasMedia": true
+    }
   }
 ];
 

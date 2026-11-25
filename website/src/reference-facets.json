@@ -272,5 +272,6 @@
   "x-r4nm4_64-527084": {"status":"draft","industry":"gaming","medium":"3d","pageTypes":[],"patterns":[],"components":["cursor"],"techniques":["shader"],"styles":[]},
   "x-jammyjanmo-236023": {"status":"draft","industry":null,"medium":"film","pageTypes":[],"patterns":[],"components":[],"techniques":[],"styles":[]},
   "x-magalyn07-643821": {"status":"draft","industry":null,"medium":"film","pageTypes":[],"patterns":[],"components":[],"techniques":[],"styles":[]},
-  "x-duckwhocodes-939918": {"status":"reviewed","reviewedAt":"2026-11-22","reviewedBy":"agent","industry":null,"medium":"web-app","pageTypes":[],"patterns":[],"components":["carousel"],"techniques":["transition","morph"],"styles":["illustrated","playful"]}
+  "x-duckwhocodes-939918": {"status":"reviewed","reviewedAt":"2026-11-22","reviewedBy":"agent","industry":null,"medium":"web-app","pageTypes":[],"patterns":[],"components":["carousel"],"techniques":["transition","morph"],"styles":["illustrated","playful"]},
+  "x-chetaslua-275008": {"status":"reviewed","reviewedAt":"2026-11-25","reviewedBy":"agent","industry":null,"medium":"3d","pageTypes":[],"patterns":[],"components":[],"techniques":["webgl"],"styles":["rendered-3d","colorful","illustrated"]}
 }

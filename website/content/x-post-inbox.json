@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-24T08:47:53.243Z",
+  "updatedAt": "2026-11-25T01:39:19.239Z",
   "source": "Ego Lite on X search",
   "reviewPolicy": "Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request that merges itself once CI passes; nobody reviews entries one by one.",
   "candidates": [
@@ -2904,6 +2904,19 @@
       "status": "rejected",
       "reviewedAt": "2026-11-12",
       "reason": "Reposted video; the original author could not be confirmed"
+    },
+    {
+      "id": "2125253343480275008",
+      "url": "https://x.com/chetaslua/status/2125253343480275008",
+      "handle": "chetaslua",
+      "author": "Chetaslua",
+      "publishedAt": "2026-11-24",
+      "likes": 3206,
+      "capturedAt": "2026-11-25T01:39:19.239Z",
+      "query": "maintainer link (2026-11-25)",
+      "status": "published",
+      "entry": "x-chetaslua-275008",
+      "reviewedAt": "2026-11-25"
     }
   ]
 }
