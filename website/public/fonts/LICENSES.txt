@@ -1,6 +1,6 @@
 Fonts used on this site
 
-- Libre Caslon Display: SIL Open Font License 1.1 (https://openfontlicense.org)
+- Newsreader: SIL Open Font License 1.1 (https://openfontlicense.org), Copyright 2020 The Newsreader Project Authors
 - Hanken Grotesk: SIL Open Font License 1.1
 - IBM Plex Mono: SIL Open Font License 1.1
 

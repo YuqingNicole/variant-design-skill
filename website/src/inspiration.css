@@ -1,6 +1,6 @@
 /* Reference library: a title row, a sticky filter bar, an image-first grid and a detail layer.
    Thumbnails map the link itself (its published preview or the post's text); analysis cards are the fallback. */
-.inspiration-page{--radius-control:6px;--radius-card:6px;--radius-panel:6px}
+.inspiration-page{--radius-control:6px;--radius-card:4px;--radius-panel:6px}
 .inspiration-page :is(a,button,select,input,textarea,summary):focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
 .insp-head{display:grid;gap:var(--space-2);padding-block:var(--space-6) var(--space-5)}
 .insp-title{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:var(--space-3) var(--space-6)}
@@ -53,7 +53,7 @@
 div.insp-thumb{position:relative;display:grid;grid-template-rows:auto auto auto 1fr;gap:6px;padding:var(--space-4);background:var(--site-card);color:var(--site-ink);overflow:hidden}
 .insp-thumb-product{background:var(--site-surface)}.insp-thumb-flow{background:var(--site-accent)}.insp-thumb-motion{background:var(--site-wash)}
 .insp-thumb-tag{font-size:12px;color:var(--site-muted)}.insp-detail-visual .insp-thumb-tag{display:none}
-.insp-thumb b{font-family:var(--font-display);font-weight:500;font-size:20px;line-height:1.1;letter-spacing:-.01em}
+.insp-thumb b{font-family:var(--font-display);font-weight:400;font-size:20px;line-height:1.1;letter-spacing:-.01em}
 .insp-thumb span{font-size:12px;line-height:1.45;color:var(--site-muted);max-width:30ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .insp-sketch{align-self:end;display:grid;gap:5px;height:44%;min-height:42px}
 .insp-sketch i{display:block;border:1px solid var(--site-line);border-radius:3px;background:var(--fill-3)}
@@ -140,7 +140,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .insp-thumb-media[data-loaded=true]>img{opacity:1}
 .insp-thumb-media>.insp-thumb-fallback{position:absolute;inset:0;display:grid;grid-template-rows:auto auto auto 1fr;gap:6px;width:100%;height:100%;padding:var(--space-5);overflow:hidden;color:var(--site-ink);background:var(--site-card)}
 .insp-thumb-fallback .insp-thumb-tag{font-size:12px;color:var(--site-muted)}
-.insp-thumb-fallback b{font-family:var(--font-display);font-weight:500;font-size:20px;line-height:1.1;letter-spacing:-.01em}
+.insp-thumb-fallback b{font-family:var(--font-display);font-weight:400;font-size:20px;line-height:1.1;letter-spacing:-.01em}
 .insp-thumb-fallback span{font-size:12px;line-height:1.45;color:var(--site-muted);max-width:30ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .insp-thumb-media[data-loaded=true]>.insp-thumb-fallback{visibility:hidden}
 .insp-thumb-post b{font-size:18px;line-height:1.35;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
@@ -186,41 +186,98 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .insp-vcard-open.insp-fills .insp-vcard-media{object-fit:cover}
 /* The head is kept short so three rows of cards start about 350px down on a desktop: the title's white space shrank and the
    count line below the bar is read by screen readers only (the pills and the progress line already show the numbers). */
-.inspiration-page .insp-head{padding-block:32px 16px;gap:var(--space-3)}
-.inspiration-page .insp-title h1{font-size:clamp(34px,4.2vw,56px);font-weight:400;line-height:1.04;letter-spacing:-.025em}
-.inspiration-page .insp-title p{max-width:72ch}
-.inspiration-page .insp-body{padding-top:var(--space-2)}
+/* Paper pass (2026-11-25, docs/design-system.md §12): the head is a statement again. A 96px thin serif claim with one emphasised
+   word (italic in English, the regular weight in Chinese), 120px of paper above it and 88px below; the feed starts lower, which
+   the maintainer accepted for the calmer page. */
+.inspiration-page .insp-head{padding-block:120px 88px;gap:var(--space-5)}
+.inspiration-page .insp-title{row-gap:var(--space-5)}
+.inspiration-page .insp-title h1{font-size:clamp(56px,6.7vw,96px);font-weight:200;line-height:1.02;letter-spacing:-.025em}
+.inspiration-page .insp-title h1 em{display:inline;margin:0;color:inherit;font-family:inherit;font-style:italic;font-weight:200}
+.inspiration-page .insp-title h1 em[data-lang=zh]{font-style:normal;font-weight:400}
+.inspiration-page .insp-title p{max-width:52ch}
+.inspiration-page .insp-title .insp-links{font-size:16px;max-width:none}
+.inspiration-page .insp-title a{font-size:16px}
+.inspiration-page .insp-rights{border-top:0;padding-top:0}
+.inspiration-page .insp-body{padding-top:48px}
 /* Sticky stays (a tested contract), but the bar is only a faint tint: a blurred white band cut the frosted panel in two. */
-.inspiration-page .insp-bar{background:var(--fill-4);border-block:0}
-.inspiration-page .insp-pills a{background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-muted)}
-.inspiration-page .insp-pills a[aria-current=page]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}
-.inspiration-page :is(.insp-bar select,.insp-search){background:var(--fill-1);border-color:var(--hair)}
+/* The bar stays sticky (a tested contract) on opaque paper, so cards scrolling under it disappear cleanly. Channels are text
+   with an underline and a superscript count; search and sort are plain text controls on the same hairline. */
+.inspiration-page .insp-bar{background:var(--site-paper);border-block:0}
+.inspiration-page .insp-bar>.site-shell{gap:var(--space-5);padding-block:0;border-bottom:1px solid var(--site-line)}
+.inspiration-page .insp-pills{gap:32px}
+.inspiration-page .insp-pills a{height:56px;padding:0;background:none;box-shadow:none;border-radius:0;font-size:16px;color:var(--site-muted);border-bottom:1.5px solid transparent;margin-bottom:-1px}
+.inspiration-page .insp-pills a:hover{color:var(--site-ink)}
+.inspiration-page .insp-pills a[aria-current=page]{background:none;color:var(--site-ink);border-bottom-color:var(--site-ink)}
+.inspiration-page .insp-pills a small{align-self:flex-start;margin:15px 0 0 3px;font-size:13px;color:inherit;opacity:1}
+.inspiration-page .insp-pills a[aria-current=page] small{opacity:1}
+.inspiration-page .insp-search{background:none;border:0;padding:0;font-size:16px}
+.inspiration-page .insp-search input{font-size:16px}
+.inspiration-page .insp-search input::placeholder{color:var(--site-muted)}
+.content-page.inspiration-page .insp-bar select{border-color:transparent;font-size:16px;color:var(--site-muted)}
+.content-page.inspiration-page .insp-bar select:hover{border-color:transparent;color:var(--site-ink)}
 .inspiration-page .inspiration-count{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 /* The feed is a vertical grid, newest first along each row: image first, name and note under it, never overlaid. Cards are at
    least 220px wide and fill the row; scrolling down loads the next page (maintainer, 2026-11-22: it replaced the three-row
    sideways wall, since scrolling down is what visitors expect). Phones get two columns further down. */
-.inspiration-page .inspiration-grid.insp-feed{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding:4px 0 8px}
-.inspiration-page .insp-feed>.insp-card{background:var(--card-g);border:1px solid var(--hair);border-radius:16px;padding:8px 8px 10px}
+/* Unframed: the image is the card. No white sheet, hairline, mat or lift; a 4px corner, the name in the display face under it
+   and one small line of source. Four columns at 1440 with 32px between columns and about 44px between rows. */
+.inspiration-page .inspiration-grid.insp-feed{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:44px 32px;padding:0 0 8px}
+.inspiration-page .insp-feed>.insp-card{background:none;border:0;border-radius:0;padding:0}
 .inspiration-page .insp-feed .insp-card-open{aspect-ratio:auto;overflow:visible;background:none}
 .inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){background:var(--site-surface)}
-.inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){aspect-ratio:4/3;height:auto;border-radius:3px;overflow:hidden}
-.inspiration-page .insp-feed .insp-card-meta{position:static;opacity:1;padding:10px 80px 0 8px;background:none;min-height:44px}
-.inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){top:auto;bottom:12px;right:12px}
-.inspiration-page .insp-feed .insp-card-out{right:46px}
+.inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){aspect-ratio:4/3;height:auto;border-radius:4px;overflow:hidden}
+.inspiration-page .insp-feed .insp-card-meta{position:static;opacity:1;padding:14px 80px 0 0;background:none;min-height:0;align-items:flex-start}
+.inspiration-page .insp-feed .insp-card-meta b{font-family:var(--font-display);font-size:24px;font-weight:400;line-height:1.2;letter-spacing:-.01em;white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.inspiration-page .insp-feed .insp-card-meta small{margin-top:4px;font-size:13px}
+.inspiration-page .insp-feed .insp-card-meta{display:grid;grid-template-columns:20px minmax(0,1fr);gap:0 8px}
+.inspiration-page .insp-feed .insp-card-meta>span{display:contents}
+.inspiration-page .insp-feed .insp-card-meta b{grid-column:1/-1;grid-row:1}
+.inspiration-page .insp-feed .insp-card-meta .insp-vcard-avatar{grid-column:1;grid-row:2;align-self:center;width:20px;height:20px;margin-top:4px}
+.inspiration-page .insp-feed .insp-card-meta small{grid-column:2;grid-row:2}
+.inspiration-page .insp-feed .insp-card-meta:not(:has(.insp-vcard-avatar)) small{grid-column:1/-1}
+.inspiration-page .insp-feed :is(.insp-card-save,.insp-card-out){top:auto;bottom:0;right:0;width:32px;height:32px;background:var(--site-paper);border-color:var(--site-line)}
+.inspiration-page .insp-feed .insp-card-out{right:40px}
+.inspiration-page .insp-feed .insp-card-save[aria-pressed=true]{background:var(--site-ink);border-color:var(--site-ink);color:var(--site-paper)}
+.inspiration-page .insp-feed .insp-card:is(:hover,:focus-within) .insp-card-open>:is(.insp-thumb,.insp-vcard-media){transform:none}
+/* Type budget (five tiers, docs/design-system.md §3): the analysis card, the closing and the small print join the tiers. */
+.inspiration-page .insp-feed :is(.insp-thumb,.insp-thumb-fallback) b{font-size:24px;line-height:1.15}
+.inspiration-page .insp-feed :is(.insp-thumb,.insp-thumb-fallback) :is(span,.insp-thumb-tag){font-size:13px}
+.inspiration-page .inspiration-count,.inspiration-page .content-closing .content-secondary{font-size:13px}
+.inspiration-page .insp-more button{height:44px;padding:0 22px;background:none;font-size:16px}
+.inspiration-page .content-closing h2{font-size:48px}
+.inspiration-page .site-footer{font-size:13px}
+.inspiration-page .site-footer-groups b{font-size:13px}
+.inspiration-page .site-footer-brand{font-size:13px}
+@media(hover:hover) and (pointer:fine){.inspiration-page .insp-feed .insp-card:hover .insp-card-meta b{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}}
 /* Detail: the study and apply notes read as sentences, the labels as small capitals. */
-.inspiration-page .insp-detail :is(h1,h2){font-size:clamp(36px,4vw,56px);font-weight:400;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
-.inspiration-page :is(.insp-detail-label,.insp-detail dt){letter-spacing:.1em}
-/* The two notes are read, not glanced at: body face, 20px, generous leading and a measure of about 34 characters per line in Chinese. The display face stays on the title only. */
-.inspiration-page .insp-detail dd:nth-of-type(-n+2){font-size:20px;line-height:1.65;max-width:34em;text-wrap:pretty}
-.inspiration-page .insp-detail-media{background:var(--card-g);border:1px solid var(--hair);border-radius:16px;padding:8px}
-.inspiration-page :is(.insp-detail-media,.insp-shot)>.insp-thumb,.inspiration-page .insp-shot img{border-radius:3px}
-/* Radius budget: pill, 16px for panels and cards, 3px for images and sketch lines. */
-.inspiration-page .insp-sketch i{border-radius:3px}
-.inspiration-page :is(.insp-detail-tools :is(a,button),.insp-detail-brief){background:var(--fill-1);border-color:var(--hair)}
+.inspiration-page .insp-detail :is(h1,h2){font-size:48px;font-weight:200;line-height:1.05;letter-spacing:-.015em;text-wrap:balance;margin:var(--space-5) 0 var(--space-2)}
+.inspiration-page :is(.insp-detail-label,.insp-detail dt){font-size:13px;letter-spacing:.02em}
+/* Detail type on the tiers: the two notes at 24px (body face, read as statements), everything else 16px, the small print 13px;
+   weights 200 / 400 / 500 only. */
+.inspiration-page .insp-detail dl,.inspiration-page .insp-detail dd,.inspiration-page .insp-detail-tools :is(a,button),.inspiration-page .insp-detail-brief,.inspiration-page .insp-detail :is(.insp-analysis h3,.insp-analysis p,.insp-analysis li){font-size:16px}
+.inspiration-page .inspiration-host,.inspiration-page .insp-related small,.inspiration-page .inspiration-demo figcaption{font-size:13px}
+.inspiration-page .inspiration-demo figcaption b{font-weight:500}
+.inspiration-page .insp-detail :is(.insp-related,.insp-yours,.insp-analysis) h2,.inspiration-page .insp-detail .insp-analysis h3{font-weight:500}
+.inspiration-page .insp-detail-tools :is(a,button),.inspiration-page .insp-detail-brief{height:40px}
+.inspiration-page .insp-detail-tools>span button,.inspiration-page .insp-detail-tools>button:first-child{width:40px}
+/* The tag row is a set of outlined chips: section, type and the rights note. */
+.inspiration-page .insp-detail-label{display:flex;flex-wrap:wrap;gap:6px}
+.inspiration-page .insp-detail-label>*{display:inline-flex;align-items:center;min-height:24px;padding:0 10px;border:1px solid var(--site-line);border-radius:999px;margin:0;color:var(--site-muted)}
+.inspiration-page .insp-detail dl{margin:var(--space-7) 0}
+.inspiration-page .insp-detail dt{margin-top:var(--space-6)}
+.inspiration-page .insp-detail dt:first-of-type{margin-top:0}
+/* The two notes are read, not glanced at: body face, 24px (the card-name tier), generous leading, about 28 characters a line in Chinese. The display face stays on the title only. */
+.inspiration-page .insp-detail dd:nth-of-type(-n+2){font-size:24px;line-height:1.5;max-width:28em;text-wrap:pretty}
+.inspiration-page .insp-detail-media{background:none;border:0;border-radius:0;padding:0}
+.inspiration-page :is(.insp-detail-media,.insp-shot)>.insp-thumb,.inspiration-page .insp-shot img{border-radius:4px;border:0}
+/* Radius budget: pill for controls, 6px for dialogs and sheets, 4px for images and sketch lines. */
+.inspiration-page .insp-sketch i{border-radius:4px}
+.inspiration-page :is(.insp-detail-tools :is(a,button),.insp-detail-brief){background:none;border-color:var(--site-line)}
+.inspiration-page :is(.insp-detail-tools :is(a,button),.insp-detail-brief):hover{border-color:var(--site-ink)}
 /* The dialog is opaque paper: through a translucent fill the blurred cards behind it smudged the notes. */
-.insp-dialog{border-radius:16px;background:var(--site-paper)}
-.inspiration-page .inspiration-pack{background:var(--card-g);border-color:var(--hair);border-radius:16px}
-.inspiration-page .inspiration-brief{background:var(--fill-1);border-color:var(--hair);border-radius:16px}
+.insp-dialog{border-radius:6px;background:var(--site-paper)}
+.inspiration-page .inspiration-pack{background:var(--site-surface);border-color:transparent;border-radius:6px}
+.inspiration-page .inspiration-brief{background:var(--site-surface);border-color:transparent;border-radius:6px}
 @media(max-width:650px){
  .inspiration-page .insp-head{padding-block:20px 8px;gap:var(--space-2)}
  .inspiration-page .insp-title p{text-wrap:pretty}
@@ -234,14 +291,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .inspiration-page .site-footer-cta{display:none}
 /* Texture pass (2026-11-15, docs/design-system.md §12.9). Presentation only; the budgets stay: no new shadow value (the well reuses the pills' inset hairline), no gradient, no new radius.
    The sticky filter bar frosts what scrolls under it instead of letting card titles show through its faint tint; at rest it blurs only the panel's own glass, so no band appears. */
-.inspiration-page .insp-bar{-webkit-backdrop-filter:blur(18px) saturate(1.1);backdrop-filter:blur(18px) saturate(1.1)}
-.inspiration-page .insp-feed>.insp-card div.insp-thumb.insp-thumb-media{box-shadow:inset 0 0 0 1px var(--hair)}
-.inspiration-page .insp-feed>.insp-card{transition:border-color var(--dur-fast) var(--ease-out),background-color var(--dur-fast) var(--ease-out),transform var(--dur-base) var(--ease-out)}
-@media(hover:hover) and (pointer:fine){.inspiration-page .insp-feed>.insp-card:hover{background:var(--fill-1);border-color:var(--site-line)}}
-@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.inspiration-page .insp-feed>.insp-card:hover{transform:translateY(-2px)}}
-/* Mount each link preview on an even mat instead of letterboxing it edge to edge: the image keeps its own proportions inside a 10px margin. */
-.inspiration-page .insp-feed>.insp-card .insp-thumb-media>img{inset:10px;width:calc(100% - 20px);height:calc(100% - 20px);border-radius:3px}
-.inspiration-page .insp-feed>.insp-card .insp-vcard-media{box-sizing:border-box;padding:10px}
+/* The 2026-11-15 texture pass (frosted sticky bar, matted previews, lifting cards) gave way to the unframed paper feed above. */
 /* Detail of an X post with a known video: the video plays from X's file host with its own controls, at its own proportions, before the stored text. */
 /* The box is sized from the stored width and height before the file's metadata arrives (a bare <video> is 300×150 until then, which moved the text below it). */
 .x-post-video .insp-vcard-media{display:block;width:min(100%,calc(72vh * var(--ar,1.78)));height:auto;aspect-ratio:var(--ar,1.78);margin-inline:auto;border-radius:3px;background:var(--site-surface)}
@@ -250,11 +300,11 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
    are laid out. The desktop strip and its arrows stay as they are above 650px. */
 @media(max-width:650px){
  .inspiration-page .inspiration-grid.insp-feed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-flow:row;grid-auto-columns:auto;gap:12px 10px;overflow:visible;scroll-snap-type:none;padding:4px 0 8px;margin-inline:0;align-items:start}
- .inspiration-page .insp-feed>.insp-card{padding:0;border:0;background:none;border-radius:16px;scroll-snap-align:none}
- .inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){aspect-ratio:4/5;border-radius:16px}
+ .inspiration-page .insp-feed>.insp-card{padding:0;border:0;background:none;border-radius:0;scroll-snap-align:none}
+ .inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){aspect-ratio:4/5;border-radius:4px}
  .inspiration-page .insp-feed .insp-card-meta{padding:8px 44px 0 2px;min-height:0;display:grid;grid-template-columns:20px minmax(0,1fr);align-items:center;gap:4px 6px}
  .inspiration-page .insp-feed .insp-card-meta>span{display:contents}
- .inspiration-page .insp-feed .insp-card-meta b{grid-column:1/-1;grid-row:1;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;white-space:normal;font-size:14px;line-height:1.35}
+ .inspiration-page .insp-feed .insp-card-meta b{grid-column:1/-1;grid-row:1;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;white-space:normal;font-size:17px;line-height:1.25}
  .inspiration-page .insp-feed .insp-card-meta .insp-vcard-avatar{grid-column:1;grid-row:2;width:20px;height:20px}
  .inspiration-page .insp-feed .insp-card-meta small{grid-column:2;grid-row:2;line-height:20px}
  .inspiration-page .insp-feed .insp-card-meta:not(:has(.insp-vcard-avatar)) small{grid-column:1/-1}
@@ -262,15 +312,13 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
  .inspiration-page .insp-feed .insp-card-out{display:none}
  .insp-more{display:flex;justify-content:center;padding:8px 0 16px}
  /* Header: the title and the rights notice stay; the long intro and counts leave the first screen. */
- .inspiration-page .insp-title h1{font-size:30px}
- .inspiration-page .insp-title>p:not(.insp-links),.inspiration-page .insp-counts{display:none}
- .inspiration-page .insp-head{padding-block:12px 4px}
+ .inspiration-page .insp-counts{display:none}
  /* Bottom tab bar (SiteChrome mounts .site-tabbar on <body> after hydration). */
  /* Gone from the first paint, so mounting the tab bar moves nothing; without JavaScript there is no tab bar, so the links come back. */
  .site-nav-links{display:none}
  @media(scripting:none){.site-nav-links{display:flex}}
- .site-tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:0 8px env(safe-area-inset-bottom);height:calc(56px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--site-paper,#fff) 92%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-top:1px solid var(--site-line)}
- .site-tabbar a{display:flex;align-items:center;justify-content:center;min-height:56px;font-size:13px;position:relative;color:var(--site-ink);text-decoration:none}
+ .site-tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:0 8px env(safe-area-inset-bottom);height:calc(56px + env(safe-area-inset-bottom));background:var(--site-paper,#f6f3ec);border-top:1px solid var(--site-line)}
+ .site-tabbar a{display:flex;align-items:center;justify-content:center;min-height:56px;font-size:13px;position:relative;color:var(--site-muted);text-decoration:none}
  .site-tabbar a[aria-current=page]{color:var(--site-brand);font-weight:500}
  .site-tabbar a[aria-current=page]::after{content:"";position:absolute;bottom:8px;width:4px;height:4px;border-radius:50%;background:var(--site-brand)}
  body{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
@@ -279,9 +327,11 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 
 /* Design-type filter inside the videos tab: the same pills as the section tabs, as buttons because they filter in place. */
 .insp-types{display:flex;gap:var(--space-1);overflow-x:auto;scrollbar-width:none;padding-bottom:var(--space-2)}.insp-types::-webkit-scrollbar{display:none}
-.insp-types button{display:inline-flex;align-items:center;flex:none;height:32px;padding:0 var(--space-4);border:0;border-radius:var(--radius-pill);font:inherit;font-size:14px;cursor:pointer;background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-muted);transition:background var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
-.insp-types button small{font-size:12px;margin-left:6px;font-variant-numeric:tabular-nums}
-.insp-types button[aria-pressed=true]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}.insp-types button[aria-pressed=true] small{opacity:.75}
+.insp-types{gap:24px}
+.insp-types button{display:inline-flex;align-items:center;flex:none;height:44px;padding:0;border:0;border-bottom:1.5px solid transparent;border-radius:0;font:inherit;font-size:16px;cursor:pointer;background:none;color:var(--site-muted);transition:color var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out)}
+.insp-types button small{align-self:flex-start;margin:8px 0 0 3px;font-size:13px;font-variant-numeric:tabular-nums}
+.insp-types button:hover{color:var(--site-ink)}
+.insp-types button[aria-pressed=true]{color:var(--site-ink);border-bottom-color:var(--site-ink)}
 @media(max-width:650px){.insp-types button{height:44px}}
 .insp-bar .insp-types-main{flex:1 1 auto;min-width:0;padding-bottom:0}
 @media(max-width:650px){.insp-bar .insp-types-main{grid-column:1/-1;flex-basis:100%}}
@@ -325,7 +375,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .insp-analysis p,.insp-analysis ul{margin:0}.insp-analysis ul{padding-left:1.2em}
 .insp-analysis-note{font-size:13px;opacity:.7}
 /* The detail rule above sets every h2 in .insp-detail to display size; these are section labels. */
-.inspiration-page .insp-detail :is(.insp-related,.insp-yours,.insp-analysis) h2{font-size:16px;font-weight:600;line-height:1.3;letter-spacing:0;margin:0;text-wrap:wrap}
+.inspiration-page .insp-detail :is(.insp-related,.insp-yours,.insp-analysis) h2{font-size:16px;font-weight:500;line-height:1.3;letter-spacing:0;margin:0;text-wrap:wrap}
 .inspiration-page .insp-detail .insp-analysis h2 small{font-size:13px;font-weight:400}
 
 /* Phones, notes-feed pass (2026-11-22, the maintainer's phone screenshot): the first row of cards sat 60% down the screen behind
@@ -341,25 +391,35 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
  .site-nav .site-wordmark{flex-shrink:0}
  .site-nav .site-nav-end>*,.site-nav .site-nav-end .site-connect,.site-nav .site-nav-end .site-language{min-height:44px;height:44px;padding-block:0;padding-inline:12px;font-size:14px;display:inline-flex;align-items:center;white-space:nowrap}
  .site-nav .site-nav-end .site-language{min-width:0}
- .inspiration-page .insp-head{padding-block:8px 0;gap:0}
- .inspiration-page .insp-title h1{font-size:20px;line-height:1.3;letter-spacing:-.01em}
+ /* Paper pass: the claim comes back on phones at 44px with its one-line intro, one step more air than before; the first row of
+    work still starts on the first screen (about 380px down on a 390×844 phone). */
+ .inspiration-page .insp-head{padding-block:28px 24px;gap:var(--space-3)}
+ .inspiration-page .insp-title{row-gap:var(--space-3)}
+ .inspiration-page .insp-title h1{font-size:44px;line-height:1.08;letter-spacing:-.02em}
+ .inspiration-page .insp-title>p:not(.insp-links){font-size:16px;line-height:1.6}
  .inspiration-page .insp-head :is(.insp-links,.insp-rights){display:none}
  .inspiration-page .insp-bar>.site-shell{grid-template-columns:minmax(0,1fr) auto;column-gap:8px;row-gap:4px;padding-block:0 8px}
  .inspiration-page .insp-pills{grid-column:1/-1;grid-row:1;gap:20px}
- .inspiration-page .insp-pills a{height:44px;padding:0;background:none;box-shadow:none;border-radius:0;font-size:16px;color:var(--site-muted);border-bottom:2px solid transparent}
- .inspiration-page .insp-pills a[aria-current=page]{background:none;color:var(--site-ink);font-weight:500;border-bottom-color:var(--site-ink)}
+ .inspiration-page .insp-pills a{height:44px;padding:0;background:none;box-shadow:none;border-radius:0;font-size:16px;color:var(--site-muted);border-bottom:1.5px solid transparent;margin-bottom:0}
+ .inspiration-page .insp-pills a[aria-current=page]{background:none;color:var(--site-ink);font-weight:400;border-bottom-color:var(--site-ink)}
  .inspiration-page .insp-pills a small{display:none}
  .inspiration-page .insp-search{grid-column:1;grid-row:2}
  .inspiration-page .insp-bar select{grid-column:2;grid-row:2;width:auto;padding-inline:12px 28px}
- .inspiration-page .inspiration-grid.insp-feed{gap:8px 6px;padding-top:2px}
- .inspiration-page .insp-body{width:calc(100% - 12px)}
- .inspiration-page .insp-feed>.insp-card{background:var(--site-card);border-radius:16px;overflow:hidden}
- .inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){border-radius:0}
+ .inspiration-page .inspiration-grid.insp-feed{gap:24px 12px;padding-top:0}
+ .inspiration-page .insp-body{padding-top:20px}
+ .inspiration-page .insp-feed>.insp-card{background:none;border-radius:0;overflow:visible}
+ .inspiration-page .insp-feed .insp-card-open>:is(.insp-thumb,.insp-vcard-media){border-radius:4px}
  /* Videos fill the cover edge to edge like a note's photo; link previews keep their mat, since cropping would cut the page they show. */
  .inspiration-page .insp-feed>.insp-card .insp-vcard-media{padding:0;object-fit:cover;background:var(--site-surface)}
- .inspiration-page .insp-feed .insp-card-meta{padding:8px 40px 10px 10px}
- .inspiration-page .insp-feed :is(.insp-card-save){right:0;bottom:0}
- .insp-end{display:grid;gap:var(--space-2);padding-block:var(--space-4) var(--space-5);font-size:14px;line-height:1.6;color:var(--site-muted)}
+ .inspiration-page .insp-feed .insp-card-meta{padding:8px 36px 0 0}
+ .inspiration-page .insp-feed .insp-card-meta small{font-size:12px;margin-top:0}
+ .inspiration-page .insp-feed :is(.insp-card-save){right:-10px;bottom:-12px;background:none;border:0}
+ .insp-end{display:grid;gap:var(--space-2);padding-block:var(--space-4) var(--space-5);font-size:16px;line-height:1.6;color:var(--site-muted)}
+ .insp-end .insp-end-rights{font-size:12px}
+ .inspiration-page .insp-feed :is(.insp-thumb,.insp-thumb-fallback) b{font-size:17px}
+ .inspiration-page .insp-feed :is(.insp-thumb,.insp-thumb-fallback) :is(span,.insp-thumb-tag){font-size:12px}
+ .inspiration-page .content-closing h2{font-size:32px}
+ .inspiration-page :is(.site-footer,.site-footer-groups b,.site-footer-brand){font-size:12px}
  .insp-end p{margin:0}.insp-end-links{display:flex;flex-wrap:wrap;gap:0 var(--space-4)}.insp-end a{display:inline-flex;align-items:center;min-height:44px;color:inherit;text-underline-offset:3px}
 }
 /* The smallest phones (320px): the wordmark stays whole (a phone requirement in tests/landing.spec.mjs); the buttons get tighter and,
@@ -378,7 +438,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
  .insp-result-sort{display:flex;gap:20px;overflow-x:auto;scrollbar-width:none}.insp-result-sort::-webkit-scrollbar{display:none}
  .insp-result-sort button{flex:none;min-height:44px;padding:0;border:0;background:none;color:var(--site-muted);font:inherit;font-size:14px;cursor:pointer}
  .insp-result-sort [aria-checked=true]{color:var(--site-ink);font-weight:500}
- .insp-query-chip{justify-self:start;display:inline-flex;align-items:center;gap:6px;min-height:44px;margin:0;padding:0 16px;border:0;border-radius:var(--radius-pill);background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-ink);font:inherit;font-size:14px;cursor:pointer}
+ .insp-query-chip{justify-self:start;display:inline-flex;align-items:center;gap:6px;min-height:44px;margin:0;padding:0 16px;border:1px solid var(--site-line);border-radius:var(--radius-pill);background:none;color:var(--site-ink);font:inherit;font-size:14px;cursor:pointer}
  /* A website's share preview is a wide image: it fills a 4:3 cover, trimmed a little at the sides, so no grey mat surrounds it. */
  .inspiration-page .insp-feed .insp-card-open>.insp-thumb.insp-thumb-media{aspect-ratio:4/3}
  .inspiration-page .insp-feed>.insp-card .insp-thumb-media>img{inset:0;width:100%;height:100%;object-fit:cover;border-radius:0}
@@ -389,8 +449,8 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .search-sheet.content-page{width:auto;margin:0;transform:none;min-height:0;background:var(--site-paper);-webkit-backdrop-filter:none;backdrop-filter:none;border:0;border-radius:0;box-shadow:none}
 .search-sheet-bar{display:flex;align-items:center;gap:4px;padding:8px 12px 8px 4px}
 .search-sheet-back,.search-sheet-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;padding:0;border:0;background:none;color:var(--site-ink);cursor:pointer}
-.search-sheet-field{flex:1;min-width:0;display:flex;align-items:center;height:44px;border:1px solid transparent;border-radius:var(--radius-pill);background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair)}
-.search-sheet-field:focus-within{border-color:var(--site-ink);box-shadow:none}
+.search-sheet-field{flex:1;min-width:0;display:flex;align-items:center;height:44px;border:1px solid var(--site-line);border-radius:var(--radius-pill);background:none}
+.search-sheet-field:focus-within{border-color:var(--site-ink)}
 .search-sheet-field input{flex:1;min-width:0;height:100%;padding:0 4px 0 16px;border:0;background:none;color:var(--site-ink);font:inherit;font-size:16px;outline:none}
 .search-sheet-field input::-webkit-search-cancel-button{display:none}
 /* The field's rounded frame shows focus (:focus-within); the site-wide square ring on the input itself is turned off here. */
@@ -399,10 +459,10 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .search-sheet-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:8px 16px calc(24px + env(safe-area-inset-bottom))}
 .search-sheet section{padding-block:12px}
 .search-sheet section>header{display:flex;align-items:center;justify-content:space-between;min-height:44px}
-.search-sheet h2{margin:0;font-size:16px;font-weight:500}
+.search-sheet h2{margin:0;font-family:var(--font-serif);font-size:16px;font-weight:500;letter-spacing:0}
 .search-chips{display:flex;flex-wrap:wrap;gap:8px}
-.search-chips>:is(a,button){display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:0;border-radius:var(--radius-pill);background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-ink);font:inherit;font-size:14px;text-decoration:none;cursor:pointer}
-.search-chips>[aria-checked=true]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}
+.search-chips>:is(a,button){display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:1px solid var(--site-line);border-radius:var(--radius-pill);background:none;color:var(--site-ink);font:inherit;font-size:14px;text-decoration:none;cursor:pointer}
+.search-chips>[aria-checked=true]{border-color:var(--site-ink);font-weight:500}
 .search-chip-fold{width:44px;justify-content:center;padding:0!important}
 .search-sheet-icon{color:var(--site-muted);margin-right:-12px}
 .search-suggestions{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
@@ -413,7 +473,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
    A video keeps its stored width:height (--ar, set by XVideo); a website preview starts at the usual share-card 1200:630 and
    takes the image's measured ratio once it loads (--ar); text cards are as tall as their text. No crop, no grey mat. The grid
    becomes masonry only once InspirationPage has measured every card (.is-masonry); before that it is the plain grid. */
-.inspiration-page .inspiration-grid.insp-feed{--masonry-gap:12px}
+.inspiration-page .inspiration-grid.insp-feed{--masonry-gap:44px}
 .inspiration-page .inspiration-grid.insp-feed.is-masonry{grid-auto-rows:1px;row-gap:0;align-items:start}
 .inspiration-page .insp-feed .insp-card-open>.insp-vcard-media{aspect-ratio:var(--ar,auto);height:auto;object-fit:cover}
 .inspiration-page .insp-feed>.insp-card .insp-vcard-media{padding:0}
@@ -422,7 +482,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .inspiration-page .insp-feed .insp-card-open>.insp-thumb:not(.insp-thumb-media){aspect-ratio:auto;height:auto}
 .inspiration-page .insp-feed .insp-card-open>.insp-thumb.insp-thumb-standin{aspect-ratio:var(--ar)}
 @media(max-width:650px){
- .inspiration-page .inspiration-grid.insp-feed{--masonry-gap:8px}
+ .inspiration-page .inspiration-grid.insp-feed{--masonry-gap:24px}
  .inspiration-page .insp-feed .insp-card-open>.insp-vcard-media{aspect-ratio:var(--ar,auto)}
  .inspiration-page .insp-feed .insp-card-open>.insp-thumb.insp-thumb-media{aspect-ratio:var(--ar,1200/630)}
  .inspiration-page .insp-feed .insp-card-open>.insp-thumb:not(.insp-thumb-media){aspect-ratio:auto}
@@ -433,7 +493,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
    on <body> beside the tab bar, borrowing .content-page for colour tokens only, and the feed ends far enough above it. */
 @media(max-width:650px){
  .search-dock.content-page{display:block;position:fixed;left:0;right:0;bottom:calc(56px + env(safe-area-inset-bottom));z-index:25;width:auto;margin:0;transform:none;min-height:0;padding:8px 12px;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:0;border-radius:0;box-shadow:none;pointer-events:none}
- .search-dock .insp-search-open{pointer-events:auto;display:flex;align-items:center;gap:8px;width:100%;height:44px;padding:0 16px;border:0;border-radius:var(--radius-pill);background:var(--fill-1);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-ink);font:inherit;font-size:16px;text-align:left;cursor:pointer}
+ .search-dock .insp-search-open{pointer-events:auto;display:flex;align-items:center;gap:8px;width:100%;height:44px;padding:0 16px;border:1px solid var(--site-line);border-radius:var(--radius-pill);background:var(--site-paper);color:var(--site-ink);font:inherit;font-size:16px;text-align:left;cursor:pointer}
  .search-dock .insp-search-open svg{flex:none;width:18px;height:18px;color:var(--site-muted)}
  .search-dock .insp-search-open span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
  .search-dock-placeholder{color:var(--site-muted)}
@@ -452,13 +512,14 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 
 /* Pages below the feed (100 cards a page, maintainer 2026-11-23): previous, the numbers, next; every target 44px, the current
    page filled in ink. Same pill, fill and hairline as the filter pills, so the style budget holds. */
-.insp-pages{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;padding:16px 0 24px}
+.insp-pages{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;padding:48px 0 64px}
 .insp-page-slot{display:inline-flex;align-items:center;gap:6px}
-.insp-pages button{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:44px;height:44px;padding:0 14px;border:0;border-radius:var(--radius-pill);background:var(--fill-2);box-shadow:inset 0 0 0 1px var(--hair);color:var(--site-ink);font:inherit;font-size:14px;font-variant-numeric:tabular-nums;cursor:pointer}
-.insp-pages button[aria-current=page]{background:var(--site-ink);color:var(--site-paper);box-shadow:none}
+.insp-pages button{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:44px;height:44px;padding:0 14px;border:1.5px solid transparent;border-radius:var(--radius-pill);background:none;color:var(--site-muted);font:inherit;font-size:16px;font-variant-numeric:tabular-nums;cursor:pointer;transition:color var(--dur-fast) var(--ease-out)}
+.insp-pages button:not(:disabled):hover{color:var(--site-ink)}
+.insp-pages button[aria-current=page]{color:var(--site-ink);border-color:var(--site-ink)}
 .insp-pages button:disabled{opacity:.4;cursor:default}
 .insp-pages button:focus-visible{outline:2px solid var(--site-brand);outline-offset:2px}
 .insp-pages svg{width:14px;height:14px}
-.insp-page-gap{color:var(--site-muted);font-size:14px}
+.insp-page-gap{color:var(--site-muted);font-size:16px}
 /* Phones: the arrows alone, so previous, the numbers and next stay on one line; the words remain for screen readers. */
 @media(max-width:650px){.insp-pages button>span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.insp-pages button{padding:0 12px}}
