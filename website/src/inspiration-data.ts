@@ -8314,6 +8314,666 @@ export const inspirationItems = [
       "text": "Opus 5.6 is peak @threejs, no assets.\n\nCan you feel the AGI, son?",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-uisabor-296658-01",
+    "name": "Nelson CRM: a face tearing through clouds",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/1",
+    "source": "link-only",
+    "focus": {
+      "zh": "首屏是整幅蓝天云海，中间像撕开一张纸，露出古典油画里的一只眼睛和扒着纸边的手 → 白底上衬线大标题“All-in-One CRM for Sales Teams”，上方一行头像和“Used by 1,000+ sales teams” → 通栏 logo 条 → 左侧蓝色分段标签和四项特性，右侧古典雕像群配一张柱状图卡片，继续用撕纸云朵收边。",
+      "en": "A full-bleed sky of clouds with a torn hole in the middle, through which an eye and a hand from an old oil painting peer out → a serif headline “All-in-One CRM for Sales Teams” on white, with a row of avatars and “Used by 1,000+ sales teams” above it → a full-width logo strip → blue segmented tabs and four features on the left, a group of classical statues with a bar-chart card on the right, edged with the same torn clouds."
+    },
+    "application": {
+      "zh": "想让 B2B 产品首屏有记忆点时，用撕纸拼贴把古典图像和天空组合",
+      "en": "Giving a B2B first screen a memorable image by collaging classical art into sky with torn-paper edges"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 1
+    }
+  },
+  {
+    "id": "x-uisabor-296658-02",
+    "name": "Opero: a lamp post in a blue swirl",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/2",
+    "source": "link-only",
+    "focus": {
+      "zh": "首屏是深蓝和米色的旋涡笔触，正中一盏路灯，右上角一弯月亮，悬浮导航条压在画面顶端 → 客户 logo 做成米色小卡片排在主视觉底边 → 标题“The AI integration layer for modern enterprises.”里“integration”换成衬线体 → 深蓝区块里放一张米色的流程图卡片，带头像光标和“nice flow!”气泡。",
+      "en": "A first screen of dark-blue and cream swirling brushstrokes with a single lamp post in the centre and a crescent moon top right, under a floating nav bar → customer logos as small cream tiles along the bottom edge of the image → the headline “The AI integration layer for modern enterprises.” sets “integration” in a serif → a dark-blue band holding a cream flowchart card with avatar cursors and a “nice flow!” bubble."
+    },
+    "application": {
+      "zh": "用一幅笔触感强的插画给 AI 基础设施产品定下双色调",
+      "en": "Setting a two-colour palette for an AI infrastructure product from one painterly illustration"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 2
+    }
+  },
+  {
+    "id": "x-uisabor-296658-03",
+    "name": "Opero: a workflow editor sunk into a forest",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/3",
+    "source": "link-only",
+    "focus": {
+      "zh": "暮色山林照片做底，衬线标题“Turn complex processes into reliable automations”和 4.8 评分居中 → 工作流编辑器截图立在林中，下半截被前景的粉色树冠吞没，像从森林里长出来 → 黑底上一排企业 logo → “As Automation Grows, Most Tools Become Hard to Trust”引出深色卡片里的流程图。",
+      "en": "A dusk photo of forested hills behind a centred serif headline “Turn complex processes into reliable automations” and a 4.8 rating → a screenshot of the workflow editor stands among the trees, its lower half swallowed by pink-lit canopy in the foreground → a row of enterprise logos on black → “As Automation Grows, Most Tools Become Hard to Trust” leads into a flowchart in a dark card."
+    },
+    "application": {
+      "zh": "让产品截图被风景前景遮住一截，做出纵深而不是平贴",
+      "en": "Letting a landscape foreground overlap the product screenshot for depth instead of a flat paste"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 3
+    }
+  },
+  {
+    "id": "x-uisabor-296658-04",
+    "name": "MeetSense: a dashboard behind green hills",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/4",
+    "source": "link-only",
+    "focus": {
+      "zh": "浅蓝天空和远山下，衬线标题“Record talks. Stay on track.”配黑白两枚按钮 → 会议报告仪表盘从层层草坡后面露出，只看得到上半部分 → 草地上写“Trusted by 100+ companies”和一排白色 logo → 白底上三张人群卡片，中间那张反成黑底并多一行“3,800+ founders”。",
+      "en": "Under a pale sky and distant mountains, the serif headline “Record talks. Stay on track.” with a black and a white button → a meeting-report dashboard rises from behind rolling green hills, only its top half visible → “Trusted by 100+ companies” and white logos laid over the grass → three audience cards on white, the middle one inverted to black with an extra “3,800+ founders” row."
+    },
+    "application": {
+      "zh": "用草坡遮住仪表盘下半部分，把产品图和自然场景接成一张图；三栏卡片用反色突出主推人群",
+      "en": "Hiding a dashboard behind hills to merge product and landscape; inverting one of three cards to push the main audience"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 4
+    }
+  },
+  {
+    "id": "x-uisabor-296658-05",
+    "name": "Orbit CRM: a Roman general in blue halftone",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/5",
+    "source": "link-only",
+    "focus": {
+      "zh": "整屏克莱因蓝单色网点插画：戴月桂冠的统帅背影举手，面对排到地平线的军阵 → 像素等宽字体的大标题“Manage customers and revenue with AI”压在画面左上，按钮是黑白两块直角 → 白底两栏引言后，一排深蓝网点底的卡片，每张中间放一块白色界面（销售助手、权限列表、留存图表）。",
+      "en": "A full-screen single-colour Klein-blue halftone illustration: a laurel-crowned general seen from behind, hand raised before an army that runs to the horizon → a pixel monospace headline “Manage customers and revenue with AI” in the top left, with square black and white buttons → after a two-column intro on white, a row of deep-blue halftone cards, each centring one white interface panel (sales assistant, access list, retention chart)."
+    },
+    "application": {
+      "zh": "用单色网点插画和像素等宽字给 CRM 这类常规 SaaS 换一种复古印刷气质",
+      "en": "Giving routine SaaS such as a CRM a retro print feel with single-colour halftone art and pixel monospace type"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 5
+    }
+  },
+  {
+    "id": "x-uisabor-296658-06",
+    "name": "Opero: a translucent dashboard at dusk",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/6",
+    "source": "link-only",
+    "focus": {
+      "zh": "暮色山脉照片，标题“The AI integration layer for modern enterprises.”后半句转成灰色 → 半透明深色仪表盘（四个指标卡和一条竖线柱状趋势图）压在照片下沿，一路接进纯黑页面 → “Track tokens. Streamline workflows effortlessly.”下面是设备—Logo—云三个方块的连线图 → 四个大数字统计，单位字母（B、M、%）用灰色。",
+      "en": "A dusk mountain photo; in the headline “The AI integration layer for modern enterprises.” the second half turns grey → a translucent dark dashboard (four metric cards and a trend chart of thin bars) sits over the photo’s lower edge and runs on into a pure-black page → under “Track tokens. Streamline workflows effortlessly.” a device–logo–cloud diagram of three connected squares → four large statistics with their units (B, M, %) in grey."
+    },
+    "application": {
+      "zh": "从照片首屏过渡到黑底内容区；用灰色区分标题的主次和数字的单位",
+      "en": "Moving from a photo first screen to a black page; using grey to rank headline phrases and number units"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 6
+    }
+  },
+  {
+    "id": "x-uisabor-296658-07",
+    "name": "Sendoq CRM: orange on cream",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/7",
+    "source": "link-only",
+    "focus": {
+      "zh": "米色页面上嵌一块黑色大圆角首屏，衬线标题“All-in-One CRM for Sales Teams”和橙色胶囊按钮 → 按钮下拉出细线，连到三张扇形展开的米色数据卡（线索仪表、销售管道柱状图、交易列表）→ 米色底上大号 logo 一行 → 黑色分段标签配特性列表，右侧人物照片上叠一张柱状图卡片。",
+      "en": "A large rounded black first screen set into a cream page, with the serif headline “All-in-One CRM for Sales Teams” and an orange pill button → thin lines run from the button to three fanned cream data cards (a leads gauge, a pipeline bar chart, a deals list) → a row of large logos on cream → black segmented tabs with features, and a portrait photo with a bar-chart card laid over it on the right."
+    },
+    "application": {
+      "zh": "用细线把首屏按钮和下方数据卡连起来，引导视线；米、黑、橙三色的克制配色",
+      "en": "Connecting the call to action to the data cards below with thin lines; a restrained cream, black and orange palette"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 7
+    }
+  },
+  {
+    "id": "x-uisabor-296658-08",
+    "name": "finku: money app with people photos",
+    "category": "landing",
+    "tag": "Fintech",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/8",
+    "source": "link-only",
+    "focus": {
+      "zh": "整页套一圈薄荷绿边框，白底上淡淡的同心圆，深绿标题“Manage money with confidence everyday”和深绿描边按钮 → 一行银行 logo → 两张大圆角人物照片并排，照片角上叠余额“$48,250.75”和“Recent Transactions”的绿色卡片 → “Manage Your Money Worldwide”下是一个可加减金额的转账组件。",
+      "en": "The whole page framed in a mint-green border; faint concentric circles on white behind a dark-green headline “Manage money with confidence everyday” and an outlined dark-green button → a row of bank logos → two large rounded people photos side by side, with green cards for a “$48,250.75” balance and “Recent Transactions” laid on their corners → under “Manage Your Money Worldwide”, a transfer widget with plus and minus buttons around the amount."
+    },
+    "application": {
+      "zh": "消费级理财产品用真人照片配数据浮层，比单放界面更有温度",
+      "en": "Consumer finance products pairing real people photos with data overlays, warmer than an interface alone"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 8
+    }
+  },
+  {
+    "id": "x-uisabor-296658-09",
+    "name": "synais: a glowing device in hand",
+    "category": "landing",
+    "tag": "Fintech",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/9",
+    "source": "link-only",
+    "focus": {
+      "zh": "浅灰米底上铺满电路板式细线和小芯片，“Backend by Y Combinator”下标题“Smarter Financial Management”里“Financial”是浅棕色，酒红色按钮 → 一只手从下方举起一块边缘发光的灰绿色小设备，右下两张深棕支出 / 收入卡片 → 深棕区块的大段介绍文字从白色渐变成灰色，句中嵌三枚图标小方块 → 三列大数字统计。",
+      "en": "A light grey-beige ground covered in circuit-board lines and small chips; under “Backend by Y Combinator” the headline “Smarter Financial Management” sets “Financial” in light brown, with a burgundy button → a hand rises from below holding a small sage device with a glowing edge, beside two dark-brown expense and income cards → in a dark-brown band a long statement fades from white to grey, with three icon tiles set inside the sentence → three columns of large statistics."
+    },
+    "application": {
+      "zh": "用一件实体硬件做首屏主角；长段介绍文字由白渐灰，引导阅读重点",
+      "en": "Making a physical device the hero of the first screen; fading a long statement from white to grey to lead the eye"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 9
+    }
+  },
+  {
+    "id": "x-uisabor-296658-10",
+    "name": "Qredible: a workflow editor in a meadow",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/10",
+    "source": "link-only",
+    "focus": {
+      "zh": "饱和蓝底上衬线标题“Automation that adapts to every team”和黑色按钮 → 工作流编辑器截图下半截被粉色草穗的绿色草坡挡住 → 草地上一排白色 logo → 白底“Automation for every department”后，深蓝卡片的底部继续露出同样的草坡，卡片里放图标和流程节点。",
+      "en": "A saturated blue ground with the serif headline “Automation that adapts to every team” and a black button → the lower half of a workflow-editor screenshot hidden by a green slope of pink-tipped grass → white logos across the grass → after “Automation for every department” on white, deep-blue cards whose bottoms show the same grass, holding icons and flow nodes."
+    },
+    "application": {
+      "zh": "把首屏的草坡素材延续到下方卡片，让整页视觉连起来",
+      "en": "Carrying the first screen’s grass into the cards below so the page reads as one picture"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 10
+    }
+  },
+  {
+    "id": "x-uisabor-296658-11",
+    "name": "Fluxyn: sunrise over a sea of clouds",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/11",
+    "source": "link-only",
+    "focus": {
+      "zh": "日出时的云海山脉照片铺满首屏，衬线标题“Say Goodbye to Email Overwhelm”配黑白两枚按钮和一行五星评分 → 照片底部的松林剪影里压一排白色 logo，画面渐暗接入黑底 → “Built-in Intelligence. Designed for Speed.”下是暗色半透明卡片网格，每张一个图表或洞察面板，卡片背后隐约透出山景。",
+      "en": "A sunrise photo of mountains above a sea of clouds fills the first screen, with the serif headline “Say Goodbye to Email Overwhelm”, black and white buttons and a five-star row → white logos over the silhouetted pines at the bottom as the image darkens into black → under “Built-in Intelligence. Designed for Speed.” a grid of dark translucent cards, each with a chart or insight panel and the mountains faintly behind."
+    },
+    "application": {
+      "zh": "风景照首屏渐暗接入暗色功能区，卡片背景透出同一张照片",
+      "en": "Fading a landscape first screen into a dark features section whose cards let the same photo show through"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 11
+    }
+  },
+  {
+    "id": "x-uisabor-296658-12",
+    "name": "Goit: a phone ringed by floating cards",
+    "category": "landing",
+    "tag": "Fintech",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/12",
+    "source": "link-only",
+    "focus": {
+      "zh": "白底，衬线标题“Empowering your financial future”，黑色实心和描边两枚按钮 → 居中一部手机显示余额和两张银行卡，背后是淡灰同心圆，四周浮着可用率柱图、交易卡片和蓝、黄两枚“Smart Asset Allocation”标签（带指针箭头）→ 一行 logo → 左侧标题，右侧超大衬线“92%”配一排头像 → 01 / 02 / 03 编号分栏。",
+      "en": "White ground, the serif headline “Empowering your financial future”, a filled and an outlined button → a phone in the centre showing a balance and two cards, faint grey concentric circles behind it, with an uptime bar chart, a transactions card and blue and yellow “Smart Asset Allocation” tags with pointer arrows floating around → a logo row → a headline on the left and an oversized serif “92%” with avatars on the right → numbered 01 / 02 / 03 columns."
+    },
+    "application": {
+      "zh": "移动 App 落地页的“手机居中 + 浮动卡片”首屏；超大数字配头像做社会证明",
+      "en": "A mobile-app landing pattern of a centred phone with floating cards; an oversized figure with avatars as social proof"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 12
+    }
+  },
+  {
+    "id": "x-uisabor-296658-13",
+    "name": "Metricly: a full dashboard with a warm glow",
+    "category": "landing",
+    "tag": "Analytics",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/13",
+    "source": "link-only",
+    "focus": {
+      "zh": "暖白底，右侧一团橙紫色弥散光晕，顶部融资公告胶囊，无衬线粗体标题“Automate smarter. grow faster. With AI.”和带价格的黑色试用按钮 → 一整块仪表盘做主视觉：侧栏、收入流、三个指标、目标进度、转化率折线和评分小卡，金额数字全用衬线体 → 一行 logo → 黑色标签“The features”引出下一节标题。",
+      "en": "A warm white ground with an orange and violet glow on the right, a funding-news pill at the top, a bold sans headline “Automate smarter. grow faster. With AI.” and a black trial button that states its price → a complete dashboard as the hero: sidebar, revenue stream, three metrics, goal progress, a conversion line chart and a small rating card, with every amount set in a serif → a logo row → a black “The features” tag leading into the next heading."
+    },
+    "application": {
+      "zh": "直接把完整仪表盘当首屏主视觉，用衬线数字给数据界面加一点编辑感",
+      "en": "Using the whole dashboard as the hero, with serif figures giving a data interface an editorial touch"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 13
+    }
+  },
+  {
+    "id": "x-uisabor-296658-14",
+    "name": "fintec: a gold card held up in brown tones",
+    "category": "landing",
+    "tag": "Fintech",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/14",
+    "source": "link-only",
+    "focus": {
+      "zh": "奶白底和淡赭色雾团、两侧点阵，标题“Make Smarter Use Of Your Money”中嵌一枚箭头小开关，后半句浅棕 → 一只手从底部举起一张金色 VISA 卡，手臂穿过一排赭棕色数据卡（交易、收支折线、柱状图、用户分布地图）→ 赭棕色 logo 格栏 → 整块赭棕色区块放一句大号用户引言和翻页按钮。",
+      "en": "A cream ground with soft ochre haze and dot grids on both sides; the headline “Make Smarter Use Of Your Money” has a small arrow toggle set into it and its second half in light brown → a hand rises from the bottom holding a gold VISA card, the arm passing in front of a row of ochre data cards (transactions, an income line chart, a bar chart, a user map) → an ochre grid of logos → a solid ochre band with one large customer quote and paging buttons."
+    },
+    "application": {
+      "zh": "单色系（赭棕）贯穿整页的金融首屏；手持实物卡片做焦点",
+      "en": "A finance page held to one colour family (ochre and brown) throughout, with a hand-held card as the focal point"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 14
+    }
+  },
+  {
+    "id": "x-uisabor-296658-15",
+    "name": "monee: two philosophers and a card",
+    "category": "landing",
+    "tag": "Fintech",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/15",
+    "source": "link-only",
+    "focus": {
+      "zh": "浅灰底上隐约一张由字符点阵组成的世界地图，衬线标题“Build a Smarter Financial Future”，按钮和顶部胶囊用等宽字 → 两尊对坐交谈的古典哲人雕像分居左右，中间悬一张深灰银色的余额卡 → 白底两栏“Manage every payment with ease and confidence” → 同一张卡片叠成一摞，两侧是各国国旗图标。",
+      "en": "A light grey ground with a faint world map made of text characters; the serif headline “Build a Smarter Financial Future”, with buttons and the top pill in monospace → two classical philosopher statues seated in conversation on either side, a dark-grey and silver balance card floating between them → a two-column “Manage every payment with ease and confidence” on white → the same card stacked into a pile, with country-flag icons on either side."
+    },
+    "application": {
+      "zh": "用古典雕像的“对话”构图托住产品；字符点阵地图做低调背景纹理",
+      "en": "Framing the product between classical statues in conversation; a character-grid map as a quiet background texture"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 15
+    }
+  },
+  {
+    "id": "x-uisabor-296658-16",
+    "name": "Opero: split hero over a lavender field",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/16",
+    "source": "link-only",
+    "focus": {
+      "zh": "整页背后是一张薰衣草山坡照片，只在边缘露出 → 首屏是深墨绿圆角大块左右分栏：左边标题“The AI integration layer for modern enterprises.”、淡紫按钮和一张分支连线到等距方块的示意图；右边淡紫色产品界面（侧栏、指标、柱状趋势和工作流表格）压在照片上 → 左侧一句话，右侧 3×3 logo 格 → 居中“Track tokens. streamline workflows effortlessly.”。",
+      "en": "A lavender-hillside photo sits behind the whole page, showing only at its edges → the first screen is a large rounded dark-green block split in two: the headline “The AI integration layer for modern enterprises.”, lilac buttons and a diagram branching to isometric blocks on the left; a lilac product interface (sidebar, metrics, bar trends, a workflow table) laid over the photo on the right → one line of text beside a 3×3 grid of logos → a centred “Track tokens. streamline workflows effortlessly.”"
+    },
+    "application": {
+      "zh": "左文右图的分栏首屏，让产品界面的淡紫色和背景照片的紫色呼应",
+      "en": "A split first screen where the interface’s lilac echoes the purple of the background photo"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 16
+    }
+  },
+  {
+    "id": "x-uisabor-296658-17",
+    "name": "Finance: a card rising between rocks",
+    "category": "landing",
+    "tag": "Fintech",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/17",
+    "source": "link-only",
+    "focus": {
+      "zh": "米白底和淡淡的同心圆，标题“Manage Business Finances with Ease”第二行浅灰，一行灰色 logo → 两块长着青苔的岩石从左右夹进画面，中间一只手捏着金色卡片向上伸出，后面是淡化的财务仪表盘卡片，底部渐隐 → “Why you should choose us”同样上黑下灰 → 三张白色特性卡。",
+      "en": "A cream ground with faint concentric circles; the headline “Manage Business Finances with Ease” with its second line in light grey, and a row of grey logos → two mossy rocks closing in from left and right, a hand between them lifting a gold card, faded finance-dashboard cards behind and a fade at the bottom → “Why you should choose us”, again black over grey → three white feature cards."
+    },
+    "application": {
+      "zh": "用两侧岩石框住中间的手和卡片，形成舞台感；标题上黑下灰的固定写法",
+      "en": "Framing a hand and card between two rocks like a stage; a fixed black-over-grey headline style"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 17
+    }
+  },
+  {
+    "id": "x-uisabor-296658-18",
+    "name": "Veridical: a dashboard between mossy rocks",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/18",
+    "source": "link-only",
+    "focus": {
+      "zh": "米白首屏，标题“AI agents that boost productivity”第二行浅灰，黑色和文字两枚按钮、一行灰色 logo → 分析仪表盘夹在左右两块青苔岩石之间，被岩石挡住两侧 → 白底上一个 logo 节点向下分出三张 agent 项目卡（带进度条和 Active 状态），四周散落“Created 2 research summaries”这类已完成动作的胶囊 → “How veridical agents handle complex tasks”。",
+      "en": "A cream first screen; the headline “AI agents that boost productivity” with its second line in light grey, a black and a text button, a row of grey logos → an analytics dashboard wedged between two mossy rocks that cover its sides → on white, a logo node branching down to three agent project cards (progress bars, Active status), with pills of finished actions such as “Created 2 research summaries” scattered around → “How veridical agents handle complex tasks”."
+    },
+    "application": {
+      "zh": "AI agent 产品用“节点树 + 散落的已完成动作”讲清它替你做了什么",
+      "en": "Showing what an AI agent did for you with a node tree and scattered finished-action pills"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 18
+    }
+  },
+  {
+    "id": "x-uisabor-296658-19",
+    "name": "Calsum: a voice tool among shrubs and stones",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/19",
+    "source": "link-only",
+    "focus": {
+      "zh": "米色底，“Backend by Y Combinator”下衬线标题“The Future of Ai Conversations”，白黑两枚直角按钮，一行灰色 logo → 一张完整的文字转语音工作台（四个用量指标、输入面板、声波输出、最近项目表、模板列表、用量环图），两侧灌木和白色大石从后面探出 → “Why choose Callium for voice agent automation?”下三张对比卡：传统方案、普通 AI、Callium AI。",
+      "en": "A cream ground; under “Backend by Y Combinator” the serif headline “The Future of Ai Conversations”, square white and black buttons, a row of grey logos → a complete text-to-speech workspace (four usage metrics, input panel, waveform output, recent-projects table, templates, usage ring) with shrubs and large white stones peeking out from behind on both sides → under “Why choose Callium for voice agent automation?”, three comparison cards: traditional, conventional AI and Callium AI."
+    },
+    "application": {
+      "zh": "用“传统 / 普通 AI / 我们”三栏卡片讲产品差异；首屏放完整工作台",
+      "en": "Explaining the difference with three cards (traditional, conventional AI, ours); a complete workspace on the first screen"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 19
+    }
+  },
+  {
+    "id": "x-uisabor-296658-20",
+    "name": "Xenora: a workflow canvas under a Greek temple",
+    "category": "landing",
+    "tag": "SaaS",
+    "url": "https://x.com/uisabor/status/2125154776019296658/photo/20",
+    "source": "link-only",
+    "focus": {
+      "zh": "蓝天白云和远处希腊神庙的照片，左对齐无衬线标题“Automation that adapts to every team”，等宽字按钮旁拉出一根细线连到“Across Teams”小标签 → 一整块工作流画布截图（开始、任务、AI 分析节点，右侧配置面板）压在照片下沿 → 白底“Automation for every department”和同样的部门卡片网格。",
+      "en": "A photo of blue sky, clouds and a distant Greek temple; a left-aligned sans headline “Automation that adapts to every team”, and beside the monospace button a thin line runs to a small “Across Teams” tag → a full workflow-canvas screenshot (start, tasks and AI-analysis nodes, a settings panel on the right) laid across the photo’s lower edge → “Automation for every department” on white with a grid of department cards."
+    },
+    "application": {
+      "zh": "左对齐标题配风景照，大幅产品截图压住照片下缘，把首屏和内容区接起来",
+      "en": "A left-aligned headline over a landscape, with a wide product screenshot across the photo’s lower edge joining the first screen to the content"
+    },
+    "publisher": "Saboor (@uisabor)",
+    "kind": "social-post",
+    "designer": "Saboor",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:07:04.015Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125154776019296658",
+      "author": "Saboor",
+      "handle": "uisabor",
+      "date": "2026-11-24",
+      "lang": "en",
+      "text": "20 landing page designs. Which one would you ship?",
+      "hasMedia": true,
+      "photo": 20
+    }
   }
 ];
 

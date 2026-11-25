@@ -24,6 +24,9 @@ test('mapping rules: landing is web, product and flow are interface, a video is 
     for (const tag of ['Animation', 'VFX', 'Craft', 'Generative', 'Live action', 'Humor']) assert.equal(sectionOf({ category: 'practice', tag, kind }), 'videos', tag);
   }
   assert.equal(sectionOf({ category: 'practice', tag: 'Motion' }), 'web');
+  // One picture of a photo post is a still of a page or an interface, so it is filed by its category.
+  assert.equal(sectionOf({ category: 'landing', tag: 'SaaS', kind: 'social-post' }), 'web');
+  assert.equal(sectionOf({ category: 'product', tag: 'SaaS', kind: 'social-post' }), 'interface');
   // Inside a video section the type is the tag; an unknown design tag is a web video.
   for (const [tag, id] of [['Motion', 'motion'], ['Interaction', 'interaction'], ['Branding', 'branding'], ['Brand', 'branding'], ['Web', 'web'], ['Illustration', 'illustration'], ['Poster', 'posters'], ['Print', 'print'], ['Anything else', 'web'],
     ['Animation', 'animation'], ['VFX', 'vfx'], ['Craft', 'craft'], ['Generative', 'generative'], ['Live action', 'live-action'], ['Humor', 'humor']]) assert.equal(videoTypeOf({ tag }), id, tag);

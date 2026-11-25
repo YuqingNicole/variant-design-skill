@@ -35,11 +35,12 @@ export const sections: Section[] = [
 ];
 
 // `landing` is a website; `product` and `flow` are interface work; a social post or a YouTube video is a video, creative when
-// its tag is a creative type and design work otherwise. Inside a video section the type is the tag.
+// its tag is a creative type and design work otherwise. Inside a video section the type is the tag. A social post filed as
+// `landing`, `product` or `flow` is a still of that work (one picture of a photo post), so it follows its category instead.
 const designByTag: Record<string, string> = { motion: 'motion', interaction: 'interaction', branding: 'branding', brand: 'branding', illustration: 'illustration', poster: 'posters', posters: 'posters', print: 'print' };
 const creativeByTag: Record<string, string> = { animation: 'animation', vfx: 'vfx', craft: 'craft', generative: 'generative', 'live action': 'live-action', humor: 'humor' };
 export function sectionOf(item: { category: string; tag: string; kind?: string }): string {
-  if (item.kind === 'social-post' || item.kind === 'youtube-video') return creativeByTag[item.tag.toLowerCase()] ? 'videos' : 'design-motion';
+  if ((item.kind === 'social-post' && item.category === 'practice') || item.kind === 'youtube-video') return creativeByTag[item.tag.toLowerCase()] ? 'videos' : 'design-motion';
   if (item.category === 'product' || item.category === 'flow') return 'interface';
   return 'web';
 }

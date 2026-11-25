@@ -11,7 +11,7 @@ const template = '<!doctype html><html><head>\n<meta name="description" content=
 const dark = collections.find(c => c.slug === 'dark-websites');
 const facet = (status, over = {}) => ({ status, ...(status === 'reviewed' ? { reviewedAt: '2026-11-21', reviewedBy: 'agent' } : {}), industry: null, medium: 'website', pageTypes: [], patterns: [], components: [], techniques: [], styles: ['dark'], ...over });
 const facets = n => Object.fromEntries([...Array(8)].map((_, i) => [`r${i}`, facet(i < n ? 'reviewed' : 'draft', i === 7 ? { medium: 'poster' } : {})]));
-const ids = [...Array(8)].map((_, i) => `r${i}`), rows = ids.map((id, i) => ({ id, category: 'landing', tag: 'SaaS', kind: i === 6 ? 'social-post' : 'official-site' }));
+const ids = [...Array(8)].map((_, i) => `r${i}`), rows = ids.map((id, i) => (i === 6 ? { id, category: 'practice', tag: 'Motion', kind: 'social-post' } : { id, category: 'landing', tag: 'SaaS', kind: 'official-site' }));
 
 test('unreviewed English collection pages are listed as drafts for production', async () => {
   const { englishDraftRoutes } = await importTs(path.join(here, '../src/collections.ts'));

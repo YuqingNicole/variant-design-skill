@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Reads the video address, poster and author avatar of each X post entry from the endpoint X's own embed widget
-// uses (cdn.syndication.twimg.com). The maintainer chose this on 2026-11-01 over the paid X API; it is
+// uses (cdn.syndication.twimg.com). An entry that stands for one picture of a photo post (`post.photo`, X's 1-based
+// /photo/N index) gets that picture as its poster and no video. The maintainer chose this on 2026-11-01 over the paid X API; it is
 // undocumented and may stop working, in which case cards fall back to the poster or the stored text.
 // Nothing is downloaded: the page streams the video from video.twimg.com.
 // Usage: node website/scripts/x-media.mjs [--refresh]   (adds records for new posts to src/x-media.json; --refresh re-reads every post)
@@ -21,17 +22,27 @@ export function pickMedia(json, maxHeight = 720) {
   return { video: video.url, poster: media.media_url_https, width, height: h, avatar: json.user?.profile_image_url_https?.replace('_normal.', '_bigger.') ?? null };
 }
 
+// One picture of a photo post, as a poster-only record; null when the post has no picture at that index.
+export function pickPhoto(json, photo) {
+  const media = (json.mediaDetails ?? []).filter(m => m.type === 'photo')[photo - 1];
+  if (!media?.media_url_https?.startsWith('https://pbs.twimg.com/')) return null;
+  const { width, height } = media.original_info ?? {};
+  return { poster: media.media_url_https, width, height, avatar: json.user?.profile_image_url_https?.replace('_normal.', '_bigger.') ?? null };
+}
+
 // Only posts with no stored record are fetched, so a run adds records and never rewrites the ones already there (the poster and
 // video addresses X returns change between calls). `refresh` re-reads every post, keeping the stored record when X gives none.
 export async function collect({ posts, stored = {}, refresh = false, today = new Date().toISOString().slice(0, 10), fetchJson, log = () => {} }) {
-  const out = { ...stored }, added = [];
+  const out = { ...stored }, added = [], answers = new Map();
+  // Every picture of a photo post is its own entry; the post is asked for once per run.
+  const answer = id => { if (!answers.has(id)) answers.set(id, fetchJson(id).then(async res => ({ status: res.status, json: res.ok ? await res.json() : null }))); return answers.get(id); };
   for (const { id, post } of posts) {
     if (stored[id] && !refresh) continue;
     try {
-      const res = await fetchJson(post.id);
-      const media = res.ok ? pickMedia(await res.json()) : null;
+      const { status, json } = await answer(post.id);
+      const media = json && (post.photo ? pickPhoto(json, post.photo) : pickMedia(json));
       if (media) { out[id] = { ...media, fetchedAt: today }; added.push(id); }
-      log(`${media ? 'ok  ' : 'none'} ${id}${res.ok ? '' : ` (${res.status})`}`);
+      log(`${media ? 'ok  ' : 'none'} ${id}${json ? '' : ` (${status})`}`);
     } catch (e) { log(`fail ${id} (${e.message})`); }
   }
   return { out, added };

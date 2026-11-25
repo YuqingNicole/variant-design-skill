@@ -4,8 +4,10 @@ import { proxied } from './image-proxy';
 // hands each card its record) and played
 // muted on a loop while on screen. Nothing is hosted here; if X refuses or the file is gone, the poster stays,
 // and if the poster cannot load either the caller's fallback replaces the card. The poster is tried through the
-// image service first (reachable where pbs.twimg.com is not), then from X directly.
-export type XMedia={video:string;poster:string;width:number;height:number;avatar:string|null;fetchedAt:string};
+// image service first (reachable where pbs.twimg.com is not), then from X directly. A record without `video` is one picture of a
+// photo post (scripts/x-media.mjs): it shows as that picture, through the same poster sources, with no player. In the feed the
+// picture is lazy, so React does not add a head preload for every card (landing test 'does not preload every avatar').
+export type XMedia={video?:string;poster:string;width:number;height:number;avatar:string|null;fetchedAt:string};
 export type VideoMedia=Pick<XMedia,'video'|'poster'|'width'|'height'>;
 // Feed cards are about 300px wide, so X's small size (680px) is enough even at 2x; as WebP it is about a third of the original JPEG.
 // Only X's own image host understands the size and format parameters; any other poster address is used as it is.
@@ -26,10 +28,10 @@ export function XVideo({media,fallback,controls=false}:{media:VideoMedia;fallbac
   if(typeof IntersectionObserver==='undefined')return;
   const motion=matchMedia('(prefers-reduced-motion: reduce)');let visible=false;
   // Reduced motion stops automatic playback only: with controls the file is still attached, so the visitor can press play.
-  if(controls&&motion.matches)v.src=media.video;
+  if(controls&&motion.matches)v.src=media.video!;
   // Under reduced motion a video with controls is the visitor's to start and stop; the observers leave it alone.
   const play=()=>{if(controls&&motion.matches)return;if(visible&&!motion.matches&&!document.hidden&&v.getAttribute('src'))v.play().catch(()=>{});else v.pause()};
-  const attach=()=>{if(!motion.matches&&!v.getAttribute('src'))v.src=media.video;play()};
+  const attach=()=>{if(!motion.matches&&!v.getAttribute('src'))v.src=media.video!;play()};
   const near=new IntersectionObserver(([e])=>{if(e.isIntersecting&&!motion.matches)attach()},{rootMargin:'600px 0px'});near.observe(v);
   const io=new IntersectionObserver(([e])=>{visible=e.isIntersecting&&e.intersectionRatio>=.25;if(visible)attach();else play()},{threshold:[0,.25]});io.observe(v);
   const preference=()=>{if(motion.matches){v.pause();if(!controls){v.removeAttribute('src');v.load()}}else{near.unobserve(v);near.observe(v);if(visible)attach()}};
@@ -40,5 +42,5 @@ export function XVideo({media,fallback,controls=false}:{media:VideoMedia;fallbac
  // size once the file attaches and push everything below it (CLS). --ar carries the stored proportions, and it is in the
  // prerendered HTML; styles that size the element read it (the feed's masonry covers, the detail player).
  const ratio={'--ar':`${media.width}/${media.height}`} as CSSProperties;
- return failed?<img className="insp-vcard-media" style={ratio} src={poster} width={media.width} height={media.height} alt="" referrerPolicy="no-referrer" onError={next}/>
+ return failed||!media.video?<img className="insp-vcard-media" style={ratio} src={poster} width={media.width} height={media.height} alt="" loading={controls?undefined:'lazy'} decoding="async" referrerPolicy="no-referrer" onError={next}/>
   :<video ref={ref} className="insp-vcard-media" style={ratio} poster={poster} width={media.width} height={media.height} muted loop playsInline controls={controls} preload="metadata" onError={()=>setFailed(true)}/>}

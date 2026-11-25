@@ -91,8 +91,9 @@ test('motion preference changes stop video downloads and playback; offscreen vid
  await page.emulateMedia({reducedMotion:'reduce'});await page.addInitScript(()=>{window.transitionCalls=0;const start=document.startViewTransition?.bind(document);if(start)document.startViewTransition=update=>{window.transitionCalls++;return start(update)}});
  await page.goto('/zh');const first=page.locator('.insp-feed video').first();await expect(first).toBeAttached();await expect(first).not.toHaveAttribute('src');
  await page.locator('.insp-card-open').first().click();await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).not.toBeVisible();expect(await page.evaluate(()=>window.transitionCalls)).toBe(0);
- await page.emulateMedia({reducedMotion:'no-preference'});await expect.poll(()=>first.evaluate(v=>!v.paused&&v.currentTime>0)).toBe(true);
- await page.locator('.insp-feed .insp-card').nth(20).scrollIntoViewIfNeeded();await expect.poll(()=>first.evaluate(v=>v.paused)).toBe(true);
+ // The newest cards may be pictures (photo posts), so the first video is not always on the first screen: bring it in, then scroll past it.
+ await page.emulateMedia({reducedMotion:'no-preference'});await first.scrollIntoViewIfNeeded();await expect.poll(()=>first.evaluate(v=>!v.paused&&v.currentTime>0)).toBe(true);
+ await first.evaluate(v=>scrollBy(0,v.getBoundingClientRect().bottom+200));await expect.poll(()=>first.evaluate(v=>v.paused)).toBe(true);
  await first.scrollIntoViewIfNeeded();await expect.poll(()=>first.evaluate(v=>!v.paused)).toBe(true);
  await page.emulateMedia({reducedMotion:'reduce'});await expect(first).not.toHaveAttribute('src');await expect.poll(()=>first.evaluate(v=>v.paused)).toBe(true);
 });

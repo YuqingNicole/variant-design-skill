@@ -23,8 +23,13 @@ test('every external reference records provenance; unknown designers stay null',
 test('best-practice entries and other X links carry the oEmbed fields their card renders', () => {
   for (const i of items.filter(i => (i.category === 'practice' && i.kind !== 'youtube-video') || i.post || i.kind === 'social-post')) {
     assert.ok(i.post, i.id); assert.equal(i.kind, 'social-post', i.id); assert.equal(i.source, 'link-only', i.id);
-    const m = /^https:\/\/x\.com\/([A-Za-z0-9_]+)\/status\/(\d+)$/.exec(i.url); assert.ok(m, i.id);
+    const m = /^https:\/\/x\.com\/([A-Za-z0-9_]+)\/status\/(\d+)(?:\/photo\/(\d+))?$/.exec(i.url); assert.ok(m, i.id);
     assert.equal(i.post.handle, m[1], i.id); assert.equal(i.post.id, m[2], i.id);
+    // One picture of a photo post: the link opens that picture on X, and the entry is filed as the page or interface it shows.
+    if (m[3] || 'photo' in i.post) {
+      assert.ok(Number.isInteger(i.post.photo) && i.post.photo >= 1, i.id); assert.equal(m[3], String(i.post.photo), i.id); assert.ok(i.post.hasMedia, i.id);
+      assert.ok(['landing', 'product', 'flow'].includes(i.category), i.id); assert.equal(i.id, `x-${i.post.handle.toLowerCase()}-${i.post.id.slice(-6)}-${String(i.post.photo).padStart(2, '0')}`, i.id);
+    } else assert.equal(i.category, 'practice', i.id);
     // A media-only post has no text; it must then carry media and the no-linguistic-content language tag.
     assert.ok(i.post.author.trim() && typeof i.post.text === 'string' && typeof i.post.hasMedia === 'boolean', i.id);
     if (!i.post.text.trim()) { assert.ok(i.post.hasMedia, i.id); assert.equal(i.post.lang, 'zxx', i.id); }

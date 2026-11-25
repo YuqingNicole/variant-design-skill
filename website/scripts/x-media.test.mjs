@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { pickMedia, syndicationToken, collect } from './x-media.mjs';
+import { pickMedia, pickPhoto, syndicationToken, collect } from './x-media.mjs';
 
 const v = (w, h, bitrate) => ({ content_type: 'video/mp4', bitrate, url: `https://video.twimg.com/amplify_video/1/vid/avc1/${w}x${h}/a.mp4` });
 
@@ -23,11 +23,30 @@ test('stored media belongs to X post entries and streams from X', () => {
   const from = source.indexOf('[', source.indexOf('export const inspirationItems = '));
   const items = new Map(JSON.parse(source.slice(from, source.indexOf('\n];', from) + 2)).map(i => [i.id, i]));
   for (const [id, m] of Object.entries(JSON.parse(fs.readFileSync(new URL('../src/x-media.json', import.meta.url), 'utf8')))) {
-    assert.ok(items.get(id)?.post, id);
+    const post = items.get(id)?.post; assert.ok(post, id);
+    // A picture of a photo post has only its poster; every other record streams a video.
+    if (post.photo) { assert.equal(m.video, undefined, id); assert.match(m.poster, /^https:\/\/pbs\.twimg\.com\/media\//, id); assert.ok(m.width > 0 && m.height > 0, id); continue; }
     assert.match(m.video, /^https:\/\/video\.twimg\.com\/[^?]+\.mp4(\?tag=\d+)?$/, id);
     assert.match(m.poster, /^https:\/\/pbs\.twimg\.com\//, id);
     assert.ok(m.width > 0 && m.height > 0, id);
   }
+});
+
+test('a photo post yields the picture at its 1-based index as a poster without video, and nothing past the last one', () => {
+  const photo = (n, w) => ({ type: 'photo', media_url_https: `https://pbs.twimg.com/media/${n}.jpg`, original_info: { width: w, height: 4096 } });
+  const json = { user: { profile_image_url_https: 'https://pbs.twimg.com/profile_images/1/a_normal.jpg' }, mediaDetails: [photo('a', 3033), photo('b', 1941)] };
+  assert.deepEqual(pickPhoto(json, 2), { poster: 'https://pbs.twimg.com/media/b.jpg', width: 1941, height: 4096, avatar: 'https://pbs.twimg.com/profile_images/1/a_bigger.jpg' });
+  assert.equal(pickPhoto(json, 3), null);
+  assert.equal(pickMedia(json), null);
+});
+
+test('the pictures of one photo post become separate records from a single request', async () => {
+  const asked = [];
+  const json = { mediaDetails: [1, 2].map(n => ({ type: 'photo', media_url_https: `https://pbs.twimg.com/media/${n}.jpg`, original_info: { width: 3, height: 4 } })) };
+  const posts = [1, 2, 3].map(n => ({ id: `p-${n}`, post: { id: '9', photo: n } }));
+  const { out, added } = await collect({ posts, today: '2026-11-25', fetchJson: async id => { asked.push(id); return { ok: true, json: async () => json }; } });
+  assert.deepEqual(asked, ['9']); assert.deepEqual(added, ['p-1', 'p-2']);
+  assert.equal(out['p-2'].poster, 'https://pbs.twimg.com/media/2.jpg'); assert.equal(out['p-2'].video, undefined);
 });
 
 const answer = poster => ({ ok: true, json: async () => ({ mediaDetails: [{ type: 'video', media_url_https: poster, video_info: { variants: [v(1152, 720, 1)] } }] }) });

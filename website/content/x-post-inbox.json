@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-25T01:39:19.239Z",
+  "updatedAt": "2026-11-25T09:07:04.015Z",
   "source": "Ego Lite on X search",
   "reviewPolicy": "Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request that merges itself once CI passes; nobody reviews entries one by one.",
   "candidates": [
@@ -2916,6 +2916,19 @@
       "query": "maintainer link (2026-11-25)",
       "status": "published",
       "entry": "x-chetaslua-275008",
+      "reviewedAt": "2026-11-25"
+    },
+    {
+      "id": "2125154776019296658",
+      "url": "https://x.com/uisabor/status/2125154776019296658",
+      "handle": "uisabor",
+      "author": "Saboor",
+      "publishedAt": "2026-11-24",
+      "likes": 1441,
+      "capturedAt": "2026-11-25T09:07:04.015Z",
+      "query": "maintainer link (2026-11-25)",
+      "status": "published",
+      "entry": "x-uisabor-296658-01",
       "reviewedAt": "2026-11-25"
     }
   ]
