@@ -13,15 +13,15 @@ html:has(:is(.content-page,.pricing-page,.paper-home)) body{background:transpare
 :is(.content-page,.pricing-page,.paper-home) .site-brandmark{width:28px;height:28px}
 :is(.content-page,.pricing-page,.paper-home) .site-nav-links{gap:32px;font-size:16px}
 :is(.content-page,.pricing-page,.paper-home) .site-nav-links a{color:var(--site-muted);transition:color var(--dur-fast) var(--ease-out)}
-:is(.content-page,.pricing-page,.paper-home) .site-nav-links a:hover{color:var(--site-ink)}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){:is(.content-page,.pricing-page,.paper-home) .site-nav-links a:hover{color:var(--site-ink)}}
 :is(.content-page,.pricing-page,.paper-home) .site-nav-links a[aria-current=page]{color:var(--site-ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:8px}
 @media(min-width:651px){:is(.content-page,.pricing-page,.paper-home) .site-wordmark{font-family:var(--font-display);font-size:24px;font-weight:400;letter-spacing:-.01em}}
 :is(.content-page,.pricing-page,.paper-home) .site-nav-end{display:flex;align-items:center;gap:8px}
 /* Connect and the language switch are text; Sign in is the single outlined pill. Without accounts, Connect takes the outline. */
 html body :is(.content-page,.pricing-page,.paper-home) .site-nav-end :is(.site-connect,.site-language){min-height:44px;padding:0 12px;border:0;border-radius:999px;background:none;color:var(--site-ink);font-size:16px}
-html body :is(.content-page,.pricing-page,.paper-home) .site-nav-end :is(.site-connect,.site-language):hover{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
-html body :is(.content-page,.pricing-page,.paper-home) .site-nav-end :is(.site-account,.site-connect:not(:has(~.site-account))){padding:0 22px;border:1.5px solid var(--site-ink);font-weight:500;text-decoration:none;transition:background-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
-html body :is(.content-page,.pricing-page,.paper-home) .site-nav-end :is(.site-account,.site-connect:not(:has(~.site-account))):hover{background:var(--site-ink);color:var(--site-paper);text-decoration:none}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){html body :is(.content-page,.pricing-page,.paper-home) .site-nav-end :is(.site-connect,.site-language):hover{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}}
+html body :is(.content-page,.pricing-page,.paper-home) .site-nav-end :is(.site-account,.site-connect:not(:has(~:is(.site-account,.site-account-menu)))){padding:0 22px;border:1.5px solid var(--site-ink);font-weight:500;text-decoration:none;transition:background-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){html body :is(.content-page,.pricing-page,.paper-home) .site-nav-end :is(.site-account,.site-connect:not(:has(~:is(.site-account,.site-account-menu)))):hover{background:var(--site-ink);color:var(--site-paper);text-decoration:none}}
 
 /* Headings: the thin serif (200) with sentence-level emphasis; Chinese takes the system face's thin weight the same way. */
 :is(.content-page,.pricing-page,.paper-home) :is(h1,h2){text-wrap:balance;font-synthesis:none}
@@ -31,7 +31,7 @@ html body :is(.content-page,.pricing-page,.paper-home) .site-nav-end :is(.site-a
    weight beats the 3-class shared finish in site-system.css and the pages' own button colours. */
 html body :is(.content-page,.pricing-page,.paper-home) :is(.content-button,.paper-button,.site-footer-action,.home-action-primary,.pricing-button),html body :is(.content-page,.pricing-page,.paper-home) .pricing-card.is-accent .pricing-button{
  display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:44px;padding:0 22px;border:1.5px solid var(--site-ink);border-radius:999px;background:transparent;color:var(--site-ink)!important;font-size:16px;font-weight:500;box-shadow:none;transform:none;transition:background-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
-html body :is(.content-page,.pricing-page,.paper-home) :is(.content-button,.paper-button,.site-footer-action,.home-action-primary,.pricing-button):is(:hover,:active),html body :is(.content-page,.pricing-page,.paper-home) .pricing-card.is-accent .pricing-button:is(:hover,:active){background:var(--site-ink);color:var(--site-paper)!important;box-shadow:none;transform:none}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){html body :is(.content-page,.pricing-page,.paper-home) :is(.content-button,.paper-button,.site-footer-action,.home-action-primary,.pricing-button):is(:hover,:active),html body :is(.content-page,.pricing-page,.paper-home) .pricing-card.is-accent .pricing-button:is(:hover,:active){background:var(--site-ink);color:var(--site-paper)!important;box-shadow:none;transform:none}}
 
 /* Footer: a hairline and air instead of a tinted band. */
 :is(.content-page,.pricing-page,.paper-home) .site-footer-cta{background:none;border-block:0;border-top:1px solid var(--site-line)}
@@ -70,7 +70,7 @@ html body :is(.content-page,.pricing-page,.paper-home) :is(.content-button,.pape
 .content-page select{appearance:none;-webkit-appearance:none;cursor:pointer;color:var(--site-ink);
  background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%235a5852' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 1.75 6 6.25l4.5-4.5'/%3E%3C/svg%3E") no-repeat right 14px center/12px 8px;
  border:1px solid var(--site-line);padding-right:40px;transition:border-color var(--dur-fast) var(--ease-out)}
-.content-page select:hover{border-color:var(--site-ink)}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.content-page select:hover{border-color:var(--site-ink)}}
 .content-page .submission-fields select{min-height:48px;padding-inline:var(--space-3) 40px;border-radius:var(--radius-control)}
 .content-page .insp-bar select{padding-inline:var(--space-4) 36px;background-position:right 13px center}
 @supports (appearance:base-select){
@@ -81,7 +81,7 @@ html body :is(.content-page,.pricing-page,.paper-home) :is(.content-button,.pape
  .content-page .submission-fields select{padding-inline:var(--space-3)}
  .content-page select::picker(select){margin-top:6px;padding:6px;border:1px solid var(--site-line);border-radius:6px;background:var(--site-paper)}
  .content-page select option{padding:8px 12px;border-radius:4px;color:var(--site-ink)}
- .content-page select option:hover{background:var(--site-surface)}
+ @media(hover:hover) and (prefers-reduced-motion:no-preference){.content-page select option:hover{background:var(--site-surface)}}
  .content-page select option:checked{background:var(--site-surface);font-weight:500}
  .content-page select option::checkmark{display:none}
 }

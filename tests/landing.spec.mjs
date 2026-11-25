@@ -1339,7 +1339,7 @@ test('every page sits on one sheet of paper: no sky, no frosted panel, no pointe
    await page.goto(route);await hydrated(page);
    const look=await page.evaluate(()=>{const html=getComputedStyle(document.documentElement),main=getComputedStyle(document.querySelector('.content-page,.pricing-page,.paper-home'));
     return {image:html.backgroundImage,html:html.backgroundColor,page:main.backgroundColor,blur:main.backdropFilter,shadow:main.boxShadow,radius:main.borderTopLeftRadius,light:document.querySelectorAll('.site-spotlight').length,
-     outlined:[...document.querySelectorAll('.site-nav-end > *')].filter(e=>getComputedStyle(e).borderTopStyle!=='none'&&parseFloat(getComputedStyle(e).borderTopWidth)>0).length}});
+     outlined:[...document.querySelectorAll('.site-nav-end :is(a,button)')].filter(e=>getComputedStyle(e).borderTopStyle!=='none'&&parseFloat(getComputedStyle(e).borderTopWidth)>0).length}});
    const paper=scheme==='dark'?'rgb(20, 21, 24)':'rgb(246, 243, 236)';
    expect(look,`${scheme} ${route}`).toEqual({image:'none',html:paper,page:paper,blur:'none',shadow:'none',radius:'0px',light:0,outlined:1});
   }

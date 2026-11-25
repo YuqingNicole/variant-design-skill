@@ -81,16 +81,16 @@
 /* Paper pass (2026-11-25, docs/design-system.md §12): reading pages breathe. Section titles take the thin serif at the 48px tier
    with about 120px of paper before each; body copy is 16px within 68ch; the contents stay in the left column. Cards on paper lose
    their frames and become hairline-topped entries. `html body` outweighs the per-page size rules above without rewriting them. */
-html body .content-page .content-reading>*{max-width:68ch}
+html body .content-page:not(.changelog-page) .content-reading>*{max-width:68ch}
 html body .content-page .content-reading h2{font-size:48px;font-weight:200;line-height:1.1;letter-spacing:-.015em;margin:120px 0 32px}
 html body .content-page .content-reading :is(p,li){font-size:16px;line-height:1.8}
 html body .content-page .docs-layout{grid-template-columns:220px minmax(0,1fr);gap:96px}
 html body .content-page .docs-layout>aside{top:32px;gap:14px;padding-top:24px}
 html body .content-page .docs-layout>aside a{font-size:13px;line-height:1.5;transition:color var(--dur-fast) var(--ease-out)}
-html body .content-page .docs-layout>aside a:hover{color:var(--site-ink)}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){html body .content-page .docs-layout>aside a:hover{color:var(--site-ink)}}
 html body .content-page .docs-layout section{margin-bottom:0}
 html body .content-page .docs-layout section:first-child>h2,html body .content-page .content-reading>h2:first-child{margin-top:0}
-html body .content-page .docs-layout h3{font-size:24px;font-weight:400;margin:48px 0 12px}
+html body .content-page:not(.changelog-page) .docs-layout h3{font-size:24px;font-weight:400;margin:48px 0 12px}
 html body .content-page .guide-hero h1{font-size:48px;line-height:1.08}
 .guide-code{background:var(--site-surface);border-radius:6px}
 .guide-list{gap:0;padding-block:0 120px}
@@ -103,7 +103,7 @@ html body .content-page .docs-hub{gap:0 64px}
 html body .content-page .docs-hub article{padding:32px 0;border:0;border-top:1px solid var(--site-line);border-radius:0;background:none}
 html body .content-page .docs-hub article h2{font-size:24px;font-weight:400}
 html body .content-page .docs-hub .docs-start{padding:32px;border:0;border-radius:6px;background:var(--site-surface)}
-@media(hover:hover){html body .content-page .docs-hub :is(.docs-card,.docs-answers,.docs-changelog):hover{background:none;border-color:var(--site-ink)}}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){html body .content-page .docs-hub :is(.docs-card,.docs-answers,.docs-changelog):hover{background:none;border-color:var(--site-ink)}}
 /* Filters and tabs on inner pages: outlined pills; the pressed one takes an ink outline instead of a fill. */
 html body .content-page :is(.content-filters,.content-directions,.docs-tabs) button,html body .content-page .content-filters a{border:1.5px solid var(--site-line);border-radius:999px;background:none;color:var(--site-muted)}
 html body .content-page :is(.content-filters,.content-directions,.docs-tabs) button[aria-pressed=true],html body .content-page .content-filters a[aria-current]{border-color:var(--site-ink);background:none;color:var(--site-ink)}
