@@ -8974,6 +8974,134 @@ export const inspirationItems = [
       "hasMedia": true,
       "photo": 20
     }
+  },
+  {
+    "id": "x-bitzelyt-161077",
+    "name": "Blocky purple rabbit animatronic in a voxel world",
+    "category": "practice",
+    "tag": "Animation",
+    "url": "https://x.com/BitzelYT/status/2124662515611161077",
+    "source": "link-only",
+    "focus": {
+      "zh": "Bitzel 为 Jude 的新视频制作的 3D 动画镜头：一个方块风格的紫色兔子玩偶在室内探头、凑到镜头前，又在阳光草地上做着夸张的表情和动作；低多边形的方块角色配上柔和的光影和电影式运镜，作者称耗时 113 小时完成。",
+      "en": "Shots Bitzel animated for Jude's new video: a blocky purple rabbit animatronic peers over a counter indoors, then mugs and gestures right up to the camera on a sunny grassy field. Simple voxel characters get soft lighting and cinematic camera moves, and the author says the shots took 113 hours."
+    },
+    "application": {
+      "zh": "用电影级光影和运镜演绎方块角色",
+      "en": "Cinematic lighting and camera moves for blocky voxel characters"
+    },
+    "publisher": "Bitzel (@BitzelYT)",
+    "kind": "social-post",
+    "designer": "Bitzel",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:56:47.815Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2124662515611161077",
+      "author": "Bitzel",
+      "handle": "BitzelYT",
+      "date": "2026-11-23",
+      "lang": "en",
+      "text": "shots i animated for jude's new video\n113 hours of work, some of my best  So Yeah,",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-spicklenuts-478917",
+    "name": "Friend group animated into a show intro",
+    "category": "practice",
+    "tag": "Animation",
+    "url": "https://x.com/SPicklenuts/status/2123513509455478917",
+    "source": "link-only",
+    "focus": {
+      "zh": "作者把自己的朋友们画成粗线条的2D卡通角色，放进真实照片背景里：便利店门口、电梯里、夕阳下的公寓阳台站满了人，最后一个角色坐在屋顶喝饮料，画面打出\"DEAD SEASON\"字样，像一部动画剧集的片头，既有氛围感又很有私人趣味。",
+      "en": "The author draws their friends as bold-outlined 2D cartoon characters over real photo backgrounds: a convenience store at night, an elevator, a sunset apartment block with friends on every balcony. It ends with one character sipping a drink on a rooftop under a \"DEAD SEASON\" title, like the opening of an animated series, moody and personal at once."
+    },
+    "application": {
+      "zh": "把手绘角色叠在真实照片场景上，做成私人剧集片头",
+      "en": "Hand-drawn characters over real photo backdrops, framed as a personal series intro"
+    },
+    "publisher": "SPickleNuts_ (@SPicklenuts)",
+    "kind": "social-post",
+    "designer": "SPickleNuts_",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:56:47.815Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2123513509455478917",
+      "author": "SPickleNuts_",
+      "handle": "SPicklenuts",
+      "date": "2026-11-19",
+      "lang": "en",
+      "text": "I animated my friend group into a small little intro! #animation",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-toomuchliving-827214",
+    "name": "Beaver Moon Mixed-Media Stop Motion",
+    "category": "practice",
+    "tag": "Craft",
+    "url": "https://x.com/toomuchliving/status/2125402094173827214",
+    "source": "link-only",
+    "focus": {
+      "zh": "Mia 把 50 张十一月海狸满月的照片打印出来，叠在星空纸上逐张翻拍；旁边的手账拼贴里有剪贴的森林、星空和两只手绘海狸，把一次真实的赏月观测做成了温暖的手工定格动画。",
+      "en": "Mia printed 50 photos of November's full beaver moon and shot them one by one as a stack on starry paper, next to a sketchbook collage of cut-out forest, night sky and two hand-drawn beavers, turning a real moon-watching session into a cosy handmade stop-motion."
+    },
+    "application": {
+      "zh": "用一叠打印照片做定格动画的帧",
+      "en": "Using a stack of printed photos as stop-motion frames"
+    },
+    "publisher": "Mia (@toomuchliving)",
+    "kind": "social-post",
+    "designer": "Mia",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:56:47.815Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125402094173827214",
+      "author": "Mia",
+      "handle": "toomuchliving",
+      "date": "2026-11-25",
+      "lang": "en",
+      "text": "Mixed media stop motion I made using 50 pics of Novembers full beaver moon 🔭🦫",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-zhuwei030430-156163",
+    "name": "Handmade fursuit debut with a golden retriever",
+    "category": "practice",
+    "tag": "Craft",
+    "url": "https://x.com/zhuwei030430/status/2125384575950156163",
+    "source": "link-only",
+    "focus": {
+      "zh": "烛尾展示自己亲手做完的灰蓝色兽装：大眼睛、蓝色肉垫爪子、毛茸茸的耳朵，穿着水墨纹斗篷挥手亮相，一只金毛犬不停扑上来抢戏，手工角色和真狗同框，又可爱又好笑。",
+      "en": "Maker 烛尾 shows off a finished handmade grey-and-blue fursuit with big glossy eyes, blue paw-pad gloves and fluffy ears, waving in an ink-print poncho while a golden retriever keeps jumping up to steal the scene. The handmade character next to a real dog is both cute and funny."
+    },
+    "application": {
+      "zh": "让真实动物和手工角色同框互动",
+      "en": "Put a handmade character in the same shot as a real animal"
+    },
+    "publisher": "烛尾zhuwei (@zhuwei030430)",
+    "kind": "social-post",
+    "designer": "烛尾zhuwei",
+    "checkedAt": "2026-11-25",
+    "addedAt": "2026-11-25T09:56:47.815Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125384575950156163",
+      "author": "烛尾zhuwei",
+      "handle": "zhuwei030430",
+      "date": "2026-11-25",
+      "lang": "en",
+      "text": "Finished!💙🩶 It’s me～#fursuit #fursuitmaker #kemono #handmade",
+      "hasMedia": true
+    }
   }
 ];
 
