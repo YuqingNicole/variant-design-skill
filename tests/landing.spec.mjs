@@ -216,7 +216,7 @@ test('expressive homepage gallery opens distinct complete directions with workin
  const homeFont=await page.locator('h1').evaluate(el=>getComputedStyle(el).fontFamily);
  await page.locator('.site-footer a[href="/zh/pricing"]').click();
  await expect(page.locator('h1')).toHaveCSS('font-family',homeFont);
- await expect(page.locator('.pricing-page')).toHaveCSS('background-color','rgba(247, 250, 254, 0.64)');
+ await expect(page.locator('.pricing-page')).toHaveCSS('background-color','rgb(246, 243, 236)');
  await expect(page.locator('.pricing-card header b')).toHaveText(['计划中','计划中']);
  await expect(page.locator('.pricing-hero-aside')).toContainText('尚未开放购买、开通或生成额度');
  await expect(page.locator('.pricing-card').nth(1)).toContainText('报价草案');
@@ -238,7 +238,7 @@ test('expressive homepage gallery opens distinct complete directions with workin
  await expect(page).toHaveURL(/\/docs\/install$/);
  await expect(page.locator('html')).toHaveAttribute('lang','en');
  await page.locator('.site-footer a[href="/lab"]').click();await page.locator('a[href="/lab/workbench"]').click();
- await expect(page.locator('.site-workbench')).toHaveCSS('background-color','rgb(246, 247, 249)');
+ await expect(page.locator('.site-workbench')).toHaveCSS('background-color','rgb(246, 243, 236)');
  await expect(page.locator('.site-nav')).toBeVisible();
  });
 
@@ -413,7 +413,7 @@ test('inspiration thumbnails map each link\'s own preview, resized from the sour
  await page.emulateMedia({reducedMotion:'reduce'});
  expect(await page.locator('.insp-card-open').first().evaluate(el=>parseFloat(getComputedStyle(el).transitionDuration))).toBeLessThan(0.001);
  const posterMedia=JSON.parse(fs.readFileSync(new URL('../website/src/x-media.json',import.meta.url),'utf8'));
- const allowed=new Set([new URL('/sky.jpg',page.url()).href,...Object.values(previews).flatMap(p=>[p.image,new URL(sized(p.image,640),page.url()).href]),...Object.values(posterMedia).flatMap(m=>[m.poster,`${m.poster}?format=webp&name=small`,m.avatar]).filter(Boolean).flatMap(u=>[u,new URL(sized(u,640),page.url()).href])]);
+ const allowed=new Set([...Object.values(previews).flatMap(p=>[p.image,new URL(sized(p.image,640),page.url()).href]),...Object.values(posterMedia).flatMap(m=>[m.poster,`${m.poster}?format=webp&name=small`,m.avatar]).filter(Boolean).flatMap(u=>[u,new URL(sized(u,640),page.url()).href])]);
  expect(imageRequests.filter(u=>!allowed.has(u))).toEqual([]);
  await expect(page.locator('.insp-card:has(a[href="/zh/inspiration/linear"]) .insp-thumb-media')).toHaveCount(0);
 });
@@ -879,14 +879,16 @@ test('headings, primary buttons and filters share one scale and one look across 
   }
   for (const [route, selector] of [['/zh/pricing', '.pricing-card.is-accent .pricing-button'], ['/zh/about', '.paper-button'], ['/zh/guides', '.site-footer-action']]) {
     await page.goto(route); await hydrated(page);
-    const style = await page.locator(selector).first().evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius]; });
-    expect(style, `${route} ${selector}`).toEqual([brand, '6px']);
+    // Primary actions are outlined pills since the paper pass (2026-11-25): transparent, a 1.5px ink outline, ink text.
+    const style = await page.locator(selector).first().evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius, parseFloat(s.borderTopWidth) >= 1, s.borderTopColor, s.color]; });
+    // 1.5px is drawn as 1px on a 1x screen, so the width is checked as at least one pixel.
+    expect(style, `${route} ${selector}`).toEqual(['rgba(0, 0, 0, 0)', '999px', true, brand, brand]);
     const size = await page.locator(selector).first().evaluate(e => [getComputedStyle(e).fontSize, e.getBoundingClientRect().height]);
-    expect(size[0], `${route} ${selector} text`).toBe('14px'); expect(size[1], `${route} ${selector} height`).toBeGreaterThanOrEqual(44);
+    expect(size[0], `${route} ${selector} text`).toBe('16px'); expect(size[1], `${route} ${selector} height`).toBeGreaterThanOrEqual(44);
   }
   await page.goto('/zh/cases');await hydrated(page);
-  const pill = await page.locator('.content-filters a[aria-current=page]').evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius, s.height]; });
-  expect(pill).toEqual([brand, '999px', '32px']);
+  const pill = await page.locator('.content-filters a[aria-current=page]').evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius, s.borderTopColor, s.color]; });
+  expect(pill).toEqual(['rgba(0, 0, 0, 0)', '999px', brand, brand]);
   await page.goto('/zh/skills');await hydrated(page);
   const [main, aside] = await page.evaluate(() => ['.skills-main', '.skills-aside'].map(q => document.querySelector(q).getBoundingClientRect()).map(r => ({ left: r.left, top: r.top })));
   expect(aside.left).toBeGreaterThan(main.left + 400); expect(Math.abs(aside.top - main.top)).toBeLessThan(40);
@@ -894,7 +896,7 @@ test('headings, primary buttons and filters share one scale and one look across 
   // Wait for hydration before reading styles through an element handle: before it, React can replace the prerendered
   // node under the handle and getComputedStyle on the detached element returns '' (seen once in CI on 2026-11-13).
   await page.goto('/zh/pricing');await hydrated(page);
-  expect(await page.locator('.billing-switch button[aria-pressed=true]').evaluate(e => getComputedStyle(e).boxShadow)).toBe('rgba(35, 38, 34, 0.14) 0px 1px 2px 0px');
+  expect(await page.locator('.billing-switch button[aria-pressed=true]').evaluate(e => { const s = getComputedStyle(e); return [s.boxShadow, s.borderTopColor]; })).toEqual(['none', brand]);
 });
 
 test('design videos sit under Inspiration, keep the full wordmark on phones and the counts follow the filter', async ({ page }) => {
@@ -924,7 +926,7 @@ test('content shares the heading\'s left edge and two-tone headings use the pale
   for (const [route, selector] of [['/zh/pricing', '.pricing-hero h1 em'], ['/zh/about', '.paper-hero h1 span']]) {
     // React replaces the prerendered heading on load; a style read on the old node comes back empty, so wait for the hand-over.
     await page.goto(route); await hydrated(page);
-    expect(await page.locator(selector).first().evaluate(e => getComputedStyle(e).color), route).toBe('rgb(77, 82, 90)');
+    expect(await page.locator(selector).first().evaluate(e => getComputedStyle(e).color), route).toBe('rgb(90, 88, 82)');
   }
 });
 
@@ -1330,18 +1332,19 @@ test('the home fetches the rest of the library per section, once, only when scro
  await expect(cards.first().locator('.insp-card-meta b')).not.toHaveText('');expect(new Set(chunks)).toEqual(beyondFirstPage);
 });
 
-test('a fine pointer drags a soft light across the panel; reduced motion removes it and touch never turns it on', async ({browser})=>{
- const desk=await browser.newContext({viewport:{width:1440,height:900}}),page=await desk.newPage();await page.goto('/zh/docs');await hydrated(page);
- const light=page.locator('.site-spotlight i');await expect(light).toHaveCSS('opacity','0');
- await page.mouse.move(700,400);await page.mouse.move(720,420);await expect(light).toHaveCSS('opacity','1');
- expect(await light.evaluate(e=>e.style.transform)).toMatch(/^translate3d\(/);
- // The layer takes no space and sits under the content: the nav is still at the top of the panel and still clickable.
- expect((await page.locator('.site-nav').boundingBox()).y).toBeLessThan(120);await page.locator('.site-nav-links a').first().click();await expect(page).not.toHaveURL(/\/docs$/);
- await desk.close();
- const still=await browser.newContext({viewport:{width:1440,height:900},reducedMotion:'reduce'}),p2=await still.newPage();await p2.goto('/zh/docs');await hydrated(p2);
- await p2.mouse.move(700,400);await p2.mouse.move(720,420);await p2.waitForTimeout(200);await expect(p2.locator('.site-spotlight')).toBeHidden();await still.close();
- const touch=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true}),p3=await touch.newPage();await p3.goto('/zh/docs');await hydrated(p3);
- await p3.mouse.move(100,300);await p3.mouse.move(120,320);await p3.waitForTimeout(200);await expect(p3.locator('.site-spotlight i')).toHaveCSS('opacity','0');await touch.close();
+test('every page sits on one sheet of paper: no sky, no frosted panel, no pointer light, one outlined header button', async ({browser})=>{
+ for(const scheme of ['light','dark']){
+  const ctx=await browser.newContext({viewport:{width:1440,height:900},colorScheme:scheme}),page=await ctx.newPage();
+  for(const route of ['/zh','/zh/docs','/zh/pricing','/zh/collections/dark-websites']){
+   await page.goto(route);await hydrated(page);
+   const look=await page.evaluate(()=>{const html=getComputedStyle(document.documentElement),main=getComputedStyle(document.querySelector('.content-page,.pricing-page,.paper-home'));
+    return {image:html.backgroundImage,html:html.backgroundColor,page:main.backgroundColor,blur:main.backdropFilter,shadow:main.boxShadow,radius:main.borderTopLeftRadius,light:document.querySelectorAll('.site-spotlight').length,
+     outlined:[...document.querySelectorAll('.site-nav-end :is(a,button)')].filter(e=>getComputedStyle(e).borderTopStyle!=='none'&&parseFloat(getComputedStyle(e).borderTopWidth)>0).length}});
+   const paper=scheme==='dark'?'rgb(20, 21, 24)':'rgb(246, 243, 236)';
+   expect(look,`${scheme} ${route}`).toEqual({image:'none',html:paper,page:paper,blur:'none',shadow:'none',radius:'0px',light:0,outlined:1});
+  }
+  await ctx.close();
+ }
 });
 
 // Opening an X post's detail loads nothing from X's widget host: the stored text and the video file are enough to read and watch it.

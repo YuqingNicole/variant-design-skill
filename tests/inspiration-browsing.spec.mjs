@@ -114,14 +114,14 @@ test('both languages meet the visual budget, show a vertical grid that fills the
    expect(tops[0].top,`${language} ${width} first row`).toBe(tops[1].top);expect(tops[2].top,`${language} ${width} second row`).toBeGreaterThan(tops[0].top);
    expect(Math.abs(tops[0].width-tops[1].width),`${language} ${width} equal columns`).toBeLessThanOrEqual(1);expect(tops[0].width*2,`${language} ${width} fills the width`).toBeGreaterThan(width*.8);
   }else{
-   // Desktop: a wrapping grid of cards at least 220px wide, five to a row at 1440px, nothing sideways, no strip arrows.
-   const w=await grid();expect(w.sideways,`${language} ${width} sideways`).toBe(false);expect(w.perRow,`${language} ${width} per row`).toBeGreaterThanOrEqual(5);expect(w.width).toBeGreaterThanOrEqual(220);
+   // Desktop: an unframed grid of cards at least 280px wide, four to a row at 1440px (the paper pass, 2026-11-25), nothing sideways, no strip arrows.
+   const w=await grid();expect(w.sideways,`${language} ${width} sideways`).toBe(false);expect(w.perRow,`${language} ${width} per row`).toBe(4);expect(w.width).toBeGreaterThanOrEqual(280);
    await expect(page.locator('.insp-controls')).toHaveCount(0);
   }
  }
- // A wide screen keeps the page width (the shell stops at 1280px), so the row stays five cards and nothing scrolls sideways.
+ // A wide screen keeps the page width (the shell stops at 1280px), so the row stays four cards and nothing scrolls sideways.
  await page.setViewportSize({width:1920,height:1080});await page.goto('/zh');await expect(page.locator('.insp-card').first()).toBeVisible();await page.evaluate(()=>document.fonts.ready);
- const w=await grid();expect(w.sideways).toBe(false);expect(w.perRow).toBeGreaterThanOrEqual(5);
+ const w=await grid();expect(w.sideways).toBe(false);expect(w.perRow).toBe(4);
 });
 
 
