@@ -1206,5 +1206,13 @@
     "height": 1440,
     "avatar": "https://pbs.twimg.com/profile_images/1865687776047325184/5X0YXq87_bigger.jpg",
     "fetchedAt": "2026-11-24"
+  },
+  "x-chetaslua-275008": {
+    "video": "https://video.twimg.com/amplify_video/2125253014906916864/vid/avc1/1280x720/hLorWAekToQqM0cM.mp4",
+    "poster": "https://pbs.twimg.com/media/HX5qW2IaMAAtDJk.jpg",
+    "width": 1920,
+    "height": 1080,
+    "avatar": "https://pbs.twimg.com/profile_images/1926364057004646400/z3oD9QyB_bigger.jpg",
+    "fetchedAt": "2026-11-25"
   }
 }
