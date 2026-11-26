@@ -47,3 +47,7 @@ dark-websites 17、developer-tool-websites 32、ai-product-websites 18、fintech
 - X 作者头像先走图片代理、再直连，都失败就显示来源首字母（与灵感页一致）。
 
 只借用了双列笔记流这种通用布局，没有复制小红书的界面、图标或文案。检查：网站测试 149 个通过；手机 390px 与桌面 1440px 截图无报错、无横向溢出，正文链接点击高度 ≥ 44px。`columns` 让条目先排满左列再排右列，所以阅读顺序是按列的；合集没有排名，暂时接受。没有在真机上试过。
+
+## 补记：第二轮核对后共 19 个合集（2026-11-26）
+
+其余 138 条参考核对后，新增 8 个合集（productivity-websites、mobile-app-interfaces、brand-identity-design、bento-grid-layouts、big-type-layouts、documentation-pages、gesture-interactions、playful-design），全部达到“已核对 ≥ 6 条”，英文同样标为草稿。合集多了以后，手机上频道条会把当前合集横向滚进可见范围。详见 `2026-11-26-agent-facet-review-2.md`。

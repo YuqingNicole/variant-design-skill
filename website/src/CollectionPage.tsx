@@ -53,6 +53,9 @@ export function CollectionPage({ slug = '' }: { slug?: string }) {
   const list = visibleCollections(facets, rows, showDrafts), current = list.find(c => c.slug === slug);
   const title = current ? `${t(current.title, copyIn(current))} — Variant Design` : t(m.indexTitle, copyIn(indexItem));
   useEffect(() => { document.title = title; document.documentElement.lang = locales[language].htmlLang; }, [language, title]);
+  // With 19 collections the current chip can sit past the phone's edge: centre it in the strip (sideways only, the page stays put).
+  useEffect(() => { const strip = document.querySelector<HTMLElement>('.collection-channels > div'), on = strip?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (strip && on) strip.scrollLeft += on.getBoundingClientRect().left - strip.getBoundingClientRect().left - (strip.clientWidth - on.offsetWidth) / 2; }, [slug]);
   // Channels: every collection one tap away, the current one marked, scrolling sideways on a phone.
   const channels = <nav className="collection-channels" aria-label={l('index')}><div className="site-shell"><a href={localePath('/collections', language)} aria-current={current ? undefined : 'page'}>{l('all')}</a>
     {list.map(c => <a key={c.slug} href={localePath(`/collections/${c.slug}`, language)} aria-current={c.slug === slug ? 'page' : undefined}>{copy(c, c.short)}</a>)}</div></nav>;
