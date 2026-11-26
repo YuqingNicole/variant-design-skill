@@ -1353,7 +1353,7 @@ test('every page sits on one sheet of paper: no sky, no frosted panel, no pointe
 test('a collection page on a phone shows its own channel in the strip', async ({browser})=>{
  const ctx=await browser.newContext({viewport:{width:390,height:844}}),page=await ctx.newPage();
  await page.goto('/zh/collections/playful-design');await hydrated(page);
- const on=page.locator('.collection-channels a[aria-current="page"]');await expect(on).toHaveCount(1);
+ const on=page.locator('.collection-channels a[aria-current="page"]');await expect(on).toHaveCount(1);await expect(on).toHaveAttribute('href','/zh/collections/playful-design');
  await expect.poll(()=>page.evaluate(()=>{const s=document.querySelector('.collection-channels > div').getBoundingClientRect(),a=document.querySelector('.collection-channels a[aria-current="page"]').getBoundingClientRect();return a.left>=s.left-1&&a.right<=s.right+1})).toBe(true);
  expect(await page.evaluate(()=>[scrollY,document.documentElement.scrollWidth<=innerWidth])).toEqual([0,true]);
  await ctx.close();
