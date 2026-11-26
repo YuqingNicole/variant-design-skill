@@ -88,6 +88,7 @@ test('posts the screening always rejected are skipped before they cost a model c
     'I made a low-poly cat and animated its walk cycle in Blender.',
     'Brutally clean shader transition I made yesterday',
     'my original character, a little voxel rabbit, finally walks',
+    'my original character in a FNAF style, first walk cycle',
     'made my first fan for the summer, a paper fan that folds itself',
     'finished my first stop motion, it took me 3 weeks',
   ];

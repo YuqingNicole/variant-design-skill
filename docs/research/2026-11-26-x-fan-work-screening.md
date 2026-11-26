@@ -14,7 +14,7 @@
 - 两条从 `inspiration-data.ts` 和 `x-media.json` 删掉；收件箱里对应两行改为 `rejected`，写明撤下原因，以后发现时不会再收。
 - `x-publish.mjs` 新增 `IP_RULE`，放进筛选提示词：主角是别人作品（游戏、动画、漫画、影视、玩具、吉祥物）里已有角色的视频一律拒，手艺再好也拒；列了 FNAF、Sonic、宝可梦、马里奥、Looney Tunes、迪士尼/皮克斯、TUGS、Hazbin Hotel、动漫主角、Minecraft 生物等例子；同人图、同人动画、重制、"我的版本"、换皮 OC 都算；看不出角色是不是作者原创时拒。同时拒"给别人视频做的镜头"、约稿、客户作品节选。原创角色用常见风格（体素、卡通、兽装）不受影响。其他标准没动。
 - `youtube-publish.mjs` 和 X 共用同一套视频 tab 定义，也加了这条规则。
-- `x-discovery.mjs` 的文字预过滤加两类明确标记：`fan art`/`fanart`/`fan animation`/`fanmade`/`fnaf`/`five nights at freddy's`，以及 "shots/scenes/parts I animated for X's …"、"commissioned by"、"commission for @"。不匹配裸的作品名，因为原创帖里也可能提到。用库里现有 170 条 X 帖子的正文试过，这两类一条都没命中。
+- `x-discovery.mjs` 的文字预过滤加两类明确标记：`fan art`/`fanart`/`fan animation`/`fanmade`/`#fnaf` 标签，以及 "shots/scenes/parts I animated for X's …"、"commissioned by"、"commission for @"。不匹配裸的作品名（包括不带 # 的 FNAF），因为原创帖里也可能提到，比如"FNAF 风格的原创角色"。用库里现有 170 条 X 帖子的正文试过，这两类一条都没命中。
 
 ## 重新筛选（dry run，不写文件）
 
