@@ -9070,6 +9070,38 @@ export const inspirationItems = [
       "text": "Finished!💙🩶 It’s me～#fursuit #fursuitmaker #kemono #handmade",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-nexoxh-829066",
+    "name": "AI felt stop-motion: a pirate captain and a giant octopus",
+    "category": "practice",
+    "tag": "Animation",
+    "url": "https://x.com/Nexoxh/status/2125528315041829066",
+    "source": "link-only",
+    "focus": {
+      "zh": "一段 AI 生成的定格动画风短片，所有东西都像毛毡和毛线做的：夜里的浪是一圈圈白线绣出的波纹，一只巨大的毛毡章鱼从海里冒出来缠住小帆船；独眼的海盗船长在桅杆上挥刀砍触手、在甲板上指挥船员，船被卷进毛线漩涡；最后章鱼的触手散成一把彩色毛线，织成了船的新帆，小船挂着这面帆继续航行。作者说是用 AI 做的，提示词放在评论里。",
+      "en": "An AI-made short in a stop-motion look where everything seems built from felt and yarn: night waves stitched as rows of white thread, a giant felt octopus rising to wrap a small sailboat, a one-eyed pirate captain slashing at tentacles from the rigging and rallying the crew on deck, the ship sucked into a yarn whirlpool. In the end the tentacles unravel into colourful yarn that weaves itself into the ship’s new sail, and the boat sails on. The author says it was made with AI and shares the prompt in the replies."
+    },
+    "application": {
+      "zh": "让怪物散成毛线、再织成船帆，用材质本身讲完结局",
+      "en": "Letting the monster unravel into yarn that becomes the sail, so the material itself tells the ending"
+    },
+    "publisher": "Nexo (@Nexoxh)",
+    "kind": "social-post",
+    "designer": "Nexo",
+    "checkedAt": "2026-11-26",
+    "addedAt": "2026-11-26T03:50:29.593Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125528315041829066",
+      "author": "Nexo",
+      "handle": "Nexoxh",
+      "date": "2026-11-25",
+      "lang": "en",
+      "text": "Stop-motion using AI\n\nPrompt in CS👇",
+      "hasMedia": true
+    }
   }
 ];
 
