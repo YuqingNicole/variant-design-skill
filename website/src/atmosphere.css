@@ -46,15 +46,6 @@ html body :is(.content-page,.pricing-page,.paper-home) :is(.content-button,.pape
 .pricing-page .pricing-hero h1,.paper-home .paper-hero h1{font-size:48px;line-height:1.08;letter-spacing:-.015em}
 @media(max-width:650px){.pricing-page .pricing-hero h1,.paper-home .paper-hero h1{font-size:32px}}
 
-/* Pricing paints its own bands; on paper they become a sheet tone and hairlines. */
-.pricing-page .pricing-hero{background:none}
-.pricing-page .pricing-principles{background:var(--site-surface);border-color:var(--site-line)}
-.pricing-page .pricing-card{background:none;border-color:var(--site-line);border-radius:6px}
-.pricing-page .pricing-card.is-accent{border-color:var(--site-ink)}
-.pricing-page .billing-switch{background:none;border:1px solid var(--site-line);border-radius:999px}
-.pricing-page .billing-switch button{border-radius:999px}
-.pricing-page .billing-switch button{border:1.5px solid transparent}
-.pricing-page .billing-switch button[aria-pressed=true]{background:none;box-shadow:none;border-color:var(--site-ink);color:var(--site-ink)}
 .content-page .docs-start{background:var(--site-surface);border-color:transparent}
 
 @media(max-width:650px){

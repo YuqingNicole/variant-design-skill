@@ -1178,11 +1178,13 @@ test('feed motion stays inside the budget: 200ms card zoom, a fixed-width search
  expect(await search.evaluate(e=>getComputedStyle(e).transitionProperty.includes('width'))).toBe(false);
  await search.focus();await search.fill('x');expect(await search.evaluate(e=>e.getBoundingClientRect().width)).toBe(width);
  await page.goto('/zh/cases');await hydrated(page);
+ // Case pictures on paper do not zoom (docs/design-system.md §12.12): a pointer hover underlines the name instead; touch never does.
  const link=page.locator('.library-card a').first();await link.hover();
- await expect.poll(()=>link.locator('img').first().evaluate(e=>getComputedStyle(e).transform)).toBe('matrix(1.025, 0, 0, 1.025, 0, 0)');
+ await expect.poll(()=>link.locator('strong').evaluate(e=>getComputedStyle(e).textDecorationLine)).toBe('underline');
+ expect(await link.locator('img').first().evaluate(e=>getComputedStyle(e).transform)).toBe('none');
  const phone=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true}),p=await phone.newPage();
  await p.goto('/zh/cases');await hydrated(p);const tap=p.locator('.library-card a').first();await tap.hover();await p.waitForTimeout(400);
- expect(await tap.locator('img').first().evaluate(e=>getComputedStyle(e).transform)).toBe('none');await phone.close();
+ expect(await tap.locator('strong').evaluate(e=>getComputedStyle(e).textDecorationLine)).toBe('none');await phone.close();
 });
 
 test('page crossfade is wired in, drops the shared card names while it runs, and stays off with reduced motion', async ({page,browser})=>{
