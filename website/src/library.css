@@ -109,64 +109,64 @@
    (4px corners, no border, no zoom), names are the 24px display face, boxes become hairline sections, and the direction tabs
    are outlined pills whose pressed state is an ink outline, not a fill. Scale: 48 / 24 / 16 / 13. */
 .library-feed{padding-bottom:120px}
-.library-grid{gap:48px 32px}
+.library-grid{gap:var(--space-7) var(--space-6)}
 .library-card-image{border:0;border-radius:4px}
 .library-card a:focus-visible img{transform:none}
 @media(hover:hover) and (pointer:fine){.library-card a:hover img{transform:none}.library-card a:hover strong{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}}
 .library-card-image small{border-radius:999px;padding:2px 10px;background:var(--site-paper)}
-.library-card-trio{gap:4px;background:var(--site-paper)}
+.library-card-trio{gap:var(--space-1);background:var(--site-paper)}
 .library-card-panel{border-radius:4px}
-.library-card-trio small{left:8px;bottom:8px;padding:1px 8px;font:13px var(--font-serif)}
-.library-card-meta{margin-top:12px}
+.library-card-trio small{left:8px;bottom:8px;padding:1px var(--space-2);font:13px var(--font-serif)}
+.library-card-meta{margin-top:var(--space-3)}
 .library-card strong,.library-sponsor strong{font-family:var(--font-display);font-size:24px;font-weight:400;line-height:1.2;letter-spacing:-.01em}
 .library-card-summary{font-size:16px;line-height:1.6}
-.library-card:has(.library-card-image) .library-card-summary,.library-sponsor .library-card-summary{margin-bottom:48px}
+.library-card:has(.library-card-image) .library-card-summary,.library-sponsor .library-card-summary{margin-bottom:var(--space-7)}
 .library-sponsor-tile{border-radius:4px;font-size:16px}
 .library-more{margin-top:64px;font-size:16px}
 .library-more a,.library-try p a,.library-try div a,.library-figure a,.library-evidence a,.library-run small a,.skills-entry a{color:var(--site-ink);text-underline-offset:5px}
 .library-source span{padding:2px 10px;border:1px solid var(--site-line);border-radius:999px;background:none;font-size:13px}
 .library-source span[data-kind=concept]{background:none}
 .library-detail{padding-bottom:120px}
-.library-brief{border-left:0;border-top:1px solid var(--site-line);padding:24px 0 0;margin-bottom:48px}
+.library-brief{border-left:0;border-top:1px solid var(--site-line);padding:var(--space-5) 0 0;margin-bottom:var(--space-7)}
 .library-brief b,.library-comparison dt,.library-run dt{font:13px var(--font-serif);letter-spacing:0;color:var(--site-muted)}
-.library-brief p{margin-top:8px;font-size:16px;line-height:1.7}
-.library-tabs{gap:12px;margin-bottom:24px}
+.library-brief p{margin-top:var(--space-2);font-size:16px;line-height:1.7}
+.library-tabs{gap:var(--space-3);margin-bottom:var(--space-5)}
 .library-tabs button{min-height:44px;padding:0 20px;border:1.5px solid var(--site-line);border-radius:999px;color:var(--site-muted);font-size:16px;transition:border-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
 .library-tabs button b{font:500 16px var(--font-serif)}
-.library-tabs button small{font-size:13px;color:inherit;border-radius:999px;padding:0 8px}
+.library-tabs button small{font-size:13px;color:inherit;border-radius:999px;padding:0 var(--space-2)}
 .library-tabs button[aria-pressed=true]{background:none;border-color:var(--site-ink);color:var(--site-ink)}
 .library-tabs button[aria-pressed=true] small{color:inherit;border-color:var(--site-line)}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){.library-tabs button:hover{color:var(--site-ink)}}
 .library-figure img{border:0;border-radius:4px}
-.library-figure figcaption{margin-top:12px}
-.library-comparison{gap:32px;margin:48px 0}
-.library-comparison>div{padding-top:16px;border-top:1px solid var(--site-line)}
+.library-figure figcaption{margin-top:var(--space-3)}
+.library-comparison{gap:var(--space-6);margin:var(--space-7) 0}
+.library-comparison>div{padding-top:var(--space-4);border-top:1px solid var(--site-line)}
 .library-comparison dd{font-size:16px;line-height:1.7}
-.library-try,.library-recommendation{padding:24px 0 0;border:0;border-top:1px solid var(--site-line);border-radius:0;background:none}
-.library-try h2{font-size:24px;font-weight:400;line-height:1.2;margin:0 0 12px}
+.library-try,.library-recommendation{padding:var(--space-5) 0 0;border:0;border-top:1px solid var(--site-line);border-radius:0;background:none}
+.library-try h2{font-size:24px;font-weight:400;line-height:1.2;margin:0 0 var(--space-3)}
 .library-try p,.library-recommendation p{font-size:16px;line-height:1.7}
-.library-try textarea,.library-run textarea{border:0;border-radius:6px;background:var(--site-surface)}
+.library-try textarea,.library-run textarea{border:0;border-radius:var(--radius-control);background:var(--site-surface)}
 .library-try button{min-height:44px;padding:0 22px;border:1.5px solid var(--site-ink);border-radius:999px;background:transparent;color:var(--site-ink);font-size:16px;font-weight:500;transition:background-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){.library-try button:hover{background:var(--site-ink);color:var(--site-paper)}}
 .library-recommendation b,.library-recommendation h2,.library-recommendation strong{font-weight:500}
-.library-evidence{margin-top:32px;font-size:16px;line-height:1.7}
-.library-run{margin:96px 0 0;padding:32px 0 0;border:0;border-top:1px solid var(--site-line);border-radius:0;background:none}
-.library-run h2,.library-related h2{font-size:48px;font-weight:200;line-height:1.08;letter-spacing:-.015em;margin:0 0 32px}
-.library-run dl{gap:16px 48px;margin-bottom:32px}
+.library-evidence{margin-top:var(--space-6);font-size:16px;line-height:1.7}
+.library-run{margin:96px 0 0;padding:var(--space-6) 0 0;border:0;border-top:1px solid var(--site-line);border-radius:0;background:none}
+.library-run h2,.library-related h2{font-size:48px;font-weight:200;line-height:1.08;letter-spacing:-.015em;margin:0 0 var(--space-6)}
+.library-run dl{gap:var(--space-4) var(--space-7);margin-bottom:var(--space-6)}
 .library-run dd{font-size:16px}
 .library-run p{font-size:16px;line-height:1.7}
 .library-run code,.skills-entry code{border:0;background:var(--site-surface)}
 .library-related{margin-top:120px}
 /* /skills: one hairline row per skill; the name is the display face. */
-.skills-entry{padding:48px 0}
-.skills-entry h2{font-size:48px;font-weight:200;line-height:1.08;letter-spacing:-.015em;margin:0 0 16px}
+.skills-entry{padding:var(--space-7) 0}
+.skills-entry h2{font-size:48px;font-weight:200;line-height:1.08;letter-spacing:-.015em;margin:0 0 var(--space-4)}
 .skills-entry h2 small{font-size:13px;letter-spacing:0}
 .skills-entry>p,.skills-entry dd{font-size:16px;line-height:1.7}
-.skills-entry dt{font-size:16px;margin-top:24px}
+.skills-entry dt{font-size:16px;margin-top:var(--space-5)}
 @media(max-width:650px){
- .library-grid{gap:40px 16px}
+ .library-grid{gap:40px var(--space-4)}
  .library-card strong,.library-sponsor strong{font-size:17px}
- .library-card:has(.library-card-image) .library-card-summary,.library-sponsor .library-card-summary{margin-bottom:24px}
+ .library-card:has(.library-card-image) .library-card-summary,.library-sponsor .library-card-summary{margin-bottom:var(--space-5)}
  .library-run{margin-top:64px}
  .library-run h2,.library-related h2,.skills-entry h2{font-size:32px;line-height:1.12}
  .library-related{margin-top:64px}

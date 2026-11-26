@@ -82,71 +82,71 @@
    with about 120px of paper before each; body copy is 16px within 68ch; the contents stay in the left column. Cards on paper lose
    their frames and become hairline-topped entries. `html body` outweighs the per-page size rules above without rewriting them. */
 html body .content-page:not(.changelog-page) .content-reading>*{max-width:68ch}
-html body .content-page .content-reading h2{font-size:48px;font-weight:200;line-height:1.1;letter-spacing:-.015em;margin:120px 0 32px}
+html body .content-page .content-reading h2{font-size:48px;font-weight:200;line-height:1.1;letter-spacing:-.015em;margin:120px 0 var(--space-6)}
 html body .content-page .content-reading :is(p,li){font-size:16px;line-height:1.8}
 html body .content-page .docs-layout{grid-template-columns:220px minmax(0,1fr);gap:96px}
-html body .content-page .docs-layout>aside{top:32px;gap:14px;padding-top:24px}
+html body .content-page .docs-layout>aside{top:32px;gap:14px;padding-top:var(--space-5)}
 html body .content-page .docs-layout>aside a{font-size:13px;line-height:1.5;transition:color var(--dur-fast) var(--ease-out)}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){html body .content-page .docs-layout>aside a:hover{color:var(--site-ink)}}
 html body .content-page .docs-layout section{margin-bottom:0}
 html body .content-page .docs-layout section:first-child>h2,html body .content-page .content-reading>h2:first-child{margin-top:0}
-html body .content-page:not(.changelog-page) .docs-layout h3{font-size:24px;font-weight:400;margin:48px 0 12px}
+html body .content-page:not(.changelog-page) .docs-layout h3{font-size:24px;font-weight:400;margin:var(--space-7) 0 var(--space-3)}
 html body .content-page .guide-hero h1{font-size:48px;line-height:1.08}
-.guide-code{background:var(--site-surface);border-radius:6px}
+.guide-code{background:var(--site-surface);border-radius:var(--radius-control)}
 .guide-list{gap:0;padding-block:0 120px}
-.guide-list>*{padding-block:32px;border-top:1px solid var(--site-line)}
+.guide-list>*{padding-block:var(--space-6);border-top:1px solid var(--site-line)}
 .guide-list h2{font-size:24px;font-weight:400}
 html body .content-page .content-closing{padding:120px 0}
 html body .content-page .content-closing h2{font-size:48px;font-weight:200;line-height:1.1}
 /* Docs hub: the articles are entries on the paper, not white cards. */
 html body .content-page .docs-hub{gap:0 64px}
-html body .content-page .docs-hub article{padding:32px 0;border:0;border-top:1px solid var(--site-line);border-radius:0;background:none}
+html body .content-page .docs-hub article{padding:var(--space-6) 0;border:0;border-top:1px solid var(--site-line);border-radius:0;background:none}
 html body .content-page .docs-hub article h2{font-size:24px;font-weight:400}
-html body .content-page .docs-hub .docs-start{padding:32px;border:0;border-radius:6px;background:var(--site-surface)}
+html body .content-page .docs-hub .docs-start{padding:var(--space-6);border:0;border-radius:var(--radius-control);background:var(--site-surface)}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){html body .content-page .docs-hub :is(.docs-card,.docs-answers,.docs-changelog):hover{background:none;border-color:var(--site-ink)}}
 /* Filters and tabs on inner pages: outlined pills; the pressed one takes an ink outline instead of a fill. */
 html body .content-page :is(.content-filters,.content-directions,.docs-tabs) button,html body .content-page .content-filters a{border:1.5px solid var(--site-line);border-radius:999px;background:none;color:var(--site-muted)}
 html body .content-page :is(.content-filters,.content-directions,.docs-tabs) button[aria-pressed=true],html body .content-page .content-filters a[aria-current]{border-color:var(--site-ink);background:none;color:var(--site-ink)}
 html body .content-page .docs-layout textarea{background:var(--site-surface);border-color:transparent}
-@media(max-width:800px){html body .content-page .docs-layout{grid-template-columns:1fr;gap:32px}}
+@media(max-width:800px){html body .content-page .docs-layout{grid-template-columns:1fr;gap:var(--space-6)}}
 @media(max-width:650px){
  html body .content-page .content-reading h2{font-size:32px;margin:64px 0 20px}
  html body .content-page .guide-hero h1{font-size:32px}
  html body .content-page .content-closing{padding:64px 0}
  html body .content-page .content-closing h2{font-size:32px}
- html body .content-page .docs-hub article{padding:24px 0}
+ html body .content-page .docs-hub article{padding:var(--space-5) 0}
 }
 /* Paper pass for the inner pages (docs/design-system.md §12.12, 2026-11-26): submissions, sponsor, changelog. Fields are outlined
    on the paper (no filled card), the submit action is the outlined pill and the rest are text buttons, and the changelog is a
    quiet dated list: one column, each change a hairline row with its title on the left. Scale: 48 / 24 / 16 / 13. */
-html body .content-page .submission-intake fieldset{margin:48px 0 0;padding:32px 0 0}
-html body .content-page .submission-intake legend{float:left;width:100%;margin:0 0 24px;padding:0;font:400 24px/1.2 var(--font-display);letter-spacing:-.01em}
-html body .content-page .submission-fields{gap:24px 32px;clear:both}
-html body .content-page .submission-fields label{gap:8px;font-size:16px}
-html body .content-page .submission-intake :is(input:not([type=checkbox]),select,textarea){min-height:48px;background:transparent;border:1px solid var(--site-line);border-radius:6px;transition:border-color var(--dur-fast) var(--ease-out)}
+html body .content-page .submission-intake fieldset{margin:var(--space-7) 0 0;padding:var(--space-6) 0 0}
+html body .content-page .submission-intake legend{float:left;width:100%;margin:0 0 var(--space-5);padding:0;font:400 24px/1.2 var(--font-display);letter-spacing:-.01em}
+html body .content-page .submission-fields{gap:var(--space-5) var(--space-6);clear:both}
+html body .content-page .submission-fields label{gap:var(--space-2);font-size:16px}
+html body .content-page .submission-intake :is(input:not([type=checkbox]),select,textarea){min-height:48px;background:transparent;border:1px solid var(--site-line);border-radius:var(--radius-control);transition:border-color var(--dur-fast) var(--ease-out)}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){html body .content-page .submission-intake :is(input:not([type=checkbox]),select,textarea):hover{border-color:var(--site-muted)}}
 html body .content-page .submission-intake :is(input:not([type=checkbox]),select,textarea):focus{border-color:var(--site-ink)}
 html body .content-page .submission-intake :is(input,select,textarea,button,a):focus-visible{outline:2px solid var(--site-ink);outline-offset:2px}
 html body .content-page .submission-intake .submission-note{font-size:13px;line-height:1.6}
 html body .content-page .submission-consent{font-size:16px;line-height:1.6}
 html body .content-page .submission-consent input{accent-color:var(--site-ink)}
-html body .content-page .submission-actions{gap:12px 28px;margin-top:32px}
+html body .content-page .submission-actions{gap:var(--space-3) 28px;margin-top:var(--space-6)}
 html body .content-page .submission-actions :is(button,a){min-height:44px;padding:0;border:0;border-radius:0;background:none;color:var(--site-ink);font-size:16px;text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px;cursor:pointer}
 html body .content-page .submission-actions button[type=submit],html body .content-page .sponsor-inquiry .home-action-primary{padding:0 22px;border:1.5px solid var(--site-ink);border-radius:999px;background:transparent;color:var(--site-ink);font-weight:500;text-decoration:none;transition:background-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){html body .content-page .submission-actions button[type=submit]:not(:disabled):hover{background:var(--site-ink);color:var(--site-paper)}}
 html body .content-page .submission-intake [role=alert]{border-left:1.5px solid var(--site-ink)}
-html body .content-page .submission-draft{margin-top:48px;padding-top:32px}
+html body .content-page .submission-draft{margin-top:var(--space-7);padding-top:var(--space-6)}
 html body .content-page .submission-draft>textarea{background:var(--site-surface);border-color:transparent}
-html body .content-page .submit-sources em{margin-top:4px;font-size:13px;color:var(--site-muted)}
-html body .content-page .submit-sources li{padding:16px 0;margin:0;border-top:1px solid var(--site-line);list-style:none}
+html body .content-page .submit-sources em{margin-top:var(--space-1);font-size:13px;color:var(--site-muted)}
+html body .content-page .submit-sources li{padding:var(--space-4) 0;margin:0;border-top:1px solid var(--site-line);list-style:none}
 html body .content-page .submit-sources{padding:0}
 html body .content-page .content-reading>a,html body .content-page .content-reading section>a{font-size:16px;color:var(--site-ink);text-underline-offset:6px}
 /* Sponsor: the hero and the inquiry use the shared outlined pill; the secondary action is a text link. */
 html body .content-page .sponsor-hero{padding-block:120px 88px}
 html body .content-page .sponsor-section{padding-block:120px;gap:72px}
 html body .content-page .sponsor-section h2{font-size:48px;line-height:1.08}
-html body .content-page .sponsor-rows li{padding:24px 0}
-html body .content-page .home-actions{gap:12px 28px;align-items:center}
+html body .content-page .sponsor-rows li{padding:var(--space-5) 0}
+html body .content-page .home-actions{gap:var(--space-3) 28px;align-items:center}
 html body .content-page .home-actions .home-action-secondary{padding:0;border:0;border-radius:0;font-size:16px;text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
 /* Changelog */
 html body .content-page.changelog-page .docs-layout .content-reading{max-width:880px}
@@ -159,13 +159,13 @@ html body .content-page .changelog-filters button{min-height:44px;margin-bottom:
 html body .content-page .changelog-filters button[aria-pressed=true]{border-bottom-color:var(--site-ink)}
 html body .content-page .changelog-release{margin:0 0 96px}
 html body .content-page .changelog-release+.changelog-release{padding-top:0;border-top:0}
-html body .content-page .changelog-release h2{font-size:48px;line-height:1.08;margin:0 0 16px}
+html body .content-page .changelog-release h2{font-size:48px;line-height:1.08;margin:0 0 var(--space-4)}
 html body .content-page :is(.changelog-pill,.changelog-current){padding:2px 10px;font:13px/1.4 var(--font-serif);color:var(--site-muted)}
 html body .content-page .changelog-current{color:var(--site-ink);border-color:var(--site-ink)}
 html body .content-page .changelog-current::before{background:var(--site-ink)}
-html body .content-page .content-reading .changelog-lede{font-weight:400;font-size:16px;color:var(--site-ink);margin-bottom:8px}
+html body .content-page .content-reading .changelog-lede{font-weight:400;font-size:16px;color:var(--site-ink);margin-bottom:var(--space-2)}
 html body .content-page .changelog-grid{grid-template-columns:1fr;gap:0;margin-top:40px}
-html body .content-page .changelog-item{grid-template-columns:minmax(0,15em) minmax(0,1fr);gap:4px 40px;padding:24px 0;border-top:1px solid var(--site-line)}
+html body .content-page .changelog-item{grid-template-columns:minmax(0,15em) minmax(0,1fr);gap:var(--space-1) 40px;padding:var(--space-5) 0;border-top:1px solid var(--site-line)}
 html body .content-page .changelog-item:last-child{border-bottom:1px solid var(--site-line)}
 html body .content-page .changelog-item h3{grid-column:1;margin:0;font:500 16px/1.5 var(--font-serif)}
 html body .content-page .changelog-item p{grid-column:2;grid-row:1/span 3;max-width:62ch}
@@ -176,8 +176,8 @@ html body .content-page .changelog-item:not(:has(h3)) p{grid-row:1/span 2}
  html body .content-page .changelog-item :is(h3,p,small){grid-column:1;grid-row:auto}
 }
 @media(max-width:650px){
- html body .content-page .sponsor-hero{padding-block:40px 48px}
- html body .content-page .sponsor-section{padding-block:64px;gap:24px}
+ html body .content-page .sponsor-hero{padding-block:40px var(--space-7)}
+ html body .content-page .sponsor-section{padding-block:64px;gap:var(--space-5)}
  html body .content-page .sponsor-section h2,html body .content-page .changelog-release h2{font-size:32px;line-height:1.12}
  html body .content-page .changelog-release{margin-bottom:64px}
  html body .content-page .changelog-filters{margin-bottom:40px}
