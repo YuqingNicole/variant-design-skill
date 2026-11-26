@@ -9102,6 +9102,38 @@ export const inspirationItems = [
       "text": "Stop-motion using AI\n\nPrompt in CS👇",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-ayushsoni_io-884760",
+    "name": "Second: a painted-landscape identity for a personal AI model",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/ayushsoni_io/status/2125586059727884760",
+    "source": "link-only",
+    "focus": {
+      "zh": "一个 6 秒的品牌整理视频，给个人 AI 模型「Second」做的识别：画面主体是粗笔刷画的天空、草坡和沙滩，几个小人在坡上散步、看书、放风筝；文字都是细的白色或黑色衬线体，压在插画上或放在白卡片里，比如「Everything you want to build gets started.」「A personal model that learns your habits, values and goals.」「Built to remember what matters」。同一套画和字铺到海报、发布会邀请函、户外广告牌、黑色笔记本、带黑色火漆封口的白信封和黑色信封、徽章贴纸上；还有一页黑底上只刷了一道草地，写着「Always by your side」。作者 4 天前的帖子发过深色版本：黑底上的日程手写字、整幅绿色草地上的「Continual understanding of who you are」，以及铅笔、风筝、椅子、树等一组同样笔触的小图标。",
+      "en": "A 6-second roundup of an identity for “Second”, a personal AI model. The core is loose, brushy paintings of sky, grassy slopes and beach, with small figures walking, reading and flying a kite. Type is a thin serif in white or black, set over the paintings or on white cards: “Everything you want to build gets started.”, “A personal model that learns your habits, values and goals.”, “Built to remember what matters”. The same paintings and type carry onto posters, a launch-party invite, a street billboard, a black notebook, a white envelope with a black wax seal and a black envelope, and pin badges; one frame is a single stroke of grass on black with “Always by your side”. Four days earlier the author posted a dark-mode take: handwritten schedule notes on black, “Continual understanding of who you are” over a full field of green, and a set of small icons (pencil, kite, chair, tree) in the same brushwork."
+    },
+    "application": {
+      "zh": "让一种手绘笔触和一款细衬线字撑起整套品牌，从海报到信封都认得出来",
+      "en": "Letting one painted brushstroke and one thin serif carry a whole identity, recognisable from poster to envelope"
+    },
+    "publisher": "Ayush Soni (@ayushsoni_io)",
+    "kind": "social-post",
+    "designer": "Ayush Soni",
+    "checkedAt": "2026-11-26",
+    "addedAt": "2026-11-26T09:55:29.437Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125586059727884760",
+      "author": "Ayush Soni",
+      "handle": "ayushsoni_io",
+      "date": "2026-11-25",
+      "lang": "en",
+      "text": "documenting the brand\nfirst person labs https://t.co/Q6hmERFLU8",
+      "hasMedia": true
+    }
   }
 ];
 

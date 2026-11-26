@@ -274,5 +274,6 @@
   "x-magalyn07-643821": {"status":"reviewed","reviewedAt":"2026-11-26","reviewedBy":"agent","industry":null,"medium":"film","pageTypes":[],"patterns":[],"components":[],"techniques":[],"styles":[]},
   "x-duckwhocodes-939918": {"status":"reviewed","reviewedAt":"2026-11-22","reviewedBy":"agent","industry":null,"medium":"web-app","pageTypes":[],"patterns":[],"components":["carousel"],"techniques":["transition","morph"],"styles":["illustrated","playful"]},
   "x-chetaslua-275008": {"status":"reviewed","reviewedAt":"2026-11-25","reviewedBy":"agent","industry":null,"medium":"3d","pageTypes":[],"patterns":[],"components":[],"techniques":["webgl"],"styles":["rendered-3d","colorful","illustrated"]},
-  "x-nexoxh-829066": {"status":"reviewed","reviewedAt":"2026-11-26","reviewedBy":"agent","industry":null,"medium":"film","pageTypes":[],"patterns":[],"components":[],"techniques":["morph"],"styles":["texture","dark","playful"]}
+  "x-nexoxh-829066": {"status":"reviewed","reviewedAt":"2026-11-26","reviewedBy":"agent","industry":null,"medium":"film","pageTypes":[],"patterns":[],"components":[],"techniques":["morph"],"styles":["texture","dark","playful"]},
+  "x-ayushsoni_io-884760": {"status":"reviewed","reviewedAt":"2026-11-26","reviewedBy":"agent","industry":"ai","medium":"brand-identity","pageTypes":[],"patterns":[],"components":["logo","icon"],"techniques":[],"styles":["illustrated","texture","warm"]}
 }

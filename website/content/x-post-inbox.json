@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-26T03:49:36.263Z",
+  "updatedAt": "2026-11-26T09:55:29.437Z",
   "source": "Ego Lite on X search",
   "reviewPolicy": "Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request that merges itself once CI passes; nobody reviews entries one by one.",
   "candidates": [
@@ -3244,6 +3244,19 @@
       "query": "maintainer link (2026-11-26)",
       "status": "published",
       "entry": "x-nexoxh-829066",
+      "reviewedAt": "2026-11-26"
+    },
+    {
+      "id": "2125586059727884760",
+      "url": "https://x.com/ayushsoni_io/status/2125586059727884760",
+      "handle": "ayushsoni_io",
+      "author": "Ayush Soni",
+      "publishedAt": "2026-11-25",
+      "likes": 283,
+      "capturedAt": "2026-11-26T09:55:29.437Z",
+      "query": "maintainer link (2026-11-26)",
+      "status": "published",
+      "entry": "x-ayushsoni_io-884760",
       "reviewedAt": "2026-11-26"
     }
   ]
