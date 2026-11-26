@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-26T03:49:36.263Z",
+  "updatedAt": "2026-11-26T10:12:45.875Z",
   "source": "Ego Lite on X search",
   "reviewPolicy": "Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request that merges itself once CI passes; nobody reviews entries one by one.",
   "candidates": [
@@ -3244,6 +3244,45 @@
       "query": "maintainer link (2026-11-26)",
       "status": "published",
       "entry": "x-nexoxh-829066",
+      "reviewedAt": "2026-11-26"
+    },
+    {
+      "id": "2125586059727884760",
+      "url": "https://x.com/ayushsoni_io/status/2125586059727884760",
+      "handle": "ayushsoni_io",
+      "author": "Ayush Soni",
+      "publishedAt": "2026-11-25",
+      "likes": 283,
+      "capturedAt": "2026-11-26T09:55:29.437Z",
+      "query": "maintainer link (2026-11-26)",
+      "status": "published",
+      "entry": "x-ayushsoni_io-884760",
+      "reviewedAt": "2026-11-26"
+    },
+    {
+      "id": "2066491158164045957",
+      "url": "https://x.com/dmiiiitrii/status/2066491158164045957",
+      "handle": "dmiiiitrii",
+      "author": "Dmitri",
+      "publishedAt": "2026-06-15",
+      "likes": 3691,
+      "capturedAt": "2026-11-26T10:12:45.875Z",
+      "query": "maintainer request: original designer behind an @morrre_dsgn pick (2026-11-26)",
+      "status": "published",
+      "entry": "x-dmiiiitrii-045957",
+      "reviewedAt": "2026-11-26"
+    },
+    {
+      "id": "2124449261853237413",
+      "url": "https://x.com/Sdymoondesign/status/2124449261853237413",
+      "handle": "Sdymoondesign",
+      "author": "Moon",
+      "publishedAt": "2026-11-22",
+      "likes": 1227,
+      "capturedAt": "2026-11-26T10:12:45.875Z",
+      "query": "maintainer request: original designer behind an @morrre_dsgn pick (2026-11-26)",
+      "status": "published",
+      "entry": "x-sdymoondesign-237413",
       "reviewedAt": "2026-11-26"
     }
   ]
