@@ -76,12 +76,20 @@ test('posts the screening always rejected are skipped before they cost a model c
     ['This video is just 10KB of code. I made it with my shader-skills repo', 'repo or tool promotion'],
     ['I made this with GPT Astra 6.2', 'AI model showcase'],
     ['261121 choi hyunsuk instagram 🎥✨ #최현석', 'repost'],
+    // Fan work and shots made for someone else's video (owner, 2026-11-26).
+    ['Sonic fan animation I finished this week', 'fan work'],
+    ['little fanart of my fav duo, animated', 'fan work'],
+    ['Bonnie walk cycle test #FNAF #blender', 'fan work'],
+    ["shots i animated for jude's new video 113 hours of work, some of my best", 'made for someone else'],
+    ['animation commissioned by @studio for their channel', 'made for someone else'],
   ];
   for (const [text, reason] of rejected) assert.equal(skipReason(row(text)), reason, text);
   const kept = [
     'I made a low-poly cat and animated its walk cycle in Blender.',
     'Brutally clean shader transition I made yesterday',
-    "shots i animated for jude's new video 113 hours of work, some of my best",
+    'my original character, a little voxel rabbit, finally walks',
+    'my original character in a FNAF style, first walk cycle',
+    'made my first fan for the summer, a paper fan that folds itself',
     'finished my first stop motion, it took me 3 weeks',
   ];
   for (const text of kept) assert.equal(skipReason(row(text)), null, text);

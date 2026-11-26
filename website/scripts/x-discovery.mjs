@@ -117,12 +117,16 @@ export function planSearches(config, { groups, days, now = new Date() } = {}) {
 // Cheap checks before a candidate costs a model screening. Each pattern is a kind of post x-publish.mjs rejected again and
 // again (inbox, 2026-11-16 to 11-22): repo and tool lists, reposts of someone else's video, growth and income posts,
 // promotion, and showcases of an AI model. A quote post is skipped too: its video is usually the quoted account's.
+// Fan work and shots made for someone else's video are out too (owner, 2026-11-26); only explicit markers (and the #fnaf tag the owner named) are matched
+// here, since a bare franchise name can sit in an original post ("my OC in a FNAF style"), and the screening prompt catches the rest from the frames.
 export const SKIP_TEXT = [
   ['resource list', /\b\d+\s+(?:[\w-]+\s+){0,2}(?:repos?|repositories|tools|skills|prompts|resources|websites|plugins)\b|\bbookmark (?:this|these|it)\b|🧵/iu],
   ['repo or tool promotion', /\bgithub\b|\brepo\b|\bremotion\b|\bcomfyui\b|\bopen[- ]source\b/i],
   ['repost', /\bwho made this\b|\bcredits?\s*(?::|to\b|goes\b)|\bvia\s+@|\bnot mine\b|(?:^|\s)(?:source|🎥|📹)\s*:|\binstagram\s*(?:🎥|📸|story|post|update|live)/iu],
   ['income or growth claim', /\$\s?\d[\d,.]*\s*[km]?\s*(?:\/|per|a|in)\s*(?:month|mo|week|day)\b|\bpassive income\b|\bmake money\b|\bfollowers in \d+\s*(?:days|weeks)\b/i],
   ['promotion', /\blink in bio\b|\buse code\b|\bpre-?order\b|\bkickstarter\b|\bgiveaway\b|\bsponsored\b|#ad\b|\bwishlist\b/i],
+  ['fan work', /\bfan[- ]?(?:art|animation|animatic|film|game|remake|made)s?\b|\bfanart\b|#fnaf\b/i],
+  ['made for someone else', /\b(?:shots?|scenes?|parts?)\s+(?:i|we)\s+(?:animated|made|did)\s+for\s+(?:@?\w+'s\b|an?\s+client)|\bcommissioned by\b|\bcommission for @/i],
   ['AI model showcase', /\b(?:fable|opus|sonnet|claude|gpt|chatgpt|gemini|veo|sora|kling|midjourney|seedance|dreamina|higgsfield)(?:[\s-]+[a-z]+)?[\s-]*\d|\bearly access to @/i],
 ];
 
