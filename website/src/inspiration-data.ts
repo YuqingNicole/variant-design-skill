@@ -9134,6 +9134,70 @@ export const inspirationItems = [
       "text": "documenting the brand\nfirst person labs https://t.co/Q6hmERFLU8",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-dmiiiitrii-045957",
+    "name": "Character app icons with two dot eyes",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/dmiiiitrii/status/2066491158164045957",
+    "source": "link-only",
+    "focus": {
+      "zh": "一段循环的动图，八个 App 图标一个接一个换上来，每个都是一只只有两点眼睛的小角色：浅蓝渐变里鼓起的一团、黑底上彩虹色的炸毛球、紫色底上的小幽灵、荧光绿底上带速度线的白色刺团、蓝底上咧嘴笑的纸片、白底上紫色的软团、蓝底上像云又像花的白色笑脸、红底上一滴带尖角的白色水滴。每个角色只用一个外形加两点眼睛就有了表情，底色、渐变和阴影按 iOS 图标的圆角方块做。作者 Dmitri 是图标设计师，这是作者置顶的帖子；@morrre_dsgn 转发过作者的作品。",
+      "en": "A looping animation that swaps through eight app icons, each a small character with nothing but two dot eyes: a soft blob rising out of a light-blue gradient, a rainbow spiky puff on black, a little ghost on purple, a white spiky burst with speed lines on neon green, a grinning card on blue, a lilac squish on white, a white cloud-like flower smiling on blue, and a white pointed droplet on red. Each character gets its expression from a single silhouette plus two dots, set in an iOS rounded square with its own ground, gradient and shadow. Dmitri is an icon designer and this is the pinned post on that account; @morrre_dsgn has shared the work."
+    },
+    "application": {
+      "zh": "用一个外形加两点眼睛给图标一个性格",
+      "en": "Giving an icon a personality with one silhouette and two dot eyes"
+    },
+    "publisher": "Dmitri (@dmiiiitrii)",
+    "kind": "social-post",
+    "designer": "Dmitri",
+    "checkedAt": "2026-11-26",
+    "addedAt": "2026-11-26T10:12:45.875Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2066491158164045957",
+      "author": "Dmitri",
+      "handle": "dmiiiitrii",
+      "date": "2026-06-15",
+      "lang": "en",
+      "text": "this is truly insane https://t.co/Uijr6MOyj9",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-sdymoondesign-237413",
+    "name": "Mascot and symbol app icons, one per frame",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/Sdymoondesign/status/2124449261853237413",
+    "source": "link-only",
+    "focus": {
+      "zh": "一段 5 秒的方形视频，每一帧换一个 App 图标，放在和它配色一致的整幅背景上：一半是脸一半是骷髅的卡通头像、深蓝发光方块里的两只眼睛、绿色原子轨道围着的发光图标、红白条纹遮阳篷下张大嘴的方脸、一片绿色的抽象字形、黑底上的线框多面体、横条绿色里的半圆、粉色底上的黑色小怪兽。帖子另外三张图把这些图标整理成「吉祥物」和「图标」两组网格，排进 iPhone 主屏幕，再单独放大一只黑白的刺猬角色。作者 Moon 是产品和品牌设计师，@morrre_dsgn 转发过作者的作品。",
+      "en": "A 5-second square video that changes app icon every frame, each on a full background in its own colours: a cartoon head that is half face and half skull, two eyes in a glowing dark-blue square, a glowing icon ringed by green atom orbits, a wide-mouthed square face under a red-and-white awning, an abstract green glyph, a wireframe polyhedron on black, a half circle in bands of green, and a small black monster on pink. Three more images in the post sort the icons into “mascot” and “icon” grids, place them on an iPhone home screen, and zoom in on a black-and-white hedgehog character. Moon is a product and brand designer; @morrre_dsgn has shared the work."
+    },
+    "application": {
+      "zh": "给每个图标配一整幅同色背景，单独看和放进主屏幕都成立",
+      "en": "Pairing each icon with a full background in its colours, so it works alone and on a home screen"
+    },
+    "publisher": "Moon (@Sdymoondesign)",
+    "kind": "social-post",
+    "designer": "Moon",
+    "checkedAt": "2026-11-26",
+    "addedAt": "2026-11-26T10:12:45.875Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2124449261853237413",
+      "author": "Moon",
+      "handle": "Sdymoondesign",
+      "date": "2026-11-22",
+      "lang": "en",
+      "text": "Designing icons that make people wanna tap https://t.co/C5rBQ53Fbj",
+      "hasMedia": true
+    }
   }
 ];
 
