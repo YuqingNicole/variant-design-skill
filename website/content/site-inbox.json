@@ -139,7 +139,9 @@
       "title": "The Brink Agency",
       "publishedAt": "2026-11-20T22:31:40.000Z",
       "foundAt": "2026-11-22T12:22:51.879Z",
-      "status": "pending"
+      "status": "published",
+      "entry": "thebrinkagency",
+      "reviewedAt": "2026-11-26"
     },
     {
       "id": "minimalgallery-glebich-com",
@@ -150,7 +152,9 @@
       "title": "Gleb Kuznetsov",
       "publishedAt": "2026-11-20T22:30:12.000Z",
       "foundAt": "2026-11-22T12:22:51.879Z",
-      "status": "pending"
+      "status": "published",
+      "entry": "glebich",
+      "reviewedAt": "2026-11-26"
     },
     {
       "id": "minimalgallery-protipmarketing-com",
@@ -226,7 +230,9 @@
       "title": "GSSI Latam",
       "publishedAt": "2026-11-18T06:00:00.000Z",
       "foundAt": "2026-11-24T08:04:41.794Z",
-      "status": "pending"
+      "status": "rejected",
+      "reason": "All three screens show an Imperva \"Access denied – Error 15\" block page instead of the GSSI Latam site.",
+      "reviewedAt": "2026-11-26"
     },
     {
       "id": "csswinner-fojcikdominik-com",
@@ -276,7 +282,9 @@
       "title": "Study Hall — Agency Website",
       "publishedAt": "2026-11-17T06:00:00.000Z",
       "foundAt": "2026-11-24T08:04:41.794Z",
-      "status": "pending"
+      "status": "rejected",
+      "reason": "Two of the three screens are mostly empty: the first shows only the wordmark on black, and the second is a blank white area with just the caption \"San Francisco Running Company Brand Identity\", which suggests the featured media did not render, so only a single strip of recent-work thumbnails is left to study.",
+      "reviewedAt": "2026-11-26"
     },
     {
       "id": "csswinner-m0r1m1ch1-com",
@@ -287,7 +295,9 @@
       "title": "MORIMICHI",
       "publishedAt": "2026-11-13T00:00:00.000Z",
       "foundAt": "2026-11-24T08:04:41.794Z",
-      "status": "pending"
+      "status": "rejected",
+      "reason": "All three screens are completely blank dark panels with no visible content, so the page did not render anything that could be studied.",
+      "reviewedAt": "2026-11-26"
     },
     {
       "id": "minimalgallery-theflatironbuilding-com",
@@ -298,7 +308,9 @@
       "title": "The Flatiron Building",
       "publishedAt": "2026-11-22T22:30:26.000Z",
       "foundAt": "2026-11-24T08:04:41.794Z",
-      "status": "pending"
+      "status": "rejected",
+      "reason": "All three screens show the same fixed hero (the building photo with About, Inquire, Press and Fair Housing Notice links and slider arrows), so there is only one screen of content to judge.",
+      "reviewedAt": "2026-11-26"
     },
     {
       "id": "mindsparkle-future-human-de",
@@ -309,7 +321,9 @@
       "title": "FUTURE HUMAN",
       "publishedAt": "2026-11-14T06:00:00.000Z",
       "foundAt": "2026-11-24T08:04:41.794Z",
-      "status": "pending"
+      "status": "rejected",
+      "reason": "All three screens show the same 'Step into the field' splash with an 'Enter' button, so only one screen of content is visible and the experience behind the gate can't be judged.",
+      "reviewedAt": "2026-11-26"
     },
     {
       "id": "csswinner-snapa-sites-uprock-pro",
@@ -320,8 +334,102 @@
       "title": "Snapa",
       "publishedAt": "2026-11-11T00:00:00.000Z",
       "foundAt": "2026-11-24T08:04:41.794Z",
+      "status": "published",
+      "entry": "snapa-sites-uprock",
+      "reviewedAt": "2026-11-26"
+    },
+    {
+      "id": "onepagelove-solea-dj-com",
+      "source": "onepagelove",
+      "sourceName": "One Page Love",
+      "url": "https://onepagelove.com/solea",
+      "link": "https://solea-dj.com/",
+      "title": "Solea",
+      "publishedAt": "2026-11-25T11:01:33.000Z",
+      "foundAt": "2026-11-26T07:00:08.427Z",
+      "status": "published",
+      "entry": "solea-dj",
+      "reviewedAt": "2026-11-26"
+    },
+    {
+      "id": "minimalgallery-teriksandersstudio-com",
+      "source": "minimalgallery",
+      "sourceName": "Minimal Gallery",
+      "url": "https://minimal.gallery/teri-sanders/",
+      "link": "https://teriksandersstudio.com/",
+      "title": "Teri Sanders",
+      "publishedAt": "2026-11-25T22:31:02.000Z",
+      "foundAt": "2026-11-26T07:00:08.427Z",
+      "status": "rejected",
+      "reason": "The site publishes no share preview image",
+      "reviewedAt": "2026-11-26"
+    },
+    {
+      "id": "mindsparkle-buckssauce-com",
+      "source": "mindsparkle",
+      "sourceName": "Mindsparkle Mag",
+      "url": "https://mindsparklemag.com/website/bucks-sauce-buzzworthy-studio",
+      "link": "https://buckssauce.com/",
+      "title": "Bucks Sauce",
+      "publishedAt": "2026-11-26T06:00:00.000Z",
+      "foundAt": "2026-11-26T07:00:08.427Z",
+      "status": "pending"
+    },
+    {
+      "id": "csswinner-uxcrunch-co-uk",
+      "source": "csswinner",
+      "sourceName": "CSS Winner",
+      "url": "https://www.csswinner.com/details/ux-crunch/19581/",
+      "link": "https://uxcrunch.co.uk/",
+      "title": "UX Crunch",
+      "publishedAt": "2026-11-16T00:00:00.000Z",
+      "foundAt": "2026-11-26T07:00:08.427Z",
+      "status": "pending"
+    },
+    {
+      "id": "onepagelove-seifrinat-com",
+      "source": "onepagelove",
+      "sourceName": "One Page Love",
+      "url": "https://onepagelove.com/rinat-seif",
+      "link": "https://seifrinat.com/",
+      "title": "Rinat Seif",
+      "publishedAt": "2026-11-24T10:39:41.000Z",
+      "foundAt": "2026-11-26T07:00:08.427Z",
+      "status": "pending"
+    },
+    {
+      "id": "minimalgallery-dontmatter-eu",
+      "source": "minimalgallery",
+      "sourceName": "Minimal Gallery",
+      "url": "https://minimal.gallery/dontmatter/",
+      "link": "https://dontmatter.eu/",
+      "title": "DontMatter",
+      "publishedAt": "2026-11-25T22:30:07.000Z",
+      "foundAt": "2026-11-26T07:00:08.427Z",
+      "status": "pending"
+    },
+    {
+      "id": "mindsparkle-farmminerals-com",
+      "source": "mindsparkle",
+      "sourceName": "Mindsparkle Mag",
+      "url": "https://mindsparklemag.com/website/farm-minerals",
+      "link": "https://www.farmminerals.com/",
+      "title": "Farm Minerals",
+      "publishedAt": "2026-11-25T06:00:00.000Z",
+      "foundAt": "2026-11-26T07:00:08.427Z",
+      "status": "pending"
+    },
+    {
+      "id": "csswinner-psychoactive-co-nz",
+      "source": "csswinner",
+      "sourceName": "CSS Winner",
+      "url": "https://www.csswinner.com/details/psychoactive-studios/19580/",
+      "link": "https://www.psychoactive.co.nz/",
+      "title": "Psychoactive Studios",
+      "publishedAt": "2026-11-16T00:00:00.000Z",
+      "foundAt": "2026-11-26T07:00:08.427Z",
       "status": "pending"
     }
   ],
-  "updatedAt": "2026-11-24T08:18:40.835Z"
+  "updatedAt": "2026-11-26T07:00:27.124Z"
 }

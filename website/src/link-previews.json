@@ -1216,5 +1216,39 @@
     "width": 1200,
     "height": 630,
     "fetchedAt": "2026-11-24"
+  },
+  "thebrinkagency": {
+    "image": "https://cdn.thebrinkagency.com/9ab7a5cda28da1782b44627469d7785b.jpg",
+    "title": "Home",
+    "description": "Bold and effective dutch design agency from Amsterdam. We help you cut through the noise with Identity, Development, 3D Technology and Ai-Powered content.",
+    "lang": "en",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-26"
+  },
+  "glebich": {
+    "image": "https://glebich.com/og/home.jpg",
+    "title": "Gleb Kuznetsov, Chief Design Officer at Brain.AI, Founder and CEO of Milkinside",
+    "description": "Gleb Kuznetsov, Chief Design Officer at Brain.AI and Founder and CEO of Milkinside, leads the design of Natural OS on SoftBank's Natural AI Phone.",
+    "lang": "en",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-26"
+  },
+  "snapa-sites-uprock": {
+    "image": "https://snapa.uprock.pro/assets/images/6a7487daad74a9c3cfd35273_Opengraph.jpg",
+    "title": "Snapa — A New Standard for Instant Photography",
+    "description": "Snapa is a new-generation instant camera with a 4-lens optical system, sonar autofocus, and large-format prints — full control from your phone.",
+    "lang": "en-US",
+    "fetchedAt": "2026-11-26"
+  },
+  "solea-dj": {
+    "image": "https://solea-dj.com/opengraph-image.png?opengraph-image.3h961z27zmvog.png",
+    "title": "Free DJ software for Mac with live stems · Solea",
+    "description": "Solea is free DJ software for the Mac: live stems on any track, beatgrids that land on the kick, key detection, controller mappings built in and USB export for CDJs without rekordbox.",
+    "lang": "en",
+    "width": 2400,
+    "height": 1260,
+    "fetchedAt": "2026-11-26"
   }
 }

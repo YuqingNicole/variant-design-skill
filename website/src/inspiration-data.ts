@@ -9102,6 +9102,102 @@ export const inspirationItems = [
       "text": "Stop-motion using AI\n\nPrompt in CS👇",
       "hasMedia": true
     }
+  },
+  {
+    "id": "thebrinkagency",
+    "name": "The Brink",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://thebrinkagency.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "全屏微距花卉3D场景主视觉，叠加白色大字标题\"Bold Dutch Design, Engineered for Tomorrow\"与服务简介，右上角为白色胶囊按钮\"Let's talk\" → 白底居中的黑色大字宣言\"Turn your ideas into reality with bold & effective Dutch design.\"，下方小黑点，左下角悬浮\"Watch Our Showreel\"缩略卡片 → 错落双列作品网格：右列为绿色跑车渲染图配标题\"Bringing the Preliator to life.\"与灰色标签\"3D Technology, Ai-Powered content\"，左列为\"THE MORNING\"案例，两列高度错开。",
+      "en": "Full-bleed macro 3D flower scene with large white headline \"Bold Dutch Design, Engineered for Tomorrow\" and a services blurb, white pill \"Let's talk\" top right → centered black statement on white, \"Turn your ideas into reality with bold & effective Dutch design.\", small black dot, floating \"Watch Our Showreel\" thumbnail card bottom left → staggered two-column work grid: green sports car render with \"Bringing the Preliator to life.\" and grey tags \"3D Technology, Ai-Powered content\", offset \"THE MORNING\" case."
+    },
+    "application": {
+      "zh": "创意/3D工作室官网首页与错落式作品集网格",
+      "en": "Creative/3D studio homepages and staggered portfolio grids"
+    },
+    "publisher": "The Brink",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-26",
+    "addedAt": "2026-11-26T07:00:27.124Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://minimal.gallery/the-brink-agency/"
+  },
+  {
+    "id": "glebich",
+    "name": "Gleb Kuznetsov",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://glebich.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "全宽 3D 柔光场景主视觉 → 底部大字号姓名“Gleb Kuznetsov”配标语“Technology should be a natural extension of your mind.”（红色句点点缀）及右侧职位与“Play reel, 1:15” → “The shift”章节：黑灰渐隐大标题“For decades, people learned the language of machines.”配白色胶囊内的手机渲染 → “Natural OS / An AI-driven operating system”项目区：深色手机图上叠加对话卡片（“Dinner for two on Friday. Somewhere quiet.”→“20:00 Ginza”，Change/Confirm 按钮）",
+      "en": "Full-bleed soft-lit 3D hero → oversized \"Gleb Kuznetsov\" with tagline \"Technology should be a natural extension of your mind.\" (red period), titles and \"Play reel, 1:15\" at right → \"The shift\": fading headline \"For decades, people learned the language of machines.\" beside a phone in a white capsule → \"Natural OS\" case: phone shot overlaid with chat cards (\"Dinner for two on Friday…\" → \"20:00 Ginza\", Change/Confirm)"
+    },
+    "application": {
+      "zh": "设计师作品集、AI 产品概念展示",
+      "en": "Designer portfolios and AI product concept showcases"
+    },
+    "publisher": "Gleb Kuznetsov",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-26",
+    "addedAt": "2026-11-26T07:00:27.124Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://minimal.gallery/gleb-kuznetsov/"
+  },
+  {
+    "id": "snapa-sites-uprock",
+    "name": "Snapa",
+    "category": "landing",
+    "tag": "Commerce",
+    "url": "https://snapa.sites.uprock.pro/",
+    "source": "link-only",
+    "focus": {
+      "zh": "首屏：超大白色字标“Snapa”压在暗调岩石场景上，白色相机居中，暖橙侧光照明，右下角大字“A new generation instant camera…”，左下角两行小字说明，右上角药丸形“Order”按钮 → 浅粉底色上居中的红色大号紧排宣言“Snapa is a new generation instant camera built for people who want better photos and real printed memories.”，下方一行红色小字 → 镜头特写，“optical zoom”刻字清晰可见，图片靠左排布，右侧大面积留白",
+      "en": "Hero: oversized white \"Snapa\" wordmark over a dark rock scene, white camera centred under warm orange side light, large \"A new generation instant camera…\" bottom right, two small captions bottom left, pill \"Order\" button → centred red, tightly tracked manifesto \"Snapa is a new generation instant camera…\" on pale blush with a tiny red subline → close-up of the lens showing the \"optical zoom\" engraving, image set left with open white space"
+    },
+    "application": {
+      "zh": "硬件产品发布落地页、电影感的产品摄影",
+      "en": "Hardware product launch pages, cinematic product photography"
+    },
+    "publisher": "Snapa",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-26",
+    "addedAt": "2026-11-26T07:00:27.124Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://www.csswinner.com/details/snapa/19571/"
+  },
+  {
+    "id": "solea-dj",
+    "name": "Solea",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://solea-dj.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "黑底大号细体标题“DJing, reinvented. Live, free, on your Mac.”，下方是全宽像素点阵波形，叠着 Deck A“124.00”、Key“8A”、剩余“-3:39”读数，配橙色“Download for Mac”按钮 → 滚动的功能条（“Live stems on any track”“USB sticks ready for CDJs”）→ “01 Why Solea”宣言，文字随滚动逐渐变亮，“orange”一词标成橙色 → “02 Perform”：“Your set. Nothing else.”，配带倾斜透视的完整应用界面",
+      "en": "Black hero with a large thin headline, \"DJing, reinvented. Live, free, on your Mac.\", over full-width pixel-dot waveforms with Deck A \"124.00\", Key \"8A\" and \"-3:39\" readouts, plus an orange \"Download for Mac\" button → scrolling feature strip (\"Live stems on any track\", \"USB sticks ready for CDJs\") → \"01 Why Solea\" statement that brightens as you scroll, with \"orange\" set in orange → \"02 Perform\": \"Your set. Nothing else.\" above a tilted full app UI"
+    },
+    "application": {
+      "zh": "音频/创意工具类产品落地页，单一强调色",
+      "en": "Landing pages for audio or creative tools with a single accent colour"
+    },
+    "publisher": "Solea",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-26",
+    "addedAt": "2026-11-26T07:00:27.124Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://onepagelove.com/solea"
   }
 ];
 
