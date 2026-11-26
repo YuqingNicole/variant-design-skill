@@ -9,7 +9,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { readItems, appendItems, askClaude, judged as judgedWith, TAGS, SCOPE, TAG_GUIDE, SCOPE_REJECTS, review } from './x-publish.mjs';
+import { readItems, appendItems, askClaude, judged as judgedWith, TAGS, SCOPE, TAG_GUIDE, SCOPE_REJECTS, IP_RULE, review } from './x-publish.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const inboxPath = path.resolve(here, '../content/youtube-video-inbox.json');
@@ -34,6 +34,7 @@ Read the image at ${sheet}: YouTube's public thumbnails of ${candidate.url}, in 
 ${facts}
 
 Reject (accept=false) when any applies: ${SCOPE_REJECTS}; a tutorial, course, "how to" or tips list; a tool, product, plugin, template or sponsor promotion; a talk, interview, podcast, vlog, reaction or commentary; a compilation of other people's work or an unclear original author; pictures too unclear to describe.
+${IP_RULE}
 Otherwise accept, and write notes on what makes it fun or clever. ${TAG_GUIDE} Do not invent: no names, claims or tools the pictures and the text do not show.
 
 Answer with one JSON object and nothing else:

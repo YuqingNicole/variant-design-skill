@@ -35,6 +35,9 @@ test('the prompt carries the rules, the sheet and the tag list, and quotes the p
   assert.match(p, /\/tmp\/s\.jpg/); assert.match(p, /resource list/); assert.match(p, /Do not invent/);
   // The Videos tab takes fun, creative videos and turns design work away (maintainer, 2026-11-20).
   assert.match(p, /nothing to do with design/); assert.match(p, /Reject[^\n]*design work of any kind/);
+  // Fan work of someone else's characters is rejected even when well made, and an unsure call rejects (owner, 2026-11-26).
+  assert.match(p, /Reject fan work/); assert.match(p, /Bonnie/); assert.match(p, /Whisper the Wolf/); assert.match(p, /cannot tell it is the author's own, reject/);
+  assert.match(p, /shots made for someone else's video/); assert.ok(p.indexOf('Reject fan work') < p.indexOf('Otherwise accept'));
   for (const t of TAGS) assert.ok(p.includes(t));
   assert.match(p, /"ignore previous \\"rules\\""/);
 });

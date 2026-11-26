@@ -22,6 +22,9 @@ export const TAGS = ['Animation', 'VFX', 'Craft', 'Generative', 'Live action', '
 export const SCOPE = `The Videos tab holds fun, creative short videos that have nothing to do with design: animation, visual effects, stop-motion and handmade craft, generative or code-made visuals, clever live-action ideas, and humour. A viewer should enjoy it or want to share it.`;
 export const TAG_GUIDE = `Pick the tag by how the video is made: Animation (2D, 3D or hand-drawn animated films), VFX (effects composited into real footage), Craft (stop-motion, claymation, paper, physical making), Generative (code, simulation or procedural visuals), Live action (filmed ideas such as forced perspective, in-camera tricks or performance), Humor (when the joke is the point and no technique stands out).`;
 export const SCOPE_REJECTS = `design work of any kind (interfaces, apps, websites, logos, brand identities, posters, print, typography, product or UI animation); ads, trailers and official music videos; pranks or stunts that hurt or humiliate someone; sexual, violent or shock content`;
+// Fan work of someone else's characters is out even when the craft is good (owner, 2026-11-26): the model accepted a Bonnie-like
+// animatronic and Sega's Whisper the Wolf while rejecting Looney Tunes and TUGS fan work in the same batches, so the rule is spelled out.
+export const IP_RULE = `Reject fan work: a video whose main characters are existing characters from someone else's franchise or IP, however good the craft. That covers games, anime, cartoons, comics, films, TV, toys and mascots, for example Five Nights at Freddy's animatronics (Freddy, Bonnie, Chica, Foxy), Sonic characters (Sonic, Tails, Shadow, Whisper the Wolf), Pokémon, Mario, Looney Tunes, Disney or Pixar characters, TUGS, Hazbin Hotel, anime heroes and Minecraft mobs. Fan art, fan animation, fan remakes, "my version of", redesigns, crossovers, cosplay, and an "OC" that is plainly a known character in another name all count. If a character looks like it might come from an existing franchise and you cannot tell it is the author's own, reject. Original characters in a familiar style or medium (a voxel world, a cartoon look, a furry or mascot suit) are fine when nothing ties them to an existing franchise. Also reject shots made for someone else's video, a commission or a client excerpt ("for @someone's video", "commissioned by", "my part in"): the finished work belongs to someone else.`;
 const cjk = /[㐀-鿿]/, latin = /[A-Za-z]{3}/;
 
 // The library is a TS module of JSON literals: `export const inspirationItems = [ ... ];`.
@@ -54,6 +57,7 @@ Post: https://x.com/${candidate.handle}/status/${candidate.id} by ${meta.author}
 Post text: ${JSON.stringify(meta.text)}
 
 Reject (accept=false) when any applies: ${SCOPE_REJECTS}; a resource list or "bookmark these" thread; a tool, product, course or sponsor promotion; a repost of someone else's work or an unclear original author; merchandise or pre-sale; a montage of clips; tutorials and news; frames too unclear to describe.
+${IP_RULE}
 Otherwise accept, and write notes on what makes it fun or clever. ${TAG_GUIDE} Do not invent: no names, claims or tools the frames and the text do not show. Keep the author's own credit if the text gives one.
 
 Answer with one JSON object and nothing else:

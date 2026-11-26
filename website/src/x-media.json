@@ -1355,14 +1355,6 @@
     "avatar": "https://pbs.twimg.com/profile_images/2105257260155084801/vcsyZr0q_bigger.jpg",
     "fetchedAt": "2026-11-25"
   },
-  "x-bitzelyt-161077": {
-    "video": "https://video.twimg.com/amplify_video/2124661781469487105/vid/avc1/1280x720/M5TOhI693JYbhGSO.mp4?tag=14",
-    "poster": "https://pbs.twimg.com/amplify_video_thumb/2124661781469487105/img/XPAEhtVKkaKoVMXT.jpg",
-    "width": 1920,
-    "height": 1080,
-    "avatar": "https://pbs.twimg.com/profile_images/1920962008020643840/qjr8uJ0r_bigger.jpg",
-    "fetchedAt": "2026-11-25"
-  },
   "x-spicklenuts-478917": {
     "video": "https://video.twimg.com/amplify_video/2123512131878363136/vid/avc1/1002x720/H70H7Xwt1zcJxVVr.mp4?tag=14",
     "poster": "https://pbs.twimg.com/amplify_video_thumb/2123512131878363136/img/_PeaUxS3NsKf4gMK.jpg",
@@ -1386,13 +1378,5 @@
     "height": 1280,
     "avatar": "https://pbs.twimg.com/profile_images/1836424920148119558/wzjLLfWL_bigger.jpg",
     "fetchedAt": "2026-11-25"
-  },
-  "x-crimsonrakan-775114": {
-    "video": "https://video.twimg.com/amplify_video/2125370481737891840/vid/avc1/720x720/gXww-J4cp1yGreyu.mp4?tag=14",
-    "poster": "https://pbs.twimg.com/amplify_video_thumb/2125370481737891840/img/XGEj_64WctVNh2o_.jpg",
-    "width": 2000,
-    "height": 2000,
-    "avatar": "https://pbs.twimg.com/profile_images/2034727568528769024/7ztCH3jb_bigger.jpg",
-    "fetchedAt": "2026-11-26"
   }
 }

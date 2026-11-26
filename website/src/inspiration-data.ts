@@ -8976,38 +8976,6 @@ export const inspirationItems = [
     }
   },
   {
-    "id": "x-bitzelyt-161077",
-    "name": "Blocky purple rabbit animatronic in a voxel world",
-    "category": "practice",
-    "tag": "Animation",
-    "url": "https://x.com/BitzelYT/status/2124662515611161077",
-    "source": "link-only",
-    "focus": {
-      "zh": "Bitzel 为 Jude 的新视频制作的 3D 动画镜头：一个方块风格的紫色兔子玩偶在室内探头、凑到镜头前，又在阳光草地上做着夸张的表情和动作；低多边形的方块角色配上柔和的光影和电影式运镜，作者称耗时 113 小时完成。",
-      "en": "Shots Bitzel animated for Jude's new video: a blocky purple rabbit animatronic peers over a counter indoors, then mugs and gestures right up to the camera on a sunny grassy field. Simple voxel characters get soft lighting and cinematic camera moves, and the author says the shots took 113 hours."
-    },
-    "application": {
-      "zh": "用电影级光影和运镜演绎方块角色",
-      "en": "Cinematic lighting and camera moves for blocky voxel characters"
-    },
-    "publisher": "Bitzel (@BitzelYT)",
-    "kind": "social-post",
-    "designer": "Bitzel",
-    "checkedAt": "2026-11-25",
-    "addedAt": "2026-11-25T09:56:47.815Z",
-    "verification": "public-post",
-    "mobile": "not-tested",
-    "post": {
-      "id": "2124662515611161077",
-      "author": "Bitzel",
-      "handle": "BitzelYT",
-      "date": "2026-11-23",
-      "lang": "en",
-      "text": "shots i animated for jude's new video\n113 hours of work, some of my best  So Yeah,",
-      "hasMedia": true
-    }
-  },
-  {
     "id": "x-spicklenuts-478917",
     "name": "Friend group animated into a show intro",
     "category": "practice",
@@ -9100,38 +9068,6 @@ export const inspirationItems = [
       "date": "2026-11-25",
       "lang": "en",
       "text": "Finished!💙🩶 It’s me～#fursuit #fursuitmaker #kemono #handmade",
-      "hasMedia": true
-    }
-  },
-  {
-    "id": "x-crimsonrakan-775114",
-    "name": "Whisper The Wolf face animation test",
-    "category": "practice",
-    "tag": "Animation",
-    "url": "https://x.com/CrimsonRakan/status/2125370608468775114",
-    "source": "link-only",
-    "focus": {
-      "zh": "Rakan (@CrimsonRakan) 在 Blender 中为戴面具的狼角色 Whisper 制作的面部动画测试：3D 模型带有漫画式线稿与平涂着色，露出的半边脸在眨眼、坏笑、张嘴大笑、斜眼咬牙之间切换，而面具上的大眼睛始终一动不动，形成有趣的反差。",
-      "en": "Rakan (@CrimsonRakan)'s Blender face animation test of the masked wolf character Whisper: a 3D model with comic-style line art and flat shading whose uncovered half-face shifts through a wink, a smirk, an open-mouthed laugh and a side-eyed teeth-gritting glare, while the mask's big eye stays perfectly still, an amusing contrast."
-    },
-    "application": {
-      "zh": "用形态键和线稿让 3D 角色表情呈现漫画感",
-      "en": "Shape keys and line art giving a 3D face comic-style expressions"
-    },
-    "publisher": "Rakan (@CrimsonRakan)",
-    "kind": "social-post",
-    "designer": "Rakan",
-    "checkedAt": "2026-11-26",
-    "addedAt": "2026-11-26T01:02:27.660Z",
-    "verification": "public-post",
-    "mobile": "not-tested",
-    "post": {
-      "id": "2125370608468775114",
-      "author": "Rakan",
-      "handle": "CrimsonRakan",
-      "date": "2026-11-24",
-      "lang": "en",
-      "text": "Whisper The Wolf, face animation test!\n\ni think i will add more line art and more shape keys to make sure her face look exactly like the comics.\n\nafter I'm done with this we gonna go the hard part, the cape rig, wish me luck! 👍#blender3d #WhisperTheWolf",
       "hasMedia": true
     }
   }

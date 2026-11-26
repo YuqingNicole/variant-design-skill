@@ -19,6 +19,7 @@ test('addresses give a video id only for watch pages, and a channel is only coll
   assert.equal(channelInLibrary([existing], { channel: ' taken ' }).id, 'yt-old');
   assert.equal(channelInLibrary([existing], { channel: 'New', channelUrl: 'https://www.youtube.com/channel/UCnew' }), null);
   assert.match(buildPrompt(cand(1), '/s.jpg'), /2×2 grid[\s\S]*design work of any kind[\s\S]*tutorial[\s\S]*Live action/);
+  assert.match(buildPrompt(cand(1), '/s.jpg'), /tutorial[\s\S]*Reject fan work[\s\S]*Otherwise accept/);
 });
 
 test('an entry carries the video facts and no X post fields; an address alone leaves length and date out', () => {
