@@ -321,7 +321,128 @@
       "publishedAt": "2026-11-11T00:00:00.000Z",
       "foundAt": "2026-11-24T08:04:41.794Z",
       "status": "pending"
+    },
+    {
+      "id": "onepagelove-muesli-ing",
+      "source": "onepagelove",
+      "sourceName": "One Page Love",
+      "url": "https://onepagelove.com/muesli",
+      "link": "https://www.muesli.ing/",
+      "title": "Muesli",
+      "publishedAt": "2026-11-26T10:30:30.000Z",
+      "foundAt": "2026-11-27T07:01:38.470Z",
+      "status": "pending"
+    },
+    {
+      "id": "minimalgallery-mareksevcik-com",
+      "source": "minimalgallery",
+      "sourceName": "Minimal Gallery",
+      "url": "https://minimal.gallery/marek-sevcik/",
+      "link": "https://mareksevcik.com/",
+      "title": "Marek Ševčík",
+      "publishedAt": "2026-11-26T22:31:27.000Z",
+      "foundAt": "2026-11-27T07:01:38.470Z",
+      "status": "pending"
+    },
+    {
+      "id": "mindsparkle-buckssauce-com",
+      "source": "mindsparkle",
+      "sourceName": "Mindsparkle Mag",
+      "url": "https://mindsparklemag.com/website/bucks-sauce-buzzworthy-studio",
+      "link": "https://buckssauce.com/",
+      "title": "Bucks Sauce",
+      "publishedAt": "2026-11-26T06:00:00.000Z",
+      "foundAt": "2026-11-27T07:01:38.470Z",
+      "status": "pending"
+    },
+    {
+      "id": "csswinner-aday-daikifujita-com",
+      "source": "csswinner",
+      "sourceName": "CSS Winner",
+      "url": "https://www.csswinner.com/details/a-day-seasons-of-youth/19596/",
+      "link": "https://aday.daikifujita.com/",
+      "title": "A DAY -- Seasons of Youth",
+      "publishedAt": "2026-11-21T00:00:00.000Z",
+      "foundAt": "2026-11-27T07:01:38.470Z",
+      "status": "pending"
+    },
+    {
+      "id": "onepagelove-solea-dj-com",
+      "source": "onepagelove",
+      "sourceName": "One Page Love",
+      "url": "https://onepagelove.com/solea",
+      "link": "https://solea-dj.com/",
+      "title": "Solea",
+      "publishedAt": "2026-11-25T11:01:33.000Z",
+      "foundAt": "2026-11-27T07:01:38.470Z",
+      "status": "pending"
+    },
+    {
+      "id": "minimalgallery-anekdotestudio-dk",
+      "source": "minimalgallery",
+      "sourceName": "Minimal Gallery",
+      "url": "https://minimal.gallery/anekdote-studio/",
+      "link": "https://anekdotestudio.dk/",
+      "title": "Anekdote Studio",
+      "publishedAt": "2026-11-26T22:30:24.000Z",
+      "foundAt": "2026-11-27T07:01:38.470Z",
+      "status": "pending"
+    },
+    {
+      "id": "mindsparkle-farmminerals-com",
+      "source": "mindsparkle",
+      "sourceName": "Mindsparkle Mag",
+      "url": "https://mindsparklemag.com/website/farm-minerals",
+      "link": "https://www.farmminerals.com/",
+      "title": "Farm Minerals",
+      "publishedAt": "2026-11-25T06:00:00.000Z",
+      "foundAt": "2026-11-27T07:01:38.470Z",
+      "status": "pending"
+    },
+    {
+      "id": "csswinner-seeingdouble-beer",
+      "source": "csswinner",
+      "sourceName": "CSS Winner",
+      "url": "https://www.csswinner.com/details/seeing-double/19590/",
+      "link": "https://seeingdouble.beer/",
+      "title": "Seeing Double",
+      "publishedAt": "2026-11-20T00:00:00.000Z",
+      "foundAt": "2026-11-27T07:01:38.470Z",
+      "status": "pending"
+    },
+    {
+      "id": "onepagelove-seifrinat-com",
+      "source": "onepagelove",
+      "sourceName": "One Page Love",
+      "url": "https://onepagelove.com/rinat-seif",
+      "link": "https://seifrinat.com/",
+      "title": "Rinat Seif",
+      "publishedAt": "2026-11-24T10:39:41.000Z",
+      "foundAt": "2026-11-27T07:01:38.470Z",
+      "status": "pending"
+    },
+    {
+      "id": "minimalgallery-teriksandersstudio-com",
+      "source": "minimalgallery",
+      "sourceName": "Minimal Gallery",
+      "url": "https://minimal.gallery/teri-sanders/",
+      "link": "https://teriksandersstudio.com/",
+      "title": "Teri Sanders",
+      "publishedAt": "2026-11-25T22:31:02.000Z",
+      "foundAt": "2026-11-27T07:01:38.470Z",
+      "status": "pending"
+    },
+    {
+      "id": "csswinner-uxcrunch-co-uk",
+      "source": "csswinner",
+      "sourceName": "CSS Winner",
+      "url": "https://www.csswinner.com/details/ux-crunch/19581/",
+      "link": "https://uxcrunch.co.uk/",
+      "title": "UX Crunch",
+      "publishedAt": "2026-11-16T00:00:00.000Z",
+      "foundAt": "2026-11-27T07:01:38.470Z",
+      "status": "pending"
     }
   ],
-  "updatedAt": "2026-11-24T08:18:40.835Z"
+  "updatedAt": "2026-11-27T07:01:38.470Z"
 }
