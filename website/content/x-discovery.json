@@ -1,5 +1,5 @@
 {
-  "exclude": "-filter:replies -filter:quote -repos -github -prompt -prompts -bookmark -thread -tutorial -course -giveaway -trailer -kickstarter -\"who made\" -credit -claude -remotion -comfyui -fanart -fnaf -robloxugc -hazbinhotel -\"rig by\"",
+  "exclude": "-filter:replies -filter:quote -repos -github -prompt -prompts -bookmark -thread -tutorial -course -giveaway -trailer -kickstarter -\"who made\" -credit -claude -remotion -comfyui -fanart -#fnaf -#hazbinhotel -robloxugc",
   "skipHandles": [
     { "handle": "e1genqq", "reason": "repo and tool lists with income claims, five times (2026-11-19 to 11-22)" },
     { "handle": "flxrnc", "reason": "\"N GitHub repos\" list threads, twice (2026-11-20, 11-22)" },

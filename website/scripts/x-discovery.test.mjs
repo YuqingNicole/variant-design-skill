@@ -61,7 +61,11 @@ test('the shipped config searches for creative videos posted by their makers, no
   for (const s of weekly) assert.match(s.label, /"i made"|"made this"|wip/, `${s.label} has no maker phrasing`);
   assert.ok(config.skipHandles.some(entry => entry.handle === 'e1genqq'));
   // Fan work filled the 2026-11-27 pool (0 of 6 kept); the commonest markers are cut at search time for every query.
-  for (const s of planSearches(config, { groups: 'all', now })) for (const term of ['-fanart', '-fnaf', '-robloxugc']) assert.ok(s.query.includes(term), `${s.label} lacks ${term}`);
+  for (const s of planSearches(config, { groups: 'all', now })) {
+    for (const term of ['-fanart', '-#fnaf', '-#hazbinhotel', '-robloxugc']) assert.ok(s.query.includes(term), `${s.label} lacks ${term}`);
+    // Only hashtags for franchises (a bare name can sit in an original post), and no -"rig by", which would drop "rig by me".
+    assert.doesNotMatch(s.query, / -(?:fnaf|hazbinhotel|"rig by")(?:\s|$)/);
+  }
   for (const handle of ['ButtercupWinnie', 'NothingS_ecial']) assert.ok(config.skipHandles.some(entry => entry.handle === handle), handle);
 });
 

@@ -23,7 +23,7 @@
   - asset or commission sale：`#robloxugc`、UGC、“animation/asset/emote/vfx pack”、“on sale”、“available on Roblox/itch/gumroad/ko-fi…”、“commissions open”、ko-fi 商店链接、itch.io、gumroad。
   - made for someone else 补上 “stuff/bits I animated for X's …”（@kirbs428）。
   - 没有匹配 `#RobloxDev`：库里已上线的 @gen_xcx 原创 Roblox 黑洞特效就带这个标签，测试里留了它的原文。
-- `x-discovery.json`：`exclude` 加 `-fanart -fnaf -robloxugc -hazbinhotel -"rig by"`（没加 `-roblox`，原因同上），最长查询 485 字，低于 500；`skipHandles` 加上面 8 个账号，各写原因。
+- `x-discovery.json`：`exclude` 加 `-fanart -#fnaf -#hazbinhotel -robloxugc`，最长查询 480 字，低于 500。作品名只排除标签（`-#fnaf`），不排除裸词，原因同预过滤；没加 `-"rig by"`，否则会把“rig by me”的原创帖也挡掉；没加 `-roblox`，原因同上。（初版用的是 `-fnaf -hazbinhotel -"rig by"`，按 CodeRabbit 的意见改了。）`skipHandles` 加上面 8 个账号，各写原因。
 - 筛选标准（`x-publish.mjs`）没动。
 
 ## 误伤检查
@@ -40,6 +40,6 @@
 | 预过滤后留下 | 21 | 14（加 `#mrpuzzles` 后 13） |
 | 其中收件箱里没有的新帖 | 4 | 3（加 `#mrpuzzles` 后 2） |
 
-改后挡掉或不再出现的同人/素材帖：@ttdantell、@Has4gawa、@NothingS_ecial（被搜索排除词挡掉）；@Cursed_Nelari、@AlanbowePro、@ButtercupWinnie、@CrimsonRakan（skipHandles）；@kirbs428（给别人视频做的）；@ChimeralArt（#monsterhunter 手作）；@ChefDiabloDex（“model by @…”，新帖）。
+下面的“改后”是初版排除词跑的。改后挡掉或不再出现的同人/素材帖：@ttdantell（带 #HazbinHotel，现排除词仍挡）、@NothingS_ecial（#robloxugc，现排除词仍挡）、@Has4gawa（初版被 `-"rig by"` 挡；去掉后由预过滤“rig by: @”挡，测试里有原文）；@Cursed_Nelari、@AlanbowePro、@ButtercupWinnie、@CrimsonRakan（skipHandles）；@kirbs428（给别人视频做的）；@ChimeralArt（#monsterhunter 手作）；@ChefDiabloDex（“model by @…”，新帖）。
 
 改后仍留下、要靠模型筛的：@classicalletty 的 #mrpuzzles 同人（之后已加进标签表）、@Manuclay_ 的 Crash Bandicoot 概念图动画（只提作品名，不带标签，按规则不在预过滤里匹配），以及几条与同人无关的转发或新闻。这只是一次结果，下一周的实际通过率要看 #344 之后的周跑。
