@@ -9198,6 +9198,38 @@ export const inspirationItems = [
       "text": "Designing icons that make people wanna tap https://t.co/C5rBQ53Fbj",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-aura_uniiiii-234774",
+    "name": "One scene made with Claude in Python, Motion Canvas, Three.js and Blender",
+    "category": "practice",
+    "tag": "Motion",
+    "url": "https://x.com/aura_uniiiii/status/2126107363191234774",
+    "source": "link-only",
+    "focus": {
+      "zh": "一段 10 秒的横屏对比视频，画面竖着分成四栏，分别标着 Python、Motion Canvas、Three.js 和 Blender，四栏放的是同一个场景：一架驮着小纸箱的纸飞机掠过绿色山坡，天上有大朵的云，坡上有风车、小房子和蒲公英。Python 那栏像带颗粒的手绘水彩；Motion Canvas 那栏是描边的扁平插画，旁边浮着一张 easeOutElastic 缓动曲线小卡，还蹦出 WHOOSH! 这样的漫画字；Three.js 那栏是通透的实时 3D，飞机拖出一道蓝色光圈；Blender 那栏是完整渲染的 3D，云更厚、草更密，飞机拖着长长的白色烟迹。片尾四栏的分界消失，拼成一整片连续的风景。作者说视频是她用 Claude 做的，Blender 每次迭代要等三四十分钟。",
+      "en": "A 10-second landscape comparison split into four vertical panels labelled Python, Motion Canvas, Three.js and Blender, each showing the same scene: a paper plane carrying a small parcel over green hills, with big clouds, a windmill, a small house and dandelions. The Python panel looks like grainy hand-painted watercolour; the Motion Canvas panel is outlined flat illustration with a floating easeOutElastic easing-curve card and comic words like WHOOSH!; the Three.js panel is airy real-time 3D, the plane trailing a blue glowing ring; the Blender panel is fully rendered 3D with thicker clouds, denser grass and a long white smoke trail. At the end the panel borders vanish and the four strips join into one continuous landscape. The author says she made it with Claude, and that each Blender iteration took thirty to forty minutes to render."
+    },
+    "application": {
+      "zh": "让同一个镜头在四种工具里并排跑，再把分栏拼成一幅画，差别不用解释就看得出",
+      "en": "Running one shot side by side in four tools, then merging the panels into one picture, so the differences need no explanation"
+    },
+    "publisher": "Mimo🍀 (@aura_uniiiii)",
+    "kind": "social-post",
+    "designer": "Mimo",
+    "checkedAt": "2026-11-27",
+    "addedAt": "2026-11-27T06:48:41.238Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2126107363191234774",
+      "author": "Mimo🍀",
+      "handle": "aura_uniiiii",
+      "date": "2026-11-27",
+      "lang": "zh",
+      "text": "同样是用 Claude 做视频，为什么有人做出来像动画电影，有人做出来却像 PPT？🥹\n\n下面用同一个场景展示四种常见的制作方案，从左到右，效果差异一目了然👻\n\n1. Python：风格自由，可实现手绘质感，适合艺术动画、数学演示和数据可视化\n\n2. Motion Canvas：画面干净、动画流畅，适合知识科普和技术教程；同类的Remotion 基于 React，更适合批量生成模板化视频\n\n3. Three.js：网页实时渲染，擅长交互式 3D 场景和沉浸式视觉效果\n\n4. Blender：完整的 3D 建模与渲染能力，擅长电影级光影、运镜和产品展示，但渲染时间最长\n\n想让 Claude 做出真正惊艳的视频，除了提示词，选对工具也很重要！！\n\n你们最喜欢哪种风格呀？",
+      "hasMedia": true
+    }
   }
 ];
 
