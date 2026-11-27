@@ -22,14 +22,14 @@ test('the chronological stream includes every kind on the home (Videos is its ow
  // the end of the page as a reader does.
  const ids=()=>cards.locator('.insp-card-open').evaluateAll(as=>as.map(a=>a.pathname.split('/').pop()));
  const fill=async size=>{for(let count=await cards.count();count<size;count=await cards.count()){await page.evaluate(()=>scrollTo(0,document.documentElement.scrollHeight));await expect.poll(()=>cards.count()).toBeGreaterThan(count);}await expect(cards).toHaveCount(size)};
- const pages=Math.ceil(expected.length/100),seen=[];
+ const pages=Math.ceil(expected.length/100),seen=[];let videos=0;
  await expect(page.locator('.insp-pages [aria-label]')).toHaveCount(pages);
  for(let n=1;n<=pages;n++){
   if(n>1){await page.locator('.insp-pages').getByRole('button',{name:'下一页'}).click();await expect(page).toHaveURL(new RegExp(`[?&]page=${n}(&|$)`));await expect(page.locator('.insp-pages [aria-current=page]')).toHaveText(String(n));}
-  await fill(Math.min(100,expected.length-(n-1)*100));seen.push(...await ids());
+  await fill(Math.min(100,expected.length-(n-1)*100));seen.push(...await ids());videos+=await cards.locator('video').count();
  }
- expect(seen).toEqual(expected.map(i=>i.id));
- await expect(cards.locator('video').first()).toBeAttached();
+ // Videos are counted on every page: the last page can be a short one with only site cards.
+ expect(seen).toEqual(expected.map(i=>i.id));expect(videos).toBeGreaterThan(0);
  await page.locator('.insp-pages').getByRole('button',{name:'第 1 页'}).click();await expect(page).not.toHaveURL(/[?&]page=/);await expect(cards.locator('.insp-thumb-media').first()).toBeAttached();
  await page.getByRole('link',{name:'网站',exact:true}).click();await expect(page).toHaveURL(/\/browse\/web$/);
  // A tab is a full page load: act only after React has taken over the prerendered page, or its state replaces the filters.
@@ -89,7 +89,11 @@ test('details share an element transition and restore focus, history and the scr
 
 test('motion preference changes stop video downloads and playback; offscreen videos pause',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await page.addInitScript(()=>{window.transitionCalls=0;const start=document.startViewTransition?.bind(document);if(start)document.startViewTransition=update=>{window.transitionCalls++;return start(update)}});
- await page.goto('/zh');const first=page.locator('.insp-feed video').first();await expect(first).toBeAttached();await expect(first).not.toHaveAttribute('src');
+ // The newest 30 cards can all be sites or pictures (a week of gallery additions), so load more until a video card arrives.
+ // Once every section has loaded, the feed also loads more by itself near the button, so wait for growth instead of an exact count.
+ await page.goto('/zh');const first=page.locator('.insp-feed video').first(),cards=page.locator('.insp-feed>.insp-card'),more=page.getByRole('button',{name:/^加载更多/});await expect(cards).toHaveCount(30);
+ for(let count=30;!await first.count();count=await cards.count()){await more.click({timeout:2000}).catch(()=>{});await expect.poll(async()=>await first.count()>0||await cards.count()>count).toBe(true)}
+ await expect(first).not.toHaveAttribute('src');await page.evaluate(()=>scrollTo(0,0));
  await page.locator('.insp-card-open').first().click();await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).not.toBeVisible();expect(await page.evaluate(()=>window.transitionCalls)).toBe(0);
  // The newest cards may be pictures (photo posts), so the first video is not always on the first screen: bring it in, then scroll past it.
  await page.emulateMedia({reducedMotion:'no-preference'});await first.scrollIntoViewIfNeeded();await expect.poll(()=>first.evaluate(v=>!v.paused&&v.currentTime>0)).toBe(true);

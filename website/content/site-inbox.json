@@ -334,9 +334,9 @@
       "title": "Snapa",
       "publishedAt": "2026-11-11T00:00:00.000Z",
       "foundAt": "2026-11-24T08:04:41.794Z",
-      "status": "published",
-      "entry": "snapa-sites-uprock",
-      "reviewedAt": "2026-11-26"
+      "status": "rejected",
+      "reason": "Taken down after review: snapa.sites.uprock.pro looks like a site-builder template demo for a fictional camera, not a real brand's site.",
+      "reviewedAt": "2026-11-27"
     },
     {
       "id": "onepagelove-solea-dj-com",

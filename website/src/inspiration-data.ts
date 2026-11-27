@@ -9152,30 +9152,6 @@ export const inspirationItems = [
     "via": "https://minimal.gallery/gleb-kuznetsov/"
   },
   {
-    "id": "snapa-sites-uprock",
-    "name": "Snapa",
-    "category": "landing",
-    "tag": "Commerce",
-    "url": "https://snapa.sites.uprock.pro/",
-    "source": "link-only",
-    "focus": {
-      "zh": "首屏：超大白色字标“Snapa”压在暗调岩石场景上，白色相机居中，暖橙侧光照明，右下角大字“A new generation instant camera…”，左下角两行小字说明，右上角药丸形“Order”按钮 → 浅粉底色上居中的红色大号紧排宣言“Snapa is a new generation instant camera built for people who want better photos and real printed memories.”，下方一行红色小字 → 镜头特写，“optical zoom”刻字清晰可见，图片靠左排布，右侧大面积留白",
-      "en": "Hero: oversized white \"Snapa\" wordmark over a dark rock scene, white camera centred under warm orange side light, large \"A new generation instant camera…\" bottom right, two small captions bottom left, pill \"Order\" button → centred red, tightly tracked manifesto \"Snapa is a new generation instant camera…\" on pale blush with a tiny red subline → close-up of the lens showing the \"optical zoom\" engraving, image set left with open white space"
-    },
-    "application": {
-      "zh": "硬件产品发布落地页、电影感的产品摄影",
-      "en": "Hardware product launch pages, cinematic product photography"
-    },
-    "publisher": "Snapa",
-    "kind": "official-site",
-    "designer": null,
-    "checkedAt": "2026-11-26",
-    "addedAt": "2026-11-26T07:00:27.124Z",
-    "verification": "official-public-source",
-    "mobile": "not-tested",
-    "via": "https://www.csswinner.com/details/snapa/19571/"
-  },
-  {
     "id": "solea-dj",
     "name": "Solea",
     "category": "landing",
@@ -9198,6 +9174,102 @@ export const inspirationItems = [
     "verification": "official-public-source",
     "mobile": "not-tested",
     "via": "https://onepagelove.com/solea"
+  },
+  {
+    "id": "x-ayushsoni_io-884760",
+    "name": "Second: a painted-landscape identity for a personal AI model",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/ayushsoni_io/status/2125586059727884760",
+    "source": "link-only",
+    "focus": {
+      "zh": "一个 6 秒的品牌整理视频，给个人 AI 模型「Second」做的识别：画面主体是粗笔刷画的天空、草坡和沙滩，几个小人在坡上散步、看书、放风筝；文字都是细的白色或黑色衬线体，一两行短句压在插画上或放在白卡片里，讲的是帮你开始做事、记住你的习惯和在意的东西。同一套画和字铺到海报、发布会邀请函、户外广告牌、黑色笔记本、带黑色火漆封口的白信封和黑色信封、徽章贴纸上；还有一页黑底上只刷了一道草地，配一句短标语。这条帖子引用了作者早 4 天发的深色版本：黑底上的手写日程、整幅绿色草地上的一句白字，以及铅笔、风筝、椅子、树等一组同样笔触的小图标。",
+      "en": "A 6-second roundup of an identity for “Second”, a personal AI model. The core is loose, brushy paintings of sky, grassy slopes and beach, with small figures walking, reading and flying a kite. Type is a thin serif in white or black: one or two short lines set over the paintings or on white cards, about getting started on things and remembering your habits and what you care about. The same paintings and type carry onto posters, a launch-party invite, a street billboard, a black notebook, a white envelope with a black wax seal and a black envelope, and pin badges; one frame is a single stroke of grass on black with a short tagline. The post quotes a dark-mode take the author shared four days before it: handwritten schedule notes on black, one white line over a full field of green, and a set of small icons (pencil, kite, chair, tree) in the same brushwork."
+    },
+    "application": {
+      "zh": "让一种手绘笔触和一款细衬线字撑起整套品牌，从海报到信封都认得出来",
+      "en": "Letting one painted brushstroke and one thin serif carry a whole identity, recognisable from poster to envelope"
+    },
+    "publisher": "Ayush Soni (@ayushsoni_io)",
+    "kind": "social-post",
+    "designer": "Ayush Soni",
+    "checkedAt": "2026-11-26",
+    "addedAt": "2026-11-26T09:55:29.437Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2125586059727884760",
+      "author": "Ayush Soni",
+      "handle": "ayushsoni_io",
+      "date": "2026-11-25",
+      "lang": "en",
+      "text": "documenting the brand\nfirst person labs https://t.co/Q6hmERFLU8",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-dmiiiitrii-045957",
+    "name": "Character app icons with two dot eyes",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/dmiiiitrii/status/2066491158164045957",
+    "source": "link-only",
+    "focus": {
+      "zh": "一段循环的动图，八个 App 图标一个接一个换上来，每个都是一只只有两点眼睛的小角色：浅蓝渐变里鼓起的一团、黑底上彩虹色的炸毛球、紫色底上的小幽灵、荧光绿底上带速度线的白色刺团、蓝底上咧嘴笑的纸片、白底上紫色的软团、蓝底上像云又像花的白色笑脸、红底上一滴带尖角的白色水滴。每个角色只用一个外形加两点眼睛就有了表情，底色、渐变和阴影按 iOS 图标的圆角方块做。作者 Dmitri 是图标设计师，这是作者置顶的帖子；@morrre_dsgn 转发过作者的作品。",
+      "en": "A looping animation that swaps through eight app icons, each a small character with nothing but two dot eyes: a soft blob rising out of a light-blue gradient, a rainbow spiky puff on black, a little ghost on purple, a white spiky burst with speed lines on neon green, a grinning card on blue, a lilac squish on white, a white cloud-like flower smiling on blue, and a white pointed droplet on red. Each character gets its expression from a single silhouette plus two dots, set in an iOS rounded square with its own ground, gradient and shadow. Dmitri is an icon designer and this is the pinned post on that account; @morrre_dsgn has shared the work."
+    },
+    "application": {
+      "zh": "用一个外形加两点眼睛给图标一个性格",
+      "en": "Giving an icon a personality with one silhouette and two dot eyes"
+    },
+    "publisher": "Dmitri (@dmiiiitrii)",
+    "kind": "social-post",
+    "designer": "Dmitri",
+    "checkedAt": "2026-11-26",
+    "addedAt": "2026-11-26T10:12:45.875Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2066491158164045957",
+      "author": "Dmitri",
+      "handle": "dmiiiitrii",
+      "date": "2026-06-15",
+      "lang": "en",
+      "text": "this is truly insane https://t.co/Uijr6MOyj9",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-sdymoondesign-237413",
+    "name": "Mascot and symbol app icons, one per frame",
+    "category": "practice",
+    "tag": "Branding",
+    "url": "https://x.com/Sdymoondesign/status/2124449261853237413",
+    "source": "link-only",
+    "focus": {
+      "zh": "一段 5 秒的方形视频，每一帧换一个 App 图标，放在和它配色一致的整幅背景上：一半是脸一半是骷髅的卡通头像、深蓝发光方块里的两只眼睛、绿色原子轨道围着的发光图标、红白条纹遮阳篷下张大嘴的方脸、一片绿色的抽象字形、黑底上的线框多面体、横条绿色里的半圆、粉色底上的黑色小怪兽。帖子另外三张图把这些图标整理成「吉祥物」和「图标」两组网格，排进 iPhone 主屏幕，再单独放大一只黑白的刺猬角色。作者 Moon 是产品和品牌设计师，@morrre_dsgn 转发过作者的作品。",
+      "en": "A 5-second square video that changes app icon every frame, each on a full background in its own colours: a cartoon head that is half face and half skull, two eyes in a glowing dark-blue square, a glowing icon ringed by green atom orbits, a wide-mouthed square face under a red-and-white awning, an abstract green glyph, a wireframe polyhedron on black, a half circle in bands of green, and a small black monster on pink. Three more images in the post sort the icons into “mascot” and “icon” grids, place them on an iPhone home screen, and zoom in on a black-and-white hedgehog character. Moon is a product and brand designer; @morrre_dsgn has shared the work."
+    },
+    "application": {
+      "zh": "给每个图标配一整幅同色背景，单独看和放进主屏幕都成立",
+      "en": "Pairing each icon with a full background in its colours, so it works alone and on a home screen"
+    },
+    "publisher": "Moon (@Sdymoondesign)",
+    "kind": "social-post",
+    "designer": "Moon",
+    "checkedAt": "2026-11-26",
+    "addedAt": "2026-11-26T10:12:45.875Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2124449261853237413",
+      "author": "Moon",
+      "handle": "Sdymoondesign",
+      "date": "2026-11-22",
+      "lang": "en",
+      "text": "Designing icons that make people wanna tap https://t.co/C5rBQ53Fbj",
+      "hasMedia": true
+    }
   }
 ];
 

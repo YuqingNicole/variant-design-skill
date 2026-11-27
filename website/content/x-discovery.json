@@ -1,5 +1,5 @@
 {
-  "exclude": "-filter:replies -filter:quote -repos -github -prompt -prompts -bookmark -thread -tutorial -course -giveaway -trailer -kickstarter -\"who made\" -credit -claude -remotion -comfyui",
+  "exclude": "-filter:replies -filter:quote -repos -github -prompt -prompts -bookmark -thread -tutorial -course -giveaway -trailer -kickstarter -\"who made\" -credit -claude -remotion -comfyui -fanart -#fnaf -#hazbinhotel -robloxugc",
   "skipHandles": [
     { "handle": "e1genqq", "reason": "repo and tool lists with income claims, five times (2026-11-19 to 11-22)" },
     { "handle": "flxrnc", "reason": "\"N GitHub repos\" list threads, twice (2026-11-20, 11-22)" },
@@ -9,7 +9,15 @@
     { "handle": "DiscussingFilm", "reason": "film news account reposting official shorts (2026-11-20)" },
     { "handle": "ani_obsessive", "reason": "reposts films it writes about (2026-11-20)" },
     { "handle": "CartoonsOTMoon", "reason": "aggregator reposting trailers (2026-11-20)" },
-    { "handle": "dailytobytrivia", "reason": "trivia account reposting others' animation (2026-11-20)" }
+    { "handle": "dailytobytrivia", "reason": "trivia account reposting others' animation (2026-11-20)" },
+    { "handle": "ButtercupWinnie", "reason": "fan animation on others' models: six #deadlockfanart posts in a row, plus a commissions post (profile, 2026-11-27)" },
+    { "handle": "NothingS_ecial", "reason": "sells Roblox animation packs and emotes (#robloxugc); feed is product showcases (2026-11-27)" },
+    { "handle": "ttdantell", "reason": "Hazbin Hotel fan remake and a paid Alastor model; rejected 2026-11-25 and back in the 11-27 results" },
+    { "handle": "AlanbowePro", "reason": "every recent post is a Gojo vs Sukuna (Jujutsu Kaisen) fan movie update (2026-11-25, profile 11-27)" },
+    { "handle": "CrimsonRakan", "reason": "rigs of Sega's Whisper the Wolf, taken down by the owner (2026-11-26); feed is the same rig" },
+    { "handle": "Cursed_Nelari", "reason": "Looney Tunes fan art and animatics (#wileroad), rejected 2026-11-26" },
+    { "handle": "lambdarops", "reason": "#gunshow fandom posts, rejected 2026-11-27" },
+    { "handle": "Ast3rea", "reason": "self-described multifandom account; Minecraft creator-series fan animation rejected 2026-11-27" }
   ],
   "groups": [
     {
