@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
 import { loadEntries, toCard } from './content.mjs';
 import { cardToReference, validateCard } from '../../scripts/direction-card.mjs';
 import { indexableRoutes, agentInstall, aiTrainingCrawlers, shareCard, draftRoutes, escape, llms, llmsFull, loadReferences, referenceIndex, renderSite, robots, rss, sitemap, sectionPages, isCaseRoute, withNoindex, withoutCases, withoutDrafts } from './prerender.mjs';
@@ -140,7 +141,7 @@ test('guides get their own pages, are listed for search and read in both languag
   assert.ok(docsArticles.length >= 5 && docsArticles.every(g => g.base === '/docs'));
   assert.deepEqual(docsArticles.filter(g => g.translations).map(g => [g.slug, g.translations]), [['frontend-design-in-codex', { en: { status: 'draft' } }], ['design-system-after-pick-lessons', { en: { status: 'draft' } }], ['why-ai-design-directions-look-alike', { en: { status: 'draft' } }], ['make-ai-ui-look-premium', { en: { status: 'draft' } }], ['check-a-design-reference-is-still-true', { en: { status: 'draft' } }]]);
   const rendered = Object.fromEntries(guides.map(g => [guideRoute(g), `<main><h1>${g.slug}</h1></main>`]));
-  const pages = renderSite(entries, template, 'https://example.test', [], { guides, rendered });
+  const pages = renderSite(entries, template, 'https://example.test', [], { guides, rendered }), referenceIds = new Set(loadReferences().map(r => r.id));
   const map = sitemap(indexableRoutes(pages), 'https://example.test'), docs = await importTs(new URL('../src/docs-content.ts', import.meta.url).pathname), text = llms(entries, docs, 'https://example.test', [], guides);
   for (const g of guides) {
     const route = guideRoute(g), html = pages.get(`/zh${route}`);
@@ -149,8 +150,9 @@ test('guides get their own pages, are listed for search and read in both languag
     assert.ok(html.includes(`<link rel="canonical" href="https://example.test/zh${route}">`) && html.includes(`"url":"https://example.test/zh${route}"`), route);
     const ids = g.sections.map(s => s.id);
     assert.equal(new Set(ids).size, ids.length);
-    for (const value of [g.title, g.answer, ...g.sections.flatMap(s => [s.heading, ...s.body, ...(s.list ?? []), ...(s.code ? [s.code] : [])])]) assert.ok(value.zh && value.en, g.slug);
-    for (const s of g.sections) if (s.link && !s.link.href.startsWith('http')) assert.ok(pages.has(s.link.href) || ['/docs', '/docs/install', '/inspiration'].includes(s.link.href) || /^\/(guides|docs)\//.test(s.link.href) && pages.has(s.link.href) , s.link.href);
+    for (const value of [g.title, g.answer, ...g.sections.flatMap(s => [s.heading, ...s.body, ...(s.list ?? []), ...(s.code ? [s.code] : []), ...(s.media ?? []).flatMap(f => [f.alt, ...(f.caption ? [f.caption] : [])])])]) assert.ok(value.zh && value.en, g.slug);
+    for (const f of g.sections.flatMap(s => s.media ?? [])) assert.ok(f.src.startsWith('/guide-media/') && existsSync(new URL(`../public${f.src}`, import.meta.url)) && (!f.poster || existsSync(new URL(`../public${f.poster}`, import.meta.url))), f.src);
+    for (const s of g.sections) if (s.link && !s.link.href.startsWith('http')) assert.ok(pages.has(s.link.href) || ['/docs', '/docs/install', '/inspiration'].includes(s.link.href) || /^\/(guides|docs)\//.test(s.link.href) && pages.has(s.link.href) || s.link.href.startsWith('/inspiration/') && referenceIds.has(s.link.href.slice('/inspiration/'.length)), s.link.href);
   }
 });
 
@@ -201,7 +203,7 @@ test('draft English stays out of the English pages, hreflang and sitemap, and th
   assert.deepEqual(drafts, [...marked.filter(g => g.translations?.en?.status === 'draft').map(g => `/guides/${g.slug}`), '/d/pulse']);
   const legacy = guides.map(({ translations, ...guide }) => guide);
   assert.deepEqual(draftRoutes({ guides: legacy, entries }), [], 'legacy items without a status count as published');
-  assert.deepEqual(draftRoutes({ guides, entries }), ['/guides/undo-ai-design-changes', '/guides/git-or-snapshot-undo', '/guides/design-references-with-sources', '/guides/write-a-design-brief-for-ai', '/guides/edit-one-part-of-a-ui-with-ai']);
+  assert.deepEqual(draftRoutes({ guides, entries }), ['/guides/undo-ai-design-changes', '/guides/git-or-snapshot-undo', '/guides/design-references-with-sources', '/guides/write-a-design-brief-for-ai', '/guides/edit-one-part-of-a-ui-with-ai', '/guides/choose-a-tool-for-ai-animation']);
   const body = route => `<main><h1>${route}</h1></main>`, routes = [...guides.map(g => `/guides/${g.slug}`), '/d/pulse'];
   const english = Object.fromEntries(routes.map(r => [r, body(r)])), rendered = Object.fromEntries(guides.map(g => [`/guides/${g.slug}`, body(g.slug)]));
   const pages = renderSite(draftEntries, template, 'https://example.test', [], { guides: marked, rendered, english: withoutDrafts(english, drafts) });

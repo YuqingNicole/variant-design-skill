@@ -779,6 +779,28 @@ test('pages read without JavaScript, guides render in both languages, and unknow
   expect(await (await request.get('/sitemap.xml')).text()).toContain('/guides/undo-ai-design-changes</loc>');
 });
 
+test('the animation-tool guide serves our own clips with posters, prerendered and after hydration', async ({ browser, page, request }) => {
+  const route = '/zh/guides/choose-a-tool-for-ai-animation';
+  const noScript = await browser.newContext({ javaScriptEnabled: false }), reader = await noScript.newPage();
+  await reader.goto(route);
+  await expect(reader.locator('.guide-media video')).toHaveCount(6);
+  await noScript.close();
+  await page.goto(route);
+  const videos = page.locator('.guide-media video');
+  await expect(videos).toHaveCount(6);
+  for (const video of await videos.all()) {
+    await expect(video).toHaveAttribute('aria-label', /\S/);
+    for (const [url, type] of [[await video.getAttribute('src'), 'video/mp4'], [await video.getAttribute('poster'), 'image/jpeg']]) {
+      const response = await request.get(url);
+      expect(response.status(), url).toBe(200);
+      expect(response.headers()['content-type'], url).toContain(type);
+    }
+  }
+  await expect(page.locator('.guide-media figcaption').first()).toContainText('Python');
+  const box = await videos.first().boundingBox();
+  expect(Math.abs(box.width / box.height - 16 / 9)).toBeLessThan(0.05);
+});
+
 test('changelog runs on a month timeline with filters, titled items and the current skill version, in both languages', async ({ page }) => {
   const website = JSON.parse(fs.readFileSync(new URL('../website/package.json', import.meta.url), 'utf8')).version;
   await page.goto('/zh/changelog');await hydrated(page);

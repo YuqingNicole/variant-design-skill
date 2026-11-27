@@ -5,7 +5,9 @@ import type { Localized } from './i18n/localized';
 import type { Translations } from './i18n/translations';
 import { deliver, installCommand, prompts, repository, refine } from './docs-content';
 
-export type GuideSection = { id: string; heading: Localized; body: Localized[]; list?: Localized[]; code?: Localized; link?: { href: string; label: Localized } };
+// `media` is our own output, served from public/: a still (image) or a short clip (video, with a poster still).
+export type GuideMedia = { src: string; poster?: string; width: number; height: number; alt: Localized; caption?: Localized };
+export type GuideSection = { id: string; heading: Localized; body: Localized[]; list?: Localized[]; code?: Localized; media?: GuideMedia[]; link?: { href: string; label: Localized } };
 // `base` is the route a page lives under: the Q&A answers at /guides, the longer articles at /docs.
 export type Guide = { slug: string; base?: '/guides' | '/docs'; title: Localized; answer: Localized; publishedAt: string; sections: GuideSection[]; translations?: Translations };
 export const guideRoute = (g: Pick<Guide, 'slug' | 'base'>) => `${g.base ?? '/guides'}/${g.slug}`;
@@ -268,6 +270,91 @@ export const guides: Guide[] = [
           { zh: '要在一次修改里新增文件，得在准备副本之前先登记这个文件。', en: 'To add a new file in an edit, register it before the candidate is prepared.' },
         ],
         link: { href: `${records}/2026-10-26-cli-dogfood.md`, label: { zh: '查看 2026-10-26 的实测记录', en: 'Read the 2026-10-26 record' } } },
+    ],
+  },
+  {
+    // From our own runs on 2026-11-27 (docs/research/2026-11-27-ai-animation-four-tools.md): one brief, four tools,
+    // then the same brief plus a style paragraph. The idea comes from Mimo's comparison video, now a library entry.
+    slug: 'choose-a-tool-for-ai-animation',
+    translations: { en: { status: 'draft' } },
+    publishedAt: '2026-11-27',
+    title: { zh: '让 AI 做动画，选 Python、Motion Canvas、Three.js 还是 Blender', en: 'Python, Motion Canvas, Three.js or Blender: which tool to have AI animate with' },
+    answer: {
+      zh: '我们用同一句需求让 Claude Code 在四种工具里各做一段 4 秒的纸飞机动画。只写内容不写风格时，工具决定了默认的样子：Python 和 Motion Canvas 都给出扁平的剪贴画，Three.js 和 Blender 给出有光照的 3D。加上一段具体的风格要求后，Python 和 Three.js 做出来几乎一样。所以工具主要决定成本和能做什么，画面的质感要靠需求写出来。下面是原样的需求、成品、用时和选择建议。',
+      en: 'We gave Claude Code the same brief in four tools and had each make a 4-second paper-plane animation. With content but no style, the tool set the default look: Python and Motion Canvas both gave flat clip art, Three.js and Blender gave lit 3D. With one specific style paragraph added, Python and Three.js came out almost the same. So the tool mostly decides cost and what is possible, and the look has to be written into the brief. Below are the exact brief, the results, the times and how to choose.',
+    },
+    sections: [
+      { id: 'why', heading: { zh: '起因', en: 'Where this came from' },
+        body: [{ zh: 'Mimo 发过一段四栏对比视频：同一个纸飞机掠过山坡的场景，用 Claude 分别在 Python、Motion Canvas、Three.js 和 Blender 里做，一栏像水彩，一栏像描边插画，一栏是通透的实时 3D，一栏是完整渲染的 3D。她的帖子里没有给出提示词，所以我们看不出差别有多少来自工具、多少来自写法，就自己跑了一遍。', en: 'Mimo posted a four-panel comparison: one scene, a paper plane over hills, made with Claude in Python, Motion Canvas, Three.js and Blender. One panel looks like watercolour, one like outlined illustration, one like airy real-time 3D, one like fully rendered 3D. Her post does not include the prompts, so we could not tell how much of the difference came from the tool and how much from the wording, and we ran it ourselves.' }],
+        link: { href: '/inspiration/x-aura_uniiiii-234774', label: { zh: '看 Mimo 的对比视频', en: 'See Mimo’s comparison video' } } },
+      { id: 'setup', heading: { zh: '1. 我们怎么跑的', en: '1. How we ran it' },
+        body: [
+          { zh: '一台 M2、8 GB 内存的 Mac mini，Claude Code 2.1.331，模型 Opus 5.5，无头运行。每个工具一个空目录，依赖事先装好：Python 带 numpy、matplotlib 和 Pillow，Motion Canvas 3.17.2，three 0.180.0，Blender 5.3.0；需要浏览器的用本机 Chrome。四次只换需求里写工具的那半句：', en: 'An M2 Mac mini with 8 GB of memory, Claude Code 2.1.331 with Opus 5.5, run headless. Each tool got an empty folder with its dependencies installed: Python with numpy, matplotlib and Pillow, Motion Canvas 3.17.2, three 0.180.0, Blender 5.3.0, and the local Chrome where a browser was needed. Only the half-sentence naming the tool changed between the four runs:' },
+        ],
+        code: same('Make a 4-second animation, 960x540, 24 fps: a paper plane flies across the frame from left to right over rolling green hills, two or three clouds drift slowly, and a windmill on one of the hills turns its blades. Build it with <TOOL> and render it to out.mp4 in this directory (ffmpeg is installed). Work only inside this directory. Do not ask me questions; make reasonable choices. When you finish, list the commands that render it.'),
+        list: [
+          same('Python (the .venv here has numpy, matplotlib and Pillow; draw the frames yourself)'),
+          same('Motion Canvas (its packages are already in node_modules; Google Chrome is in /Applications and playwright-core is installed if you need to drive a browser)'),
+          same('Three.js (three is already in node_modules; Google Chrome is in /Applications and playwright-core is installed if you need to drive a browser)'),
+          same('Blender, scripted with its Python API (bpy) and run headless (Blender is at ./Blender.app/Contents/MacOS/Blender)'),
+        ] },
+      { id: 'look', heading: { zh: '2. 不写风格时：工具决定默认的样子', en: '2. Without a style: the tool sets the default look' },
+        body: [
+          { zh: '四段都按要求做出来了：960×540、24 帧每秒、96 帧。两种 2D 工具几乎撞了脸：Python 用 Pillow 画出扁平的渐变天空和三层山坡，Motion Canvas 多了描边和一个太阳。两种 3D 工具也很像：Three.js 做了带雾和投影的低多边形山坡，还自己加了几十棵树；Blender 是柔和的玩具感 3D，云在山上投下影子，纸飞机远看只是一个白色三角片。', en: 'All four came out to spec: 960×540, 24 fps, 96 frames. The two 2D tools nearly matched: Python drew a flat gradient sky and three layers of hills with Pillow, and Motion Canvas added outlines and a sun. The two 3D tools were close too: Three.js made low-poly hills with fog and shadows and added dozens of trees on its own; Blender gave soft, toy-like 3D with cloud shadows on the hills and a plane that reads as a white wedge.' },
+          { zh: '没有一段像 Mimo 视频里的水彩或电影感渲染。不写风格，Agent 会给出这个工具最省事的样子。', en: 'None looks like the watercolour or the cinematic render in Mimo’s video. Without a style, the agent gives the cheapest look the tool offers.' },
+        ],
+        media: [
+          { src: '/guide-media/ai-animation-tools/python.mp4', poster: '/guide-media/ai-animation-tools/python.jpg', width: 640, height: 360, alt: { zh: 'Python 版：扁平渐变天空、三层绿色山坡、白色风车，纸飞机拖着虚线飞过', en: 'Python version: flat gradient sky, three layers of green hills, a white windmill, a paper plane trailing a dashed line' }, caption: { zh: 'Python（Pillow）：Agent 91 秒，渲染 4.7 秒', en: 'Python (Pillow): agent 91 s, render 4.7 s' } },
+          { src: '/guide-media/ai-animation-tools/motion-canvas.mp4', poster: '/guide-media/ai-animation-tools/motion-canvas.jpg', width: 640, height: 360, alt: { zh: 'Motion Canvas 版：带描边的扁平插画，风车、太阳和底边被切平的云', en: 'Motion Canvas version: outlined flat illustration with a windmill, a sun and clouds cut flat at the bottom' }, caption: { zh: 'Motion Canvas：Agent 286 秒，渲染 6.9 秒', en: 'Motion Canvas: agent 286 s, render 6.9 s' } },
+          { src: '/guide-media/ai-animation-tools/threejs.mp4', poster: '/guide-media/ai-animation-tools/threejs.jpg', width: 640, height: 360, alt: { zh: 'Three.js 版：有光照的低多边形山坡，散布着树，风车和纸飞机', en: 'Three.js version: lit low-poly hills dotted with trees, a windmill and a paper plane' }, caption: { zh: 'Three.js：Agent 197 秒，渲染 5.1 秒', en: 'Three.js: agent 197 s, render 5.1 s' } },
+          { src: '/guide-media/ai-animation-tools/blender.mp4', poster: '/guide-media/ai-animation-tools/blender.jpg', width: 640, height: 360, alt: { zh: 'Blender 版：柔和的 3D 圆形山坡，云投下影子，白色三角形的纸飞机', en: 'Blender version: soft rounded 3D hills, clouds casting shadows, a white triangular paper plane' }, caption: { zh: 'Blender（EEVEE）：Agent 218 秒，渲染 59 秒', en: 'Blender (EEVEE): agent 218 s, render 59 s' } },
+        ] },
+      { id: 'style', heading: { zh: '3. 写了风格时：写法压过工具', en: '3. With a style: the wording outweighs the tool' },
+        body: [{ zh: '我们在 Python 和 Three.js 的需求后面加了同一段风格要求，写清材质、边缘、阴影、颜色和节奏：', en: 'We added the same style paragraph to the Python and Three.js briefs, naming the material, edges, shadows, colours and timing:' }],
+        code: same('Style: paper-cut collage. Every shape is a flat piece of cut paper with a slightly irregular edge, a soft drop shadow underneath and a faint paper grain; no gradients and no glossy shading. Palette: sage and moss greens, cream, warm terracotta, faded sky blue. Motion is stepped like stop-motion: hold each drawing for two frames (12 drawings per second) and let the plane wobble a little.'),
+        media: [
+          { src: '/guide-media/ai-animation-tools/python-styled.mp4', poster: '/guide-media/ai-animation-tools/python-styled.jpg', width: 640, height: 360, alt: { zh: 'Python 加风格要求：剪纸拼贴的山坡、奶油色的云、陶土色太阳和风车', en: 'Python with the style paragraph: cut-paper hills, cream clouds, a terracotta sun and windmill' }, caption: { zh: 'Python + 风格段落：Agent 381 秒', en: 'Python + style paragraph: agent 381 s' } },
+          { src: '/guide-media/ai-animation-tools/threejs-styled.mp4', poster: '/guide-media/ai-animation-tools/threejs-styled.jpg', width: 640, height: 360, alt: { zh: 'Three.js 加风格要求：同样的剪纸拼贴，平面纸片，没有 3D 光照', en: 'Three.js with the style paragraph: the same cut-paper collage, flat paper pieces, no 3D lighting' }, caption: { zh: 'Three.js + 风格段落：Agent 237 秒', en: 'Three.js + style paragraph: agent 237 s' } },
+        ],
+        list: [
+          { zh: '两段都做出了不规则的纸边、纸纹、软阴影和那几种颜色，也都每两帧才换一张画', en: 'Both have irregular paper edges, grain, soft shadows and the named colours, and both hold each drawing for two frames' },
+          { zh: 'Three.js 放弃了光照，把每样东西做成平面纸片，用五层半透明副本叠出阴影', en: 'Three.js dropped its lighting, made every object a flat paper piece and built shadows from five translucent copies' },
+          { zh: '两段放在一起，比没写风格时的 Python 和 Three.js 更像；Agent 用时变长了，Python 从 91 秒到 381 秒', en: 'Side by side they look more alike than the unstyled Python and Three.js did; the agent took longer, Python going from 91 s to 381 s' },
+        ] },
+      { id: 'motion', heading: { zh: '4. 动起来的感觉也要写', en: '4. Motion feel has to be written too' },
+        body: [{ zh: '四段不写风格的版本，运动都是一个匀速时钟加正弦波：飞机匀速横穿、上下起伏，风车匀速转，云匀速飘。没有起步、减速、停顿或弹性。Motion Canvas 擅长缓动和分段动画，这次也只用了一个 linear 的时钟。想要“飞机先冲出来再慢慢滑”“风车被风吹得一顿一顿”，得写在需求里，或者写出缓动曲线的名字。', en: 'In all four unstyled versions the motion is one constant clock plus sine waves: the plane crosses at a steady speed and bobs, the windmill turns evenly, the clouds drift evenly. There is no ease-in, slow-down, pause or bounce. Motion Canvas is built for easing and sequenced animation, and this run still used a single linear clock. If you want the plane to dart in and then glide, or the windmill to turn in gusts, write it in the brief, or name the easing curve.' }],
+        link: { href: '/docs/motion-rules-for-ai-generated-ui', label: { zh: '给 AI 生成的界面定动效规则', en: 'Motion rules for AI-generated UI' } } },
+      { id: 'effort', heading: { zh: '5. 工具真正决定的：成本和坑', en: '5. What the tool really decides: cost and gotchas' },
+        body: [{ zh: '“渲染”是全部跑完后，机器空闲时我们按 Agent 给的命令再跑一次的用时。', en: '"Render" is the time to run the agent’s own render command again afterwards, on an idle machine.' }],
+        list: [
+          { zh: 'Python：最快、最好预测。逐帧画好直接交给 ffmpeg，渲染不到 5 秒。缺点是什么都得自己画，默认就是剪贴画。', en: 'Python: the fastest and most predictable. It draws each frame and pipes it to ffmpeg, rendering in under 5 seconds. The catch is that everything is drawn by hand, and the default is clip art.' },
+          { zh: 'Motion Canvas：没有无头渲染命令，只能在编辑器里点 Render。Agent 去读界面代码找到按钮，再用 playwright 在无头 Chrome 里点它；它输出了 98 帧，要截成 96 帧。前一轮它在 30 分钟里一直在找出片的办法，没有做出成品。', en: 'Motion Canvas: there is no headless render command, only the Render button in its editor. The agent read the UI code to find the button and clicked it with playwright in headless Chrome; it output 98 frames that had to be cut to 96. In an earlier round it spent 30 minutes looking for a way to render and produced nothing.' },
+          { zh: 'Three.js：要一个浏览器出片，走哪条图形路径差很多。这一轮用 GPU，渲染 5 秒；前一轮 Agent 选了软件渲染，整次用了约 16 分钟。它会自己加需求里没有的东西，比如树和影子。', en: 'Three.js: it needs a browser to render, and the graphics path matters a lot. This round used the GPU and rendered in 5 seconds; in an earlier round the agent picked software rendering and the whole run took about 16 minutes. It adds things nobody asked for, such as trees and shadows.' },
+          { zh: 'Blender：渲染慢一个数量级，也最吃机器。空闲时 96 帧 59 秒；前一轮和别的任务同时跑，每帧 6.5 到 33 秒，整段约 19 分钟，而 Agent 把渲染放到后台就给出了最后的回复，没有等它跑完。默认的 EEVEE 画面是玩具感，不是电影感，Mimo 说她的 Blender 每次迭代要等三四十分钟。', en: 'Blender: an order of magnitude slower to render, and the heaviest on the machine. Idle, 96 frames took 59 seconds; in an earlier round, sharing the machine with other jobs, each frame took 6.5 to 33 seconds, about 19 minutes in all, and the agent moved the render to the background and gave its final reply without waiting for it to finish. The default EEVEE look is toy-like, not cinematic; Mimo says each Blender iteration of hers took 30 to 40 minutes.' },
+        ],
+        link: { href: `${records}/2026-11-27-ai-animation-four-tools.md`, label: { zh: '查看完整记录', en: 'Read the full record' } } },
+      { id: 'pick', heading: { zh: '6. 怎么选', en: '6. Which to pick' },
+        body: [],
+        list: [
+          { zh: '要快、要能反复改、画面是 2D 插画、图表或手绘质感：Python。风格写清楚，它几乎什么都能画。', en: 'Fast, many revisions, a 2D illustration, chart or hand-drawn look: Python. With the style written out, it can draw almost anything.' },
+          { zh: '讲解视频、要精确的时间轴和缓动：Motion Canvas，但先准备好出片的办法，或者能接受在编辑器里手动点 Render。批量做模板化视频，Mimo 提到同类的 Remotion 更合适，我们没有试。', en: 'Explainers that need a precise timeline and easing: Motion Canvas, but sort out how to render first, or accept clicking Render in the editor. For templated videos in bulk, Mimo points to Remotion; we did not try it.' },
+          { zh: '要真的 3D 空间、镜头运动，或者同一个场景还要放在网页上交互：Three.js。确认无头浏览器走的是 GPU。', en: 'Real 3D space, camera moves, or a scene that should also run interactively on a page: Three.js. Check that the headless browser uses the GPU.' },
+          { zh: '要电影级的光影和材质，并且能等：Blender。先渲一两帧看构图，再渲整段；内存小的机器上不要和别的渲染一起跑。', en: 'Cinematic light and materials, and time to wait: Blender. Render a frame or two to check the composition before the whole clip, and on a machine with little memory do not run it alongside other renders.' },
+        ] },
+      { id: 'brief', heading: { zh: '7. 和 Variant Design 的关系', en: '7. How this relates to Variant Design' },
+        body: [
+          { zh: 'Variant Design 要解决的就是这个问题：AI 不被告知要什么样，就给出最省事、最常见的样子。动画和界面一样，选工具只决定从哪个默认值出发，质感、颜色、节奏要写成能检查的要求。我们的技能在生成之前先把形容词拆成具体的做法，并让三个方向在取舍上真正不同，而不是同一个默认值换三种颜色。', en: 'This is the problem Variant Design exists for: told nothing about the look, AI gives the cheapest, most common one. Animation is no different from interfaces here. The tool only decides which default you start from; texture, colour and timing have to be written as requirements you can check. Before generating, our skill turns adjectives into concrete methods and makes the three directions differ in their tradeoffs, not one default in three colours.' },
+          { zh: '技能本身生成的是界面，不生成视频；这里借的是写需求的方法。', en: 'The skill itself generates interfaces, not video; what carries over is how to write the brief.' },
+        ],
+        link: { href: '/guides/write-a-design-brief-for-ai', label: { zh: '怎么给 AI 写设计需求', en: 'How to write a design brief for AI' } } },
+      { id: 'limits', heading: { zh: '没有验证的', en: 'Not verified' },
+        body: [],
+        list: [
+          { zh: '每个工具、每种写法只跑了一次；前后两轮的用时差别很大，数字只能看量级。', en: 'Each tool and wording ran once; times differed a lot between the two rounds, so read them as orders of magnitude.' },
+          { zh: '只试了 Claude Code 和 Opus 5.5，没有试 Codex 或别的模型。', en: 'Only Claude Code with Opus 5.5; not Codex or other models.' },
+          { zh: '没有试 manim、Remotion，也没有试 Blender 的 Cycles 渲染器；风格段落只在 Python 和 Three.js 上试过。', en: 'No manim, no Remotion and no Blender Cycles; the style paragraph was tried only with Python and Three.js.' },
+          { zh: '没有找人盲评哪一段更好看。', en: 'No blind rating of which clip looks better.' },
+        ] },
     ],
   },
 ];
