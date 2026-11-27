@@ -117,16 +117,23 @@ export function planSearches(config, { groups, days, now = new Date() } = {}) {
 // Cheap checks before a candidate costs a model screening. Each pattern is a kind of post x-publish.mjs rejected again and
 // again (inbox, 2026-11-16 to 11-22): repo and tool lists, reposts of someone else's video, growth and income posts,
 // promotion, and showcases of an AI model. A quote post is skipped too: its video is usually the quoted account's.
-// Fan work and shots made for someone else's video are out too (owner, 2026-11-26); only explicit markers (and the #fnaf tag the owner named) are matched
-// here, since a bare franchise name can sit in an original post ("my OC in a FNAF style"), and the screening prompt catches the rest from the frames.
+// Fan work and shots made for someone else's video are out too (owner, 2026-11-26). Only explicit markers are matched, since a bare franchise name
+// can sit in an original post ("my OC in a FNAF style"); the screening prompt catches the rest from the frames. After the 2026-11-27 run screened six
+// posts and kept none, the markers grew to what those posts and their accounts actually carried: fan tags inside hashtags (#deadlockfanart), fandom
+// hashtags (only as hashtags, from rejected posts), "AU", someone else's rig or model, and game-asset or commission sales (#robloxugc, ko-fi shop links).
+const fandomTags = 'fnaf|hazbinhotel|helluvaboss|alastor|deltarune|undertale|dandysworld|wemmbu|unstableuniverse|dreamsmp|smg4|mrpuzzles|tlok|looneytunes|wileroad|monsterhunter|deadlock';
 export const SKIP_TEXT = [
   ['resource list', /\b\d+\s+(?:[\w-]+\s+){0,2}(?:repos?|repositories|tools|skills|prompts|resources|websites|plugins)\b|\bbookmark (?:this|these|it)\b|🧵/iu],
   ['repo or tool promotion', /\bgithub\b|\brepo\b|\bremotion\b|\bcomfyui\b|\bopen[- ]source\b/i],
   ['repost', /\bwho made this\b|\bcredits?\s*(?::|to\b|goes\b)|\bvia\s+@|\bnot mine\b|(?:^|\s)(?:source|🎥|📹)\s*:|\binstagram\s*(?:🎥|📸|story|post|update|live)/iu],
   ['income or growth claim', /\$\s?\d[\d,.]*\s*[km]?\s*(?:\/|per|a|in)\s*(?:month|mo|week|day)\b|\bpassive income\b|\bmake money\b|\bfollowers in \d+\s*(?:days|weeks)\b/i],
   ['promotion', /\blink in bio\b|\buse code\b|\bpre-?order\b|\bkickstarter\b|\bgiveaway\b|\bsponsored\b|#ad\b|\bwishlist\b/i],
-  ['fan work', /\bfan[- ]?(?:art|animation|animatic|film|game|remake|made)s?\b|\bfanart\b|#fnaf\b/i],
-  ['made for someone else', /\b(?:shots?|scenes?|parts?)\s+(?:i|we)\s+(?:animated|made|did)\s+for\s+(?:@?\w+'s\b|an?\s+client)|\bcommissioned by\b|\bcommission for @/i],
+  ['fan work', new RegExp(String.raw`\bfan[- ]?(?:art|animation|animatic|film|game|remake|made)s?\b|\bfanart\b|#\w*fan(?:art|made|anim|animation|animatic|work|fic)s?\b|#(?:${fandomTags})\b|\boc\s*x\s*canon\b|\bcanon\s*x\s*oc\b`, 'i')],
+  // Case-sensitive: "my Undertale AU", "ACTOR AU", #UndertaleAU, but not "shipping to AU" or #artnouveau.
+  ['fan work', /#\w*AU\b|(?<!\b(?:to|in|from|across)\s)\bAU\b(?![$\d])/],
+  ["someone else's rig or model", /\b(?:rig|model|face animation)s?\s*(?:by|credits?)\b(?!\s*:?\s*(?:me|myself|hand)\b)/i],
+  ['asset or commission sale', /#robloxugc\b|\bugc\b|\b(?:animation|asset|emote|model|vfx|sprite)\s+packs?\b|\bemotes?\s+(?:is|are)\s+(?:on sale|out)\b|\bon sale\b|\bavailable (?:now )?on (?:the )?(?:roblox|marketplace|gumroad|itch|booth|fab|ko-?fi|unity asset store|blender ?market|superhive)\b|\b(?:commissions?|comms)\s+(?:are\s+)?open\b|\bopen(?:ed)? for (?:commissions?|comms)\b|ko-?fi\.com\/s\/|gumroad\.com|itch\.io\b/i],
+  ['made for someone else', /\b(?:shots?|scenes?|parts?|stuff|bits)\s+(?:i|we)\s+(?:animated|made|did)\s+for\s+(?:@?\w+'s\b|an?\s+client)|\bcommissioned by\b|\bcommission for @/i],
   ['AI model showcase', /\b(?:fable|opus|sonnet|claude|gpt|chatgpt|gemini|veo|sora|kling|midjourney|seedance|dreamina|higgsfield)(?:[\s-]+[a-z]+)?[\s-]*\d|\bearly access to @/i],
 ];
 
