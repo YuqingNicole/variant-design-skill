@@ -60,6 +60,13 @@ test('the shipped config searches for creative videos posted by their makers, no
   }
   for (const s of weekly) assert.match(s.label, /"i made"|"made this"|wip/, `${s.label} has no maker phrasing`);
   assert.ok(config.skipHandles.some(entry => entry.handle === 'e1genqq'));
+  // Fan work filled the 2026-11-27 pool (0 of 6 kept); the commonest markers are cut at search time for every query.
+  for (const s of planSearches(config, { groups: 'all', now })) {
+    for (const term of ['-fanart', '-#fnaf', '-#hazbinhotel', '-robloxugc']) assert.ok(s.query.includes(term), `${s.label} lacks ${term}`);
+    // Only hashtags for franchises (a bare name can sit in an original post), and no -"rig by", which would drop "rig by me".
+    assert.doesNotMatch(s.query, / -(?:fnaf|hazbinhotel|"rig by")(?:\s|$)/);
+  }
+  for (const handle of ['ButtercupWinnie', 'NothingS_ecial']) assert.ok(config.skipHandles.some(entry => entry.handle === handle), handle);
 });
 
 test('posts the screening always rejected are skipped before they cost a model call', () => {
@@ -82,6 +89,21 @@ test('posts the screening always rejected are skipped before they cost a model c
     ['Bonnie walk cycle test #FNAF #blender', 'fan work'],
     ["shots i animated for jude's new video 113 hours of work, some of my best", 'made for someone else'],
     ['animation commissioned by @studio for their channel', 'made for someone else'],
+    // Post text read from X on 2026-11-27: the run's six rejections and the recent posts of those accounts.
+    ["#deadlockfanart #deadlock #blender #3danimation ( https:// open3dlab.com/user/266094/) made by, RS_VorT [WIP] I finished Ivy's Ani", 'fan work'],
+    ['New WIP my guys! I already made it to the chorus #alastor #WIP #blender #animation #HazbinHotel', 'fan work'],
+    ['(1/?) ACTOR AU #wileroad #LooneyTunes #RoadRage #CoyoteVsAcme #RoadRunner', 'fan work'],
+    ['Paolumu are finished 🥰 Handmade crafts inspired by #monsterhunter', 'fan work'],
+    ['walk cycle for my #UndertaleAU', 'fan work'],
+    ['#wpnz , #mrpuzzles animation! That also almost broke my animation program 💔 I really do love cav and smg4', 'fan work'],
+    ['my oc x canon animatic is done', 'fan work'],
+    ['lil animation i made Face animation by: @RichardAnims123 Mr Puzzles rig by: @catmationz', "someone else's rig or model"],
+    ['I made an animation pack that lets you hold your weapons! #Roblox #RobloxDev #RobloxAnimation #robloxugc', 'asset or commission sale'],
+    ["Baby Don't Worry Emote is on sale! #Roblox #RobloxDev #RobloxAnimation #robloxugc", 'asset or commission sale'],
+    ['Opened for commissions! https:// ko-fi.com/winniebuttercup #commissions #blender #3Danimation', 'asset or commission sale'],
+    ['https:// ko-fi.com/s/3ab50bc277 HERE IT IS! MY 3D MODEL FOR BLENDER!', 'asset or commission sale'],
+    ['free pixel VFX pack, grab it on itch.io', 'asset or commission sale'],
+    ["The stuff I animated for Judelow's latest video", 'made for someone else'],
   ];
   for (const [text, reason] of rejected) assert.equal(skipReason(row(text)), reason, text);
   const kept = [
@@ -90,6 +112,17 @@ test('posts the screening always rejected are skipped before they cost a model c
     'my original character, a little voxel rabbit, finally walks',
     'my original character in a FNAF style, first walk cycle',
     'made my first fan for the summer, a paper fan that folds itself',
+    // Original work read from X on 2026-11-27, and near misses for the newer markers.
+    'Mixed media stop motion I made using 50 pics of Novembers full beaver moon 🔭🦫',
+    'the cutest animation WIP i have ever made in my life HEHE',
+    'Beethoven animation test',
+    'my stop motion short, shipping prints to AU and NZ next week',
+    'Art Nouveau poster loop I animated #artnouveau',
+    'model by me, rig by me, animated in two weeks',
+    'I sculpted the model by hand and shot it frame by frame',
+    'my new short is available now on YouTube',
+    // Published 2026-11-24 (@gen_xcx): an original Roblox effect, so #RobloxDev alone must not count as an asset sale.
+    "black hole i made with rocca's textures, the math for the rocks took me too much time 🥀\nbetter quality in my port#Roblox #RobloxVFX #RobloxDev #VFX #realtimevfx",
     'finished my first stop motion, it took me 3 weeks',
   ];
   for (const text of kept) assert.equal(skipReason(row(text)), null, text);
