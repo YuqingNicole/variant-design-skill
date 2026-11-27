@@ -1,8 +1,34 @@
 {
-  "updatedAt": "2026-11-27T01:03:16.843Z",
+  "updatedAt": "2026-11-27T06:48:41.238Z",
   "source": "Ego Lite on X search",
   "reviewPolicy": "Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request that merges itself once CI passes; nobody reviews entries one by one.",
   "candidates": [
+    {
+      "id": "2126107363191234774",
+      "url": "https://x.com/aura_uniiiii/status/2126107363191234774",
+      "handle": "aura_uniiiii",
+      "author": "Mimo🍀",
+      "publishedAt": "2026-11-27",
+      "likes": 2100,
+      "capturedAt": "2026-11-27T06:48:41.238Z",
+      "query": "maintainer request: original maker behind a @369Serena repost (2026-11-27)",
+      "status": "published",
+      "entry": "x-aura_uniiiii-234774",
+      "reviewedAt": "2026-11-27"
+    },
+    {
+      "id": "2126161591502598253",
+      "url": "https://x.com/369Serena/status/2126161591502598253",
+      "handle": "369Serena",
+      "author": "Serena 木瓜",
+      "publishedAt": "2026-11-27",
+      "likes": 18,
+      "capturedAt": "2026-11-27T06:48:41.238Z",
+      "query": "maintainer link (2026-11-27)",
+      "status": "rejected",
+      "reason": "Repost: the video is credited \"From Mimo🍀\" in the post, and @aura_uniiiii published it about three and a half hours earlier and says in her replies that she made it, so her original post was added instead.",
+      "reviewedAt": "2026-11-27"
+    },
     {
       "id": "2123584298712473988",
       "url": "https://x.com/lambdarops/status/2123584298712473988",
