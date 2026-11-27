@@ -26,7 +26,7 @@ function redirectFor(pathname, search) {
   return null;
 }
 const clientRoutes = new Set((vercel.rewrites ?? []).filter(r => r.destination === "/app.html").map(r => r.source));
-const mime = { ".css": "text/css", ".html": "text/html", ".js": "text/javascript", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml", ".jpg": "image/jpeg", ".txt": "text/plain", ".xml": "application/xml" };
+const mime = { ".css": "text/css", ".html": "text/html", ".js": "text/javascript", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml", ".jpg": "image/jpeg", ".mp4": "video/mp4", ".txt": "text/plain", ".xml": "application/xml" };
 
 createServer(async (request, response) => {
   if (await handleApi(request, response)) return;
