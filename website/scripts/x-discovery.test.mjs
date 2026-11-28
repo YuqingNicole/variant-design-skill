@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { run, SKIP_TEXT, skipReason, extractCandidates, makeAccountSearchUrl, makeSearchUrl, mergeCandidates, parseCount, planSearches, readConfig, selectGroups, validateConfig } from './x-discovery.mjs';
+import { run, SKIP_TEXT, skipReason, extractCandidates, makeAccountSearchUrl, makeSearchUrl, mergeCandidates, parseCount, planSearches, readConfig, selectGroups, validateConfig, batchAuthors, makeAuthorQuery, includesAuthors, fillSlots, onePerAuthor, applyCarried, saveCarried, loadCarried, libraryHandles } from './x-discovery.mjs';
 
 const config = await readConfig();
 const now = new Date('2026-11-14T01:00:00.000Z');
@@ -48,12 +48,12 @@ test('an account search keeps only that account, uses its own like threshold and
 });
 
 test('the shipped config searches for creative videos posted by their makers, not design work or tool lists (Videos tab, 2026-11-20)', () => {
-  const weekly = planSearches(config, { now });
+  const weekly = planSearches(config, { now }).filter(s => s.kind !== 'authors');
   assert.deepEqual([...new Set(weekly.map(s => s.group))], ['weekly']);
   assert.ok(weekly.length >= 1 && weekly[0].required && weekly[0].kind === 'query');
   assert.match(weekly[0].query, /"i made".*animation.*filter:videos min_faves:\d+ since:2026-11-07$/);
   // The 2026-11-22 run screened six posts and rejected all six: repo lists, income claims, "who made this" reposts.
-  for (const s of planSearches(config, { groups: 'all', now })) {
+  for (const s of planSearches(config, { groups: 'all', now }).filter(s => s.kind !== 'authors')) {
     assert.doesNotMatch(s.label.replace(/(^|\s)-\S+/g, ''), /\b(design|typography|dashboard|branding|rebrand|ui|interaction|prototype)\b/i, s.label);
     for (const term of ['-filter:quote', '-filter:replies', '-repos', '-github', '-"who made"']) assert.ok(s.query.includes(term), `${s.label} lacks ${term}`);
     assert.ok(s.query.length <= 500, `${s.label} is ${s.query.length} characters`);
@@ -61,7 +61,7 @@ test('the shipped config searches for creative videos posted by their makers, no
   for (const s of weekly) assert.match(s.label, /"i made"|"made this"|wip/, `${s.label} has no maker phrasing`);
   assert.ok(config.skipHandles.some(entry => entry.handle === 'e1genqq'));
   // Fan work filled the 2026-11-27 pool (0 of 6 kept); the commonest markers are cut at search time for every query.
-  for (const s of planSearches(config, { groups: 'all', now })) {
+  for (const s of planSearches(config, { groups: 'all', now }).filter(s => s.kind !== 'authors')) {
     for (const term of ['-fanart', '-#fnaf', '-#hazbinhotel', '-robloxugc']) assert.ok(s.query.includes(term), `${s.label} lacks ${term}`);
     // Only hashtags for franchises (a bare name can sit in an original post), and no -"rig by", which would drop "rig by me".
     assert.doesNotMatch(s.query, / -(?:fnaf|hazbinhotel|"rig by")(?:\s|$)/);
@@ -152,7 +152,7 @@ test('a run covers the weekly groups unless groups are named; named groups keep 
   assert.deepEqual(selectGroups(groupsFixture, '').map(g => g.id), selectGroups(groupsFixture).map(g => g.id));
   assert.deepEqual(selectGroups(groupsFixture, 'designers, print').map(g => g.id), ['print', 'designers']);
   assert.deepEqual(selectGroups(groupsFixture, ['all']).map(g => g.id), groupsFixture.groups.map(g => g.id));
-  assert.throws(() => selectGroups(groupsFixture, 'print,nope'), /Unknown discovery group: nope\. Known groups: weekly,/);
+  assert.throws(() => selectGroups(groupsFixture, 'print,nope'), /Unknown discovery group: nope\. Known groups: weekly, print, designers, "authors", or "all"\./);
 
   const print = planSearches(groupsFixture, { groups: 'print', now });
   assert.equal(print.length, 1);
@@ -222,8 +222,9 @@ test('new posts join the inbox with their group, reviewed candidates are left as
 // A stand-in for Ego Lite's task space: each search URL answers with the rows listed for its query, or times out.
 async function runWith(pages, options = {}) {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'x-discovery-'));
-  const configFile = path.join(dir, 'x-discovery.json'), inbox = path.join(dir, 'inbox.json');
-  await fs.writeFile(configFile, JSON.stringify({ skipHandles: [{ handle: 'lister', reason: 'repo lists' }], groups: [
+  const configFile = path.join(dir, 'x-discovery.json'), inbox = path.join(dir, 'inbox.json'), data = path.join(dir, 'inspiration-data.ts');
+  await fs.writeFile(data, `export const inspirationItems = [\n${JSON.stringify({ id: 'x-oldmaker-1', tag: 'Animation', post: { handle: 'OldMaker' } })}\n];\n`);
+  await fs.writeFile(configFile, JSON.stringify({ skipHandles: [{ handle: 'lister', reason: 'repo lists' }], ...(options.authors ? { authors: options.authors } : {}), groups: [
     { id: 'weekly', weekly: true, days: 7, queries: [{ terms: 'design', minLikes: 100, required: true }], accounts: [{ handle: 'akella', minLikes: 50 }] },
     { id: 'print', days: 30, queries: [{ terms: 'zine', minLikes: 150 }, { terms: 'letterpress', minLikes: 150 }] },
   ] }));
@@ -242,7 +243,7 @@ async function runWith(pages, options = {}) {
   globalThis.taskSpace = async () => ({ page: () => page, finish: async () => { finished = true; } });
   console.log = line => lines.push(line);
   let error;
-  try { await run({ groups: options.groups, config: configFile, inbox, pause: 0 }); } catch (caught) { error = caught; } finally { console.log = log; delete globalThis.taskSpace; }
+  try { await run({ groups: options.groups, limit: options.limit, config: configFile, inbox, data, pause: 0 }); } catch (caught) { error = caught; } finally { console.log = log; delete globalThis.taskSpace; }
   const written = await fs.readFile(inbox, 'utf8').then(JSON.parse, () => null);
   await fs.rm(dir, { recursive: true });
   return { visited, lines, error, written, finished };
@@ -261,11 +262,12 @@ test('a run reads each planned search, writes new candidates with their group an
   assert.deepEqual(got.written.candidates.map(c => [c.id, c.status, c.group, c.watched]), [
     ['2120000000000000023', 'pending', 'weekly', true], ['2120000000000000024', 'pending', 'print', undefined], ['2120000000000000021', 'published', undefined, undefined],
   ]);
-  assert.match(got.lines[0], /^X creative video discovery: 3 qualifying posts, 2 new, from 4 searches; /);
-  assert.deepEqual(got.lines.slice(1), [
+  assert.equal(got.lines[0], 'X creative video discovery: 3 qualifying posts, 2 new (0 from listed authors, 2 from keyword searches), from 4 searches');
+  assert.deepEqual(got.lines.slice(1, -1), [
     '  weekly: 2 qualifying, 1 new; 0/2 searches gave nothing (none)',
     '  print: 1 qualifying, 1 new; 1/2 searches gave nothing (letterpress)',
   ]);
+  assert.match(got.lines.at(-1), /^  written to .*inbox\.json$/);
   assert.equal(got.finished, true);
 });
 
@@ -279,7 +281,7 @@ test('quote posts, skipped accounts and list or repost text never reach the inbo
   ] });
   assert.deepEqual(got.written.candidates.map(c => c.handle), ['maker']);
   assert.equal('text' in got.written.candidates[0], false, 'the post text is read for the check, not stored');
-  assert.equal(got.lines.at(-1), '  skipped before screening: 1 quote post, 1 skipped account, 1 repost, 1 resource list');
+  assert.equal(got.lines.at(-2), '  skipped before screening: 1 quote post, 1 skipped account, 1 repost, 1 resource list');
 });
 
 test('a results page that times out once is read on the retry', async () => {
@@ -292,7 +294,7 @@ test('a results page that times out once is read on the retry', async () => {
 test('with no groups named only the weekly group is searched', async () => {
   const got = await runWith({ design: [post('one', '2120000000000000021', 500)] });
   assert.deepEqual(got.visited.map(q => q.split(' ')[0]), ['design', 'from:akella', 'from:akella']);
-  assert.deepEqual(got.lines.slice(1), ['  weekly: 1 qualifying, 1 new; 1/2 searches gave nothing (@akella)']);
+  assert.deepEqual(got.lines.slice(1, -1), ['  weekly: 1 qualifying, 1 new; 1/2 searches gave nothing (@akella)']);
 });
 
 test('the inbox is left unchanged when a required search, or every search of the run, reads nothing', async () => {
@@ -308,4 +310,126 @@ test('the inbox is left unchanged when a required search, or every search of the
   assert.match(nothing.error?.message, /^X returned no readable posts; the inbox was left unchanged\./);
   assert.equal(nothing.visited.length, 4, 'a group with no required search tries all of its searches, each twice, first');
   assert.deepEqual(nothing.written, { candidates: existing });
+});
+
+// The author list (owner, 2026-11-28): keyword searches kept bringing fan work, so listed makers are read first.
+const authorsFixture = { days: 7, minLikes: 100, list: ['maker_one', 'maker_two', 'OldMaker'].map(handle => ({ handle, added: '2026-11-28', from: 'library: x', why: 'posts own animation' })) };
+
+test('listed authors are searched first, in batches X still answers, without authors the library already has', () => {
+  const handles = Array.from({ length: 40 }, (_, i) => `maker_number_${i}`);
+  const batches = batchAuthors(handles, '2026-11-21', 100);
+  assert.deepEqual(batches.flat(), handles, 'every author once, in list order');
+  assert.ok(batches.length > 1);
+  for (const batch of batches) assert.ok(makeAuthorQuery(batch, '2026-11-21', 100).length <= 500);
+  assert.equal(makeAuthorQuery(['a', 'b'], '2026-11-21', 100), '(from:a OR from:b) -filter:replies -filter:quote filter:videos min_faves:100 since:2026-11-21');
+
+  const withAuthors = validateConfig({ ...groupsFixture, authors: authorsFixture });
+  const plan = planSearches(withAuthors, { now, inLibrary: new Set(['oldmaker']) });
+  assert.equal(plan[0].kind, 'authors');
+  assert.deepEqual(plan[0].handles, ['maker_one', 'maker_two']);
+  assert.equal(plan[0].query, '(from:maker_one OR from:maker_two) -filter:replies -filter:quote filter:videos min_faves:100 since:2026-11-07');
+  assert.deepEqual(plan.slice(1).map(s => s.group), ['weekly', 'weekly']);
+  assert.equal(includesAuthors(withAuthors, 'print'), false, 'a named group runs without the author list');
+  assert.deepEqual(planSearches(withAuthors, { groups: 'authors', now }).map(s => s.kind), ['authors']);
+  assert.equal(planSearches(withAuthors, { groups: 'all', now })[0].kind, 'authors');
+
+  // The shipped list: every listed author is searched unless the library already has them, and each batch fits.
+  assert.ok(config.authors.list.length >= 30);
+  const shipped = planSearches(config, { now, inLibrary: new Set(['kuro_40']) }).filter(s => s.kind === 'authors');
+  assert.deepEqual(shipped.flatMap(s => s.handles), config.authors.list.map(a => a.handle).filter(h => h !== 'kuro_40'));
+  for (const s of shipped) assert.ok(s.query.length <= 500, `${s.label} is ${s.query.length} characters`);
+  for (const a of config.authors.list) assert.ok(!config.skipHandles.some(e => e.handle.toLowerCase() === a.handle.toLowerCase()), `@${a.handle} is listed and skipped`);
+});
+
+test('an author list that says too little is refused with the reason', () => {
+  const group = { groups: [{ id: 'g', weekly: true, days: 7, queries: [{ terms: 'zine', minLikes: 150 }] }] };
+  const author = extra => ({ handle: 'maker', added: '2026-11-28', from: 'library: x', why: 'animation', ...extra });
+  const cases = [
+    [{ days: 0, minLikes: 100, list: [] }, /"authors\.days" must be from 1 to 90/],
+    [{ days: 7, minLikes: 0, list: [] }, /"authors\.minLikes" must be a positive whole number/],
+    [{ days: 7, minLikes: 100 }, /"authors\.list" must be a list/],
+    [{ days: 7, minLikes: 100, list: [author({ handle: '@maker' })] }, /invalid handle "@maker"/],
+    [{ days: 7, minLikes: 100, list: [author(), author({ handle: 'Maker' })] }, /@Maker twice/],
+    [{ days: 7, minLikes: 100, list: [author({ why: ' ' })] }, /@maker needs "why"/],
+    [{ days: 7, minLikes: 100, list: [author({ added: 'today' })] }, /"added" must be a date/],
+    [{ days: 7, minLikes: 100, list: [author()], declined: [{ handle: 'maker', reason: 'fan work' }] }, /both listed and declined/],
+    [{ days: 7, minLikes: 100, list: [], declined: [{ handle: 'fan' }] }, /authors\.declined: @fan needs a "reason"/],
+  ];
+  for (const [authors, message] of cases) assert.throws(() => validateConfig({ ...group, authors }), message);
+  assert.throws(() => validateConfig({ groups: [{ ...group.groups[0], id: 'authors' }] }), /"authors" is the author list's own id/);
+});
+
+test('keyword posts only fill the slots the listed authors left, most likes first', () => {
+  const c = (id, likes) => ({ id, likes });
+  const got = fillSlots([c('1', 300), c('2', 900), c('known', 50), c('3', 500), c('2', 900)], new Set(['known']), 2);
+  assert.deepEqual(got.kept.map(x => x.id), ['2', 'known', '3', '2']);
+  assert.equal(got.dropped, 1);
+  assert.deepEqual(fillSlots([c('1', 300)], new Set(), 0).kept, []);
+});
+
+test('a run reads listed authors first and stops searching once their new posts fill the run', async () => {
+  const got = await runWith({
+    '(from:maker_one OR from:maker_two)': [post('maker_one', '2120000000000000041', 150), post('maker_two', '2120000000000000042', 120), post('stranger', '2120000000000000043', 9000)],
+    design: [post('one', '2120000000000000044', 5000)],
+  }, { authors: authorsFixture, limit: 2 });
+  assert.equal(got.error, undefined);
+  assert.deepEqual(got.visited.map(q => q.split(' ')[0]), ['(from:maker_one'], 'the keyword searches are not needed, and @OldMaker is not searched');
+  assert.deepEqual(got.written.candidates.map(c => [c.handle, c.group, c.watched]), [['maker_one', 'authors', true], ['maker_two', 'authors', true]]);
+  assert.equal(got.lines[0], 'X creative video discovery: 2 qualifying posts, 2 new (2 from listed authors, 0 from keyword searches), from 1 searches; 2 keyword searches not needed');
+  assert.equal(got.lines[1], '  1 listed authors already have an entry in the library and were not searched (one video per author)');
+});
+
+test('keyword searches fill only what the listed authors left, and library authors are skipped before screening', async () => {
+  const got = await runWith({
+    '(from:maker_one': [post('maker_one', '2120000000000000051', 150)],
+    design: [post('one', '2120000000000000052', 400), post('two', '2120000000000000053', 800), post('OldMaker', '2120000000000000054', 9000)],
+  }, { authors: authorsFixture, limit: 2 });
+  assert.equal(got.error, undefined);
+  assert.deepEqual(got.written.candidates.map(c => c.handle).sort(), ['maker_one', 'two']);
+  assert.ok(got.lines.includes('  1 new keyword posts left out: the run already has 2 new candidates'));
+  assert.ok(got.lines.includes('  skipped before screening: 1 author already in the library'));
+});
+
+test('a run that finds nothing new leaves the inbox file alone, so the daily job opens no pull request', async () => {
+  const existing = [{ id: '2120000000000000061', capturedAt: '2026-11-07T01:00:00.000Z', status: 'rejected', reason: 'fan work' }];
+  const got = await runWith({ design: [post('one', '2120000000000000061', 500)] }, { existing });
+  assert.equal(got.error, undefined);
+  assert.deepEqual(got.written, { candidates: existing }, 'not rewritten, not even updatedAt');
+  assert.match(got.lines.at(-1), /^  nothing new; .* left unchanged$/);
+});
+
+test('rejections from a run without a pull request are carried to the next run and never undo a decision', async () => {
+  const row = (id, status, extra = {}) => ({ id, capturedAt: '2026-11-20T01:00:00.000Z', status, ...extra });
+  const merged = applyCarried([row('1', 'pending'), row('2', 'published', { entry: 'x' }), row('4', 'rejected', { reason: 'master' })],
+    [row('1', 'rejected', { reason: 'fan work' }), row('2', 'rejected', { reason: 'late' }), row('3', 'rejected', { reason: 'repost' }), row('5', 'pending'), row('4', 'rejected', { reason: 'carried' })]);
+  assert.deepEqual(merged.candidates.map(c => [c.id, c.status, c.reason]), [['1', 'rejected', 'fan work'], ['2', 'published', undefined], ['3', 'rejected', 'repost'], ['4', 'rejected', 'master']]);
+  assert.equal(merged.applied, 2);
+
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'x-carry-'));
+  const inbox = path.join(dir, 'inbox.json'), carry = path.join(dir, 'state', 'carry.json');
+  await fs.writeFile(inbox, JSON.stringify({ updatedAt: 'then', candidates: [row('1', 'rejected', { reason: 'fan work' }), row('2', 'pending')] }));
+  assert.equal(await saveCarried(carry, inbox), 1);
+  await fs.writeFile(inbox, JSON.stringify({ updatedAt: 'master', candidates: [row('2', 'pending')] }));
+  assert.equal(await loadCarried(carry, inbox), 1);
+  const back = JSON.parse(await fs.readFile(inbox, 'utf8'));
+  assert.equal(back.updatedAt, 'master');
+  assert.deepEqual(back.candidates.map(c => [c.id, c.status]), [['1', 'rejected'], ['2', 'pending']]);
+  assert.equal(await loadCarried(path.join(dir, 'missing.json'), inbox), 0);
+  await fs.rm(dir, { recursive: true });
+});
+
+test('the library handles come from the shipped data file, lowercased', async () => {
+  const handles = await libraryHandles();
+  assert.ok(handles.has('kuro_40') && handles.has('xikhar'));
+  assert.ok([...handles].every(h => h === h.toLowerCase()));
+});
+
+test('a run keeps one new post per author, the one with the most likes', async () => {
+  const c = (id, handle, likes) => ({ id, handle, likes });
+  assert.deepEqual(onePerAuthor([c('1', 'a', 100), c('2', 'A', 300), c('3', 'b', 50), c('old', 'a', 900)], new Set(['old'])).map(x => x.id), ['2', '3', 'old']);
+  const got = await runWith({
+    '(from:maker_one': [post('maker_one', '2120000000000000071', 150), post('maker_one', '2120000000000000072', 400)],
+    design: [post('maker_one', '2120000000000000073', 5000), post('one', '2120000000000000074', 600)],
+  }, { authors: authorsFixture, limit: 5 });
+  assert.deepEqual(got.written.candidates.map(c => c.id).sort(), ['2120000000000000072', '2120000000000000074']);
 });

@@ -137,6 +137,12 @@ const defaults = {
   ask: askClaude,
 };
 
+// Pending candidates in the order they are screened: posts from listed authors and watched accounts (`watched`, set by
+// x-discovery.mjs) first, then the rest; most likes first within each.
+export function screeningOrder(candidates) {
+  return candidates.filter(c => c.status === 'pending' || !c.status).sort((a, b) => Number(Boolean(b.watched)) - Number(Boolean(a.watched)) || b.likes - a.likes);
+}
+
 // A candidate that cannot be read this time (network, X, the model) stays `pending` for the next run; only a decision changes it.
 export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataPath, limit = 10, dryRun = false, now = new Date(), io = {} } = {}) {
   const dep = { ...defaults, ...io };
@@ -144,7 +150,7 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
   let source = await fs.readFile(dataFile, 'utf8');
   const items = readItems(source), today = now.toISOString().slice(0, 10);
   const added = [], summary = { accepted: [], rejected: [], kept: [] };
-  const queue = inbox.candidates.filter(c => c.status === 'pending' || !c.status).sort((a, b) => b.likes - a.likes).slice(0, limit);
+  const queue = screeningOrder(inbox.candidates).slice(0, limit);
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'x-publish-'));
   const decide = (candidate, patch) => { inbox.candidates[inbox.candidates.indexOf(candidate)] = review(candidate, patch, today); };
   try {
