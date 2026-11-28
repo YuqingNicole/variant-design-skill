@@ -25,7 +25,7 @@ cd "$WORK"
 
 node website/scripts/youtube-discovery.mjs ${GROUPS_ARG:+--groups "$GROUPS_ARG"}
 OUT="$(mktemp)"; node website/scripts/youtube-publish.mjs --limit "$LIMIT" | tee "$OUT"
-node --test website/scripts/inspiration-data.test.mjs website/scripts/youtube-discovery.test.mjs website/scripts/youtube-publish.test.mjs
+node --test website/scripts/inspiration-data.test.mjs website/scripts/screening-rubric.test.mjs website/scripts/youtube-discovery.test.mjs website/scripts/youtube-publish.test.mjs
 
 if git diff --quiet; then echo "Nothing to publish this week."; git branch -D "$BRANCH" >/dev/null 2>&1 || true; exit 0; fi
 git add website/content/youtube-video-inbox.json website/src/inspiration-data.ts
@@ -34,7 +34,7 @@ git commit -q -m "Add this week's videos found on YouTube ($DAY)
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 git push -q -u origin "$BRANCH"
 gh pr create --base master --title "Add this week's videos found on YouTube ($DAY)" --body "$(cat <<EOF
-Weekly YouTube discovery, screened by \`website/scripts/youtube-publish.mjs\`: the model read YouTube's own public thumbnails of each video (the cover and three small frames from the middle, nothing downloaded) and wrote the notes from them, so a note describes what those pictures show, not how the video moves. Nobody has watched the videos or seen them on a phone; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`.
+Weekly YouTube discovery, screened by \`website/scripts/youtube-publish.mjs\`: the model read YouTube's own public thumbnails of each video (the cover and three small frames from the middle, nothing downloaded) and wrote the notes from them, so a note describes what those pictures show, not how the video moves. Nobody has watched the videos or seen them on a phone; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`. Candidates that score in the review band (60–75% of the weighted total, docs/benchmark.md) are not published: they stay in the inbox as \`review\` and are listed under "Held for review"; answer 收 or 拒 per id, applied with \`node website/scripts/review-queue.mjs accept|reject <id>\`.
 
 \`\`\`
 $(cat "$OUT")

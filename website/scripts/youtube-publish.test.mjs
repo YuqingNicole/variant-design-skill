@@ -7,6 +7,8 @@ import { readItems } from './x-publish.mjs';
 import { videoId, channelInLibrary, buildPrompt, entryFor, candidateFromUrl, run, report } from './youtube-publish.mjs';
 
 const good = { accept: true, name: 'Paper city', tag: 'Craft', ai: false, focus: { zh: '纸折的城市一格一格立起来，再被一阵风吹平', en: 'A folded paper city rises frame by frame, then a gust flattens it' }, application: { zh: '定格动画的节奏感', en: 'The rhythm of stop-motion' } };
+const HIGH = { idea: 5, completeness: 4, craft: 4, originality: 4, shareability: 4 };
+const scored = (scores, card = good) => JSON.stringify({ vetoes: [], scores: Object.fromEntries(Object.entries(scores).map(([k, n]) => [k, { score: n, reason: `${k} line` }])), ai: false, ...card });
 const idOf = n => String(n).padStart(11, 'a');
 const cand = (n, extra = {}) => ({ id: idOf(n), url: `https://www.youtube.com/watch?v=${idOf(n)}`, title: `T${n}`, channel: `Chan${n}`, channelUrl: `https://www.youtube.com/channel/UC${n}`, publishedAt: '2026-11-10T00:00:00Z', seconds: 40, views: 1000 + n, text: '', capturedAt: '2026-11-17T00:00:00Z', status: 'pending', ...extra });
 const existing = { id: 'yt-old', name: 'Old', url: 'https://www.youtube.com/watch?v=ooooooooooo', kind: 'youtube-video', video: { platform: 'youtube', id: 'ooooooooooo', channel: 'Taken', channelUrl: 'https://www.youtube.com/channel/UCtaken' } };
@@ -19,9 +21,9 @@ test('addresses give a video id only for watch pages, and a channel is only coll
   assert.equal(channelInLibrary([existing], { channel: ' taken ' }).id, 'yt-old');
   assert.equal(channelInLibrary([existing], { channel: 'New', channelUrl: 'https://www.youtube.com/channel/UCnew' }), null);
   assert.match(buildPrompt(cand(1), '/s.jpg'), /2×2 grid[\s\S]*design work of any kind[\s\S]*tutorial[\s\S]*Live action/);
-  assert.match(buildPrompt(cand(1), '/s.jpg'), /tutorial[\s\S]*Reject fan work[\s\S]*Otherwise accept/);
+  assert.match(buildPrompt(cand(1), '/s.jpg'), /Reject fan work[\s\S]*First check the vetoes[\s\S]*a tutorial[\s\S]*Calibration/);
   // YouTube shares the X tag rules and the AI marker (2026-11-28).
-  assert.match(buildPrompt(cand(1), '/s.jpg'), /1\. VFX[\s\S]*4\. Real-time[\s\S]*"ai": true when[\s\S]*"ai": <true or false>/);
+  assert.match(buildPrompt(cand(1), '/s.jpg'), /1\. VFX[\s\S]*4\. Real-time/); assert.match(buildPrompt(cand(1), '/s.jpg'), /"ai": true when[\s\S]*"ai": <true or false>/);
 });
 
 test('an entry carries the video facts and no X post fields; an address alone leaves length and date out', () => {
@@ -47,13 +49,13 @@ test('a run records every decision, adds accepted videos, and keeps unreadable o
   const io = {
     oembed: async id => id === idOf(3) ? { status: 403 } : { title: 'x' },
     sheet: async id => { if (id === idOf(4)) throw new Error('frame 1 is missing'); return '/s.jpg'; },
-    ask: async prompt => JSON.stringify(prompt.includes('T5') ? { accept: false, reason: 'A product promotion' } : good),
+    ask: async prompt => prompt.includes('T5') ? JSON.stringify({ vetoes: ['promo'], reason: 'A product promotion' }) : scored(HIGH),
   };
   const dry = await run({ inbox, data, io, dryRun: true, now: new Date('2026-11-19T00:00:00Z') });
   assert.equal(await fs.readFile(data, 'utf8'), source);
   const summary = await run({ inbox, data, io, now: new Date('2026-11-19T00:00:00Z') });
   assert.deepEqual(summary.accepted.map(a => a[1]), [`yt-${idOf(1)}`]); assert.equal(dry.accepted.length, 1);
-  assert.deepEqual(summary.rejected.map(r => r[1]).sort(), ['A product promotion', 'Not a YouTube video id', 'The library already has a video from this channel (yt-old)', 'YouTube does not serve this video for embedding (HTTP 403)']);
+  assert.deepEqual(summary.rejected.map(r => r[1]).sort(), ['Not a YouTube video id', 'The library already has a video from this channel (yt-old)', 'Veto promo: A product promotion', 'YouTube does not serve this video for embedding (HTTP 403)']);
   assert.equal(summary.rejected.length, 4); assert.equal(summary.kept.length, 1);
   const stored = JSON.parse(await fs.readFile(inbox, 'utf8')).candidates, by = id => stored.find(c => c.id === id);
   assert.deepEqual([by(idOf(1)).status, by(idOf(1)).entry, by(idOf(2)).status, by(idOf(4)).status, by(idOf(6)).reason], ['published', `yt-${idOf(1)}`, 'rejected', 'pending', 'earlier']);
@@ -64,7 +66,7 @@ test('a run records every decision, adds accepted videos, and keeps unreadable o
 test('--url screens one video even when the inbox file does not exist yet', async () => {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'yp-url-')), inbox = path.join(dir, 'none.json'), data = path.join(dir, 'data.ts');
   await fs.writeFile(data, source);
-  const io = { oembed: async () => ({ title: 'x' }), sheet: async () => '/s.jpg', ask: async () => JSON.stringify(good) };
+  const io = { oembed: async () => ({ title: 'x' }), sheet: async () => '/s.jpg', ask: async () => scored(HIGH) };
   const only = await candidateFromUrl(`https://youtu.be/${idOf(1)}`, io);
   const summary = await run({ inbox, data, io, only });
   assert.equal(summary.entries.length, 1); assert.equal(JSON.parse(await fs.readFile(inbox, 'utf8')).candidates[0].status, 'published');

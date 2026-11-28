@@ -41,7 +41,7 @@ fi
 # The throwaway worktree has no node_modules, and reference-facets.test.mjs loads TypeScript through ts-module.mjs; without
 # this every run failed here, after screening, and nothing was published (2026-11-24 and 11-25).
 npm ci --prefix website --silent --no-audit --no-fund
-node --test website/scripts/inspiration-data.test.mjs website/scripts/reference-facets.test.mjs website/scripts/site-discovery.test.mjs website/scripts/threads-publish.test.mjs
+node --test website/scripts/inspiration-data.test.mjs website/scripts/screening-rubric.test.mjs website/scripts/reference-facets.test.mjs website/scripts/site-discovery.test.mjs website/scripts/threads-publish.test.mjs
 
 if git diff --quiet; then echo "Nothing to publish this week."; git branch -D "$BRANCH" >/dev/null 2>&1 || true; exit 0; fi
 git add website/content/site-inbox.json website/src/inspiration-data.ts website/src/link-previews.json website/src/reference-facets.json
@@ -51,7 +51,7 @@ Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 guard open-pr sites   # again, in case a weekly pull request was opened during this run (a direct run skips weekly.sh's lock)
 git push -q -u origin "$BRANCH"
 gh pr create --base master --title "Add this week's sites from curated galleries ($DAY)" --body "$(cat <<BODY
-Weekly gallery discovery (\`website/content/site-discovery.json\`), screened by \`website/scripts/threads-publish.mjs\`: each site was opened once in headless Chrome (first three screens), and the model wrote the notes from that image; the gallery is credited in \`via\`. Nobody has used the sites or seen them on a phone; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`.
+Weekly gallery discovery (\`website/content/site-discovery.json\`), screened by \`website/scripts/threads-publish.mjs\`: each site was opened once in headless Chrome (first three screens), and the model wrote the notes from that image; the gallery is credited in \`via\`. Nobody has used the sites or seen them on a phone; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`. Candidates that score in the review band (60–75% of the weighted total, docs/benchmark.md) are not published: they stay in the inbox as \`review\` and are listed under "Held for review"; answer 收 or 拒 per id, applied with \`node website/scripts/review-queue.mjs accept|reject <id>\`.
 
 \`\`\`
 $(cat "$OUT")

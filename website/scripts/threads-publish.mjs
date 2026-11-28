@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Closes the loop after Threads discovery. A Threads post is a lead; what the library collects is the site it points to.
 // For each `pending` candidate with a link, this opens the site once in headless Chrome (a 1280×800 viewport, scrolled
-// screen by screen, the first three screens stacked as one image; see site-capture.mjs), reads its share preview, and asks a model to accept it with bilingual notes or reject it with a reason.
+// screen by screen, the first three screens stacked as one image; see site-capture.mjs), reads its share preview, and asks a model to score it
+// against the material benchmark (screening-rubric.mjs) with bilingual notes; the code turns the scores into accept, review (held in the inbox) or reject.
 // Nothing here publishes by itself: run-threads-weekly.sh puts the change in a pull request that merges once CI passes, with no person reviewing it.
 // The same screening serves the curated-gallery inbox (site-discovery.mjs): pass --inbox website/content/site-inbox.json.
 // Usage: node website/scripts/threads-publish.mjs [--inbox file] [--limit n] [--dry-run]
@@ -9,10 +10,11 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { readItems, appendItems, askClaude } from './x-publish.mjs';
+import { readItems, appendItems, askClaude, report } from './x-publish.mjs';
 import { parsePreview } from './link-preview.mjs';
 import { fetchImageSize } from './image-size.mjs';
 import { captureScreens } from './site-capture.mjs';
+import { rubricBlock, answerBlock, screen, record, reviewLines, builderHost } from './screening-rubric.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const inboxPath = path.resolve(here, '../content/threads-post-inbox.json');
@@ -39,18 +41,18 @@ export function buildPrompt(candidate, preview, shot) {
   const still = (shot.moved ?? []).flatMap((went, i) => (went === false ? [i + 1] : []));
   const stuck = still.length ? `\nThe capture checked this: the page did not move to reach screen ${still.join(' or ')}, even after a second wheel pass and the Page Down key, so the repeat is how the page behaves (a fixed hero, a drag or click-to-explore scene), not a capture fault.` : '';
   const door = shot.gate ? `\nBefore the first screen the capture clicked the page's full-screen entry button ${JSON.stringify(shot.gate)} once, as a visitor would, so the screens show the page behind that entry screen.` : '';
-  return `You are screening one website for Variant Design's design inspiration library, entries you accept go live without a person reviewing them, so reject when unsure.
+  return `You are screening one website for Variant Design's design inspiration library. Entries that score in the collect band go live without a person reviewing them.
 Read the image at ${sheet}: the first three screens of ${candidate.link} in a 1280×800 browser window, one above the other with a thin grey line between them. Each screen was reached by scrolling the mouse wheel one screen height and waiting for the page to settle, so a screen that repeats the one above means the page did not scroll further (or swapped a slide in place).${stuck}${door} You cannot interact with the site or see it on a phone, so describe only what the screens show.
 
 ${candidate.source ? `It was picked by ${candidate.sourceName}, a curated website gallery, as ${JSON.stringify(candidate.title)}; a gallery pick is a lead, not proof of quality.` : `It was found in a Threads post by @${candidate.username ?? 'unknown'}: ${JSON.stringify(candidate.text)}`}
 Its share preview title: ${JSON.stringify(preview.title)}
 
-Reject (accept=false) when any applies: the screens are a block page, a verification or age gate, a subscription or discount gate, or a pop-up covering the main content; the page is empty or did not render past the first screen; only one screen of content; a shutdown, acquisition or farewell notice; a redirect to an unrelated site; a link-in-bio or template page; a page whose design is plain or dated with nothing to study; a small cookie banner alone is not a reason.
-Otherwise accept, and write notes a designer can use: "focus" walks the page top to bottom with an arrow between sections, using only what the screens show (real copy in quotes), in at most 450 characters per language; "application" at most 100. Do not invent names, claims or tools.
+A page whose screens repeat because it did not render past the first screen, or that shows only one screen of content, scores low on hierarchy and consistency unless the capture says the page is built that way; a small cookie banner alone is not a fault.
+${rubricBlock('design', { outOfScope: 'not a website for a real product, studio, person or project (a document, a store listing, a social profile, a link-in-bio page)' })}
 
-Answer with one JSON object and nothing else:
-{"accept": true, "name": "<the site's own name>", "tag": "<one of ${SITE_TAGS.join(', ')}>", "focus": {"zh": "<what to study>", "en": "<same, in English>"}, "application": {"zh": "<where it applies, a short phrase>", "en": "<same, in English>"}}
-or {"accept": false, "reason": "<one sentence in English>"}`;
+Card fields: write notes a designer can use: "focus" walks the page top to bottom with an arrow between sections, using only what the screens show (real copy in quotes), in at most 450 characters per language; "application" at most 100. Do not invent names, claims or tools.
+
+${answerBlock('design', `"name": "<the site's own name>", "tag": "<one of ${SITE_TAGS.join(', ')}>", "focus": {"zh": "<what to study>", "en": "<same, in English>"}, "application": {"zh": "<where it applies, a short phrase>", "en": "<same, in English>"}`)}`;
 }
 
 const text = (value, max) => typeof value === 'string' && value.trim() && value.trim().length <= max && !/TODO/i.test(value);
@@ -82,8 +84,9 @@ export function entryFor(candidate, verdict, id, at) {
   };
 }
 
+// `draft` and `draftPreview` are what a review-band row would publish (review-queue.mjs); a new decision replaces them.
 export function review(candidate, patch, today) {
-  const { reason, entry, ...rest } = candidate;
+  const { reason, entry, draft, draftPreview, ...rest } = candidate;
   return { ...rest, ...patch, reviewedAt: today };
 }
 
@@ -92,16 +95,10 @@ export async function screenshot(url, dir) {
   return captureScreens(url, path.join(dir, 'site.png'));
 }
 
-async function fetchPage(url) {
+// Exported so benchmark.mjs screens a site exactly as a weekly run does.
+export async function fetchPage(url) {
   const res = await fetch(url, { headers: { 'user-agent': 'Mozilla/5.0 (compatible; VariantDesignLinkPreview/1.0)', accept: 'text/html' }, signal: AbortSignal.timeout(20000), redirect: 'follow' });
   return { status: res.status, url: res.url, html: res.ok ? await res.text() : '' };
-}
-// An answer that fails validation is sent back once with the reason, because a note that runs long is the usual miss.
-export async function judged(ask, prompt, dir) {
-  const first = await ask(prompt, dir);
-  try { return parseVerdict(first); } catch (error) {
-    return parseVerdict(await ask(`${prompt}\n\nYour previous answer was rejected: ${error.message}. Answer again with the corrected JSON object only.`, dir));
-  }
 }
 // `size` reads the preview image's width and height so the feed can lay its cover out before it loads.
 const defaults = { page: fetchPage, screenshot, ask: askClaude, size: url => fetchImageSize(url).catch(() => null) };
@@ -113,7 +110,7 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
   let source = await fs.readFile(dataFile, 'utf8');
   const items = readItems(source), today = now.toISOString().slice(0, 10), stamp = now.toISOString();
   const previews = JSON.parse(await fs.readFile(previewsFile, 'utf8')), newPreviews = {};
-  const added = [], summary = { accepted: [], rejected: [], kept: [] };
+  const added = [], summary = { accepted: [], rejected: [], kept: [], review: [] };
   const queue = inbox.candidates.filter(c => c.status === 'pending' || !c.status).slice(0, limit);
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'threads-publish-'));
   const decide = (candidate, patch) => { inbox.candidates[inbox.candidates.indexOf(candidate)] = review(candidate, patch, today); };
@@ -123,6 +120,7 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
       const label = candidate.source ? `${candidate.sourceName}: ${candidate.title}` : `@${candidate.username ?? '?'} ${candidate.id}`;
       try {
         if (!candidate.link || !/^https:\/\//.test(candidate.link)) { reject(candidate, label, 'The lead points to no website; the library collects sites, not posts'); continue; }
+        if (builderHost(candidate.link)) { reject(candidate, label, `Veto template: ${new URL(candidate.link).hostname} is a site-builder subdomain, a template demo rather than a real brand's site`); continue; }
         const own = siteInLibrary([...items, ...added], candidate.link);
         if (own) { reject(candidate, label, `The library already has this site (${own.id})`); continue; }
         const page = await dep.page(candidate.link);
@@ -131,17 +129,18 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
         if (!preview) { reject(candidate, label, 'The site publishes no share preview image'); continue; }
         if (siteInLibrary([...items, ...added], page.url)) { reject(candidate, label, 'The link redirects to a site the library already has'); continue; }
         const prompt = buildPrompt(candidate, preview, await dep.screenshot(candidate.link, dir));
-        const verdict = await judged(dep.ask, prompt, dir);
-        if (!verdict.accept) { reject(candidate, label, verdict.reason); continue; }
+        const scored = await screen(dep.ask, prompt, dir, 'design', parseVerdict), screening = record('design', scored, stamp);
+        if (scored.band === 'reject') { decide(candidate, { status: 'rejected', reason: scored.reason, screening }); summary.rejected.push([label, scored.reason]); continue; }
         const id = idFor(candidate.link, new Set([...items, ...added].map(i => i.id)));
-        const entry = entryFor(candidate, verdict, id, stamp);
-        added.push(entry); newPreviews[id] = { ...preview, ...(await dep.size(preview.image) ?? {}), fetchedAt: today };
-        decide(candidate, { status: 'published', entry: id });
-        summary.accepted.push([label, id, entry.tag, entry.name]);
+        const entry = entryFor(candidate, scored.notes, id, stamp), card = { ...preview, ...(await dep.size(preview.image) ?? {}), fetchedAt: today };
+        if (scored.band === 'review') { decide(candidate, { status: 'review', reason: scored.reason, draft: entry, draftPreview: card, screening }); summary.review.push([label, candidate.id, scored, entry.name]); continue; }
+        added.push(entry); newPreviews[id] = card;
+        decide(candidate, { status: 'published', entry: id, screening });
+        summary.accepted.push([label, id, entry.tag, entry.name, scored]);
       } catch (error) { summary.kept.push([label, error.message]); }
     }
   } finally { await fs.rm(dir, { recursive: true, force: true }); }
-  if (!dryRun && (added.length || summary.rejected.length)) {
+  if (!dryRun && (added.length || summary.rejected.length || summary.review.length)) {
     await fs.writeFile(dataFile, appendItems(source, added));
     if (added.length) await fs.writeFile(previewsFile, `${JSON.stringify({ ...previews, ...newPreviews }, null, 2)}\n`);
     inbox.updatedAt = stamp;
@@ -152,13 +151,8 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
   return { ...summary, entries: added };
 }
 
-export function report(summary) {
-  const lines = [`Accepted ${summary.accepted.length}, rejected ${summary.rejected.length}, left pending ${summary.kept.length}.`];
-  for (const [label, id, tag, name] of summary.accepted) lines.push(`+ ${label} → ${id} (${tag}) ${name}`);
-  for (const [label, reason] of summary.rejected) lines.push(`- ${label}: ${reason}`);
-  for (const [label, reason] of summary.kept) lines.push(`? ${label}: ${reason}`);
-  return lines.join('\n');
-}
+// One report format for every source, review band included.
+export { report };
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = process.argv.slice(2), at = flag => args[args.indexOf(flag) + 1];

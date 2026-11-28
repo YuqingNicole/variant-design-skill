@@ -18,7 +18,7 @@
 ## 流程
 
 - `node website/scripts/site-discovery.mjs [--sources a,b|all] [--days n] [--dry-run]`：读各图库最近 `days` 天的条目，解析出网站地址；库里已有的站点（按域名）、收件箱里已有的条目和本次已从别的图库收到的同一站点跳过；每个图库每次最多加 `max` 个（现在都是 3）。写进 `website/content/site-inbox.json` 时各图库轮流排（每个图库第一条，再每个图库第二条……），状态 `pending`。筛选按收件箱顺序取前 `--limit` 条，所以一周不会被一个图库占满（2026-11-22 那次 10 条全来自 One Page Love）。
-- `node website/scripts/threads-publish.mjs --inbox website/content/site-inbox.json [--limit n] [--dry-run]`：和 Threads 同一套筛选。打开网站一次（无界面 Chrome，1280×800，前三屏一张图，截法见下面“截图”），读分享预览，交给模型（`claude -p`）收或拒，收的写中英文笔记；提示词写明“图库收录只是线索，不代表质量”，拿不准就拒。读不到的留在 `pending`。
+- `node website/scripts/threads-publish.mjs --inbox website/content/site-inbox.json [--limit n] [--dry-run]`：和 Threads 同一套筛选。打开网站一次（无界面 Chrome，1280×800，前三屏一张图，截法见下面“截图”），读分享预览，交给模型（`claude -p`）按素材识别标准打分（设计六维、一票否决，`docs/benchmark.md`），代码算加权分定收、待审或拒，收的写中英文笔记；提示词写明“图库收录只是线索，不代表质量”，拿不准的维度往低打。待审的不上线，留在收件箱（`review`），PR 描述最后一节一条一行，维护者回“收”或“拒”后用 `node website/scripts/review-queue.mjs accept|reject <id>` 处理。分数和理由存在收件箱那一行的 `screening` 里。读不到的留在 `pending`。
 - `website/scripts/run-sites-weekly.sh [--sources a,b|all] [--limit n]`：整条流程，开 `codex/sites-weekly-<日期>` 的 PR，CI 通过后自动合并（`merge-weekly-pr.sh`，失败重跑一次，仍失败就留给人）。不需要账号或 API 密钥。
 - 跳过一次运行（`website/scripts/weekly-guard.mjs`，X 和 Threads 的周任务也用）：上一个 `codex/sites-weekly-*` PR 还开着就不跑（#347 和没合并的 #342 有 8 条重复）；内存不够（压力等级到 critical、空闲内存低于 10%，或 swap 超过 12 GB）就每 10 分钟再看一次，三次都不够就不跑（#347 那次 swap 约 28 GB，10 条全是 Chrome 起不来）；筛完后一条都没定下来，或一半以上留在 `pending`，就不开 PR，候选留到下一次。每种情况日志里有一行原因，不推分支、不开 PR。
 

@@ -11,7 +11,7 @@
 ## 流程
 
 - `node website/scripts/youtube-discovery.mjs [--groups a,b|all] [--days n]`：按 `website/content/youtube-discovery.json` 的关键词组搜索（只要可嵌入、4 分钟内、观看数达到门槛的视频），写入 `website/content/youtube-video-inbox.json`。`--plan` 只列出会做的搜索，不联网。
-- `node website/scripts/youtube-publish.mjs [--limit n] [--dry-run]`：逐条筛选。先挡掉库里已有的视频、同一频道已在库里的、YouTube 不允许嵌入的；再取 YouTube 公开缩略图（封面 + 视频中段三帧）拼成一张图，交给模型（`claude -p`，只许读这张图）收或不收，收的写双语笔记。能读不到的候选留在 `pending`。
+- `node website/scripts/youtube-publish.mjs [--limit n] [--dry-run]`：逐条筛选。先挡掉库里已有的视频、同一频道已在库里的、YouTube 不允许嵌入的；再取 YouTube 公开缩略图（封面 + 视频中段三帧）拼成一张图，交给模型（`claude -p`，只许读这张图）按素材识别标准的视频五维逐项打分（`docs/benchmark.md`，和 X 同一套），代码按分数定收、待审（`review`，不上线，等维护者回“收”或“拒”）或拒，收的写双语笔记。能读不到的候选留在 `pending`。
 - `node website/scripts/youtube-publish.mjs --url <watch 地址> [--dry-run]`：不用 API 密钥，筛一条指定的视频（用 oEmbed 取标题和频道，没有时长和发布日期）。
 - `website/scripts/run-youtube-weekly.sh`：整条流程，开一个 `codex/youtube-weekly-<日期>` 的 PR，CI 通过后自合并（见 `merge-weekly-pr.sh`）。
 

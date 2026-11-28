@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Closes the loop after weekly discovery: every `pending` candidate in the X inbox gets its video frames read by a model,
-// which accepts it with bilingual notes or rejects it with a reason; the result is written to the inbox and the library.
+// which scores it against the material benchmark (screening-rubric.mjs) and writes bilingual notes; the code turns the scores into
+// accept (into the library), review (held in the inbox for the owner) or reject. Every decision is written to the inbox.
 // Nothing here publishes by itself: run-x-weekly.sh puts the change in a pull request that merges once CI passes, with no person reviewing it.
 // Usage: node website/scripts/x-publish.mjs [--limit n] [--dry-run]
 import fs from 'node:fs/promises';
@@ -10,6 +11,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parsePostUrl, fromOembed, draftEntry } from './x-post.mjs';
 import { pickMedia, syndicationToken } from './x-media.mjs';
+import { rubricBlock, answerBlock, screen, record, reviewLines } from './screening-rubric.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const inboxPath = path.resolve(here, '../content/x-post-inbox.json');
@@ -38,6 +40,9 @@ export const SCOPE_REJECTS = `design work of any kind (interfaces, apps, website
 // Fan work of someone else's characters is out even when the craft is good (owner, 2026-11-26): the model accepted a Bonnie-like
 // animatronic and Sega's Whisper the Wolf while rejecting Looney Tunes and TUGS fan work in the same batches, so the rule is spelled out.
 export const IP_RULE = `Reject fan work: a video whose main characters are existing characters from someone else's franchise or IP, however good the craft. That covers games, anime, cartoons, comics, films, TV, toys and mascots, for example Five Nights at Freddy's animatronics (Freddy, Bonnie, Chica, Foxy), Sonic characters (Sonic, Tails, Shadow, Whisper the Wolf), Pokémon, Mario, Looney Tunes, Disney or Pixar characters, TUGS, Hazbin Hotel, anime heroes and Minecraft mobs. Fan art, fan animation, fan remakes, "my version of", redesigns, crossovers, cosplay, and an "OC" that is plainly a known character in another name all count. If a character looks like it might come from an existing franchise and you cannot tell it is the author's own, reject. Original characters in a familiar style or medium (a voxel world, a cartoon look, a furry or mascot suit) are fine when nothing ties them to an existing franchise. Also reject shots made for someone else's video, a commission or a client excerpt ("for @someone's video", "commissioned by", "my part in"): the finished work belongs to someone else.`;
+// The source's own `out-of-scope` veto and card fields for the material benchmark (screening-rubric.mjs); youtube-publish.mjs shares both.
+export const VIDEO_OUT_OF_SCOPE = `${SCOPE_REJECTS}; a montage of clips; a tutorial or "how to"; frames too unclear to describe`;
+export const VIDEO_CARD = `"name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "focus": {"zh": "<what happens and what makes it fun or clever, one sentence, at most 300 characters>", "en": "<same, in English>"}, "application": {"zh": "<the idea worth borrowing, a short phrase>", "en": "<same, in English>"}`;
 const cjk = /[㐀-鿿]/, latin = /[A-Za-z]{3}/;
 
 // The library is a TS module of JSON literals: `export const inspirationItems = [ ... ];`.
@@ -62,23 +67,22 @@ export function authorInLibrary(items, handle) {
 }
 
 export function buildPrompt(candidate, meta, sheet) {
-  return `You are screening one X video post for the Videos tab of Variant Design's inspiration library. Entries you accept go live without a person reviewing them, so reject when unsure.
+  return `You are screening one X video post for the Videos tab of Variant Design's inspiration library. Entries that score in the collect band go live without a person reviewing them.
 ${SCOPE}
 Read the image at ${sheet}: six frames from the post's video, left to right, top to bottom. You cannot play the video, so describe only what the frames show.
 
 Post: https://x.com/${candidate.handle}/status/${candidate.id} by ${meta.author} (@${meta.handle}), ${meta.date}, ${candidate.likes} likes.
 Post text: ${JSON.stringify(meta.text)}
 
-Reject (accept=false) when any applies: ${SCOPE_REJECTS}; a resource list or "bookmark these" thread; a tool, product, course or sponsor promotion; a repost of someone else's work or an unclear original author; merchandise or pre-sale; a montage of clips; tutorials and news; frames too unclear to describe.
 ${IP_RULE}
-Otherwise accept, and write notes on what makes it fun or clever.
-${TAG_GUIDE}
 ${AI_RULE}
+${rubricBlock('video', { outOfScope: VIDEO_OUT_OF_SCOPE })}
+
+Card fields: write notes on what makes it fun or clever.
+${TAG_GUIDE}
 Do not invent: no names, claims or tools the frames and the text do not show. Keep the author's own credit if the text gives one.
 
-Answer with one JSON object and nothing else:
-{"accept": true, "name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "ai": <true or false>, "focus": {"zh": "<what happens and what makes it fun or clever, one sentence, at most 300 characters>", "en": "<same, in English>"}, "application": {"zh": "<the idea worth borrowing, a short phrase>", "en": "<same, in English>"}}
-or {"accept": false, "reason": "<one sentence in English>"}`;
+${answerBlock('video', VIDEO_CARD)}`;
 }
 
 const text = (value, max) => typeof value === 'string' && value.trim() && value.trim().length <= max && !/TODO/i.test(value);
@@ -103,14 +107,6 @@ export function parseVerdict(output) {
   return { accept: true, name: v.name.trim(), tag: v.tag, ai: v.ai, focus: { zh: v.focus.zh.trim(), en: v.focus.en.trim() }, application: { zh: v.application.zh.trim(), en: v.application.en.trim() } };
 }
 
-// An answer that fails validation is sent back once with the reason, because a note that runs long is the usual miss.
-export async function judged(ask, prompt, dir) {
-  const first = await ask(prompt, dir);
-  try { return parseVerdict(first); } catch (error) {
-    return parseVerdict(await ask(`${prompt}\n\nYour previous answer was rejected: ${error.message}. Answer again with the corrected JSON object only.`, dir));
-  }
-}
-
 export function entryFor(candidate, meta, verdict, at) {
   const post = parsePostUrl(candidate.url);
   const entry = draftEntry(post, meta, verdict.tag, at);
@@ -119,8 +115,9 @@ export function entryFor(candidate, meta, verdict, at) {
   return { ...entry, name: verdict.name, ...(verdict.ai ? { ai: true } : {}), focus: verdict.focus, application: verdict.application, post: { ...entry.post, lang } };
 }
 
+// `draft` is the card a review-band row would publish (review-queue.mjs); a new decision replaces it.
 export function review(candidate, patch, today) {
-  const { reason, entry, ...rest } = candidate;
+  const { reason, entry, draft, ...rest } = candidate;
   return { ...rest, ...patch, reviewedAt: today };
 }
 
@@ -166,7 +163,7 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
   const inbox = JSON.parse(await fs.readFile(inboxFile, 'utf8'));
   let source = await fs.readFile(dataFile, 'utf8');
   const items = readItems(source), today = now.toISOString().slice(0, 10);
-  const added = [], summary = { accepted: [], rejected: [], kept: [] };
+  const added = [], summary = { accepted: [], rejected: [], kept: [], review: [] };
   const queue = screeningOrder(inbox.candidates).slice(0, limit);
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'x-publish-'));
   const decide = (candidate, patch) => { inbox.candidates[inbox.candidates.indexOf(candidate)] = review(candidate, patch, today); };
@@ -181,17 +178,18 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
         if (!media) { decide(candidate, { status: 'rejected', reason: 'The post has no video the embed endpoint serves' }); summary.rejected.push([label, 'no video']); continue; }
         const meta = fromOembed(await dep.oembed(post), post);
         const prompt = buildPrompt(candidate, meta, await dep.sheet(media.video, dir));
-        const verdict = await judged(dep.ask, prompt, dir);
-        if (!verdict.accept) { decide(candidate, { status: 'rejected', reason: verdict.reason }); summary.rejected.push([label, verdict.reason]); continue; }
-        const entry = entryFor(candidate, meta, verdict, now.toISOString());
+        const scored = await screen(dep.ask, prompt, dir, 'video', parseVerdict), screening = record('video', scored, now.toISOString());
+        if (scored.band === 'reject') { decide(candidate, { status: 'rejected', reason: scored.reason, screening }); summary.rejected.push([label, scored.reason]); continue; }
+        const entry = entryFor(candidate, meta, scored.notes, now.toISOString());
         if (items.some(i => i.id === entry.id) || added.some(i => i.id === entry.id)) throw new Error(`entry id ${entry.id} already exists`);
+        if (scored.band === 'review') { decide(candidate, { status: 'review', reason: scored.reason, draft: entry, screening }); summary.review.push([label, candidate.id, scored, entry.name]); continue; }
         added.push(entry);
-        decide(candidate, { status: 'published', entry: entry.id });
-        summary.accepted.push([label, entry.id, entry.tag, entry.name]);
+        decide(candidate, { status: 'published', entry: entry.id, screening });
+        summary.accepted.push([label, entry.id, entry.tag, entry.name, scored]);
       } catch (error) { summary.kept.push([label, error.message]); }
     }
   } finally { await fs.rm(dir, { recursive: true, force: true }); }
-  if (!dryRun && (added.length || summary.rejected.length)) {
+  if (!dryRun && (added.length || summary.rejected.length || summary.review.length)) {
     source = appendItems(source, added);
     await fs.writeFile(dataFile, source);
     inbox.updatedAt = now.toISOString();
@@ -202,12 +200,14 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
   return { ...summary, entries: added };
 }
 
+// The first line is what weekly-guard.mjs reads; the review band gets its own section, one line per candidate.
 export function report(summary) {
-  const lines = [`Accepted ${summary.accepted.length}, rejected ${summary.rejected.length}, left pending ${summary.kept.length}.`];
-  for (const [label, id, tag, name] of summary.accepted) lines.push(`+ ${label} → ${id} (${tag}) ${name}`);
+  const review = summary.review ?? [];
+  const lines = [`Accepted ${summary.accepted.length}, rejected ${summary.rejected.length}, left pending ${summary.kept.length}, held for review ${review.length}.`];
+  for (const [label, id, tag, name, s] of summary.accepted) lines.push(`+ ${label} → ${id} (${tag}) ${name}${s ? ` [${s.total}/${s.max}]` : ''}`);
   for (const [label, reason] of summary.rejected) lines.push(`- ${label}: ${reason}`);
   for (const [label, reason] of summary.kept) lines.push(`? ${label}: ${reason}`);
-  return lines.join('\n');
+  return [...lines, ...reviewLines(review)].join('\n');
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
