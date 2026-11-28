@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import zlib from 'node:zlib';
 import { importTs } from './ts-module.mjs';
-import { inspirationPlugin, moduleSource, pageSize, readLibrary, rowFields, splitReferences } from './inspiration-split.mjs';
+import { cardFields, cardLocales, cardOf, cardsSource, indexSource, inspirationPlugin, moduleSource, pageSize, readLibrary, rowFields, splitReferences } from './inspiration-split.mjs';
 
 const { sectionOf, sections, pageOf } = await importTs(new URL('../src/inspiration-sections.ts', import.meta.url).pathname);
 const library = readLibrary(), split = splitReferences(library.items, sectionOf, { ...library, onHome: r => !pageOf(r) });
@@ -38,24 +38,50 @@ test('the section chunks partition the library and carry only their own previews
   assert.equal(Object.keys(split.all.previews).length, Object.keys(library.previews).filter(id => library.items.some(r => r.id === id)).length);
 });
 
-test('the browser gets the first page and the SSR build the whole library from the same module', async () => {
+test('the browser gets cards for the first page and the SSR build the whole library', async () => {
   const plugin = inspirationPlugin(), id = plugin.resolveId('virtual:inspiration/initial');
   assert.equal(id, '\0virtual:inspiration/initial');
-  const context = { addWatchFile() {} };
-  const browser = await plugin.load.call(context, id, { ssr: false }), ssr = await plugin.load.call(context, id, { ssr: true });
-  assert.equal(browser, moduleSource(split.first));
-  assert.equal(ssr, moduleSource(split.all));
-  const loader = await plugin.load.call(context, '\0virtual:inspiration/loader');
+  const context = { addWatchFile() {} }, load = (name, ssr = false) => plugin.load.call(context, '\0virtual:inspiration/' + name, { ssr });
+  assert.equal(await load('initial'), moduleSource({ items: [], previews: {}, media: {} }));
+  assert.equal(await load('initial', true), moduleSource(split.all));
+  for (const locale of Object.keys(cardLocales)) assert.equal(await load(`cards-${locale}`), cardsSource(split.first, locale), locale);
+  assert.ok((await load('cards')).includes('import("virtual:inspiration/cards-zh")'));
+  assert.equal(await load('first'), moduleSource(split.first));
+  const loader = await load('loader');
   for (const section of Object.keys(split.sections)) assert.ok(loader.includes(`import("virtual:inspiration/section-${section}")`), section);
-  const index = await plugin.load.call(context, '\0virtual:inspiration/index');
-  assert.ok(index.startsWith(`export const index=${JSON.stringify(split.index)};`));
-  assert.ok(index.includes(`export const topics=${JSON.stringify(library.topics)};`));
+  assert.ok(loader.includes('"first":()=>import("virtual:inspiration/first")'));
+  assert.ok(!Object.keys(split.sections).includes('first'), 'no section may be called first');
+  assert.equal(await load('index'), indexSource(split.index, library.topics));
   assert.equal(plugin.resolveId('./inspiration-data'), undefined);
 });
 
-// The point of the split: what the home script carries no longer grows with the library (TODO §6).
-test('the home script carries a small index and one page, not the library', () => {
-  assert.ok(gzipKb(JSON.stringify(split.index)) < 12, 'index');
-  assert.ok(gzipKb(moduleSource(split.first)) < 25, 'first page');
+test('the index module rebuilds exactly the rows it was given', async () => {
+  const url = 'data:text/javascript,' + encodeURIComponent(indexSource(split.index, library.topics)), mod = await import(url);
+  assert.deepEqual(mod.index, JSON.parse(JSON.stringify(split.index)));
+  assert.deepEqual(mod.topics, library.topics);
+});
+
+test('a card carries its link, its post or video and the focus line in one language, nothing else', () => {
+  for (const r of split.first.items) for (const [locale, chain] of Object.entries(cardLocales)) {
+    const card = cardOf(r, locale);
+    assert.deepEqual(Object.keys(card).sort(), ['id', 'focus', ...cardFields.filter(k => r[k] !== undefined)].sort());
+    assert.deepEqual(card.focus, { zh: chain.map(l => r.focus[l]).find(Boolean) });
+  }
+});
+
+// The point of the split: what the home script carries no longer grows with the library (TODO §6), nor with a long note.
+const homeKb = (lib, locale) => { const parts = splitReferences(lib.items, sectionOf, { ...lib, onHome: r => !pageOf(r) }); return gzipKb(indexSource(parts.index, lib.topics)) + gzipKb(cardsSource(parts.first, locale)); };
+test('the home script carries a small index and one page of cards, not the library', () => {
+  for (const locale of Object.keys(cardLocales)) assert.ok(homeKb(library, locale) < 20, locale);
   assert.ok(gzipKb(moduleSource(split.all)) > 40, 'the whole library is what the split keeps out');
+});
+
+test('a new reference with long notes adds its row and one focus line to the home, not its notes', () => {
+  const long = 'A long note about this reference that repeats a careful observation. '.repeat(40), base = split.first.items[0];
+  const entry = { ...base, id: 'long-note-fixture', name: 'Long note fixture', addedAt: new Date(Date.parse(base.addedAt) + 1000).toISOString(),
+    focus: { zh: '一句话的焦点。', en: 'A one-line focus.' }, application: { zh: long, en: long }, analysis: { structure: { zh: long, en: long } } };
+  for (const locale of Object.keys(cardLocales)) {
+    const grown = homeKb({ ...library, items: [...library.items, entry] }, locale) - homeKb(library, locale);
+    assert.ok(grown < 0.25, `${locale}: ${grown.toFixed(2)} KB`);
+  }
 });

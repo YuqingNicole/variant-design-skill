@@ -1329,8 +1329,11 @@ test('lab budget: no layout shift past 0.1, a quick first paint on our own pages
   // The rest of the library arrives per section when the reader scrolls, sorts, searches or opens one, and counts in `kbAfter`,
   // not here. The cap followed the library while the whole of it shipped in the script (145 → 160 → 180 KB, measured 173 at 209
   // entries); with the split (2026-11-13) the home measured 113.8 KB, so the line is back under the first one, and a batch of
-  // references should not move it: if it does, the split leaks.
-  if(path==='/'&&!mobile){expect(m.kb.js,'home gzip script KB').toBeLessThanOrEqual(130);expect(m.kb.css,'home gzip style KB').toBeLessThanOrEqual(95)}
+  // references should not move it: if it does, the split leaks. It still crept to 129.9 by 323 entries (full first-page notes
+  // in both languages, the account dialog, the detail's media); since 2026-11-28 the first page ships as cards in one language
+  // and those load on demand, measured 112.9 (en) and 113.5 (zh) at 323, so the line came down to 125. Each new reference adds
+  // about 25 B of index row; its notes do not count (inspiration-split.test.mjs).
+  if(path==='/'&&!mobile){expect(m.kb.js,'home gzip script KB').toBeLessThanOrEqual(125);expect(m.kb.css,'home gzip style KB').toBeLessThanOrEqual(95)}
  }
 });
 
@@ -1354,6 +1357,18 @@ test('the home fetches the rest of the library per section, once, only when scro
  // A sort in the address reaches past the first page, so its records are fetched before the first render.
  chunks.length=0;await page.goto('/zh?sort=name');await hydrated(page);await expect(cards).toHaveCount(30);
  await expect(cards.first().locator('.insp-card-meta b')).not.toHaveText('');expect(new Set(chunks)).toEqual(beyondFirstPage);
+});
+
+// The first page arrives as cards in the page's language: the card draws the focus line, and the notes (`application`) come
+// with the full record, from the first page's own chunk, when the card is opened (2026-11-28). The section chunks stay unfetched.
+test('the home draws its first page from cards and fetches a card\'s notes only when it is opened',async({page})=>{
+ const first=await (async()=>{const library=readLibrary(),{sectionOf,pageOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname);return splitReferences(library.items,sectionOf,{...library,onHome:r=>!pageOf(r)}).first.items[0]})();
+ const chunks=[];page.on('request',r=>{const m=new URL(r.url()).pathname.match(/\/assets\/((?:section|cards)-[a-z-]+?|first)-[\w-]{8}\.js$/);if(m)chunks.push(m[1])});
+ await page.goto('/zh');await hydrated(page);
+ const card=page.locator('.inspiration-grid .insp-card').first();await expect(card.locator('.insp-card-open')).toHaveAttribute('aria-label',new RegExp(first.focus.zh.slice(0,12).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
+ expect(chunks).toEqual(['cards-zh']);
+ await card.locator('.insp-card-open').click();const dialog=page.locator('.insp-detail');await expect(dialog.locator('h2')).toHaveText(first.name);
+ await expect(dialog.locator('dl')).toContainText(first.application.zh);expect(chunks).toEqual(['cards-zh','first']);
 });
 
 test('every page sits on one sheet of paper: no sky, no frosted panel, no pointer light, one outlined header button', async ({browser})=>{

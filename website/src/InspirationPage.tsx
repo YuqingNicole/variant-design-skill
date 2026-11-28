@@ -2,14 +2,15 @@ import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, typ
 import { createPortal } from 'react-dom';
 import { SiteHeader, SiteFooter } from './SiteChrome';
 import { transition } from './view-transition';
-import { YouTubeEmbed, YouTubeThumb, isYouTube, type YouTubeVideo } from './YouTubeEmbed';
-import { XPost, type Post } from './XPost';
+import { YouTubeThumb, isYouTube, type YouTubeVideo } from './YouTubeEmbed';
+import type { Post } from './XPost';
+import { detailMedia, loadDetailMedia } from './detail-media';
 import { XVideo } from './XVideo';
 import { sized, proxied } from './image-proxy';
 import { locales, type Locale } from './i18n/locales';
 import { t, type Localized } from './i18n/localized';
 import { sectionOf, sectionPath, sectionById, activeSections, detailTitle, videoTypeOf, pageOf, relatedReferences } from './inspiration-sections';
-import { references, referencesFor, withdrawnReferences, permissionOf, referenceOf, previewOf, mediaOf, ensure, ensureAll, loaded, subscribe, snapshot, inspirationTopics, type Reference, type Row, type Preview } from './reference-library';
+import { references, referencesFor, withdrawnReferences, permissionOf, referenceOf, cardOf, useCards, previewOf, mediaOf, ensure, ensureAll, loaded, subscribe, snapshot, inspirationTopics, type Reference, type Row, type Card, type Preview } from './reference-library';
 import { AuthorizationDetails, AuthorizedMedia, authorizedVideo, WithdrawnReferencePage } from './ReferencePermission';
 import './content-pages.css';
 import './inspiration.css';
@@ -19,16 +20,18 @@ import { showCases } from './case-visibility';
 import { packKey, parsePack, mergePacks, createPackWriter, type Intent, type Pack } from './pack';
 import { useAccount, openSignIn, readPack, writePack, rememberPending, takePending } from './account';
 type Item=Reference;
+// A grid card draws from the full record or, on the home's first page before that is here, from its card (reference-library.ts).
+type Drawn=Reference|Card;
 // Media close to the 16:10 cell fills it (a small crop); a tall or very wide capture stays whole on a surface mat. The grid keeps its row order, which the first screen and scroll restoration rely on.
 const fills=(media?:{width?:number;height?:number})=>Boolean(media?.width&&media.height&&media.width/media.height>=.85&&media.width/media.height<=2);
-const mediaFor=(item:Item)=>{const r=permissionOf(item);return r?(r.media.kind==='video'?authorizedVideo(r):undefined):mediaOf(item.id)};
+const mediaFor=(item:Drawn)=>{const r=permissionOf(item);return r?(r.media.kind==='video'?authorizedVideo(r):undefined):mediaOf(item.id)};
 // Thumbnails map the link itself: an X post shows its own text and embed; a site shows the preview it publishes
 // for shared links (og:image, title, description; scripts/link-preview.mjs), loaded from its own server. A link
 // without a preview, or whose image fails to load, falls back to our analysis card.
 const labels:Record<string,Localized>={landing:{zh:'Landing',en:'Landing'},product:{zh:'产品界面',en:'Product'},flow:{zh:'关键流程',en:'Flow'},motion:{zh:'动效',en:'Motion'},practice:{zh:'Best practice',en:'Best practice'}};
-const postOf=(item:Item)=>(item as Item&{post?:Post}).post;
+const postOf=(item:Drawn)=>(item as Drawn&{post?:Post}).post;
 // A YouTube entry carries `video` (channel, length); it has no stored text, so its card is the thumbnail and its detail the click-to-play embed.
-const youtubeOf=(item:Item):YouTubeVideo|undefined=>{const v=(item as Item&{video?:unknown}).video;return isYouTube(v)?v:undefined};
+const youtubeOf=(item:Drawn):YouTubeVideo|undefined=>{const v=(item as Drawn&{video?:unknown}).video;return isYouTube(v)?v:undefined};
 // Where we found the work, when another curator surfaced it first; credited beside the source.
 const viaOf=(item:Item)=>(item as Item&{via?:string}).via;
 // Three structural sketches per category, picked by id, so neighbouring cards do not repeat.
@@ -70,17 +73,17 @@ const f={
  via:{zh:(host:string)=>`经 ${host} 发现`,en:(host:string)=>`found via ${host}`},
  loadMore:{zh:(n:number)=>`加载更多（还有 ${n} 个）`,en:(n:number)=>`Load more (${n} left)`},
  pageN:{zh:(n:number)=>`第 ${n} 页`,en:(n:number)=>`Page ${n}`}};
-const rightsLabel=(item:Item,locale:Locale)=>t(m[permissionOf(item)?'authorized':'linkOnly'],locale);
-const rights=(item:Item,locale:Locale)=><em className="inspiration-link-only">{rightsLabel(item,locale)}</em>;
-function Thumb({item,locale}:{item:Item;locale:Locale}){const preview=previewOf(item.id);const post=postOf(item);const [tries,setTries]=useState(0),[loaded,setLoaded]=useState(false),[ratio,setRatio]=useState('');
+const rightsLabel=(item:Drawn,locale:Locale)=>t(m[permissionOf(item)?'authorized':'linkOnly'],locale);
+const rights=(item:Drawn,locale:Locale)=><em className="inspiration-link-only">{rightsLabel(item,locale)}</em>;
+function Thumb({item,locale}:{item:Drawn;locale:Locale}){const preview=previewOf(item.id);const post=postOf(item);const [tries,setTries]=useState(0),[loaded,setLoaded]=useState(false),[ratio,setRatio]=useState('');
  const authorized=permissionOf(item);if(authorized)return <AuthorizedMedia key={item.id} record={authorized} thumbnail fallback={<AnalysisCard item={item} locale={locale}/>}/>;
  if(post)return <div className="insp-thumb insp-thumb-post" aria-hidden="true"><small className="insp-thumb-tag">{post.author} @{post.handle} · {post.date}</small><b lang={post.lang}>{post.text}</b></div>;
  if(preview&&tries<2)return <div className="insp-thumb insp-thumb-media" data-loaded={loaded} aria-hidden="true" style={(preview.width&&preview.height?`${preview.width}/${preview.height}`:ratio)?{'--ar':preview.width&&preview.height?`${preview.width}/${preview.height}`:ratio} as CSSProperties:undefined}><AnalysisCard item={item} locale={locale} embedded/><img src={tries?preview.image:sized(preview.image,640)} alt="" loading="lazy" referrerPolicy="no-referrer" onLoad={e=>{const {naturalWidth:w,naturalHeight:h}=e.currentTarget;if(w&&h&&!preview.width)setRatio(`${w}/${h}`);setLoaded(true)}} onError={()=>setTries(t=>t+1)}/></div>;
  return <AnalysisCard item={item} locale={locale} ratio={preview?(preview.width&&preview.height?`${preview.width}/${preview.height}`:ratio||'1200/630'):undefined}/>}
 // A reference's picture in a grid: its video, its YouTube thumbnail, or its link preview, falling back to the analysis card. Collection pages reuse it.
-export function ReferenceCover({item,locale}:{item:Item;locale:Locale}){const media=mediaFor(item),yt=youtubeOf(item);return media?<XVideo media={media} fallback={<AnalysisCard item={item} locale={locale}/>}/>:yt?<YouTubeThumb video={yt} fallback={<AnalysisCard item={item} locale={locale}/>}/>:<Thumb item={item} locale={locale}/>}
+export function ReferenceCover({item,locale}:{item:Drawn;locale:Locale}){const media=mediaFor(item),yt=youtubeOf(item);return media?<XVideo media={media} fallback={<AnalysisCard item={item} locale={locale}/>}/>:yt?<YouTubeThumb video={yt} fallback={<AnalysisCard item={item} locale={locale}/>}/>:<Thumb item={item} locale={locale}/>}
 // `ratio`: the card stands in for a preview image that failed, so it keeps that image's proportions and the feed does not jump.
-function AnalysisCard({item,locale,embedded=false,ratio}:{item:Item;locale:Locale;embedded?:boolean;ratio?:string}){const v=variantOf(item.id);return <div className={`${embedded?'insp-thumb-fallback':'insp-thumb'} insp-thumb-${item.category} insp-tint-${v%2}${ratio?' insp-thumb-standin':''}`} style={ratio?{'--ar':ratio} as CSSProperties:undefined} aria-hidden="true"><small className="insp-thumb-tag">{t(labels[item.category],locale)} · {item.tag} {rights(item,locale)}</small><b>{item.name}</b><span>{t(item.focus,locale)}</span><div className={`insp-sketch insp-sk-${item.category}-${v}`}>{Array.from({length:(sketches[item.category]??[4,4,4])[v]},(_,i)=><i key={i}/>)}</div></div>}
+function AnalysisCard({item,locale,embedded=false,ratio}:{item:Drawn;locale:Locale;embedded?:boolean;ratio?:string}){const v=variantOf(item.id);return <div className={`${embedded?'insp-thumb-fallback':'insp-thumb'} insp-thumb-${item.category} insp-tint-${v%2}${ratio?' insp-thumb-standin':''}`} style={ratio?{'--ar':ratio} as CSSProperties:undefined} aria-hidden="true"><small className="insp-thumb-tag">{t(labels[item.category],locale)} · {item.tag} {rights(item,locale)}</small><b>{item.name}</b><span>{t(item.focus,locale)}</span><div className={`insp-sketch insp-sk-${item.category}-${v}`}>{Array.from({length:(sketches[item.category]??[4,4,4])[v]},(_,i)=><i key={i}/>)}</div></div>}
 function LinkPreview({item,preview,locale}:{item:Item;preview:Preview;locale:Locale}){const [tries,setTries]=useState(0);const failed=tries>1;const host=new URL(item.url).hostname;
  const lang=preview.lang||undefined;
  return <figure className="inspiration-demo insp-shot">{failed?<AnalysisCard item={item} locale={locale}/>:<img src={tries?preview.image:sized(preview.image,1280)} alt={preview.title} lang={lang} referrerPolicy="no-referrer" style={preview.width&&preview.height?{aspectRatio:`${preview.width}/${preview.height}`}:undefined} onError={()=>setTries(t=>t+1)}/>}<figcaption><span lang={lang}><b>{preview.title}</b>{preview.description&&<> — {preview.description}</>}</span><br/>{t(f.caption,locale)(host,preview.fetchedAt,failed)}</figcaption></figure>}
@@ -97,10 +100,10 @@ const known=(id:string)=>references.some(item=>item.id===id)||withdrawnReference
 function loadPack():{selection:Pack;error:boolean}{try{const raw=localStorage.getItem(packKey);if(!raw)return {selection:{},error:false};return {selection:parsePack(JSON.parse(raw),known),error:false}}catch{return {selection:{},error:true}}}
 // An account's pack may name a reference since taken off the site; those entries are dropped, not the whole pack.
 const knownOnly=(raw:unknown)=>raw&&typeof raw==='object'&&!Array.isArray(raw)?Object.fromEntries(Object.entries(raw).filter(([id])=>known(id))):{};
-// Before the first render: the records that render shows (main.tsx waits for it). The home's first page is in the script; a
+// Before the first render: the records that render shows (main.tsx waits for it). The home's first page needs its cards; a
 // section page, a reference opened by address, and a sort, topic or query in the address load their records first.
-export function prepare(route:string){const p=new URLSearchParams(location.search);if(p.get('sort')||p.get('topic')||p.get('q')||Number(p.get('page'))>1)return ensureAll();
- if(route.startsWith('/browse/'))return ensure(references.filter(r=>sectionOf(r)===route.slice(8)).map(r=>r.id));if(route.startsWith('/inspiration/'))return ensure([route.slice(13)]);return Promise.resolve()}
+export function prepare(route:string,locale:Locale){const p=new URLSearchParams(location.search);if(p.get('sort')||p.get('topic')||p.get('q')||Number(p.get('page'))>1)return ensureAll();
+ if(route.startsWith('/browse/'))return ensure(references.filter(r=>sectionOf(r)===route.slice(8)).map(r=>r.id));if(route.startsWith('/inspiration/'))return Promise.all([ensure([route.slice(13)]),loadDetailMedia()]).then(()=>{});return useCards(locale)}
 export function InspirationPage({detail='',section:sectionProp=''}:{detail?:string;section?:string}){
  const language = useLocale();useSyncExternalStore(subscribe,snapshot,snapshot);// re-renders as section chunks arrive
  // Videos is a page of its own (pageOf): on it only creative videos count; everywhere else (Inspiration) they are left out.
@@ -149,10 +152,11 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  const matches=rows.filter(r=>(!section||sectionOf(r)===section)&&(!activeTopic||activeTopic.items.includes(r.id))&&(!type||!sectionInfo?.types||videoTypeOf(r)===type)&&(!q||text(r).includes(q)));
  const [pageNo,setPageNo]=useState(()=>Math.max(1,Math.floor(Number(new URLSearchParams(location.search).get('page')))||1));
  const results=sort==='checked'?[...matches].sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt)):sort==='name'?[...matches].sort((a,b)=>a.name.localeCompare(b.name)):sort==='curated'?matches:[...matches].sort((a,b)=>Date.parse(b.addedAt)-Date.parse(a.addedAt));
- // Cards render from records; the rows on screen whose section has not been fetched ask for it, and the store re-renders the page when it lands.
+ // Cards render from records or first-page cards; the rows on screen with neither ask for their section, and the store re-renders the page when it lands.
  const pages=Math.max(1,Math.ceil(results.length/perPage)),pageAt=Math.min(pageNo,pages),pageResults=results.slice((pageAt-1)*perPage,pageAt*perPage);
- const shown=pageResults.slice(0,visible),cards=shown.flatMap(r=>referenceOf(r.id)??[]),missing=shown.filter(r=>!referenceOf(r.id)).map(r=>r.id).join(' ');
- useEffect(()=>{if(missing)ensure(missing.split(' '))},[missing]);
+ const shown=pageResults.slice(0,visible),cards=shown.flatMap(r=>cardOf(r.id)??[]),missing=shown.filter(r=>!cardOf(r.id)).map(r=>r.id).join(' ');
+ // A detail on its own page draws no grid, so it asks for nothing more than its own record.
+ useEffect(()=>{if(missing&&open?.mode!=='page')ensure(missing.split(' '))},[missing,open?.mode]);
  useEffect(()=>{if(q)ensureAll()},[q]);
  function useReference(item:Item){setNotice('');setPrompt(fl('useReference')(item))}
  async function copy(){try{await navigator.clipboard.writeText(prompt);setNotice(l('copied'))}catch{setNotice(l('copyManually'))}}
@@ -167,15 +171,17 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
   const next=valid?{id,mode:fromGrid.current?'modal' as const:'page' as const}:null;requestedOpen.current=next;
   const apply=()=>transition(()=>{setOpen(next);
    const params=new URLSearchParams(location.search),s=params.get('sort');setTopic(params.get('topic')??'');setType((sectionInfo?.types??[]).some(v=>v.id===params.get('type'))?params.get('type')!:'');setQuery(params.get('q')??'');setSort(s==='name'||s==='checked'||s==='curated'?s:'default');setPageNo(Math.max(1,Math.floor(Number(params.get('page')))||1))});
-  if(next&&!loaded([next.id]))ensure([next.id]).then(()=>{if(requestedOpen.current===next)apply()});else apply();
+  if(next&&!(loaded([next.id])&&detailMedia()))Promise.all([ensure([next.id]),loadDetailMedia()]).then(()=>{if(requestedOpen.current===next)apply()});else apply();
  };addEventListener('popstate',onPop);return()=>removeEventListener('popstate',onPop)},[]);
  useEffect(()=>{const url=new URL(location.href);for(const [key,value] of Object.entries({topic,type:sectionInfo?.types?type:'',q:query,sort:sort==='default'?'':sort,page:pageAt>1?String(pageAt):''})){if(value)url.searchParams.set(key,value);else url.searchParams.delete(key)}history.replaceState(history.state,'',url.pathname+url.search+url.hash)},[topic,type,query,sort,pageAt]);
  const inQuery=(drop=false)=>{const p=new URLSearchParams(location.search);if(drop||!section)p.delete('in');else p.set('in',section);const q=p.toString();return q?'?'+q:''};
- // A reference outside the fetched sections is shown once its record is here; a newer request in the meantime wins.
+ // A pointer over a card or focus on it starts fetching what its detail needs, so opening it seldom waits.
+ const prefetchDetail=(id:string)=>{void ensure([id]);void loadDetailMedia()};
+// A reference outside the fetched sections is shown once its record is here; a newer request in the meantime wins.
  function show(id:string,mode:'page'|'modal'){if(!requestedOpen.current&&mode==='modal')remember();const request={id,mode};requestedOpen.current=request;const go=()=>transition(()=>{
   if(parseLocale(location.pathname).route!==`/inspiration/${id}`){if(open)history.replaceState(null,'',localePath(`/inspiration/${id}`,language)+inQuery());else{history.pushState(null,'',localePath(`/inspiration/${id}`,language)+inQuery());pushed.current=true}}
   setOpen({id,mode});if(dialogRef.current)dialogRef.current.scrollTop=0;
- });if(loaded([id]))go();else ensure([id]).then(()=>{if(requestedOpen.current===request)go()})}
+ });if(loaded([id])&&detailMedia())go();else Promise.all([ensure([id]),loadDetailMedia()]).then(()=>{if(requestedOpen.current===request)go()})}
  function close(){requestedOpen.current=null;if(pushed.current){pushed.current=false;history.back()}else transition(()=>{history.replaceState(null,'',localePath(sectionPath(section),language)+inQuery(true));setOpen(null)})}
  // Track requested navigation immediately: transition callbacks may lag behind several key presses.
  function step(by:number){const current=requestedOpen.current;if(!current)return;const list=results.some(r=>r.id===current.id)?results:rows;const at=list.findIndex(r=>r.id===current.id);if(at<0)return;show(list[(at+by+list.length)%list.length].id,current.mode)}
@@ -230,7 +236,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
  function brief(item:Item){if(needAccount('brief'))return;if(open?.mode==='modal'){afterClose.current=()=>useReference(item);close()}else useReference(item)}
  const analysisOf=(item:Item)=>(item as {analysis?:{checkedAt:string;structure:Localized<string>;measured:Localized<string[]>;learn:Localized<string>;avoid:Localized<string>}}).analysis;
  const related=(item:Item)=>relatedReferences(item,rows);
- const detailView=(item:Item,asPage:boolean)=>{const H=asPage?'h1':'h2';const post=postOf(item),yt=youtubeOf(item);const preview=previewOf(item.id);
+ const detailView=(item:Item,asPage:boolean)=>{const H=asPage?'h1':'h2';const post=postOf(item),yt=youtubeOf(item);const preview=previewOf(item.id),parts=detailMedia();
   // A creative video (Videos, its own page) is not design work: its notes say what is fun and what to borrow, and the design-brief tools stay off.
   const own=sectionById(pageOf(item)),typeName=own?.types?.find(v=>v.id===videoTypeOf(item))?.name;
   return <article className="insp-detail" aria-labelledby={`detail-${item.id}`}>
@@ -249,7 +255,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
      {list.length>0&&<section className="insp-related" aria-labelledby={`related-${item.id}`}><h2 id={`related-${item.id}`}>{l('related')}</h2><ul>{list.map(r=><li key={r.id}><a href={localePath(`/inspiration/${r.id}`,language)}>{r.name}</a> <small>{r.tag}</small></li>)}</ul><a href={localePath(sectionPath(sectionOf(item)),language)}>{l('seeAll')} ({total})</a></section>}
      <section className="insp-yours" aria-labelledby={`yours-${item.id}`}><h2 id={`yours-${item.id}`}>{l('yours')}</h2><p>{l('yoursNote')}</p><a href={localePath('/docs/install',language)}>{l('installSkill')}</a></section></>})()}
    </div>
-   <div className={`insp-detail-visual${post&&!permissionOf(item)?' insp-detail-visual-post':''}`}><div className="insp-detail-media" style={{viewTransitionName:`ref-${item.id}`}}>{permissionOf(item)?<AuthorizedMedia key={item.id} record={permissionOf(item)!}/>:yt?<YouTubeEmbed key={item.id} video={yt} title={item.name} url={item.url} locale={language}/>:post?<XPost key={item.id} post={post} url={item.url} locale={language} media={mediaFor(item)??undefined}/>:preview?<LinkPreview key={item.id} item={item} preview={preview} locale={language}/>:<Thumb key={item.id} item={item} locale={language}/>}</div>
+   <div className={`insp-detail-visual${post&&!permissionOf(item)?' insp-detail-visual-post':''}`}><div className="insp-detail-media" style={{viewTransitionName:`ref-${item.id}`}}>{permissionOf(item)?<AuthorizedMedia key={item.id} record={permissionOf(item)!}/>:yt&&parts?<parts.YouTubeEmbed key={item.id} video={yt} title={item.name} url={item.url} locale={language}/>:post&&parts?<parts.XPost key={item.id} post={post} url={item.url} locale={language} media={mediaFor(item)??undefined}/>:(yt||post)?<Thumb key={item.id} item={item} locale={language}/>:preview?<LinkPreview key={item.id} item={item} preview={preview} locale={language}/>:<Thumb key={item.id} item={item} locale={language}/>}</div>
     <a className="content-button insp-visit" href={item.url} target="_blank" rel="noreferrer">{l('visit')}<Icon d={icons.out}/></a></div>
   </article>};
  const tail=<>
@@ -287,7 +293,7 @@ export function InspirationPage({detail='',section:sectionProp=''}:{detail?:stri
    {activeTopic&&<p className="inspiration-topic">{t(activeTopic.task,language)} {fl('topicNote')(activeTopic.linksCheckedAt)}</p>}
    <p className="inspiration-count" role="status">{results.length} {l('references')}</p>
    <ul ref={gridRef} className={`inspiration-grid insp-feed${masonry?' is-masonry':''}${sectionInfo?.videoGrid?' insp-videos':''}${page?' insp-own':''}`}>{cards.map(item=>{const media=mediaFor(item),post=postOf(item),yt=youtubeOf(item),authorized=permissionOf(item);return <li key={item.id} className={`insp-card${media?' insp-vcard':''}`} data-added-at={item.addedAt}>
-    <a className={`insp-card-open${media||yt?' insp-vcard-open':''}${fills(media)||yt?' insp-fills':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
+    <a className={`insp-card-open${media||yt?' insp-vcard-open':''}${fills(media)||yt?' insp-fills':''}`} href={localePath(`/inspiration/${item.id}`,language)} style={{viewTransitionName:open?.mode==='modal'&&open.id===item.id?'none':`ref-${item.id}`}} aria-label={`${item.name}：${t(item.focus,language)}（${t(sectionById(sectionOf(item))!.name,language)} · ${rightsLabel(item,language)}）`} onPointerEnter={()=>prefetchDetail(item.id)} onFocus={()=>prefetchDetail(item.id)} onClick={e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();show(item.id,'modal')}}>
      <ReferenceCover item={item} locale={language}/>
      <span className="insp-card-meta">{media?.avatar&&<img className="insp-vcard-avatar" src={proxied(media.avatar,640)} width="28" height="28" loading="lazy" decoding="async" alt={post?`${post.author} @${post.handle}`:''} referrerPolicy="no-referrer" onError={e=>{const i=e.currentTarget;if(media.avatar&&i.dataset.direct!==''&&i.getAttribute('src')!==media.avatar){i.dataset.direct='';i.src=media.avatar}else i.style.display='none'}}/>}<span><b>{item.name}</b><small>{authorized?authorized.credit.name:post?`@${post.handle}`:yt?yt.channel:new URL(item.url).hostname.replace(/^www\./,'')}{authorized&&` · ${rightsLabel(item,language)}`}</small></span></span>
     </a>

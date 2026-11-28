@@ -4,6 +4,7 @@ import "./site-styles";
 import { localePath, parseLocale } from "./i18n/locale-route";
 import { LocaleNotice, LocaleProvider } from "./i18n/LocaleProvider";
 import { designTypeIds } from "./inspiration-sections";
+import { loadCards } from "virtual:inspiration/cards";
 // Old paths keep working: the address is rewritten in place (Vercel also redirects them with 301).
 const legacy = (path: string) => path === "/canvas" ? "/lab/canvas" : path === "/workbench" ? "/lab/workbench" : path.startsWith("/showcase/") ? "/d/" + path.split("/")[2]
   : path === "/showcase" && !new URLSearchParams(location.search).has("direction") ? "/cases" : path === "/inspiration" ? "/" : null;
@@ -22,11 +23,13 @@ if (oldCategory !== undefined && (route === "/" || route.startsWith("/inspiratio
 // Design videos left `videos` for `design-motion` (2026-11-20); a link that still filters `videos` by a design type follows them.
 if (route === "/browse/videos" && designTypeIds.includes(new URLSearchParams(location.search).get("type") ?? "")) { route = "/browse/design-motion"; history.replaceState(null, "", localePath(route, parsed.locale) + location.search + location.hash); }
 if (moved) { history.replaceState(null, "", localePath(moved, parsed.locale) + (moved.startsWith("/lab/") || route === "/inspiration" ? location.search : "") + location.hash); route = moved; }
+// The home's first page arrives as cards (reference-library.ts); asking now fetches them beside the page's script, not after it.
+if (route === "/") void loadCards(parsed.locale);
 const page: Promise<ReactNode> = route === "/lab/canvas" ? import("./LandingCanvas").then(m => <m.LandingCanvas/>) : route === "/lab/workbench" ? import("./App").then(m => <m.default/>)
   : route === "/lab" ? import("./LabPage").then(m => <m.LabPage/>) : route === "/skills" ? import("./SkillsPage").then(m => <m.SkillsPage/>) : route === "/about" ? import("./PaperLanding").then(m => <m.PaperLanding/>)
   // The inspiration pages wait for the records their first render shows (reference-library.ts), so the prerendered cards are never replaced by a gap.
-  : route.startsWith("/browse/") ? import("./InspirationPage").then(m => m.prepare(route).then(() => <m.InspirationPage section={route.slice(8)}/>))
-  : route === "/" || route.startsWith("/inspiration/") ? import("./InspirationPage").then(m => m.prepare(route).then(() => <m.InspirationPage detail={route === "/" ? undefined : route.slice(13)}/>))
+  : route.startsWith("/browse/") ? import("./InspirationPage").then(m => m.prepare(route, parsed.locale).then(() => <m.InspirationPage section={route.slice(8)}/>))
+  : route === "/" || route.startsWith("/inspiration/") ? import("./InspirationPage").then(m => m.prepare(route, parsed.locale).then(() => <m.InspirationPage detail={route === "/" ? undefined : route.slice(13)}/>))
   : route === "/collections" || route.startsWith("/collections/") ? import("./CollectionPage").then(m => { const slug = route.slice(13); return m.prepare(slug).then(() => <m.CollectionPage slug={slug}/>); })
   : route === "/changelog" ? import("./ChangelogPage").then(m => <m.ChangelogPage/>)
   : route === "/docs" || route.startsWith("/docs/") && route !== "/docs/install" ? import("./GuidesPage").then(m => <m.GuidesPage base="/docs" slug={route === "/docs" ? undefined : route.slice(6)}/>)

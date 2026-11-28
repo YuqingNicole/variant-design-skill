@@ -11,6 +11,10 @@ import { docsArticles } from './docs-articles';
 import { LocaleProvider } from './i18n/LocaleProvider';
 import type { Locale } from './i18n/locales';
 import { InspirationPage } from './InspirationPage';
+import * as detailParts from './DetailMedia';
+import { provideDetailMedia } from './detail-media';
+import * as accountParts from './AccountDialog';
+import { provideAccountDialog } from './AccountSlot';
 import { references,authorizedReferences,withdrawnReferences } from './reference-library';
 import { activeSections } from './inspiration-sections';
 import {WithdrawnReferencePage} from './ReferencePermission';
@@ -25,6 +29,8 @@ import { CollectionPage } from './CollectionPage';
 import { collections } from './collections';
 import { SubmitPage } from './SubmitPage';
 
+// Modules the browser loads on demand render into the HTML as they did before they were split off (2026-11-28).
+provideDetailMedia(detailParts);provideAccountDialog(accountParts);
 const standalone: Record<string, ReactNode> = {
   ...Object.fromEntries(authorizedReferences.map(i=>[`/inspiration/${i.id}`,<InspirationPage detail={i.id}/>])),
   ...Object.fromEntries(withdrawnReferences.map(i=>[`/inspiration/${i.id}`,<WithdrawnReferencePage record={i}/>])),
