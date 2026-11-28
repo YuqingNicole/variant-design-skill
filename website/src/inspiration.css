@@ -338,7 +338,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .insp-play{position:absolute;right:8px;bottom:8px;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,.72);color:#fff;font-size:12px;font-variant-numeric:tabular-nums;line-height:1.4}
 /* Made with AI (2026-11-28): a quiet, always-visible corner label on the card, so it reads before hover; the detail repeats it in words. */
 .insp-card-open:has(.insp-card-ai){position:relative}
-.insp-card-ai{position:absolute;left:8px;top:8px;z-index:1;padding:1px 6px;border-radius:4px;background:rgba(0,0,0,.72);color:#fff;font-size:11px;font-weight:600;letter-spacing:.04em;line-height:1.5;pointer-events:none}
+.insp-card-ai{position:absolute;left:8px;top:8px;z-index:1;padding:1px 6px;border-radius:4px;background:rgba(0,0,0,.72);color:#fff;font-size:12px;font-weight:600;letter-spacing:.04em;line-height:1.4;pointer-events:none}
 .insp-vcard-open .insp-play::before{content:"";display:inline-block;margin-right:5px;border-left:7px solid #fff;border-block:4px solid transparent}
 .yt-embed{display:grid;gap:var(--space-3);margin:0;min-width:0}
 .yt-embed-frame{position:relative;aspect-ratio:16/9;border-radius:var(--radius-panel);overflow:hidden;background:var(--site-surface);border:1px solid var(--site-line)}
