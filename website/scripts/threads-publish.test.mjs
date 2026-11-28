@@ -34,6 +34,8 @@ test('the prompt says when the capture checked that the page did not move, and s
   assert.match(stuck, /did not move to reach screen 2 or 3, even after a second wheel pass and the Page Down key/);
   assert.match(stuck, /only one screen of content/, 'the rule that rejects it is unchanged');
   assert.doesNotMatch(buildPrompt(cand('1', 'https://a.example/'), { title: 'A' }, { file: '/s.png', moved: [null, true, true] }), /did not move/);
+  assert.match(buildPrompt(cand('1', 'https://a.example/'), { title: 'A' }, { file: '/s.png', moved: [null, true, true], gate: 'Without' }), /clicked the page's full-screen entry button "Without" once/);
+  assert.doesNotMatch(buildPrompt(cand('1', 'https://a.example/'), { title: 'A' }, { file: '/s.png', moved: [null, true, true], gate: null }), /entry button/);
 });
 
 test('a run records every decision, adds the preview, and keeps unreadable sites pending', async () => {

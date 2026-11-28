@@ -28,6 +28,13 @@
 
 2026-11-23 用 #314 的 10 个网站对比新旧截图（`--dry-run` 等价的调用，没有写入，提示词的收拒标准没改）：旧截图收 4 拒 6（Soma 这次被收，#314 里被拒，说明模型判断本身有波动）；新截图收 8 拒 2。新收的 Hoy、Wowww、Studio Plato、LouieLouie 在旧截图里都是一屏撑满或空白。仍被拒的：Damián Panes 没有分享预览图（不涉及截图）；Sunstill 页面确实不滚动，三屏重复，按“只有一屏内容”拒，这是标准问题，不是截图问题。
 
+2026-11-28 补了两处（#356 里被误拒的站）：
+
+- WebGL：无界面 Chrome 关了 GPU 就完全没有 WebGL，WebGL 站只剩黑屏或脚本报错（A DAY 显示 `Cannot read properties of null (reading 'getSupportedExtensions')`，MORIMICHI 三屏全黑）。现在启动时加 `--use-angle=swiftshader --enable-unsafe-swiftshader`，用 CPU 软件渲染 WebGL（Chrome 137 起要显式打开）。第一屏有占窗口四分之一以上的 canvas 时，每 0.5 秒截一张缩略图，等到不再是一整片纯色再截，最多 12 秒，算在 75 秒预算里。SwiftShader 吃 CPU，截图仍是一次一个。
+- 入口页：整屏的“Enter with sound / Without”“Skip intro”“Explore”之类入口会挡住每一屏（Rinat Seif）。截第一屏前找这样的按钮：文字只有入口词，在一个盖住整个窗口的 fixed/absolute 层里（或页面还滚不动），周围可点的东西不超过 8 个，不指向别的页面；优先点静音或不带声音的选项，用真实鼠标点一次，再等入场时间。提示词会告诉模型点了哪个按钮。收拒标准没改。
+
+同日对比（同样的调用方式，没有写入）：Rinat Seif 旧图三屏都是入口页，新图点了“WITHOUT”后是完整作品集，模型收；MORIMICHI 旧图全黑，新图点了“ENTER”，是 3D 显示器和蓝屏多语言问候，收；Study Hall 旧图首屏只有字标、第二屏空白（主视觉是 canvas，没画出来），新图首屏是滑雪照片拼贴，收；A DAY 旧图是 WebGL 报错，新图 WebGL 能画了，但 75 秒内页面还停在加载计数（28→40），模型按“没渲染出来”拒，这个站在预算内加载不完，没再放宽。SLOWRAT、Manna 两个普通站新旧截图一样，仍收；普通站没有触发入口点击。
+
 请求带 `VariantDesignDiscovery/1.0` 的 User-Agent 和隐私页地址。
 
 ## 试跑（2026-11-22）

@@ -8,9 +8,13 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
+import zlib from 'node:zlib';
 
 export const VIEWPORT = { width: 1280, height: 800 };
 export const GAP = 8;
+// Headless Chrome with the GPU disabled has no WebGL at all, so WebGL sites rendered black or a script error (A DAY, PR #356;
+// MORIMICHI, #342). SwiftShader draws WebGL on the CPU; since Chrome 137 it must be asked for explicitly.
+export const WEBGL_ARGS = ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'];
 const defaultChrome = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 // Waits for `promise`, or `ms` at most; the timer is cleared so a finished capture does not keep the process alive.
@@ -54,7 +58,7 @@ export async function launch({ chrome = defaultChrome, viewport = VIEWPORT, args
   let last;
   for (let attempt = 1; attempt <= attempts; attempt++) {
     const profile = await fs.mkdtemp(path.join(os.tmpdir(), 'site-capture-'));
-    const child = spawn(chrome, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--mute-audio', '--no-first-run', '--no-default-browser-check',
+    const child = spawn(chrome, ['--headless=new', '--disable-gpu', ...WEBGL_ARGS, '--hide-scrollbars', '--mute-audio', '--no-first-run', '--no-default-browser-check',
       `--window-size=${viewport.width},${viewport.height}`, '--remote-debugging-port=0', `--user-data-dir=${profile}`, ...args, 'about:blank'], { stdio: 'ignore', detached: true });
     // A missing or unrunnable binary fails the capture instead of crashing the process with an unhandled 'error' event.
     const failed = new Promise((_, reject) => child.once('error', error => reject(new Error(`Chrome could not start: ${error.message}`))));
@@ -134,13 +138,78 @@ export function moved(before, after) {
   return n > 0 && shifted > n / 3;
 }
 
+// Enough of PNG to read Chrome's screenshots: 8-bit RGB or RGBA, not interlaced.
+export function decodePng(buf) {
+  const width = buf.readUInt32BE(16), height = buf.readUInt32BE(20), channels = { 2: 3, 6: 4 }[buf[25]];
+  if (buf[24] !== 8 || !channels || buf[28] !== 0) throw new Error('unexpected PNG format');
+  const parts = [];
+  for (let at = 8; at < buf.length;) {
+    const length = buf.readUInt32BE(at), type = buf.toString('ascii', at + 4, at + 8);
+    if (type === 'IDAT') parts.push(buf.subarray(at + 8, at + 8 + length));
+    at += length + 12;
+  }
+  const raw = zlib.inflateSync(Buffer.concat(parts)), stride = width * channels, pixels = Buffer.alloc(stride * height);
+  for (let y = 0; y < height; y++) {
+    const filter = raw[y * (stride + 1)], line = raw.subarray(y * (stride + 1) + 1, (y + 1) * (stride + 1));
+    for (let x = 0; x < stride; x++) {
+      const a = x >= channels ? pixels[y * stride + x - channels] : 0, b = y ? pixels[(y - 1) * stride + x] : 0, c = x >= channels && y ? pixels[(y - 1) * stride + x - channels] : 0;
+      const p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
+      const predictor = [0, a, b, (a + b) >> 1, pa <= pb && pa <= pc ? a : pb <= pc ? b : c][filter];
+      pixels[y * stride + x] = (line[x] + predictor) & 255;
+    }
+  }
+  return { width, height, at: (x, y) => [...pixels.subarray(y * stride + x * channels, y * stride + x * channels + 3)] };
+}
+
+// Whether an image has been drawn on: more than 1% of its pixels fall outside its most common colour (coarsely binned). A WebGL
+// scene that is still loading shows one flat colour, usually black.
+export function drawn(png) {
+  const bins = new Map();
+  for (let y = 0; y < png.height; y++) for (let x = 0; x < png.width; x++) {
+    const [r, g, b] = png.at(x, y), key = (r >> 5) << 6 | (g >> 5) << 3 | b >> 5;
+    bins.set(key, (bins.get(key) ?? 0) + 1);
+  }
+  const total = png.width * png.height;
+  return total - Math.max(0, ...bins.values()) > total / 100;
+}
+
+// The largest visible canvas covering at least a quarter of the window, as a screenshot clip, or null.
+const bigCanvas = `(() => { let best = null; for (const c of document.querySelectorAll('canvas')) { const r = c.getBoundingClientRect(), x = Math.max(0, r.left), y = Math.max(0, r.top), w = Math.min(innerWidth, r.right) - x, h = Math.min(innerHeight, r.bottom) - y; if (w > 0 && h > 0 && w * h >= innerWidth * innerHeight / 4 && getComputedStyle(c).visibility !== 'hidden' && (!best || w * h > best.width * best.height)) best = { x, y, width: w, height: h }; } return best; })()`;
+
+// A full-screen entry gate ("Enter with sound / Without", "Skip intro", "Explore") hides the site on every screen (Rinat Seif,
+// #356). This finds its button: short text that is only an entry word, inside a fixed or absolute layer that covers the window,
+// or on a page that does not scroll yet, with few other things to click. The silent or plain choice wins over the others.
+// Links to other pages are never chosen. Returns the button's centre and text, or null.
+const gate = `(() => {
+  const vw = innerWidth, vh = innerHeight, entry = /^(enter|enter (the )?(site|website|experience)|enter without (sound|audio|music)|without( sound| audio| music)?|no (sound|audio|music)|sound off|mute|silent|skip|skip intro|start|explore|continue|begin|进入|进入网站|跳过|开始|探索|静音进入)$/;
+  const quiet = /without|no (sound|audio|music)|sound off|mute|silent|skip|跳过|静音/;
+  const visible = el => { const r = el.getBoundingClientRect(), s = getComputedStyle(el); return r.width > 0 && r.height > 0 && r.bottom > 0 && r.right > 0 && r.top < vh && r.left < vw && s.visibility !== 'hidden' && Number(s.opacity) > 0.05; };
+  const clickable = el => el.matches('a[href], button, [role=button], [onclick], input[type=button], input[type=submit]') || getComputedStyle(el).cursor === 'pointer';
+  const elsewhere = el => { const a = el.closest('a[href]'); if (!a) return false; const h = a.getAttribute('href'); if (/^(#|javascript:)/i.test(h)) return false; try { const u = new URL(a.href); return u.origin !== location.origin || u.pathname !== location.pathname; } catch { return false; } };
+  const scrolls = (document.scrollingElement?.scrollHeight ?? 0) > vh * 1.2 && !['hidden', 'clip'].includes(getComputedStyle(document.documentElement).overflowY) && !['hidden', 'clip'].includes(getComputedStyle(document.body).overflowY);
+  const layer = el => { for (let p = el.parentElement; p && p !== document.documentElement; p = p.parentElement) { const s = getComputedStyle(p), r = p.getBoundingClientRect(); if (['fixed', 'absolute', 'sticky'].includes(s.position) && r.width >= vw * 0.9 && r.height >= vh * 0.9) return p; } return null; };
+  const targets = [...document.querySelectorAll('body *')].slice(0, 5000).filter(el => clickable(el) && visible(el));
+  let best = null;
+  for (const el of targets) {
+    const text = (el.innerText || el.value || el.getAttribute('aria-label') || '').toLowerCase().replace(/[^\\p{L}\\p{N}\\s']/gu, ' ').replace(/\\s+/g, ' ').trim();
+    if (!text || text.length > 40 || !entry.test(text) || elsewhere(el)) continue;
+    const box = layer(el), around = box ? targets.filter(t => box.contains(t)) : targets;
+    if (!(box || !scrolls) || around.length > 8) continue;
+    const score = quiet.test(text) ? 2 : 1, r = el.getBoundingClientRect();
+    if (!best || score > best.score) best = { score, text: (el.innerText || el.value || el.getAttribute('aria-label')).trim().replace(/\\s+/g, ' '), x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
+  }
+  return best && { text: best.text, x: best.x, y: best.y };
+})()`;
+
 // Returns the stacked image's path and, per screen, the scroll offset it was taken at and whether the page moved to reach it
 // (`moved[0]` is null, and so is any screen whose position could not be measured). A page that does not move after a second wheel pass and the Page Down key genuinely does not scroll
 // (a fixed hero, a drag-to-explore scene); its screens repeat, and the screening prompt says so.
 // `timeout` is the page's budget: a slow page spends it loading, the remaining waits shrink to fit, and the screens show what
 // loaded by then (`late: true`). Only a browser that stops answering fails the capture, `hang` ms after the budget.
 // `startup`: how long Chrome may take to open its DevTools port, per attempt (see launch).
-export async function captureScreens(url, file, { screens = 3, viewport = VIEWPORT, chrome = defaultChrome, settle = 1200, intro = 2500, timeout = 75000, hang = 30000, args = [], startup = 45000 } = {}) {
+// `gate`: the text of the entry-gate button clicked once before the first screen, or null. `canvas`: for a page whose first
+// screen is mostly a canvas, whether it had drawn when shot ('drawn', or 'blank' when `paint` ms ran out), else null.
+export async function captureScreens(url, file, { screens = 3, viewport = VIEWPORT, chrome = defaultChrome, settle = 1200, intro = 2500, paint = 12000, timeout = 75000, hang = 30000, args = [], startup = 45000 } = {}) {
   sweep();
   const browser = await launch({ chrome, viewport, args, startup });
   let client, timer, late = false;
@@ -174,6 +243,26 @@ export async function captureScreens(url, file, { screens = 3, viewport = VIEWPO
     const pageDown = async () => {
       for (const type of ['keyDown', 'keyUp']) await input('Input.dispatchKeyEvent', { type, key: 'PageDown', code: 'PageDown', windowsVirtualKeyCode: 34 });
     };
+    // An entry gate is clicked once, at its centre with real mouse input, and the page gets the intro time again.
+    const door = await measure(gate);
+    if (door) {
+      await input('Input.dispatchMouseEvent', { type: 'mouseMoved', x: door.x, y: door.y });
+      for (const type of ['mousePressed', 'mouseReleased']) await input('Input.dispatchMouseEvent', { type, x: door.x, y: door.y, button: 'left', clickCount: 1 });
+      await page.quiet(500, budget(4000)); await within(page.evaluate(settled), budget(3000)); await wait(intro);
+    }
+    // A canvas scene (WebGL on SwiftShader is slow) is shot once it shows more than one flat colour, within `paint` ms.
+    const area = await measure(bigCanvas);
+    let canvas = null;
+    if (area) {
+      const scale = Math.min(1, 96 / area.width), end = Date.now() + budget(paint);
+      for (;;) {
+        const shot = await within(page.send('Page.captureScreenshot', { format: 'png', clip: { ...area, scale } }).catch(() => null), 5000);
+        canvas = shot?.data && drawn(decodePng(Buffer.from(shot.data, 'base64'))) ? 'drawn' : 'blank';
+        if (canvas === 'drawn' || Date.now() + 500 >= end) break;
+        await sleep(500);
+      }
+      if (canvas === 'drawn') await wait(Math.min(intro, 1500)); // let the first frames fade in
+    }
     const rest = async () => { await wait(settle); await page.quiet(400, budget(3000)); await within(page.evaluate(settled), budget(3500)); };
     const shots = [], offsets = [], went = [];
     let here = await where();
@@ -199,7 +288,7 @@ export async function captureScreens(url, file, { screens = 3, viewport = VIEWPO
     await sheet.evaluate(`Promise.all([...document.images].map(i => i.decode()))`);
     const { data } = await sheet.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
     await fs.writeFile(file, Buffer.from(data, 'base64'));
-    return { file, offsets, moved: went, late };
+    return { file, offsets, moved: went, late, gate: door?.text ?? null, canvas };
   })();
   try {
     return await Promise.race([work, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(`Chrome stopped answering (capture ran past ${(timeout + hang) / 1000}s)`)), timeout + hang); })]);
