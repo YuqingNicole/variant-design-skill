@@ -1243,5 +1243,68 @@
     "width": 2400,
     "height": 1260,
     "fetchedAt": "2026-11-26"
+  },
+  "uxcrunch-co": {
+    "image": "https://uxcrunch.co.uk/og.jpg",
+    "title": "UX Crunch: London's design event for UX, product and AI",
+    "description": "Small rooms, big conversations. UX Crunch brings London's designers, product leaders and technologists together for practical talks on UX, research, AI and digital craft.",
+    "lang": "en-GB",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-28"
+  },
+  "dontmatter": {
+    "image": "https://dontmatter.eu/uploads/logos/2PleeWTJtQKtggGSXiE4w7NrBd2W9VEayjKNSfxg.png",
+    "title": "DontMatter | Web Design, Development & Digital Marketing",
+    "description": "DontMatter: digital agency στη Θεσσαλονίκη για custom web design & development, digital platforms, branding και performance marketing.",
+    "lang": "en",
+    "width": 3600,
+    "height": 1890,
+    "fetchedAt": "2026-11-28"
+  },
+  "farmminerals": {
+    "image": "https://cdn.prod.website-files.com/68b5b8542c5c0a63b1d91b3b/6936f0bbb320188eeeb5f39e_main_badge.png",
+    "title": "Farm Minerals | Low-Carbon, Acre-Rate Crop Nutrition",
+    "description": "CropTab™ is an acre-rate crop nutrition system: one carbon-encapsulated tablet per 2.5 acres in your existing spray pass. We replace tons with tablets.",
+    "lang": "en",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-28"
+  },
+  "psychoactive-co": {
+    "image": "https://www.psychoactive.co.nz/og.jpg",
+    "title": "Psychoactive Studios | Creative Web Design & Development Agency",
+    "description": "Based in Wellington, NZ, working globally. A creative web design and development agency building websites for ambitious brands in the AI era. 50+ international awards and recognitions.",
+    "lang": "en-NZ",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-28"
+  },
+  "mannadesign": {
+    "image": "https://mannadesign.net/wp-content/uploads/2026/10/manna-share-2026.webp",
+    "title": "Manna | Branding & Web Design Agency, Donegal, Ireland",
+    "description": "Strategy-led branding and websites for established companies that have outgrown their brand. Award-winning studio in Donegal, Ireland, working worldwide.",
+    "lang": "en-GB",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-28"
+  },
+  "slowrat": {
+    "image": "https://framerusercontent.com/assets/hKRfQcQfFqE4FTciCqDL2qayGo.jpg",
+    "title": "SLOWRAT • Brand Identity & Web Design Studio in Prague",
+    "description": "We design brands and build websites for companies ready to be taken seriously. Strategy, design, and code – no handoffs. Based in Prague, working across Europe.",
+    "lang": "en",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-28"
+  },
+  "muesli": {
+    "image": "https://www.muesli.ing/og/home.png",
+    "title": "Muesli: Talk to your books.",
+    "description": "Muesli is a reader that listens. Read, listen to or talk through articles and physical books, on the web, with iPhone coming soon, and what you learn stays with you.",
+    "lang": "en-GB",
+    "width": 1200,
+    "height": 630,
+    "fetchedAt": "2026-11-28"
   }
 }

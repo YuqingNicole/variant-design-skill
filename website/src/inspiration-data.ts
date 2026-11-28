@@ -9334,6 +9334,174 @@ export const inspirationItems = [
       "text": "people overcomplicate designing apps.\n\n> give claude references\n> ask it for 10 inspired designs\n> tell it to present it in an artifact\n> choose the winner\n\nprompt & artifact example ↓ https://t.co/5XKCc5pWok",
       "hasMedia": true
     }
+  },
+  {
+    "id": "uxcrunch-co",
+    "name": "UX Crunch",
+    "category": "landing",
+    "tag": "Creative",
+    "url": "https://uxcrunch.co.uk/",
+    "source": "link-only",
+    "focus": {
+      "zh": "首屏为橙红满版，左上角是品牌标志，右侧是巨大的黑色“100%”加载数字 → 黑底中央是胶囊式导航（Event、Idea、Values、Archive、About、Contact），当前项以橙色高亮；“(IDEA)”标签下是一段低对比度的大字宣言，其中“thinkers”“speakers”“leaders”分别着蓝、黄、红色 → 滚动后宣言转为高亮，字母围绕中心标志呈旋涡状散开、旋转，属于滚动驱动的动态排版。",
+      "en": "Full-bleed orange-red opener with the logo top left and a giant black \"100%\" loading counter → black section with a centred pill nav (Event, Idea, Values, Archive, About, Contact), the active item in orange; a dim oversized statement sits under an \"(IDEA)\" label, with \"thinkers\", \"speakers\" and \"leaders\" in blue, yellow and red → on scroll the statement lights up and its letters swirl around the central logo mark as scroll-driven kinetic type."
+    },
+    "application": {
+      "zh": "活动或品牌官网的宣言区与滚动动态排版",
+      "en": "Manifesto sections and scroll-driven kinetic type for event or brand sites"
+    },
+    "publisher": "UX Crunch",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T07:00:33.455Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://www.csswinner.com/details/ux-crunch/19581/"
+  },
+  {
+    "id": "dontmatter",
+    "name": "DontMatter",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://dontmatter.eu/",
+    "source": "link-only",
+    "focus": {
+      "zh": "顶部：Logo“//Don't Matter//”后半段倒置，旁边是实时时钟“(GMT+9)”和“ENGLISH / GREEK”语言切换 → 全屏黑红宇航员星球主视觉，底部一排项目缩略图，下方是悬浮胶囊导航“About Services Work Clients Blog Jobs Archive Contact”，角落有“click me!”圆形按钮 → 米白底“About Us”大字宣言，“matters”“development”“direction”三个词加下划线 → 底部“Works View All”胶囊按钮 → 第三屏几乎留空，只有一个黑色小方块，底部是“Our Clients View All”。",
+      "en": "Top: logo \"//Don't Matter//\" with the second word flipped, a live \"(GMT+9)\" clock and an \"ENGLISH / GREEK\" switch → full-screen black-and-red astronaut-on-planet hero, a strip of project thumbnails along the bottom, a floating pill nav \"About Services Work Clients Blog Jobs Archive Contact\" and a round \"click me!\" orb → off-white \"About Us\" statement with \"matters\", \"development\" and \"direction\" underlined → \"Works View All\" pill → near-empty screen with one black square and \"Our Clients View All\"."
+    },
+    "application": {
+      "zh": "设计工作室官网首页与品牌宣言区",
+      "en": "Agency homepages and studio manifesto sections"
+    },
+    "publisher": "DontMatter",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T07:00:33.455Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://minimal.gallery/dontmatter/"
+  },
+  {
+    "id": "farmminerals",
+    "name": "Farm Minerals",
+    "category": "landing",
+    "tag": "Commerce",
+    "url": "https://www.farmminerals.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "首屏：深绿光影中的3D基座上悬浮着压印叶形标志的黑色肥料片，左上大标题\"Fertilizer, Reinvented.\"，右下\"For Your Crops. For the Planet.\"与描边按钮\"EXPLORE PRODUCTS\" → 深色条带陈列媒体与投资方标志 → 左右分屏：左侧玉米特写，右侧米色底上的绿色大字数据\"67% of nitrogen applied to cereals never reaches the crop.\"，附文献出处和线描作物插画 → 浅绿渐变屏提问\"How much could you grow — if nothing was wasted?\"，产品片居中，右下\"We found a better way\"引出CROPTAB™。",
+      "en": "Hero: a dark tablet embossed with the leaf logo floats over 3D plinths in moody green light, with \"Fertilizer, Reinvented.\" top left and \"For Your Crops. For the Planet.\" plus an outlined \"EXPLORE PRODUCTS\" button bottom right → dark strip of press and investor logos → split screen: macro corn photo beside a cream panel with \"67% of nitrogen applied to cereals never reaches the crop.\", a cited source and line-art plant → soft green screen asks \"How much could you grow — if nothing was wasted?\", tablet centred, \"We found a better way\" introduces CROPTAB™."
+    },
+    "application": {
+      "zh": "实体产品发布页、农业与气候科技品牌的产品叙事",
+      "en": "Physical product launches and agri or climate-tech brand storytelling"
+    },
+    "publisher": "Farm Minerals",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T07:00:33.455Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://mindsparklemag.com/website/farm-minerals"
+  },
+  {
+    "id": "psychoactive-co",
+    "name": "Psychoactive Studios",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://www.psychoactive.co.nz/",
+    "source": "link-only",
+    "focus": {
+      "zh": "近黑色首屏：左上 \"PSYCHOACTIVE®\"，右侧等宽小字 \"CREATIVE WEB AGENCY FOR AMBITIOUS BRANDS\"，配大字 \"redefine\" 和描边胶囊按钮 \"START A PROJECT\"；中间横线标出坐标 \"-41.2925°\" / \"174.7783°\"，线上嵌一个带角点的小视频窗，标着 \"PLAY REEL\" 和秒数；左下是轮换的大字组合 \"Imagine scale\"、\"Venture shape\"，文字带乱码切换效果 → 继续滚动，小视频窗放大成圆角的全宽彩色流体视频，中间是 \"PLAY REEL\" 播放控件和 \"01:07 SEC\"",
+      "en": "Near-black hero: \"PSYCHOACTIVE®\" top left; on the right, small mono text \"CREATIVE WEB AGENCY FOR AMBITIOUS BRANDS\" over a big word, \"redefine\", and an outlined pill button, \"START A PROJECT\". A thin line across the middle shows the coordinates \"-41.2925°\" / \"174.7783°\" and holds a small video window with corner marks, \"PLAY REEL\" and a seconds count. Bottom left, big word pairs rotate (\"Imagine scale\", \"Venture shape\") with a scrambled-text swap → on scroll, the video grows into a wide, rounded fluid-colour reel with \"PLAY REEL\" and \"01:07 SEC\""
+    },
+    "application": {
+      "zh": "工作室或代理公司首屏：滚动时展开作品视频",
+      "en": "Studio or agency hero that expands a showreel on scroll"
+    },
+    "publisher": "Psychoactive Studios",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T07:00:33.455Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://www.csswinner.com/details/psychoactive-studios/19580/"
+  },
+  {
+    "id": "mannadesign",
+    "name": "Manna",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://www.mannadesign.net/",
+    "source": "link-only",
+    "focus": {
+      "zh": "米灰底上的超大无衬线标题\"Be seen for the business you have become.\"，末词\"become\"用灰色，右侧短介绍配黑色\"Book an Intro Call\"箭头按钮 → 灰度客户Logo条 → 带暂停键的横向项目图片带 → 深色区块：等宽小标签\"WHERE YOU ARE NOW\"，大段陈述由白渐变为灰；右栏\"ABOUT MANNA\"，含\"20+ Years of expertise\"和创始人卡片 → 浅色底大字客户引言。",
+      "en": "Oversized sans headline \"Be seen for the business you have become.\" on warm off-white, last word \"become\" in grey, short intro and black \"Book an Intro Call\" arrow button → greyscale client logo strip → sliding project image band with a pause control → dark section: mono labels \"WHERE YOU ARE NOW\", statement text fading from white to grey, \"ABOUT MANNA\" column with \"20+ Years of expertise\" and a founder card → large client quote on a light background."
+    },
+    "application": {
+      "zh": "品牌与网站设计工作室官网首页",
+      "en": "Branding and web design studio homepages"
+    },
+    "publisher": "Manna",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T07:00:33.455Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://onepagelove.com/manna"
+  },
+  {
+    "id": "slowrat",
+    "name": "SLOWRAT",
+    "category": "landing",
+    "tag": "Studio",
+    "url": "https://slowrat.com/",
+    "source": "link-only",
+    "focus": {
+      "zh": "首屏左侧衬线体问句“Your company has evolved, but your brand hasn't?”，搭配下划线链接“We should talk.”，右侧是粗黑无衬线大标题，下方有 ENG/POL/CZE 胶囊标签和 Red Dot、Awwwards 奖项 → “Selected work”板块，每个项目先写一行成果说明，再接三联图片 → NETCRAFT SOLUTIONS 用条纹标志、FAQ 屏幕样机和团队合影 → OH MY BEAN 用云朵插画包装，图上悬浮“CASE STUDY”贴纸 → FOXDELI 是紫色品牌板，配“92% OF CUSTOMERS WON'T SHOP”海报。",
+      "en": "Hero pairs a serif question, \"Your company has evolved, but your brand hasn't?\", and the underlined link \"We should talk.\" with a heavy sans headline, ENG/POL/CZE pill tags and Red Dot and Awwwards credits → \"Selected work\": each project gets a one-line result blurb above a three-image row → NETCRAFT SOLUTIONS: striped mark, FAQ screen mockup, team photo → OH MY BEAN: cloud-illustration packaging with a floating \"CASE STUDY\" sticker → FOXDELI: purple brand board and a \"92% OF CUSTOMERS WON'T SHOP\" poster."
+    },
+    "application": {
+      "zh": "设计工作室作品集首页，以成果说明配三联图展示项目",
+      "en": "Studio portfolio homepage: results blurb over a three-image case grid"
+    },
+    "publisher": "SLOWRAT",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T07:00:33.455Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://minimal.gallery/slowrat/"
+  },
+  {
+    "id": "muesli",
+    "name": "Muesli",
+    "category": "landing",
+    "tag": "AI",
+    "url": "https://www.muesli.ing/",
+    "source": "link-only",
+    "focus": {
+      "zh": "居中大标题“Talk to your books. Keep what you learn.”配黑色“Start reading”按钮 → “At your desk / On the bus / In bed”分段切换，下方是浏览器框产品演示，带橙色引文竖线、录音条“…um”和“Esc to cancel”，背景有渐变橙色圆点 → 月桂叶装饰的“#3 Project of the Week”徽章 → “Turn reading into doing.”便当格卡片，每张上半是界面片段、下半是标题加说明，如“The point, before you start”",
+      "en": "Large centered headline \"Talk to your books. Keep what you learn.\" with a black \"Start reading\" button → \"At your desk / On the bus / In bed\" segmented toggle above a browser-frame demo: orange quote rule, \"…um\" recording bar with \"Esc to cancel\", and a fading orange dot pattern behind → laurel-framed \"#3 Project of the Week\" badge → \"Turn reading into doing.\" bento cards, each with a UI snippet on top and a title plus caption below, e.g. \"The point, before you start\""
+    },
+    "application": {
+      "zh": "AI 阅读或消费类应用落地页，用界面片段展示功能",
+      "en": "Landing pages for AI reading or consumer apps that show features as UI snippets"
+    },
+    "publisher": "Muesli",
+    "kind": "official-site",
+    "designer": null,
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T07:00:33.455Z",
+    "verification": "official-public-source",
+    "mobile": "not-tested",
+    "via": "https://onepagelove.com/muesli"
   }
 ];
 
