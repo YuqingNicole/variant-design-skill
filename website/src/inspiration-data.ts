@@ -9444,6 +9444,198 @@ export const inspirationItems = [
     "verification": "official-public-source",
     "mobile": "not-tested",
     "via": "https://onepagelove.com/muesli"
+  },
+  {
+    "id": "x-yokohara_h-342816",
+    "name": "A worm-swarm monster stalking a corridor in UE5",
+    "category": "practice",
+    "tag": "Real-time",
+    "url": "https://x.com/Yokohara_h/status/2116401242591342816",
+    "source": "link-only",
+    "focus": {
+      "zh": "Unreal Engine 5 里的怪物测试：昏黄的地下走廊里，一个由成百上千条蚯蚓缠成的人形一步步逼近第一人称镜头，虫子一路散落又被拖着走，最后整团扑到眼前。",
+      "en": "A monster test in Unreal Engine 5: in a dim yellow corridor, a figure made of hundreds of tangled worms walks toward the first-person camera, shedding and dragging worms as it goes, until the whole mass lunges at the lens."
+    },
+    "application": {
+      "zh": "用一大群小个体组成一个角色",
+      "en": "Building one character out of a swarm of small parts"
+    },
+    "publisher": "Hirokazu Yokohara (@Yokohara_h)",
+    "kind": "social-post",
+    "designer": "Hirokazu Yokohara",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T15:00:00.000Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2116401242591342816",
+      "author": "Hirokazu Yokohara",
+      "handle": "Yokohara_h",
+      "date": "2026-10-31",
+      "lang": "ja",
+      "text": "UE5で試しに作ってる歩いて迫ってくるミミズの大群のような化け物",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-rj5telf-518104",
+    "name": "Something in the mall after closing",
+    "category": "practice",
+    "tag": "Animation",
+    "url": "https://x.com/rj5telf/status/2098354362443518104",
+    "source": "link-only",
+    "focus": {
+      "zh": "Blender 做的 3DCG 短片：闭店后昏暗的商场里，一块紫色兔子立牌每次镜头转开再转回来都离得更近，最后贴到镜头前，再一看只剩它平摊在纸箱上。",
+      "en": "A Blender 3DCG short: in a dark mall after closing, a purple bunny standee is a little closer each time the camera looks away and back, ends up filling the lens, then is found lying flat on a cardboard box."
+    },
+    "application": {
+      "zh": "用镜头移开再移回制造“它动了”的惊吓",
+      "en": "Look-away-and-back framing that makes a still object seem to move"
+    },
+    "publisher": "Natsuki (@rj5telf)",
+    "kind": "social-post",
+    "designer": "Natsuki",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T15:00:00.000Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2098354362443518104",
+      "author": "Natsuki",
+      "handle": "rj5telf",
+      "date": "2026-09-11",
+      "lang": "ja",
+      "text": "閉店後のショッピングモールに何かいた\n\n3DCGで作りました。",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-lucknknock-498686",
+    "name": "Cubic Living Things: an ecosystem inside a cube",
+    "category": "practice",
+    "tag": "Generative",
+    "url": "https://x.com/lucknknock/status/2108513110445498686",
+    "source": "link-only",
+    "focus": {
+      "zh": "平井龍之介的人工生态系统：立方体的各个面上，绿色群落和黑白小生物实时成群、繁殖、死亡，画面一直在变；最后一幕是它在玉川高岛屋 S.C. 的 LED 立方屏上展出。",
+      "en": "Ryunosuke Hirai's artificial ecosystem: across the faces of a cube, green colonies and small black-and-white creatures flock, breed and die in a real-time simulation, and the last shot shows it running on the LED cube at Tamagawa Takashimaya S.C."
+    },
+    "application": {
+      "zh": "让一套生命规则在实体屏幕上一直演下去",
+      "en": "Letting a set of life rules play out on a physical screen"
+    },
+    "publisher": "避雷/ 平井龍之介 (@lucknknock)",
+    "kind": "social-post",
+    "designer": "避雷/ 平井龍之介",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T15:00:00.000Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2108513110445498686",
+      "author": "避雷/ 平井龍之介",
+      "handle": "lucknknock",
+      "date": "2026-10-09",
+      "lang": "ja",
+      "text": "立方体の中で生きる人工生態系を作りました。\n\n人工生命が群れを作り、子孫を残し、死んでいく様子がリアルタイムでシミュレートされ、絶え間なく生態系が変化していきます。\n\n玉川髙島屋S.C.にて展示中です。ぜひ！\nミニ生態系を持ち帰り、その変化を眺めることもできます。",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-kanetaaaaa-263840",
+    "name": "Blowing up a dammed river with dynamite in VRChat",
+    "category": "practice",
+    "tag": "Real-time",
+    "url": "https://x.com/kanetaaaaa/status/2114677419525263840",
+    "source": "link-only",
+    "focus": {
+      "zh": "在自己做的 VRChat 森林河流世界里：第一人称拿起一根红色炸药，点燃后放到土坝上，爆炸把坝炸开，蓄着的水冲出来顺着河道穿过蕨类和树林。",
+      "en": "In their own VRChat forest-and-river world: in first person you pick up a red stick of dynamite, light it and set it on an earth dam; the blast breaks it open and the held-back water rushes down the riverbed through ferns and trees."
+    },
+    "application": {
+      "zh": "让玩家亲手改变水流",
+      "en": "Letting the player change how the water flows"
+    },
+    "publisher": "かねた (@kanetaaaaa)",
+    "kind": "social-post",
+    "designer": "かねた",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T15:00:00.000Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2114677419525263840",
+      "author": "かねた",
+      "handle": "kanetaaaaa",
+      "date": "2026-10-26",
+      "lang": "ja",
+      "text": "せき止めた水をダイナマイトで爆破できるようにした💥#VRChat",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-kanizo_cg_vfx-634349",
+    "name": "Two spaceships collide above Earth",
+    "category": "practice",
+    "tag": "VFX",
+    "url": "https://x.com/Kanizo_CG_VFX/status/2099061764197634349",
+    "source": "link-only",
+    "focus": {
+      "zh": "カニ蔵用 Houdini 做的特效镜头：两艘灰色战舰在地球轨道上缓缓相向靠近，船头撞在一起，船体一节节压碎，碎片和烟雾散开，最后远处炸成一团火球。",
+      "en": "Kanizo's Houdini shot: two grey battleships drift toward each other in orbit above Earth, their bows meet and the hulls crumple section by section in debris and smoke, ending in a distant fireball."
+    },
+    "application": {
+      "zh": "用慢速碰撞表现巨大的体量",
+      "en": "Showing huge scale through a slow collision"
+    },
+    "publisher": "カニ蔵 (@Kanizo_CG_VFX)",
+    "kind": "social-post",
+    "designer": "カニ蔵",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T15:00:00.000Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2099061764197634349",
+      "author": "カニ蔵",
+      "handle": "Kanizo_CG_VFX",
+      "date": "2026-09-13",
+      "lang": "ja",
+      "text": "衝突する宇宙船#Houdini #3DCG",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-treasurebooru-241147",
+    "name": "Gaming Stick Arts: a ninja kid with an RGB staff",
+    "category": "practice",
+    "tag": "Animation",
+    "url": "https://x.com/TreasureBooru/status/2116528228496241147",
+    "source": "link-only",
+    "focus": {
+      "zh": "宝丼自己导演的动画《NinjaSkooler》里的一段：夜晚城市前，忍者少年把棍子转得飞快，棍子像电竞外设一样不停变换黄、青、粉色的光，夹着夸张的大头表情，标题“游戏棒术”就是笑点。",
+      "en": "A clip from NinjaSkooler, the animated pilot TreasureBooru directed: against a night city, a ninja kid twirls a staff that keeps cycling yellow, cyan and pink like RGB gaming gear, cut with big-faced close-ups; the title, \"Gaming Stick Arts\", is the joke."
+    },
+    "application": {
+      "zh": "把一个网络梗做成动作招式",
+      "en": "Turning an internet joke into a fighting move"
+    },
+    "publisher": "宝丼 (@TreasureBooru)",
+    "kind": "social-post",
+    "designer": "宝丼",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T15:00:00.000Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2116528228496241147",
+      "author": "宝丼",
+      "handle": "TreasureBooru",
+      "date": "2026-10-31",
+      "lang": "ja",
+      "text": "ゲーミング棒術",
+      "hasMedia": true
+    }
   }
 ];
 

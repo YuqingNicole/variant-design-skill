@@ -1410,5 +1410,53 @@
     "height": 2160,
     "avatar": "https://pbs.twimg.com/profile_images/2090476714908680202/iA4V5MvL_bigger.jpg",
     "fetchedAt": "2026-11-28"
+  },
+  "x-yokohara_h-342816": {
+    "video": "https://video.twimg.com/amplify_video/2116401178120720384/vid/avc1/1280x720/3SmeZzs-BxcIGi4i.mp4",
+    "poster": "https://pbs.twimg.com/amplify_video_thumb/2116401178120720384/img/FBAMBimuVFgJ4kii.jpg",
+    "width": 1920,
+    "height": 1080,
+    "avatar": "https://pbs.twimg.com/profile_images/1435601105757487105/YsZc28CD_bigger.png",
+    "fetchedAt": "2026-11-28"
+  },
+  "x-rj5telf-518104": {
+    "video": "https://video.twimg.com/amplify_video/2098351620656619520/vid/avc1/960x720/Bjma95XpXGqsP8M_.mp4",
+    "poster": "https://pbs.twimg.com/media/HR7mELeXwAcvBCD.jpg",
+    "width": 1600,
+    "height": 1200,
+    "avatar": "https://pbs.twimg.com/profile_images/2112579420557123586/lZO9_0Ex_bigger.jpg",
+    "fetchedAt": "2026-11-28"
+  },
+  "x-lucknknock-498686": {
+    "video": "https://video.twimg.com/amplify_video/2108512910612037632/vid/avc1/720x720/_6_KvEA37OJim337.mp4",
+    "poster": "https://pbs.twimg.com/amplify_video_thumb/2108512910612037632/img/-sqq4RFgRrqG_W_k.jpg",
+    "width": 1080,
+    "height": 1080,
+    "avatar": "https://pbs.twimg.com/profile_images/1534248862809960448/5UI89sC5_bigger.jpg",
+    "fetchedAt": "2026-11-28"
+  },
+  "x-kanetaaaaa-263840": {
+    "video": "https://video.twimg.com/amplify_video/2114602182008025089/vid/avc1/1280x720/mX6MPY4sKxlzE_QR.mp4?tag=14",
+    "poster": "https://pbs.twimg.com/amplify_video_thumb/2114602182008025089/img/kOxxN5KdjgYEKpFb.jpg",
+    "width": 1920,
+    "height": 1080,
+    "avatar": "https://pbs.twimg.com/profile_images/1052839923105972224/uvEfTDfV_bigger.jpg",
+    "fetchedAt": "2026-11-28"
+  },
+  "x-kanizo_cg_vfx-634349": {
+    "video": "https://video.twimg.com/amplify_video/2099061713782108160/vid/avc1/1280x720/XwIuyhepUi_azj3v.mp4",
+    "poster": "https://pbs.twimg.com/amplify_video_thumb/2099061713782108160/img/OH04xPTVvJqDG987.jpg",
+    "width": 1920,
+    "height": 1080,
+    "avatar": "https://pbs.twimg.com/profile_images/1970741315412598787/FL4ClQri_bigger.jpg",
+    "fetchedAt": "2026-11-28"
+  },
+  "x-treasurebooru-241147": {
+    "video": "https://video.twimg.com/amplify_video/2116528189430448128/vid/avc1/1280x720/JaSrckOiIwTWLknO.mp4",
+    "poster": "https://pbs.twimg.com/amplify_video_thumb/2116528189430448128/img/dlDAoJQOGOntEJ7o.jpg",
+    "width": 1280,
+    "height": 720,
+    "avatar": "https://pbs.twimg.com/profile_images/417658260775129088/n7HGCPUV_bigger.jpeg",
+    "fetchedAt": "2026-11-28"
   }
 }
