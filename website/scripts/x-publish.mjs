@@ -17,10 +17,23 @@ const dataPath = path.resolve(here, '../src/inspiration-data.ts');
 
 // The Videos tab collects fun, creative videos that are not design work (maintainer, 2026-11-20); the tag is how a video was made,
 // and inspiration-sections.ts files a video under `videos` by it. Design videos already in the library stay under `design-motion`.
-export const TAGS = ['Animation', 'VFX', 'Craft', 'Generative', 'Live action', 'Humor'];
+// 2026-11-28 (owner-approved tag review): Humor never fit, because it is a tone and every other tag is a medium, so it went and a
+// filmed joke is Live action; Real-time came in for games and engine or browser worlds, which had been split across Generative and Animation.
+export const TAGS = ['Animation', 'VFX', 'Craft', 'Generative', 'Real-time', 'Live action'];
 // Shared with youtube-publish.mjs, so both sources apply one definition of what belongs in the tab.
-export const SCOPE = `The Videos tab holds fun, creative short videos that have nothing to do with design: animation, visual effects, stop-motion and handmade craft, generative or code-made visuals, clever live-action ideas, and humour. A viewer should enjoy it or want to share it.`;
-export const TAG_GUIDE = `Pick the tag by how the video is made: Animation (2D, 3D or hand-drawn animated films), VFX (effects composited into real footage), Craft (stop-motion, claymation, paper, physical making), Generative (code, simulation or procedural visuals), Live action (filmed ideas such as forced perspective, in-camera tricks or performance), Humor (when the joke is the point and no technique stands out).`;
+export const SCOPE = `The Videos tab holds fun, creative short videos that have nothing to do with design: animation, visual effects, stop-motion and handmade craft, generative or code-made visuals, games and real-time worlds, and clever or funny live-action ideas. A viewer should enjoy it or want to share it.`;
+// One tag per video, by how it was made. The rules are checked in order and the first that fits wins, so a borderline video has one answer.
+// The examples are real library entries as tagged on 2026-11-28.
+export const TAG_GUIDE = `Pick exactly one tag by how the video was made. Go through these in order and take the first that fits:
+1. VFX: the point is an effect (an explosion, a portal, a black hole, a world cracking apart), either composited into real footage or built as an effect in an engine. Examples: a filmed crosswalk whose stripes rise into steps above the clouds; a black hole effect made in Roblox Studio.
+2. Craft: what you see was physically made by hand: stop-motion with clay, paper, felt or toys, collage, puppets, costumes, models. Examples: brick figures eating a real cookie frame by frame; a stack of printed moon photos shot as stop-motion; a handmade fursuit shown off next to a dog. A video that only looks handmade but was rendered or AI-generated is not Craft.
+3. Generative: the picture is computed by rules the author wrote or prompted into code (a shader, a physics or fluid simulation, a procedural or endless world), and that system is the subject. Examples: a fog shader that swirls when a character walks through; a pickup truck crash test in a real-time sand simulation; an endless papercraft world that grows around the walker.
+4. Real-time: a game, or a world built in a game engine or the browser (Unreal, Unity, Godot, Roblox, three.js), shown as a place someone plays, walks or flies through, rather than as an effect or a simulation. Examples: a 24-hour ink-wash platformer; a medieval town built in Unreal Engine; a three.js flythrough of an illustrated market town.
+5. Animation: an animated film or test made frame by frame or keyframed, 2D, 3D or hand-drawn, including AI-generated animated shorts. Examples: a hand-drawn D&D comedy short; a low-poly cat walk cycle in Blender; a pencil animation test of Beethoven; an AI felt-look pirate short.
+6. Live action: filmed people, animals or places where the idea happens in front of the camera (forced perspective, in-camera tricks, performance, a filmed sketch or joke) with no effect, animation or handmade object as the point.
+Humour is a quality, not a tag: a funny video takes the tag of how it was made.`;
+// The AI marker (2026-11-28) is a separate yes/no, so a reader can tell AI-made work at a glance without a tag of its own.
+export const AI_RULE = `Also set "ai": true when the post text or the frames say generative AI made a substantial part of what you see: the frames or footage, the characters, textures or models, or the code that renders the scene (for example "made with AI", "prompt below", a named image or video model, or "Opus wrote this"). Otherwise set "ai": false. Using AI is not a reason to reject; the other rules still apply.`;
 export const SCOPE_REJECTS = `design work of any kind (interfaces, apps, websites, logos, brand identities, posters, print, typography, product or UI animation); ads, trailers and official music videos; pranks or stunts that hurt or humiliate someone; sexual, violent or shock content`;
 // Fan work of someone else's characters is out even when the craft is good (owner, 2026-11-26): the model accepted a Bonnie-like
 // animatronic and Sega's Whisper the Wolf while rejecting Looney Tunes and TUGS fan work in the same batches, so the rule is spelled out.
@@ -58,10 +71,13 @@ Post text: ${JSON.stringify(meta.text)}
 
 Reject (accept=false) when any applies: ${SCOPE_REJECTS}; a resource list or "bookmark these" thread; a tool, product, course or sponsor promotion; a repost of someone else's work or an unclear original author; merchandise or pre-sale; a montage of clips; tutorials and news; frames too unclear to describe.
 ${IP_RULE}
-Otherwise accept, and write notes on what makes it fun or clever. ${TAG_GUIDE} Do not invent: no names, claims or tools the frames and the text do not show. Keep the author's own credit if the text gives one.
+Otherwise accept, and write notes on what makes it fun or clever.
+${TAG_GUIDE}
+${AI_RULE}
+Do not invent: no names, claims or tools the frames and the text do not show. Keep the author's own credit if the text gives one.
 
 Answer with one JSON object and nothing else:
-{"accept": true, "name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "focus": {"zh": "<what happens and what makes it fun or clever, one sentence, at most 300 characters>", "en": "<same, in English>"}, "application": {"zh": "<the idea worth borrowing, a short phrase>", "en": "<same, in English>"}}
+{"accept": true, "name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "ai": <true or false>, "focus": {"zh": "<what happens and what makes it fun or clever, one sentence, at most 300 characters>", "en": "<same, in English>"}, "application": {"zh": "<the idea worth borrowing, a short phrase>", "en": "<same, in English>"}}
 or {"accept": false, "reason": "<one sentence in English>"}`;
 }
 
@@ -79,11 +95,12 @@ export function parseVerdict(output) {
   if (v.accept !== true) throw new Error('"accept" must be true or false');
   if (!text(v.name, 60)) throw new Error('"name" must be 1–60 characters');
   if (!TAGS.includes(v.tag)) throw new Error(`"tag" must be one of ${TAGS.join(', ')}`);
+  if (typeof v.ai !== 'boolean') throw new Error('"ai" must be true or false');
   for (const [key, max] of [['focus', 400], ['application', 160]]) {
     if (!text(v[key]?.zh, max) || !text(v[key]?.en, max)) throw new Error(`"${key}" needs zh and en text of at most ${max} characters`);
     if (!cjk.test(v[key].zh) || !latin.test(v[key].en)) throw new Error(`"${key}" zh must be Chinese and en must be English`);
   }
-  return { accept: true, name: v.name.trim(), tag: v.tag, focus: { zh: v.focus.zh.trim(), en: v.focus.en.trim() }, application: { zh: v.application.zh.trim(), en: v.application.en.trim() } };
+  return { accept: true, name: v.name.trim(), tag: v.tag, ai: v.ai, focus: { zh: v.focus.zh.trim(), en: v.focus.en.trim() }, application: { zh: v.application.zh.trim(), en: v.application.en.trim() } };
 }
 
 // An answer that fails validation is sent back once with the reason, because a note that runs long is the usual miss.
@@ -99,7 +116,7 @@ export function entryFor(candidate, meta, verdict, at) {
   const entry = draftEntry(post, meta, verdict.tag, at);
   // X labels Indonesian `in`; the library writes the standard code, as the earlier batches did.
   const lang = { in: 'id' }[entry.post.lang] ?? entry.post.lang;
-  return { ...entry, name: verdict.name, focus: verdict.focus, application: verdict.application, post: { ...entry.post, lang } };
+  return { ...entry, name: verdict.name, ...(verdict.ai ? { ai: true } : {}), focus: verdict.focus, application: verdict.application, post: { ...entry.post, lang } };
 }
 
 export function review(candidate, patch, today) {

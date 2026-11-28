@@ -6,7 +6,7 @@ import path from 'node:path';
 import { readItems } from './x-publish.mjs';
 import { videoId, channelInLibrary, buildPrompt, entryFor, candidateFromUrl, run, report } from './youtube-publish.mjs';
 
-const good = { accept: true, name: 'Paper city', tag: 'Craft', focus: { zh: '纸折的城市一格一格立起来，再被一阵风吹平', en: 'A folded paper city rises frame by frame, then a gust flattens it' }, application: { zh: '定格动画的节奏感', en: 'The rhythm of stop-motion' } };
+const good = { accept: true, name: 'Paper city', tag: 'Craft', ai: false, focus: { zh: '纸折的城市一格一格立起来，再被一阵风吹平', en: 'A folded paper city rises frame by frame, then a gust flattens it' }, application: { zh: '定格动画的节奏感', en: 'The rhythm of stop-motion' } };
 const idOf = n => String(n).padStart(11, 'a');
 const cand = (n, extra = {}) => ({ id: idOf(n), url: `https://www.youtube.com/watch?v=${idOf(n)}`, title: `T${n}`, channel: `Chan${n}`, channelUrl: `https://www.youtube.com/channel/UC${n}`, publishedAt: '2026-11-10T00:00:00Z', seconds: 40, views: 1000 + n, text: '', capturedAt: '2026-11-17T00:00:00Z', status: 'pending', ...extra });
 const existing = { id: 'yt-old', name: 'Old', url: 'https://www.youtube.com/watch?v=ooooooooooo', kind: 'youtube-video', video: { platform: 'youtube', id: 'ooooooooooo', channel: 'Taken', channelUrl: 'https://www.youtube.com/channel/UCtaken' } };
@@ -20,12 +20,15 @@ test('addresses give a video id only for watch pages, and a channel is only coll
   assert.equal(channelInLibrary([existing], { channel: 'New', channelUrl: 'https://www.youtube.com/channel/UCnew' }), null);
   assert.match(buildPrompt(cand(1), '/s.jpg'), /2×2 grid[\s\S]*design work of any kind[\s\S]*tutorial[\s\S]*Live action/);
   assert.match(buildPrompt(cand(1), '/s.jpg'), /tutorial[\s\S]*Reject fan work[\s\S]*Otherwise accept/);
+  // YouTube shares the X tag rules and the AI marker (2026-11-28).
+  assert.match(buildPrompt(cand(1), '/s.jpg'), /1\. VFX[\s\S]*4\. Real-time[\s\S]*"ai": true when[\s\S]*"ai": <true or false>/);
 });
 
 test('an entry carries the video facts and no X post fields; an address alone leaves length and date out', () => {
   const entry = entryFor(cand(1), good, '2026-11-19T01:02:03.000Z');
   assert.equal(entry.id, `yt-${idOf(1)}`); assert.equal(entry.kind, 'youtube-video'); assert.equal(entry.category, 'practice'); assert.ok(!('post' in entry));
   assert.deepEqual(entry.video, { platform: 'youtube', id: idOf(1), channel: 'Chan1', channelUrl: 'https://www.youtube.com/channel/UC1', date: '2026-11-10', seconds: 40 });
+  assert.ok(!('ai' in entry)); assert.equal(entryFor(cand(1), { ...good, ai: true }, '2026-11-19T00:00:00Z').ai, true);
   assert.deepEqual(Object.keys(entryFor({ ...cand(2), seconds: undefined, publishedAt: undefined }, good, '2026-11-19T00:00:00Z').video), ['platform', 'id', 'channel', 'channelUrl']);
 });
 

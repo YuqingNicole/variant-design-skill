@@ -19,7 +19,7 @@ export type Link=typeof links[number];
 export type Reference=Link|Authorized;
 export type Row=Pick<Link,'id'|'name'|'category'|'tag'|'source'|'addedAt'|'checkedAt'>&Partial<Pick<Link,'kind'>>&{translations?:Translations};
 // What a card draws: its row, its link, its focus line (only the page's language, under the source key) and a post's or video's fields.
-export type Card=Row&Pick<Link,'url'|'focus'>&{post?:unknown;video?:unknown};
+export type Card=Row&Pick<Link,'url'|'focus'>&{post?:unknown;video?:unknown;ai?:boolean};
 // The preview a site publishes for shared links (scripts/link-preview.mjs).
 // width and height are the image's own, read when the preview was stored (scripts/image-size.mjs); older entries may lack them.
 export type Preview={image:string;title:string;description:string;lang:string;fetchedAt:string;width?:number;height?:number};

@@ -30,7 +30,7 @@ node website/scripts/x-discovery.mjs --plan            # 不开浏览器，列�
 website/scripts/run-x-discovery.sh --groups authors     # 只跑名单（Ego Lite）
 ```
 
-- **加人之前**：在登录的 Ego Lite 里用 `from:<handle> filter:videos -filter:replies` 看最近几条视频。只收自己做原创、非设计的创意视频（六类：动画、特效、定格与手作、代码生成、实拍脑洞、幽默）的人。同人账号、转发或策展账号（例如 @morrre_dsgn）、卖素材和接委托为主的、教程和课程为主的、官方工作室和 MV 导演，都不收。
+- **加人之前**：在登录的 Ego Lite 里用 `from:<handle> filter:videos -filter:replies` 看最近几条视频。只收自己做原创、非设计的创意视频（动画、特效、定格与手作、代码生成、游戏与实时、实拍脑洞；分类定义见 RFC-008 §8 末尾）的人。同人账号、转发或策展账号（例如 @morrre_dsgn）、卖素材和接委托为主的、教程和课程为主的、官方工作室和 MV 导演，都不收。
 - **删人**：同人或转发多了就删掉；只发同人或转发的，再加进 `skipHandles` 写明原因，关键词搜索也会跳过它。
 - **建议**：`suggest` 列出视频 tab 里已收条目的作者中，不在名单、`declined` 和 `skipHandles` 里的人；每天的 PR 描述末尾也会附上。只建议，不会自动加。
 - `x-authors.mjs` 写回文件时保持一人一行的格式，加一个人只改一行。

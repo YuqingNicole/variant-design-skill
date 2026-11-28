@@ -992,10 +992,10 @@
       "views": 17906,
       "capturedAt": "2026-11-20T03:44:44.076Z",
       "query": "(\"stop motion\" OR stopmotion OR claymation OR papercraft OR \"paper animation\") -tutorial -course -giveaway filter:videos min_faves:500 since:2026-10-21",
-      "status": "published",
+      "status": "rejected",
       "group": "craft",
-      "entry": "x-magalyn07-643821",
-      "reviewedAt": "2026-11-20"
+      "reviewedAt": "2026-11-28",
+      "reason": "Taken down 2026-11-28 (owner): fan work of an existing franchise (Isaac from The Binding of Isaac, Edmund McMillen's game), against the 2026-11-26 fan-work rule."
     },
     {
       "id": "2113795661397201209",
@@ -1037,10 +1037,10 @@
       "views": 340285,
       "capturedAt": "2026-11-20T03:44:44.076Z",
       "query": "(\"stop motion\" OR stopmotion OR claymation OR papercraft OR \"paper animation\") -tutorial -course -giveaway filter:videos min_faves:500 since:2026-10-21",
-      "status": "published",
+      "status": "rejected",
       "group": "craft",
-      "entry": "x-sicknire-355249",
-      "reviewedAt": "2026-11-20"
+      "reviewedAt": "2026-11-28",
+      "reason": "Taken down 2026-11-28 (owner): fan work of an existing franchise (Lauren Child's Charlie and Lola), against the 2026-11-26 fan-work rule."
     },
     {
       "id": "2115698901126930693",
