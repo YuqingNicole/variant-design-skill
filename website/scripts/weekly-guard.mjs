@@ -56,9 +56,10 @@ export async function waitForMemory({ tries = 3, wait = 600000, read = readMemor
 
 // `report` is threads-publish.mjs or x-publish.mjs output; its first line is "Accepted a, rejected r, left pending k."
 // A run where nothing was decided, or at least half was left pending, is a machine or network fault, not a week's result.
+// No summary means the publisher died first (the wrappers pipe it through `tee`, which hides its exit status).
 export function resultsVerdict(report) {
   const m = /Accepted (\d+), rejected (\d+), left pending (\d+)\./.exec(String(report ?? ''));
-  if (!m) return { ok: true, reason: '' };
+  if (!m) return { ok: false, reason: 'the screening step printed no summary, so it did not finish' };
   const [accepted, rejected, kept] = m.slice(1).map(Number), decided = accepted + rejected, total = decided + kept;
   if (!kept) return { ok: true, reason: '' };
   if (!decided) return { ok: false, reason: `none of ${total} candidates could be screened` };
@@ -73,7 +74,7 @@ export function openWeeklyPr(prs, source) {
 }
 
 async function listOpenPrs() {
-  const { stdout } = await run('gh', ['pr', 'list', '--state', 'open', '--limit', '100', '--json', 'number,headRefName'], { timeout: 60000 });
+  const { stdout } = await run('gh', ['pr', 'list', '--state', 'open', '--limit', '1000', '--json', 'number,headRefName'], { timeout: 60000 });
   return JSON.parse(stdout);
 }
 

@@ -36,7 +36,8 @@ test('a run where nothing or at least half could be screened opens no pull reque
   assert.equal(resultsVerdict('Accepted 4, rejected 2, left pending 3.').ok, true);
   assert.equal(resultsVerdict('Accepted 0, rejected 0, left pending 0.').ok, true);
   assert.equal(resultsVerdict('Accepted 2, rejected 1, left pending 0.').ok, true);
-  assert.equal(resultsVerdict('').ok, true);
+  assert.match(resultsVerdict('').reason, /no summary/);
+  assert.equal(resultsVerdict('Error: claude not found\n    at run').ok, false);
 });
 
 test('an open weekly pull request from the same source blocks a new one; other sources do not', () => {
