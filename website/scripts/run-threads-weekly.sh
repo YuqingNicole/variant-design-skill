@@ -40,6 +40,7 @@ git add website/content/threads-post-inbox.json website/src/inspiration-data.ts 
 git commit -q -m "Add this week's sites found on Threads ($DAY)
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
+guard open-pr threads   # again, in case a weekly pull request was opened during this run (a direct run skips weekly.sh's lock)
 git push -q -u origin "$BRANCH"
 gh pr create --base master --title "Add this week's sites found on Threads ($DAY)" --body "$(cat <<EOF
 Weekly Threads discovery, screened by \`website/scripts/threads-publish.mjs\`: each site a post points to was opened once in headless Chrome (first three screens), and the model wrote the notes from that image. Nobody has used the sites or seen them on a phone; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`.

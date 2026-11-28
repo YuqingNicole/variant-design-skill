@@ -48,6 +48,7 @@ git add website/content/x-post-inbox.json website/src/inspiration-data.ts websit
 git commit -q -m "Add this week's X creative videos ($DAY)
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
+guard open-pr x   # again, in case a weekly pull request was opened during this run (a direct run skips weekly.sh's lock)
 git push -q -u origin "$BRANCH"
 gh pr create --base master --title "Add this week's X creative videos ($DAY)" --body "$(cat <<EOF
 Weekly X discovery, screened by \`website/scripts/x-publish.mjs\`: the model read six frames per video and wrote the notes. Nobody has watched the videos; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`.

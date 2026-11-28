@@ -74,8 +74,9 @@ export function openWeeklyPr(prs, source) {
 }
 
 async function listOpenPrs() {
-  const { stdout } = await run('gh', ['pr', 'list', '--state', 'open', '--limit', '1000', '--json', 'number,headRefName'], { timeout: 60000 });
-  return JSON.parse(stdout);
+  // Every page of open pull requests, so a weekly one can never fall outside a result cap.
+  const { stdout } = await run('gh', ['api', '--paginate', 'repos/{owner}/{repo}/pulls?state=open&per_page=100', '--jq', '.[] | {number, headRefName: .head.ref}'], { timeout: 120000 });
+  return stdout.split('\n').filter(Boolean).map(line => JSON.parse(line));
 }
 
 export async function main(argv, { log = console.log, read = readMemory, pause = sleep, prs = listOpenPrs } = {}) {

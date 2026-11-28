@@ -48,6 +48,7 @@ git add website/content/site-inbox.json website/src/inspiration-data.ts website/
 git commit -q -m "Add this week's sites from curated galleries ($DAY)
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
+guard open-pr sites   # again, in case a weekly pull request was opened during this run (a direct run skips weekly.sh's lock)
 git push -q -u origin "$BRANCH"
 gh pr create --base master --title "Add this week's sites from curated galleries ($DAY)" --body "$(cat <<BODY
 Weekly gallery discovery (\`website/content/site-discovery.json\`), screened by \`website/scripts/threads-publish.mjs\`: each site was opened once in headless Chrome (first three screens), and the model wrote the notes from that image; the gallery is credited in \`via\`. Nobody has used the sites or seen them on a phone; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`.
