@@ -1,5 +1,5 @@
 #!/bin/zsh
-# The Monday job, end to end: find candidates, screen them, open one pull request, and merge it once CI passes (maintainer's decision, 2026-11-19; see merge-weekly-pr.sh).
+# The daily job, end to end: find candidates, screen them, open one pull request, and merge it once CI passes (maintainer's decision, 2026-11-19; see merge-weekly-pr.sh).
 # Usage: run-x-weekly.sh [--groups a,b|all] [--limit n]
 # Needs on this machine: ego-browser (logged in to x.com), ffmpeg, claude, gh, and a clean checkout of this repository.
 set -eu
@@ -30,7 +30,13 @@ git worktree add -q -b "$BRANCH" "$WORK" origin/master
 trap 'cd "$ROOT"; git worktree remove --force "$WORK" 2>/dev/null || true; git branch -D "$BRANCH" >/dev/null 2>&1 || true' EXIT
 cd "$WORK"
 
-"$WORK/website/scripts/run-x-discovery.sh" ${GROUPS_ARG:+--groups "$GROUPS_ARG"}
+# Rejections from runs that accepted nothing wait here, outside the repository, so the same posts are not screened again;
+# they go into the next pull request this job opens (owner, 2026-11-28: no pull request for a day with nothing new).
+CARRY="${X_INBOX_CARRY:-$HOME/Library/Application Support/variant-design/x-inbox-carry.json}"
+[ -f "$CARRY" ] && node website/scripts/x-discovery.mjs --carry-load "$CARRY"
+
+# Listed authors first; keyword searches only fill what is left of the $LIMIT candidates screened below.
+"$WORK/website/scripts/run-x-discovery.sh" ${GROUPS_ARG:+--groups "$GROUPS_ARG"} --limit "$LIMIT"
 OUT="$(mktemp)"; node website/scripts/x-publish.mjs --limit "$LIMIT" | tee "$OUT"
 guard results "$OUT"   # mostly unread candidates mean the machine or network failed: no pull request
 node website/scripts/x-media.mjs
@@ -41,9 +47,15 @@ fi
 # The throwaway worktree has no node_modules, and reference-facets.test.mjs loads TypeScript through ts-module.mjs; without
 # this every run failed here, after screening, and nothing was published (2026-11-24 and 11-25).
 npm ci --prefix website --silent --no-audit --no-fund
-node --test website/scripts/inspiration-data.test.mjs website/scripts/reference-facets.test.mjs website/scripts/x-media.test.mjs website/scripts/x-publish.test.mjs website/scripts/x-discovery.test.mjs
+node --test website/scripts/inspiration-data.test.mjs website/scripts/reference-facets.test.mjs website/scripts/x-media.test.mjs website/scripts/x-publish.test.mjs website/scripts/x-discovery.test.mjs website/scripts/x-authors.test.mjs
 
-if git diff --quiet; then echo "Nothing to publish this week."; git branch -D "$BRANCH" >/dev/null 2>&1 || true; exit 0; fi
+# No new video, no pull request: a run that found nothing, or rejected everything it found, only saves its rejections.
+if git diff --quiet website/src/inspiration-data.ts; then
+  git diff --quiet website/content/x-post-inbox.json || node website/scripts/x-discovery.mjs --carry-save "$CARRY"
+  echo "No new videos today; no pull request opened."; exit 0
+fi
+# Makers of accepted videos who are not on the author list yet; listed in the pull request for a person to add by hand.
+node website/scripts/x-authors.mjs suggest | tee -a "$OUT" || true
 git add website/content/x-post-inbox.json website/src/inspiration-data.ts website/src/x-media.json website/src/reference-facets.json
 git commit -q -m "Add this week's X creative videos ($DAY)
 
@@ -60,4 +72,5 @@ $(cat "$OUT")
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 EOF
 )"
+rm -f "$CARRY"   # its rejections are in this pull request's inbox now
 "$WORK/website/scripts/merge-weekly-pr.sh" "$BRANCH"

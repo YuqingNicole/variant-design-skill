@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { appendItems, readItems, parseVerdict, buildPrompt, run, report, authorInLibrary, TAGS } from './x-publish.mjs';
+import { appendItems, readItems, parseVerdict, buildPrompt, run, report, authorInLibrary, screeningOrder, TAGS } from './x-publish.mjs';
 
 const good = { accept: true, name: 'Clay chase', tag: 'Craft', focus: { zh: '黏土小人在桌面上追一颗滚动的豆子', en: 'A clay figure chases a rolling bean across a desk' }, application: { zh: '用日常物件讲小故事', en: 'Small stories told with everyday objects' } };
 const item = id => ({ id, name: id, post: { handle: 'old', id: '1' } });
@@ -81,4 +81,10 @@ test('two posts by one author in the same run publish only the first; a dry run 
   assert.equal(dry.accepted.length, 1); assert.equal(dry.rejected.length, 1);
   assert.equal(await fs.readFile(inbox, 'utf8'), body); assert.equal(await fs.readFile(data, 'utf8'), source);
   assert.equal(authorInLibrary([item('a')], 'OLD').id, 'a');
+});
+
+test('posts from listed authors are screened before keyword finds, most likes first within each (owner, 2026-11-28)', () => {
+  const c = (id, likes, extra = {}) => ({ id, likes, status: 'pending', ...extra });
+  const order = screeningOrder([c('k1', 9000), c('a1', 120, { watched: true }), c('done', 99999, { status: 'rejected' }), c('k2', 400), c('a2', 800, { watched: true }), { id: 'old', likes: 500 }]);
+  assert.deepEqual(order.map(x => x.id), ['a2', 'a1', 'k1', 'old', 'k2']);
 });
