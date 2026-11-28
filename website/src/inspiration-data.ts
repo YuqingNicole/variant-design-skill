@@ -9302,6 +9302,38 @@ export const inspirationItems = [
       "text": "同样是用 Claude 做视频，为什么有人做出来像动画电影，有人做出来却像 PPT？🥹\n\n下面用同一个场景展示四种常见的制作方案，从左到右，效果差异一目了然👻\n\n1. Python：风格自由，可实现手绘质感，适合艺术动画、数学演示和数据可视化\n\n2. Motion Canvas：画面干净、动画流畅，适合知识科普和技术教程；同类的Remotion 基于 React，更适合批量生成模板化视频\n\n3. Three.js：网页实时渲染，擅长交互式 3D 场景和沉浸式视觉效果\n\n4. Blender：完整的 3D 建模与渲染能力，擅长电影级光影、运镜和产品展示，但渲染时间最长\n\n想让 Claude 做出真正惊艳的视频，除了提示词，选对工具也很重要！！\n\n你们最喜欢哪种风格呀？",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-jaimintf-959134",
+    "name": "Ten Claude-made designs for one diary app, shown in one artifact",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/jaimintf/status/2126326014271959134",
+    "source": "link-only",
+    "focus": {
+      "zh": "给 Claude 参考，让它出 10 个设计放进一个 artifact，再挑最好的。录屏里是同一个记日子 App 的十个方案，如一笔画、一窗一天的楼。提示词见后续帖子。",
+      "en": "Give Claude references, ask for ten designs in an artifact, pick the winner. The recording shows ten takes on one day-logging app, such as a day in one line or a window per day. The prompt is in the follow-up post."
+    },
+    "application": {
+      "zh": "十个方向并排挑，比反复改一个快",
+      "en": "Ten directions side by side beat revising one"
+    },
+    "publisher": "jaimin (@jaimintf)",
+    "kind": "social-post",
+    "designer": "jaimin",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T01:15:49.289Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2126326014271959134",
+      "author": "jaimin",
+      "handle": "jaimintf",
+      "date": "2026-11-27",
+      "lang": "en",
+      "text": "people overcomplicate designing apps.\n\n> give claude references\n> ask it for 10 inspired designs\n> tell it to present it in an artifact\n> choose the winner\n\nprompt & artifact example ↓ https://t.co/5XKCc5pWok",
+      "hasMedia": true
+    }
   }
 ];
 
