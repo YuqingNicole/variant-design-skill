@@ -82,3 +82,11 @@ test('a run keeps an unreadable item as an error and screens the rest, writing n
   assert.equal(results[0].screening.band, 'accept'); assert.match(results[1].error, /no video/);
   assert.equal(await fs.readFile(set, 'utf8'), before);
 });
+
+test('an item that never answers times out as an error, and every finished item is saved as it lands', async () => {
+  const dir = await fs.mkdtemp(path.join((await import('node:os')).tmpdir(), 'bm-test-')), set = path.join(dir, 'set.json');
+  await fs.writeFile(set, JSON.stringify({ items: [{ id: 's-1', rubric: 'design', source: 'site', label: 'accept', candidate: { link: 'https://hang.example/' } }] }));
+  const saved = [];
+  const results = await run({ set, timeout: 50, io: { page: () => new Promise(() => {}) }, save: done => { saved.push(done.length); } });
+  assert.match(results[0].error, /no answer within/); assert.deepEqual(saved, [1]);
+});

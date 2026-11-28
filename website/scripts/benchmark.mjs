@@ -4,7 +4,7 @@
 // how well the scores separate accepted items from rejected ones. Nothing is written to an inbox or the library.
 // Each item goes through the same steps as a weekly run (screening-rubric.mjs and the source's own prompt), without the
 // "already in the library" checks, since many labelled items are in the library. Costs one model call per item (two on a retry).
-// Usage: node website/scripts/benchmark.mjs [--only id,id] [--rubric design|video] [--jobs n] [--json file]
+// Usage: node website/scripts/benchmark.mjs [--only id,id] [--rubric design|video] [--jobs n] [--json file]   (--json is rewritten after every item)
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -114,7 +114,11 @@ export function format(results, a = agreement(results)) {
   return lines.join('\n');
 }
 
-export async function run({ set = setPath, only = null, rubric = null, jobs = 3, io = {} } = {}) {
+// A step that never settles (a capture whose Chrome died) would otherwise end the process with nothing saved, as the first run did.
+const within = (promise, ms) => { let timer; return Promise.race([promise, new Promise((_, no) => { timer = setTimeout(() => no(new Error(`no answer within ${ms / 60000} minutes`)), ms); })]).finally(() => clearTimeout(timer)); };
+
+// `save` gets the results so far after every item, so a long run that is stopped keeps what it finished.
+export async function run({ set = setPath, only = null, rubric = null, jobs = 3, io = {}, timeout = 600000, save = null } = {}) {
   const dep = { ...defaults, ...io };
   const items = JSON.parse(await fs.readFile(set, 'utf8')).items.filter(i => (!only || only.includes(i.id)) && (!rubric || i.rubric === rubric));
   const results = new Array(items.length);
@@ -123,8 +127,9 @@ export async function run({ set = setPath, only = null, rubric = null, jobs = 3,
   const worker = async queue => {
     for (let next; (next = queue.shift());) {
       const [item, i] = next, dir = await fs.mkdtemp(path.join(os.tmpdir(), 'benchmark-'));
-      try { results[i] = { item, screening: await screenItem(item, dep, dir) }; } catch (error) { results[i] = { item, error: error.message.slice(0, 160) }; } finally { await fs.rm(dir, { recursive: true, force: true }); }
+      try { results[i] = { item, screening: await within(screenItem(item, dep, dir), timeout) }; } catch (error) { results[i] = { item, error: error.message.slice(0, 160) }; } finally { await fs.rm(dir, { recursive: true, force: true }); }
       process.stderr.write(`${results[i].screening ? '.' : '?'}`);
+      if (save) await save(results.filter(Boolean));
     }
   };
   await Promise.all([worker(lanes[0]), ...Array.from({ length: Math.max(1, jobs) }, () => worker(lanes[1]))]);
@@ -134,7 +139,7 @@ export async function run({ set = setPath, only = null, rubric = null, jobs = 3,
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = process.argv.slice(2), at = flag => (args.includes(flag) ? args[args.indexOf(flag) + 1] : null);
-  const results = await run({ only: at('--only')?.split(','), rubric: at('--rubric'), jobs: Number(at('--jobs') ?? 3) });
-  if (at('--json')) await fs.writeFile(at('--json'), `${JSON.stringify(results, null, 2)}\n`);
+  const save = at('--json') ? done => fs.writeFile(at('--json'), `${JSON.stringify(done, null, 2)}\n`) : null;
+  const results = await run({ only: at('--only')?.split(','), rubric: at('--rubric'), jobs: Number(at('--jobs') ?? 3), save });
   console.log(format(results));
 }
