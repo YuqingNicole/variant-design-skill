@@ -1559,7 +1559,7 @@ test('a creative video reads as a video, not as a design reference', async ({pag
  // The detail: the type by its Chinese name, notes on what is fun and what to borrow, the creator, and no design-brief tools.
  await feed.locator('.insp-card-open').first().click();
  const dialog=page.getByRole('dialog');await expect(dialog).toBeVisible();
- await expect(dialog.locator('.insp-detail-label')).toContainText(/动画短片|特效合成|定格与手作|代码与生成|实拍脑洞|幽默/);
+ await expect(dialog.locator('.insp-detail-label')).toContainText(/动画短片|特效合成|定格与手作|代码与生成|游戏与实时|实拍脑洞/);
  await expect(dialog.locator('dt')).toHaveText(['看点','可以借的点子','出处','作者']);
  await expect(dialog.getByRole('button',{name:'生成参考指令'})).toHaveCount(0);await expect(dialog.getByRole('button',{name:'加入参考包'})).toHaveCount(0);
  // Design references keep their tools.
