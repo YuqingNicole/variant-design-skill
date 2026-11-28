@@ -9447,7 +9447,7 @@ export const inspirationItems = [
   },
   {
     "id": "x-yokohara_h-342816",
-    "name": "A worm-swarm monster stalking a corridor in UE5",
+    "name": "Worm-swarm monster in UE5",
     "category": "practice",
     "tag": "Real-time",
     "url": "https://x.com/Yokohara_h/status/2116401242591342816",
@@ -9479,7 +9479,7 @@ export const inspirationItems = [
   },
   {
     "id": "x-rj5telf-518104",
-    "name": "Something in the mall after closing",
+    "name": "The mall after closing",
     "category": "practice",
     "tag": "Animation",
     "url": "https://x.com/rj5telf/status/2098354362443518104",
@@ -9511,7 +9511,7 @@ export const inspirationItems = [
   },
   {
     "id": "x-lucknknock-498686",
-    "name": "Cubic Living Things: an ecosystem inside a cube",
+    "name": "Cubic Living Things",
     "category": "practice",
     "tag": "Generative",
     "url": "https://x.com/lucknknock/status/2108513110445498686",
@@ -9543,7 +9543,7 @@ export const inspirationItems = [
   },
   {
     "id": "x-kanetaaaaa-263840",
-    "name": "Blowing up a dammed river with dynamite in VRChat",
+    "name": "Dynamiting a dam in VRChat",
     "category": "practice",
     "tag": "Real-time",
     "url": "https://x.com/kanetaaaaa/status/2114677419525263840",
@@ -9575,7 +9575,7 @@ export const inspirationItems = [
   },
   {
     "id": "x-kanizo_cg_vfx-634349",
-    "name": "Two spaceships collide above Earth",
+    "name": "Spaceships collide above Earth",
     "category": "practice",
     "tag": "VFX",
     "url": "https://x.com/Kanizo_CG_VFX/status/2099061764197634349",
@@ -9607,7 +9607,7 @@ export const inspirationItems = [
   },
   {
     "id": "x-treasurebooru-241147",
-    "name": "Gaming Stick Arts: a ninja kid with an RGB staff",
+    "name": "Gaming Stick Arts",
     "category": "practice",
     "tag": "Animation",
     "url": "https://x.com/TreasureBooru/status/2116528228496241147",
