@@ -9311,12 +9311,12 @@ export const inspirationItems = [
     "url": "https://x.com/jaimintf/status/2126326014271959134",
     "source": "link-only",
     "focus": {
-      "zh": "作者的做法：给 Claude 参考，让它出 10 个设计，放进一个 artifact，挑出最好的。录屏里同一个记日子的 App 有十个方案，同一对女孩和小白狗，各换一个点子：一笔画出一天、夜间画廊、一窗一天的公寓楼、对折墨迹记心情、立体书周报。提示词在后续帖子里（Appllama 页面）。",
-      "en": "The author’s method: give Claude references, ask for ten designs, have it present them in an artifact, pick the winner. The recording shows ten takes on one day-logging app, the same girl and white dog in each but a new idea every time: a day drawn in one line, a night gallery, a building with one window per day, an inkblot mood, a pop-up week. The prompt is in the follow-up post (an Appllama page)."
+      "zh": "给 Claude 参考，让它出 10 个设计放进一个 artifact，再挑最好的。录屏里是同一个记日子 App 的十个方案，如一笔画、一窗一天的楼。提示词见后续帖子。",
+      "en": "Give Claude references, ask for ten designs in an artifact, pick the winner. The recording shows ten takes on one day-logging app, such as a day in one line or a window per day. The prompt is in the follow-up post."
     },
     "application": {
-      "zh": "一次出十个方向并排挑，比反复改一个方案更快",
-      "en": "Ten directions side by side, then pick: faster than revising one design"
+      "zh": "十个方向并排挑，比反复改一个快",
+      "en": "Ten directions side by side beat revising one"
     },
     "publisher": "jaimin (@jaimintf)",
     "kind": "social-post",
