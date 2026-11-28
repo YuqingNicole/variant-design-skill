@@ -47,10 +47,11 @@ fi
 # The throwaway worktree has no node_modules, and reference-facets.test.mjs loads TypeScript through ts-module.mjs; without
 # this every run failed here, after screening, and nothing was published (2026-11-24 and 11-25).
 npm ci --prefix website --silent --no-audit --no-fund
-node --test website/scripts/inspiration-data.test.mjs website/scripts/reference-facets.test.mjs website/scripts/x-media.test.mjs website/scripts/x-publish.test.mjs website/scripts/x-discovery.test.mjs website/scripts/x-authors.test.mjs
+node --test website/scripts/inspiration-data.test.mjs website/scripts/screening-rubric.test.mjs website/scripts/reference-facets.test.mjs website/scripts/x-media.test.mjs website/scripts/x-publish.test.mjs website/scripts/x-discovery.test.mjs website/scripts/x-authors.test.mjs
 
-# No new video, no pull request: a run that found nothing, or rejected everything it found, only saves its rejections.
-if git diff --quiet website/src/inspiration-data.ts; then
+# No new video and nothing held for review, no pull request: a run that found nothing, or rejected everything it found, only
+# saves its rejections. Review-band rows ("~ " lines in the report) need the owner, so they always open one.
+if git diff --quiet website/src/inspiration-data.ts && ! grep -q '^~ ' "$OUT"; then
   git diff --quiet website/content/x-post-inbox.json || node website/scripts/x-discovery.mjs --carry-save "$CARRY"
   echo "No new videos today; no pull request opened."; exit 0
 fi
@@ -63,7 +64,7 @@ Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 guard open-pr x   # again, in case a weekly pull request was opened during this run (a direct run skips weekly.sh's lock)
 git push -q -u origin "$BRANCH"
 gh pr create --base master --title "Add this week's X creative videos ($DAY)" --body "$(cat <<EOF
-Weekly X discovery, screened by \`website/scripts/x-publish.mjs\`: the model read six frames per video and wrote the notes. Nobody has watched the videos; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`.
+Weekly X discovery, screened by \`website/scripts/x-publish.mjs\`: the model read six frames per video and wrote the notes. Nobody has watched the videos; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`. Candidates that score in the review band (60–75% of the weighted total, docs/benchmark.md) are not published: they stay in the inbox as \`review\` and are listed under "Held for review"; answer 收 or 拒 per id, applied with \`node website/scripts/review-queue.mjs accept|reject <id>\`.
 
 \`\`\`
 $(cat "$OUT")

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Closes the loop after YouTube discovery. A candidate is read from YouTube's own public thumbnails (the cover and three frames from
-// the middle of the video, joined into one image); nothing is downloaded from the video. A model accepts it with bilingual notes or
-// rejects it with a reason, and the result goes to the inbox and the library. run-youtube-weekly.sh puts the change in a pull request.
+// the middle of the video, joined into one image); nothing is downloaded from the video. A model scores it against the material
+// benchmark (screening-rubric.mjs, the Videos rules shared with x-publish.mjs) and writes bilingual notes; the code turns the scores
+// into accept, review (held in the inbox) or reject. run-youtube-weekly.sh puts the change in a pull request.
 // Usage: node website/scripts/youtube-publish.mjs [--limit n] [--dry-run]
 //        node website/scripts/youtube-publish.mjs --url <youtube watch address> [--dry-run]   screen one video without an API key
 import fs from 'node:fs/promises';
@@ -9,7 +10,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { readItems, appendItems, askClaude, judged as judgedWith, TAGS, SCOPE, TAG_GUIDE, AI_RULE, SCOPE_REJECTS, IP_RULE, review } from './x-publish.mjs';
+import { readItems, appendItems, askClaude, parseVerdict, TAG_GUIDE, AI_RULE, SCOPE, IP_RULE, VIDEO_OUT_OF_SCOPE, VIDEO_CARD, review, report } from './x-publish.mjs';
+import { rubricBlock, answerBlock, screen, record } from './screening-rubric.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const inboxPath = path.resolve(here, '../content/youtube-video-inbox.json');
@@ -27,22 +29,21 @@ export function channelInLibrary(items, candidate) {
 export function buildPrompt(candidate, sheet) {
   const facts = [`Title: ${JSON.stringify(candidate.title)}`, `Channel: ${candidate.channel}`, candidate.seconds ? `Length: ${candidate.seconds} seconds` : null, candidate.views ? `${candidate.views} views` : null,
     candidate.text ? `Description (start): ${JSON.stringify(candidate.text)}` : null].filter(Boolean).join('\n');
-  return `You are screening one YouTube video for the Videos tab of Variant Design's inspiration library. Entries you accept go live once CI passes, without a person reviewing them, so reject when unsure.
+  return `You are screening one YouTube video for the Videos tab of Variant Design's inspiration library. Entries that score in the collect band go live once CI passes, without a person reviewing them.
 ${SCOPE}
 Read the image at ${sheet}: YouTube's public thumbnails of ${candidate.url}, in a 2×2 grid: top left is the cover; the other three are small, blurry frames from the middle of the video. You cannot play the video, so describe only what the pictures and the title show, and say nothing about motion or timing that they do not.
 
 ${facts}
 
-Reject (accept=false) when any applies: ${SCOPE_REJECTS}; a tutorial, course, "how to" or tips list; a tool, product, plugin, template or sponsor promotion; a talk, interview, podcast, vlog, reaction or commentary; a compilation of other people's work or an unclear original author; pictures too unclear to describe.
 ${IP_RULE}
-Otherwise accept, and write notes on what makes it fun or clever.
-${TAG_GUIDE}
 ${AI_RULE}
+${rubricBlock('video', { outOfScope: `${VIDEO_OUT_OF_SCOPE}; a course or tips list; a talk, interview, podcast, vlog, reaction or commentary; a compilation of other people's work (the not-original veto); pictures too unclear to describe` })}
+
+Card fields: write notes on what makes it fun or clever.
+${TAG_GUIDE}
 Do not invent: no names, claims or tools the pictures and the text do not show.
 
-Answer with one JSON object and nothing else:
-{"accept": true, "name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "ai": <true or false>, "focus": {"zh": "<what happens and what makes it fun or clever, one sentence, at most 300 characters>", "en": "<same, in English>"}, "application": {"zh": "<the idea worth borrowing, a short phrase>", "en": "<same, in English>"}}
-or {"accept": false, "reason": "<one sentence in English>"}`;
+${answerBlock('video', VIDEO_CARD)}`;
 }
 
 export function entryFor(candidate, verdict, at) {
@@ -81,7 +82,6 @@ async function oembed(id) {
   return res.ok ? res.json() : { status: res.status };
 }
 const defaults = { oembed, sheet: makeSheet, ask: askClaude };
-const judged = (ask, prompt, dir) => judgedWith(ask, prompt, dir);
 
 // A candidate from an address alone, with what oEmbed gives (no length, date or views).
 export async function candidateFromUrl(url, dep = defaults, now = new Date()) {
@@ -99,7 +99,7 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
   if (only && !inbox.candidates.some(c => c.id === only.id)) inbox.candidates.push(only);
   const source = await fs.readFile(dataFile, 'utf8');
   const items = readItems(source), today = now.toISOString().slice(0, 10), stamp = now.toISOString();
-  const added = [], summary = { accepted: [], rejected: [], kept: [] };
+  const added = [], summary = { accepted: [], rejected: [], kept: [], review: [] };
   const queue = inbox.candidates.filter(c => (c.status === 'pending' || !c.status) && (!only || c.id === only.id)).sort((a, b) => (b.views ?? 0) - (a.views ?? 0)).slice(0, limit);
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'youtube-publish-'));
   const decide = (candidate, patch) => { inbox.candidates[inbox.candidates.indexOf(candidate)] = review(candidate, patch, today); };
@@ -115,16 +115,17 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
         if (own) { reject(candidate, label, `The library already has a video from this channel (${own.id})`); continue; }
         const meta = await dep.oembed(candidate.id);
         if (!meta.title) { reject(candidate, label, `YouTube does not serve this video for embedding (HTTP ${meta.status ?? '?'})`); continue; }
-        const verdict = await judged(dep.ask, buildPrompt(candidate, await dep.sheet(candidate.id, dir)), dir);
-        if (!verdict.accept) { reject(candidate, label, verdict.reason); continue; }
-        const entry = entryFor(candidate, verdict, stamp);
+        const scored = await screen(dep.ask, buildPrompt(candidate, await dep.sheet(candidate.id, dir)), dir, 'video', parseVerdict), screening = record('video', scored, stamp);
+        if (scored.band === 'reject') { decide(candidate, { status: 'rejected', reason: scored.reason, screening }); summary.rejected.push([label, scored.reason]); continue; }
+        const entry = entryFor(candidate, scored.notes, stamp);
+        if (scored.band === 'review') { decide(candidate, { status: 'review', reason: scored.reason, draft: entry, screening }); summary.review.push([label, candidate.id, scored, entry.name]); continue; }
         added.push(entry);
-        decide(candidate, { status: 'published', entry: entry.id });
-        summary.accepted.push([label, entry.id, entry.tag, entry.name]);
+        decide(candidate, { status: 'published', entry: entry.id, screening });
+        summary.accepted.push([label, entry.id, entry.tag, entry.name, scored]);
       } catch (error) { summary.kept.push([label, error.message]); }
     }
   } finally { await fs.rm(dir, { recursive: true, force: true }); }
-  if (!dryRun && (added.length || summary.rejected.length)) {
+  if (!dryRun && (added.length || summary.rejected.length || summary.review.length)) {
     await fs.writeFile(dataFile, appendItems(source, added));
     inbox.updatedAt = stamp;
     const temporary = `${inboxFile}.tmp`;
@@ -134,13 +135,8 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
   return { ...summary, entries: added };
 }
 
-export function report(summary) {
-  const lines = [`Accepted ${summary.accepted.length}, rejected ${summary.rejected.length}, left pending ${summary.kept.length}.`];
-  for (const [label, id, tag, name] of summary.accepted) lines.push(`+ ${label} → ${id} (${tag}) ${name}`);
-  for (const [label, reason] of summary.rejected) lines.push(`- ${label}: ${reason}`);
-  for (const [label, reason] of summary.kept) lines.push(`? ${label}: ${reason}`);
-  return lines.join('\n');
-}
+// One report format for both video sources, review band included.
+export { report };
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = process.argv.slice(2), at = flag => args[args.indexOf(flag) + 1];

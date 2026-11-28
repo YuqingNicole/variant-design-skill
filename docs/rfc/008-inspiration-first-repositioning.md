@@ -165,3 +165,5 @@
 **AI 标记**：和分类分开，是一个是或否。帖子正文或画面表明生成式 AI 做了你看到的东西的主要部分（画面或素材、角色、贴图或模型，或渲染场景的代码，例如「made with AI」、附了提示词、点名图像或视频模型、「Opus 写的」），条目就带 `"ai": true`，卡片左上角显示一个小的「AI」，详情的标签行写「AI 参与制作 / Made with AI」。用了 AI 不是拒收理由，其他规则照旧。
 
 同一次修订撤下两条同人作品（Charlie and Lola 纸片翻拍、The Binding of Isaac 黏土短片，违反 2026-11-26 的同人规则），逐条前后对照见 `docs/research/2026-11-28-videos-tag-review.md`。回归：`website/scripts/inspiration-sections.test.mjs`（分类映射、库里视频条目都用现行分类、AI 标记只在视频上）、`x-publish.test.mjs` 和 `youtube-publish.test.mjs`（规则顺序和例子、`ai` 必填）、`tests/landing.spec.mjs`（视频页筛选、AI 角标和详情标签）。
+
+**收录门槛（2026-11-28，维护者批准）**：视频页和网站的筛选按素材识别标准逐项打分，收、待审、拒由代码按加权分定，待审的不自动上线。维度、门槛、否决清单、待审处理和测试集见 `docs/benchmark.md`。

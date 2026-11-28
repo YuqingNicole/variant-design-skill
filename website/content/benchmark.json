@@ -1,0 +1,681 @@
+{
+  "about": "Benchmark set for the material standard (docs/benchmark.md). Labels are drafts for the owner to correct: owner-added entries are accept, owner takedowns are reject, the rest follow the current inbox decision, except where the standard's own calibration table says otherwise (basis says so). `calibration: true` marks items whose scores also appear in the screening prompt as calibration examples, so agreement on them is not independent. Run: node website/scripts/benchmark.mjs",
+  "updatedAt": "2026-11-28",
+  "items": [
+    {
+      "id": "x-2124169434998939918",
+      "rubric": "design",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "owner added (#316)",
+      "candidate": {
+        "id": "2124169434998939918",
+        "url": "https://x.com/duckwhocodes/status/2124169434998939918",
+        "handle": "duckwhocodes",
+        "likes": 2869
+      }
+    },
+    {
+      "id": "x-2125586059727884760",
+      "rubric": "design",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "owner added (#343)",
+      "calibration": true,
+      "expected": {
+        "total": 37
+      },
+      "candidate": {
+        "id": "2125586059727884760",
+        "url": "https://x.com/ayushsoni_io/status/2125586059727884760",
+        "handle": "ayushsoni_io",
+        "likes": 283
+      }
+    },
+    {
+      "id": "x-2066491158164045957",
+      "rubric": "design",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "owner added (#343)",
+      "candidate": {
+        "id": "2066491158164045957",
+        "url": "https://x.com/dmiiiitrii/status/2066491158164045957",
+        "handle": "dmiiiitrii",
+        "likes": 3691
+      }
+    },
+    {
+      "id": "x-2124449261853237413",
+      "rubric": "design",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "owner added (#343)",
+      "candidate": {
+        "id": "2124449261853237413",
+        "url": "https://x.com/Sdymoondesign/status/2124449261853237413",
+        "handle": "Sdymoondesign",
+        "likes": 1227
+      }
+    },
+    {
+      "id": "x-2126107363191234774",
+      "rubric": "design",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "owner added (#346)",
+      "calibration": true,
+      "expected": {
+        "total": 38
+      },
+      "candidate": {
+        "id": "2126107363191234774",
+        "url": "https://x.com/aura_uniiiii/status/2126107363191234774",
+        "handle": "aura_uniiiii",
+        "likes": 2100
+      }
+    },
+    {
+      "id": "x-2126326014271959134",
+      "rubric": "design",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "owner added (#351)",
+      "candidate": {
+        "id": "2126326014271959134",
+        "url": "https://x.com/jaimintf/status/2126326014271959134",
+        "handle": "jaimintf",
+        "likes": 445
+      }
+    },
+    {
+      "id": "site-minimalgallery-glebich-com",
+      "rubric": "design",
+      "source": "site",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published by the weekly gallery run",
+      "calibration": true,
+      "expected": {
+        "total": 36
+      },
+      "candidate": {
+        "id": "minimalgallery-glebich-com",
+        "source": "minimalgallery",
+        "sourceName": "Minimal Gallery",
+        "url": "https://minimal.gallery/gleb-kuznetsov/",
+        "link": "https://glebich.com/",
+        "title": "Gleb Kuznetsov"
+      }
+    },
+    {
+      "id": "site-onepagelove-geoform-co",
+      "rubric": "design",
+      "source": "site",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published by the weekly gallery run",
+      "candidate": {
+        "id": "onepagelove-geoform-co",
+        "source": "onepagelove",
+        "sourceName": "One Page Love",
+        "url": "https://onepagelove.com/geoform",
+        "link": "https://geoform.co/",
+        "title": "GEOFORM®"
+      }
+    },
+    {
+      "id": "site-onepagelove-fonting-co",
+      "rubric": "design",
+      "source": "site",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published by the weekly gallery run",
+      "candidate": {
+        "id": "onepagelove-fonting-co",
+        "source": "onepagelove",
+        "sourceName": "One Page Love",
+        "url": "https://onepagelove.com/fonting",
+        "link": "https://www.fonting.co/",
+        "title": "Fonting"
+      }
+    },
+    {
+      "id": "site-onepagelove-justinschueler-com",
+      "rubric": "design",
+      "source": "site",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published by the weekly gallery run",
+      "candidate": {
+        "id": "onepagelove-justinschueler-com",
+        "source": "onepagelove",
+        "sourceName": "One Page Love",
+        "url": "https://onepagelove.com/justin-schuler",
+        "link": "https://justinschueler.com/",
+        "title": "Justin Schüler"
+      }
+    },
+    {
+      "id": "site-minimalgallery-openinghours-studio",
+      "rubric": "design",
+      "source": "site",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published by the weekly gallery run",
+      "candidate": {
+        "id": "minimalgallery-openinghours-studio",
+        "source": "minimalgallery",
+        "sourceName": "Minimal Gallery",
+        "url": "https://minimal.gallery/openinghours-studio/",
+        "link": "https://openinghours.studio/",
+        "title": "OPENINGHOURS Studio"
+      }
+    },
+    {
+      "id": "site-onepagelove-plastic-audio",
+      "rubric": "design",
+      "source": "site",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published by the weekly gallery run",
+      "candidate": {
+        "id": "onepagelove-plastic-audio",
+        "source": "onepagelove",
+        "sourceName": "One Page Love",
+        "url": "https://onepagelove.com/clips",
+        "link": "https://plastic.audio/clips",
+        "title": "Clips"
+      }
+    },
+    {
+      "id": "site-mindsparkle-farmminerals-com",
+      "rubric": "design",
+      "source": "site",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published by the weekly gallery run",
+      "candidate": {
+        "id": "mindsparkle-farmminerals-com",
+        "source": "mindsparkle",
+        "sourceName": "Mindsparkle Mag",
+        "url": "https://mindsparklemag.com/website/farm-minerals",
+        "link": "https://www.farmminerals.com/",
+        "title": "Farm Minerals"
+      }
+    },
+    {
+      "id": "site-csswinner-snapa-sites-uprock-pro",
+      "rubric": "design",
+      "source": "site",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "owner takedown (Snapa, merged with the 2026-11-27 gallery batch)",
+      "calibration": true,
+      "expected": {
+        "vetoes": [
+          "template"
+        ]
+      },
+      "candidate": {
+        "id": "csswinner-snapa-sites-uprock-pro",
+        "source": "csswinner",
+        "sourceName": "CSS Winner",
+        "url": "https://www.csswinner.com/details/snapa/19571/",
+        "link": "https://snapa.sites.uprock.pro/",
+        "title": "Snapa"
+      }
+    },
+    {
+      "id": "x-2126161591502598253",
+      "rubric": "design",
+      "source": "x",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "owner request: a repost; the original maker was added instead (#346)",
+      "expected": {
+        "vetoes": [
+          "not-original"
+        ]
+      },
+      "candidate": {
+        "id": "2126161591502598253",
+        "url": "https://x.com/369Serena/status/2126161591502598253",
+        "handle": "369Serena",
+        "likes": 18
+      }
+    },
+    {
+      "id": "site-onepagelove-wowww-art",
+      "rubric": "design",
+      "source": "site",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "rejected by the weekly gallery run (capture showed one screen or a blank page)",
+      "candidate": {
+        "id": "onepagelove-wowww-art",
+        "source": "onepagelove",
+        "sourceName": "One Page Love",
+        "url": "https://onepagelove.com/wowww-studio",
+        "link": "https://wowww.art/",
+        "title": "Wowww studio"
+      }
+    },
+    {
+      "id": "site-onepagelove-soma-health-co",
+      "rubric": "design",
+      "source": "site",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "rejected by the weekly gallery run (capture showed one screen or a blank page)",
+      "candidate": {
+        "id": "onepagelove-soma-health-co",
+        "source": "onepagelove",
+        "sourceName": "One Page Love",
+        "url": "https://onepagelove.com/soma",
+        "link": "https://www.soma-health.co/",
+        "title": "Soma"
+      }
+    },
+    {
+      "id": "site-minimalgallery-studioplato-co",
+      "rubric": "design",
+      "source": "site",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "rejected by the weekly gallery run (capture showed one screen or a blank page)",
+      "candidate": {
+        "id": "minimalgallery-studioplato-co",
+        "source": "minimalgallery",
+        "sourceName": "Minimal Gallery",
+        "url": "https://minimal.gallery/studio-plato/",
+        "link": "https://studioplato.co/",
+        "title": "Studio Plato"
+      }
+    },
+    {
+      "id": "site-minimalgallery-protipmarketing-com",
+      "rubric": "design",
+      "source": "site",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "rejected by the weekly gallery run (capture showed one screen or a blank page)",
+      "candidate": {
+        "id": "minimalgallery-protipmarketing-com",
+        "source": "minimalgallery",
+        "sourceName": "Minimal Gallery",
+        "url": "https://minimal.gallery/protip-marketing/",
+        "link": "https://protipmarketing.com/",
+        "title": "Protip Marketing"
+      }
+    },
+    {
+      "id": "site-mindsparkle-studyhall-design",
+      "rubric": "design",
+      "source": "site",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "rejected by the weekly gallery run (capture showed one screen or a blank page)",
+      "candidate": {
+        "id": "mindsparkle-studyhall-design",
+        "source": "mindsparkle",
+        "sourceName": "Mindsparkle Mag",
+        "url": "https://mindsparklemag.com/website/study-hall-agency-website",
+        "link": "https://studyhall.design/",
+        "title": "Study Hall — Agency Website"
+      }
+    },
+    {
+      "id": "x-2121906990889017411",
+      "rubric": "video",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published (Videos tab)",
+      "calibration": true,
+      "expected": {
+        "total": 34
+      },
+      "candidate": {
+        "id": "2121906990889017411",
+        "url": "https://x.com/kuro_40/status/2121906990889017411",
+        "handle": "kuro_40",
+        "likes": 6261
+      }
+    },
+    {
+      "id": "x-2125402094173827214",
+      "rubric": "video",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published (Videos tab)",
+      "calibration": true,
+      "expected": {
+        "total": 33
+      },
+      "candidate": {
+        "id": "2125402094173827214",
+        "url": "https://x.com/toomuchliving/status/2125402094173827214",
+        "handle": "toomuchliving",
+        "likes": 981
+      }
+    },
+    {
+      "id": "x-2125528315041829066",
+      "rubric": "video",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "owner added (#340); the standard's calibration table estimates review (28/40)",
+      "calibration": true,
+      "expected": {
+        "total": 28
+      },
+      "candidate": {
+        "id": "2125528315041829066",
+        "url": "https://x.com/Nexoxh/status/2125528315041829066",
+        "handle": "Nexoxh",
+        "likes": 305
+      }
+    },
+    {
+      "id": "x-2117724045483344364",
+      "rubric": "video",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published (Videos tab)",
+      "candidate": {
+        "id": "2117724045483344364",
+        "url": "https://x.com/worldofio/status/2117724045483344364",
+        "handle": "worldofio",
+        "likes": 2720
+      }
+    },
+    {
+      "id": "x-2120068254794236023",
+      "rubric": "video",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published (Videos tab)",
+      "candidate": {
+        "id": "2120068254794236023",
+        "url": "https://x.com/jammyjanmo/status/2120068254794236023",
+        "handle": "jammyjanmo",
+        "likes": 1866
+      }
+    },
+    {
+      "id": "x-2119862967441527084",
+      "rubric": "video",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published (Videos tab)",
+      "candidate": {
+        "id": "2119862967441527084",
+        "url": "https://x.com/r4nM4_64/status/2119862967441527084",
+        "handle": "r4nM4_64",
+        "likes": 2431
+      }
+    },
+    {
+      "id": "x-2123139134134829114",
+      "rubric": "video",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published (Videos tab)",
+      "candidate": {
+        "id": "2123139134134829114",
+        "url": "https://x.com/thomasma_labs/status/2123139134134829114",
+        "handle": "thomasma_labs",
+        "likes": 782
+      }
+    },
+    {
+      "id": "x-2125384575950156163",
+      "rubric": "video",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published (Videos tab)",
+      "candidate": {
+        "id": "2125384575950156163",
+        "url": "https://x.com/zhuwei030430/status/2125384575950156163",
+        "handle": "zhuwei030430",
+        "likes": 400
+      }
+    },
+    {
+      "id": "x-2123513509455478917",
+      "rubric": "video",
+      "source": "x",
+      "label": "accept",
+      "labelStatus": "draft",
+      "basis": "published (Videos tab)",
+      "candidate": {
+        "id": "2123513509455478917",
+        "url": "https://x.com/SPicklenuts/status/2123513509455478917",
+        "handle": "SPicklenuts",
+        "likes": 2105
+      }
+    },
+    {
+      "id": "x-2124524949427958240",
+      "rubric": "video",
+      "source": "x",
+      "label": "review",
+      "labelStatus": "draft",
+      "basis": "published now; the standard's calibration table puts it in review (27/40)",
+      "calibration": true,
+      "expected": {
+        "total": 27
+      },
+      "candidate": {
+        "id": "2124524949427958240",
+        "url": "https://x.com/rivka_huehhh/status/2124524949427958240",
+        "handle": "rivka_huehhh",
+        "likes": 943
+      }
+    },
+    {
+      "id": "x-2122526144125980695",
+      "rubric": "video",
+      "source": "x",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "published now; the standard's calibration table rejects it (22/40)",
+      "calibration": true,
+      "expected": {
+        "total": 22
+      },
+      "candidate": {
+        "id": "2122526144125980695",
+        "url": "https://x.com/jvl3djp/status/2122526144125980695",
+        "handle": "jvl3djp",
+        "likes": 2527
+      }
+    },
+    {
+      "id": "x-2125370608468775114",
+      "rubric": "video",
+      "source": "x",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "owner fan-work takedown (#338)",
+      "expected": {
+        "vetoes": [
+          "fan-work"
+        ]
+      },
+      "candidate": {
+        "id": "2125370608468775114",
+        "url": "https://x.com/CrimsonRakan/status/2125370608468775114",
+        "handle": "CrimsonRakan",
+        "likes": 1031
+      }
+    },
+    {
+      "id": "x-2124662515611161077",
+      "rubric": "video",
+      "source": "x",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "owner fan-work takedown (#338)",
+      "calibration": true,
+      "expected": {
+        "vetoes": [
+          "fan-work"
+        ]
+      },
+      "candidate": {
+        "id": "2124662515611161077",
+        "url": "https://x.com/BitzelYT/status/2124662515611161077",
+        "handle": "BitzelYT",
+        "likes": 76219
+      }
+    },
+    {
+      "id": "x-2115560598616355249",
+      "rubric": "video",
+      "source": "x",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "fan-work takedown in the owner-approved tag review (#358)",
+      "expected": {
+        "vetoes": [
+          "fan-work"
+        ]
+      },
+      "candidate": {
+        "id": "2115560598616355249",
+        "url": "https://x.com/sicknire/status/2115560598616355249",
+        "handle": "sicknire",
+        "likes": 28594
+      }
+    },
+    {
+      "id": "x-2113105764344643821",
+      "rubric": "video",
+      "source": "x",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "fan-work takedown in the owner-approved tag review (#358)",
+      "expected": {
+        "vetoes": [
+          "fan-work"
+        ]
+      },
+      "candidate": {
+        "id": "2113105764344643821",
+        "url": "https://x.com/Magalyn07/status/2113105764344643821",
+        "handle": "Magalyn07",
+        "likes": 1113
+      }
+    },
+    {
+      "id": "x-2126042554898719025",
+      "rubric": "video",
+      "source": "x",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "rejected by the weekly X run (a Roblox animation pack)",
+      "expected": {
+        "vetoes": [
+          "merch"
+        ]
+      },
+      "candidate": {
+        "id": "2126042554898719025",
+        "url": "https://x.com/NothingS_ecial/status/2126042554898719025",
+        "handle": "NothingS_ecial",
+        "likes": 1082
+      }
+    },
+    {
+      "id": "x-2125251995040911656",
+      "rubric": "video",
+      "source": "x",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "rejected by the weekly X run (NASCAR broadcast)",
+      "expected": {
+        "vetoes": [
+          "news"
+        ]
+      },
+      "candidate": {
+        "id": "2125251995040911656",
+        "url": "https://x.com/NASCARSON_/status/2125251995040911656",
+        "handle": "NASCARSON_",
+        "likes": 303
+      }
+    },
+    {
+      "id": "x-2122200010615935385",
+      "rubric": "video",
+      "source": "x",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "rejected by the weekly X run (\"Who made this\")",
+      "expected": {
+        "vetoes": [
+          "not-original"
+        ]
+      },
+      "candidate": {
+        "id": "2122200010615935385",
+        "url": "https://x.com/Shannnu_18/status/2122200010615935385",
+        "handle": "Shannnu_18",
+        "likes": 3103
+      }
+    },
+    {
+      "id": "x-2124231511499026436",
+      "rubric": "video",
+      "source": "x",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "rejected by the weekly X run (a repo list)",
+      "expected": {
+        "vetoes": [
+          "promo"
+        ]
+      },
+      "candidate": {
+        "id": "2124231511499026436",
+        "url": "https://x.com/flxrnc/status/2124231511499026436",
+        "handle": "flxrnc",
+        "likes": 1287
+      }
+    },
+    {
+      "id": "x-2123017165771043327",
+      "rubric": "video",
+      "source": "x",
+      "label": "reject",
+      "labelStatus": "draft",
+      "basis": "rejected by the weekly X run (suggestive)",
+      "expected": {
+        "vetoes": [
+          "shock"
+        ]
+      },
+      "candidate": {
+        "id": "2123017165771043327",
+        "url": "https://x.com/MichaelRusakov/status/2123017165771043327",
+        "handle": "MichaelRusakov",
+        "likes": 814
+      }
+    }
+  ]
+}

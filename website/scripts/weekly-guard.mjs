@@ -54,13 +54,14 @@ export async function waitForMemory({ tries = 3, wait = 600000, read = readMemor
   return verdict;
 }
 
-// `report` is threads-publish.mjs or x-publish.mjs output; its first line is "Accepted a, rejected r, left pending k."
+// `report` is threads-publish.mjs or x-publish.mjs output; its first line is "Accepted a, rejected r, left pending k, held for review v."
+// (older reports end after the pending count). A candidate held for review was decided: the model scored it.
 // A run where nothing was decided, or at least half was left pending, is a machine or network fault, not a week's result.
 // No summary means the publisher died first (the wrappers pipe it through `tee`, which hides its exit status).
 export function resultsVerdict(report) {
-  const m = /Accepted (\d+), rejected (\d+), left pending (\d+)\./.exec(String(report ?? ''));
+  const m = /Accepted (\d+), rejected (\d+), left pending (\d+)(?:, held for review (\d+))?\./.exec(String(report ?? ''));
   if (!m) return { ok: false, reason: 'the screening step printed no summary, so it did not finish' };
-  const [accepted, rejected, kept] = m.slice(1).map(Number), decided = accepted + rejected, total = decided + kept;
+  const [accepted, rejected, kept, held = 0] = m.slice(1).map(n => Number(n ?? 0)), decided = accepted + rejected + held, total = decided + kept;
   if (!kept) return { ok: true, reason: '' };
   if (!decided) return { ok: false, reason: `none of ${total} candidates could be screened` };
   if (kept * 2 >= total) return { ok: false, reason: `${kept} of ${total} candidates could not be screened` };

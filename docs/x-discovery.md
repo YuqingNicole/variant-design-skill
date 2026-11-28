@@ -14,8 +14,9 @@
 ## 没有新视频就不开 PR
 
 - 没有新候选时，`x-discovery.mjs` 不改收件箱文件（连 `updatedAt` 也不改）。
-- 筛完一条都没收（`inspiration-data.ts` 没变）时，`run-x-weekly.sh` 不开 PR，只打印 “No new videos today; no pull request opened.”。这次拒掉的候选存到仓库外的 `~/Library/Application Support/variant-design/x-inbox-carry.json`（可用 `X_INBOX_CARRY` 改路径），下次运行开始时放回收件箱，避免同一批帖子每天重筛；等有新视频开 PR 时，这些拒收记录跟着进 PR，文件随后删掉。
+- 筛完一条都没收（`inspiration-data.ts` 没变）、也没有待审时，`run-x-weekly.sh` 不开 PR，只打印 “No new videos today; no pull request opened.”。这次拒掉的候选存到仓库外的 `~/Library/Application Support/variant-design/x-inbox-carry.json`（可用 `X_INBOX_CARRY` 改路径），下次运行开始时放回收件箱，避免同一批帖子每天重筛；等有新视频开 PR 时，这些拒收记录跟着进 PR，文件随后删掉。
 - 内存不足、上一个 PR 未合、大半候选读不到时的跳过规则不变（`weekly-guard.mjs`）。
+- 2026-11-28 起 `x-publish.mjs` 按素材识别标准逐项打分（`docs/benchmark.md`），收、待审、拒由代码按分数定。有待审（报告里的 `~ ` 行）时即使没有新视频也开 PR，让维护者回“收”或“拒”。
 
 ## 维护名单
 

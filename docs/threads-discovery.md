@@ -53,7 +53,7 @@ node website/scripts/threads-discovery.mjs --plan --groups all # 不连网，只
 
 `website/scripts/threads-publish.mjs` 处理收件箱里的 `pending`：
 - 没有附带网址的帖子、网址已在库里的站点（含 `www.` 和路径不同的）、打不开（非 200）或没有分享预览图的，直接拒；
-- 其余在无头 Chrome 里打开一次（1280×800，前三屏拼成一张图），交给 `claude -p`（只许读这张图）：被拦截页、验证或订阅闸门、只有一屏、停业公告、陈旧无可学的拒掉，收的写中英文笔记；答案不合格式时带原因重试一次；
+- 其余在无头 Chrome 里打开一次（1280×800，前三屏拼成一张图），交给 `claude -p`（只许读这张图）。2026-11-28 起按素材识别标准的设计六维逐项打分并报一票否决（拦截页、验证或订阅闸门、停业公告算 `broken`，模板演示站算 `template`），代码算加权分：≥ 34/45 收并写中英文笔记，27–33 进待审（收件箱状态 `review`，不上线，PR 里一行一条等维护者回“收”或“拒”），其余拒；建站平台二级域名不打开直接拒。详见 `docs/benchmark.md`。答案不合格式时带原因重试一次；
 - 收的条目追加进 `inspiration-data.ts`（`via` 指向 Threads 帖子），分享预览写进 `link-previews.json`；
 - 读不到的（网络、Chrome、模型出错）留在 `pending` 等下一次。
 
