@@ -283,5 +283,11 @@
   "x-lucknknock-498686": {"status":"reviewed","reviewedAt":"2026-11-28","reviewedBy":"agent","industry":"culture","medium":"motion-graphics","pageTypes":[],"patterns":[],"components":[],"techniques":["generative"],"styles":["illustrated"]},
   "x-kanetaaaaa-263840": {"status":"reviewed","reviewedAt":"2026-11-28","reviewedBy":"agent","industry":"gaming","medium":"3d","pageTypes":[],"patterns":[],"components":[],"techniques":["physics"],"styles":["rendered-3d"]},
   "x-kanizo_cg_vfx-634349": {"status":"reviewed","reviewedAt":"2026-11-28","reviewedBy":"agent","industry":null,"medium":"3d","pageTypes":[],"patterns":[],"components":[],"techniques":["physics"],"styles":["rendered-3d"]},
-  "x-treasurebooru-241147": {"status":"reviewed","reviewedAt":"2026-11-28","reviewedBy":"agent","industry":null,"medium":"film","pageTypes":[],"patterns":[],"components":[],"techniques":[],"styles":["illustrated","colorful","playful"]}
+  "x-treasurebooru-241147": {"status":"reviewed","reviewedAt":"2026-11-28","reviewedBy":"agent","industry":null,"medium":"film","pageTypes":[],"patterns":[],"components":[],"techniques":[],"styles":["illustrated","colorful","playful"]},
+  "x-kevinbparry-506120": {"status":"reviewed","reviewedAt":"2026-11-28","reviewedBy":"agent","industry":null,"medium":"film","pageTypes":[],"patterns":[],"components":[],"techniques":[],"styles":["playful"]},
+  "x-seevua-590484": {"status":"reviewed","reviewedAt":"2026-11-28","reviewedBy":"agent","industry":null,"medium":"film","pageTypes":[],"patterns":[],"components":[],"techniques":[],"styles":["playful"]},
+  "x-measure_plan-374257": {"status":"reviewed","reviewedAt":"2026-11-28","reviewedBy":"agent","industry":"culture","medium":"motion-graphics","pageTypes":[],"patterns":[],"components":[],"techniques":["generative"],"styles":["minimal"]},
+  "x-dustman_tips-355354": {"status":"reviewed","reviewedAt":"2026-11-28","reviewedBy":"agent","industry":null,"medium":"3d","pageTypes":[],"patterns":[],"components":[],"techniques":[],"styles":["rendered-3d"]},
+  "x-jdge180112-218571": {"status":"reviewed","reviewedAt":"2026-11-28","reviewedBy":"agent","industry":null,"medium":"film","pageTypes":[],"patterns":[],"components":[],"techniques":[],"styles":["illustrated"]},
+  "x-studiony3-289494": {"status":"reviewed","reviewedAt":"2026-11-28","reviewedBy":"agent","industry":"gaming","medium":"3d","pageTypes":[],"patterns":[],"components":[],"techniques":["physics"],"styles":["rendered-3d"]}
 }

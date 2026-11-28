@@ -56,7 +56,13 @@
       { "handle": "picassotrigger8", "added": "2026-11-28", "from": "followed by @TreasureBooru", "why": "short original 2D animation loops (\"Ramen\", 3.5K)" },
       { "handle": "rocketboiART", "added": "2026-11-28", "from": "followed by @sol_hana1", "why": "kung-fu animation tests (7.4K); also posts shots for other shows, which screening rejects" },
       { "handle": "JDGE180112", "added": "2026-11-28", "from": "followed by @TreasureBooru, @rj5telf", "why": "original animation shorts drawn in CLIP STUDIO (34K); some posts are client MVs" },
-      { "handle": "beigesthetic_", "added": "2026-11-28", "from": "followed by @Yokohara_h", "why": "flower and creature animation series (3.6K)" }
+      { "handle": "beigesthetic_", "added": "2026-11-28", "from": "followed by @Yokohara_h", "why": "flower and creature animation series (3.6K)" },
+      { "handle": "kevinbparry", "added": "2026-11-28", "from": "practical-effects keyword sweep (library: x-kevinbparry-506120)", "why": "in-camera tricks and pixilation of himself (growing-ball trick, 17K; racing office chair, 22K); also sells his own stop-motion book, which screening rejects" },
+      { "handle": "seevua", "added": "2026-11-28", "from": "followed by @akella (library: x-seevua-590484)", "why": "inventor of barely useful machines, filmed live (T-Shirt Flapper, 10K)" },
+      { "handle": "measure_plan", "added": "2026-11-28", "from": "followed by @akella (library: x-measure_plan-374257)", "why": "music written as math functions on a graphing calculator (18K) and computer-vision toys" },
+      { "handle": "dustman_tips", "added": "2026-11-28", "from": "followed by @kuro_40 (library: x-dustman_tips-355354)", "why": "countryside video and AR maker (AR rescue of a stuck boar); their AR runs on their company's platform, so watch for promos" },
+      { "handle": "studioNY3", "added": "2026-11-28", "from": "VRChat world keyword sweep (library: x-studiony3-289494)", "why": "VRChat game worlds built on one playful mechanic (fried-rice tossing, 7.5K)" },
+      { "handle": "tsumiki_room", "added": "2026-11-28", "from": "followed by @kuro_40", "why": "WebGL and TouchDesigner experiments (phone-tilt holographic foil, 3K); close to the bar, not yet in the library" }
     ],
     "declined": [
       { "handle": "sicknire", "reason": "library entry was a paper stop-motion remake of Charlie and Lola, someone else's IP (accepted before IP_RULE, taken down 2026-11-28)" },

@@ -9636,6 +9636,198 @@ export const inspirationItems = [
       "text": "ゲーミング棒術",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-kevinbparry-506120",
+    "name": "A ball that grows as it changes hands",
+    "category": "practice",
+    "tag": "Live action",
+    "url": "https://x.com/kevinbparry/status/2087142461835506120",
+    "source": "link-only",
+    "focus": {
+      "zh": "Kevin Parry 对着镜头把一颗小白球在两只手之间来回传，每传一次球就大一圈，最后捧着一个和脑袋差不多大的球；镜头内完成的把戏，他说这条 2018 年的视频是他做网络视频的起点。",
+      "en": "Kevin Parry passes a small white ball from hand to hand toward the camera, and with every pass it is a size bigger, until he holds one about as big as his head. A trick done in camera; he says this 2018 clip started his video career."
+    },
+    "application": {
+      "zh": "借手挡住的一瞬换道具，假装是连续的变化",
+      "en": "Swapping props behind a passing hand to fake one continuous change"
+    },
+    "publisher": "Kevin Parry (@kevinbparry)",
+    "kind": "social-post",
+    "designer": "Kevin Parry",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T15:15:00.000Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2087142461835506120",
+      "author": "Kevin Parry",
+      "handle": "kevinbparry",
+      "date": "2026-08-11",
+      "lang": "en",
+      "text": "The trick that kicked off my internet video-making career back in 2018",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-seevua-590484",
+    "name": "The T-Shirt Flapper",
+    "category": "practice",
+    "tag": "Craft",
+    "url": "https://x.com/seevua/status/2078349268394590484",
+    "source": "link-only",
+    "focus": {
+      "zh": "发明家柴田和也的“T恤啪嗒啪嗒”：夹在裤腰上的白色小盒子伸出一根橙色摆臂，一下下替你掀动 T 恤下摆扇风，他站在绿篱前笑得很满足，最后在假人身上展示机关。",
+      "en": "Inventor Kazuya Shibata's T-Shirt Flapper: a small white box clipped to the waistband swings an orange arm that keeps flapping his T-shirt hem to cool him, while he grins in front of a hedge; the end shows the mechanism on a mannequin."
+    },
+    "application": {
+      "zh": "把夏天的一个小动作做成一台机器",
+      "en": "Turning a small summer habit into a machine"
+    },
+    "publisher": "カズヤシバタ(KAZUYA SHIBATA) (@seevua)",
+    "kind": "social-post",
+    "designer": "Kazuya Shibata",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T15:15:00.000Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2078349268394590484",
+      "author": "カズヤシバタ(KAZUYA SHIBATA)",
+      "handle": "seevua",
+      "date": "2026-07-18",
+      "lang": "ja",
+      "text": "Tシャツパタパタの季節がやってきましたね！",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-measure_plan-374257",
+    "name": "Trance music written on a graphing calculator",
+    "category": "practice",
+    "tag": "Generative",
+    "url": "https://x.com/measure_plan/status/2107497388919374257",
+    "source": "link-only",
+    "focus": {
+      "zh": "在图形计算器里用一长串分段函数写出一首 trance：红底上的曲线就是音符，播放点沿着 x 轴走，公式一行行变长，鼓点和旋律也一层层叠上去。",
+      "en": "A trance track written as piecewise functions in a graphing calculator: the curves on the red background are the notes, a playhead runs along the x-axis, and as the formula grows line by line the beat and melody stack up."
+    },
+    "application": {
+      "zh": "让一条公式变成能听的音乐",
+      "en": "Making an equation something you can hear"
+    },
+    "publisher": "AA (@measure_plan)",
+    "kind": "social-post",
+    "designer": "AA",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T15:15:00.000Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2107497388919374257",
+      "author": "AA",
+      "handle": "measure_plan",
+      "date": "2026-10-06",
+      "lang": "en",
+      "text": "attempting to write trance music on my graphing calculator",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-dustman_tips-355354",
+    "name": "An AR rescue for a boar stuck in a ditch",
+    "category": "practice",
+    "tag": "VFX",
+    "url": "https://x.com/dustman_tips/status/2112447070502355354",
+    "source": "link-only",
+    "focus": {
+      "zh": "一头真野猪卡在路边水沟里，联系业者之后，ダストマン 觉得它可怜，把它做成 3DCG 放进 AR：手机镜头里，野猪从同一条水沟走上来，站在人行道上看着你。",
+      "en": "A real wild boar got stuck in a roadside gutter; after calling a contractor, Dustman felt sorry for it and made it a 3DCG boar in AR. Through the phone camera it climbs out of the same ditch and stands on the pavement looking at you."
+    },
+    "application": {
+      "zh": "用 AR 给真实发生的事补一个好结局",
+      "en": "Giving a real incident a happy ending in AR"
+    },
+    "publisher": "ダストマン (@dustman_tips)",
+    "kind": "social-post",
+    "designer": "Dustman",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T15:15:00.000Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2112447070502355354",
+      "author": "ダストマン",
+      "handle": "dustman_tips",
+      "date": "2026-10-20",
+      "lang": "ja",
+      "text": "業者には連絡しましたが、かわいそうだったので3DCG化して溝から救出できるARを作りました…ごめんな。",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-jdge180112-218571",
+    "name": "Cold hands and dragon breath",
+    "category": "practice",
+    "tag": "Animation",
+    "url": "https://x.com/JDGE180112/status/2126262732727218571",
+    "source": "link-only",
+    "focus": {
+      "zh": "雪中神社前，长着龙角的少女往手里哈气，身边的龙也跟着学着吹，最后她一口气吹出来的却是一团火，烧得自己灰头土脸，画面停在“谨贺新年”的贺卡上。",
+      "en": "At a snowy shrine a girl with dragon horns blows into her cold hands and the dragon beside her copies her; then her own breath comes out as a blast of fire that singes her, and it ends on a New Year card."
+    },
+    "application": {
+      "zh": "用一个误会式的小笑点做贺卡",
+      "en": "A New Year card built on one small gag"
+    },
+    "publisher": "ＪＤＧＥ (@JDGE180112)",
+    "kind": "social-post",
+    "designer": "JDGE",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T15:15:00.000Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2126262732727218571",
+      "author": "ＪＤＧＥ",
+      "handle": "JDGE180112",
+      "date": "2026-11-27",
+      "lang": "ja",
+      "text": "なぜか消えてたので再掲…",
+      "hasMedia": true
+    }
+  },
+  {
+    "id": "x-studiony3-289494",
+    "name": "A VRChat world for perfectly loose fried rice",
+    "category": "practice",
+    "tag": "Real-time",
+    "url": "https://x.com/studioNY3/status/2115451938691289494",
+    "source": "link-only",
+    "focus": {
+      "zh": "VRChat 世界“能做出粒粒分明炒饭的世界”：第一人称站在中华炒锅前，下蛋、下饭、颠锅，米粒在火焰里翻飞，连击数一路往上涨，炒得越散分数越高。",
+      "en": "A VRChat world for making perfectly loose fried rice: in first person at a wok stove you add egg and rice and toss, the grains fly through the flames, a combo counter climbs, and the looser the rice the higher your score."
+    },
+    "application": {
+      "zh": "把一道菜的手感做成能打分的游戏",
+      "en": "Turning the feel of cooking one dish into a scored game"
+    },
+    "publisher": "NY studio（ゆうじろー） (@studioNY3)",
+    "kind": "social-post",
+    "designer": "NY studio",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T15:15:00.000Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2115451938691289494",
+      "author": "NY studio（ゆうじろー）",
+      "handle": "studioNY3",
+      "date": "2026-10-28",
+      "lang": "ja",
+      "text": "ワールド「パッラパラのチャーハンが作れるワールド」を公開しました！\n\nパッラパラのチャーハンを作りましょう。出来具合で点数が付きますよ！\n\n#VRChat\n#VRChatワールド紹介\n\n👇ワールドリンク👇\nhttps://t.co/wrlTPhDYlE",
+      "hasMedia": true
+    }
   }
 ];
 
