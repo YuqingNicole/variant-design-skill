@@ -17,6 +17,13 @@ done
 cd "$ROOT"
 git diff --quiet && git diff --cached --quiet || { echo "The working tree has uncommitted changes; run this from a clean checkout." >&2; exit 1; }
 
+# weekly-guard.mjs exits 3 to skip a run and prints why; nothing is pushed, and the EXIT trap below removes any worktree.
+guard() { local s=0; node "$ROOT/website/scripts/weekly-guard.mjs" "$@" || s=$?; (( s == 3 )) && exit 0; return $s; }
+# The same candidates must not land in two pull requests (#347 repeated 8 of #342's), and on a machine short on memory
+# Chrome does not start (#347: all 10 left pending with swap near full), so wait a while for memory, then give up the run.
+guard open-pr sites
+guard memory --tries 3 --wait 600
+
 # Work in a throwaway worktree off origin/master so the maintainer's own branch is never touched.
 git fetch -q origin master
 DAY="$(date +%F)"; BRANCH="codex/sites-weekly-$DAY"; WORK="$(mktemp -d)/sites-weekly"
@@ -26,6 +33,7 @@ cd "$WORK"
 
 node website/scripts/site-discovery.mjs ${SOURCES_ARG:+--sources "$SOURCES_ARG"}
 OUT="$(mktemp)"; node website/scripts/threads-publish.mjs --inbox website/content/site-inbox.json --limit "$LIMIT" | tee "$OUT"
+guard results "$OUT"   # mostly unread candidates mean the machine or network failed: no pull request
 # Draft facets for the new references with the local Jev model when the machine started it (JEV_URL); a failure costs nothing.
 if [ -n "${JEV_URL:-}" ] && ! git diff --quiet website/src/inspiration-data.ts; then
   node website/scripts/jev-facets.mjs --limit 20 | tee -a "$OUT" || echo "Jev facets failed; publishing without drafts."
@@ -40,6 +48,7 @@ git add website/content/site-inbox.json website/src/inspiration-data.ts website/
 git commit -q -m "Add this week's sites from curated galleries ($DAY)
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
+guard open-pr sites   # again, in case a weekly pull request was opened during this run (a direct run skips weekly.sh's lock)
 git push -q -u origin "$BRANCH"
 gh pr create --base master --title "Add this week's sites from curated galleries ($DAY)" --body "$(cat <<BODY
 Weekly gallery discovery (\`website/content/site-discovery.json\`), screened by \`website/scripts/threads-publish.mjs\`: each site was opened once in headless Chrome (first three screens), and the model wrote the notes from that image; the gallery is credited in \`via\`. Nobody has used the sites or seen them on a phone; this pull request merges itself once CI passes. To take a card down afterwards, remove its entry and set the inbox row to \`rejected\`.
