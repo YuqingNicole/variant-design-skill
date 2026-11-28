@@ -884,6 +884,42 @@ test('the footer heading never leaves a lone character on its last line', async 
   }
 });
 
+// The footer after epochal.com's (owner request, 2026-11-28): one solid ink slab, the same in light and dark, with a thin-serif
+// sign-off and the brand plus four link groups as five equal columns. Its tokens flip, so the shared outlined button reads paper on ink.
+test('the footer is one ink slab in both colour schemes, with five equal columns on desktop and two on phones', async ({ browser }) => {
+  const ink = 'rgb(29, 31, 35)', paper = 'rgb(236, 233, 225)';
+  for (const colorScheme of ['light', 'dark']) {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme }), page = await context.newPage();
+    await page.goto('/zh/guides'); await hydrated(page);
+    const footer = page.locator('.site-footer');
+    const slab = await footer.evaluate(f => { const s = getComputedStyle(f); return [s.backgroundColor, s.borderTopWidth, getComputedStyle(document.querySelector('main')).backgroundColor]; });
+    expect(slab[0], colorScheme).toBe(ink); expect(slab[1]).toBe('0px'); expect(slab[2], `${colorScheme} page`).not.toBe(ink);
+    const h2 = await footer.locator('h2').evaluate(h => { const s = getComputedStyle(h); return [s.color, s.fontWeight, s.fontSize, s.fontFamily.startsWith('"Newsreader')]; });
+    expect(h2).toEqual([paper, '200', '48px', true]);
+    // The outlined pill keeps its shape and swaps to paper on ink.
+    const action = await footer.locator('.site-footer-action').evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius, s.borderTopColor, s.color, s.fontSize, e.getBoundingClientRect().height >= 44]; });
+    expect(action).toEqual(['rgba(0, 0, 0, 0)', '999px', paper, paper, '16px', true]);
+    // Brand and four groups: five columns of one width, tops aligned, headings and links on the 16px step.
+    const cols = await page.locator('.site-footer-brand, .site-footer-groups nav').evaluateAll(es => es.map(e => { const r = e.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top), Math.round(e.parentElement.closest('.site-footer-main').getBoundingClientRect().width)]; }));
+    expect(cols).toHaveLength(5);
+    const pitch = cols[1][0] - cols[0][0];
+    for (let i = 1; i < 5; i++) { expect(Math.abs(cols[i][0] - cols[i - 1][0] - pitch), `column ${i}`).toBeLessThanOrEqual(1); expect(Math.abs(cols[i][1] - cols[0][1])).toBeLessThanOrEqual(1); }
+    const link = footer.locator('.site-footer-groups a').first();
+    const [size, rest] = await link.evaluate(a => [getComputedStyle(a).fontSize, getComputedStyle(a).color]);
+    expect(size).toBe('16px'); expect(rest).toBe('rgb(164, 162, 155)');
+    // Hover brightens the link to paper, colour only: no underline (docs/design-system.md §6).
+    await link.hover(); await expect.poll(() => link.evaluate(a => getComputedStyle(a).color)).toBe(paper);
+    expect(await link.evaluate(a => getComputedStyle(a).textDecorationLine)).toBe('none');
+    // The focus ring flips with the tokens: paper on ink, well over 3:1.
+    await link.focus(); expect(await link.evaluate(a => getComputedStyle(a).outlineColor)).toBe(paper);
+    await page.setViewportSize({ width: 390, height: 844 });
+    const lefts = await page.locator('.site-footer-groups nav').evaluateAll(es => [...new Set(es.map(e => Math.round(e.getBoundingClientRect().left)))]);
+    expect(lefts, `${colorScheme} phone columns`).toHaveLength(2);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await context.close();
+  }
+});
+
 test('headings, primary buttons and filters share one scale and one look across pages', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   const brand = 'rgb(29, 31, 35)';
@@ -899,7 +935,7 @@ test('headings, primary buttons and filters share one scale and one look across 
     const sections = await page.locator('main h2').evaluateAll(hs => hs.map(h => parseFloat(getComputedStyle(h).fontSize)));
     expect(Math.max(...sections), `${route} section headings`).toBeLessThanOrEqual(h1);
   }
-  for (const [route, selector] of [['/zh/pricing', '.pricing-card.is-accent .pricing-button'], ['/zh/about', '.paper-button'], ['/zh/guides', '.site-footer-action']]) {
+  for (const [route, selector] of [['/zh/pricing', '.pricing-card.is-accent .pricing-button'], ['/zh/about', '.paper-button']]) {
     await page.goto(route); await hydrated(page);
     // Primary actions are outlined pills since the paper pass (2026-11-25): transparent, a 1.5px ink outline, ink text.
     const style = await page.locator(selector).first().evaluate(e => { const s = getComputedStyle(e); return [s.backgroundColor, s.borderRadius, parseFloat(s.borderTopWidth) >= 1, s.borderTopColor, s.color]; });
@@ -1451,7 +1487,7 @@ test('an X post embed arriving does not move the link out or the notice, on a de
  await context.close();
 });
 
-// One focus ring across the site (the brand green, 2px) that stands out from what is behind it. This checks the ring's colour
+// One focus ring across the site (ink, 2px; paper inside the ink footer slab) that stands out from what is behind it. This checks the ring's colour
 // and its contrast against the background, with the WCAG 2.2 3:1 line; it is not a claim of WCAG conformance.
 test('every public page shows the same ink focus ring, at 3:1 or better against its background', async ({browser})=>{
  // A fresh context per page: a stored language preference makes the language notice appear, and that dark bar rightly uses a light ring.
@@ -1461,7 +1497,7 @@ test('every public page shows the same ink focus ring, at 3:1 or better against 
   // A live preview iframe (the about page's) is a real tab stop whose ring comes from the page inside it, not from this site.
   const rows=(await probeFocus(page,{tabs:16})).filter(r=>r.tag!=='iframe');
   expect(rows.length,`${path} focusable elements`).toBeGreaterThan(5);
-  for(const r of rows){expect(r.ring,`${path} ${r.tag} "${r.label}" has no focus ring`).not.toBeNull();expect(r.ring,`${path} ${r.tag} "${r.label}"`).toEqual([29,31,35]);expect(r.width,`${path} ${r.label}`).toBe('2px');expect(r.ratio,`${path} ${r.label} contrast`).toBeGreaterThanOrEqual(3)}
+  for(const r of rows){expect(r.ring,`${path} ${r.tag} "${r.label}" has no focus ring`).not.toBeNull();expect(r.ring,`${path} ${r.tag} "${r.label}"`).toEqual(r.background.join()==='29,31,35'?[236,233,225]:[29,31,35]);expect(r.width,`${path} ${r.label}`).toBe('2px');expect(r.ratio,`${path} ${r.label} contrast`).toBeGreaterThanOrEqual(3)}
   await context.close();
  }
 });
