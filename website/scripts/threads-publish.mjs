@@ -32,13 +32,15 @@ export function idFor(url, taken) {
   return id;
 }
 
-// `shot`: the capture's image path, or the capture itself ({ file, moved }) so the prompt can say when the page did not move.
+// `shot`: the capture's image path, or the capture itself ({ file, moved, gate }) so the prompt can say when the page did not
+// move and when an entry gate was clicked.
 export function buildPrompt(candidate, preview, shot) {
   const sheet = typeof shot === 'string' ? shot : shot.file;
   const still = (shot.moved ?? []).flatMap((went, i) => (went === false ? [i + 1] : []));
   const stuck = still.length ? `\nThe capture checked this: the page did not move to reach screen ${still.join(' or ')}, even after a second wheel pass and the Page Down key, so the repeat is how the page behaves (a fixed hero, a drag or click-to-explore scene), not a capture fault.` : '';
+  const door = shot.gate ? `\nBefore the first screen the capture clicked the page's full-screen entry button ${JSON.stringify(shot.gate)} once, as a visitor would, so the screens show the page behind that entry screen.` : '';
   return `You are screening one website for Variant Design's design inspiration library, entries you accept go live without a person reviewing them, so reject when unsure.
-Read the image at ${sheet}: the first three screens of ${candidate.link} in a 1280×800 browser window, one above the other with a thin grey line between them. Each screen was reached by scrolling the mouse wheel one screen height and waiting for the page to settle, so a screen that repeats the one above means the page did not scroll further (or swapped a slide in place).${stuck} You cannot interact with the site or see it on a phone, so describe only what the screens show.
+Read the image at ${sheet}: the first three screens of ${candidate.link} in a 1280×800 browser window, one above the other with a thin grey line between them. Each screen was reached by scrolling the mouse wheel one screen height and waiting for the page to settle, so a screen that repeats the one above means the page did not scroll further (or swapped a slide in place).${stuck}${door} You cannot interact with the site or see it on a phone, so describe only what the screens show.
 
 ${candidate.source ? `It was picked by ${candidate.sourceName}, a curated website gallery, as ${JSON.stringify(candidate.title)}; a gallery pick is a lead, not proof of quality.` : `It was found in a Threads post by @${candidate.username ?? 'unknown'}: ${JSON.stringify(candidate.text)}`}
 Its share preview title: ${JSON.stringify(preview.title)}

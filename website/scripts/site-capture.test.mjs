@@ -5,37 +5,13 @@ import { existsSync } from 'node:fs';
 import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
-import zlib from 'node:zlib';
-import { captureScreens, launch, moved, sheetHtml, sheetHeight, VIEWPORT, GAP } from './site-capture.mjs';
+import { captureScreens, decodePng, drawn, launch, moved, sheetHtml, sheetHeight, VIEWPORT, GAP } from './site-capture.mjs';
 
 const chrome = [process.env.CHROME_BIN, '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium']
   .find(file => file && existsSync(file));
 
 // Ubuntu 24.04 (the CI runner) blocks Chrome's sandbox; the page here is our own.
 const sandbox = process.platform === 'linux' ? ['--no-sandbox'] : [];
-
-// Enough of PNG to read Chrome's screenshots: 8-bit RGB or RGBA, not interlaced.
-function decodePng(buf) {
-  const width = buf.readUInt32BE(16), height = buf.readUInt32BE(20), channels = { 2: 3, 6: 4 }[buf[25]];
-  assert.ok(buf[24] === 8 && channels && buf[28] === 0, 'unexpected PNG format');
-  const parts = [];
-  for (let at = 8; at < buf.length;) {
-    const length = buf.readUInt32BE(at), type = buf.toString('ascii', at + 4, at + 8);
-    if (type === 'IDAT') parts.push(buf.subarray(at + 8, at + 8 + length));
-    at += length + 12;
-  }
-  const raw = zlib.inflateSync(Buffer.concat(parts)), stride = width * channels, pixels = Buffer.alloc(stride * height);
-  for (let y = 0; y < height; y++) {
-    const filter = raw[y * (stride + 1)], line = raw.subarray(y * (stride + 1) + 1, (y + 1) * (stride + 1));
-    for (let x = 0; x < stride; x++) {
-      const a = x >= channels ? pixels[y * stride + x - channels] : 0, b = y ? pixels[(y - 1) * stride + x] : 0, c = x >= channels && y ? pixels[(y - 1) * stride + x - channels] : 0;
-      const p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
-      const predictor = [0, a, b, (a + b) >> 1, pa <= pb && pa <= pc ? a : pb <= pc ? b : c][filter];
-      pixels[y * stride + x] = (line[x] + predictor) & 255;
-    }
-  }
-  return { width, height, at: (x, y) => [...pixels.subarray(y * stride + x * channels, y * stride + x * channels + 3)] };
-}
 
 test('the sheet stacks one viewport-sized shot per screen with a gap between', () => {
   assert.equal(sheetHeight(3), 3 * VIEWPORT.height + 2 * GAP);
@@ -57,7 +33,7 @@ const page = `<!doctype html><html><head><style>
   body { margin: 0 } section { height: 100vh } #hero { background: rgb(255,0,0) }
   #reveal { background: rgb(255,255,255); transition: background .3s } #reveal.in { background: rgb(0,160,0) }
   #last { background: rgb(0,0,255) }
-</style></head><body><section id="hero"></section><section id="reveal"></section><section id="last"></section>
+</style></head><body><section id="hero"><button style="margin:20px">Explore</button></section><section id="reveal"></section><section id="last"></section>
 <script>new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('in')), { threshold: .5 }).observe(document.getElementById('reveal'))</script>
 </body></html>`;
 
@@ -66,8 +42,10 @@ test('each screen is one viewport, reached by scrolling, after scroll reveals ra
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'capture-test-'));
   try {
-    const { file, offsets } = await captureScreens(`http://127.0.0.1:${server.address().port}/`, path.join(dir, 'site.png'), { chrome, settle: 600, intro: 300, args: sandbox });
+    const { file, offsets, gate, canvas } = await captureScreens(`http://127.0.0.1:${server.address().port}/`, path.join(dir, 'site.png'), { chrome, settle: 600, intro: 300, args: sandbox });
     assert.deepEqual(offsets, [0, 800, 1600]);
+    assert.equal(gate, null, 'a button on a page that scrolls is not an entry gate');
+    assert.equal(canvas, null);
     const png = decodePng(await fs.readFile(file));
     assert.deepEqual([png.width, png.height], [1280, sheetHeight(3)]);
     const middle = screen => png.at(640, screen * (VIEWPORT.height + GAP) + 400);
@@ -158,5 +136,48 @@ test('a page that never finishes loading is captured as it stands when the budge
     assert.deepEqual(offsets, [0, 800, 1600]);
     assert.ok(Date.now() - started < 30000, 'bounded by the budget, not by the page');
     assert.deepEqual(decodePng(await fs.readFile(file)).at(640, 400), [255, 0, 0]);
+  } finally { site.close(); await fs.rm(dir, { recursive: true, force: true }); }
+});
+
+test('a canvas counts as drawn once more than a flat colour shows', () => {
+  const image = (w, h, colour) => ({ width: w, height: h, at: (x, y) => colour(x, y) });
+  assert.equal(drawn(image(96, 60, () => [0, 0, 0])), false, 'a black scene still loading');
+  assert.equal(drawn(image(96, 60, (x, y) => (x < 2 && y < 2 ? [255, 255, 255] : [0, 0, 0]))), false, 'a few pixels of noise');
+  assert.equal(drawn(image(96, 60, x => (x < 48 ? [200, 30, 30] : [0, 0, 0]))), true);
+});
+
+// A DAY (#356) showed only "Cannot read properties of null (reading 'getSupportedExtensions')": headless Chrome had no WebGL.
+// This scene needs WebGL and draws only after a delay; the first screen must wait for it and show it.
+test('a WebGL scene renders and is shot once it has drawn', { skip: !chrome && 'no Chrome on this machine', timeout: 90000 }, async () => {
+  const scene = `<!doctype html><html><body style="margin:0;background:#000"><canvas id="c" width="1280" height="800" style="display:block;width:100vw;height:100vh"></canvas>
+<script>const gl = document.getElementById('c').getContext('webgl', { preserveDrawingBuffer: true }); document.title = gl ? 'webgl' : 'none';
+setTimeout(() => { if (!gl) return; gl.clearColor(1, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT); gl.enable(gl.SCISSOR_TEST); gl.scissor(0, 0, 640, 800); gl.clearColor(0, 0, 1, 1); gl.clear(gl.COLOR_BUFFER_BIT); }, 2500);</script></body></html>`;
+  const site = await serve((req, res) => { res.writeHead(200, { 'content-type': 'text/html' }); res.end(scene); });
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'capture-test-'));
+  try {
+    const { file, canvas } = await captureScreens(site.url, path.join(dir, 'site.png'), fast);
+    assert.equal(canvas, 'drawn');
+    const png = decodePng(await fs.readFile(file));
+    assert.deepEqual(png.at(320, 400), [0, 0, 255]);
+    assert.deepEqual(png.at(960, 400), [255, 0, 0]);
+  } finally { site.close(); await fs.rm(dir, { recursive: true, force: true }); }
+});
+
+// Rinat Seif (#356) showed its "Enter with sound / Without" gate on all three screens. The silent choice is clicked once.
+test('a full-screen entry gate is clicked once, on its silent choice', { skip: !chrome && 'no Chrome on this machine', timeout: 90000 }, async () => {
+  const gated = page.replace('<script>', `<div id="gate" style="position:fixed;inset:0;background:#000;display:flex;gap:40px;align-items:center;justify-content:center">
+<span id="loud" style="cursor:pointer;color:#fff">Enter with sound</span><span id="quiet" style="cursor:pointer;color:#fff">Without</span></div>
+<script>document.body.style.overflow = 'hidden';
+for (const [id, colour] of [['loud', 'rgb(255,255,0)'], ['quiet', 'rgb(255,0,0)']]) document.getElementById(id).addEventListener('click', () => {
+  document.getElementById('gate').remove(); document.body.style.overflow = ''; document.getElementById('hero').style.background = colour; });</script><script>`);
+  const site = await serve((req, res) => { res.writeHead(200, { 'content-type': 'text/html' }); res.end(gated); });
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'capture-test-'));
+  try {
+    const { file, gate, offsets } = await captureScreens(site.url, path.join(dir, 'site.png'), fast);
+    assert.equal(gate, 'Without');
+    assert.deepEqual(offsets, [0, 800, 1600]);
+    const png = decodePng(await fs.readFile(file));
+    assert.deepEqual(png.at(640, 400), [255, 0, 0], 'the hero behind the gate, entered without sound');
+    assert.deepEqual(png.at(640, 2 * (VIEWPORT.height + GAP) + 400), [0, 0, 255]);
   } finally { site.close(); await fs.rm(dir, { recursive: true, force: true }); }
 });
