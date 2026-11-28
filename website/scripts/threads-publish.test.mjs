@@ -65,6 +65,37 @@ test('a run records every decision, adds the preview, and keeps unreadable sites
   assert.match(report(result), /Accepted 1, rejected 5, left pending 1/);
 });
 
+test('only a complete capture can turn a negative verdict into a rejection', async t => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'tp-late-'));
+  t.after(() => fs.rm(dir, { recursive: true, force: true }));
+  const inbox = path.join(dir, 'inbox.json'), data = path.join(dir, 'data.ts'), previews = path.join(dir, 'previews.json');
+  const candidates = ['late', 'complete', 'timeout'].map(id => cand(id, `https://${id}.example/`));
+  await fs.writeFile(inbox, JSON.stringify({ candidates }));
+  await fs.writeFile(data, source);
+  await fs.writeFile(previews, '{}');
+  const negative = { accept: false, reason: 'Only one screen of content.' };
+  const asked = [];
+  const io = {
+    page: async url => ({ status: 200, url, html }),
+    screenshot: url => {
+      if (url.includes('timeout')) throw new Error('Chrome stopped answering');
+      return { file: '/s.png', moved: [null, false, false], late: url.includes('late') };
+    },
+    ask: prompt => { asked.push(prompt); return JSON.stringify(negative); },
+  };
+  const result = await run({ inbox, data, previews, io });
+  assert.equal(asked.length, 2);
+  const stored = JSON.parse(await fs.readFile(inbox, 'utf8')).candidates;
+  assert.deepEqual(stored[0], candidates[0], 'an incomplete capture does not write a decision');
+  assert.equal(stored[1].status, 'rejected');
+  assert.equal(stored[1].reason, negative.reason);
+  assert.deepEqual(stored[2], candidates[2], 'capture errors still stay pending');
+  assert.deepEqual(result.entries, []);
+  assert.deepEqual(result.rejected, [['@u complete', negative.reason]]);
+  assert.match(result.kept[0][1], /needs a complete retry/);
+  assert.deepEqual(result.kept[1], ['@u timeout', 'Chrome stopped answering']);
+});
+
 test('a dry run, and two posts for one site, publish once and write nothing', async () => {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'tp-test-'));
   const inbox = path.join(dir, 'inbox.json'), data = path.join(dir, 'data.ts'), previews = path.join(dir, 'previews.json');
