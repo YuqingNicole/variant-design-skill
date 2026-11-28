@@ -373,7 +373,9 @@
       "title": "Bucks Sauce",
       "publishedAt": "2026-11-26T06:00:00.000Z",
       "foundAt": "2026-11-26T07:00:08.427Z",
-      "status": "pending"
+      "status": "rejected",
+      "reason": "The site answered HTTP 429",
+      "reviewedAt": "2026-11-28"
     },
     {
       "id": "csswinner-uxcrunch-co-uk",
@@ -384,7 +386,9 @@
       "title": "UX Crunch",
       "publishedAt": "2026-11-16T00:00:00.000Z",
       "foundAt": "2026-11-26T07:00:08.427Z",
-      "status": "pending"
+      "status": "published",
+      "entry": "uxcrunch-co",
+      "reviewedAt": "2026-11-28"
     },
     {
       "id": "onepagelove-seifrinat-com",
@@ -395,7 +399,9 @@
       "title": "Rinat Seif",
       "publishedAt": "2026-11-24T10:39:41.000Z",
       "foundAt": "2026-11-26T07:00:08.427Z",
-      "status": "pending"
+      "status": "rejected",
+      "reason": "All three screens show the same sound-choice entry gate (\"Enter with sound\" / \"Without\"), so the page never got past its intro and there is only one screen of content.",
+      "reviewedAt": "2026-11-28"
     },
     {
       "id": "minimalgallery-dontmatter-eu",
@@ -406,7 +412,9 @@
       "title": "DontMatter",
       "publishedAt": "2026-11-25T22:30:07.000Z",
       "foundAt": "2026-11-26T07:00:08.427Z",
-      "status": "pending"
+      "status": "published",
+      "entry": "dontmatter",
+      "reviewedAt": "2026-11-28"
     },
     {
       "id": "mindsparkle-farmminerals-com",
@@ -417,7 +425,9 @@
       "title": "Farm Minerals",
       "publishedAt": "2026-11-25T06:00:00.000Z",
       "foundAt": "2026-11-26T07:00:08.427Z",
-      "status": "pending"
+      "status": "published",
+      "entry": "farmminerals",
+      "reviewedAt": "2026-11-28"
     },
     {
       "id": "csswinner-psychoactive-co-nz",
@@ -428,8 +438,95 @@
       "title": "Psychoactive Studios",
       "publishedAt": "2026-11-16T00:00:00.000Z",
       "foundAt": "2026-11-26T07:00:08.427Z",
+      "status": "published",
+      "entry": "psychoactive-co",
+      "reviewedAt": "2026-11-28"
+    },
+    {
+      "id": "onepagelove-mannadesign-net",
+      "source": "onepagelove",
+      "sourceName": "One Page Love",
+      "url": "https://onepagelove.com/manna",
+      "link": "https://www.mannadesign.net/",
+      "title": "Manna",
+      "publishedAt": "2026-11-27T10:31:53.000Z",
+      "foundAt": "2026-11-28T07:00:23.541Z",
+      "status": "published",
+      "entry": "mannadesign",
+      "reviewedAt": "2026-11-28"
+    },
+    {
+      "id": "minimalgallery-slowrat-com",
+      "source": "minimalgallery",
+      "sourceName": "Minimal Gallery",
+      "url": "https://minimal.gallery/slowrat/",
+      "link": "https://slowrat.com/",
+      "title": "SLOWRAT",
+      "publishedAt": "2026-11-27T22:31:39.000Z",
+      "foundAt": "2026-11-28T07:00:23.541Z",
+      "status": "published",
+      "entry": "slowrat",
+      "reviewedAt": "2026-11-28"
+    },
+    {
+      "id": "csswinner-aday-daikifujita-com",
+      "source": "csswinner",
+      "sourceName": "CSS Winner",
+      "url": "https://www.csswinner.com/details/a-day-seasons-of-youth/19596/",
+      "link": "https://aday.daikifujita.com/",
+      "title": "A DAY -- Seasons of Youth",
+      "publishedAt": "2026-11-21T00:00:00.000Z",
+      "foundAt": "2026-11-28T07:00:23.541Z",
+      "status": "rejected",
+      "reason": "The page didn't render: all three screens are black and show only the JavaScript error \"Cannot read properties of null (reading 'getSupportedExtensions')\", so there's no design to study.",
+      "reviewedAt": "2026-11-28"
+    },
+    {
+      "id": "onepagelove-muesli-ing",
+      "source": "onepagelove",
+      "sourceName": "One Page Love",
+      "url": "https://onepagelove.com/muesli",
+      "link": "https://www.muesli.ing/",
+      "title": "Muesli",
+      "publishedAt": "2026-11-26T10:30:30.000Z",
+      "foundAt": "2026-11-28T07:00:23.541Z",
+      "status": "published",
+      "entry": "muesli",
+      "reviewedAt": "2026-11-28"
+    },
+    {
+      "id": "minimalgallery-dada-montreal-ca",
+      "source": "minimalgallery",
+      "sourceName": "Minimal Gallery",
+      "url": "https://minimal.gallery/dada-2026/",
+      "link": "https://dada-montreal.ca/",
+      "title": "DADA 2026",
+      "publishedAt": "2026-11-27T22:30:10.000Z",
+      "foundAt": "2026-11-28T07:00:23.541Z",
+      "status": "pending"
+    },
+    {
+      "id": "csswinner-seeingdouble-beer",
+      "source": "csswinner",
+      "sourceName": "CSS Winner",
+      "url": "https://www.csswinner.com/details/seeing-double/19590/",
+      "link": "https://seeingdouble.beer/",
+      "title": "Seeing Double",
+      "publishedAt": "2026-11-20T00:00:00.000Z",
+      "foundAt": "2026-11-28T07:00:23.541Z",
+      "status": "pending"
+    },
+    {
+      "id": "minimalgallery-mareksevcik-com",
+      "source": "minimalgallery",
+      "sourceName": "Minimal Gallery",
+      "url": "https://minimal.gallery/marek-sevcik/",
+      "link": "https://mareksevcik.com/",
+      "title": "Marek Ševčík",
+      "publishedAt": "2026-11-26T22:31:27.000Z",
+      "foundAt": "2026-11-28T07:00:23.541Z",
       "status": "pending"
     }
   ],
-  "updatedAt": "2026-11-26T07:00:27.124Z"
+  "updatedAt": "2026-11-28T07:00:33.455Z"
 }
