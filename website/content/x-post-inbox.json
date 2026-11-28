@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-28T15:00:00.000Z",
+  "updatedAt": "2026-11-28T15:15:00.000Z",
   "source": "Ego Lite on X search",
   "reviewPolicy": "Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request that merges itself once CI passes; nobody reviews entries one by one.",
   "candidates": [
@@ -3908,6 +3908,681 @@
       "status": "rejected",
       "reason": "A 3.6s fragment with no context; completeness 1.",
       "reviewedAt": "2026-11-28"
+    },
+    {
+      "id": "2087142461835506120",
+      "url": "https://x.com/kevinbparry/status/2087142461835506120",
+      "handle": "kevinbparry",
+      "author": "Kevin Parry",
+      "publishedAt": "2026-08-11T11:41:54.000Z",
+      "likes": 17217,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "published",
+      "entry": "x-kevinbparry-506120",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 5,
+        "completeness": 4,
+        "craft": 4,
+        "originality": 5,
+        "shareability": 5,
+        "total": 36,
+        "notes": "idea: a ball that grows with each pass, readable in one second; completeness: a clean build to a payoff in 15s; craft: invisible swaps; his own act; shareability: 17K likes"
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "accept",
+        "total": 36,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 5,
+          "completeness": 4,
+          "craft": 4,
+          "originality": 5,
+          "shareability": 5
+        },
+        "ai": {
+          "generated": false
+        },
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2078349268394590484",
+      "url": "https://x.com/seevua/status/2078349268394590484",
+      "handle": "seevua",
+      "author": "カズヤシバタ(KAZUYA SHIBATA)",
+      "publishedAt": "2026-07-18T05:20:54.000Z",
+      "likes": 10465,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "published",
+      "entry": "x-seevua-590484",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 5,
+        "completeness": 4,
+        "craft": 4,
+        "originality": 5,
+        "shareability": 5,
+        "total": 36,
+        "notes": "idea: a machine for the summer shirt-flap, deadpan and useless; completeness: demo, close-up of the mechanism, title card; craft: a neat working build; from his own invention series"
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "accept",
+        "total": 36,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 5,
+          "completeness": 4,
+          "craft": 4,
+          "originality": 5,
+          "shareability": 5
+        },
+        "ai": {
+          "generated": false
+        },
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2107497388919374257",
+      "url": "https://x.com/measure_plan/status/2107497388919374257",
+      "handle": "measure_plan",
+      "author": "AA",
+      "publishedAt": "2026-10-06T15:45:07.000Z",
+      "likes": 18072,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "published",
+      "entry": "x-measure_plan-374257",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 4,
+        "completeness": 4,
+        "craft": 4,
+        "originality": 4,
+        "shareability": 4,
+        "total": 32,
+        "notes": "idea: a dance track built out of math functions; completeness: a full 66s build-up; craft: the graph and the sound stay in step; shareability: 18K likes"
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "accept",
+        "total": 32,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 4,
+          "completeness": 4,
+          "craft": 4,
+          "originality": 4,
+          "shareability": 4
+        },
+        "ai": {
+          "generated": false
+        },
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2112447070502355354",
+      "url": "https://x.com/dustman_tips/status/2112447070502355354",
+      "handle": "dustman_tips",
+      "author": "ダストマン",
+      "publishedAt": "2026-10-20T07:33:23.000Z",
+      "likes": 551,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "published",
+      "entry": "x-dustman_tips-355354",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 5,
+        "completeness": 4,
+        "craft": 4,
+        "originality": 4,
+        "shareability": 5,
+        "total": 35,
+        "notes": "idea: rescue a stuck boar in AR, a kind joke; completeness: opens the AR page, boar climbs out and stands in the street; craft: convincing scale and lighting in real footage; shown on their own company AR page, not sold"
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "accept",
+        "total": 35,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 5,
+          "completeness": 4,
+          "craft": 4,
+          "originality": 4,
+          "shareability": 5
+        },
+        "ai": {
+          "generated": false
+        },
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2126262732727218571",
+      "url": "https://x.com/JDGE180112/status/2126262732727218571",
+      "handle": "JDGE180112",
+      "author": "ＪＤＧＥ",
+      "publishedAt": "2026-11-27T10:31:54.000Z",
+      "likes": 44892,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "published",
+      "entry": "x-jdge180112-218571",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 4,
+        "completeness": 3,
+        "craft": 5,
+        "originality": 4,
+        "shareability": 5,
+        "total": 33,
+        "notes": "idea: breath on cold hands turns into dragon fire; completeness: a short gag with a payoff and an end card, under 5s; craft: clean drawing and fire effects; their own characters, reposted by the author; shareability: 45K likes"
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "accept",
+        "total": 33,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 4,
+          "completeness": 3,
+          "craft": 5,
+          "originality": 4,
+          "shareability": 5
+        },
+        "ai": {
+          "generated": false
+        },
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2115451938691289494",
+      "url": "https://x.com/studioNY3/status/2115451938691289494",
+      "handle": "studioNY3",
+      "author": "NY studio（ゆうじろー）",
+      "publishedAt": "2026-10-28T14:33:40.000Z",
+      "likes": 7536,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "published",
+      "entry": "x-studiony3-289494",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 4,
+        "completeness": 4,
+        "craft": 4,
+        "originality": 4,
+        "shareability": 4,
+        "total": 32,
+        "notes": "idea: a whole world about tossing fried rice; completeness: a released world with scoring; craft: lively rice and flame motion; shareability: 7.5K likes"
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "accept",
+        "total": 32,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 4,
+          "completeness": 4,
+          "craft": 4,
+          "originality": 4,
+          "shareability": 4
+        },
+        "ai": {
+          "generated": false
+        },
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2107764940954091531",
+      "url": "https://x.com/akella/status/2107764940954091531",
+      "handle": "akella",
+      "author": "akella",
+      "publishedAt": "2026-10-07T09:28:16.000Z",
+      "likes": 10767,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "rejected",
+      "reason": "Below the bar (28/40): a 4s loop that animates M.C. Escher's own Sky and Water; the design is Escher's.",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 4,
+        "completeness": 3,
+        "craft": 4,
+        "originality": 2,
+        "shareability": 4,
+        "total": 28
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "review",
+        "total": 28,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 4,
+          "completeness": 3,
+          "craft": 4,
+          "originality": 2,
+          "shareability": 4
+        },
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2117940574112436323",
+      "url": "https://x.com/nishiibe/status/2117940574112436323",
+      "handle": "nishiibe",
+      "author": "ニスィーベ",
+      "publishedAt": "2026-11-04T11:22:36.000Z",
+      "likes": 41472,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "rejected",
+      "reason": "Veto shock: a strong idea (a game that scolds you unless peanuts and pistachios alternate), but a giant hand slams the figure down with red splatter.",
+      "reviewedAt": "2026-11-28",
+      "screening": {
+        "rubric": "video",
+        "band": "reject",
+        "total": null,
+        "max": 40,
+        "vetoes": [
+          "shock"
+        ],
+        "scores": {},
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2108621262130221321",
+      "url": "https://x.com/MoonshineKim/status/2108621262130221321",
+      "handle": "MoonshineKim",
+      "author": "MOONSHINE",
+      "publishedAt": "2026-10-09T18:10:59.000Z",
+      "likes": 14235,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "rejected",
+      "reason": "Veto promo: action-figure stop motion that ends on a product pledge page.",
+      "reviewedAt": "2026-11-28",
+      "screening": {
+        "rubric": "video",
+        "band": "reject",
+        "total": null,
+        "max": 40,
+        "vetoes": [
+          "promo"
+        ],
+        "scores": {},
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2109261747664371911",
+      "url": "https://x.com/beigesthetic_/status/2109261747664371911",
+      "handle": "beigesthetic_",
+      "author": "Beige",
+      "publishedAt": "2026-10-11T12:36:03.000Z",
+      "likes": 4344,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "rejected",
+      "reason": "Below the bar (29/40): a maid working a retro diner from day to neon night; good-looking, no idea beyond the mood.",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 3,
+        "completeness": 4,
+        "craft": 4,
+        "originality": 4,
+        "shareability": 3,
+        "total": 29
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "review",
+        "total": 29,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 3,
+          "completeness": 4,
+          "craft": 4,
+          "originality": 4,
+          "shareability": 3
+        },
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2115054315094348233",
+      "url": "https://x.com/beigesthetic_/status/2115054315094348233",
+      "handle": "beigesthetic_",
+      "author": "Beige",
+      "publishedAt": "2026-10-27T12:13:39.000Z",
+      "likes": 3625,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "rejected",
+      "reason": "Below the bar (25/40): a band playing in a field and on a platform; a mood piece, idea 2.",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 2,
+        "completeness": 3,
+        "craft": 4,
+        "originality": 4,
+        "shareability": 3,
+        "total": 25
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "reject",
+        "total": 25,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 2,
+          "completeness": 3,
+          "craft": 4,
+          "originality": 4,
+          "shareability": 3
+        },
+        "below": [
+          "idea"
+        ],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2117422058254762339",
+      "url": "https://x.com/tsumiki_room/status/2117422058254762339",
+      "handle": "tsumiki_room",
+      "author": "TsumikiRoom / ツミキルーム",
+      "publishedAt": "2026-11-03T01:02:13.000Z",
+      "likes": 2970,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "rejected",
+      "reason": "Below the bar (29/40): WebGL holographic foil that uses phone tilt and the front camera as a fake reflection; a neat test, not a finished piece.",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 4,
+        "completeness": 3,
+        "craft": 4,
+        "originality": 4,
+        "shareability": 3,
+        "total": 29
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "review",
+        "total": 29,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 4,
+          "completeness": 3,
+          "craft": 4,
+          "originality": 4,
+          "shareability": 3
+        },
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2126488750695882914",
+      "url": "https://x.com/syaimeiri/status/2126488750695882914",
+      "handle": "syaimeiri",
+      "author": "シャイメイ理",
+      "publishedAt": "2026-11-28T01:30:01.000Z",
+      "likes": 5788,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "rejected",
+      "reason": "Below the bar (29/40): a calm VRChat shrimp-tank world; well made, little idea.",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 3,
+        "completeness": 4,
+        "craft": 4,
+        "originality": 4,
+        "shareability": 3,
+        "total": 29
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "review",
+        "total": 29,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 3,
+          "completeness": 4,
+          "craft": 4,
+          "originality": 4,
+          "shareability": 3
+        },
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2088673046643048871",
+      "url": "https://x.com/Nicolas_Loizeau/status/2088673046643048871",
+      "handle": "Nicolas_Loizeau",
+      "author": "Nicolas Loizeau",
+      "publishedAt": "2026-08-15T17:03:54.000Z",
+      "likes": 5151,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "rejected",
+      "reason": "Below the bar (28/40): a Z80 chip's circuit lighting up as it multiplies, from the Visual6502 project's data.",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 4,
+        "completeness": 3,
+        "craft": 4,
+        "originality": 3,
+        "shareability": 3,
+        "total": 28
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "review",
+        "total": 28,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 4,
+          "completeness": 3,
+          "craft": 4,
+          "originality": 3,
+          "shareability": 3
+        },
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2093557017860526193",
+      "url": "https://x.com/picassotrigger8/status/2093557017860526193",
+      "handle": "picassotrigger8",
+      "author": "✨内田清輝・グ弍✨",
+      "publishedAt": "2026-08-29T04:31:04.000Z",
+      "likes": 1587,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "rejected",
+      "reason": "Below the bar (28/40): a TV that grows a face and flies off; rough drawing, the story does not land.",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 4,
+        "completeness": 3,
+        "craft": 3,
+        "originality": 5,
+        "shareability": 3,
+        "total": 28
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "review",
+        "total": 28,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 4,
+          "completeness": 3,
+          "craft": 3,
+          "originality": 5,
+          "shareability": 3
+        },
+        "below": [],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2104127176572616723",
+      "url": "https://x.com/sol_hana1/status/2104127176572616723",
+      "handle": "sol_hana1",
+      "author": "Hana",
+      "publishedAt": "2026-09-27T08:33:06.000Z",
+      "likes": 5054,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "rejected",
+      "reason": "Below the bar (24/40): cuts from a scrapped project; completeness 2.",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 3,
+        "completeness": 2,
+        "craft": 4,
+        "originality": 3,
+        "shareability": 3,
+        "total": 24
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "reject",
+        "total": 24,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 3,
+          "completeness": 2,
+          "craft": 4,
+          "originality": 3,
+          "shareability": 3
+        },
+        "below": [
+          "completeness"
+        ],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2124701472642506828",
+      "url": "https://x.com/waltinjapan00/status/2124701472642506828",
+      "handle": "waltinjapan00",
+      "author": "walt.",
+      "publishedAt": "2026-11-23T03:08:00.000Z",
+      "likes": 1378,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "rejected",
+      "reason": "Below the bar (23/40): a photoreal jungle dock render with no idea.",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 2,
+        "completeness": 3,
+        "craft": 4,
+        "originality": 3,
+        "shareability": 2,
+        "total": 23
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "reject",
+        "total": 23,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 2,
+          "completeness": 3,
+          "craft": 4,
+          "originality": 3,
+          "shareability": 2
+        },
+        "below": [
+          "idea"
+        ],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
+    },
+    {
+      "id": "2090102864240632107",
+      "url": "https://x.com/chev3d/status/2090102864240632107",
+      "handle": "chev3d",
+      "author": "chev",
+      "publishedAt": "2026-08-19T15:45:29.000Z",
+      "likes": 1668,
+      "capturedAt": "2026-11-28T15:15:00.000Z",
+      "query": "hand-curated, second batch: author list, who library makers follow, keyword sweeps (2026-11-28)",
+      "status": "rejected",
+      "reason": "Below the bar (22/40): a 2.8s rigid-body test shot.",
+      "reviewedAt": "2026-11-28",
+      "scores": {
+        "idea": 2,
+        "completeness": 2,
+        "craft": 4,
+        "originality": 3,
+        "shareability": 3,
+        "total": 22
+      },
+      "screening": {
+        "rubric": "video",
+        "band": "reject",
+        "total": 22,
+        "max": 40,
+        "vetoes": [],
+        "scores": {
+          "idea": 2,
+          "completeness": 2,
+          "craft": 4,
+          "originality": 3,
+          "shareability": 3
+        },
+        "below": [
+          "idea",
+          "completeness"
+        ],
+        "at": "2026-11-28T15:15:00.000Z"
+      }
     }
   ]
 }
