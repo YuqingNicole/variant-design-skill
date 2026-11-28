@@ -1,19 +1,16 @@
 :root{--ease-out:cubic-bezier(.22,1,.36,1);--dur-press:160ms;--dur-fast:140ms;--dur-base:200ms;--dur-slow:340ms}
 :is(.paper-home,.pricing-page,.site-workbench,.content-page,.site-language-notice,.site-tabbar){--site-paper:#f6f3ec;--site-surface:#ebe7de;--site-ink:#1d1f23;--site-muted:#5a5852;--site-line:rgba(29,31,35,.15);--site-accent:#e8e4da;--site-card:#fbf9f4;--site-brand:var(--site-ink);--site-wash:#e0dbd0;--site-surface-2:#e2ded4;--site-on-ink:#f6f3ec;--site-hot:#c42a3c;--site-on-hot:#fff;--fill-1:rgba(251,249,244,.9);--fill-2:rgba(251,249,244,.72);--fill-3:rgba(29,31,35,.04);--fill-4:rgba(29,31,35,.02);--edge:var(--site-line);--site-scrim:rgba(29,31,35,.4);--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:24px;--space-6:32px;--space-7:48px;--radius-control:6px;--radius-card:8px;--radius-panel:12px;--radius-pill:999px;--color-paper:var(--site-paper);--color-surface:var(--site-surface);--color-ink:var(--site-ink);--color-muted:var(--site-muted);--color-line:#2528221c;--color-line-strong:#25282240;--font-serif:"Hanken Grotesk Variable","PingFang SC","Microsoft YaHei",sans-serif;--font-display:"Newsreader Variable","PingFang SC","Hiragino Sans GB","Microsoft YaHei",serif;--font-mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;color:var(--site-ink);background:var(--site-paper);font-family:var(--font-serif);line-height:1.65;-webkit-font-smoothing:antialiased}
 html:has(:is(.pricing-page,.site-workbench,.content-page,.paper-home)){color-scheme:light dark;background:#f6f3ec}
-.site-shell{width:min(1280px,calc(100% - 96px));margin-inline:auto}.site-nav{height:94px;display:flex;align-items:center;justify-content:space-between;gap:28px}.site-wordmark{display:flex;align-items:center;gap:7px;text-decoration:none;font-size:23px;letter-spacing:-1px;white-space:nowrap;color:var(--site-ink)!important}.site-brandmark{display:block;flex-shrink:0;object-fit:contain}.site-wordmark{gap:9px}.site-footer-brand{display:inline-flex;align-items:center;gap:9px}.site-footer-brand .site-credit{color:var(--site-muted)}.site-footer{align-items:flex-start}.site-wordmark-light{color:var(--site-muted)}.site-nav-links{display:flex;gap:32px;font-size:14px}.site-nav-links a{text-decoration:none;color:var(--site-ink)}.site-nav-links a[aria-current=page]{text-decoration:underline;text-underline-offset:6px}.site-language{border:0;border-radius:var(--radius-control);padding:8px 0 8px 12px;font-size:14px;background:transparent;min-height:44px;cursor:pointer;color:var(--site-ink);font-family:inherit}.site-footer{display:flex;justify-content:space-between;gap:24px;padding:25px 0;border-top:1px solid var(--site-line);font-size:13px;color:var(--site-muted)}.site-footer a{color:inherit;text-decoration:none}.site-footer>div{display:flex;gap:24px}:is(.site-nav,.site-footer) :is(a,button):focus-visible{outline:2px solid var(--site-brand);outline-offset:4px}
+.site-shell{width:min(1280px,calc(100% - 96px));margin-inline:auto}.site-nav{height:94px;display:flex;align-items:center;justify-content:space-between;gap:28px}.site-wordmark{display:flex;align-items:center;gap:7px;text-decoration:none;font-size:23px;letter-spacing:-1px;white-space:nowrap;color:var(--site-ink)!important}.site-brandmark{display:block;flex-shrink:0;object-fit:contain}.site-wordmark{gap:9px}.site-wordmark-light{color:var(--site-muted)}.site-nav-links{display:flex;gap:32px;font-size:14px}.site-nav-links a{text-decoration:none;color:var(--site-ink)}.site-nav-links a[aria-current=page]{text-decoration:underline;text-underline-offset:6px}.site-language{border:0;border-radius:var(--radius-control);padding:8px 0 8px 12px;font-size:14px;background:transparent;min-height:44px;cursor:pointer;color:var(--site-ink);font-family:inherit}:is(.site-nav,.site-footer) :is(a,button):focus-visible{outline:2px solid var(--site-brand);outline-offset:4px}
 @media(max-width:800px){.site-shell{width:calc(100% - 40px)}.site-nav{height:76px;gap:12px}.site-wordmark{font-size:18px}.site-nav-links{gap:16px;font-size:12px}}
-@media(max-width:480px){.site-shell{width:calc(100% - 32px)}.site-nav-links{gap:12px}.site-nav-links>a:first-child{display:none}.site-footer{flex-direction:column;gap:20px}}
+@media(max-width:480px){.site-shell{width:calc(100% - 32px)}.site-nav-links{gap:12px}.site-nav-links>a:first-child{display:none}}
 
 @media(max-width:800px){.site-wordmark .site-brandmark{width:32px;height:32px}}
-@media(max-width:480px){.site-footer{align-items:flex-start}}
-.site-footer>div{flex-wrap:wrap;row-gap:12px}
 @media(max-width:480px){.site-nav{gap:10px}.site-nav .site-wordmark{font-size:16px;gap:6px}.site-nav .site-brandmark{width:28px;height:28px}.site-nav-links{font-size:11px;gap:10px}.site-language{font-size:12px;padding:8px 0 8px 8px;flex-shrink:0}}
 @media(max-width:650px){.site-nav-links{overflow-x:auto;white-space:nowrap;min-width:0;scrollbar-width:none}.site-nav-links::-webkit-scrollbar{display:none}.site-nav-links>a:first-child{display:block}.site-wordmark{flex-shrink:0}}
 
 /* Browser surfaces carry the palette: selection, caret, native controls and keyboard focus. */
 .content-page ::selection{background:var(--site-surface);color:var(--site-ink)}.content-page{caret-color:var(--site-ink);accent-color:var(--site-ink)}.content-page :focus-visible{outline:2px solid var(--site-ink);outline-offset:2px}
-.site-footer{flex-wrap:wrap}
 @media(prefers-reduced-motion:no-preference){@view-transition{navigation:auto}}
 .vt-cross [style*=view-transition-name]{view-transition-name:none!important}
 ::view-transition-group(*){animation-duration:var(--dur-slow);animation-timing-function:var(--ease-out)}::view-transition-old(root),::view-transition-new(root){animation-duration:var(--dur-base)}
@@ -26,33 +23,41 @@ a.site-language{display:inline-flex;align-items:center;justify-content:center;te
 /* Phones: header links stay on one row but get 44px-tall touch targets and text that grows with the screen
    (12px at 320 wide, 14px from about 400). Padding replaces the gap so the tap areas meet instead of leaving dead space. */
 @media(max-width:650px){.site-nav{padding-block:var(--space-2) 0;row-gap:0}.site-nav-links{gap:0;font-size:clamp(12px,3.5vw,14px);margin-inline:-3px}.site-nav-links a,.site-nav-links>a:first-child{display:inline-flex;align-items:center;min-height:44px;padding-inline:3px}}
-/* Phones: footer links become 44px-tall touch targets on wrapping rows. */
-@media(max-width:650px){.site-footer>div{flex-wrap:wrap;gap:0 18px}.site-footer>div a{display:inline-flex;align-items:center;min-height:44px}}
 
 .site-nav-divider{width:1px;height:14px;background:var(--site-line,var(--site-surface));align-self:center}
-.site-footer-groups{display:grid!important;grid-template-columns:repeat(4,auto);gap:16px 48px!important}
-.site-footer-groups nav{display:flex;flex-direction:column;gap:8px}
-.site-footer-groups b{font-weight:500;color:var(--site-ink,var(--site-ink))}
-@media(max-width:800px){.site-nav-divider{display:none}.site-footer-groups{grid-template-columns:repeat(2,auto)}}
+@media(max-width:800px){.site-nav-divider{display:none}}
 
-/* The footer closes the browsing experience with one clear invitation, then keeps site links easy to scan. */
-.site-footer{display:block;width:100%;margin:0;padding:0;border:0;font-size:14px;color:var(--site-muted)}
-.site-footer-cta{background:var(--site-accent);border-block:1px solid var(--site-line)}
-.site-footer-cta-inner{min-height:220px;padding-block:48px;display:flex;align-items:center;justify-content:space-between;gap:40px}
-.site-footer-cta h2{max-width:760px;margin:0;text-wrap:balance;font-feature-settings:'halt';color:var(--site-ink);font-family:var(--font-display);font-size:46px;font-weight:500;line-height:1.16;letter-spacing:-.01em}
-.site-footer-copy{max-width:560px;margin:14px 0 0;color:var(--site-muted);font-size:16px;line-height:1.7}
-.site-footer-action{display:inline-flex;align-items:center;justify-content:center;gap:16px;flex:none;min-height:44px;padding:12px 20px;font-size:14px;border-radius:var(--radius-control);background:var(--site-brand);color:var(--site-on-ink)!important;text-decoration:none;font-weight:500}
-.site-footer>.site-footer-bottom{display:block;padding-block:40px 24px}
-.site-footer-main{display:grid;grid-template-columns:minmax(180px,.75fr) 2fr;align-items:start;gap:40px}
-.site-footer-brand{color:var(--site-ink)!important;text-decoration:none;font-size:14px}
-.site-footer-groups{grid-template-columns:repeat(4,minmax(0,1fr));gap:24px!important}
-.site-footer-groups nav{gap:9px}
-.site-footer-groups b{margin-bottom:3px;font-size:14px}
-.site-footer-groups a{width:fit-content;line-height:1.5;text-underline-offset:3px}
-.site-footer-groups a:hover{text-decoration:underline}
-@media(max-width:800px){.site-footer-main{grid-template-columns:1fr;gap:24px}.site-footer-groups{grid-template-columns:repeat(4,minmax(0,1fr))}.site-footer-cta-inner{min-height:260px}}
-@media(max-width:650px){.site-footer-cta-inner{align-items:flex-start;flex-direction:column;justify-content:center;gap:24px;padding-block:48px}.site-footer-cta h2{font-size:36px}.site-footer-copy{font-size:14px}.site-footer-bottom{padding-block:28px 20px}.site-footer-groups{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 24px!important}.site-footer-groups nav{gap:4px}.site-footer-groups b{margin-bottom:0}.site-footer-groups a{min-height:44px;display:inline-flex;align-items:center}}
-@media(max-width:360px){.site-footer-cta-inner{padding-block:40px}}
+/* Footer (docs/design-system.md §7): one solid ink slab that closes every page, the same in light and dark. The tokens flip inside
+   it, so the shared outlined button, links and focus ring read as paper on ink without rules of their own. A thin-serif sign-off,
+   then the brand and the four link groups as five equal columns. No hairlines inside; air does the separating. It stacks above
+   sticky in-page bars (the collection channels, z-index 5) so the slab slides over them at the end of the page. */
+.site-footer{--site-paper:#1d1f23;--site-surface:#26272c;--site-ink:#ece9e1;--site-muted:#a4a29b;--site-line:rgba(236,233,225,.16);--site-brand:#ece9e1;--site-on-ink:#1d1f23;
+ color-scheme:dark;position:relative;z-index:6;display:block;width:100%;margin:0;padding:0;border:0;background:var(--site-paper);color:var(--site-muted);font-size:16px;line-height:1.5}
+.site-footer a{color:inherit;text-decoration:none}
+.site-footer-cta-inner{display:flex;flex-direction:column;align-items:flex-start;gap:32px;padding-block:96px 0}
+.site-footer-cta h2{max-width:none;margin:0;text-wrap:balance;font-feature-settings:'halt';font-synthesis:none;color:var(--site-ink);font-family:var(--font-display);font-size:48px;font-weight:200;line-height:1.1;letter-spacing:-.015em}
+.site-footer-copy{max-width:56ch;margin:16px 0 0;color:var(--site-muted);font-size:16px;line-height:1.6}
+.site-footer-action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 22px;border:1.5px solid var(--site-ink);border-radius:999px;color:var(--site-ink)!important;font-size:16px;font-weight:500}
+.site-footer>.site-footer-bottom{display:block;padding-block:96px}
+.site-footer-cta+.site-footer-bottom{padding-top:80px}
+.site-footer-main{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:start;gap:24px}
+.site-footer-groups{display:contents}
+.site-footer-groups nav{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0}
+.site-footer-groups b{margin-bottom:8px;color:var(--site-ink);font-weight:500}
+.site-footer-brand{display:inline-flex;flex-direction:column;align-items:flex-start;gap:16px;color:var(--site-ink)!important}
+.site-footer-brand .site-brandmark{width:28px;height:28px}
+.site-footer-name{font-family:var(--font-display);font-size:24px;font-weight:400;line-height:1.2;letter-spacing:-.01em}
+.site-footer-brand .site-credit{display:block;margin-top:4px;font-family:var(--font-serif);font-size:13px;letter-spacing:0;color:var(--site-muted)}
+.site-footer-groups a{transition:color var(--dur-fast) var(--ease-out)}
+@media(hover:hover){.site-footer-groups a:hover{color:var(--site-ink)}}
+@media(max-width:1000px){.site-footer-main{grid-template-columns:repeat(4,minmax(0,1fr));row-gap:48px}.site-footer-brand{grid-column:1/-1}}
+@media(max-width:650px){
+ .site-footer-cta-inner{gap:24px;padding-top:64px}.site-footer-cta h2{font-size:32px}
+ .site-footer>.site-footer-bottom{padding-block:64px}.site-footer-cta+.site-footer-bottom{padding-top:56px}
+ .site-footer-main{grid-template-columns:repeat(2,minmax(0,1fr));gap:40px 24px}
+ .site-footer-groups nav{gap:0}.site-footer-groups b{margin-bottom:4px}
+ .site-footer-groups a{display:inline-flex;align-items:center;min-height:44px}
+}
 /* Primary buttons share one finish: an outlined pill that fills with ink on hover (atmosphere.css carries the rule for every page
    on paper). No shadow and no glow; the colour change is the only transition. */
 body :is(.content-button,.paper-button,.site-footer-action,.home-action-primary,.pricing-card.is-accent .pricing-button){box-shadow:none;transition:background-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}

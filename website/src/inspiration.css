@@ -165,7 +165,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .insp-card-meta .insp-vcard-avatar{position:static;display:block;flex:none;width:28px;height:28px;border-radius:50%;border:0}
 .insp-card:is(:hover,:focus-within) .insp-card-meta{opacity:1}
 .inspiration-page .content-closing h2{font-size:28px}.inspiration-page .content-button{border-radius:var(--radius-control);background:var(--site-brand);color:var(--site-paper)!important}
-.inspiration-page .site-footer{font-size:14px}
+
 @media(hover:none){.insp-card-meta{opacity:1}}
 @media(max-width:650px){.inspiration-page .site-nav-links{font-size:12px}.insp-feed{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-5) var(--space-3)}.insp-card-open{overflow:visible;aspect-ratio:auto}.insp-card-open>.insp-thumb,.insp-card-open>.insp-vcard-media{aspect-ratio:16/10;height:auto;overflow:hidden}.insp-card-meta{position:static;opacity:1;padding:var(--space-2) 0 0;background:none}.insp-card-save,.insp-card-out{width:44px;height:44px}.insp-card-out{bottom:auto;top:var(--space-2);left:var(--space-2);right:auto}.insp-card-meta small{font-size:12px}}
 @media(max-width:360px){.insp-feed{grid-template-columns:minmax(0,1fr)}}
@@ -245,9 +245,6 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .inspiration-page .inspiration-count,.inspiration-page .content-closing .content-secondary{font-size:13px}
 .inspiration-page .insp-more button{height:44px;padding:0 22px;background:none;font-size:16px}
 .inspiration-page .content-closing h2{font-size:48px}
-.inspiration-page .site-footer{font-size:13px}
-.inspiration-page .site-footer-groups b{font-size:13px}
-.inspiration-page .site-footer-brand{font-size:13px}
 @media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.inspiration-page .insp-feed .insp-card:hover .insp-card-meta b{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}}
 /* Detail: the study and apply notes read as sentences, the labels as small capitals. */
 .inspiration-page .insp-detail :is(h1,h2){font-size:48px;font-weight:200;line-height:1.05;letter-spacing:-.015em;text-wrap:balance;margin:var(--space-5) 0 var(--space-2)}
@@ -288,7 +285,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
  .inspiration-page .insp-feed .insp-card-save{right:6px}.inspiration-page .insp-feed .insp-card-out{right:56px;left:auto}
 }
 @media(prefers-reduced-motion:reduce){.inspiration-page .inspiration-grid.insp-feed{scroll-behavior:auto}}
-/* The frosted panel carries the footer's links; the green call to action would repeat the closing section above it. */
+/* The feed ends with its own closing section, so the footer's sign-off and button would repeat it; the slab starts with the links. */
 .inspiration-page .site-footer-cta{display:none}
 /* Texture pass (2026-11-15, docs/design-system.md §12.9). Presentation only; the budgets stay: no new shadow value (the well reuses the pills' inset hairline), no gradient, no new radius.
    The sticky filter bar frosts what scrolls under it instead of letting card titles show through its faint tint; at rest it blurs only the panel's own glass, so no band appears. */
@@ -420,7 +417,6 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
  .inspiration-page .insp-feed :is(.insp-thumb,.insp-thumb-fallback) b{font-size:17px}
  .inspiration-page .insp-feed :is(.insp-thumb,.insp-thumb-fallback) :is(span,.insp-thumb-tag){font-size:12px}
  .inspiration-page .content-closing h2{font-size:32px}
- .inspiration-page :is(.site-footer,.site-footer-groups b,.site-footer-brand){font-size:12px}
  .insp-end p{margin:0}.insp-end-links{display:flex;flex-wrap:wrap;gap:0 var(--space-4)}.insp-end a{display:inline-flex;align-items:center;min-height:44px;color:inherit;text-underline-offset:3px}
 }
 /* The smallest phones (320px): the wordmark stays whole (a phone requirement in tests/landing.spec.mjs); the buttons get tighter and,
@@ -494,6 +490,7 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
    on <body> beside the tab bar, borrowing .content-page for colour tokens only, and the feed ends far enough above it. */
 @media(max-width:650px){
  .search-dock.content-page{display:block;position:fixed;left:0;right:0;bottom:calc(56px + env(safe-area-inset-bottom));z-index:25;width:auto;margin:0;transform:none;min-height:0;padding:8px 12px;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:0;border-radius:0;box-shadow:none;pointer-events:none}
+ body:has(.search-dock) .site-footer>.site-footer-bottom{padding-bottom:124px}
  .search-dock .insp-search-open{pointer-events:auto;display:flex;align-items:center;gap:8px;width:100%;height:44px;padding:0 16px;border:1px solid var(--site-line);border-radius:var(--radius-pill);background:var(--site-paper);color:var(--site-ink);font:inherit;font-size:16px;text-align:left;cursor:pointer}
  .search-dock .insp-search-open svg{flex:none;width:18px;height:18px;color:var(--site-muted)}
  .search-dock .insp-search-open span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}

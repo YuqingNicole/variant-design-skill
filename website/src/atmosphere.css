@@ -33,11 +33,7 @@ html body :is(.content-page,.pricing-page,.paper-home) :is(.content-button,.pape
  display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:44px;padding:0 22px;border:1.5px solid var(--site-ink);border-radius:999px;background:transparent;color:var(--site-ink)!important;font-size:16px;font-weight:500;box-shadow:none;transform:none;transition:background-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){html body :is(.content-page,.pricing-page,.paper-home) :is(.content-button,.paper-button,.site-footer-action,.home-action-primary,.pricing-button):is(:hover,:active),html body :is(.content-page,.pricing-page,.paper-home) .pricing-card.is-accent .pricing-button:is(:hover,:active){background:var(--site-ink);color:var(--site-paper)!important;box-shadow:none;transform:none}}
 
-/* Footer: a hairline and air instead of a tinted band. */
-:is(.content-page,.pricing-page,.paper-home) .site-footer-cta{background:none;border-block:0;border-top:1px solid var(--site-line)}
-:is(.content-page,.pricing-page,.paper-home) .site-footer-cta-inner{padding-block:96px}
-:is(.content-page,.pricing-page,.paper-home) .site-footer-cta h2{font-size:48px;font-weight:200;line-height:1.1;letter-spacing:-.015em}
-:is(.content-page,.pricing-page,.paper-home) .site-footer>.site-footer-bottom{border-top:1px solid var(--site-line);padding-block:48px 32px}
+/* The footer is an ink slab with its own tokens; its rules live in site-system.css. */
 
 /* Inner pages: one hero with a thin 48px title and generous air above it. No inner title is larger than the home's (a tested rule). */
 .content-page .content-hero{padding-block:120px 64px}
@@ -52,8 +48,6 @@ html body :is(.content-page,.pricing-page,.paper-home) :is(.content-button,.pape
  :is(.content-page,.pricing-page,.paper-home) .site-nav{height:auto;padding-bottom:4px}
  .content-page .content-hero{padding-block:40px 24px}
  .content-page .content-hero h1{font-size:32px;line-height:1.12}
- :is(.content-page,.pricing-page,.paper-home) .site-footer-cta-inner{padding-block:56px}
- :is(.content-page,.pricing-page,.paper-home) .site-footer-cta h2{font-size:32px}
 }
 
 /* Selects: transparent, a hairline outline and a thin chevron. Chrome's customizable select (appearance: base-select) gives the
