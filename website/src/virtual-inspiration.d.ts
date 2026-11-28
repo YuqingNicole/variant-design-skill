@@ -7,5 +7,6 @@ declare module 'virtual:inspiration/index' {
   export const topics: typeof import('./inspiration-data').inspirationTopics;
 }
 declare module 'virtual:inspiration/initial' { export const items: SplitPart['items']; export const previews: SplitPart['previews']; export const media: SplitPart['media']; }
+declare module 'virtual:inspiration/cards' { export const loadCards: (locale: string) => Promise<SplitPart>; }
 declare module 'virtual:inspiration/loader' { export const loadSection: (id: string) => Promise<SplitPart>; }
 declare module 'virtual:inspiration/sections' { export const active: string[]; }

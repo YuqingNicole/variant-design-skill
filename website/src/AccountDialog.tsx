@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Language } from './direction-engine';
 import { t, type Localized } from './i18n/localized';
-import { closeSignIn, dismissSignIn, deleteAccount, openSignIn, sendSignInLink, signInWithGoogle, signOut, useAccountState } from './account';
+import { closeSignIn, dismissSignIn, deleteAccount, sendSignInLink, signInWithGoogle, signOut, useAccountState } from './account';
 import { localePath } from './i18n/locale-route';
-import './account.css';
-// The sign-in dialog and the header's account control (src/account.ts). Rendered by SiteHeader only when accounts are on.
+import { SignInButton } from './AccountSlot';
+// The sign-in dialog and the signed-in account menu (src/account.ts), loaded on demand by AccountSlot.tsx when accounts are on.
 const m = {
   title: { zh: '登录 Variant Design', en: 'Sign in to Variant Design' },
   save: { zh: '登录后就能收藏这条参考。收藏和你写的笔记保存在账号里，换一台设备也在。', en: 'Sign in to save this reference. Your saves and notes stay with your account, on any device.' },
@@ -21,7 +21,6 @@ const m = {
   privacy: { zh: '我们只保存你的邮箱（用 Google 登录时还有名字和头像）以及你收藏的参考和笔记，用来让你登录、同步收藏，不发营销邮件。可以随时在账号菜单里删除账号。', en: 'We keep only your email (and, with Google, your name and picture) plus the references and notes you save, to sign you in and sync your saves, never for marketing email. You can delete your account any time from the account menu.' },
   privacyLink: { zh: '隐私说明', en: 'Privacy' },
   close: { zh: '关闭', en: 'Close' },
-  signIn: { zh: '登录', en: 'Sign in' },
   account: { zh: '账号', en: 'Account' },
   signOut: { zh: '退出登录', en: 'Sign out' },
   remove: { zh: '删除账号', en: 'Delete account' },
@@ -62,7 +61,8 @@ export function AccountDialog({ language }: { language: Language }) {
   </dialog>;
 }
 
-export function AccountButton({ language }: { language: Language }) {
+// A signed-in visitor's menu; signed out (or while the session loads) it is the plain sign-in button (AccountSlot.tsx).
+export function AccountMenu({ language }: { language: Language }) {
   const { account } = useAccountState();
   const l = (k: Exclude<keyof typeof m, 'sent'>) => t(m[k] as Localized, language);
   const [open, setOpen] = useState(false), [confirming, setConfirming] = useState(false), [error, setError] = useState('');
@@ -76,7 +76,7 @@ export function AccountButton({ language }: { language: Language }) {
   }, [open]);
   useEffect(() => { if (!open) { setConfirming(false); setError(''); } }, [open]);
   if (account.status !== 'signed-in' || !account.user)
-    return <button type="button" className="site-language site-account" aria-busy={account.status === 'loading' || undefined} onClick={() => openSignIn('header')}>{l('signIn')}</button>;
+    return <SignInButton language={language} busy={account.status === 'loading'}/>;
   const u = account.user, initial = (u.name || u.email || '?').trim().charAt(0).toUpperCase();
   return <div className="site-account-menu" ref={box}>
     <button type="button" className="site-language site-account" aria-expanded={open} aria-haspopup="true" aria-label={`${l('account')}: ${u.email}`} onClick={() => setOpen(v => !v)}>

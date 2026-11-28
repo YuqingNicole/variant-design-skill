@@ -4,7 +4,7 @@
 
 - **登录服务**：Supabase，提供登录和存收藏的 Postgres 数据库。
 - **登录方式**：Google，以及发到邮箱的登录链接（不用密码）。
-- **代码**：`website/src/account.ts`（登录状态、读写收藏）、`website/src/AccountDialog.tsx`（登录弹窗和页头的账号按钮）、`website/src/pack.ts`（参考包的格式和首次登录时的合并）。
+- **代码**：`website/src/account.ts`（登录状态、读写收藏）、`website/src/AccountSlot.tsx`（页头的登录按钮，按需加载下面两个）、`website/src/AccountDialog.tsx`（登录弹窗和登录后的账号菜单）、`website/src/pack.ts`（参考包的格式和首次登录时的合并）。
 - **数据库**：`supabase/migrations/20261115000000_reference_packs.sql`。
 - **测试**：`tests/accounts.spec.mjs` 用一个假的 Supabase 模块跑完整流程；`website/scripts/pack.test.mjs` 测合并规则。
 
