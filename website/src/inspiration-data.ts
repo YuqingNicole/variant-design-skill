@@ -9311,12 +9311,12 @@ export const inspirationItems = [
     "url": "https://x.com/jaimintf/status/2126326014271959134",
     "source": "link-only",
     "focus": {
-      "zh": "一段 30 秒的横屏录屏，演示作者的做法：给 Claude 参考，让它出 10 个受参考启发的设计，放进一个 artifact 里，再挑出最好的。画面左边一部 iPhone 依次播放每个方案，右边是标题“Juni Artifact”和两排共十张缩略图，标着 Mosey、Wax、Oneline、After Hours、Upstairs、Blot、So Today、Zoomies、Recap、Tracing Paper，正在播的那张会高亮。十个方案都是同一个记日子的 App，主角都是穿红毛衣、蓝裤子、背黄包的女孩和小白狗 Pepper，只是每个方案换了一个点子：Oneline 是“一笔画出你的一天”的引导页；After Hours 是深蓝的夜间画廊，打着手电看墙上的画；Upstairs 把一个月画成一栋蓝色公寓楼，每扇窗是一天；Blot 把颜色对折成墨迹来记心情；Zoomies 用一串手拉手的纸娃娃记连续天数；Recap 把一周做成立体书；Tracing Paper 把照片描成线稿。后续帖子给了提示词，放在 Appllama 的页面上，要装 Appllama 的 skill 并连上它的 MCP：让 Claude 读参考 App 的录屏，用 React Native + Expo 或 Swift 一比一复刻，每轮都在模拟器里逐帧对照原作和苹果设计规范，再由子代理做出 10 个不同方案并逐个打分，最后放进 artifact。",
-      "en": "A 30-second landscape screen recording of the author’s method: give Claude references, ask for ten designs inspired by them, have it present them in an artifact, then pick the winner. On the left an iPhone plays each design in turn; on the right a “Juni Artifact” title sits over two rows of ten thumbnails labelled Mosey, Wax, Oneline, After Hours, Upstairs, Blot, So Today, Zoomies, Recap and Tracing Paper, with the one playing highlighted. All ten are the same day-logging app with the same characters, a girl in a red sweater, blue trousers and a yellow bag and a small white dog called Pepper, but each is built on a different idea: Oneline is an onboarding screen that says “Draw your day. One line.”; After Hours is a dark-blue night gallery browsed by torchlight; Upstairs draws a month as a blue apartment block with one window per day; Blot folds colours into an inkblot to record a feeling; Zoomies counts a streak with a chain of paper dolls holding hands; Recap turns the week into a pop-up book; Tracing Paper traces a photo into line art. The follow-up post links the prompt on an Appllama page, which needs Appllama’s skills and MCP: Claude reads a video of a reference app, recreates it 1:1 in React Native + Expo or Swift, checks every iteration in the simulator frame by frame against the original and Apple’s guidelines, then has subagents make ten distinct designs, scores each one and presents them in an artifact."
+      "zh": "作者的做法：给 Claude 参考，让它出 10 个设计，放进一个 artifact，挑出最好的。录屏里同一个记日子的 App 有十个方案，同一对女孩和小白狗，各换一个点子：一笔画出一天、夜间画廊、一窗一天的公寓楼、对折墨迹记心情、立体书周报。提示词在后续帖子里（Appllama 页面）。",
+      "en": "The author’s method: give Claude references, ask for ten designs, have it present them in an artifact, pick the winner. The recording shows ten takes on one day-logging app, the same girl and white dog in each but a new idea every time: a day drawn in one line, a night gallery, a building with one window per day, an inkblot mood, a pop-up week. The prompt is in the follow-up post (an Appllama page)."
     },
     "application": {
-      "zh": "让 AI 一次出十个方向、并排放在一个页面里再挑，比反复改一个方案更快看清哪种点子成立",
-      "en": "Having AI produce ten directions at once, side by side on one page, then choosing, shows which idea holds up faster than revising one design over and over"
+      "zh": "一次出十个方向并排挑，比反复改一个方案更快",
+      "en": "Ten directions side by side, then pick: faster than revising one design"
     },
     "publisher": "jaimin (@jaimintf)",
     "kind": "social-post",
