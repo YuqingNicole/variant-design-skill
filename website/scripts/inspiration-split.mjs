@@ -13,9 +13,9 @@ export const pageSize = 30;
 // What the tabs, counts, sort orders, topics, pack and prev/next order need without the record itself.
 export const rowFields = ['id', 'name', 'category', 'tag', 'source', 'addedAt', 'checkedAt', 'kind'];
 // What a home card draws beyond its row (InspirationPage's card, cover and analysis card): the link, the focus line in the
-// page's one language, and an X post's or YouTube video's own fields. The notes, the other language and the rest of the
+// page's one language, an X post's or YouTube video's own fields, and the made-with-AI flag its corner label reads. The notes, the other language and the rest of the
 // record arrive with the full record when the card is opened or searched (2026-11-28), so a long note does not grow the home.
-export const cardFields = ['url', 'post', 'video'];
+export const cardFields = ['url', 'post', 'video', 'ai'];
 // The languages the home is served in, each with its fallback chain (src/i18n/locales.ts); a card carries the one text it shows.
 export const cardLocales = { zh: ['zh'], en: ['en', 'zh'] };
 export const cardOf = (r, locale) => ({ id: r.id, ...Object.fromEntries(cardFields.flatMap(k => r[k] === undefined ? [] : [[k, r[k]]])), focus: { zh: cardLocales[locale].map(l => r.focus[l]).find(Boolean) } });

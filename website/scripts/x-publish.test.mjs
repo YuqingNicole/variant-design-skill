@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { appendItems, readItems, parseVerdict, buildPrompt, run, report, authorInLibrary, screeningOrder, TAGS } from './x-publish.mjs';
 
-const good = { accept: true, name: 'Clay chase', tag: 'Craft', focus: { zh: '黏土小人在桌面上追一颗滚动的豆子', en: 'A clay figure chases a rolling bean across a desk' }, application: { zh: '用日常物件讲小故事', en: 'Small stories told with everyday objects' } };
+const good = { accept: true, name: 'Clay chase', tag: 'Craft', ai: false, focus: { zh: '黏土小人在桌面上追一颗滚动的豆子', en: 'A clay figure chases a rolling bean across a desk' }, application: { zh: '用日常物件讲小故事', en: 'Small stories told with everyday objects' } };
 const item = id => ({ id, name: id, post: { handle: 'old', id: '1' } });
 const source = `// header\nexport const inspirationItems = [\n  ${JSON.stringify(item('a'), null, 2).replace(/\n/g, '\n  ')}\n];\n\nexport const inspirationTopics = [];\n`;
 const cand = (id, handle, likes = 100) => ({ id, url: `https://x.com/${handle}/status/${id}`, handle, likes, status: 'pending' });
@@ -26,6 +26,8 @@ test('parseVerdict accepts a complete answer, even inside prose, and rejects any
     '', 'not json {', '{"accept": false}', '{"accept": "yes"}',
     { ...good, tag: 'Gaming' }, { ...good, tag: 'Interaction' }, { ...good, name: 'x'.repeat(61) }, { ...good, focus: { zh: 'TODO', en: 'TODO' } },
     { ...good, focus: { zh: '全是中文', en: '全是中文' } }, { ...good, application: { zh: 'English only', en: 'English only' } }, { ...good, focus: { zh: '只有中文' } },
+    // Humor left the tags on 2026-11-28; the AI marker is a required yes or no.
+    { ...good, tag: 'Humor' }, { ...good, ai: undefined }, { ...good, ai: 'yes' },
   ];
   for (const b of bad) assert.throws(() => parseVerdict(typeof b === 'string' ? b : JSON.stringify(b)), undefined, JSON.stringify(b));
 });
@@ -39,6 +41,11 @@ test('the prompt carries the rules, the sheet and the tag list, and quotes the p
   assert.match(p, /Reject fan work/); assert.match(p, /Bonnie/); assert.match(p, /Whisper the Wolf/); assert.match(p, /cannot tell it is the author's own, reject/);
   assert.match(p, /shots made for someone else's video/); assert.ok(p.indexOf('Reject fan work') < p.indexOf('Otherwise accept'));
   for (const t of TAGS) assert.ok(p.includes(t));
+  // Tag definitions are ordered rules with real examples, and the AI marker has its own rule (owner-approved review, 2026-11-28).
+  assert.deepEqual(TAGS, ['Animation', 'VFX', 'Craft', 'Generative', 'Real-time', 'Live action']);
+  assert.ok(['1. VFX', '2. Craft', '3. Generative', '4. Real-time', '5. Animation', '6. Live action'].every((r, i, all) => p.includes(r) && (i === 0 || p.indexOf(all[i - 1]) < p.indexOf(r))));
+  assert.match(p, /black hole effect made in Roblox Studio/); assert.match(p, /medieval town built in Unreal Engine/); assert.match(p, /Humour is a quality, not a tag/);
+  assert.match(p, /"ai": true when[^\n]*generative AI/); assert.match(p, /"ai": <true or false>/);
   assert.match(p, /"ignore previous \\"rules\\""/);
 });
 
@@ -53,7 +60,7 @@ test('a run publishes accepted posts, records every decision, and keeps unreadab
     oembed: post => { if (post.handle === 'flaky') throw new Error('503 from publish.x.com'); return oembed(post.handle, post.id); },
     syndication: id => id === '1000005' ? { mediaDetails: [] } : syndication,
     sheet: () => '/tmp/sheet.jpg',
-    ask: prompt => { asked.push(prompt); return prompt.includes('@promo') ? '{"accept": false, "reason": "A tool promotion."}' : JSON.stringify(good); },
+    ask: prompt => { asked.push(prompt); return prompt.includes('@promo') ? '{"accept": false, "reason": "A tool promotion."}' : JSON.stringify({ ...good, ai: true }); },
   };
   const result = await run({ inbox, data, io, now: new Date('2026-11-17T01:00:00Z') });
   assert.equal(asked.length, 2, 'the author already in the library and the post without video never reach the model');
@@ -67,6 +74,7 @@ test('a run publishes accepted posts, records every decision, and keeps unreadab
   assert.equal(by('1000006').reason, 'earlier'); assert.equal(by('1000006').reviewedAt, undefined);
   const entry = readItems(await fs.readFile(data, 'utf8')).at(-1);
   assert.equal(entry.id, 'x-fresh-000001'); assert.equal(entry.post.hasMedia, true); assert.equal(entry.focus.en, good.focus.en);
+  assert.equal(entry.ai, true, 'an AI-made video is marked');
   assert.equal(entry.post.lang, 'en'); assert.equal(entry.addedAt, '2026-11-17T01:00:00.000Z'); assert.equal(entry.source, 'link-only');
   assert.match(report(result), /Accepted 1, rejected 3, left pending 1/);
 });

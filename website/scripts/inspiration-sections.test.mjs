@@ -21,7 +21,7 @@ test('mapping rules: landing is web, product and flow are interface, a video is 
   assert.equal(sectionOf({ category: 'flow', tag: 'History' }), 'interface');
   for (const kind of ['social-post', 'youtube-video']) {
     for (const tag of ['Motion', 'Interaction', 'Branding', 'Web', 'Illustration', 'Poster', 'Print', 'Anything else']) assert.equal(sectionOf({ category: 'practice', tag, kind }), 'design-motion', tag);
-    for (const tag of ['Animation', 'VFX', 'Craft', 'Generative', 'Live action', 'Humor']) assert.equal(sectionOf({ category: 'practice', tag, kind }), 'videos', tag);
+    for (const tag of ['Animation', 'VFX', 'Craft', 'Generative', 'Real-time', 'Live action', 'Humor']) assert.equal(sectionOf({ category: 'practice', tag, kind }), 'videos', tag);
   }
   assert.equal(sectionOf({ category: 'practice', tag: 'Motion' }), 'web');
   // One picture of a photo post is a still of a page or an interface, so it is filed by its category.
@@ -29,11 +29,11 @@ test('mapping rules: landing is web, product and flow are interface, a video is 
   assert.equal(sectionOf({ category: 'product', tag: 'SaaS', kind: 'social-post' }), 'interface');
   // Inside a video section the type is the tag; an unknown design tag is a web video.
   for (const [tag, id] of [['Motion', 'motion'], ['Interaction', 'interaction'], ['Branding', 'branding'], ['Brand', 'branding'], ['Web', 'web'], ['Illustration', 'illustration'], ['Poster', 'posters'], ['Print', 'print'], ['Anything else', 'web'],
-    ['Animation', 'animation'], ['VFX', 'vfx'], ['Craft', 'craft'], ['Generative', 'generative'], ['Live action', 'live-action'], ['Humor', 'humor']]) assert.equal(videoTypeOf({ tag }), id, tag);
+    ['Animation', 'animation'], ['VFX', 'vfx'], ['Craft', 'craft'], ['Generative', 'generative'], ['Real-time', 'real-time'], ['Live action', 'live-action'], ['Humor', 'live-action']]) assert.equal(videoTypeOf({ tag }), id, tag);
   const types = id => sections.find(s => s.id === id).types.map(v => v.id).sort();
   assert.deepEqual(types('design-motion'), ['branding', 'illustration', 'interaction', 'motion', 'posters', 'print', 'web']);
   assert.deepEqual(designTypeIds.sort(), types('design-motion'));
-  assert.deepEqual(types('videos'), ['animation', 'craft', 'generative', 'humor', 'live-action', 'vfx']);
+  assert.deepEqual(types('videos'), ['animation', 'craft', 'generative', 'live-action', 'real-time', 'vfx']);
   assert.equal(sections.find(s => s.id === 'web').types, undefined);
   assert.equal(sectionPath(''), '/'); assert.equal(sectionPath('web'), '/browse/web');
 });
@@ -41,6 +41,18 @@ test('mapping rules: landing is web, product and flow are interface, a video is 
 test('the publish scripts tag every accepted video with a creative type, so it lands in Videos', async () => {
   const { TAGS } = await import('./x-publish.mjs');
   for (const tag of TAGS) assert.equal(sectionOf({ category: 'practice', tag, kind: 'social-post' }), 'videos', tag);
+});
+
+// Owner-approved tag review (2026-11-28): every published creative video carries a current tag, the AI marker is only ever
+// `true` and only on Videos entries, and the two fan-work videos taken down that day stay out.
+test('Videos entries use the current tags, and the AI marker is a plain true on creative videos only', async () => {
+  const { TAGS } = await import('./x-publish.mjs');
+  const refs = loadReferences(), videos = refs.filter(r => sectionOf(r) === 'videos');
+  for (const r of videos) assert.ok(TAGS.includes(r.tag), `${r.id}: ${r.tag}`);
+  for (const r of refs.filter(r => 'ai' in r)) { assert.equal(r.ai, true, r.id); assert.equal(sectionOf(r), 'videos', r.id); }
+  for (const id of ['x-sicknire-355249', 'x-magalyn07-643821']) assert.ok(!refs.some(r => r.id === id), id);
+  const tagOf = id => refs.find(r => r.id === id)?.tag;
+  assert.deepEqual(['x-gen_xcx-902642', 'x-xikhar-997818', 'x-thomasma_labs-829114'].map(tagOf), ['VFX', 'Real-time', 'Generative']);
 });
 
 test('a section with no reference has no tab and no page until one exists', () => {

@@ -9,7 +9,7 @@ import { readLibrary, splitReferences } from '../website/scripts/inspiration-spl
 // The sections the home has to fetch once a reader reaches past its first page (a section whose references are all on that page is never fetched).
 const beyondFirstPage=await (async()=>{const library=readLibrary(),{sectionOf,pageOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname),split=splitReferences(library.items,sectionOf,{...library,onHome:r=>!pageOf(r)});return new Set(Object.entries(split.sections).filter(([,part])=>part.items.some(r=>!split.first.items.includes(r))).map(([id])=>id))})();
 // Library totals come from the data (`home` leaves out Videos, which is its own page), so adding a reference (the weekly X pull request does) does not break counts pinned here.
-const libraryCounts=await (async()=>{const {sectionOf,videoTypeOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname),items=readLibrary().items;const by=key=>items.filter(i=>sectionOf(i)===key).length;const type=key=>items.filter(i=>sectionOf(i)==='design-motion'&&videoTypeOf(i)===key).length;const typeIn=(section,key)=>items.filter(i=>sectionOf(i)===section&&videoTypeOf(i)===key).length;return{total:items.length,home:items.length-by('videos'),web:by('web'),by,type,typeIn};})();
+const libraryCounts=await (async()=>{const {sectionOf,videoTypeOf}=await importTs(new URL('../website/src/inspiration-sections.ts',import.meta.url).pathname),items=readLibrary().items;const by=key=>items.filter(i=>sectionOf(i)===key).length;const type=key=>items.filter(i=>sectionOf(i)==='design-motion'&&videoTypeOf(i)===key).length;const typeIn=(section,key)=>items.filter(i=>sectionOf(i)===section&&videoTypeOf(i)===key).length;const aiIn=(section,key)=>items.filter(i=>sectionOf(i)===section&&videoTypeOf(i)===key&&i.ai===true).length;return{total:items.length,home:items.length-by('videos'),web:by('web'),by,type,typeIn,aiIn};})();
 const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=','base64');
 // The homepage includes X motion now; regressions isolate its media in every scenario.
 // Individual media tests override these routes with their own playback/failure fixture.
@@ -1527,13 +1527,17 @@ test('the videos tab filters creative videos by how they were made, with the dat
  await expect(page.locator('h1')).toHaveText('创意视频');
  // Videos is its own page: Inspiration's tabs are not on it, and it is not one of theirs.
  await expect(page.locator('.insp-pills')).toHaveCount(0);await expect(page.locator('.insp-bar .insp-types')).toHaveCount(1);
- const types=page.locator('.insp-types button'),creative=[['动画短片','animation'],['特效合成','vfx'],['定格与手作','craft'],['代码与生成','generative'],['实拍脑洞','live-action'],['幽默','humor']];
+ const types=page.locator('.insp-types button'),creative=[['动画短片','animation'],['特效合成','vfx'],['定格与手作','craft'],['代码与生成','generative'],['游戏与实时','real-time'],['实拍脑洞','live-action']];
  const shown=creative.filter(([,key])=>libraryCounts.typeIn('videos',key));
  await expect(types).toHaveText([new RegExp(`^全部\\s*${libraryCounts.by('videos')}$`),...shown.map(([name,key])=>new RegExp(`^${name}\\s*${libraryCounts.typeIn('videos',key)}$`))]);
  for(const name of ['交互','动效','品牌'])await expect(types.filter({hasText:name})).toHaveCount(0);
  const [name,key]=shown[0];await types.filter({hasText:name}).click();
  await expect(page).toHaveURL(new RegExp(`/browse/videos\\?type=${key}$`));
  await expect(page.locator('.inspiration-count[role=status]')).toHaveText(`${libraryCounts.typeIn('videos',key)} 个参考`);
+ // Made with AI (2026-11-28): each AI-made card carries the corner label, and its detail says so in words.
+ const aiType=shown.find(([,k])=>libraryCounts.aiIn('videos',k));
+ if(aiType){await types.filter({hasText:aiType[0]}).click();await expect(page.locator('.insp-card-ai')).toHaveCount(libraryCounts.aiIn('videos',aiType[1]));
+  await expect(page.locator('.insp-card-ai').first()).toBeVisible();await page.locator('.insp-card:has(.insp-card-ai) .insp-card-open').first().click();await expect(page.locator('.insp-detail-ai')).toHaveText('AI 参与制作');await page.keyboard.press('Escape');}
  // A creative video opened by its address belongs to Videos, not Inspiration.
  const id=await page.locator('.insp-card-open').first().getAttribute('href');
  await page.goto(id);await hydrated(page);await expect(page.locator('.site-nav-links a[aria-current=page]')).toHaveText('视频');

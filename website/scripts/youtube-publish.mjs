@@ -9,7 +9,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { readItems, appendItems, askClaude, judged as judgedWith, TAGS, SCOPE, TAG_GUIDE, SCOPE_REJECTS, IP_RULE, review } from './x-publish.mjs';
+import { readItems, appendItems, askClaude, judged as judgedWith, TAGS, SCOPE, TAG_GUIDE, AI_RULE, SCOPE_REJECTS, IP_RULE, review } from './x-publish.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const inboxPath = path.resolve(here, '../content/youtube-video-inbox.json');
@@ -35,17 +35,20 @@ ${facts}
 
 Reject (accept=false) when any applies: ${SCOPE_REJECTS}; a tutorial, course, "how to" or tips list; a tool, product, plugin, template or sponsor promotion; a talk, interview, podcast, vlog, reaction or commentary; a compilation of other people's work or an unclear original author; pictures too unclear to describe.
 ${IP_RULE}
-Otherwise accept, and write notes on what makes it fun or clever. ${TAG_GUIDE} Do not invent: no names, claims or tools the pictures and the text do not show.
+Otherwise accept, and write notes on what makes it fun or clever.
+${TAG_GUIDE}
+${AI_RULE}
+Do not invent: no names, claims or tools the pictures and the text do not show.
 
 Answer with one JSON object and nothing else:
-{"accept": true, "name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "focus": {"zh": "<what happens and what makes it fun or clever, one sentence, at most 300 characters>", "en": "<same, in English>"}, "application": {"zh": "<the idea worth borrowing, a short phrase>", "en": "<same, in English>"}}
+{"accept": true, "name": "<short title, at most 60 characters>", "tag": "<one of ${TAGS.join(', ')}>", "ai": <true or false>, "focus": {"zh": "<what happens and what makes it fun or clever, one sentence, at most 300 characters>", "en": "<same, in English>"}, "application": {"zh": "<the idea worth borrowing, a short phrase>", "en": "<same, in English>"}}
 or {"accept": false, "reason": "<one sentence in English>"}`;
 }
 
 export function entryFor(candidate, verdict, at) {
   const channelUrl = candidate.channelUrl ?? null;
   return {
-    id: `yt-${candidate.id}`, name: verdict.name, category: 'practice', tag: verdict.tag, url: `https://www.youtube.com/watch?v=${candidate.id}`, source: 'link-only',
+    id: `yt-${candidate.id}`, name: verdict.name, category: 'practice', tag: verdict.tag, ...(verdict.ai ? { ai: true } : {}), url: `https://www.youtube.com/watch?v=${candidate.id}`, source: 'link-only',
     focus: verdict.focus, application: verdict.application, publisher: candidate.channel, kind: 'youtube-video', designer: null,
     checkedAt: at.slice(0, 10), addedAt: at, verification: 'public-video', mobile: 'not-tested',
     video: { platform: 'youtube', id: candidate.id, channel: candidate.channel, channelUrl, ...(candidate.publishedAt ? { date: candidate.publishedAt.slice(0, 10) } : {}), ...(candidate.seconds ? { seconds: candidate.seconds } : {}) },

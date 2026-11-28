@@ -7556,38 +7556,6 @@ export const inspirationItems = [
     }
   },
   {
-    "id": "x-sicknire-355249",
-    "name": "Paper stop-motion remake of Charlie and Lola",
-    "category": "practice",
-    "tag": "Craft",
-    "url": "https://x.com/sicknire/status/2115560598616355249",
-    "source": "link-only",
-    "focus": {
-      "zh": "为定格动画课用纸重做《查理与劳拉》的一段动画：一个手绘剪纸女孩趴在橙色桌沿后，眼睛跟着一排彩色纸甲虫左右转动，甲虫爬过桌面，又沿着上方的紫色纸条走回去，用简单的纸片还原了原作的绘本质感。",
-      "en": "Remaking a Charlie and Lola scene in paper for a stop-motion class: a hand-drawn cut-out girl peeks over an orange paper table, her eyes following a parade of colourful paper beetles that crawl across it and then march back along a purple strip above, capturing the show's picture-book look with simple paper pieces."
-    },
-    "application": {
-      "zh": "用剪纸和眼神转动重现一部动画的质感",
-      "en": "Recreating a cartoon's look with paper cut-outs and eye movement"
-    },
-    "publisher": "ninis ⋆𐙚₊ (@sicknire)",
-    "kind": "social-post",
-    "designer": "ninis ⋆𐙚₊",
-    "checkedAt": "2026-11-20",
-    "addedAt": "2026-11-20T03:50:07.114Z",
-    "verification": "public-post",
-    "mobile": "not-tested",
-    "post": {
-      "id": "2115560598616355249",
-      "author": "ninis ⋆𐙚₊",
-      "handle": "sicknire",
-      "date": "2026-10-28",
-      "lang": "pt",
-      "text": "pós-graduação em animação é tipo  refazer a animação de charlie e lola com papel pra aula de stop motion",
-      "hasMedia": true
-    }
-  },
-  {
     "id": "x-kuro_40-017411",
     "name": "Crosswalk Turns Into a Staircase in the Sky",
     "category": "practice",
@@ -7723,8 +7691,8 @@ export const inspirationItems = [
     "url": "https://x.com/jammyjanmo/status/2120068254794236023",
     "source": "link-only",
     "focus": {
-      "zh": "用积木拍的定格动画：一块曲奇在绿色积木底板上被一点点啃光，只剩碎屑；随后一个由积木搭成、笑眯眯的大块头站在小人仔旁边，最后嘴边挂着红色黏糊糊的东西，用最简单的玩具拍出贪吃的喜感。",
-      "en": "A brick-built stop-motion: a cookie on a green baseplate gets nibbled away until only crumbs remain, then a grinning chunky brick character, Bigdude, stands beside a minifigure and ends up with red goo dripping from its mouth. Simple toys turned into a funny gluttony gag."
+      "zh": "用积木拍的定格动画：笑眯眯的大块头积木人 Bigdude 在绿色底板上一口吞下真的曲奇，接着是一个糖霜甜甜圈，最后连旁边的小人仔也吃了，只剩一地红色碎块，用最简单的玩具拍出贪吃的喜感。",
+      "en": "A brick-built stop-motion: Bigdude, a grinning chunky brick figure on a green baseplate, gulps down a real cookie, then a powdered doughnut, and finally the minifigure standing next to him, leaving red bits behind. Simple toys turned into a funny gluttony gag."
     },
     "application": {
       "zh": "用真实食物配合玩具定格，制造“被吃掉”的错觉",
@@ -7744,38 +7712,6 @@ export const inspirationItems = [
       "date": "2026-11-10",
       "lang": "en",
       "text": "Bigdude eats stuff♥️#stopmotion #animation",
-      "hasMedia": true
-    }
-  },
-  {
-    "id": "x-magalyn07-643821",
-    "name": "The Binding of Isaac: claymation school short",
-    "category": "practice",
-    "tag": "Craft",
-    "url": "https://x.com/Magalyn07/status/2113105764344643821",
-    "source": "link-only",
-    "focus": {
-      "zh": "一部学校作业的粘土定格短片，重现《以撒的结合》：粘土做的以撒在凹凸的粘土墙前哭泣，背景里有手绘纸板做的巨手和铅笔画的场景，结尾是作者手绘的演职员表（Thiago Caballero、Leandro Coro、Agustin Melgarejo），手工的粗糙质感满是热爱。",
-      "en": "A school-project claymation retelling of The Binding of Isaac: a clay Isaac cries against a bumpy clay wall, with a cut-out painted giant hand and pencil-drawn sets, ending on hand-drawn credits (Thiago Caballero, Leandro Coro, Agustin Melgarejo); the rough handmade look shows real love for the game."
-    },
-    "application": {
-      "zh": "粘土角色搭配手绘纸板布景",
-      "en": "Clay characters mixed with hand-drawn paper sets"
-    },
-    "publisher": "Magalyn (@Magalyn07)",
-    "kind": "social-post",
-    "designer": "Magalyn",
-    "checkedAt": "2026-11-20",
-    "addedAt": "2026-11-20T03:50:07.114Z",
-    "verification": "public-post",
-    "mobile": "not-tested",
-    "post": {
-      "id": "2113105764344643821",
-      "author": "Magalyn",
-      "handle": "Magalyn07",
-      "date": "2026-10-22",
-      "lang": "es",
-      "text": "The binding of Isaac: stop motion un proyecto de la escuela que hicimos por capricho mio\nMi amigo y yo amamos tboi por eso salio con tanto esfuerzo esta animacion xd\nGracias edmund por divertirnos por años con tu juego#tboi #art @edmundmcmillen",
       "hasMedia": true
     }
   },
@@ -7887,7 +7823,8 @@ export const inspirationItems = [
     "id": "x-xikhar-997818",
     "name": "Ink-wash platformer made in 24 hours",
     "category": "practice",
-    "tag": "Generative",
+    "tag": "Real-time",
+    "ai": true,
     "url": "https://x.com/xikhar/status/2117776295534997818",
     "source": "link-only",
     "focus": {
@@ -7920,6 +7857,7 @@ export const inspirationItems = [
     "name": "Papertrails: an endless papercraft world",
     "category": "practice",
     "tag": "Generative",
+    "ai": true,
     "url": "https://x.com/xikhar/status/2122682962647122403",
     "source": "link-only",
     "focus": {
@@ -7951,7 +7889,8 @@ export const inspirationItems = [
     "id": "x-xikhar-353617",
     "name": "A whole medieval town built in Unreal Engine with AI",
     "category": "practice",
-    "tag": "Generative",
+    "tag": "Real-time",
+    "ai": true,
     "url": "https://x.com/xikhar/status/2114567234857353617",
     "source": "link-only",
     "focus": {
@@ -7984,6 +7923,7 @@ export const inspirationItems = [
     "name": "Ghibli-style stick-figure music video",
     "category": "practice",
     "tag": "Animation",
+    "ai": true,
     "url": "https://x.com/CrazyKaomei/status/2124821277563351374",
     "source": "link-only",
     "focus": {
@@ -8255,7 +8195,7 @@ export const inspirationItems = [
     "id": "x-gen_xcx-902642",
     "name": "Real-time black hole VFX in Roblox",
     "category": "practice",
-    "tag": "Animation",
+    "tag": "VFX",
     "url": "https://x.com/gen_xcx/status/2123249742519902642",
     "source": "link-only",
     "focus": {
@@ -8287,7 +8227,8 @@ export const inspirationItems = [
     "id": "x-chetaslua-275008",
     "name": "Illustrated market town as a three.js flythrough",
     "category": "practice",
-    "tag": "Generative",
+    "tag": "Real-time",
+    "ai": true,
     "url": "https://x.com/chetaslua/status/2125253343480275008",
     "source": "link-only",
     "focus": {
@@ -9076,6 +9017,7 @@ export const inspirationItems = [
     "name": "AI felt stop-motion: a pirate captain and a giant octopus",
     "category": "practice",
     "tag": "Animation",
+    "ai": true,
     "url": "https://x.com/Nexoxh/status/2125528315041829066",
     "source": "link-only",
     "focus": {

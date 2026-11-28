@@ -16,7 +16,7 @@ const designTypes: VideoType[] = [
 ];
 const creativeTypes: VideoType[] = [
   { id: 'animation', name: { zh: '动画短片', en: 'Animation' } }, { id: 'vfx', name: { zh: '特效合成', en: 'VFX' } }, { id: 'craft', name: { zh: '定格与手作', en: 'Stop-motion & craft' } },
-  { id: 'generative', name: { zh: '代码与生成', en: 'Generative' } }, { id: 'live-action', name: { zh: '实拍脑洞', en: 'Live-action ideas' } }, { id: 'humor', name: { zh: '幽默', en: 'Humor' } },
+  { id: 'generative', name: { zh: '代码与生成', en: 'Generative' } }, { id: 'real-time', name: { zh: '游戏与实时', en: 'Games & real-time' } }, { id: 'live-action', name: { zh: '实拍脑洞', en: 'Live-action ideas' } },
 ];
 
 export const sections: Section[] = [
@@ -31,14 +31,15 @@ export const sections: Section[] = [
     intro: { zh: '来自 X 和 YouTube 的设计短视频：交互、动效、品牌、插画、海报和印刷作品，每条都能直接看它怎么动、怎么响应。', en: 'Short design videos from X and YouTube: interaction, motion, brand, illustration, poster and print work, each one showing how it moves and responds.' } },
   { id: 'videos', name: { zh: '视频', en: 'Videos' }, work: { zh: '创意视频', en: 'Creative video' }, videoGrid: true, types: creativeTypes, ownPage: true,
     title: { zh: '创意视频', en: 'Creative videos' },
-    intro: { zh: '来自 X 和 YouTube 的有趣创意短视频，和设计无关：动画、特效、定格和手作、代码生成、实拍的脑洞和纯粹的幽默。', en: 'Fun, creative short videos from X and YouTube that have nothing to do with design: animation, effects, stop-motion and craft, generative work, live-action ideas and plain humour.' } },
+    intro: { zh: '来自 X 和 YouTube 的有趣创意短视频，和设计无关：动画、特效、定格和手作、代码生成、游戏和实时场景，还有实拍的脑洞。', en: 'Fun, creative short videos from X and YouTube that have nothing to do with design: animation, effects, stop-motion and craft, generative work, games and real-time worlds, and live-action ideas.' } },
 ];
 
 // `landing` is a website; `product` and `flow` are interface work; a social post or a YouTube video is a video, creative when
 // its tag is a creative type and design work otherwise. Inside a video section the type is the tag. A social post filed as
 // `landing`, `product` or `flow` is a still of that work (one picture of a photo post), so it follows its category instead.
 const designByTag: Record<string, string> = { motion: 'motion', interaction: 'interaction', branding: 'branding', brand: 'branding', illustration: 'illustration', poster: 'posters', posters: 'posters', print: 'print' };
-const creativeByTag: Record<string, string> = { animation: 'animation', vfx: 'vfx', craft: 'craft', generative: 'generative', 'live action': 'live-action', humor: 'humor' };
+// Humor was a tag until 2026-11-28 (a tone, not a medium); a record still carrying it is filed with filmed ideas, never lost to design.
+const creativeByTag: Record<string, string> = { animation: 'animation', vfx: 'vfx', craft: 'craft', generative: 'generative', 'real-time': 'real-time', 'live action': 'live-action', humor: 'live-action' };
 export function sectionOf(item: { category: string; tag: string; kind?: string }): string {
   if ((item.kind === 'social-post' && item.category === 'practice') || item.kind === 'youtube-video') return creativeByTag[item.tag.toLowerCase()] ? 'videos' : 'design-motion';
   if (item.category === 'product' || item.category === 'flow') return 'interface';
