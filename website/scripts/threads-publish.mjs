@@ -128,9 +128,14 @@ export async function run({ inbox: inboxFile = inboxPath, data: dataFile = dataP
         const preview = parsePreview(page.html, page.url);
         if (!preview) { reject(candidate, label, 'The site publishes no share preview image'); continue; }
         if (siteInLibrary([...items, ...added], page.url)) { reject(candidate, label, 'The link redirects to a site the library already has'); continue; }
-        const prompt = buildPrompt(candidate, preview, await dep.screenshot(candidate.link, dir));
-        const verdict = await judged(dep.ask, prompt, dir);
-        if (!verdict.accept) { reject(candidate, label, verdict.reason); continue; }
+        const shot = await dep.screenshot(candidate.link, dir);
+        const verdict = await judged(dep.ask, buildPrompt(candidate, preview, shot), dir);
+        if (!verdict.accept) {
+          // A shortened wait can hide content; a negative needs a complete capture.
+          if (shot.late === true) summary.kept.push([label, `Capture ran short on time; needs a complete retry (model: ${verdict.reason})`]);
+          else reject(candidate, label, verdict.reason);
+          continue;
+        }
         const id = idFor(candidate.link, new Set([...items, ...added].map(i => i.id)));
         const entry = entryFor(candidate, verdict, id, stamp);
         added.push(entry); newPreviews[id] = { ...preview, ...(await dep.size(preview.image) ?? {}), fetchedAt: today };
