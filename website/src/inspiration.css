@@ -165,7 +165,6 @@ div.insp-thumb.insp-thumb-media{position:relative;display:block;padding:0;backgr
 .insp-card-meta .insp-vcard-avatar{position:static;display:block;flex:none;width:28px;height:28px;border-radius:50%;border:0}
 .insp-card:is(:hover,:focus-within) .insp-card-meta{opacity:1}
 .inspiration-page .content-closing h2{font-size:28px}.inspiration-page .content-button{border-radius:var(--radius-control);background:var(--site-brand);color:var(--site-paper)!important}
-
 @media(hover:none){.insp-card-meta{opacity:1}}
 @media(max-width:650px){.inspiration-page .site-nav-links{font-size:12px}.insp-feed{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-5) var(--space-3)}.insp-card-open{overflow:visible;aspect-ratio:auto}.insp-card-open>.insp-thumb,.insp-card-open>.insp-vcard-media{aspect-ratio:16/10;height:auto;overflow:hidden}.insp-card-meta{position:static;opacity:1;padding:var(--space-2) 0 0;background:none}.insp-card-save,.insp-card-out{width:44px;height:44px}.insp-card-out{bottom:auto;top:var(--space-2);left:var(--space-2);right:auto}.insp-card-meta small{font-size:12px}}
 @media(max-width:360px){.insp-feed{grid-template-columns:minmax(0,1fr)}}
