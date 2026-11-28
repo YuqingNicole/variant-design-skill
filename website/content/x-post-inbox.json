@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-28T01:02:41.747Z",
+  "updatedAt": "2026-11-28T01:15:49.289Z",
   "source": "Ego Lite on X search",
   "reviewPolicy": "Candidates reach the library only through x-publish.mjs, which reads video frames and writes bilingual notes into a pull request that merges itself once CI passes; nobody reviews entries one by one.",
   "candidates": [
@@ -3520,6 +3520,19 @@
       "status": "rejected",
       "reviewedAt": "2026-11-12",
       "reason": "Reposted video; the original author could not be confirmed"
+    },
+    {
+      "id": "2126326014271959134",
+      "url": "https://x.com/jaimintf/status/2126326014271959134",
+      "handle": "jaimintf",
+      "author": "jaimin",
+      "publishedAt": "2026-11-27",
+      "likes": 445,
+      "capturedAt": "2026-11-28T01:15:49.289Z",
+      "query": "maintainer link (2026-11-28)",
+      "status": "published",
+      "entry": "x-jaimintf-959134",
+      "reviewedAt": "2026-11-28"
     }
   ]
 }

@@ -1418,5 +1418,13 @@
     "height": 1080,
     "avatar": "https://pbs.twimg.com/profile_images/2120070925110685696/jMnd5yEP_bigger.jpg",
     "fetchedAt": "2026-11-27"
+  },
+  "x-jaimintf-959134": {
+    "video": "https://video.twimg.com/amplify_video/2126325703734140928/vid/avc1/960x720/EiCW-05INGxiMCTG.mp4",
+    "poster": "https://pbs.twimg.com/amplify_video_thumb/2126325703734140928/img/sggADaZCDdLZfiGg.jpg",
+    "width": 2880,
+    "height": 2160,
+    "avatar": "https://pbs.twimg.com/profile_images/2090476714908680202/iA4V5MvL_bigger.jpg",
+    "fetchedAt": "2026-11-28"
   }
 }

@@ -9302,6 +9302,38 @@ export const inspirationItems = [
       "text": "同样是用 Claude 做视频，为什么有人做出来像动画电影，有人做出来却像 PPT？🥹\n\n下面用同一个场景展示四种常见的制作方案，从左到右，效果差异一目了然👻\n\n1. Python：风格自由，可实现手绘质感，适合艺术动画、数学演示和数据可视化\n\n2. Motion Canvas：画面干净、动画流畅，适合知识科普和技术教程；同类的Remotion 基于 React，更适合批量生成模板化视频\n\n3. Three.js：网页实时渲染，擅长交互式 3D 场景和沉浸式视觉效果\n\n4. Blender：完整的 3D 建模与渲染能力，擅长电影级光影、运镜和产品展示，但渲染时间最长\n\n想让 Claude 做出真正惊艳的视频，除了提示词，选对工具也很重要！！\n\n你们最喜欢哪种风格呀？",
       "hasMedia": true
     }
+  },
+  {
+    "id": "x-jaimintf-959134",
+    "name": "Ten Claude-made designs for one diary app, shown in one artifact",
+    "category": "practice",
+    "tag": "Interaction",
+    "url": "https://x.com/jaimintf/status/2126326014271959134",
+    "source": "link-only",
+    "focus": {
+      "zh": "一段 30 秒的横屏录屏，演示作者的做法：给 Claude 参考，让它出 10 个受参考启发的设计，放进一个 artifact 里，再挑出最好的。画面左边一部 iPhone 依次播放每个方案，右边是标题“Juni Artifact”和两排共十张缩略图，标着 Mosey、Wax、Oneline、After Hours、Upstairs、Blot、So Today、Zoomies、Recap、Tracing Paper，正在播的那张会高亮。十个方案都是同一个记日子的 App，主角都是穿红毛衣、蓝裤子、背黄包的女孩和小白狗 Pepper，只是每个方案换了一个点子：Oneline 是“一笔画出你的一天”的引导页；After Hours 是深蓝的夜间画廊，打着手电看墙上的画；Upstairs 把一个月画成一栋蓝色公寓楼，每扇窗是一天；Blot 把颜色对折成墨迹来记心情；Zoomies 用一串手拉手的纸娃娃记连续天数；Recap 把一周做成立体书；Tracing Paper 把照片描成线稿。后续帖子给了提示词，放在 Appllama 的页面上，要装 Appllama 的 skill 并连上它的 MCP：让 Claude 读参考 App 的录屏，用 React Native + Expo 或 Swift 一比一复刻，每轮都在模拟器里逐帧对照原作和苹果设计规范，再由子代理做出 10 个不同方案并逐个打分，最后放进 artifact。",
+      "en": "A 30-second landscape screen recording of the author’s method: give Claude references, ask for ten designs inspired by them, have it present them in an artifact, then pick the winner. On the left an iPhone plays each design in turn; on the right a “Juni Artifact” title sits over two rows of ten thumbnails labelled Mosey, Wax, Oneline, After Hours, Upstairs, Blot, So Today, Zoomies, Recap and Tracing Paper, with the one playing highlighted. All ten are the same day-logging app with the same characters, a girl in a red sweater, blue trousers and a yellow bag and a small white dog called Pepper, but each is built on a different idea: Oneline is an onboarding screen that says “Draw your day. One line.”; After Hours is a dark-blue night gallery browsed by torchlight; Upstairs draws a month as a blue apartment block with one window per day; Blot folds colours into an inkblot to record a feeling; Zoomies counts a streak with a chain of paper dolls holding hands; Recap turns the week into a pop-up book; Tracing Paper traces a photo into line art. The follow-up post links the prompt on an Appllama page, which needs Appllama’s skills and MCP: Claude reads a video of a reference app, recreates it 1:1 in React Native + Expo or Swift, checks every iteration in the simulator frame by frame against the original and Apple’s guidelines, then has subagents make ten distinct designs, scores each one and presents them in an artifact."
+    },
+    "application": {
+      "zh": "让 AI 一次出十个方向、并排放在一个页面里再挑，比反复改一个方案更快看清哪种点子成立",
+      "en": "Having AI produce ten directions at once, side by side on one page, then choosing, shows which idea holds up faster than revising one design over and over"
+    },
+    "publisher": "jaimin (@jaimintf)",
+    "kind": "social-post",
+    "designer": "jaimin",
+    "checkedAt": "2026-11-28",
+    "addedAt": "2026-11-28T01:15:49.289Z",
+    "verification": "public-post",
+    "mobile": "not-tested",
+    "post": {
+      "id": "2126326014271959134",
+      "author": "jaimin",
+      "handle": "jaimintf",
+      "date": "2026-11-27",
+      "lang": "en",
+      "text": "people overcomplicate designing apps.\n\n> give claude references\n> ask it for 10 inspired designs\n> tell it to present it in an artifact\n> choose the winner\n\nprompt & artifact example ↓ https://t.co/5XKCc5pWok",
+      "hasMedia": true
+    }
   }
 ];
 
